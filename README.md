@@ -1,4 +1,4 @@
-# Fez frontend
+# UQL-LIBRARY-FRONTNEND
 
 [![Codeship Status for uqlibrary/fez-frontend](https://app.codeship.com/projects/5f018a50-f4f8-0134-5dd6-4eabb52e4bf9/status?branch=master)](https://app.codeship.com/projects/210111)
 [![Dependency Status](https://david-dm.org/uqlibrary/fez-frontend.svg)](https://david-dm.org/uqlibrary/fez-frontend)
@@ -6,13 +6,6 @@
 
 Fez frontend is a web interface application for digital repository.
 [Staging/Production release notes](https://libnet.library.uq.edu.au/display/LIB/eSpace+UI+Release+Notes)
-
-UQ's branding for Fez is UQ eSpace.
-
-- Legacy eSpace application <https://espace.library.uq.edu.au/>
-- eSpace production <https://espace.library.uq.edu.au/dashboard>
-- eSpace staging <https://fez-staging.library.uq.edu.au/dashboard>
-- Current build <https://development.library.uq.edu.au/espace/master> (or your feature branch)
 
 ## Technology
 
