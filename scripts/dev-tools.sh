@@ -14,9 +14,9 @@ usage () {
 get-uql-x-token () {
     cd scripts/dev-tools
 
-    export CYPRESS_ESPACE_HOST="${1}"
-    export CYPRESS_ESPACE_AUTH_ID="${2}"
-    export CYPRESS_ESPACE_AUTH_PASSWORD="${3}"
+    export CYPRESS_HOMEPAGE_HOST="${1}"
+    export CYPRESS_HOMEPAGE_AUTH_ID="${2}"
+    export CYPRESS_HOMEPAGE_AUTH_PASSWORD="${3}"
 
     SILENT=$(../../node_modules/.bin/cypress run)
     # bail if it fails
@@ -34,8 +34,8 @@ start:staging-session () {
     source .env > /dev/null 2>&1
 
     # prompt for credentials
-    echo -ne "Username: ${ESPACE_STAGING_USERNAME}"
-    if [ -z ${ESPACE_STAGING_USERNAME+x} ]; then
+    echo -ne "Username: ${HOMEPAGE_STAGING_USERNAME}"
+    if [ -z ${HOMEPAGE_STAGING_USERNAME+x} ]; then
         read USERNAME
     else
         echo ""
@@ -45,7 +45,7 @@ start:staging-session () {
     echo -e "\n"
 
     # login using provided credentials
-    TOKEN=$(get-uql-x-token "${1:-$ESPACE_STAGING_HOST}" "${USERNAME:-$ESPACE_STAGING_USERNAME}" "$PASSWORD")
+    TOKEN=$(get-uql-x-token "${1:-$HOMEPAGE_STAGING_HOST}" "${USERNAME:-HOMEPAGE_STAGING_USERNAME}" "$PASSWORD")
     # bail if it fails
     if [[ $? -ne 0 ]]; then
         echo -e "$TOKEN"  && exit 1
