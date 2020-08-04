@@ -1,11 +1,10 @@
-# UQL-HOMEPAGE-FRONTEND
+# HOMEPAGE-REACT
 
 [![Codeship Status for uqlibrary/fez-frontend](https://app.codeship.com/projects/5f018a50-f4f8-0134-5dd6-4eabb52e4bf9/status?branch=master)](https://app.codeship.com/projects/210111)
 [![Dependency Status](https://david-dm.org/uqlibrary/fez-frontend.svg)](https://david-dm.org/uqlibrary/fez-frontend)
 [![Dev Dependency Status](https://david-dm.org/uqlibrary/fez-frontend/dev-status.svg)](https://david-dm.org/uqlibrary/fez-frontend)
 
-Fez frontend is a web interface application for digital repository.
-[Staging/Production release notes](https://libnet.library.uq.edu.au/display/LIB/eSpace+UI+Release+Notes)
+A repo for the Library of The University of Queensland website homepage
 
 ## Technology
 
