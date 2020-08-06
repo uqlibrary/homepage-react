@@ -1,4 +1,4 @@
-#!/bin/bash
+ #!/bin/bash
 
 # exit if command returns error (non-zero status)
 set -e
@@ -19,3 +19,7 @@ npm cache clear -f
 printf "\n\n--- INSTALL DEPENDENCIES ---\n"
 echo "$ npm ci"
 npm ci
+
+printf "\n\n--- INSTALL JEST ---\n"
+echo "$ npm install --save-dev jest"
+npm install -g jest
