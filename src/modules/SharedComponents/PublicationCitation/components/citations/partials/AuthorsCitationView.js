@@ -2,7 +2,6 @@ import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import CitationView from './CitationView';
 import { locale } from 'locale';
-import { pathConfig } from 'config/routes';
 import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -45,7 +44,7 @@ export class AuthorsCitationView extends PureComponent {
         initialNumberOfAuthors: 10,
         thresholdNumberOfAuthors: 3,
         showLink: false,
-        getLink: pathConfig.list.author,
+        getLink: '', // pathConfig.list.author,
     };
 
     constructor(props) {

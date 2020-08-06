@@ -14,6 +14,7 @@ A repo for the Library of The University of Queensland website homepage
 - Build and dev tools: `Webpack`
 - Unit tests: `Jest`
 - E2E tests: `Cypress`
+- WCAG tests: `Cypress/aXe`
 
 ## Development
 

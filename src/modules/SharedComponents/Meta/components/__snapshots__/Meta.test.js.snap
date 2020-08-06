@@ -102,7 +102,7 @@ exports[`Meta Component  should render component with audio document 1`] = `
       },
     ]
   }
-  title="Hearing the city Symposium Title 5: In conversation - UQ eSpace "
+  title="Hearing the city Symposium Title 5: In conversation - UQ Library "
 />
 `;
 
@@ -213,7 +213,7 @@ exports[`Meta Component  should render component with book 1`] = `
       },
     ]
   }
-  title="Addictions - UQ eSpace "
+  title="Addictions - UQ Library "
 />
 `;
 
@@ -374,7 +374,7 @@ exports[`Meta Component  should render component with book chapter 1`] = `
       },
     ]
   }
-  title="Non-coding RNAs in Mammary Gland Development and Disease - UQ eSpace "
+  title="Non-coding RNAs in Mammary Gland Development and Disease - UQ Library "
 />
 `;
 
@@ -555,7 +555,7 @@ exports[`Meta Component  should render component with conference paper 1`] = `
       },
     ]
   }
-  title="Alcohol use disorders, risky alcohol consumption and adverse events among chronic non-cancer pain patients receiving opioid therapy - UQ eSpace "
+  title="Alcohol use disorders, risky alcohol consumption and adverse events among chronic non-cancer pain patients receiving opioid therapy - UQ Library "
 />
 `;
 
@@ -681,7 +681,7 @@ exports[`Meta Component  should render component with conference proceedings 1`]
       },
     ]
   }
-  title="Experiences and Challenges in Sewers: Measurements and Hydrodynamics - UQ eSpace "
+  title="Experiences and Challenges in Sewers: Measurements and Hydrodynamics - UQ Library "
 />
 `;
 
@@ -716,7 +716,7 @@ exports[`Meta Component  should render component with coverage period data mappe
       },
     ]
   }
-  title="Record with coverage period - UQ eSpace "
+  title="Record with coverage period - UQ Library "
 />
 `;
 
@@ -756,7 +756,7 @@ exports[`Meta Component  should render component with coverage period data mappe
       },
     ]
   }
-  title="Record with coverage period - UQ eSpace "
+  title="Record with coverage period - UQ Library "
 />
 `;
 
@@ -852,7 +852,7 @@ exports[`Meta Component  should render component with creative work 1`] = `
       },
     ]
   }
-  title="Sustainable home Brisbane - UQ eSpace "
+  title="Sustainable home Brisbane - UQ Library "
 />
 `;
 
@@ -993,7 +993,7 @@ exports[`Meta Component  should render component with data collection 1`] = `
       },
     ]
   }
-  title="Data collection mock testing record - UQ eSpace "
+  title="Data collection mock testing record - UQ Library "
 />
 `;
 
@@ -1144,7 +1144,7 @@ exports[`Meta Component  should render component with design document 1`] = `
       },
     ]
   }
-  title="Site setting and circumstance: A house and courtyard garden, Riga, Latvia - UQ eSpace "
+  title="Site setting and circumstance: A house and courtyard garden, Riga, Latvia - UQ Library "
 />
 `;
 
@@ -1210,7 +1210,7 @@ exports[`Meta Component  should render component with digilib image 1`] = `
       },
     ]
   }
-  title="Conveyor, copper mine, Mount Morgan - UQ eSpace "
+  title="Conveyor, copper mine, Mount Morgan - UQ Library "
 />
 `;
 
@@ -1296,7 +1296,7 @@ exports[`Meta Component  should render component with generic document 1`] = `
       },
     ]
   }
-  title="Numerical solution of partial differential equations - UQ eSpace "
+  title="Numerical solution of partial differential equations - UQ Library "
 />
 `;
 
@@ -1362,7 +1362,7 @@ exports[`Meta Component  should render component with image 1`] = `
       },
     ]
   }
-  title="Reference Desk, Library - UQ eSpace "
+  title="Reference Desk, Library - UQ Library "
 />
 `;
 
@@ -1458,7 +1458,7 @@ exports[`Meta Component  should render component with journal 1`] = `
       },
     ]
   }
-  title="Management international review - UQ eSpace "
+  title="Management international review - UQ Library "
 />
 `;
 
@@ -1544,7 +1544,7 @@ exports[`Meta Component  should render component with manuscript 1`] = `
       },
     ]
   }
-  title="Thea Astley, Ashgrove, Brisbane to [Paul] Grano, 15 Jul 1944 - UQ eSpace "
+  title="Thea Astley, Ashgrove, Brisbane to [Paul] Grano, 15 Jul 1944 - UQ Library "
 />
 `;
 
@@ -1675,7 +1675,7 @@ exports[`Meta Component  should render component with newspaper 1`] = `
       },
     ]
   }
-  title="Improve Your Communication with Doctors - UQ eSpace "
+  title="Improve Your Communication with Doctors - UQ Library "
 />
 `;
 
@@ -1786,7 +1786,7 @@ exports[`Meta Component  should render component with patent 1`] = `
       },
     ]
   }
-  title="Bacterial plaques staining composition for evaluating dental caries activity - UQ eSpace "
+  title="Bacterial plaques staining composition for evaluating dental caries activity - UQ Library "
 />
 `;
 
@@ -1882,7 +1882,7 @@ exports[`Meta Component  should render component with preprint 1`] = `
       },
     ]
   }
-  title="Heavy Tails, Importance Sampling and Cross-Entropy - UQ eSpace "
+  title="Heavy Tails, Importance Sampling and Cross-Entropy - UQ Library "
 />
 `;
 
@@ -2018,7 +2018,7 @@ exports[`Meta Component  should render component with reference entry 1`] = `
       },
     ]
   }
-  title="Domestic Technologies - UQ eSpace "
+  title="Domestic Technologies - UQ Library "
 />
 `;
 
@@ -2058,7 +2058,7 @@ exports[`Meta Component  should render component with rek_date year mapped to ci
       },
     ]
   }
-  title="Record with only year in rek_date - UQ eSpace "
+  title="Record with only year in rek_date - UQ Library "
 />
 `;
 
@@ -2149,7 +2149,7 @@ exports[`Meta Component  should render component with research report 1`] = `
       },
     ]
   }
-  title="Accelerated Apprenticeships: Apprentice, Employer and Teaching Staff Perceptions - 4 - UQ eSpace "
+  title="Accelerated Apprenticeships: Apprentice, Employer and Teaching Staff Perceptions - 4 - UQ Library "
 />
 `;
 
@@ -2225,7 +2225,7 @@ exports[`Meta Component  should render component with thesis 1`] = `
       },
     ]
   }
-  title="It's for love not money: Queensland graziers' perceptions of sustainable development - UQ eSpace "
+  title="It's for love not money: Queensland graziers' perceptions of sustainable development - UQ Library "
 />
 `;
 
@@ -2301,7 +2301,7 @@ exports[`Meta Component  should render component with video document 1`] = `
       },
     ]
   }
-  title="Video 12: 1) Discovery History and Geology of the Cannington Ag-Pb-Zn Deposit 2) Advances in Micro-Analytical Technologies — What a grain can tell you - UQ eSpace "
+  title="Video 12: 1) Discovery History and Geology of the Cannington Ag-Pb-Zn Deposit 2) Advances in Micro-Analytical Technologies — What a grain can tell you - UQ Library "
 />
 `;
 
@@ -2422,7 +2422,7 @@ exports[`Meta Component  should render component with working paper 1`] = `
       },
     ]
   }
-  title="Education, Employment and Social Inclusion within the European Union - UQ eSpace "
+  title="Education, Employment and Social Inclusion within the European Union - UQ Library "
 />
 `;
 
@@ -2430,6 +2430,6 @@ exports[`Meta Component  should render title only 1`] = `
 <HelmetWrapper
   defer={true}
   encodeSpecialCharacters={true}
-  title="Index page - UQ eSpace "
+  title="Index page - UQ Library "
 />
 `;

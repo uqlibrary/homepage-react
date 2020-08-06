@@ -34,7 +34,6 @@ import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
 import { Meta } from 'modules/SharedComponents/Meta';
 import { OfflineSnackbar } from 'modules/SharedComponents/OfflineSnackbar';
-import { SearchComponent } from 'modules/SharedComponents/SearchComponent';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import * as pages from './pages';
 import { AccountContext } from 'context';
@@ -249,10 +248,6 @@ export class AppClass extends PureComponent {
         const isThesisSubmissionPage =
             this.props.location.pathname === routes.pathConfig.hdrSubmission ||
             this.props.location.pathname === routes.pathConfig.sbsSubmission;
-        const isSearchPage =
-            this.props.location.pathname === routes.pathConfig.records.search ||
-            this.props.location.pathname === routes.pathConfig.records.search;
-        const showMenu = !isThesisSubmissionPage;
 
         const containerStyle = this.state.docked && !isThesisSubmissionPage ? { paddingLeft: 260 } : {};
         if (!isAuthorizedUser && (isThesisSubmissionPage || isFileUrl(this.props.location.pathname))) {
@@ -293,7 +288,6 @@ export class AppClass extends PureComponent {
             isHdrStudent: isHdrStudent,
         });
         const titleStyle = this.state.docked && !isThesisSubmissionPage ? { paddingLeft: 284 } : { paddingLeft: 0 };
-        const isIndex = this.props.history.location.pathname === '/';
         return (
             <Grid container className={classes.layoutFill}>
                 <Meta routesConfig={routesConfig} />
@@ -344,16 +338,16 @@ export class AppClass extends PureComponent {
                                 </Grid>
                             </Grid>
                             {/* Search */}
-                            {!isThesisSubmissionPage && !isSearchPage && (
-                                <Grid item xs={2} sm={4}>
-                                    <SearchComponent
-                                        autoFocus={isIndex}
-                                        isInHeader
-                                        showPrefixIcon
-                                        showMobileSearchButton
-                                    />
-                                </Grid>
-                            )}
+                            {/* {!isThesisSubmissionPage && !isSearchPage && (*/}
+                            {/*   <Grid item xs={2} sm={4}>*/}
+                            {/*       <SearchComponent*/}
+                            {/*           autoFocus={isIndex}*/}
+                            {/*           isInHeader*/}
+                            {/*           showPrefixIcon*/}
+                            {/*           showMobileSearchButton*/}
+                            {/*       />*/}
+                            {/*   </Grid>*/}
+                            {/* )}*/}
                             <Grid item>
                                 <AuthButton
                                     isAuthorizedUser={isAuthorizedUser}
@@ -377,25 +371,23 @@ export class AppClass extends PureComponent {
                         </Grid>
                     </Toolbar>
                 </AppBar>
-                {showMenu && (
-                    <MenuDrawer
-                        hasIncompleteWorks={hasIncompleteWorks || false}
-                        menuItems={menuItems}
-                        drawerOpen={this.state.docked || this.state.menuDrawerOpen}
-                        docked={this.state.docked}
-                        history={this.props.history}
-                        logoImage="largeLogo"
-                        logoText={locale.global.logo.label}
-                        logoLink={locale.global.logo.link}
-                        onToggleDrawer={this.toggleDrawer}
-                        isMobile={this.state.isMobile}
-                        locale={{
-                            skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                            skipNavTitle: locale.global.skipNav.title,
-                            closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                        }}
-                    />
-                )}
+                <MenuDrawer
+                    hasIncompleteWorks={hasIncompleteWorks || false}
+                    menuItems={menuItems}
+                    drawerOpen={this.state.docked || this.state.menuDrawerOpen}
+                    docked={this.state.docked}
+                    history={this.props.history}
+                    logoImage="largeLogo"
+                    logoText={locale.global.logo.label}
+                    logoLink={locale.global.logo.link}
+                    onToggleDrawer={this.toggleDrawer}
+                    isMobile={this.state.isMobile}
+                    locale={{
+                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                        skipNavTitle: locale.global.skipNav.title,
+                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                    }}
+                />
                 <div className="content-container" id="content-container" style={containerStyle}>
                     <Hidden smDown>
                         <ScrollTop show containerId="content-container" />

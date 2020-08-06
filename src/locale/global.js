@@ -27,7 +27,7 @@ export const EXPROXY_URL_PREFIX = 'http://ezproxy.library.uq.edu.au/login?url=';
 
 export default {
     global: {
-        title: `UQ eSpace ${process.env.TITLE_SUFFIX || ''}`,
+        title: `UQ Library ${process.env.TITLE_SUFFIX || ''}`,
         appTitle: (
             <a
                 href={`${pathConfig.index}`}
@@ -35,7 +35,7 @@ export default {
                 title="Click to return to the eSpace home page"
                 style={{ color: '#FFFFFF' }}
             >
-                UQ eSpace {process.env.TITLE_SUFFIX || ''}
+                UQ Library {process.env.TITLE_SUFFIX || ''}
             </a>
         ),
         logo: {
@@ -63,7 +63,7 @@ export default {
         },
         loginAlert: {
             title: 'You are not logged in',
-            message: 'Login to UQ eSpace for full search results and more services.',
+            message: 'Login to UQ Library for full search results and more services.',
             type: 'info_outline',
             actionButtonLabel: 'Click to login',
         },
@@ -106,19 +106,19 @@ export default {
                 'administrators or try again later.',
         },
         notRegisteredAuthorAlert: {
-            title: 'You are not registered in UQ eSpace as an author',
-            message: 'Please contact the UQ eSpace administrator to resolve this.',
+            title: 'You are not registered in UQ Library as an author',
+            message: 'Please contact the UQ Library administrator to resolve this.',
             type: 'info_outline',
         },
         noOrcidAlert: {
             title: 'ORCID ID REQUIRED',
-            message: 'You do not have an ORCID ID linked to your UQ eSpace.',
+            message: 'You do not have an ORCID ID linked to your UQ Library.',
             type: 'warning',
             actionButtonLabel: 'Click here to link or register',
         },
         forceOrcidLinkAlert: {
             title: 'ORCID ID REQUIRED',
-            message: 'Before you can start using UQ eSpace you have to link your UQ eSpace profile to your ORCID ID.',
+            message: 'Before you can start using UQ Library you have to link your UQ Library profile to your ORCID ID.',
             type: 'error_outline',
         },
         discardFormChangesConfirmation: {

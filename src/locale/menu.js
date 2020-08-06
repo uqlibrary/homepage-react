@@ -3,69 +3,9 @@ export default {
         index: {
             primaryText: 'Home',
         },
-        myDashboard: {
-            primaryText: 'My dashboard',
-            // secondaryText is set to user's email
-        },
-        myResearch: {
-            primaryText: 'My research',
-        },
-        myDatasets: {
-            primaryText: 'My research data',
-        },
-        authorStatistics: {
-            primaryText: 'Author statistics',
-        },
-        claimPublication: {
-            primaryText: 'Claim possible work',
-        },
-        incompleteRecords: {
-            primaryText: 'My incomplete works',
-        },
-        addMissingRecord: {
-            primaryText: 'Add a missing work',
-        },
-        addMissingDataset: {
-            primaryText: 'Add a missing dataset',
-        },
-        masquerade: {
-            primaryText: 'Masquerade',
-            secondaryText: 'as another user',
-        },
-        adminAdd: {
-            primaryText: 'Add a new record',
-            secondaryText: 'as an admin user',
-        },
-        search: {
-            primaryText: 'Search eSpace',
-            secondaryText: '',
-        },
         contact: {
             primaryText: 'Contact',
             secondaryText: '',
-        },
-        thirdPartyLookupTools: {
-            primaryText: 'Lookup tools',
-        },
-        legacyEspace: {
-            primaryText: 'Switch to old interface',
-        },
-        help: {
-            primaryText: 'Help',
-        },
-        collectionForm: {
-            primaryText: 'Add a missing collection',
-        },
-        communityForm: {
-            primaryText: 'Add a missing community',
-        },
-        unpublished: {
-            primaryText: 'Unpublished buffer',
-        },
-        digiteam: {
-            batchImport: {
-                primaryText: 'CSV ingest',
-            },
         },
     },
     footer: {
