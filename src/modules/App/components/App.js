@@ -54,9 +54,7 @@ const styles = theme => ({
         ...theme.palette.primary.main,
     },
     layoutCard: {
-        maxWidth: '1200px',
-        margin: '24px auto',
-        width: '90%',
+        width: '100%',
         padding: 0,
         [theme.breakpoints.down('sm')]: {
             margin: '0 auto 24px auto',

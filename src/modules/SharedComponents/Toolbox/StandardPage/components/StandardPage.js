@@ -1,15 +1,16 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+
+import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 import { HelpIcon } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 
 const styles = theme => ({
     layoutCard: {
-        maxWidth: '1200px',
-        margin: '24px auto',
-        width: '90%',
+        width: '100%',
         padding: 0,
     },
     layoutTitle: {
@@ -25,6 +26,14 @@ const styles = theme => ({
     helpIcon: {
         position: 'absolute',
         right: '10px',
+    },
+    connectFooter: {
+        backgroundColor: '#e5e5e5',
+        color: '#333',
+    },
+    minimalFooter: {
+        backgroundColor: '#51247A',
+        color: '#d2c1d7',
     },
 });
 
@@ -61,6 +70,12 @@ export class Page extends Component {
                 <Grid item xs={12} />
                 <Grid item className={classes.layoutCard}>
                     {children}
+                </Grid>
+                <Grid container className={classes.connectFooter}>
+                    <ConnectFooter />
+                </Grid>
+                <Grid container className={classes.minimalFooter}>
+                    <MinimalFooter />
                 </Grid>
             </Grid>
         );
