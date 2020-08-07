@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { ExternalLink } from 'modules/SharedComponents/ExternalLink';
 import { default as menuLocale } from 'locale/menu';
@@ -93,63 +93,34 @@ const styles = theme => {
     };
 };
 
-export class MenuDrawer extends Component {
-    static propTypes = {
-        menuItems: PropTypes.array.isRequired,
-        logoImage: PropTypes.string,
-        logoText: PropTypes.string,
-        logoLink: PropTypes.string,
-        drawerOpen: PropTypes.bool,
-        docked: PropTypes.bool,
-        onToggleDrawer: PropTypes.func,
-        history: PropTypes.object.isRequired,
-        locale: PropTypes.shape({
-            skipNavTitle: PropTypes.string,
-            skipNavAriaLabel: PropTypes.string,
-            closeMenuLabel: PropTypes.string,
-        }),
-        classes: PropTypes.object,
-        hasIncompleteWorks: PropTypes.bool,
-    };
-
-    shouldComponentUpdate(nextProps) {
-        return (
-            nextProps.logoImage !== this.props.logoImage ||
-            nextProps.logoText !== this.props.logoText ||
-            nextProps.drawerOpen !== this.props.drawerOpen ||
-            JSON.stringify(nextProps.locale) !== JSON.stringify(this.props.locale) ||
-            JSON.stringify(nextProps.menuItems) !== JSON.stringify(this.props.menuItems) ||
-            nextProps.docked !== this.props.docked
-        );
-    }
-
-    focusOnElementId = elementId => {
+export function MenuDrawer(props) {
+    const focusOnElementId = elementId => {
         if (document.getElementById(elementId)) {
             document.getElementById(elementId).focus();
         }
     };
 
-    skipMenuItems = () => {
-        this.focusOnElementId('afterMenuDrawer');
+    const skipMenuItems = () => {
+        focusOnElementId('afterMenuDrawer');
     };
 
-    navigateToLink = (url, target = '_blank') => {
+    const navigateToLink = (url, target = '_blank') => {
         if (!!url) {
             if (url.indexOf('http') === -1) {
                 // internal link
-                this.props.history.push(url);
+                props.history.push(url);
             } else {
                 // external link
                 window.open(url, target);
             }
         }
 
-        if (!this.props.docked) {
-            this.props.onToggleDrawer();
+        if (!props.docked) {
+            props.onToggleDrawer();
         }
     };
 
-    renderMenuItems = items =>
+    const renderMenuItems = items =>
         items.map((menuItem, index) =>
             menuItem.divider ? (
                 <Divider key={`menu_item_${index}`} />
@@ -157,13 +128,13 @@ export class MenuDrawer extends Component {
                 <span className="menu-item-container" key={`menu-item-${index}`}>
                     <ListItem
                         button
-                        onClick={this.navigateToLink.bind(this, menuItem.linkTo, menuItem.target)}
+                        onClick={() => navigateToLink(menuItem.linkTo, menuItem.target)}
                         id={`menu-item-${index}`}
                     >
                         <ListItemText
                             classes={{
-                                primary: this.props.classes.ListItemTextPrimary,
-                                secondary: this.props.classes.ListItemTextSecondary,
+                                primary: props.classes.ListItemTextPrimary,
+                                secondary: props.classes.ListItemTextSecondary,
                             }}
                             primary={menuItem.primaryText}
                             secondary={menuItem.secondaryText}
@@ -173,98 +144,125 @@ export class MenuDrawer extends Component {
             ),
         );
 
-    render() {
-        const { classes } = this.props;
-        const txt = menuLocale.footer;
-        const { menuItems, onToggleDrawer, drawerOpen, docked, logoImage, logoText, logoLink, locale } = this.props;
-        if (drawerOpen && !docked) {
-            // set focus on menu on mobile view if menu is opened
-            setTimeout(this.focusOnElementId.bind(this, 'mainMenu'), 0);
-        }
-        return (
-            <Drawer
-                classes={{
-                    docked: classes.docked,
-                    paper: classes.paper,
-                    paperAnchorDockedLeft: classes.paperAnchorDockedLeft,
-                }}
-                id="menudrawer"
-                variant={docked ? 'permanent' : 'temporary'}
-                open={drawerOpen}
-                anchor="left"
-                onClose={onToggleDrawer}
-            >
-                {drawerOpen && (
-                    <Fragment>
-                        <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
-                            <Grid
-                                container
-                                spacing={0}
-                                wrap={'nowrap'}
-                                alignContent={'center'}
-                                alignItems={'center'}
-                                classes={{ container: classes.header }}
-                            >
-                                <Grid item xs={10} sm={12} zeroMinWidth>
-                                    {logoImage && logoLink && logoText && (
-                                        <ExternalLink
-                                            href={logoLink}
-                                            title={logoText}
-                                            openInNewIcon={false}
-                                            className="noHover"
-                                        >
-                                            <div
-                                                className={logoImage}
-                                                style={{ height: 50, width: 160, margin: '8px auto' }}
-                                            >
-                                                {logoText}
-                                            </div>
-                                        </ExternalLink>
-                                    )}
-                                </Grid>
-                                <Hidden smUp>
-                                    <Grid item xs={2}>
-                                        <IconButton onClick={onToggleDrawer} aria-label={locale.closeMenuLabel}>
-                                            <KeyboardArrowLeft className={classes.iconButton} />
-                                        </IconButton>
-                                    </Grid>
-                                </Hidden>
-                            </Grid>
-                            {// Skip nav section
-                            docked && (
-                                <div
-                                    type="button"
-                                    className={classes.skipNav}
-                                    id="skipNav"
-                                    onClick={this.skipMenuItems}
-                                    onKeyPress={this.skipMenuItems}
-                                    tabIndex={1}
-                                    aria-label={locale.skipNavAriaLabel}
-                                >
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        onClick={this.skipMenuItems}
-                                        className="skipNavButton"
-                                        children={locale.skipNavTitle}
-                                        tabIndex={-1}
-                                    />
-                                </div>
-                            )}
-                            {this.renderMenuItems(menuItems)}
-                        </List>
-                        <div id="afterMenuDrawer" tabIndex={-1} />
-                        <div className={classes.mainMenuFooter}>
-                            {txt.cricos.prefix}
-                            <ExternalLink href={txt.cricos.link} title={txt.cricos.prefix} openInNewIcon={false}>
-                                {txt.cricos.number}
-                            </ExternalLink>
-                        </div>
-                    </Fragment>
-                )}
-            </Drawer>
-        );
+    const { classes } = props;
+    const txt = menuLocale.footer;
+    const { menuItems, onToggleDrawer, drawerOpen, docked, logoImage, logoText, logoLink, locale } = props;
+    if (drawerOpen && !docked) {
+        // set focus on menu on mobile view if menu is opened
+        setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
+    return (
+        <Drawer
+            classes={{
+                docked: classes.docked,
+                paper: classes.paper,
+                paperAnchorDockedLeft: classes.paperAnchorDockedLeft,
+            }}
+            id="menudrawer"
+            variant={docked ? 'permanent' : 'temporary'}
+            open={drawerOpen}
+            anchor="left"
+            onClose={onToggleDrawer}
+        >
+            {drawerOpen && (
+                <Fragment>
+                    <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
+                        <Grid
+                            container
+                            spacing={0}
+                            wrap={'nowrap'}
+                            alignContent={'center'}
+                            alignItems={'center'}
+                            classes={{ container: classes.header }}
+                        >
+                            <Grid item xs={10} sm={12} zeroMinWidth>
+                                {logoImage && logoLink && logoText && (
+                                    <ExternalLink
+                                        href={logoLink}
+                                        title={logoText}
+                                        openInNewIcon={false}
+                                        className="noHover"
+                                    >
+                                        <div
+                                            className={logoImage}
+                                            style={{ height: 50, width: 160, margin: '8px auto' }}
+                                        >
+                                            {logoText}
+                                        </div>
+                                    </ExternalLink>
+                                )}
+                            </Grid>
+                            <Hidden smUp>
+                                <Grid item xs={2}>
+                                    <IconButton onClick={onToggleDrawer} aria-label={locale.closeMenuLabel}>
+                                        <KeyboardArrowLeft className={classes.iconButton} />
+                                    </IconButton>
+                                </Grid>
+                            </Hidden>
+                        </Grid>
+                        {// Skip nav section
+                        docked && (
+                            <div
+                                type="button"
+                                className={classes.skipNav}
+                                id="skipNav"
+                                onClick={skipMenuItems}
+                                onKeyPress={skipMenuItems}
+                                tabIndex={1}
+                                aria-label={locale.skipNavAriaLabel}
+                            >
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={skipMenuItems}
+                                    className="skipNavButton"
+                                    children={locale.skipNavTitle}
+                                    tabIndex={-1}
+                                />
+                            </div>
+                        )}
+                        {renderMenuItems(menuItems)}
+                    </List>
+                    <div id="afterMenuDrawer" tabIndex={-1} />
+                    <div className={classes.mainMenuFooter}>
+                        {txt.cricos.prefix}
+                        <ExternalLink href={txt.cricos.link} title={txt.cricos.prefix} openInNewIcon={false}>
+                            {txt.cricos.number}
+                        </ExternalLink>
+                    </div>
+                </Fragment>
+            )}
+        </Drawer>
+    );
 }
 
-export default withStyles(styles, { withTheme: true })(MenuDrawer);
+MenuDrawer.propTypes = {
+    menuItems: PropTypes.array.isRequired,
+    logoImage: PropTypes.string,
+    logoText: PropTypes.string,
+    logoLink: PropTypes.string,
+    drawerOpen: PropTypes.bool,
+    docked: PropTypes.bool,
+    onToggleDrawer: PropTypes.func,
+    history: PropTypes.object.isRequired,
+    locale: PropTypes.shape({
+        skipNavTitle: PropTypes.string,
+        skipNavAriaLabel: PropTypes.string,
+        closeMenuLabel: PropTypes.string,
+    }),
+    classes: PropTypes.object,
+    hasIncompleteWorks: PropTypes.bool,
+};
+
+export function isSame(prevProps, nextProps) {
+    return (
+        nextProps.logoImage !== prevProps.logoImage ||
+        nextProps.logoText !== prevProps.logoText ||
+        nextProps.drawerOpen !== prevProps.drawerOpen ||
+        JSON.stringify(nextProps.locale) !== JSON.stringify(prevProps.locale) ||
+        JSON.stringify(nextProps.menuItems) !== JSON.stringify(prevProps.menuItems) ||
+        nextProps.docked !== prevProps.docked
+    );
+}
+
+export default React.memo(withStyles(styles, { withTheme: true })(MenuDrawer), isSame);
