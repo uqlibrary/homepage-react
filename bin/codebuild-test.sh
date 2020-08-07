@@ -30,7 +30,9 @@ fi
 # Not running code coverage check for feature branches.
 BRANCH_INCLUDES_CC=false
 if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild") ]]; then
-    BRANCH_INCLUDES_CC=true
+#    Skipping coverage for initial development/prototyping
+#    BRANCH_INCLUDES_CC=true
+  BRANCH_INCLUDES_CC=false
 fi
 
 export TZ='Australia/Brisbane'
