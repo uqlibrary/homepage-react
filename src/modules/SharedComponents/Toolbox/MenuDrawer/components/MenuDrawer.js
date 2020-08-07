@@ -143,8 +143,9 @@ export function MenuDrawer(props) {
     }
 
     const renderMenuItems = items =>
-        items.map((menuItem, index) =>
-            menuItem.divider ? (
+        items.map((menuItem, index) => {
+            const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
+            return menuItem.divider ? (
                 <Divider key={`menu_item_${index}`} />
             ) : (
                 <span className="menu-item-container" key={`menu-item-${index}`}>
@@ -157,14 +158,10 @@ export function MenuDrawer(props) {
                             primary={menuItem.primaryText}
                             secondary={menuItem.secondaryText}
                         />
-                        {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 && isSubMenuOpen[menuItem.id] && (
-                            <ExpandLess />
-                        )}
-                        {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 && !isSubMenuOpen[menuItem.id] && (
-                            <ExpandMore />
-                        )}
+                        {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
+                        {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
                     </ListItem>
-                    {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 && (
+                    {hasChildren && (
                         <Collapse in={isSubMenuOpen[menuItem.id]} timeout="auto" unmountOnExit>
                             <List component="div" disablePadding>
                                 {!!menuItem.submenuItems &&
@@ -191,8 +188,8 @@ export function MenuDrawer(props) {
                         </Collapse>
                     )}
                 </span>
-            ),
-        );
+            );
+        });
 
     const { classes } = props;
     const txt = menuLocale.footer;
