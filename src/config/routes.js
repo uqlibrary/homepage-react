@@ -76,8 +76,31 @@ export const getMenuConfig = (account, author, authorDetails, disabled) => {
     ];
     const publicPages = [
         {
-            linkTo: pathConfig.contact,
-            ...locale.menu.contact,
+            ...locale.menu.libraryServices,
+            public: true,
+        },
+        {
+            ...locale.menu.researchToolsTechniques,
+            public: true,
+        },
+        {
+            ...locale.menu.collections,
+            public: true,
+        },
+        {
+            ...locale.menu.borrowingRequesting,
+            public: true,
+        },
+        {
+            ...locale.menu.locationsHours,
+            public: true,
+        },
+        {
+            ...locale.menu.about,
+            public: true,
+        },
+        {
+            ...locale.menu.contactUs,
             public: true,
         },
     ];

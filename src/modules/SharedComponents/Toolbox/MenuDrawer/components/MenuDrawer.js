@@ -2,12 +2,14 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { ExternalLink } from 'modules/SharedComponents/ExternalLink';
 import { default as menuLocale } from 'locale/menu';
-
 // MUI 1
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
+import ExpandLess from '@material-ui/icons/ExpandLess';
+import ExpandMore from '@material-ui/icons/ExpandMore';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
@@ -94,6 +96,20 @@ const styles = theme => {
 };
 
 export function MenuDrawer(props) {
+    // an array so we can control each submenu separately
+    const initialSubMenus = [];
+    props.menuItems.forEach(item => (initialSubMenus[item.id] = false));
+    const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
+
+    const setParticularSubMenuOpen = (changingId, newOpen) => {
+        // array allows us to update one element of the open/closed array, to match one menuitem change
+        const newValue = [];
+        Object.keys(isSubMenuOpen).forEach(key => {
+            newValue[key] = key === changingId ? newOpen : initialSubMenus[key];
+        });
+        setSubMenuOpen(newValue);
+    };
+
     const focusOnElementId = elementId => {
         if (document.getElementById(elementId)) {
             document.getElementById(elementId).focus();
@@ -120,17 +136,19 @@ export function MenuDrawer(props) {
         }
     };
 
+    function clickMenuItem(menuItem) {
+        return !!menuItem.submenuItems && menuItem.submenuItems.length > 0
+            ? setParticularSubMenuOpen(menuItem.id, !isSubMenuOpen[menuItem.id])
+            : navigateToLink(menuItem.linkTo, menuItem.target);
+    }
+
     const renderMenuItems = items =>
         items.map((menuItem, index) =>
             menuItem.divider ? (
                 <Divider key={`menu_item_${index}`} />
             ) : (
                 <span className="menu-item-container" key={`menu-item-${index}`}>
-                    <ListItem
-                        button
-                        onClick={() => navigateToLink(menuItem.linkTo, menuItem.target)}
-                        id={`menu-item-${index}`}
-                    >
+                    <ListItem button onClick={() => clickMenuItem(menuItem)} id={`menu-item-${index}`}>
                         <ListItemText
                             classes={{
                                 primary: props.classes.ListItemTextPrimary,
@@ -139,7 +157,39 @@ export function MenuDrawer(props) {
                             primary={menuItem.primaryText}
                             secondary={menuItem.secondaryText}
                         />
+                        {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 && isSubMenuOpen[menuItem.id] && (
+                            <ExpandLess />
+                        )}
+                        {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 && !isSubMenuOpen[menuItem.id] && (
+                            <ExpandMore />
+                        )}
                     </ListItem>
+                    {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 && (
+                        <Collapse in={isSubMenuOpen[menuItem.id]} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                {!!menuItem.submenuItems &&
+                                    menuItem.submenuItems.length > 0 &&
+                                    menuItem.submenuItems.map(submenuItem => {
+                                        return (
+                                            <ListItem
+                                                button
+                                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
+                                                id={`menu-item-${index}`}
+                                            >
+                                                <ListItemText
+                                                    classes={{
+                                                        primary: props.classes.ListItemTextPrimary,
+                                                        secondary: props.classes.ListItemTextSecondary,
+                                                    }}
+                                                    primary={submenuItem.primaryText}
+                                                    secondary={submenuItem.secondaryText}
+                                                />
+                                            </ListItem>
+                                        );
+                                    })}
+                            </List>
+                        </Collapse>
+                    )}
                 </span>
             ),
         );
