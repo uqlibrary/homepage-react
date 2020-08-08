@@ -120,7 +120,7 @@ export function MenuDrawer(props) {
         focusOnElementId('afterMenuDrawer');
     };
 
-    const navigateToLink = (url, target = '_blank') => {
+    const navigateToLink = (url, target = '_top') => {
         if (!!url) {
             if (url.indexOf('http') === -1) {
                 // internal link
