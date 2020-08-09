@@ -9,7 +9,7 @@ class AppErrorBoundary extends React.Component {
 
     componentDidMount() {
         if (process.env.ENABLE_LOG) {
-            Raven.config('https://2e8809106d66495ba3023139b1bcfbe5@sentry.io/301681', {
+            Raven.config('https://88702b1b71434522871473c7e2490ed8@o136426.ingest.sentry.io/5379235', {
                 environment: process.env.BRANCH,
                 release: process.env.GIT_SHA,
                 whitelistUrls: [/library\.uq\.edu\.au/],
