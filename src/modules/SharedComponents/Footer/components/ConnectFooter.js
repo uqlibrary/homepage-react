@@ -130,6 +130,7 @@ export function ConnectFooter(props) {
     return (
         <Grid className={`${classes.connectFooter}`} container spacing={3}>
             <Grid item xs={12} md={4} className={`${classes.navigation}`}>
+                {/* if we continue with this display, it should be driven by the json that creates the megamenu... */}
                 <ul>
                     <li>
                         <a href="http://www.library.uq.edu.au">Library home</a>

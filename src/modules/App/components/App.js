@@ -336,16 +336,6 @@ export class AppClass extends PureComponent {
                                 </Grid>
                             </Grid>
                             {/* Search */}
-                            {/* {!isThesisSubmissionPage && !isSearchPage && (*/}
-                            {/*   <Grid item xs={2} sm={4}>*/}
-                            {/*       <SearchComponent*/}
-                            {/*           autoFocus={isIndex}*/}
-                            {/*           isInHeader*/}
-                            {/*           showPrefixIcon*/}
-                            {/*           showMobileSearchButton*/}
-                            {/*       />*/}
-                            {/*   </Grid>*/}
-                            {/* )}*/}
                             <Grid item>
                                 <AuthButton
                                     isAuthorizedUser={isAuthorizedUser}
