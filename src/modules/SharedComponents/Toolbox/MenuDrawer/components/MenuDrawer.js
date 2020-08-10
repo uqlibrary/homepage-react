@@ -149,7 +149,12 @@ export function MenuDrawer(props) {
                 <Divider key={`menu_item_${index}`} />
             ) : (
                 <span className="menu-item-container" key={`menu-item-${index}`}>
-                    <ListItem button onClick={() => clickMenuItem(menuItem)} id={`menu-item-${index}`}>
+                    <ListItem
+                        button
+                        key={`menu-item-${index}`}
+                        id={`menu-item-${index}`}
+                        onClick={() => clickMenuItem(menuItem)}
+                    >
                         <ListItemText
                             classes={{
                                 primary: props.classes.ListItemTextPrimary,
@@ -170,8 +175,9 @@ export function MenuDrawer(props) {
                                         return (
                                             <ListItem
                                                 button
-                                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
+                                                key={`menu-item-${index}`}
                                                 id={`menu-item-${index}`}
+                                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
                                             >
                                                 <ListItemText
                                                     classes={{
@@ -269,6 +275,17 @@ export function MenuDrawer(props) {
                             </div>
                         )}
                         {renderMenuItems(menuItems)}
+                        <Hidden lgUp>
+                            <ListItem button key="menu-item-close" id="menu-item-close" onClick={onToggleDrawer}>
+                                <ListItemText
+                                    classes={{
+                                        primary: props.classes.ListItemTextPrimary,
+                                        secondary: props.classes.ListItemTextSecondary,
+                                    }}
+                                    primary="Close menu"
+                                />
+                            </ListItem>
+                        </Hidden>
                     </List>
                     <div id="afterMenuDrawer" tabIndex={-1} />
                     <div className={classes.mainMenuFooter}>
@@ -298,17 +315,16 @@ MenuDrawer.propTypes = {
         closeMenuLabel: PropTypes.string,
     }),
     classes: PropTypes.object,
-    hasIncompleteWorks: PropTypes.bool,
 };
 
 export function isSame(prevProps, nextProps) {
     return (
-        nextProps.logoImage !== prevProps.logoImage ||
-        nextProps.logoText !== prevProps.logoText ||
-        nextProps.drawerOpen !== prevProps.drawerOpen ||
-        JSON.stringify(nextProps.locale) !== JSON.stringify(prevProps.locale) ||
-        JSON.stringify(nextProps.menuItems) !== JSON.stringify(prevProps.menuItems) ||
-        nextProps.docked !== prevProps.docked
+        nextProps.logoImage === prevProps.logoImage &&
+        nextProps.logoText === prevProps.logoText &&
+        nextProps.drawerOpen === prevProps.drawerOpen &&
+        JSON.stringify(nextProps.locale) === JSON.stringify(prevProps.locale) &&
+        JSON.stringify(nextProps.menuItems) === JSON.stringify(prevProps.menuItems) &&
+        nextProps.docked === prevProps.docked
     );
 }
 

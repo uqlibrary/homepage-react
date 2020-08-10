@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
-import { isFileUrl } from 'config/routes';
 import browserUpdate from 'browser-update';
 
 browserUpdate({
@@ -99,9 +98,6 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
-        // incomplete Records
-        loadingIncompleteRecordData: PropTypes.bool,
-        incompleteRecordList: PropTypes.object,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -148,9 +144,6 @@ export class AppClass extends PureComponent {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
         }
-        if (nextProps.account && this.props.account !== nextProps.account && !nextProps.accountLoading) {
-            this.props.actions.searchAuthorPublications({}, 'incomplete');
-        }
     }
 
     componentWillUnmount() {
@@ -173,15 +166,6 @@ export class AppClass extends PureComponent {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
-    };
-
-    redirectToOrcid = () => {
-        if (window.location.search.indexOf('?') >= 0 && window.location.search.indexOf('code') >= 0) {
-            // if user already received an orcid response - clean up query string by redirecting via window.location
-            window.location.assign(routes.pathConfig.authorIdentifiers.orcid.absoluteLink);
-        } else {
-            this.props.history.push(routes.pathConfig.authorIdentifiers.orcid.link);
-        }
     };
 
     isPublicPage = menuItems => {
@@ -214,44 +198,26 @@ export class AppClass extends PureComponent {
 
         const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
         const isAuthorLoading = this.props.accountLoading || this.props.accountAuthorLoading;
-        const isOrcidRequired =
-            this.props.author &&
-            Object.keys(this.props.author).length > 1 &&
-            !this.props.author.aut_orcid_id &&
-            this.props.location.pathname !== routes.pathConfig.authorIdentifiers.orcid.link;
         const isHdrStudent =
             !isAuthorLoading &&
             !!this.props.account &&
             this.props.account.class &&
             this.props.account.class.indexOf('IS_CURRENT') >= 0 &&
             this.props.account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
-        const isAuthor =
-            !isAuthorLoading &&
-            !!this.props.account &&
-            !!this.props.author &&
-            Object.keys(this.props.author).length > 1;
-        const hasIncompleteWorks = !!(
-            this.props.incompleteRecordList &&
-            this.props.incompleteRecordList.incomplete.publicationsListPagingData &&
-            this.props.incompleteRecordList.incomplete.publicationsListPagingData.total > 0
-        );
         const menuItems = routes.getMenuConfig(
             this.props.account,
             this.props.author,
             this.props.authorDetails,
-            isHdrStudent && !isAuthor,
-            hasIncompleteWorks,
+            isHdrStudent && !false,
+            false,
         );
         const isPublicPage = this.isPublicPage(menuItems);
-        const isThesisSubmissionPage =
-            this.props.location.pathname === routes.pathConfig.hdrSubmission ||
-            this.props.location.pathname === routes.pathConfig.sbsSubmission;
 
-        const containerStyle = this.state.docked && !isThesisSubmissionPage ? { paddingLeft: 260 } : {};
-        if (!isAuthorizedUser && (isThesisSubmissionPage || isFileUrl(this.props.location.pathname))) {
-            this.redirectUserToLogin()();
-            return <div />;
-        }
+        const containerStyle = this.state.docked && true ? { paddingLeft: 260 } : {};
+        // if (!isAuthorizedUser) {
+        //     this.redirectUserToLogin()();
+        //     return <div />;
+        // }
 
         let userStatusAlert = null;
         if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
@@ -265,27 +231,15 @@ export class AppClass extends PureComponent {
             userStatusAlert = {
                 ...locale.global.notRegisteredAuthorAlert,
             };
-        } else if (!isPublicPage && !isAuthorLoading && isOrcidRequired && !isHdrStudent && !isThesisSubmissionPage) {
-            // user is logged in, but doesn't have ORCID identifier
-            userStatusAlert = {
-                ...locale.global.noOrcidAlert,
-                action: this.redirectToOrcid,
-            };
-        } else if (!isPublicPage && !isThesisSubmissionPage && !isAuthorLoading && isOrcidRequired && isHdrStudent) {
-            // user is logged in, but doesn't have ORCID identifier
-            userStatusAlert = {
-                ...locale.global.forceOrcidLinkAlert,
-            };
         }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
             account: this.props.account,
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
-            forceOrcidRegistration: isOrcidRequired && isHdrStudent,
             isHdrStudent: isHdrStudent,
         });
-        const titleStyle = this.state.docked && !isThesisSubmissionPage ? { paddingLeft: 284 } : { paddingLeft: 0 };
+        const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
                 <Meta routesConfig={routesConfig} />
@@ -299,8 +253,9 @@ export class AppClass extends PureComponent {
                             wrap="nowrap"
                             justify="flex-start"
                         >
-                            {!this.state.docked && !this.state.menuDrawerOpen && !isThesisSubmissionPage && (
+                            {!this.state.docked && !this.state.menuDrawerOpen && true && (
                                 <Grid item>
+                                    {/* hamburger button */}
                                     <Tooltip
                                         title={locale.global.mainNavButton.tooltip}
                                         placement="bottom-end"
@@ -341,7 +296,7 @@ export class AppClass extends PureComponent {
                                     isAuthorizedUser={isAuthorizedUser}
                                     onClick={this.redirectUserToLogin(
                                         isAuthorizedUser,
-                                        isAuthorizedUser && !isHdrStudent && isThesisSubmissionPage,
+                                        isAuthorizedUser && !isHdrStudent && false,
                                     )}
                                     signInTooltipText={locale.global.authentication.signInText}
                                     signOutTooltipText={
@@ -360,7 +315,6 @@ export class AppClass extends PureComponent {
                     </Toolbar>
                 </AppBar>
                 <MenuDrawer
-                    hasIncompleteWorks={hasIncompleteWorks || false}
                     menuItems={menuItems}
                     drawerOpen={this.state.docked || this.state.menuDrawerOpen}
                     docked={this.state.docked}
