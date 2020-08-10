@@ -149,7 +149,12 @@ export function MenuDrawer(props) {
                 <Divider key={`menu_item_${index}`} />
             ) : (
                 <span className="menu-item-container" key={`menu-item-${index}`}>
-                    <ListItem button onClick={() => clickMenuItem(menuItem)} id={`menu-item-${index}`}>
+                    <ListItem
+                        button
+                        key={`menu-item-${index}`}
+                        id={`menu-item-${index}`}
+                        onClick={() => clickMenuItem(menuItem)}
+                    >
                         <ListItemText
                             classes={{
                                 primary: props.classes.ListItemTextPrimary,
@@ -170,8 +175,9 @@ export function MenuDrawer(props) {
                                         return (
                                             <ListItem
                                                 button
-                                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
+                                                key={`menu-item-${index}`}
                                                 id={`menu-item-${index}`}
+                                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
                                             >
                                                 <ListItemText
                                                     classes={{
