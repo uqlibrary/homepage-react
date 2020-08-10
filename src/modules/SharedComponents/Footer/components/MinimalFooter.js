@@ -26,7 +26,7 @@ const styles = theme => ({
         '& ul': {
             listStyle: 'none',
         },
-        '& h6': {
+        '& h3': {
             fontSize: '17px',
             fontWeight: '500',
             color: '#fff',
@@ -82,7 +82,7 @@ export function MinimalFooter(props) {
                         </div>
                     </Grid>
                     <Grid item xs={12} md={3} className={`${classes.footerLegalDetails}`}>
-                        <Typography variant={'h6'}>Emergency</Typography>
+                        <Typography variant={'h3'}>Emergency</Typography>
                         Phone:{' '}
                         <a href="tel:+61733653333" title="UQ Emergency phone number">
                             3365 3333

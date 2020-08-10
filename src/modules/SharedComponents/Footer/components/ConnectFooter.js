@@ -173,7 +173,7 @@ export function ConnectFooter(props) {
                     <Grid item>
                         <Typography
                             style={{ fontSize: '1.2rem', color: '#000', marginBottom: '10px', fontWeight: 400 }}
-                            variant={'h4'}
+                            variant={'h3'}
                         >
                             Connect with us
                         </Typography>
