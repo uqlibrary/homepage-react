@@ -72,7 +72,8 @@ const styles = theme => ({
         },
     },
     buttonSocial: {
-        textAlign: 'center',
+        maxWidth: '400px',
+        margin: '0 auto',
         '& div': {
             backgroundColor: '#000',
             borderRadius: '4px',
