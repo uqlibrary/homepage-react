@@ -99,9 +99,6 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
-        // incomplete Records
-        loadingIncompleteRecordData: PropTypes.bool,
-        incompleteRecordList: PropTypes.object,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -147,9 +144,6 @@ export class AppClass extends PureComponent {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
-        }
-        if (nextProps.account && this.props.account !== nextProps.account && !nextProps.accountLoading) {
-            this.props.actions.searchAuthorPublications({}, 'incomplete');
         }
     }
 
@@ -230,17 +224,12 @@ export class AppClass extends PureComponent {
             !!this.props.account &&
             !!this.props.author &&
             Object.keys(this.props.author).length > 1;
-        const hasIncompleteWorks = !!(
-            this.props.incompleteRecordList &&
-            this.props.incompleteRecordList.incomplete.publicationsListPagingData &&
-            this.props.incompleteRecordList.incomplete.publicationsListPagingData.total > 0
-        );
         const menuItems = routes.getMenuConfig(
             this.props.account,
             this.props.author,
             this.props.authorDetails,
             isHdrStudent && !isAuthor,
-            hasIncompleteWorks,
+            false,
         );
         const isPublicPage = this.isPublicPage(menuItems);
         const isThesisSubmissionPage =
@@ -360,7 +349,6 @@ export class AppClass extends PureComponent {
                     </Toolbar>
                 </AppBar>
                 <MenuDrawer
-                    hasIncompleteWorks={hasIncompleteWorks || false}
                     menuItems={menuItems}
                     drawerOpen={this.state.docked || this.state.menuDrawerOpen}
                     docked={this.state.docked}

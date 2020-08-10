@@ -304,7 +304,6 @@ MenuDrawer.propTypes = {
         closeMenuLabel: PropTypes.string,
     }),
     classes: PropTypes.object,
-    hasIncompleteWorks: PropTypes.bool,
 };
 
 export function isSame(prevProps, nextProps) {
