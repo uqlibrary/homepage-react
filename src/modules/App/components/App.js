@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
-import { isFileUrl } from 'config/routes';
 import browserUpdate from 'browser-update';
 
 browserUpdate({
@@ -169,15 +168,6 @@ export class AppClass extends PureComponent {
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
     };
 
-    redirectToOrcid = () => {
-        if (window.location.search.indexOf('?') >= 0 && window.location.search.indexOf('code') >= 0) {
-            // if user already received an orcid response - clean up query string by redirecting via window.location
-            window.location.assign(routes.pathConfig.authorIdentifiers.orcid.absoluteLink);
-        } else {
-            this.props.history.push(routes.pathConfig.authorIdentifiers.orcid.link);
-        }
-    };
-
     isPublicPage = menuItems => {
         return (
             menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length >
@@ -224,10 +214,10 @@ export class AppClass extends PureComponent {
         const isPublicPage = this.isPublicPage(menuItems);
 
         const containerStyle = this.state.docked && true ? { paddingLeft: 260 } : {};
-        if (!isAuthorizedUser && (true || isFileUrl(this.props.location.pathname))) {
-            this.redirectUserToLogin()();
-            return <div />;
-        }
+        // if (!isAuthorizedUser) {
+        //     this.redirectUserToLogin()();
+        //     return <div />;
+        // }
 
         let userStatusAlert = null;
         if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
@@ -241,24 +231,12 @@ export class AppClass extends PureComponent {
             userStatusAlert = {
                 ...locale.global.notRegisteredAuthorAlert,
             };
-        } else if (!isPublicPage && !isAuthorLoading && false && !isHdrStudent && true) {
-            // user is logged in, but doesn't have ORCID identifier
-            userStatusAlert = {
-                ...locale.global.noOrcidAlert,
-                action: this.redirectToOrcid,
-            };
-        } else if (!isPublicPage && true && !isAuthorLoading && false && isHdrStudent) {
-            // user is logged in, but doesn't have ORCID identifier
-            userStatusAlert = {
-                ...locale.global.forceOrcidLinkAlert,
-            };
         }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
             account: this.props.account,
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
-            forceOrcidRegistration: false && isHdrStudent,
             isHdrStudent: isHdrStudent,
         });
         const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
