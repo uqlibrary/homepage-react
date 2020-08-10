@@ -308,12 +308,12 @@ MenuDrawer.propTypes = {
 
 export function isSame(prevProps, nextProps) {
     return (
-        nextProps.logoImage !== prevProps.logoImage ||
-        nextProps.logoText !== prevProps.logoText ||
-        nextProps.drawerOpen !== prevProps.drawerOpen ||
-        JSON.stringify(nextProps.locale) !== JSON.stringify(prevProps.locale) ||
-        JSON.stringify(nextProps.menuItems) !== JSON.stringify(prevProps.menuItems) ||
-        nextProps.docked !== prevProps.docked
+        nextProps.logoImage === prevProps.logoImage &&
+        nextProps.logoText === prevProps.logoText &&
+        nextProps.drawerOpen === prevProps.drawerOpen &&
+        JSON.stringify(nextProps.locale) === JSON.stringify(prevProps.locale) &&
+        JSON.stringify(nextProps.menuItems) === JSON.stringify(prevProps.menuItems) &&
+        nextProps.docked === prevProps.docked
     );
 }
 
