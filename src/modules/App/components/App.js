@@ -208,36 +208,23 @@ export class AppClass extends PureComponent {
 
         const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
         const isAuthorLoading = this.props.accountLoading || this.props.accountAuthorLoading;
-        const isOrcidRequired =
-            this.props.author &&
-            Object.keys(this.props.author).length > 1 &&
-            !this.props.author.aut_orcid_id &&
-            this.props.location.pathname !== routes.pathConfig.authorIdentifiers.orcid.link;
         const isHdrStudent =
             !isAuthorLoading &&
             !!this.props.account &&
             this.props.account.class &&
             this.props.account.class.indexOf('IS_CURRENT') >= 0 &&
             this.props.account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
-        const isAuthor =
-            !isAuthorLoading &&
-            !!this.props.account &&
-            !!this.props.author &&
-            Object.keys(this.props.author).length > 1;
         const menuItems = routes.getMenuConfig(
             this.props.account,
             this.props.author,
             this.props.authorDetails,
-            isHdrStudent && !isAuthor,
+            isHdrStudent && !false,
             false,
         );
         const isPublicPage = this.isPublicPage(menuItems);
-        const isThesisSubmissionPage =
-            this.props.location.pathname === routes.pathConfig.hdrSubmission ||
-            this.props.location.pathname === routes.pathConfig.sbsSubmission;
 
-        const containerStyle = this.state.docked && !isThesisSubmissionPage ? { paddingLeft: 260 } : {};
-        if (!isAuthorizedUser && (isThesisSubmissionPage || isFileUrl(this.props.location.pathname))) {
+        const containerStyle = this.state.docked && true ? { paddingLeft: 260 } : {};
+        if (!isAuthorizedUser && (true || isFileUrl(this.props.location.pathname))) {
             this.redirectUserToLogin()();
             return <div />;
         }
@@ -254,13 +241,13 @@ export class AppClass extends PureComponent {
             userStatusAlert = {
                 ...locale.global.notRegisteredAuthorAlert,
             };
-        } else if (!isPublicPage && !isAuthorLoading && isOrcidRequired && !isHdrStudent && !isThesisSubmissionPage) {
+        } else if (!isPublicPage && !isAuthorLoading && false && !isHdrStudent && true) {
             // user is logged in, but doesn't have ORCID identifier
             userStatusAlert = {
                 ...locale.global.noOrcidAlert,
                 action: this.redirectToOrcid,
             };
-        } else if (!isPublicPage && !isThesisSubmissionPage && !isAuthorLoading && isOrcidRequired && isHdrStudent) {
+        } else if (!isPublicPage && true && !isAuthorLoading && false && isHdrStudent) {
             // user is logged in, but doesn't have ORCID identifier
             userStatusAlert = {
                 ...locale.global.forceOrcidLinkAlert,
@@ -271,10 +258,10 @@ export class AppClass extends PureComponent {
             authorDetails: this.props.authorDetails,
             account: this.props.account,
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
-            forceOrcidRegistration: isOrcidRequired && isHdrStudent,
+            forceOrcidRegistration: false && isHdrStudent,
             isHdrStudent: isHdrStudent,
         });
-        const titleStyle = this.state.docked && !isThesisSubmissionPage ? { paddingLeft: 284 } : { paddingLeft: 0 };
+        const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
                 <Meta routesConfig={routesConfig} />
@@ -288,8 +275,9 @@ export class AppClass extends PureComponent {
                             wrap="nowrap"
                             justify="flex-start"
                         >
-                            {!this.state.docked && !this.state.menuDrawerOpen && !isThesisSubmissionPage && (
+                            {!this.state.docked && !this.state.menuDrawerOpen && true && (
                                 <Grid item>
+                                    {/* hamburger button */}
                                     <Tooltip
                                         title={locale.global.mainNavButton.tooltip}
                                         placement="bottom-end"
@@ -330,7 +318,7 @@ export class AppClass extends PureComponent {
                                     isAuthorizedUser={isAuthorizedUser}
                                     onClick={this.redirectUserToLogin(
                                         isAuthorizedUser,
-                                        isAuthorizedUser && !isHdrStudent && isThesisSubmissionPage,
+                                        isAuthorizedUser && !isHdrStudent && false,
                                     )}
                                     signInTooltipText={locale.global.authentication.signInText}
                                     signOutTooltipText={
