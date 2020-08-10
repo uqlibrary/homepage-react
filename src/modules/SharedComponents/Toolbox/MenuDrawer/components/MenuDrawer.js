@@ -275,6 +275,17 @@ export function MenuDrawer(props) {
                             </div>
                         )}
                         {renderMenuItems(menuItems)}
+                        <Hidden lgUp>
+                            <ListItem button key="menu-item-close" id="menu-item-close" onClick={onToggleDrawer}>
+                                <ListItemText
+                                    classes={{
+                                        primary: props.classes.ListItemTextPrimary,
+                                        secondary: props.classes.ListItemTextSecondary,
+                                    }}
+                                    primary="Close menu"
+                                />
+                            </ListItem>
+                        </Hidden>
                     </List>
                     <div id="afterMenuDrawer" tabIndex={-1} />
                     <div className={classes.mainMenuFooter}>

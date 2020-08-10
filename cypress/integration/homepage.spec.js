@@ -8,6 +8,6 @@ context('Homepage', () => {
 
     it('Renders the tabbed panes as expected', () => {
         cy.visit('/');
-        checkMenuItemCount(2);
+        checkMenuItemCount(9);
     });
 });
