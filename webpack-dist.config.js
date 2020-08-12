@@ -58,7 +58,7 @@ const webpackConfig = {
     // The entry file. All your app roots from here.
     entry: {
         main: resolve(__dirname, './src/index.js'),
-        vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment', 'redux-form'],
+        vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
     },
     // Where you want the output to go
     output: {
@@ -121,8 +121,8 @@ const webpackConfig = {
             'process.env.APP_URL': JSON.stringify(config.url(process.env.CI_BRANCH)),
             'process.env.FULL_PATH': JSON.stringify(config.fullPath(process.env.CI_BRANCH)),
             'process.env.BRANCH': JSON.stringify(config.environment),
-            'process.env.ORCID_URL': JSON.stringify(config.orcidUrl),
-            'process.env.ORCID_CLIENT_ID': JSON.stringify(config.orcidClientId),
+            // 'process.env.ORCID_URL': JSON.stringify(config.orcidUrl),
+            // 'process.env.ORCID_CLIENT_ID': JSON.stringify(config.orcidClientId),
             'process.env.PUBLIC_PATH': JSON.stringify(config.basePath),
             'process.env.GOOGLE_MAPS_URL': JSON.stringify(config.googleMaps),
             'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),

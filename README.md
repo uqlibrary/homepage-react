@@ -296,7 +296,6 @@ you in as that user. Usernames can be found in the `src/mock/data/accounts.js` f
 
 - anonymous user: <http://localhost:3000/?user=anon>
 - researcher user: <http://localhost:3000/?user=uqresearcher>
-- researcher user without orcid: <http://localhost:3000/?user=uqnoauthid>
 - staff/not author user (has admin): <http://localhost:3000/?user=uqstaff>
 - undegrad student user: <http://localhost:3000/?user=s1111111>
 - postgrad student user: <http://localhost:3000/?user=s2222222>

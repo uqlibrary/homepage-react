@@ -13,8 +13,6 @@ const deployment = {
         environment: 'development',
         basePath: 'espace/', // updated in webpack
         publicPath: '',
-        orcidUrl: 'https://sandbox.orcid.org',
-        orcidClientId: 'APP-OXX6M6MBQ77GUVWX',
     },
     staging: {
         url: () => 'https://fez-staging.library.uq.edu.au/',
@@ -29,8 +27,6 @@ const deployment = {
         environment: 'staging',
         basePath: '',
         publicPath: '/',
-        orcidUrl: 'https://sandbox.orcid.org',
-        orcidClientId: 'APP-OXX6M6MBQ77GUVWX',
     },
     production: {
         url: () => 'https://espace.library.uq.edu.au/',
@@ -45,8 +41,6 @@ const deployment = {
         environment: 'production',
         basePath: '',
         publicPath: '/',
-        orcidUrl: 'https://orcid.org',
-        orcidClientId: 'APP-UIQ1ZTKAU17ZGZSC',
     },
 };
 
