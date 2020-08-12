@@ -29,11 +29,11 @@ fi
 
 # Not running code coverage check for feature branches.
 BRANCH_INCLUDES_CC=false
-if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild") ]]; then
+#if [[ ($CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "production" || $CI_BRANCH == "codebuild") ]]; then
 #    Skipping coverage for initial development/prototyping
 #    BRANCH_INCLUDES_CC=true
-  BRANCH_INCLUDES_CC=false
-fi
+#  BRANCH_INCLUDES_CC=false
+#fi
 
 export TZ='Australia/Brisbane'
 
@@ -67,7 +67,7 @@ case "$PIPE_NUM" in
     # Second runner for e2e. The first one is in the other pipeline.
     if [[ $BRANCH_RUNS_E2E == true ]]; then
         printf "\n--- \e[1mRUNNING E2E TESTS\e[0m ---\n"
-        npm run test:e2e:dashboard
+#        npm run test:e2e:dashboard
     fi
 
 ;;
@@ -100,7 +100,7 @@ case "$PIPE_NUM" in
         npm run test:unit:ci2
     else
         printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
-        npm run test:unit:ci2:skipcoverage
+#        npm run test:unit:ci2:skipcoverage
     fi
 
     if [[ $BRANCH_RUNS_E2E == true ]]; then

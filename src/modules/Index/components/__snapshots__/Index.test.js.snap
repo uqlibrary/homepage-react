@@ -3253,7 +3253,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                     "marginBottom": "10px",
                                                                   }
                                                                 }
-                                                                variant="h4"
+                                                                variant="h3"
                                                               >
                                                                 <ForwardRef(Typography)
                                                                   classes={
@@ -3298,10 +3298,10 @@ exports[`Index page should render placeholders 1`] = `
                                                                       "marginBottom": "10px",
                                                                     }
                                                                   }
-                                                                  variant="h4"
+                                                                  variant="h3"
                                                                 >
-                                                                  <h4
-                                                                    className="MuiTypography-root MuiTypography-h4"
+                                                                  <h3
+                                                                    className="MuiTypography-root MuiTypography-h3"
                                                                     style={
                                                                       Object {
                                                                         "color": "#000",
@@ -3312,7 +3312,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                     }
                                                                   >
                                                                     Connect with us
-                                                                  </h4>
+                                                                  </h3>
                                                                 </ForwardRef(Typography)>
                                                               </WithStyles(ForwardRef(Typography))>
                                                             </div>
@@ -5735,7 +5735,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               className="MuiGrid-root MinimalFooter-footerLegalDetails-150 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-3"
                                                             >
                                                               <WithStyles(ForwardRef(Typography))
-                                                                variant="h6"
+                                                                variant="h3"
                                                               >
                                                                 <ForwardRef(Typography)
                                                                   classes={
@@ -5772,13 +5772,13 @@ exports[`Index page should render placeholders 1`] = `
                                                                       "subtitle2": "MuiTypography-subtitle2",
                                                                     }
                                                                   }
-                                                                  variant="h6"
+                                                                  variant="h3"
                                                                 >
-                                                                  <h6
-                                                                    className="MuiTypography-root MuiTypography-h6"
+                                                                  <h3
+                                                                    className="MuiTypography-root MuiTypography-h3"
                                                                   >
                                                                     Emergency
-                                                                  </h6>
+                                                                  </h3>
                                                                 </ForwardRef(Typography)>
                                                               </WithStyles(ForwardRef(Typography))>
                                                               Phone:
