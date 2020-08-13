@@ -1,0 +1,65 @@
+version: 0.2
+
+env:
+  #variables:
+     # key: "value"
+     # key: "value"
+  parameter-store:
+    PT_PROJECT: "/CodeBuild/homepage/PT_PROJECT"
+    PT_TOKEN: "/CodeBuild/homepage/PT_TOKEN"
+    CYPRESS_RECORD_KEY: "/CodeBuild/homepage/CYPRESS_RECORD_KEY"
+    GOOGLE_MAPS_API_KEY: "/CodeBuild/homepage/GOOGLE_MAPS_API_KEY"
+    SENTRY_AUTH_TOKEN: "/CodeBuild/homepage/SENTRY_AUTH_TOKEN"
+    SENTRY_ORG: "/CodeBuild/homepage/SENTRY_ORG"
+    SENTRY_PROJECT: "/CodeBuild/homepage/SENTRY_PROJECT"
+  #secrets-manager:
+     # key: secret-id:json-key:version-stage:version-id
+     # key: secret-id:json-key:version-stage:version-id
+  #exported-variables:
+     # - variable
+     # - variable
+  #git-credential-helper: yes
+#batch:
+  #fast-fail: true
+  #build-list:
+  #build-matrix:
+  #build-graph:
+phases:
+  install:
+    runtime-versions:
+      java: openjdk11
+      nodejs: 12
+    #commands:
+      # - command
+      # - command
+  pre_build:
+    commands:
+      chmod a+x -R bin/* scripts/*.sh &&
+      bin/codebuild-git-wrapper.sh https://github.com/uqlibrary/homepage-react.git $CI_BRANCH &&
+      bin/codebuild-setup.sh
+  build:
+    commands:
+      set &&
+      bin/codebuild-test.sh
+  #post_build:
+    #commands:
+      # - command
+      # - command
+#reports:
+  #report-name-or-arn:
+    #files:
+      # - location
+      # - location
+    #base-directory: location
+    #discard-paths: yes
+    #file-format: JunitXml | CucumberJson
+#artifacts:
+  #files:
+    # - location
+    # - location
+  #name: $(date +%Y-%m-%d)
+  #discard-paths: yes
+  #base-directory: location
+#cache:
+  #paths:
+    # - paths
