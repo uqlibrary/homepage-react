@@ -6,7 +6,7 @@
   "chromeWebSecurity": false,
   "defaultCommandTimeout": 10000,
   "videoUploadOnPasses": false,
-  "projectId": "mvfnrv",
+  "projectId": "d2f4io",
   "blacklistHosts": ["www.googletagmanager.com"],
   "firefoxGcInterval": {
     "runMode": 1,
