@@ -14,9 +14,6 @@
   &.thomson::before, &.researcher::before {
        content: url(../../src/images/thomson_icon.svg);
   }
-  &.orcid::before {
-    content: url(../../src/images/orcid_icon.svg);
-  }
   &.publons::before {
     content: url(../../src/images/publons_icon.svg);
   }
@@ -91,9 +88,6 @@
     -webkit-border-radius: 50% !important;
     width: 40px;
     height: 40px;
-    &.orcid::before {
-      zoom: 0.8;
-    }
   }
 
   &.license .openExternalUrlIcon {

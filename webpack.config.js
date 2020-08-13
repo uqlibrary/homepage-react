@@ -12,9 +12,6 @@ const url = process.env.URL || 'localhost';
 const useMock = !!process.env.USE_MOCK || false;
 const publicPath = '';
 
-const orcidUrl = 'https://sandbox.orcid.org';
-const orcidClientId = 'APP-OXX6M6MBQ77GUVWX';
-
 module.exports = {
     mode: 'development',
     context: path.resolve(__dirname),
@@ -143,8 +140,6 @@ module.exports = {
             'process.env.USE_MOCK': JSON.stringify(useMock),
             'process.env.APP_URL': JSON.stringify(`http://${url}:${port}/`),
             'process.env.FULL_PATH': JSON.stringify(process.env.FULL_PATH),
-            'process.env.ORCID_URL': JSON.stringify(orcidUrl),
-            'process.env.ORCID_CLIENT_ID': JSON.stringify(orcidClientId),
             'process.env.TITLE_SUFFIX': JSON.stringify('LOCAL'),
             'process.env.ENABLE_LOG': JSON.stringify(
                 !!process.env.CI_BRANCH && process.env.NODE_ENV !== 'test' && process.env.NODE_ENV !== 'cc',

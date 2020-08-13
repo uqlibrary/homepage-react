@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
-import { viewRecordsConfig } from 'config/viewRecord';
 import { locale } from 'locale';
 
 const dompurify = require('dompurify');
@@ -109,31 +108,9 @@ export default class Meta extends PureComponent {
         }
     };
 
-    getMetaTags = publication => {
-        // Loop through each meta tag
-        return viewRecordsConfig.metaTags
-            .reduce((metaTags, metaTag) => {
-                const { searchKey, subkey, tags, url } = metaTag;
-                // Push dublin core DC.* and/or citation_* meta tags for each field
-                metaTags.push(
-                    ...tags.reduce((tagsContent, tag) => {
-                        const metaTagsContent = !!searchKey
-                            ? publication.hasOwnProperty(searchKey) &&
-                              this.getMetaTagsForFezRecordSearchKeys(publication[searchKey], subkey, url, tag)
-                            : publication.hasOwnProperty(subkey) &&
-                              this.getMetaTagsForOtherFields(publication[subkey], subkey, url, tag);
-
-                        return [...tagsContent, ...(metaTagsContent || [])];
-                    }, []),
-                );
-                return metaTags;
-            }, [])
-            .filter(tag => tag);
-    };
-
     render() {
         const { publication, routesConfig } = this.props;
-        const metaTags = !!publication && this.getMetaTags(publication);
+        const metaTags = [];
         const filteredRoutes =
             !publication &&
             routesConfig.filter(route =>

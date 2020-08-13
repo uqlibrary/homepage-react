@@ -799,11 +799,11 @@ describe('Backend routes method', () => {
         });
     });
 
-    it('should construct url for ORCID_SYNC_API', () => {
-        expect(routes.ORCID_SYNC_API()).toEqual({
-            apiUrl: 'external/orcid/jobs/sync',
-        });
-    });
+    // it('should construct url for ORCID_SYNC_API', () => {
+    //     expect(routes.ORCID_SYNC_API()).toEqual({
+    //         apiUrl: 'external/orcid/jobs/sync',
+    //     });
+    // });
 
     it('should construct url for UNLOCK_RECORD_API', () => {
         const pid = 'UQ:123456';

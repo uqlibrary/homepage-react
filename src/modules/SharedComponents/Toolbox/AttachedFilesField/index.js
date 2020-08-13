@@ -1,1 +1,0 @@
-export { AttachedFilesField } from './AttachedFilesField';

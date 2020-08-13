@@ -23,7 +23,6 @@ export const cache = setupCache({
             'records/search?title=',
             'records/search?doi=',
             'records/search?id=pmid:',
-            'orcid',
         ],
     },
 });
