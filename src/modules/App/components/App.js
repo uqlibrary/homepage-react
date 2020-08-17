@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
+import Header from './Header';
 
 browserUpdate({
     required: {
@@ -28,7 +29,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { MenuDrawer } from 'modules/SharedComponents/Toolbox/MenuDrawer';
 import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
-import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
+// import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
 import { Meta } from 'modules/SharedComponents/Meta';
@@ -37,14 +38,14 @@ import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialog
 import * as pages from './pages';
 import { AccountContext } from 'context';
 // MUI1
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
+// import Tooltip from '@material-ui/core/Tooltip';
+// import Fade from '@material-ui/core/Fade';
+// import AppBar from '@material-ui/core/AppBar';
+// import Toolbar from '@material-ui/core/Toolbar';
+// import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/icons/Menu';
+// import Typography from '@material-ui/core/Typography';
+// import Menu from '@material-ui/icons/Menu';
 import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -239,81 +240,87 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
+        // const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
                 <Meta routesConfig={routesConfig} />
-                <AppBar className="AppBar" color="primary" position="fixed">
-                    <Toolbar style={{ height: '70px' }}>
-                        <Grid
-                            container
-                            spacing={1}
-                            alignItems="center"
-                            direction="row"
-                            wrap="nowrap"
-                            justify="flex-start"
-                        >
-                            {!this.state.docked && !this.state.menuDrawerOpen && true && (
-                                <Grid item>
-                                    {/* hamburger button */}
-                                    <Tooltip
-                                        title={locale.global.mainNavButton.tooltip}
-                                        placement="bottom-end"
-                                        TransitionComponent={Fade}
-                                    >
-                                        <IconButton
-                                            aria-label={locale.global.mainNavButton.aria}
-                                            style={{ marginLeft: '-12px', marginRight: '12px' }}
-                                            onClick={this.toggleDrawer}
-                                            id={'main-menu-button'}
-                                        >
-                                            <Menu style={{ color: 'white' }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Grid>
-                            )}
-                            <Grid item xs style={titleStyle} className={classes.nowrap}>
-                                <Grid container spacing={2} alignItems="center" justify="flex-start" wrap={'nowrap'}>
-                                    {!this.state.docked && !this.state.menuDrawerOpen && (
-                                        <Hidden xsDown>
-                                            <Grid item>
-                                                <div id="logo" className="smallLogo" style={{ height: 66, width: 60 }}>
-                                                    {locale.global.logo.label}
-                                                </div>
-                                            </Grid>
-                                        </Hidden>
-                                    )}
-                                    <Grid item xs={'auto'} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        <Typography variant="h5" component={'h1'} noWrap className={classes.titleLink}>
-                                            {locale.global.appTitle}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            {/* Search */}
-                            <Grid item>
-                                <AuthButton
-                                    isAuthorizedUser={isAuthorizedUser}
-                                    onClick={this.redirectUserToLogin(
-                                        isAuthorizedUser,
-                                        isAuthorizedUser && !isHdrStudent && false,
-                                    )}
-                                    signInTooltipText={locale.global.authentication.signInText}
-                                    signOutTooltipText={
-                                        isAuthorizedUser
-                                            ? `${locale.global.authentication.signOutText} - ${this.props.account.name}`
-                                            : ''
-                                    }
-                                    ariaLabel={
-                                        isAuthorizedUser
-                                            ? locale.global.authentication.ariaOut
-                                            : locale.global.authentication.ariaIn
-                                    }
-                                />
-                            </Grid>
-                        </Grid>
-                    </Toolbar>
-                </AppBar>
+                {/* <AppBar className="AppBar" color="primary" position="fixed">*/}
+                {/*    <Toolbar style={{ height: '70px' }}>*/}
+                {/*        <Grid*/}
+                {/*            container*/}
+                {/*            spacing={1}*/}
+                {/*            alignItems="center"*/}
+                {/*            direction="row"*/}
+                {/*            wrap="nowrap"*/}
+                {/*            justify="flex-start"*/}
+                {/*        >*/}
+                {/*            {!this.state.docked && !this.state.menuDrawerOpen && true && (*/}
+                {/*                <Grid item>*/}
+                {/*                    /!* hamburger button *!/*/}
+                {/*                    <Tooltip*/}
+                {/*                        title={locale.global.mainNavButton.tooltip}*/}
+                {/*                        placement="bottom-end"*/}
+                {/*                        TransitionComponent={Fade}*/}
+                {/*                    >*/}
+                {/*                        <IconButton*/}
+                {/*                            aria-label={locale.global.mainNavButton.aria}*/}
+                {/*                            style={{ marginLeft: '-12px', marginRight: '12px' }}*/}
+                {/*                            onClick={this.toggleDrawer}*/}
+                {/*                            id={'main-menu-button'}*/}
+                {/*                        >*/}
+                {/*                            <Menu style={{ color: 'white' }} />*/}
+                {/*                        </IconButton>*/}
+                {/*                    </Tooltip>*/}
+                {/*                </Grid>*/}
+                {/*            )}*/}
+                {/*            <Grid item xs style={titleStyle} className={classes.nowrap}>*/}
+                {/* eslint-disable-next-line max-len */}
+                {/*                <Grid container spacing={2} alignItems="center" justify="flex-start" wrap={'nowrap'}>*/}
+                {/*                    {!this.state.docked && !this.state.menuDrawerOpen && (*/}
+                {/*                        <Hidden xsDown>*/}
+                {/*                            <Grid item>*/}
+                {/* eslint-disable-next-line max-len */}
+                {/*                                <div id="logo" className="smallLogo" style={{ height: 66, width: 60 }}>*/}
+                {/*                                    {locale.global.logo.label}*/}
+                {/*                                </div>*/}
+                {/*                            </Grid>*/}
+                {/*                        </Hidden>*/}
+                {/*                    )}*/}
+                {/* eslint-disable-next-line max-len */}
+                {/*                    <Grid item xs={'auto'} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>*/}
+                {/* eslint-disable-next-line max-len */}
+                {/*                        <Typography variant="h5" component={'h1'} noWrap className={classes.titleLink}>*/}
+                {/*                            {locale.global.appTitle}*/}
+                {/*                        </Typography>*/}
+                {/*                    </Grid>*/}
+                {/*                </Grid>*/}
+                {/*            </Grid>*/}
+                {/*            /!* Search *!/*/}
+                {/*            <Grid item>*/}
+                {/*                <AuthButton*/}
+                {/*                    isAuthorizedUser={isAuthorizedUser}*/}
+                {/*                    onClick={this.redirectUserToLogin(*/}
+                {/*                        isAuthorizedUser,*/}
+                {/*                        isAuthorizedUser && !isHdrStudent && false,*/}
+                {/*                    )}*/}
+                {/*                    signInTooltipText={locale.global.authentication.signInText}*/}
+                {/*                    signOutTooltipText={*/}
+                {/*                        isAuthorizedUser*/}
+                {/* eslint-disable-next-line max-len */}
+                {/*                            ? `${locale.global.authentication.signOutText} - ${this.props.account.name}`*/}
+                {/*                            : ''*/}
+                {/*                    }*/}
+                {/*                    ariaLabel={*/}
+                {/*                        isAuthorizedUser*/}
+                {/*                            ? locale.global.authentication.ariaOut*/}
+                {/*                            : locale.global.authentication.ariaIn*/}
+                {/*                    }*/}
+                {/*                />*/}
+                {/*            </Grid>*/}
+                {/*        </Grid>*/}
+                {/*    </Toolbar>*/}
+                {/* </AppBar>*/}
+                <Header isAuthorizedUser={isAuthorizedUser} />
                 <MenuDrawer
                     menuItems={menuItems}
                     drawerOpen={this.state.docked || this.state.menuDrawerOpen}
