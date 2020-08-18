@@ -10,8 +10,8 @@ class IndexComponent extends PureComponent {
         return (
             <StandardPage title={'Hello'}>
                 <Grid container>
-                    <Grid item xs={12} md={8}>
-                        Welcome to the new homepage.
+                    <Grid item xs={12} md={8} style={{ margin: '0 24px 300px 64px' }}>
+                        <p>Welcome to the new homepage.</p>
                     </Grid>
                 </Grid>
             </StandardPage>

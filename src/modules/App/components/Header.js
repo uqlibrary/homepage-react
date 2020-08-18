@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
 import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
 import SearchIcon from '@material-ui/icons/Search';
 import CloseIcon from '@material-ui/icons/Close';
@@ -74,16 +73,29 @@ const useStyles = makeStyles(
             paddingTop: 4,
             paddingBottom: 3,
             paddingLeft: 12,
-            paddingRight: 4,
+            paddingRight: 12,
             marginTop: 12,
+            marginRight: 12,
             backgroundColor: theme.palette.white.main,
             '&:focus': {
                 border: '1px solid red',
             },
         },
         searchTypes: {
-            fontSize: 12,
+            fontSize: 13,
             color: theme.palette.white.main,
+            marginBottom: -4,
+        },
+        radioIcon: {
+            root: {
+                color: 'red',
+                '&$checked': {
+                    color: 'green',
+                },
+            },
+            checked: {
+                color: 'red',
+            },
         },
     }),
     { withTheme: true },
@@ -92,9 +104,28 @@ const useStyles = makeStyles(
 export const Header = ({ isAuthorizedUser }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
+    const [searchType, setSearchType] = useState('1');
     const toggleHeader = () => {
         setExpandHeader(!expandHeader);
     };
+
+    const handleSearchTypeChange = event => {
+        setSearchType(event.target.value);
+    };
+
+    const UQRadio = withStyles({
+        root: {
+            color: 'white',
+            paddingTop: 0,
+            paddingBottom: 0,
+            paddingRight: 4,
+            paddingLeft: 0,
+            '&$checked': {
+                color: 'white',
+            },
+        },
+        checked: {},
+    })(props => <Radio color="default" {...props} />);
 
     return (
         <Grid container className={classes.gradient}>
@@ -173,10 +204,12 @@ export const Header = ({ isAuthorizedUser }) => {
                     <Grid item xs>
                         <Grid container spacing={2}>
                             <Grid item xs={'auto'} className={classes.searchTypes}>
-                                <Radio color={'recondary'} style={{ padding: 0 }} /> Search all UQ websites
+                                <UQRadio onChange={handleSearchTypeChange} value={'1'} checked={searchType === '1'} />
+                                Search all UQ websites
                             </Grid>
                             <Grid item xs={'auto'} className={classes.searchTypes}>
-                                <Radio color={'primary'} style={{ padding: 0 }} /> Search this site (library.uq.edu.au)
+                                <UQRadio onChange={handleSearchTypeChange} value={'2'} checked={searchType === '2'} />
+                                Search this site (library.uq.edu.au)
                             </Grid>
                             <Grid item xs />
                         </Grid>
@@ -185,12 +218,12 @@ export const Header = ({ isAuthorizedUser }) => {
 
                 <Grid container className={classes.searchInputBox} alignItems={'center'}>
                     <Grid item xs>
-                        <Input fullWidth disableUnderline />
+                        <Input fullWidth disableUnderline placeholder={'Enter your search terms'} />
                     </Grid>
                     <Grid item xs={'auto'}>
-                        <Button size={'small'}>
+                        <IconButton size={'small'}>
                             <SearchIcon />
-                        </Button>
+                        </IconButton>
                     </Grid>
                 </Grid>
             </Grid>
