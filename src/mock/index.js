@@ -41,7 +41,7 @@ mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
 mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
     .reply(() => {
         // mock account response
-        if (user === 'anon') {
+        if (user === 'public') {
             return [403, {}];
         } else if (mockData.accounts[user]) {
             return [200, mockData.accounts[user]];

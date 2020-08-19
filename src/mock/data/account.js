@@ -1,5 +1,6 @@
 export const accounts = {
     // staff, no espace data
+    public: {},
     uqstaff: {
         "id": "uqstaff",
         "class": ["libstaff", "IS_CURRENT"],

@@ -37,6 +37,7 @@ const handlers = {
 
     [actions.CURRENT_AUTHOR_FAILED]: state => ({
         ...state,
+        accountLoading: false,
         author: null,
         accountAuthorLoading: false,
     }),
@@ -79,6 +80,7 @@ const handlers = {
 
     [actions.CURRENT_AUTHOR_DETAILS_FAILED]: state => ({
         ...state,
+        accountLoading: false,
         authorDetails: null,
         accountAuthorDetailsLoading: false,
     }),

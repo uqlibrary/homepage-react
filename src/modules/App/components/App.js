@@ -127,8 +127,6 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
-        this.handleResize(this.state.mediaQuery);
-        this.state.mediaQuery.addListener(this.handleResize);
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -136,17 +134,6 @@ export class AppClass extends PureComponent {
             this.sessionExpiredConfirmationBox.showConfirmation();
         }
     }
-
-    componentWillUnmount() {
-        this.state.mediaQuery.removeListener(this.handleResize);
-    }
-
-    handleResize = mediaQuery => {
-        this.setState({
-            docked: mediaQuery.matches,
-        });
-    };
-
     toggleDrawer = () => {
         this.setState({
             menuDrawerOpen: !this.state.menuDrawerOpen,
@@ -203,12 +190,6 @@ export class AppClass extends PureComponent {
             false,
         );
         const isPublicPage = this.isPublicPage(menuItems);
-
-        // const containerStyle = this.state.docked && true ? { paddingLeft: 260 } : {};
-        // if (!isAuthorizedUser) {
-        //     this.redirectUserToLogin()();
-        //     return <div />;
-        // }
 
         let userStatusAlert = null;
         if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
