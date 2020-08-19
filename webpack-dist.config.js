@@ -32,7 +32,7 @@ const options = {
             disallow: ['/'],
         },
     ],
-    sitemap: 'https://espace.library.uq.edu.au/sitemap/sitemap-index.xml',
+    sitemap: 'https://library.uq.edu.au/sitemap/sitemap-index.xml',
 };
 
 // get branch name for current build, if running build locally CI_BRANCH is not set (it's set in codeship)
@@ -83,8 +83,8 @@ const webpackConfig = {
         }),
         new WebpackPwaManifest({
             name: config.title,
-            short_name: 'eSpace',
-            description: 'The University of Queensland`s institutional repository.',
+            short_name: 'UQ Library',
+            description: 'The University of Queensland Library.',
             background_color: '#49075E',
             theme_color: '#49075E',
             inject: true,
