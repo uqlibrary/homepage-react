@@ -1,4 +1,4 @@
-import { validation, openAccessConfig } from 'config';
+import { validation } from 'config';
 import { IN_CREATION, IN_DRAFT, IN_REVIEW, UNPUBLISHED, RETRACTED, SUBMITTED_FOR_APPROVAL } from 'config/general';
 
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
@@ -54,10 +54,6 @@ export const getStandardSearchParams = ({
     };
 };
 
-export const getOpenAccessSearchParams = ({ facets = {} }) => ({
-    ...(!!facets.showOpenAccessOnly ? { rek_oa_status: openAccessConfig.openAccessIds } : {}),
-});
-
 /**
  * getSearchType - based on data provided returns query string attribute
  * @param {string} pid/pubmed/string title to search
@@ -81,28 +77,14 @@ export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
-export const AUTHORS_SEARCH_API = ({ query }) => ({
-    apiUrl: 'fez-authors/search',
-    options: { params: { query: query, rule: 'lookup' } },
-});
 export const CURRENT_AUTHOR_API = () => ({ apiUrl: 'fez-authors' });
 export const AUTHOR_API = ({ authorId }) => ({ apiUrl: `fez-authors/${authorId}` });
 export const AUTHOR_DETAILS_API = ({ userId }) => ({
     apiUrl: `authors/details/${userId}`,
 });
-export const AUTHOR_ORCID_DETAILS_API = ({ userId, params }) => ({
-    apiUrl: `orcid/${userId}/request`,
-    options: { params: { ...params } },
-});
 
 // academic stats apis
 
-export const ACADEMIC_STATS_PUBLICATION_HINDEX_API = ({ userId }) => ({ apiUrl: `academic/${userId}/hindex` });
-export const AUTHOR_TRENDING_PUBLICATIONS_API = () => ({ apiUrl: 'records/my-trending' });
-
-// lookup apis
-export const GET_ACML_QUICK_TEMPLATES_API = () => ({ apiUrl: 'acml/quick-templates' });
-export const GET_NEWS_API = () => ({ apiUrl: 'fez-news' });
 export const VOCABULARIES_API = ({ id }) => ({ apiUrl: `vocabularies?cvo_ids=${id}` });
 export const GET_PUBLICATION_TYPES_API = () => ({ apiUrl: 'records/types' });
 
@@ -133,7 +115,6 @@ export const POSSIBLE_RECORDS_API = values => ({
         params: {
             rule: 'possible',
             ...getStandardSearchParams(values),
-            ...getOpenAccessSearchParams(values),
         },
     },
 });
@@ -141,24 +122,12 @@ export const POSSIBLE_RECORDS_API = values => ({
 // (POST: with data: [\'pid\' => \'UQ:1\', \'type\' => \'H\'])`);
 export const HIDE_POSSIBLE_RECORD_API = () => ({ apiUrl: 'records/search', options: { params: { rule: 'possible' } } });
 
-export const CURRENT_USER_RECORDS_API = (values, route = 'search') => ({
-    apiUrl: `records/${route}`,
-    options: {
-        params: {
-            rule: 'mine',
-            ...getStandardSearchParams(values),
-            ...getOpenAccessSearchParams(values),
-        },
-    },
-});
-
 export const INCOMPLETE_RECORDS_API = values => ({
     apiUrl: 'records/search',
     options: {
         params: {
             rule: 'incomplete',
             ...getStandardSearchParams(values),
-            ...getOpenAccessSearchParams(values),
         },
     },
 });
@@ -170,11 +139,9 @@ export const AUTHOR_PUBLICATIONS_STATS_ONLY_API = values => ({
             rule: 'mine',
             'filters[stats_only]': true,
             ...getStandardSearchParams(values),
-            ...getOpenAccessSearchParams(values),
         },
     },
 });
-export const TRENDING_PUBLICATIONS_API = () => ({ apiUrl: 'records/trending' });
 
 export const formatSearchQueryParams = ({ result, key, searchQueryParams }) => {
     const { value } = searchQueryParams[key];
@@ -238,7 +205,6 @@ export const SEARCH_INTERNAL_RECORDS_API = (query, route = 'search') => {
 
     searchQueryParams = {
         ...values.searchQueryParams,
-        ...getOpenAccessSearchParams(values),
     };
 
     let advancedSearchQueryParams = null;
@@ -299,20 +265,8 @@ export const COLLECTIONS_BY_COMMUNITY_LOOKUP_API = ({ communityPid }) => ({
     apiUrl: `communities/${communityPid}/collections`,
 });
 
-export const BATCH_IMPORT_DIRECTORIES_API = () => ({
-    apiUrl: 'external/records/batch-import/directories',
-});
-
 export const BATCH_IMPORT_API = () => ({
     apiUrl: 'external/records/batch-import',
-});
-
-export const ISSN_LINKS_API = ({ type, issn }) => ({
-    apiUrl: `tool/lookup/local/${type}/${issn}`,
-});
-
-export const ORCID_SYNC_API = () => ({
-    apiUrl: 'external/orcid/jobs/sync',
 });
 
 export const UNLOCK_RECORD_API = ({ pid }) => ({

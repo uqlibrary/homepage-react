@@ -1,6 +1,5 @@
 import React from 'react';
 import locale from 'locale/validationErrors';
-import { isAdded } from 'helpers/datastreams';
 import Immutable from 'immutable';
 import { MEDIATED_ACCESS_ID, ORG_TYPE_NOT_SET } from 'config/general';
 
@@ -327,12 +326,6 @@ export const getErrorAlertProps = ({
         }
     }
     return alertProps;
-};
-
-export const isFileValid = ({ files: { blacklist } }, isAdmin = false, isAdminEdit = false) => dataStream => {
-    const prefixMatch = !!dataStream.dsi_dsid.match(blacklist.namePrefixRegex);
-    const suffixMatch = !!dataStream.dsi_dsid.match(blacklist.nameSuffixRegex);
-    return (!prefixMatch && !suffixMatch && isAdded(dataStream)) || (isAdmin && !isAdminEdit);
 };
 
 export const isAuthorOrEditorSelected = (data, isAdmin = false) => {

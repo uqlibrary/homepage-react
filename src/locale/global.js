@@ -110,17 +110,6 @@ export default {
             message: 'Please contact the UQ Library administrator to resolve this.',
             type: 'info_outline',
         },
-        noOrcidAlert: {
-            title: 'ORCID ID REQUIRED',
-            message: 'You do not have an ORCID ID linked to your UQ Library.',
-            type: 'warning',
-            actionButtonLabel: 'Click here to link or register',
-        },
-        forceOrcidLinkAlert: {
-            title: 'ORCID ID REQUIRED',
-            message: 'Before you can start using UQ Library you have to link your UQ Library profile to your ORCID ID.',
-            type: 'error_outline',
-        },
         discardFormChangesConfirmation: {
             confirmationTitle: 'Discard changes?',
             confirmationMessage: 'Are you sure you want to navigate away and discard all changes to the form?',
