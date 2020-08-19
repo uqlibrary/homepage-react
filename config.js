@@ -1,10 +1,10 @@
 // webpack configuration for prod/staging/dev builds
 const deployment = {
     development: {
-        url: branch => `https://homepage-development.library.uq.edu.au/homepage/${branch}/#/`,
-        fullPath: branch => `https://homepage-development.library.uq.edu.au/homepage/${branch}/#`,
+        url: branch => `https://homepage-development.library.uq.edu.au/${branch}/#/`,
+        fullPath: branch => `https://homepage-development.library.uq.edu.au/${branch}/#`,
         api: 'https://api.library.uq.edu.au/staging/',
-        auth_login: 'https://homepage-staging.library.uq.edu.au/login.php',
+        auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: '',
         title: 'UQ Library (DEVELOPMENT)',
@@ -18,7 +18,7 @@ const deployment = {
         url: () => 'https://homepage-staging.library.uq.edu.au/',
         fullPath: () => 'https://homepage-staging.library.uq.edu.au',
         api: 'https://api.library.uq.edu.au/staging/',
-        auth_login: 'https://homepage-staging.library.uq.edu.au/login.php',
+        auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: '',
         title: 'UQ Library (STAGING)',
@@ -29,10 +29,10 @@ const deployment = {
         publicPath: '/',
     },
     production: {
-        url: () => 'https://https://homepage-production.library.uq.edu.au//',
-        fullPath: () => 'https://https://homepage-production.library.uq.edu.au/',
+        url: () => 'https://homepage-production.library.uq.edu.au/',
+        fullPath: () => 'https://homepage-production.library.uq.edu.au',
         api: 'https://api.library.uq.edu.au/v1/',
-        auth_login: 'https://https://homepage-production.library.uq.edu.au//login.php',
+        auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: '',
         title: 'UQ Library',
