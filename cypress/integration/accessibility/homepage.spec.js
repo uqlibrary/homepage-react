@@ -8,7 +8,7 @@ context('ACCESSIBILITY', () => {
         cy.checkA11y('div#content-container', {
             reportName: 'Homepage',
             scopeName: 'Content',
-            includedImpacts: ['moderate', 'serious', 'critical'],
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
 });
