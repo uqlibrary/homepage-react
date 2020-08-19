@@ -1,8 +1,8 @@
 // webpack configuration for prod/staging/dev builds
 const deployment = {
     development: {
-        url: branch => `https://development.library.uq.edu.au/homepage/${branch}/#/`,
-        fullPath: branch => `https://development.library.uq.edu.au/homepage/${branch}/#`,
+        url: branch => `https://homepage-development.library.uq.edu.au/homepage/${branch}/#/`,
+        fullPath: branch => `https://homepage-development.library.uq.edu.au/homepage/${branch}/#`,
         api: 'https://api.library.uq.edu.au/staging/',
         auth_login: 'https://fez-staging.library.uq.edu.au/login.php',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
@@ -15,10 +15,10 @@ const deployment = {
         publicPath: '',
     },
     staging: {
-        url: () => 'https://fez-staging.library.uq.edu.au/',
-        fullPath: () => 'https://fez-staging.library.uq.edu.au',
+        url: () => 'https://homepage-staging.library.uq.edu.au/',
+        fullPath: () => 'https://homepage-staging.library.uq.edu.au',
         api: 'https://api.library.uq.edu.au/staging/',
-        auth_login: 'https://fez-staging.library.uq.edu.au/login.php',
+        auth_login: 'https://homepage-staging.library.uq.edu.au/login.php',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: 'GTM-K597ZS',
         title: 'UQ Library (STAGING)',
@@ -29,10 +29,10 @@ const deployment = {
         publicPath: '/',
     },
     production: {
-        url: () => 'https://library.uq.edu.au/',
-        fullPath: () => 'https://library.uq.edu.au',
+        url: () => 'https://https://homepage-production.library.uq.edu.au//',
+        fullPath: () => 'https://https://homepage-production.library.uq.edu.au/',
         api: 'https://api.library.uq.edu.au/v1/',
-        auth_login: 'https://library.uq.edu.au/login.php',
+        auth_login: 'https://https://homepage-production.library.uq.edu.au//login.php',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
         gtm: 'GTM-T4NPC25',
         title: 'UQ Library',
