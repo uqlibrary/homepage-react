@@ -67,7 +67,6 @@ export class Page extends Component {
                         <HelpIcon {...help} />
                     </div>
                 )}
-                <Grid item xs={12} />
                 <Grid item className={classes.layoutCard}>
                     {children}
                 </Grid>
