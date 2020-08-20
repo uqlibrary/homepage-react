@@ -34,6 +34,7 @@ class IndexComponent extends PureComponent {
                                     autoPlay
                                     slideDuration={2500}
                                     slideInterval={8000}
+                                    showBullets
                                 />
                             </div>
                         </Grid>

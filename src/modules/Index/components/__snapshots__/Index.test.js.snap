@@ -1986,7 +1986,7 @@ exports[`Index page should render placeholders 1`] = `
                                                     renderPlayPauseButton={[Function]}
                                                     renderRightNav={[Function]}
                                                     renderThumbInner={null}
-                                                    showBullets={false}
+                                                    showBullets={true}
                                                     showFullscreenButton={false}
                                                     showIndex={false}
                                                     showNav={true}
@@ -2187,6 +2187,40 @@ exports[`Index page should render placeholders 1`] = `
                                                               </div>
                                                             </div>
                                                           </Swipeable>
+                                                          <div
+                                                            className="image-gallery-bullets"
+                                                          >
+                                                            <div
+                                                              aria-label="Bullet Navigation"
+                                                              className="image-gallery-bullets-container"
+                                                              role="navigation"
+                                                            >
+                                                              <button
+                                                                aria-label="Go to Slide 1"
+                                                                aria-pressed="true"
+                                                                className="image-gallery-bullet active"
+                                                                key="bullet-https://app.library.uq.edu.au/file/public/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg-0"
+                                                                onClick={[Function]}
+                                                                type="button"
+                                                              />
+                                                              <button
+                                                                aria-label="Go to Slide 2"
+                                                                aria-pressed="false"
+                                                                className="image-gallery-bullet"
+                                                                key="bullet-https://app.library.uq.edu.au/file/public/8bb2b540-dc32-11ea-9810-53ef2bd221b3.jpg-1"
+                                                                onClick={[Function]}
+                                                                type="button"
+                                                              />
+                                                              <button
+                                                                aria-label="Go to Slide 3"
+                                                                aria-pressed="false"
+                                                                className="image-gallery-bullet"
+                                                                key="bullet-https://app.library.uq.edu.au/file/public/adaa3870-dad2-11ea-ae85-8b875639d1ad.jpg-2"
+                                                                onClick={[Function]}
+                                                                type="button"
+                                                              />
+                                                            </div>
+                                                          </div>
                                                         </div>
                                                       </div>
                                                     </div>
