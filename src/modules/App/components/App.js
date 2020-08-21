@@ -214,6 +214,15 @@ export class AppClass extends PureComponent {
         // const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
+                <Grid item xs={12}>
+                    <Alert
+                        title="TEST ALERT"
+                        message="This is just a quick test"
+                        type="warning"
+                        dismissAction={() => null}
+                        allowDismiss
+                    />
+                </Grid>
                 <Meta routesConfig={routesConfig} />
                 <Header isAuthorizedUser={isAuthorizedUser} />
                 <div className="content-container" id="content-container">
