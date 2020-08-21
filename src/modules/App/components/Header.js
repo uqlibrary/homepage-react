@@ -5,10 +5,21 @@ import { makeStyles, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
 import SearchIcon from '@material-ui/icons/Search';
+import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import CloseIcon from '@material-ui/icons/Close';
 import Input from '@material-ui/core/Input';
+import Tooltip from '@material-ui/core/Tooltip';
 import Radio from '@material-ui/core/Radio';
 const logo = require('../../../../public/images/uq-lockup-landscape--reversed.svg');
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import ImportContactsIcon from '@material-ui/icons/ImportContacts';
+import MailIcon from '@material-ui/icons/Mail';
+import ChatIcon from '@material-ui/icons/Chat';
+import PhoneIcon from '@material-ui/icons/Phone';
+import DescriptionIcon from '@material-ui/icons/Description';
+import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+
 const useStyles = makeStyles(
     theme => ({
         gradient: {
@@ -113,6 +124,7 @@ const useStyles = makeStyles(
 export const Header = ({ isAuthorizedUser }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
+    const [anchorEl, setAnchorEl] = React.useState(null);
     const [searchType, setSearchType] = useState('1');
     const toggleHeader = () => {
         setExpandHeader(!expandHeader);
@@ -120,6 +132,14 @@ export const Header = ({ isAuthorizedUser }) => {
 
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
+    };
+
+    const handleClick = event => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
     };
 
     const UQRadio = withStyles({
@@ -174,11 +194,6 @@ export const Header = ({ isAuthorizedUser }) => {
                     </Grid>
                     <Grid item xs={'auto'} className={classes.links}>
                         <a href="#" className={classes.link}>
-                            Library
-                        </a>
-                    </Grid>
-                    <Grid item xs={'auto'} className={classes.links}>
-                        <a href="#" className={classes.link}>
                             Give now
                         </a>
                     </Grid>
@@ -188,19 +203,91 @@ export const Header = ({ isAuthorizedUser }) => {
                         </a>
                     </Grid>
                     <Grid item xs={'auto'}>
-                        <IconButton onClick={toggleHeader}>
-                            {!expandHeader ? (
-                                <SearchIcon className={classes.icon} />
-                            ) : (
-                                <CloseIcon className={classes.icon} />
-                            )}
-                        </IconButton>
+                        <Tooltip
+                            id="auth-button"
+                            title={'Search UQ'}
+                            placement="bottom-start"
+                            TransitionProps={{ timeout: 300 }}
+                        >
+                            <IconButton onClick={toggleHeader}>
+                                {!expandHeader ? (
+                                    <SearchIcon className={classes.icon} />
+                                ) : (
+                                    <CloseIcon className={classes.icon} />
+                                )}
+                            </IconButton>
+                        </Tooltip>
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        <Tooltip
+                            id="auth-button"
+                            title={'Ask us'}
+                            placement="bottom-start"
+                            TransitionProps={{ timeout: 300 }}
+                        >
+                            <IconButton onClick={handleClick}>
+                                <QuestionAnswer className={classes.icon} />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            id="simple-menu"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <Grid container spacing={0} style={{ width: 320 }}>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        FAQ
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <ChatIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Chat
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <MailIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Email us
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <PhoneIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Phone us
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <DescriptionIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Contact form
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Exam support
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <MenuItem onClick={handleClose}>
+                                        <span style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                                            More ways to contact us
+                                        </span>
+                                    </MenuItem>
+                                </Grid>
+                            </Grid>
+                        </Menu>
                     </Grid>
                     <Grid item xs={'auto'}>
                         <AuthButton
                             isAuthorizedUser={isAuthorizedUser}
-                            signInTooltipText={'login'}
-                            signOutTooltipText={'logout'}
+                            signInTooltipText={'Login to UQ'}
+                            signOutTooltipText={'Log out of UQ'}
                         />
                     </Grid>
                 </Grid>

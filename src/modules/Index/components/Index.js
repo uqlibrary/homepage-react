@@ -64,7 +64,9 @@ export const Index = ({}) => {
                     </Grid>
                     <Grid item xs={2}>
                         <FormControl style={{ minWidth: '100%' }}>
-                            <InputLabel id="demo-simple-select-label">Search within</InputLabel>
+                            <InputLabel id="demo-simple-select-label" autoFocus>
+                                Search within
+                            </InputLabel>
                             <Select
                                 labelId="demo-simple-select-label"
                                 id="demo-simple-select"

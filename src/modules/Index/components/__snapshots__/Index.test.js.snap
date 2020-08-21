@@ -1608,9 +1608,11 @@ exports[`Index page should render placeholders 1`] = `
                                                   }
                                                 >
                                                   <WithStyles(ForwardRef(InputLabel))
+                                                    autoFocus={true}
                                                     id="demo-simple-select-label"
                                                   >
                                                     <ForwardRef(InputLabel)
+                                                      autoFocus={true}
                                                       classes={
                                                         Object {
                                                           "animated": "MuiInputLabel-animated",
@@ -1630,6 +1632,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       id="demo-simple-select-label"
                                                     >
                                                       <WithStyles(ForwardRef(FormLabel))
+                                                        autoFocus={true}
                                                         className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
                                                         classes={
                                                           Object {
@@ -1644,6 +1647,7 @@ exports[`Index page should render placeholders 1`] = `
                                                         id="demo-simple-select-label"
                                                       >
                                                         <ForwardRef(FormLabel)
+                                                          autoFocus={true}
                                                           className="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink"
                                                           classes={
                                                             Object {
@@ -1661,6 +1665,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           id="demo-simple-select-label"
                                                         >
                                                           <label
+                                                            autoFocus={true}
                                                             className="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiFormLabel-filled"
                                                             data-shrink={true}
                                                             id="demo-simple-select-label"
