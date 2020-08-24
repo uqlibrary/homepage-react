@@ -27,15 +27,12 @@ const useStyles = makeStyles(
         },
         topHeader: {
             height: 90,
-            maxWidth: 1200,
+            maxWidth: 1224,
             marginLeft: 'auto',
             marginRight: 'auto',
             overflow: 'hidden !important',
             transition: 'all 0.3s ease-in-out',
-            paddingTop: 24,
-            paddingRight: 0,
-            paddingBottom: 24,
-            paddingLeft: 0,
+            padding: 24,
         },
         bottomHeaderShow: {
             height: 120,

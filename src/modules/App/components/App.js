@@ -24,7 +24,6 @@ browserUpdate({
 
 // application components
 import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { ScrollTop } from 'modules/SharedComponents/ScrollTop';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
@@ -36,7 +35,6 @@ import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
@@ -226,9 +224,6 @@ export class AppClass extends PureComponent {
                 <Meta routesConfig={routesConfig} />
                 <Header isAuthorizedUser={isAuthorizedUser} />
                 <div className="content-container" id="content-container">
-                    <Hidden smDown>
-                        <ScrollTop show containerId="content-container" />
-                    </Hidden>
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}

@@ -15,10 +15,16 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import ToolTip from '@material-ui/core/ToolTip';
 import Typography from '@material-ui/core/Typography';
-import { mui1theme } from 'config';
+import AppBar from '@material-ui/core/AppBar';
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 const moment = require('moment');
+import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
+import Fab from '@material-ui/core/Fab';
+import FeedbackIcon from '@material-ui/icons/Feedback';
+import Box from '@material-ui/core/Box';
 const useStyles = makeStyles(
     theme => ({
         searchPanel: {
@@ -34,6 +40,11 @@ const useStyles = makeStyles(
             '&a:link, a:hover, a:visited, a:active': {
                 color: theme.palette.primary.main + ' !important',
             },
+        },
+        ChatIcon: {
+            position: 'absolute',
+            bottom: theme.spacing(2),
+            right: theme.spacing(2),
         },
     }),
     { withTheme: true },
@@ -55,17 +66,61 @@ export const Index = ({}) => {
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
-            return 'Good morning';
+            return (
+                <span>
+                    Good
+                    <br />
+                    morning
+                    <br />
+                </span>
+            );
         } else if (time >= 12 && time < 18) {
-            return 'Good afternoon';
+            return (
+                <span>
+                    Good
+                    <br />
+                    afternoon
+                    <br />
+                </span>
+            );
         } else {
-            return 'Good evening';
+            return (
+                <span>
+                    Good
+                    <br />
+                    evening
+                    <br />
+                </span>
+            );
         }
     };
-    console.log(greeting());
+    const TabPanel = props => {
+        // eslint-disable-next-line react/prop-types
+        const { children, value, index, ...other } = props;
+        return (
+            <div
+                role="tabpanel"
+                hidden={value !== index}
+                id={`simple-tabpanel-${index}`}
+                aria-labelledby={`simple-tab-${index}`}
+                {...other}
+            >
+                {value === index && (
+                    <Box p={3}>
+                        <Typography>{children}</Typography>
+                    </Box>
+                )}
+            </div>
+        );
+    };
     return (
         <StandardPage>
-            <div className="layout-card">
+            <Fab size="small" color="secondary" aria-label="help" className={classes.ChatIcon} onClick={null}>
+                <ToolTip title={'Ask a librarian'} placement={'left'}>
+                    <FeedbackIcon />
+                </ToolTip>
+            </Fab>
+            <div className="layout-card" style={{ marginTop: 0 }}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs>
                         <TextField
@@ -91,7 +146,14 @@ export const Index = ({}) => {
                                 className={classes.selectInput}
                                 // onChange={handleChange}
                             >
-                                <MenuItem value={10}>Library</MenuItem>
+                                <MenuItem value={10}>
+                                    <LocalLibraryIcon
+                                        fontSize={'small'}
+                                        color={'secondary'}
+                                        style={{ marginRight: 6 }}
+                                    />
+                                    Library
+                                </MenuItem>
                                 <MenuItem value={20}>Books</MenuItem>
                                 <MenuItem value={30}>Journal articles</MenuItem>
                                 <MenuItem value={30}>Journal articles</MenuItem>
@@ -143,8 +205,8 @@ export const Index = ({}) => {
                         <Grid
                             container
                             spacing={1}
-                            alignItems={'stretch'}
                             style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 24, height: '100%' }}
+                            justify={'flex-start'}
                         >
                             <Grid item>
                                 <Typography variant={'h3'} component={'h4'} color={'primary'}>
@@ -169,7 +231,7 @@ export const Index = ({}) => {
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '30px' }}>
+                                <Grid item xs style={{ lineHeight: '24px' }}>
                                     Current/Overdue book loans <b>4 / 1</b>
                                 </Grid>
                                 <Grid item xs={'auto'}>
@@ -188,50 +250,58 @@ export const Index = ({}) => {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={3}>
-                        <StandardCard
-                            title={'Another panel'}
-                            fullHeight
-                            customTitleBgColor={'#51247A'}
-                            customTitleColor={mui1theme.palette.white.main}
-                            customTextColor={'rgba(0, 0, 0, 0.87)'}
-                        >
-                            <p>This is a side panel</p>
+                    <Grid item xs={6}>
+                        <StandardCard noPadding noHeader fullHeight>
+                            <AppBar position="static">
+                                <Tabs value={0} onChange={null} aria-label="simple tabs example">
+                                    <Tab label="Computer availability" style={{ minWidth: 0 }} color={'primary'} />
+                                    <Tab label="Library hours" style={{ minWidth: 0 }} />
+                                    <Tab label="Training" style={{ minWidth: 0 }} />
+                                </Tabs>
+                            </AppBar>
+                            <TabPanel value={0} index={0}>
+                                Available computers
+                            </TabPanel>
+                            <TabPanel value={0} index={1}>
+                                Library hours
+                            </TabPanel>
+                            <TabPanel value={0} index={2}>
+                                Training
+                            </TabPanel>
                         </StandardCard>
                     </Grid>
-                    <Grid item xs={3}>
-                        <StandardCard
-                            title={'Another panel'}
-                            fullHeight
-                            customTitleBgColor={'#51247A'}
-                            customTitleColor={mui1theme.palette.white.main}
-                            customTextColor={'rgba(0, 0, 0, 0.87)'}
-                        >
-                            <p>This is a side panel</p>
+                    <Grid item xs={6}>
+                        <StandardCard fullHeight noPadding noHeader style={{ marginBottom: 0 }}>
+                            <Grid container alignItems={'stretch'}>
+                                <Grid item={3}>
+                                    <div
+                                        style={{
+                                            height: 200,
+                                            width: 200,
+                                            background:
+                                                'url(https://www.eharmony.com/dating-advice/wp-content/uploads/2013/07/dating-a-librarian.jpg)',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'right',
+                                            marginBottom: -24,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs style={{ padding: 16 }}>
+                                    <Typography color={'primary'} variant={'h5'}>
+                                        Your Librarian
+                                    </Typography>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et libero
+                                        ultrices nisl fringilla lobortis suscipit vitae lacus.
+                                    </p>
+                                </Grid>
+                            </Grid>
                         </StandardCard>
                     </Grid>
-                    <Grid item xs={3}>
-                        <StandardCard
-                            title={'Another panel'}
-                            fullHeight
-                            customTitleBgColor={'#51247A'}
-                            customTitleColor={mui1theme.palette.white.main}
-                            customTextColor={'rgba(0, 0, 0, 0.87)'}
-                        >
-                            <p>This is a side panel</p>
-                        </StandardCard>
-                    </Grid>
-                    <Grid item xs={3}>
-                        <StandardCard
-                            title={'Another panel'}
-                            fullHeight
-                            customTitleBgColor={'#51247A'}
-                            customTitleColor={mui1theme.palette.white.main}
-                            customTextColor={'rgba(0, 0, 0, 0.87)'}
-                        >
-                            <p>This is a side panel</p>
-                        </StandardCard>
-                    </Grid>
+                </Grid>
+                <Grid container>
+                    <Grid item style={{ marginBottom: 300 }} />
                 </Grid>
             </div>
         </StandardPage>
