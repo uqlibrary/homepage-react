@@ -1,5 +1,5 @@
 import React from 'react';
-// import { PropTypes } from 'prop-types';
+import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -12,7 +12,13 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
-
+import IconButton from '@material-ui/core/IconButton';
+import ToolTip from '@material-ui/core/ToolTip';
+import Typography from '@material-ui/core/Typography';
+import { mui1theme } from 'config';
+import PrintIcon from '@material-ui/icons/Print';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
+const moment = require('moment');
 const useStyles = makeStyles(
     theme => ({
         searchPanel: {
@@ -46,6 +52,17 @@ export const Index = ({}) => {
             original: 'https://app.library.uq.edu.au/file/public/adaa3870-dad2-11ea-ae85-8b875639d1ad.jpg',
         },
     ];
+    const greeting = () => {
+        const time = moment().format('H');
+        if (time < 12) {
+            return 'Good morning';
+        } else if (time >= 12 && time < 18) {
+            return 'Good afternoon';
+        } else {
+            return 'Good evening';
+        }
+    };
+    console.log(greeting());
     return (
         <StandardPage>
             <div className="layout-card">
@@ -53,7 +70,7 @@ export const Index = ({}) => {
                     <Grid item xs>
                         <TextField
                             id="standard-basic"
-                            placeholder="Search the UQ Library to find books, articles, databases, conferences and more..."
+                            placeholder="Search the UQ Library..."
                             fullWidth
                             InputProps={{
                                 classes: {
@@ -107,7 +124,7 @@ export const Index = ({}) => {
                     <Grid item xs />
                 </Grid>
 
-                <Grid container spacing={2}>
+                <Grid container spacing={6}>
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
                             <ImageGallery
@@ -122,8 +139,96 @@ export const Index = ({}) => {
                             />
                         </div>
                     </Grid>
-                    <Grid item xs={4}>
-                        <StandardCard title={'Side'} fullHeight>
+                    <Grid item xs={4} style={{ paddingLeft: 24, paddingTop: 28 }}>
+                        <Grid
+                            container
+                            spacing={1}
+                            alignItems={'stretch'}
+                            style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 24, height: '100%' }}
+                        >
+                            <Grid item>
+                                <Typography variant={'h3'} component={'h4'} color={'primary'}>
+                                    {greeting()} John
+                                </Typography>
+                            </Grid>
+                            <Grid container spacing={1}>
+                                <Grid item xs style={{ lineHeight: '30px' }}>
+                                    Current print balance <b>$12.50</b>
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <ToolTip
+                                        id="auth-button"
+                                        title={'Manage your print balance'}
+                                        placement="left"
+                                        TransitionProps={{ timeout: 300 }}
+                                    >
+                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
+                                            <PrintIcon />
+                                        </IconButton>
+                                    </ToolTip>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1}>
+                                <Grid item xs style={{ lineHeight: '30px' }}>
+                                    Current/Overdue book loans <b>4 / 1</b>
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <ToolTip
+                                        id="auth-button"
+                                        title={'Manage your book loans'}
+                                        placement="left"
+                                        TransitionProps={{ timeout: 300 }}
+                                    >
+                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
+                                            <MenuBookIcon />
+                                        </IconButton>
+                                    </ToolTip>
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+
+                    <Grid item xs={3}>
+                        <StandardCard
+                            title={'Another panel'}
+                            fullHeight
+                            customTitleBgColor={'#51247A'}
+                            customTitleColor={mui1theme.palette.white.main}
+                            customTextColor={'rgba(0, 0, 0, 0.87)'}
+                        >
+                            <p>This is a side panel</p>
+                        </StandardCard>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <StandardCard
+                            title={'Another panel'}
+                            fullHeight
+                            customTitleBgColor={'#51247A'}
+                            customTitleColor={mui1theme.palette.white.main}
+                            customTextColor={'rgba(0, 0, 0, 0.87)'}
+                        >
+                            <p>This is a side panel</p>
+                        </StandardCard>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <StandardCard
+                            title={'Another panel'}
+                            fullHeight
+                            customTitleBgColor={'#51247A'}
+                            customTitleColor={mui1theme.palette.white.main}
+                            customTextColor={'rgba(0, 0, 0, 0.87)'}
+                        >
+                            <p>This is a side panel</p>
+                        </StandardCard>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <StandardCard
+                            title={'Another panel'}
+                            fullHeight
+                            customTitleBgColor={'#51247A'}
+                            customTitleColor={mui1theme.palette.white.main}
+                            customTextColor={'rgba(0, 0, 0, 0.87)'}
+                        >
                             <p>This is a side panel</p>
                         </StandardCard>
                     </Grid>
@@ -133,7 +238,9 @@ export const Index = ({}) => {
     );
 };
 
-Index.propTypes = {};
+Index.propTypes = {
+    account: PropTypes.object,
+};
 
 Index.defaultProps = {};
 

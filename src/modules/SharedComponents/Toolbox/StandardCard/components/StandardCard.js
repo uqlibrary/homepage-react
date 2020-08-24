@@ -47,6 +47,7 @@ export class Cards extends Component {
         customBackgroundColor: PropTypes.any,
         customTitleColor: PropTypes.any,
         customTitleBgColor: PropTypes.any,
+        customTextColor: PropTypes.any,
         squareTop: PropTypes.bool,
         smallTitle: PropTypes.bool,
         standardCardId: PropTypes.string,
@@ -71,6 +72,7 @@ export class Cards extends Component {
             ? { backgroundColor: this.props.customTitleBgColor }
             : null;
         const customTitle = !!this.props.customTitleColor ? { color: this.props.customTitleColor } : null;
+        const customText = !!this.props.customTextColor ? { color: `${this.props.customTextColor} !important` } : null;
         const fullHeight = !!this.props.fullHeight ? { height: '100%' } : null;
         const squareTop = !!this.props.squareTop ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 } : null;
         const standardCardId = !!this.props.standardCardId
@@ -80,11 +82,11 @@ export class Cards extends Component {
             <Card
                 data-testid={standardCardId}
                 className={`${classes.card} StandardCard`}
-                style={{ ...customBG, ...customTitle, ...fullHeight }}
+                style={{ ...customBG, ...fullHeight }}
             >
                 {!this.props.noHeader && (
                     <CardHeader
-                        style={{ ...squareTop, ...customTitleBG }}
+                        style={{ ...squareTop, ...customTitleBG, ...customTitle }}
                         title={title}
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
@@ -102,7 +104,8 @@ export class Cards extends Component {
                 )}
                 <CardContent
                     data-testid={`${standardCardId}-content`}
-                    className={(this.props.noPadding && classes.cardContentNoPadding) || ''}
+                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}`}
+                    style={{ ...customText }}
                 >
                     {children}
                 </CardContent>
