@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import ToolTip from '@material-ui/core/ToolTip';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
@@ -121,9 +121,9 @@ export const Index = ({}) => {
     return (
         <StandardPage>
             <Fab size="small" color="secondary" aria-label="help" className={classes.ChatIcon} onClick={null}>
-                <ToolTip title={'Ask a librarian'} placement={'left'}>
+                <Tooltip title={'Ask a librarian'} placement={'left'}>
                     <FeedbackIcon />
-                </ToolTip>
+                </Tooltip>
             </Fab>
             <div className="layout-card" style={{ marginTop: 12 }}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
@@ -226,7 +226,7 @@ export const Index = ({}) => {
                                     Current print balance <b>$12.50</b>
                                 </Grid>
                                 <Grid item xs={'auto'}>
-                                    <ToolTip
+                                    <Tooltip
                                         id="auth-button"
                                         title={'Manage your print balance'}
                                         placement="left"
@@ -235,7 +235,7 @@ export const Index = ({}) => {
                                         <IconButton size={'small'} variant={'contained'} color={'primary'}>
                                             <PrintIcon />
                                         </IconButton>
-                                    </ToolTip>
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
@@ -243,7 +243,7 @@ export const Index = ({}) => {
                                     Current book loans <b>6</b>
                                 </Grid>
                                 <Grid item xs={'auto'}>
-                                    <ToolTip
+                                    <Tooltip
                                         id="auth-button"
                                         title={'Manage your book loans'}
                                         placement="left"
@@ -252,7 +252,7 @@ export const Index = ({}) => {
                                         <IconButton size={'small'} variant={'contained'} color={'primary'}>
                                             <MenuBookIcon />
                                         </IconButton>
-                                    </ToolTip>
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
                             <Grid container spacing={1}>
@@ -260,7 +260,7 @@ export const Index = ({}) => {
                                     Overdue book loans <b>1</b>
                                 </Grid>
                                 <Grid item xs={'auto'}>
-                                    <ToolTip
+                                    <Tooltip
                                         id="auth-button"
                                         title={'Manage your book loans'}
                                         placement="left"
@@ -269,7 +269,7 @@ export const Index = ({}) => {
                                         <IconButton size={'small'} variant={'contained'} color={'primary'}>
                                             <NotificationImportantIcon />
                                         </IconButton>
-                                    </ToolTip>
+                                    </Tooltip>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -279,7 +279,7 @@ export const Index = ({}) => {
                         <StandardCard noPadding noHeader fullHeight>
                             <AppBar position="static">
                                 <Tabs value={0} onChange={null} aria-label="simple tabs example">
-                                    <ToolTip
+                                    <Tooltip
                                         title={'St Lucia location detected - click to change your location'}
                                         placement={'top'}
                                     >
@@ -294,7 +294,7 @@ export const Index = ({}) => {
                                             }}
                                             color={'secondary'}
                                         />
-                                    </ToolTip>
+                                    </Tooltip>
                                     <Tab
                                         value={0}
                                         label="Computer availability"
