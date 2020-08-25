@@ -38,6 +38,7 @@ import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
+import Megamenu from './Megamenu';
 
 const styles = theme => ({
     appBG: {
@@ -216,6 +217,16 @@ export class AppClass extends PureComponent {
             <Grid container className={classes.layoutFill}>
                 <Meta routesConfig={routesConfig} />
                 <Header isAuthorizedUser={isAuthorizedUser} />
+                <Megamenu
+                    menuItems={menuItems}
+                    history={this.props.history}
+                    isMobile={this.state.isMobile}
+                    locale={{
+                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                        skipNavTitle: locale.global.skipNav.title,
+                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                    }}
+                />
                 <div className="content-container" id="content-container">
                     <Hidden smDown>
                         <ScrollTop show containerId="content-container" />
