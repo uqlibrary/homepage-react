@@ -131,6 +131,75 @@ export function Megamenu(props) {
             : navigateToLink(menuItem.linkTo, menuItem.target);
     }
 
+    const renderMenuChildren = (menuItem, index) => {
+        const menuGroups = [];
+        menuItem.submenuItems
+            // .sort((a, b) => (a.column || null) - (b.column || null))
+            .map(submenuItem => {
+                const index = submenuItem.column || 1;
+                if (!menuGroups[index]) {
+                    menuGroups[index] = [];
+                }
+                menuGroups[index].push(submenuItem);
+            });
+        // .map(submenuItem => {
+        //     const index = submenuItem.column || 1;
+        //     if (!menuGroups[index]) {
+        //         menuGroups[index] = [];
+        //     }
+        //     menuGroups[index].push(submenuItem);
+        // });
+
+        return (
+            <Collapse
+                in={isSubMenuOpen[menuItem.id]}
+                timeout="auto"
+                unmountOnExit
+                style={{ position: 'absolute', backgroundColor: '#f2f2f2' }}
+            >
+                <div style={{ display: 'flex' }}>
+                    {menuGroups.length > 0 &&
+                        menuGroups.map((menuGroup, index1) => {
+                            return (
+                                <List
+                                    component="div"
+                                    disablePadding
+                                    key={`menu-group-${index1}`}
+                                    id={`menu-group-${index1}`}
+                                    style={{ flexDirection: 'column' }}
+                                >
+                                    {!!menuGroup &&
+                                        menuGroup.length > 0 &&
+                                        menuGroup.map(submenuItem => {
+                                            return (
+                                                <ListItem
+                                                    button
+                                                    key={`menu-item-${index}`}
+                                                    id={`menu-item-${index}`}
+                                                    onClick={() =>
+                                                        navigateToLink(submenuItem.linkTo, submenuItem.target)
+                                                    }
+                                                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                                                >
+                                                    <ListItemText
+                                                        classes={{
+                                                            primary: props.classes.ListItemTextPrimary,
+                                                            secondary: props.classes.ListItemTextSecondary,
+                                                        }}
+                                                        primary={submenuItem.primaryText}
+                                                        secondary={submenuItem.secondaryText}
+                                                    />
+                                                </ListItem>
+                                            );
+                                        })}
+                                </List>
+                            );
+                        })}
+                </div>
+            </Collapse>
+        );
+    };
+
     const renderMenuItems = items =>
         items.map((menuItem, index) => {
             const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
@@ -157,33 +226,7 @@ export function Megamenu(props) {
                         {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
                         {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
                     </ListItem>
-                    {hasChildren && (
-                        <Collapse in={isSubMenuOpen[menuItem.id]} timeout="auto" unmountOnExit>
-                            <List component="div" disablePadding>
-                                {!!menuItem.submenuItems &&
-                                    menuItem.submenuItems.length > 0 &&
-                                    menuItem.submenuItems.map(submenuItem => {
-                                        return (
-                                            <ListItem
-                                                button
-                                                key={`menu-item-${index}`}
-                                                id={`menu-item-${index}`}
-                                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
-                                            >
-                                                <ListItemText
-                                                    classes={{
-                                                        primary: props.classes.ListItemTextPrimary,
-                                                        secondary: props.classes.ListItemTextSecondary,
-                                                    }}
-                                                    primary={submenuItem.primaryText}
-                                                    secondary={submenuItem.secondaryText}
-                                                />
-                                            </ListItem>
-                                        );
-                                    })}
-                            </List>
-                        </Collapse>
-                    )}
+                    {hasChildren && renderMenuChildren(menuItem, index)}
                 </span>
             );
         });
