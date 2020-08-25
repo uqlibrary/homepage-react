@@ -13,7 +13,10 @@ export const styles = theme => ({
         fontWeight: theme.typography.fontWeightRegular,
     },
     cardContentNoPadding: {
-        padding: 0,
+        paddingTop: '0px !important',
+        paddingBottom: '0px !important',
+        paddingLeft: '0px !important',
+        paddingRight: '0px !important',
     },
     cardHeaderPrimary: {
         color: theme.palette.white.main,
@@ -52,6 +55,7 @@ export class Cards extends Component {
         smallTitle: PropTypes.bool,
         standardCardId: PropTypes.string,
         subCard: PropTypes.bool,
+        style: PropTypes.object,
     };
 
     render() {
@@ -64,6 +68,7 @@ export class Cards extends Component {
             accentHeader,
             smallTitle = false,
             subCard = false,
+            style = {},
         } = this.props;
         const customBG = !!this.props.customBackgroundColor
             ? { backgroundColor: this.props.customBackgroundColor }
@@ -82,7 +87,7 @@ export class Cards extends Component {
             <Card
                 data-testid={standardCardId}
                 className={`${classes.card} StandardCard`}
-                style={{ ...customBG, ...fullHeight }}
+                style={{ ...customBG, ...fullHeight, ...style }}
             >
                 {!this.props.noHeader && (
                     <CardHeader

@@ -25,6 +25,11 @@ import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import Fab from '@material-ui/core/Fab';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import Box from '@material-ui/core/Box';
+import RoomIcon from '@material-ui/icons/Room';
+import HelpIcon from '../../SharedComponents/Toolbox/HelpDrawer/components/HelpIcon';
+import NotificationImportantIcon from '@material-ui/icons/NotificationImportant';
+import PhoneIcon from '@material-ui/icons/Phone';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 const useStyles = makeStyles(
     theme => ({
         searchPanel: {
@@ -120,7 +125,7 @@ export const Index = ({}) => {
                     <FeedbackIcon />
                 </ToolTip>
             </Fab>
-            <div className="layout-card" style={{ marginTop: 0 }}>
+            <div className="layout-card" style={{ marginTop: 12 }}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs>
                         <TextField
@@ -167,12 +172,16 @@ export const Index = ({}) => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={'auto'}>
-                        <Button size={'large'} variant="contained" color={'primary'}>
+                        <Button
+                            size={'large'}
+                            variant="contained"
+                            color={'primary'}
+                            style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
+                        >
                             <SearchIcon />
                         </Button>
                     </Grid>
                 </Grid>
-
                 <Grid container spacing={2} style={{ marginBottom: 24 }}>
                     <Grid item className={classes.searchUnderlinks}>
                         <a href="#">Search help</a>
@@ -185,7 +194,6 @@ export const Index = ({}) => {
                     </Grid>
                     <Grid item xs />
                 </Grid>
-
                 <Grid container spacing={6}>
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
@@ -232,7 +240,7 @@ export const Index = ({}) => {
                             </Grid>
                             <Grid container spacing={1}>
                                 <Grid item xs style={{ lineHeight: '24px' }}>
-                                    Current/Overdue book loans <b>4 / 1</b>
+                                    Current book loans <b>6</b>
                                 </Grid>
                                 <Grid item xs={'auto'}>
                                     <ToolTip
@@ -247,20 +255,63 @@ export const Index = ({}) => {
                                     </ToolTip>
                                 </Grid>
                             </Grid>
+                            <Grid container spacing={1}>
+                                <Grid item xs style={{ lineHeight: '24px' }}>
+                                    Overdue book loans <b>1</b>
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <ToolTip
+                                        id="auth-button"
+                                        title={'Manage your book loans'}
+                                        placement="left"
+                                        TransitionProps={{ timeout: 300 }}
+                                    >
+                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
+                                            <NotificationImportantIcon />
+                                        </IconButton>
+                                    </ToolTip>
+                                </Grid>
+                            </Grid>
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <StandardCard noPadding noHeader fullHeight>
                             <AppBar position="static">
                                 <Tabs value={0} onChange={null} aria-label="simple tabs example">
-                                    <Tab label="Computer availability" style={{ minWidth: 0 }} color={'primary'} />
-                                    <Tab label="Library hours" style={{ minWidth: 0 }} />
+                                    <ToolTip
+                                        title={'St Lucia location detected - click to change your location'}
+                                        placement={'top'}
+                                    >
+                                        <Tab
+                                            onClick={() => console.log('ping')}
+                                            icon={<RoomIcon />}
+                                            style={{
+                                                color: 'rgba(255,255,255,0.33)',
+                                                marginLeft: 16,
+                                                width: 20,
+                                                minWidth: 0,
+                                            }}
+                                            color={'secondary'}
+                                        />
+                                    </ToolTip>
+                                    <Tab
+                                        value={0}
+                                        label="Computer availability"
+                                        style={{ minWidth: 0 }}
+                                        color={'primary'}
+                                    />
+                                    <Tab label="Library Hours" style={{ minWidth: 0 }} />
                                     <Tab label="Training" style={{ minWidth: 0 }} />
                                 </Tabs>
                             </AppBar>
-                            <TabPanel value={0} index={0}>
-                                Available computers
+                            <TabPanel value={0} index={0} style={{ overflowY: 'scroll', height: 200 }}>
+                                <p>Available computers</p>
+                                <p>Available computers</p>
+                                <p>Available computers</p>
+                                <p>Available computers</p>
+                                <p>Available computers</p>
+                                <p>Available computers</p>
                             </TabPanel>
                             <TabPanel value={0} index={1}>
                                 Library hours
@@ -270,16 +321,16 @@ export const Index = ({}) => {
                             </TabPanel>
                         </StandardCard>
                     </Grid>
-                    <Grid item xs={6}>
+                    <Grid item xs={12} sm={6}>
                         <StandardCard fullHeight noPadding noHeader style={{ marginBottom: 0 }}>
                             <Grid container alignItems={'stretch'}>
                                 <Grid item={3}>
                                     <div
                                         style={{
-                                            height: 200,
-                                            width: 200,
+                                            height: 250,
+                                            width: 250,
                                             background:
-                                                'url(https://www.eharmony.com/dating-advice/wp-content/uploads/2013/07/dating-a-librarian.jpg)',
+                                                'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
                                             backgroundRepeat: 'no-repeat',
                                             backgroundSize: 'cover',
                                             backgroundPosition: 'right',
@@ -292,10 +343,97 @@ export const Index = ({}) => {
                                         Your Librarian
                                     </Typography>
                                     <p>
-                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin et libero
-                                        ultrices nisl fringilla lobortis suscipit vitae lacus.
+                                        <b>Felicity Berends</b>
                                     </p>
+                                    <Grid container style={{ marginTop: 60 }}>
+                                        <Grid item xs={2}>
+                                            <PhoneIcon color={'secondary'} />
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <a href="#">+61 7 336 56752</a>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <MailOutlineIcon color={'secondary'} />
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            <a href="#">a.berends@library.uq.edu.au</a>
+                                        </Grid>
+                                        <Grid item xs={2}>
+                                            <RoomIcon color={'secondary'} />
+                                        </Grid>
+                                        <Grid item xs={10}>
+                                            Duhig Tower, St Lucia
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+
+                    {/* Course resources*/}
+                    <Grid item xs={12} sm={4}>
+                        <StandardCard fullHeight noHeader>
+                            <Grid container spacing={1}>
+                                <Grid item xs>
+                                    <Typography color={'primary'} variant={'h5'}>
+                                        Course resources
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <HelpIcon
+                                        title={'About course resources'}
+                                        text={'Test'}
+                                        buttonLabel={'CLOSE'}
+                                        style={{ marginTop: -12 }}
+                                    />
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1}>
+                                <Grid item xs>
+                                    <TextField placeholder="Enter course code to search" fullWidth />
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
+                                        <SearchIcon />
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={1} style={{ marginTop: 12 }}>
+                                <Grid item xs={12}>
+                                    <Typography color={'secondary'} variant={'h6'}>
+                                        Your courses
+                                    </Typography>
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <a href="#">PH101</a> - Applied psychology
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <a href="#">PH102</a> - More applied psychology
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <a href="#">PH103</a> - Even more applied psychology
+                                </Grid>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+                    {/* Primo account */}
+                    <Grid item xs={12} sm={4}>
+                        <StandardCard fullHeight noHeader>
+                            <Grid item xs>
+                                <Typography color={'primary'} variant={'h5'}>
+                                    Primo account details
+                                </Typography>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+
+                    {/* eSpace lure */}
+                    <Grid item xs={12} sm={4}>
+                        <StandardCard fullHeight noHeader>
+                            <Grid item xs>
+                                <Typography color={'primary'} variant={'h5'}>
+                                    eSpace researcher
+                                </Typography>
                             </Grid>
                         </StandardCard>
                     </Grid>

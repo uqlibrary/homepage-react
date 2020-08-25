@@ -36,6 +36,7 @@ import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 const styles = theme => ({
     appBG: {
@@ -223,6 +224,34 @@ export class AppClass extends PureComponent {
                 </Grid>
                 <Meta routesConfig={routesConfig} />
                 <Header isAuthorizedUser={isAuthorizedUser} />
+                <Grid
+                    container
+                    spacing={3}
+                    style={{ width: '100%', height: 60, lineHeight: 2, backgroundColor: '#FFFFFF', marginTop: 6 }}
+                    justify={'center'}
+                >
+                    <Grid item xs={'auto'}>
+                        Library services <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        Research tools & techniques <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        Collections <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        Borrowing & requesting <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        Locations & hours <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        About us <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                    <Grid item xs={'auto'}>
+                        Contact us <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
+                    </Grid>
+                </Grid>
                 <div className="content-container" id="content-container">
                     <ConfirmDialogBox
                         hideCancelButton
