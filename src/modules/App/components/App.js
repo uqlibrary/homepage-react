@@ -36,7 +36,7 @@ import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Megamenu from './Megamenu';
 
 const styles = theme => ({
     appBG: {
@@ -224,42 +224,16 @@ export class AppClass extends PureComponent {
                 </Grid>
                 <Meta routesConfig={routesConfig} />
                 <Header isAuthorizedUser={isAuthorizedUser} />
-                <Grid
-                    container
-                    spacing={3}
-                    style={{
-                        width: '103%',
-                        height: 60,
-                        lineHeight: 2,
-                        backgroundColor: '#FFFFFF',
-                        marginTop: 2,
-                        marginBottom: 2,
-                        boxShadow: '0px 3px 10px rgba(0,0,0,0.1)',
+                <Megamenu
+                    menuItems={menuItems}
+                    history={this.props.history}
+                    isMobile={this.state.isMobile}
+                    locale={{
+                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                        skipNavTitle: locale.global.skipNav.title,
+                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                     }}
-                    justify={'center'}
-                >
-                    <Grid item xs={'auto'}>
-                        Library services <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Research tools & techniques <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Collections <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Borrowing & requesting <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Locations & hours <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        About us <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Contact us <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                </Grid>
+                />
                 <div className="content-container" id="content-container">
                     <ConfirmDialogBox
                         hideCancelButton
