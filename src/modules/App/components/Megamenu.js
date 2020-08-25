@@ -142,13 +142,6 @@ export function Megamenu(props) {
                 }
                 menuGroups[index].push(submenuItem);
             });
-        // .map(submenuItem => {
-        //     const index = submenuItem.column || 1;
-        //     if (!menuGroups[index]) {
-        //         menuGroups[index] = [];
-        //     }
-        //     menuGroups[index].push(submenuItem);
-        // });
 
         return (
             <Collapse

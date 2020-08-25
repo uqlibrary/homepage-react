@@ -1,9 +1,5 @@
 export default {
     menu: {
-        index: {
-            id: 'home',
-            primaryText: 'Home',
-        },
         libraryServices: {
             id: 'libraryServices',
             primaryText: 'Library services',
@@ -374,7 +370,6 @@ export default {
         about: {
             id: 'about',
             primaryText: 'About',
-            column: 2,
             submenuItems: [
                 {
                     primaryText: 'Blog',
@@ -452,13 +447,6 @@ export default {
             id: 'contactUs',
             primaryText: 'Contact us',
             linkTo: 'https://web.library.uq.edu.au/contact-us',
-        },
-    },
-    footer: {
-        cricos: {
-            prefix: 'CRICOS Provider No: ',
-            number: '00025B',
-            link: 'http://www.uq.edu.au/about/cricos-link',
         },
     },
 };
