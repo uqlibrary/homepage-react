@@ -21,7 +21,6 @@ import Tab from '@material-ui/core/Tab';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 const moment = require('moment');
-import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import Fab from '@material-ui/core/Fab';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import Box from '@material-ui/core/Box';
@@ -130,8 +129,11 @@ export const Index = ({}) => {
                     <Grid item xs>
                         <TextField
                             id="standard-basic"
-                            placeholder="Search the UQ Library..."
+                            label="Search the UQ Library"
+                            placeholder="Find books, articles, databases, conferences and more.."
                             fullWidth
+                            shrink
+                            InputLabelProps={{ shrink: true }}
                             InputProps={{
                                 classes: {
                                     input: classes.selectInput,
@@ -151,14 +153,7 @@ export const Index = ({}) => {
                                 className={classes.selectInput}
                                 // onChange={handleChange}
                             >
-                                <MenuItem value={10}>
-                                    <LocalLibraryIcon
-                                        fontSize={'small'}
-                                        color={'secondary'}
-                                        style={{ marginRight: 6 }}
-                                    />
-                                    Library
-                                </MenuItem>
+                                <MenuItem value={10}>Library</MenuItem>
                                 <MenuItem value={20}>Books</MenuItem>
                                 <MenuItem value={30}>Journal articles</MenuItem>
                                 <MenuItem value={30}>Journal articles</MenuItem>
