@@ -227,7 +227,15 @@ export class AppClass extends PureComponent {
                 <Grid
                     container
                     spacing={3}
-                    style={{ width: '100%', height: 60, lineHeight: 2, backgroundColor: '#FFFFFF', marginTop: 6 }}
+                    style={{
+                        width: '103%',
+                        height: 60,
+                        lineHeight: 2,
+                        backgroundColor: '#FFFFFF',
+                        marginTop: 2,
+                        marginBottom: 2,
+                        boxShadow: '0px 3px 10px rgba(0,0,0,0.1)',
+                    }}
                     justify={'center'}
                 >
                     <Grid item xs={'auto'}>
