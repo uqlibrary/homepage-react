@@ -54,7 +54,8 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Index = ({}) => {
+export const Index = ({ account }) => {
+    console.log(account);
     const classes = useStyles();
     const images = [
         {
@@ -217,7 +218,7 @@ export const Index = ({}) => {
                         >
                             <Grid item>
                                 <Typography variant={'h3'} component={'h4'} color={'primary'}>
-                                    {greeting()} John
+                                    {greeting()} {(account && account.firstName) || ''}
                                 </Typography>
                             </Grid>
                             <Grid container spacing={1}>
@@ -276,35 +277,21 @@ export const Index = ({}) => {
 
                     {/* Your Librarian */}
                     <Grid item xs={12} sm={5}>
-                        <StandardCard
-                            fullHeight
-                            noPadding
-                            noHeader
-                            style={{
-                                marginBottom: 0,
-                                backgroundImage:
-                                    'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
-                                backgroundRepeat: 'no-repeat',
-                                backgroundColor: '#FFFFFF',
-                                backgroundSize: 'contain',
-                                backgroundPosition: 'right',
-                            }}
-                        >
-                            <Grid container alignItems={'stretch'}>
-                                <Grid item={3}>
-                                    <div
-                                        style={{
-                                            height: '100%',
-                                            width: 250,
-                                            background:
-                                                'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
-                                            backgroundRepeat: 'no-repeat',
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'right',
-                                            marginBottom: -24,
-                                        }}
-                                    />
-                                </Grid>
+                        <StandardCard fullHeight noPadding noHeader>
+                            <Grid container>
+                                <Grid
+                                    item
+                                    style={{
+                                        height: 250,
+                                        width: 175,
+                                        background:
+                                            'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
+                                        backgroundRepeat: 'no-repeat',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'right',
+                                        marginBottom: -26,
+                                    }}
+                                />
                                 <Grid item xs style={{ padding: 16 }}>
                                     <Typography color={'primary'} variant={'h5'}>
                                         Your Librarian
@@ -315,6 +302,7 @@ export const Index = ({}) => {
                                     <Grid container style={{ marginTop: 60 }}>
                                         <Grid item xs={1}>
                                             <PhoneIcon color={'secondary'} />
+                                            &nbsp;
                                         </Grid>
                                         <Grid item xs={11}>
                                             <a href="#">+61 7 336 56752</a>
@@ -369,12 +357,7 @@ export const Index = ({}) => {
                                 </Tabs>
                             </AppBar>
                             <TabPanel value={0} index={0} style={{ overflowY: 'scroll', height: 200 }}>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
+                                Available computers
                             </TabPanel>
                             <TabPanel value={0} index={1}>
                                 Library hours

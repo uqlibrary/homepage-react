@@ -4834,7 +4834,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 morning
                                                                 <br />
                                                               </span>
-                                                               John
+                                                               
                                                             </h4>
                                                           </ForwardRef(Typography)>
                                                         </WithStyles(ForwardRef(Typography))>
@@ -6864,31 +6864,11 @@ exports[`Index page should render placeholders 1`] = `
                                               fullHeight={true}
                                               noHeader={true}
                                               noPadding={true}
-                                              style={
-                                                Object {
-                                                  "backgroundColor": "#FFFFFF",
-                                                  "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                  "backgroundPosition": "right",
-                                                  "backgroundRepeat": "no-repeat",
-                                                  "backgroundSize": "contain",
-                                                  "marginBottom": 0,
-                                                }
-                                              }
                                             >
                                               <WithStyles(Cards)
                                                 fullHeight={true}
                                                 noHeader={true}
                                                 noPadding={true}
-                                                style={
-                                                  Object {
-                                                    "backgroundColor": "#FFFFFF",
-                                                    "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                    "backgroundPosition": "right",
-                                                    "backgroundRepeat": "no-repeat",
-                                                    "backgroundSize": "contain",
-                                                    "marginBottom": 0,
-                                                  }
-                                                }
                                               >
                                                 <Cards
                                                   classes={
@@ -6903,16 +6883,6 @@ exports[`Index page should render placeholders 1`] = `
                                                   fullHeight={true}
                                                   noHeader={true}
                                                   noPadding={true}
-                                                  style={
-                                                    Object {
-                                                      "backgroundColor": "#FFFFFF",
-                                                      "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                      "backgroundPosition": "right",
-                                                      "backgroundRepeat": "no-repeat",
-                                                      "backgroundSize": "contain",
-                                                      "marginBottom": 0,
-                                                    }
-                                                  }
                                                   theme={
                                                     Object {
                                                       "breakpoints": Object {
@@ -7268,13 +7238,7 @@ exports[`Index page should render placeholders 1`] = `
                                                     data-testid="standard-card"
                                                     style={
                                                       Object {
-                                                        "backgroundColor": "#FFFFFF",
-                                                        "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                        "backgroundPosition": "right",
-                                                        "backgroundRepeat": "no-repeat",
-                                                        "backgroundSize": "contain",
                                                         "height": "100%",
-                                                        "marginBottom": 0,
                                                       }
                                                     }
                                                   >
@@ -7288,13 +7252,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       data-testid="standard-card"
                                                       style={
                                                         Object {
-                                                          "backgroundColor": "#FFFFFF",
-                                                          "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                          "backgroundPosition": "right",
-                                                          "backgroundRepeat": "no-repeat",
-                                                          "backgroundSize": "contain",
                                                           "height": "100%",
-                                                          "marginBottom": 0,
                                                         }
                                                       }
                                                     >
@@ -7304,13 +7262,7 @@ exports[`Index page should render placeholders 1`] = `
                                                         elevation={1}
                                                         style={
                                                           Object {
-                                                            "backgroundColor": "#FFFFFF",
-                                                            "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                            "backgroundPosition": "right",
-                                                            "backgroundRepeat": "no-repeat",
-                                                            "backgroundSize": "contain",
                                                             "height": "100%",
-                                                            "marginBottom": 0,
                                                           }
                                                         }
                                                       >
@@ -7352,13 +7304,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           elevation={1}
                                                           style={
                                                             Object {
-                                                              "backgroundColor": "#FFFFFF",
-                                                              "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                              "backgroundPosition": "right",
-                                                              "backgroundRepeat": "no-repeat",
-                                                              "backgroundSize": "contain",
                                                               "height": "100%",
-                                                              "marginBottom": 0,
                                                             }
                                                           }
                                                         >
@@ -7367,13 +7313,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             data-testid="standard-card"
                                                             style={
                                                               Object {
-                                                                "backgroundColor": "#FFFFFF",
-                                                                "backgroundImage": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                                "backgroundPosition": "right",
-                                                                "backgroundRepeat": "no-repeat",
-                                                                "backgroundSize": "contain",
                                                                 "height": "100%",
-                                                                "marginBottom": 0,
                                                               }
                                                             }
                                                           >
@@ -7398,11 +7338,9 @@ exports[`Index page should render placeholders 1`] = `
                                                                   style={Object {}}
                                                                 >
                                                                   <WithStyles(ForwardRef(Grid))
-                                                                    alignItems="stretch"
                                                                     container={true}
                                                                   >
                                                                     <ForwardRef(Grid)
-                                                                      alignItems="stretch"
                                                                       classes={
                                                                         Object {
                                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -7516,7 +7454,18 @@ exports[`Index page should render placeholders 1`] = `
                                                                         className="MuiGrid-root MuiGrid-container"
                                                                       >
                                                                         <WithStyles(ForwardRef(Grid))
-                                                                          item={3}
+                                                                          item={true}
+                                                                          style={
+                                                                            Object {
+                                                                              "background": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
+                                                                              "backgroundPosition": "right",
+                                                                              "backgroundRepeat": "no-repeat",
+                                                                              "backgroundSize": "cover",
+                                                                              "height": 250,
+                                                                              "marginBottom": -26,
+                                                                              "width": 175,
+                                                                            }
+                                                                          }
                                                                         >
                                                                           <ForwardRef(Grid)
                                                                             classes={
@@ -7626,25 +7575,33 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 "zeroMinWidth": "MuiGrid-zeroMinWidth",
                                                                               }
                                                                             }
-                                                                            item={3}
+                                                                            item={true}
+                                                                            style={
+                                                                              Object {
+                                                                                "background": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
+                                                                                "backgroundPosition": "right",
+                                                                                "backgroundRepeat": "no-repeat",
+                                                                                "backgroundSize": "cover",
+                                                                                "height": 250,
+                                                                                "marginBottom": -26,
+                                                                                "width": 175,
+                                                                              }
+                                                                            }
                                                                           >
                                                                             <div
                                                                               className="MuiGrid-root MuiGrid-item"
-                                                                            >
-                                                                              <div
-                                                                                style={
-                                                                                  Object {
-                                                                                    "background": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
-                                                                                    "backgroundPosition": "right",
-                                                                                    "backgroundRepeat": "no-repeat",
-                                                                                    "backgroundSize": "cover",
-                                                                                    "height": "100%",
-                                                                                    "marginBottom": -24,
-                                                                                    "width": 250,
-                                                                                  }
+                                                                              style={
+                                                                                Object {
+                                                                                  "background": "url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)",
+                                                                                  "backgroundPosition": "right",
+                                                                                  "backgroundRepeat": "no-repeat",
+                                                                                  "backgroundSize": "cover",
+                                                                                  "height": 250,
+                                                                                  "marginBottom": -26,
+                                                                                  "width": 175,
                                                                                 }
-                                                                              />
-                                                                            </div>
+                                                                              }
+                                                                            />
                                                                           </ForwardRef(Grid)>
                                                                         </WithStyles(ForwardRef(Grid))>
                                                                         <WithStyles(ForwardRef(Grid))
@@ -8118,6 +8075,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                               </ForwardRef(SvgIcon)>
                                                                                             </WithStyles(ForwardRef(SvgIcon))>
                                                                                           </ForwardRef>
+                                                                                           
                                                                                         </div>
                                                                                       </ForwardRef(Grid)>
                                                                                     </WithStyles(ForwardRef(Grid))>
@@ -10390,24 +10348,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               <p
                                                                                 className="MuiTypography-root MuiTypography-body1"
                                                                               >
-                                                                                <p>
-                                                                                  Available computers
-                                                                                </p>
-                                                                                <p>
-                                                                                  Available computers
-                                                                                </p>
-                                                                                <p>
-                                                                                  Available computers
-                                                                                </p>
-                                                                                <p>
-                                                                                  Available computers
-                                                                                </p>
-                                                                                <p>
-                                                                                  Available computers
-                                                                                </p>
-                                                                                <p>
-                                                                                  Available computers
-                                                                                </p>
+                                                                                Available computers
                                                                               </p>
                                                                             </ForwardRef(Typography)>
                                                                           </WithStyles(ForwardRef(Typography))>
