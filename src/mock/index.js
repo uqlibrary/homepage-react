@@ -5,12 +5,13 @@ import Cookies from 'js-cookie';
 import { SESSION_COOKIE_NAME } from 'config';
 import * as routes from 'repositories/routes';
 import * as mockData from './data';
+import { spotlights } from './data/spotlights';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 200 });
-const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
-// const standardQueryString = {page: '.*', pageSize: '.*', sortBy: '.*', sortDirection: '.*', facets: {}};
+const escapeRegExp = input => input.replace('.\\*', '.*')
+    .replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
 Cookies.set(SESSION_COOKIE_NAME, 'abc123');
 
@@ -28,15 +29,16 @@ if (user && !mockData.accounts[user]) {
 // default user is researcher if user is not defined
 user = user || 'uqresearcher';
 
-mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
-    // mock account response
-    if (['s2222222', 's3333333'].indexOf(user) > -1) {
-        return [200, mockData.accounts[user]];
-    } else if (mockData.accounts[user]) {
-        return [403, {}];
-    }
-    return [404, {}];
-});
+mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
+    .reply(() => {
+        // mock account response
+        if (['s2222222', 's3333333'].indexOf(user) > -1) {
+            return [200, mockData.accounts[user]];
+        } else if (mockData.accounts[user]) {
+            return [403, {}];
+        }
+        return [404, {}];
+    });
 
 mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
     .reply(() => {
@@ -47,4 +49,10 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
             return [200, mockData.accounts[user]];
         }
         return [404, {}];
-    })
+    });
+
+mock.onGet(routes.SPOTLIGHTS_API().apiUrl)
+    .reply(() => {
+        // mock spotlights
+        return [200, [ ...spotlights ]];
+    });

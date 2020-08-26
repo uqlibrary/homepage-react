@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -24,11 +24,14 @@ const moment = require('moment');
 import Fab from '@material-ui/core/Fab';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import Box from '@material-ui/core/Box';
+import { useDispatch } from 'react-redux';
 import RoomIcon from '@material-ui/icons/Room';
 import HelpIcon from '../../SharedComponents/Toolbox/HelpDrawer/components/HelpIcon';
 import NotificationImportantIcon from '@material-ui/icons/NotificationImportant';
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import { loadSpotlights } from 'actions';
+
 const useStyles = makeStyles(
     theme => ({
         searchPanel: {
@@ -54,20 +57,21 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Index = ({ account }) => {
-    console.log(account);
+export const Index = ({ account, spotlights, spotlightsError, spotlightsLoading }) => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (spotlightsLoading === null) {
+            dispatch(loadSpotlights());
+        }
+    }, [spotlightsLoading]);
+    console.log(spotlightsError, spotlightsLoading);
     const classes = useStyles();
-    const images = [
-        {
-            original: 'https://app.library.uq.edu.au/file/public/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-        },
-        {
-            original: 'https://app.library.uq.edu.au/file/public/8bb2b540-dc32-11ea-9810-53ef2bd221b3.jpg',
-        },
-        {
-            original: 'https://app.library.uq.edu.au/file/public/adaa3870-dad2-11ea-ae85-8b875639d1ad.jpg',
-        },
-    ];
+    const images =
+        spotlights &&
+        spotlights.map(item => {
+            return { original: item.img_url };
+        });
+    console.log('IMAGES:', images);
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
@@ -118,6 +122,7 @@ export const Index = ({ account }) => {
             </div>
         );
     };
+    loadSpotlights();
     return (
         <StandardPage>
             <Fab size="small" color="secondary" aria-label="help" className={classes.ChatIcon} onClick={null}>
@@ -196,7 +201,7 @@ export const Index = ({ account }) => {
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
                             <ImageGallery
-                                items={images}
+                                items={(images && images.length > 0 && images) || []}
                                 showThumbnails={false}
                                 showFullscreenButton={false}
                                 showPlayButton={false}
@@ -447,6 +452,10 @@ export const Index = ({ account }) => {
 
 Index.propTypes = {
     account: PropTypes.object,
+    actions: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsError: PropTypes.any,
+    spotlightsLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};
