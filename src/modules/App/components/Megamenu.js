@@ -85,6 +85,25 @@ const styles = theme => {
         iconButton: {
             color: theme.palette.white.main,
         },
+        menuDropdown: {
+            backgroundColor: '#f2f2f2',
+            position: 'absolute',
+            zIndex: 1000,
+        },
+        menuGroups: {
+            display: 'flex',
+        },
+        verticalMenuList: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        menuItem: {
+            alignItems: 'flex-start',
+            paddingTop: 0,
+            paddingBottom: 0,
+            minHeight: '51px',
+            verticalAlign: 'top',
+        },
     };
 };
 
@@ -131,7 +150,7 @@ export function Megamenu(props) {
             : navigateToLink(menuItem.linkTo, menuItem.target);
     }
 
-    const renderMenuChildren = (menuItem, index) => {
+    const renderMenuChildren = (menuItem, index, classes) => {
         const menuGroups = [];
         menuItem.submenuItems
             // .sort((a, b) => (a.column || null) - (b.column || null))
@@ -144,13 +163,8 @@ export function Megamenu(props) {
             });
 
         return (
-            <Collapse
-                in={isSubMenuOpen[menuItem.id]}
-                timeout="auto"
-                unmountOnExit
-                style={{ position: 'absolute', backgroundColor: '#f2f2f2' }}
-            >
-                <div style={{ display: 'flex' }}>
+            <Collapse in={isSubMenuOpen[menuItem.id]} timeout="auto" unmountOnExit className={classes.menuDropdown}>
+                <div className={classes.menuGroups}>
                     {menuGroups.length > 0 &&
                         menuGroups.map((menuGroup, index1) => {
                             return (
@@ -159,7 +173,7 @@ export function Megamenu(props) {
                                     disablePadding
                                     key={`menu-group-${index1}`}
                                     id={`menu-group-${index1}`}
-                                    style={{ flexDirection: 'column' }}
+                                    className={classes.verticalMenuList}
                                 >
                                     {!!menuGroup &&
                                         menuGroup.length > 0 &&
@@ -172,7 +186,7 @@ export function Megamenu(props) {
                                                     onClick={() =>
                                                         navigateToLink(submenuItem.linkTo, submenuItem.target)
                                                     }
-                                                    style={{ paddingTop: 0, paddingBottom: 0 }}
+                                                    className={classes.menuItem}
                                                 >
                                                     <ListItemText
                                                         classes={{
@@ -192,6 +206,7 @@ export function Megamenu(props) {
             </Collapse>
         );
     };
+    const { classes } = props;
 
     const renderMenuItems = items =>
         items.map((menuItem, index) => {
@@ -219,12 +234,11 @@ export function Megamenu(props) {
                         {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
                         {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
                     </ListItem>
-                    {hasChildren && renderMenuChildren(menuItem, index)}
+                    {hasChildren && renderMenuChildren(menuItem, index, classes)}
                 </span>
             );
         });
 
-    const { classes } = props;
     const { menuItems, drawerOpen, docked } = props;
     if (drawerOpen && !docked) {
         // set focus on menu on mobile view if menu is opened
