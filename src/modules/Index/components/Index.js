@@ -125,6 +125,7 @@ export const Index = ({}) => {
                 </Tooltip>
             </Fab>
             <div className="layout-card" style={{ marginTop: 12 }}>
+                {/* Search */}
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs>
                         <TextField
@@ -132,7 +133,6 @@ export const Index = ({}) => {
                             label="Search the UQ Library"
                             placeholder="Find books, articles, databases, conferences and more.."
                             fullWidth
-                            shrink
                             InputLabelProps={{ shrink: true }}
                             InputProps={{
                                 classes: {
@@ -189,7 +189,9 @@ export const Index = ({}) => {
                     </Grid>
                     <Grid item xs />
                 </Grid>
+
                 <Grid container spacing={6}>
+                    {/* Spotlights */}
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
                             <ImageGallery
@@ -204,6 +206,8 @@ export const Index = ({}) => {
                             />
                         </div>
                     </Grid>
+
+                    {/* Personalisation panel */}
                     <Grid item xs={4} style={{ paddingLeft: 24, paddingTop: 28 }}>
                         <Grid
                             container
@@ -270,7 +274,71 @@ export const Index = ({}) => {
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    {/* Your Librarian */}
+                    <Grid item xs={12} sm={5}>
+                        <StandardCard
+                            fullHeight
+                            noPadding
+                            noHeader
+                            style={{
+                                marginBottom: 0,
+                                backgroundImage:
+                                    'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundColor: '#FFFFFF',
+                                backgroundSize: 'contain',
+                                backgroundPosition: 'right',
+                            }}
+                        >
+                            <Grid container alignItems={'stretch'}>
+                                <Grid item={3}>
+                                    <div
+                                        style={{
+                                            height: '100%',
+                                            width: 250,
+                                            background:
+                                                'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
+                                            backgroundRepeat: 'no-repeat',
+                                            backgroundSize: 'cover',
+                                            backgroundPosition: 'right',
+                                            marginBottom: -24,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs style={{ padding: 16 }}>
+                                    <Typography color={'primary'} variant={'h5'}>
+                                        Your Librarian
+                                    </Typography>
+                                    <p>
+                                        <b>Felicity Berends</b>
+                                    </p>
+                                    <Grid container style={{ marginTop: 60 }}>
+                                        <Grid item xs={1}>
+                                            <PhoneIcon color={'secondary'} />
+                                        </Grid>
+                                        <Grid item xs={11}>
+                                            <a href="#">+61 7 336 56752</a>
+                                        </Grid>
+                                        <Grid item xs={1}>
+                                            <MailOutlineIcon color={'secondary'} />
+                                        </Grid>
+                                        <Grid item xs={11}>
+                                            <a href="#">a.berends@library.uq.edu.au</a>
+                                        </Grid>
+                                        <Grid item xs={1}>
+                                            <RoomIcon color={'secondary'} />
+                                        </Grid>
+                                        <Grid item xs={11}>
+                                            Duhig Tower, St Lucia
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+
+                    {/* Comp Avail/hours/Training */}
+                    <Grid item xs={12} sm={7}>
                         <StandardCard noPadding noHeader fullHeight>
                             <AppBar position="static">
                                 <Tabs value={0} onChange={null} aria-label="simple tabs example">
@@ -314,54 +382,6 @@ export const Index = ({}) => {
                             <TabPanel value={0} index={2}>
                                 Training
                             </TabPanel>
-                        </StandardCard>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <StandardCard fullHeight noPadding noHeader style={{ marginBottom: 0 }}>
-                            <Grid container alignItems={'stretch'}>
-                                <Grid item={3}>
-                                    <div
-                                        style={{
-                                            height: 250,
-                                            width: 250,
-                                            background:
-                                                'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
-                                            backgroundRepeat: 'no-repeat',
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'right',
-                                            marginBottom: -24,
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs style={{ padding: 16 }}>
-                                    <Typography color={'primary'} variant={'h5'}>
-                                        Your Librarian
-                                    </Typography>
-                                    <p>
-                                        <b>Felicity Berends</b>
-                                    </p>
-                                    <Grid container style={{ marginTop: 60 }}>
-                                        <Grid item xs={2}>
-                                            <PhoneIcon color={'secondary'} />
-                                        </Grid>
-                                        <Grid item xs={10}>
-                                            <a href="#">+61 7 336 56752</a>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <MailOutlineIcon color={'secondary'} />
-                                        </Grid>
-                                        <Grid item xs={10}>
-                                            <a href="#">a.berends@library.uq.edu.au</a>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <RoomIcon color={'secondary'} />
-                                        </Grid>
-                                        <Grid item xs={10}>
-                                            Duhig Tower, St Lucia
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
                         </StandardCard>
                     </Grid>
 
@@ -411,6 +431,7 @@ export const Index = ({}) => {
                             </Grid>
                         </StandardCard>
                     </Grid>
+
                     {/* Primo account */}
                     <Grid item xs={12} sm={4}>
                         <StandardCard fullHeight noHeader>
