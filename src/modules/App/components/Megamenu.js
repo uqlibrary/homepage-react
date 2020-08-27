@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 // MUI 1
 import List from '@material-ui/core/List';
@@ -78,6 +78,7 @@ const styles = theme => {
                 position: 'absolute',
                 top: '9rem',
                 zIndex: 1000,
+                marginLeft: '-2.5rem',
             },
         },
         ListItemTextPrimary: {
@@ -288,7 +289,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <Fragment>
+        <div className="layout-card">
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
                 <Hidden lgUp>
@@ -309,7 +310,7 @@ export function Megamenu(props) {
                 </Hidden>
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
-        </Fragment>
+        </div>
     );
 }
 
