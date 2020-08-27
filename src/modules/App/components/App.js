@@ -98,7 +98,7 @@ export class AppClass extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            menuDrawerOpen: false,
+            menuOpen: false,
             docked: false,
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
             isMobile: window.matchMedia('(max-width: 720px)').matches,
@@ -223,7 +223,6 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        // const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
                 <Grid item xs={12}>

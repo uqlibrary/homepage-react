@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 // MUI 1
 import List from '@material-ui/core/List';
@@ -6,6 +6,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import Divider from '@material-ui/core/Divider';
+import Hidden from '@material-ui/core/Hidden';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
@@ -72,12 +73,11 @@ const styles = theme => {
             },
             [theme.breakpoints.down('md')]: {
                 overflowY: 'auto',
-                maxWidth: '20rem',
+                maxWidth: '25rem',
                 backgroundColor: 'white',
-                // position: 'absolute',
-                // position: 'fixed',
-                // opacity: 1,
-                // zIndex: 1000,
+                position: 'absolute',
+                top: '9rem',
+                zIndex: 1000,
             },
         },
         ListItemTextPrimary: {
@@ -108,7 +108,7 @@ const styles = theme => {
             },
         },
         shiftLeft: {
-            marginLeft: '-12rem',
+            marginLeft: '-20rem',
         },
         submenus: {
             [theme.breakpoints.up('lg')]: {
@@ -143,7 +143,7 @@ const styles = theme => {
 
 export function Megamenu(props) {
     // an array so we can control each submenu separately
-    const { classes, docked, isMobile, menuOpen, menuItems, toggleMenu } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
     const initialSubMenus = [];
     menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
@@ -282,15 +282,15 @@ export function Megamenu(props) {
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
 
-    if (!menuOpen && isMobile) {
+    if (!menuOpen) {
         return <div className="empty" />;
     }
 
     return (
-        <div className="layout-card">
+        <Fragment>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
-                {isMobile && (
+                <Hidden lgUp>
                     <ListItem
                         className={classes.submenus}
                         button
@@ -305,10 +305,10 @@ export function Megamenu(props) {
                             primary="Close"
                         />
                     </ListItem>
-                )}
+                </Hidden>
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
-        </div>
+        </Fragment>
     );
 }
 
@@ -321,7 +321,6 @@ Megamenu.propTypes = {
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
-    isMobile: PropTypes.bool,
     locale: PropTypes.shape({
         skipNavTitle: PropTypes.string,
         skipNavAriaLabel: PropTypes.string,
