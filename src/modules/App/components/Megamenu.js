@@ -102,7 +102,7 @@ const styles = theme => {
             zIndex: 1000,
             position: 'absolute',
             // },
-            [theme.breakpoints.down('lg')]: {
+            [theme.breakpoints.down('md')]: {
                 width: '100%',
             },
         },
@@ -139,7 +139,7 @@ const styles = theme => {
 
 export function Megamenu(props) {
     // an array so we can control each submenu separately
-    const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
+    const { classes, docked, isMobile, menuOpen, menuItems, toggleMenu } = props;
     const initialSubMenus = [];
     menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
@@ -273,7 +273,7 @@ export function Megamenu(props) {
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
 
-    if (!menuOpen) {
+    if (!menuOpen && isMobile) {
         return <div className="empty" />;
     }
 
@@ -281,20 +281,22 @@ export function Megamenu(props) {
         <div className="layout-card">
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
-                <ListItem
-                    className={classes.submenus}
-                    button
-                    key={'submenus-item-close'}
-                    id={'submenus-item-close'}
-                    onClick={() => toggleMenu()}
-                >
-                    <ListItemText
-                        classes={{
-                            primary: classes.ListItemTextPrimary,
-                        }}
-                        primary="Close"
-                    />
-                </ListItem>
+                {isMobile && (
+                    <ListItem
+                        className={classes.submenus}
+                        button
+                        key={'submenus-item-close'}
+                        id={'submenus-item-close'}
+                        onClick={() => toggleMenu()}
+                    >
+                        <ListItemText
+                            classes={{
+                                primary: classes.ListItemTextPrimary,
+                            }}
+                            primary="Close"
+                        />
+                    </ListItem>
+                )}
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
         </div>
@@ -310,6 +312,7 @@ Megamenu.propTypes = {
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
+    isMobile: PropTypes.bool,
     locale: PropTypes.shape({
         skipNavTitle: PropTypes.string,
         skipNavAriaLabel: PropTypes.string,
