@@ -4141,7 +4141,7 @@ exports[`Index page should render placeholders 1`] = `
                                                 renderPlayPauseButton={[Function]}
                                                 renderRightNav={[Function]}
                                                 renderThumbInner={null}
-                                                showBullets={true}
+                                                showBullets={false}
                                                 showFullscreenButton={false}
                                                 showIndex={false}
                                                 showNav={true}
@@ -4205,24 +4205,6 @@ exports[`Index page should render placeholders 1`] = `
                                                               title="UQ Library"
                                                             />
                                                           </div>
-                                                        </div>
-                                                      </div>
-                                                      <div
-                                                        className="image-gallery-bullets"
-                                                      >
-                                                        <div
-                                                          aria-label="Bullet Navigation"
-                                                          className="image-gallery-bullets-container"
-                                                          role="navigation"
-                                                        >
-                                                          <button
-                                                            aria-label="Go to Slide 1"
-                                                            aria-pressed="true"
-                                                            className="image-gallery-bullet active"
-                                                            key="bullet--0"
-                                                            onClick={[Function]}
-                                                            type="button"
-                                                          />
                                                         </div>
                                                       </div>
                                                     </div>
@@ -7307,7 +7289,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                               "backgroundRepeat": "no-repeat",
                                                                               "backgroundSize": "cover",
                                                                               "height": 250,
-                                                                              "marginBottom": -26,
                                                                               "width": 175,
                                                                             }
                                                                           }
@@ -7428,7 +7409,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 "backgroundRepeat": "no-repeat",
                                                                                 "backgroundSize": "cover",
                                                                                 "height": 250,
-                                                                                "marginBottom": -26,
                                                                                 "width": 175,
                                                                               }
                                                                             }
@@ -7442,7 +7422,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   "backgroundRepeat": "no-repeat",
                                                                                   "backgroundSize": "cover",
                                                                                   "height": 250,
-                                                                                  "marginBottom": -26,
                                                                                   "width": 175,
                                                                                 }
                                                                               }
@@ -7453,7 +7432,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                           item={true}
                                                                           style={
                                                                             Object {
-                                                                              "padding": 16,
+                                                                              "padding": 12,
                                                                             }
                                                                           }
                                                                           xs={true}
@@ -7569,7 +7548,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                             item={true}
                                                                             style={
                                                                               Object {
-                                                                                "padding": 16,
+                                                                                "padding": 12,
                                                                               }
                                                                             }
                                                                             xs={true}
@@ -7578,7 +7557,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-true"
                                                                               style={
                                                                                 Object {
-                                                                                  "padding": 16,
+                                                                                  "padding": 12,
                                                                                 }
                                                                               }
                                                                             >
@@ -7640,7 +7619,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 container={true}
                                                                                 style={
                                                                                   Object {
-                                                                                    "marginTop": 60,
+                                                                                    "marginTop": "auto",
                                                                                   }
                                                                                 }
                                                                               >
@@ -7755,7 +7734,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   container={true}
                                                                                   style={
                                                                                     Object {
-                                                                                      "marginTop": 60,
+                                                                                      "marginTop": "auto",
                                                                                     }
                                                                                   }
                                                                                 >
@@ -7763,7 +7742,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     className="MuiGrid-root MuiGrid-container"
                                                                                     style={
                                                                                       Object {
-                                                                                        "marginTop": 60,
+                                                                                        "marginTop": "auto",
                                                                                       }
                                                                                     }
                                                                                   >
@@ -7920,7 +7899,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                               </ForwardRef(SvgIcon)>
                                                                                             </WithStyles(ForwardRef(SvgIcon))>
                                                                                           </ForwardRef>
-                                                                                           
                                                                                         </div>
                                                                                       </ForwardRef(Grid)>
                                                                                     </WithStyles(ForwardRef(Grid))>

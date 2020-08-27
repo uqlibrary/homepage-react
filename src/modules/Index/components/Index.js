@@ -214,7 +214,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                 autoPlay
                                 slideDuration={1000}
                                 slideInterval={8000}
-                                showBullets
+                                showBullets={images.length > 1}
                             />
                         </div>
                     </Grid>
@@ -300,20 +300,18 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         backgroundRepeat: 'no-repeat',
                                         backgroundSize: 'cover',
                                         backgroundPosition: 'right',
-                                        marginBottom: -26,
                                     }}
                                 />
-                                <Grid item xs style={{ padding: 16 }}>
+                                <Grid item xs style={{ padding: 12 }}>
                                     <Typography color={'primary'} variant={'h5'}>
                                         Your Librarian
                                     </Typography>
                                     <p>
                                         <b>Felicity Berends</b>
                                     </p>
-                                    <Grid container style={{ marginTop: 60 }}>
+                                    <Grid container style={{ marginTop: 'auto' }}>
                                         <Grid item xs={1}>
                                             <PhoneIcon color={'secondary'} />
-                                            &nbsp;
                                         </Grid>
                                         <Grid item xs={11}>
                                             <a href="#">+61 7 336 56752</a>
