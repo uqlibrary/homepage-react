@@ -282,8 +282,9 @@ export function Megamenu(props) {
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
 
-    if (!menuOpen) {
-        return <div className="empty" />;
+    const isFullDesktop = window.matchMedia('(min-width: 1279px)').matches;
+    if (!menuOpen && !isFullDesktop) {
+        return <div className="megamenu empty" />;
     }
 
     return (
