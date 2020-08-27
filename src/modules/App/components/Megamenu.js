@@ -9,6 +9,7 @@ import Divider from '@material-ui/core/Divider';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
+import classNames from 'classnames';
 
 const styles = theme => {
     return {
@@ -106,6 +107,9 @@ const styles = theme => {
                 width: '100%',
             },
         },
+        shiftLeft: {
+            marginLeft: '-12rem',
+        },
         submenus: {
             [theme.breakpoints.up('lg')]: {
                 flexDirection: 'row',
@@ -194,7 +198,12 @@ export function Megamenu(props) {
             });
 
         return (
-            <Collapse in={isSubMenuOpen[menuItem.id]} timeout="auto" unmountOnExit className={classes.menuDropdown}>
+            <Collapse
+                in={isSubMenuOpen[menuItem.id]}
+                timeout="auto"
+                unmountOnExit
+                className={classNames(!!menuItem.shiftLeft ? classes.shiftLeft : '', classes.menuDropdown)}
+            >
                 <div className={classes.menuGroups}>
                     {menuGroups.length > 0 &&
                         menuGroups.map((menuGroup, index1) => {

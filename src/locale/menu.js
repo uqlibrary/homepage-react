@@ -265,6 +265,7 @@ export default {
         locationsHours: {
             id: 'locationsHours',
             primaryText: 'Locations & hours',
+            shiftLeft: true,
             submenuItems: [
                 {
                     primaryText: 'Opening hours',
