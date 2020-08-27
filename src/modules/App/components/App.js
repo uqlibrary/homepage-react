@@ -148,7 +148,7 @@ export class AppClass extends PureComponent {
 
     toggleMenu = () => {
         this.setState({
-            menuDrawerOpen: !this.state.menuDrawerOpen,
+            menuOpen: !this.state.menuOpen,
         });
     };
 
@@ -238,8 +238,8 @@ export class AppClass extends PureComponent {
                 <Meta routesConfig={routesConfig} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}
-                    toggleDrawer={this.toggleMenu}
-                    drawerOpen={this.state.docked || this.state.menuDrawerOpen}
+                    toggleMenu={this.toggleMenu}
+                    menuOpen={this.state.menuOpen}
                 />
                 <Megamenu
                     menuItems={menuItems}
@@ -250,7 +250,8 @@ export class AppClass extends PureComponent {
                         skipNavTitle: locale.global.skipNav.title,
                         closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                     }}
-                    drawerOpen={this.state.docked || this.state.menuDrawerOpen}
+                    toggleMenu={this.toggleMenu}
+                    menuOpen={this.state.menuOpen}
                 />
                 <div className="content-container" id="content-container">
                     <ConfirmDialogBox

@@ -134,9 +134,9 @@ const styles = theme => {
 
 export function Megamenu(props) {
     // an array so we can control each submenu separately
-    const { onToggleDrawer } = props;
+    const { classes, docked, menuOpen, menuItems, onToggleMenu } = props;
     const initialSubMenus = [];
-    props.menuItems.forEach(item => (initialSubMenus[item.id] = false));
+    menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
 
     const setParticularSubMenuOpen = (changingId, newOpen) => {
@@ -165,9 +165,9 @@ export function Megamenu(props) {
             }
         }
 
-        if (!props.docked) {
-            onToggleDrawer();
-        }
+        // if (!props.docked) {
+        //     onToggleMenu();
+        // }
     };
 
     function clickMenuItem(menuItem) {
@@ -216,8 +216,8 @@ export function Megamenu(props) {
                                                 >
                                                     <ListItemText
                                                         classes={{
-                                                            primary: props.classes.ListItemTextPrimary,
-                                                            secondary: props.classes.ListItemTextSecondary,
+                                                            primary: classes.ListItemTextPrimary,
+                                                            secondary: classes.ListItemTextSecondary,
                                                         }}
                                                         primary={submenuItem.primaryText}
                                                         secondary={submenuItem.secondaryText}
@@ -232,7 +232,6 @@ export function Megamenu(props) {
             </Collapse>
         );
     };
-    const { classes } = props;
 
     const renderMenuItems = items =>
         items.map((menuItem, index) => {
@@ -250,8 +249,8 @@ export function Megamenu(props) {
                     >
                         <ListItemText
                             classes={{
-                                primary: props.classes.ListItemTextPrimary,
-                                secondary: props.classes.ListItemTextSecondary,
+                                primary: classes.ListItemTextPrimary,
+                                secondary: classes.ListItemTextSecondary,
                             }}
                             primary={menuItem.primaryText}
                             secondary={menuItem.secondaryText}
@@ -264,11 +263,15 @@ export function Megamenu(props) {
             );
         });
 
-    const { menuItems, drawerOpen, docked } = props;
-    if (drawerOpen && !docked) {
+    if (menuOpen && !docked) {
         // set focus on menu on mobile view if menu is opened
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
+
+    if (!menuOpen) {
+        return <div className="empty" />;
+    }
+
     return (
         <div className="layout-card">
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
@@ -278,11 +281,11 @@ export function Megamenu(props) {
                     button
                     key={'submenus-item-close'}
                     id={'submenus-item-close'}
-                    onClick={() => onToggleDrawer()}
+                    onClick={() => onToggleMenu()}
                 >
                     <ListItemText
                         classes={{
-                            primary: props.classes.ListItemTextPrimary,
+                            primary: classes.ListItemTextPrimary,
                         }}
                         primary="Close"
                     />
@@ -298,9 +301,9 @@ Megamenu.propTypes = {
     logoImage: PropTypes.string,
     logoText: PropTypes.string,
     logoLink: PropTypes.string,
-    drawerOpen: PropTypes.bool,
+    menuOpen: PropTypes.bool,
     docked: PropTypes.bool,
-    onToggleDrawer: PropTypes.func,
+    onToggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
     locale: PropTypes.shape({
         skipNavTitle: PropTypes.string,
@@ -314,7 +317,7 @@ export function isSame(prevProps, nextProps) {
     return (
         nextProps.logoImage === prevProps.logoImage &&
         nextProps.logoText === prevProps.logoText &&
-        nextProps.drawerOpen === prevProps.drawerOpen &&
+        nextProps.menuOpen === prevProps.menuOpen &&
         JSON.stringify(nextProps.locale) === JSON.stringify(prevProps.locale) &&
         JSON.stringify(nextProps.menuItems) === JSON.stringify(prevProps.menuItems) &&
         nextProps.docked === prevProps.docked

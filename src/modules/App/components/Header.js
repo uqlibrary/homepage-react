@@ -122,7 +122,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Header = ({ isAuthorizedUser, toggleMenu, drawerOpen }) => {
+export const Header = ({ isAuthorizedUser, toggleMenu, menuOpen }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -157,12 +157,13 @@ export const Header = ({ isAuthorizedUser, toggleMenu, drawerOpen }) => {
         checked: {},
     })(props => <Radio color="default" {...props} />);
 
+    console.log('menuOpen = ', menuOpen);
     return (
         <Grid container className={classes.gradient}>
             <Grid item xs={12} className={classes.topHeader}>
                 <Grid container alignItems={'center'}>
                     <Hidden lgUp>
-                        {(true || drawerOpen) && (
+                        {!menuOpen && (
                             <Grid item id="hamburger">
                                 {/* hamburger button */}
                                 <Tooltip
@@ -352,14 +353,14 @@ export const Header = ({ isAuthorizedUser, toggleMenu, drawerOpen }) => {
 
 Header.propTypes = {
     isAuthorizedUser: PropTypes.bool,
-    headerExpand: PropTypes.bool,
+    // headerExpand: PropTypes.bool,
     toggleMenu: PropTypes.func,
-    drawerOpen: PropTypes.bool,
+    menuOpen: PropTypes.bool,
 };
 
 Header.defaultProps = {
     isAuthorizedUser: false,
-    headerExpand: false,
+    // headerExpand: false,
 };
 
 export default Header;
