@@ -122,7 +122,7 @@ export const accounts = {
         "class": ["Campus-MATERHOSP"],
         "type": 3,
         "homeLib": "St Lucia",
-        "firstName": "J",
+        "firstName": "John",
         "lastName": "Researcher",
         "name": "J Researcher",
         "mail": "j.Researcher@uq.edu.au",

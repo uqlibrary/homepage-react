@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -21,15 +21,19 @@ import Tab from '@material-ui/core/Tab';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 const moment = require('moment');
-import LocalLibraryIcon from '@material-ui/icons/LocalLibrary';
 import Fab from '@material-ui/core/Fab';
 import FeedbackIcon from '@material-ui/icons/Feedback';
 import Box from '@material-ui/core/Box';
+import { useDispatch } from 'react-redux';
 import RoomIcon from '@material-ui/icons/Room';
 import HelpIcon from '../../SharedComponents/Toolbox/HelpDrawer/components/HelpIcon';
 import NotificationImportantIcon from '@material-ui/icons/NotificationImportant';
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import { loadSpotlights } from 'actions';
+const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+
 const useStyles = makeStyles(
     theme => ({
         searchPanel: {
@@ -55,48 +59,34 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Index = ({}) => {
+export const Index = ({ account, spotlights, spotlightsLoading }) => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        if (spotlightsLoading === null) {
+            dispatch(loadSpotlights());
+        }
+    }, [spotlightsLoading, dispatch]);
     const classes = useStyles();
-    const images = [
-        {
-            original: 'https://app.library.uq.edu.au/file/public/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-        },
-        {
-            original: 'https://app.library.uq.edu.au/file/public/8bb2b540-dc32-11ea-9810-53ef2bd221b3.jpg',
-        },
-        {
-            original: 'https://app.library.uq.edu.au/file/public/adaa3870-dad2-11ea-ae85-8b875639d1ad.jpg',
-        },
-    ];
+    const images =
+        !!spotlights && spotlights.length > 0
+            ? spotlights.map(item => {
+                  return { original: item.img_url };
+              })
+            : [
+                  {
+                      original: welcomeSpotlight,
+                      originalAlt: 'Welcome to the UQ Library',
+                      originalTitle: 'UQ Library',
+                  },
+              ];
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
-            return (
-                <span>
-                    Good
-                    <br />
-                    morning
-                    <br />
-                </span>
-            );
+            return <span>Good morning</span>;
         } else if (time >= 12 && time < 18) {
-            return (
-                <span>
-                    Good
-                    <br />
-                    afternoon
-                    <br />
-                </span>
-            );
+            return <span>Good afternoon</span>;
         } else {
-            return (
-                <span>
-                    Good
-                    <br />
-                    evening
-                    <br />
-                </span>
-            );
+            return <span>Good evening</span>;
         }
     };
     const TabPanel = props => {
@@ -126,12 +116,15 @@ export const Index = ({}) => {
                 </Tooltip>
             </Fab>
             <div className="layout-card" style={{ marginTop: 12 }}>
+                {/* Search */}
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs>
                         <TextField
                             id="standard-basic"
-                            placeholder="Search the UQ Library..."
+                            label="Search the UQ Library"
+                            placeholder="Find books, articles, databases, conferences and more.."
                             fullWidth
+                            InputLabelProps={{ shrink: true }}
                             InputProps={{
                                 classes: {
                                     input: classes.selectInput,
@@ -151,14 +144,7 @@ export const Index = ({}) => {
                                 className={classes.selectInput}
                                 // onChange={handleChange}
                             >
-                                <MenuItem value={10}>
-                                    <LocalLibraryIcon
-                                        fontSize={'small'}
-                                        color={'secondary'}
-                                        style={{ marginRight: 6 }}
-                                    />
-                                    Library
-                                </MenuItem>
+                                <MenuItem value={10}>Library</MenuItem>
                                 <MenuItem value={20}>Books</MenuItem>
                                 <MenuItem value={30}>Journal articles</MenuItem>
                                 <MenuItem value={30}>Journal articles</MenuItem>
@@ -194,88 +180,183 @@ export const Index = ({}) => {
                     </Grid>
                     <Grid item xs />
                 </Grid>
+
                 <Grid container spacing={6}>
+                    {/* Spotlights */}
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
                             <ImageGallery
+                                onErrorImageURL={welcomeSpotlight}
                                 items={images}
                                 showThumbnails={false}
                                 showFullscreenButton={false}
                                 showPlayButton={false}
                                 autoPlay
-                                slideDuration={2500}
+                                slideDuration={1000}
                                 slideInterval={8000}
-                                showBullets
+                                showBullets={images.length > 1}
                             />
                         </div>
                     </Grid>
+
+                    {/* Personalisation panel */}
                     <Grid item xs={4} style={{ paddingLeft: 24, paddingTop: 28 }}>
                         <Grid
                             container
                             spacing={1}
                             style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 24, height: '100%' }}
-                            justify={'flex-start'}
+                            justify={'flex-end'}
                         >
-                            <Grid item>
-                                <Typography variant={'h3'} component={'h4'} color={'primary'}>
-                                    {greeting()} John
+                            <Grid item xs={12}>
+                                <Typography variant={'h4'} component={'h4'} color={'primary'}>
+                                    {greeting()} {(account && account.firstName) || ''}
                                 </Typography>
                             </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '30px' }}>
-                                    Current print balance <b>$12.50</b>
+                            <Grid item xs={12} style={{ marginBottom: -12, alignSelf: 'flex-end' }}>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '30px' }}>
+                                        Current print balance <b>$12.50</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your print balance'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} color={'secondary'}>
+                                                <PrintIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Tooltip
-                                        id="auth-button"
-                                        title={'Manage your print balance'}
-                                        placement="left"
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
-                                            <PrintIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                        Current book loans <b>6</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your book loans'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} color={'secondary'}>
+                                                <MenuBookIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                    Current book loans <b>6</b>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                        Overdue book loans <b style={{ color: 'red' }}>1</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your overdue loans'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'red' }}>
+                                                <NotificationImportantIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Tooltip
-                                        id="auth-button"
-                                        title={'Manage your book loans'}
-                                        placement="left"
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
-                                            <MenuBookIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                    Overdue book loans <b>1</b>
-                                </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Tooltip
-                                        id="auth-button"
-                                        title={'Manage your book loans'}
-                                        placement="left"
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
-                                            <NotificationImportantIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                        Overdue fines <b style={{ color: 'red' }}>$7.50</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your overdue fines'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'red' }}>
+                                                <MonetizationOnIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
                     </Grid>
 
-                    <Grid item xs={12} sm={6}>
+                    {/* Your Librarian */}
+                    <Grid item xs={12} sm={5}>
+                        <StandardCard fullHeight noPadding noHeader>
+                            <Grid container>
+                                <Grid
+                                    item
+                                    style={{
+                                        height: 250,
+                                        width: 175,
+                                        background:
+                                            'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
+                                        backgroundRepeat: 'no-repeat',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'right',
+                                    }}
+                                />
+                                <Grid item xs style={{ padding: 12 }}>
+                                    <Typography color={'primary'} variant={'h5'}>
+                                        Your Librarian
+                                    </Typography>
+                                    <p>
+                                        <b>Felicity Berends</b>
+                                    </p>
+                                    <Grid container>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton size={'small'} style={{ width: 40, height: 40, margin: -6 }}>
+                                                <PhoneIcon
+                                                    size={'small'}
+                                                    color={'secondary'}
+                                                    style={{ paddingRight: 6 }}
+                                                />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <a href="#">+61 7 336 56752</a>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton size={'small'} style={{ width: 40, height: 40, margin: -6 }}>
+                                                <MailOutlineIcon
+                                                    size={'small'}
+                                                    color={'secondary'}
+                                                    style={{ paddingRight: 6 }}
+                                                />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <a href="#">a.berends@library.uq.edu.au</a>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton size={'small'} style={{ width: 40, height: 40, margin: -6 }}>
+                                                <RoomIcon
+                                                    size={'small'}
+                                                    color={'secondary'}
+                                                    style={{ paddingRight: 6 }}
+                                                />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs>
+                                            Duhig Tower, St Lucia
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+
+                    {/* Comp Avail/hours/Training */}
+                    <Grid item xs={12} sm={7}>
                         <StandardCard noPadding noHeader fullHeight>
                             <AppBar position="static">
                                 <Tabs value={0} onChange={null} aria-label="simple tabs example">
@@ -306,12 +387,7 @@ export const Index = ({}) => {
                                 </Tabs>
                             </AppBar>
                             <TabPanel value={0} index={0} style={{ overflowY: 'scroll', height: 200 }}>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
-                                <p>Available computers</p>
+                                Available computers
                             </TabPanel>
                             <TabPanel value={0} index={1}>
                                 Library hours
@@ -319,54 +395,6 @@ export const Index = ({}) => {
                             <TabPanel value={0} index={2}>
                                 Training
                             </TabPanel>
-                        </StandardCard>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <StandardCard fullHeight noPadding noHeader style={{ marginBottom: 0 }}>
-                            <Grid container alignItems={'stretch'}>
-                                <Grid item={3}>
-                                    <div
-                                        style={{
-                                            height: 250,
-                                            width: 250,
-                                            background:
-                                                'url(https://web.library.uq.edu.au/sites/web.library.uq.edu.au/files/styles/uq_core_small_portrait/public/ckfinder/images/people/Liaison%20librarians%20240%20x%20240/Berends_Felicity_S_240x240.jpg?itok=vxp_rnrI)',
-                                            backgroundRepeat: 'no-repeat',
-                                            backgroundSize: 'cover',
-                                            backgroundPosition: 'right',
-                                            marginBottom: -24,
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs style={{ padding: 16 }}>
-                                    <Typography color={'primary'} variant={'h5'}>
-                                        Your Librarian
-                                    </Typography>
-                                    <p>
-                                        <b>Felicity Berends</b>
-                                    </p>
-                                    <Grid container style={{ marginTop: 60 }}>
-                                        <Grid item xs={2}>
-                                            <PhoneIcon color={'secondary'} />
-                                        </Grid>
-                                        <Grid item xs={10}>
-                                            <a href="#">+61 7 336 56752</a>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <MailOutlineIcon color={'secondary'} />
-                                        </Grid>
-                                        <Grid item xs={10}>
-                                            <a href="#">a.berends@library.uq.edu.au</a>
-                                        </Grid>
-                                        <Grid item xs={2}>
-                                            <RoomIcon color={'secondary'} />
-                                        </Grid>
-                                        <Grid item xs={10}>
-                                            Duhig Tower, St Lucia
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
                         </StandardCard>
                     </Grid>
 
@@ -416,6 +444,7 @@ export const Index = ({}) => {
                             </Grid>
                         </StandardCard>
                     </Grid>
+
                     {/* Primo account */}
                     <Grid item xs={12} sm={4}>
                         <StandardCard fullHeight noHeader>
@@ -448,6 +477,10 @@ export const Index = ({}) => {
 
 Index.propTypes = {
     account: PropTypes.object,
+    actions: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsError: PropTypes.any,
+    spotlightsLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

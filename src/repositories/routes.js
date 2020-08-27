@@ -83,8 +83,10 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
     apiUrl: `authors/details/${userId}`,
 });
 
-// academic stats apis
+// Spotlights API
+export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// academic stats apis
 export const VOCABULARIES_API = ({ id }) => ({ apiUrl: `vocabularies?cvo_ids=${id}` });
 export const GET_PUBLICATION_TYPES_API = () => ({ apiUrl: 'records/types' });
 

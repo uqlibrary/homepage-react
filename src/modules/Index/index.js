@@ -1,1 +1,1 @@
-export { Index } from './components/Index';
+export IndexContainer from './containers/Index';
