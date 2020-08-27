@@ -134,6 +134,7 @@ const styles = theme => {
 
 export function Megamenu(props) {
     // an array so we can control each submenu separately
+    const { onToggleDrawer } = props;
     const initialSubMenus = [];
     props.menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
@@ -165,7 +166,7 @@ export function Megamenu(props) {
         }
 
         if (!props.docked) {
-            props.onToggleDrawer();
+            onToggleDrawer();
         }
     };
 
@@ -202,12 +203,12 @@ export function Megamenu(props) {
                                 >
                                     {!!menuGroup &&
                                         menuGroup.length > 0 &&
-                                        menuGroup.map(submenuItem => {
+                                        menuGroup.map((submenuItem, index2) => {
                                             return (
                                                 <ListItem
                                                     button
-                                                    key={`menu-item-${index}`}
-                                                    id={`menu-item-${index}`}
+                                                    key={`menu-group-${index1}-item-${index2}`}
+                                                    id={`menu-group-${index1}-item-${index2}`}
                                                     onClick={() =>
                                                         navigateToLink(submenuItem.linkTo, submenuItem.target)
                                                     }
@@ -239,12 +240,12 @@ export function Megamenu(props) {
             return menuItem.divider ? (
                 <Divider key={`menu_item_${index}`} />
             ) : (
-                <span className="menu-item-container" key={`menu-item-${index}`}>
+                <span className="menu-item-container" key={`menucontainer-item-${index}`}>
                     <ListItem
                         className={classes.submenus}
                         button
-                        key={`menu-item-${index}`}
-                        id={`menu-item-${index}`}
+                        key={`submenus-item-${index}`}
+                        id={`submenus-item-${index}`}
                         onClick={() => clickMenuItem(menuItem)}
                     >
                         <ListItemText
@@ -272,6 +273,20 @@ export function Megamenu(props) {
         <div className="layout-card">
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
+                <ListItem
+                    className={classes.submenus}
+                    button
+                    key={'submenus-item-close'}
+                    id={'submenus-item-close'}
+                    onClick={() => onToggleDrawer()}
+                >
+                    <ListItemText
+                        classes={{
+                            primary: props.classes.ListItemTextPrimary,
+                        }}
+                        primary="Close"
+                    />
+                </ListItem>
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
         </div>

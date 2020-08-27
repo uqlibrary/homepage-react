@@ -236,7 +236,11 @@ export class AppClass extends PureComponent {
                     />
                 </Grid>
                 <Meta routesConfig={routesConfig} />
-                <Header isAuthorizedUser={isAuthorizedUser} toggleDrawer={this.toggleMenu} />
+                <Header
+                    isAuthorizedUser={isAuthorizedUser}
+                    toggleDrawer={this.toggleMenu}
+                    drawerOpen={this.state.docked || this.state.menuDrawerOpen}
+                />
                 <Megamenu
                     menuItems={menuItems}
                     history={this.props.history}
