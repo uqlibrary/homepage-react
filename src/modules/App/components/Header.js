@@ -163,26 +163,24 @@ export const Header = ({ isAuthorizedUser, toggleMenu, menuOpen }) => {
             <Grid item xs={12} className={classes.topHeader}>
                 <Grid container alignItems={'center'}>
                     <Hidden lgUp>
-                        {!menuOpen && (
-                            <Grid item id="hamburger">
-                                {/* hamburger button */}
-                                <Tooltip
-                                    title={locale.global.mainNavButton.tooltip}
-                                    // placement="bottom-end"
-                                    // TransitionComponent={Fade}
+                        <Grid item id="hamburger">
+                            {/* hamburger button */}
+                            <Tooltip
+                                title={locale.global.mainNavButton.tooltip}
+                                // placement="bottom-end"
+                                // TransitionComponent={Fade}
+                            >
+                                <IconButton
+                                    aria-label={locale.global.mainNavButton.aria}
+                                    // style={{ marginLeft: '-12px', marginRight: '12px' }}
+                                    onClick={toggleMenu}
+                                    id={'main-menu-button'}
                                 >
-                                    <IconButton
-                                        aria-label={locale.global.mainNavButton.aria}
-                                        // style={{ marginLeft: '-12px', marginRight: '12px' }}
-                                        onClick={toggleMenu}
-                                        id={'main-menu-button'}
-                                    >
-                                        {/* <Menu />*/}
-                                        <MenuIcon className={classes.icon} style={{ color: 'white' }} />
-                                    </IconButton>
-                                </Tooltip>
-                            </Grid>
-                        )}
+                                    {/* <Menu />*/}
+                                    <MenuIcon className={classes.icon} style={{ color: 'white' }} />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
                     </Hidden>
                     <Grid item xs={'auto'}>
                         <a href="#">

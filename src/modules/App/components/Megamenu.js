@@ -71,7 +71,12 @@ const styles = theme => {
             },
             [theme.breakpoints.down('md')]: {
                 overflowY: 'auto',
-                maxWidth: '90%',
+                maxWidth: '20rem',
+                backgroundColor: 'white',
+                // position: 'absolute',
+                // position: 'fixed',
+                // opacity: 1,
+                // zIndex: 1000,
             },
         },
         ListItemTextPrimary: {
