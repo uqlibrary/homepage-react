@@ -4107,7 +4107,15 @@ exports[`Index page should render placeholders 1`] = `
                                                 indexSeparator=" / "
                                                 infinite={true}
                                                 isRTL={false}
-                                                items={Array []}
+                                                items={
+                                                  Array [
+                                                    Object {
+                                                      "original": "",
+                                                      "originalAlt": "Welcome to the UQ Library",
+                                                      "originalTitle": "UQ Library",
+                                                    },
+                                                  ]
+                                                }
                                                 lazyLoad={false}
                                                 onBeforeSlide={null}
                                                 onClick={null}
@@ -4139,7 +4147,7 @@ exports[`Index page should render placeholders 1`] = `
                                                 showNav={true}
                                                 showPlayButton={false}
                                                 showThumbnails={false}
-                                                slideDuration={2500}
+                                                slideDuration={1000}
                                                 slideInterval={8000}
                                                 slideOnThumbnailOver={false}
                                                 startIndex={0}
@@ -4162,7 +4170,43 @@ exports[`Index page should render placeholders 1`] = `
                                                     >
                                                       <div
                                                         className="image-gallery-slides"
-                                                      />
+                                                      >
+                                                        <div
+                                                          aria-label="Go to Slide 1"
+                                                          className="image-gallery-slide  center "
+                                                          key="slide--0"
+                                                          onClick={null}
+                                                          onFocus={null}
+                                                          onKeyUp={[Function]}
+                                                          onMouseLeave={null}
+                                                          onMouseOver={null}
+                                                          onTouchEnd={null}
+                                                          onTouchMove={null}
+                                                          onTouchStart={null}
+                                                          role="button"
+                                                          style={
+                                                            Object {
+                                                              "MozTransform": "translate3d(0%, 0, 0)",
+                                                              "OTransform": "translate3d(0%, 0, 0)",
+                                                              "WebkitTransform": "translate3d(0%, 0, 0)",
+                                                              "msTransform": "translate3d(0%, 0, 0)",
+                                                              "transform": "translate3d(0%, 0, 0)",
+                                                            }
+                                                          }
+                                                          tabIndex="-1"
+                                                        >
+                                                          <div>
+                                                            <img
+                                                              alt="Welcome to the UQ Library"
+                                                              className="image-gallery-image"
+                                                              onError={[Function]}
+                                                              onLoad={[Function]}
+                                                              src=""
+                                                              title="UQ Library"
+                                                            />
+                                                          </div>
+                                                        </div>
+                                                      </div>
                                                       <div
                                                         className="image-gallery-bullets"
                                                       >
@@ -4170,7 +4214,16 @@ exports[`Index page should render placeholders 1`] = `
                                                           aria-label="Bullet Navigation"
                                                           className="image-gallery-bullets-container"
                                                           role="navigation"
-                                                        />
+                                                        >
+                                                          <button
+                                                            aria-label="Go to Slide 1"
+                                                            aria-pressed="true"
+                                                            className="image-gallery-bullet active"
+                                                            key="bullet--0"
+                                                            onClick={[Function]}
+                                                            type="button"
+                                                          />
+                                                        </div>
                                                       </div>
                                                     </div>
                                                   </div>

@@ -31,6 +31,7 @@ import NotificationImportantIcon from '@material-ui/icons/NotificationImportant'
 import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { loadSpotlights } from 'actions';
+const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 
 const useStyles = makeStyles(
     theme => ({
@@ -57,21 +58,26 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Index = ({ account, spotlights, spotlightsError, spotlightsLoading }) => {
+export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
     useEffect(() => {
         if (spotlightsLoading === null) {
             dispatch(loadSpotlights());
         }
-    }, [spotlightsLoading]);
-    console.log(spotlightsError, spotlightsLoading);
+    }, [spotlightsLoading, dispatch]);
     const classes = useStyles();
     const images =
-        spotlights &&
-        spotlights.map(item => {
-            return { original: item.img_url };
-        });
-    console.log('IMAGES:', images);
+        !!spotlights && spotlights.length > 0
+            ? spotlights.map(item => {
+                  return { original: item.img_url };
+              })
+            : [
+                  {
+                      original: welcomeSpotlight,
+                      originalAlt: 'Welcome to the UQ Library',
+                      originalTitle: 'UQ Library',
+                  },
+              ];
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
@@ -122,7 +128,6 @@ export const Index = ({ account, spotlights, spotlightsError, spotlightsLoading 
             </div>
         );
     };
-    loadSpotlights();
     return (
         <StandardPage>
             <Fab size="small" color="secondary" aria-label="help" className={classes.ChatIcon} onClick={null}>
@@ -201,12 +206,13 @@ export const Index = ({ account, spotlights, spotlightsError, spotlightsLoading 
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
                             <ImageGallery
-                                items={(images && images.length > 0 && images) || []}
+                                onErrorImageURL={welcomeSpotlight}
+                                items={images}
                                 showThumbnails={false}
                                 showFullscreenButton={false}
                                 showPlayButton={false}
                                 autoPlay
-                                slideDuration={2500}
+                                slideDuration={1000}
                                 slideInterval={8000}
                                 showBullets
                             />
