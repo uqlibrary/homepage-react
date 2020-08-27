@@ -126,6 +126,8 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.handleResize(this.state.mediaQuery);
+        this.state.mediaQuery.addListener(this.handleResize);
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -133,7 +135,18 @@ export class AppClass extends PureComponent {
             this.sessionExpiredConfirmationBox.showConfirmation();
         }
     }
-    toggleDrawer = () => {
+
+    componentWillUnmount() {
+        this.state.mediaQuery.removeListener(this.handleResize);
+    }
+
+    handleResize = mediaQuery => {
+        this.setState({
+            docked: mediaQuery.matches,
+        });
+    };
+
+    toggleMenu = () => {
         this.setState({
             menuDrawerOpen: !this.state.menuDrawerOpen,
         });
@@ -223,7 +236,7 @@ export class AppClass extends PureComponent {
                     />
                 </Grid>
                 <Meta routesConfig={routesConfig} />
-                <Header isAuthorizedUser={isAuthorizedUser} />
+                <Header isAuthorizedUser={isAuthorizedUser} toggleDrawer={this.toggleMenu} />
                 <Megamenu
                     menuItems={menuItems}
                     history={this.props.history}
@@ -233,6 +246,7 @@ export class AppClass extends PureComponent {
                         skipNavTitle: locale.global.skipNav.title,
                         closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                     }}
+                    drawerOpen={this.state.docked || this.state.menuDrawerOpen}
                 />
                 <div className="content-container" id="content-container">
                     <ConfirmDialogBox

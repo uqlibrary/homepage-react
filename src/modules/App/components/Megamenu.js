@@ -64,9 +64,15 @@ const styles = theme => {
         },
         mainMenu: {
             outline: 'none',
-            display: 'flex',
-            flexGrow: 1,
             paddingTop: 0,
+            [theme.breakpoints.up('lg')]: {
+                display: 'flex',
+                flexGrow: 1,
+            },
+            [theme.breakpoints.down('md')]: {
+                overflowY: 'auto',
+                maxWidth: '90%',
+            },
         },
         ListItemTextPrimary: {
             ...theme.typography.body2,
@@ -76,33 +82,52 @@ const styles = theme => {
         ListItemTextSecondary: {
             ...theme.typography.caption,
         },
-        mainMenuFooter: {
-            paddingLeft: '12px',
-            paddingBottom: '12px',
-            fontSize: theme.typography.caption.fontSize,
-            color: theme.palette.secondary.main,
-        },
+        // mainMenuFooter: {
+        //     paddingLeft: '12px',
+        //     paddingBottom: '12px',
+        //     fontSize: theme.typography.caption.fontSize,
+        //     color: theme.palette.secondary.main,
+        // },
         iconButton: {
             color: theme.palette.white.main,
         },
         menuDropdown: {
+            // new
             backgroundColor: '#f2f2f2',
-            position: 'absolute',
             zIndex: 1000,
+            position: 'absolute',
+            // },
+            [theme.breakpoints.down('lg')]: {
+                width: '100%',
+            },
+        },
+        submenus: {
+            [theme.breakpoints.up('lg')]: {
+                flexDirection: 'row',
+            },
         },
         menuGroups: {
-            display: 'flex',
+            [theme.breakpoints.up('lg')]: {
+                display: 'flex',
+            },
         },
         verticalMenuList: {
-            display: 'flex',
-            flexDirection: 'column',
+            [theme.breakpoints.up('lg')]: {
+                display: 'flex',
+                flexDirection: 'column',
+            },
         },
         menuItem: {
-            alignItems: 'flex-start',
-            paddingTop: 0,
+            [theme.breakpoints.up('lg')]: {
+                alignItems: 'flex-start',
+                paddingTop: 0,
+            },
             paddingBottom: 0,
             minHeight: '51px',
             verticalAlign: 'top',
+            [theme.breakpoints.down('lg')]: {
+                paddingLeft: '2rem',
+            },
         },
     };
 };
@@ -216,9 +241,8 @@ export function Megamenu(props) {
             ) : (
                 <span className="menu-item-container" key={`menu-item-${index}`}>
                     <ListItem
-                        flexDirection="row"
+                        className={classes.submenus}
                         button
-                        special="yes"
                         key={`menu-item-${index}`}
                         id={`menu-item-${index}`}
                         onClick={() => clickMenuItem(menuItem)}
