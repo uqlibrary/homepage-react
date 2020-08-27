@@ -32,6 +32,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { loadSpotlights } from 'actions';
 const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 
 const useStyles = makeStyles(
     theme => ({
@@ -81,32 +82,11 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
-            return (
-                <span>
-                    Good
-                    <br />
-                    morning
-                    <br />
-                </span>
-            );
+            return <span>Good morning</span>;
         } else if (time >= 12 && time < 18) {
-            return (
-                <span>
-                    Good
-                    <br />
-                    afternoon
-                    <br />
-                </span>
-            );
+            return <span>Good afternoon</span>;
         } else {
-            return (
-                <span>
-                    Good
-                    <br />
-                    evening
-                    <br />
-                </span>
-            );
+            return <span>Good evening</span>;
         }
     };
     const TabPanel = props => {
@@ -225,62 +205,81 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             container
                             spacing={1}
                             style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 24, height: '100%' }}
-                            justify={'flex-start'}
+                            justify={'flex-end'}
                         >
-                            <Grid item>
-                                <Typography variant={'h3'} component={'h4'} color={'primary'}>
+                            <Grid item xs={12}>
+                                <Typography variant={'h4'} component={'h4'} color={'primary'}>
                                     {greeting()} {(account && account.firstName) || ''}
                                 </Typography>
                             </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '30px' }}>
-                                    Current print balance <b>$12.50</b>
+                            <Grid item xs={12} style={{ marginBottom: -12, alignSelf: 'flex-end' }}>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '30px' }}>
+                                        Current print balance <b>$12.50</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your print balance'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} color={'secondary'}>
+                                                <PrintIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Tooltip
-                                        id="auth-button"
-                                        title={'Manage your print balance'}
-                                        placement="left"
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
-                                            <PrintIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                        Current book loans <b>6</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your book loans'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} color={'secondary'}>
+                                                <MenuBookIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                    Current book loans <b>6</b>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                        Overdue book loans <b style={{ color: 'red' }}>1</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your overdue loans'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'red' }}>
+                                                <NotificationImportantIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Tooltip
-                                        id="auth-button"
-                                        title={'Manage your book loans'}
-                                        placement="left"
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
-                                            <MenuBookIcon />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={1}>
-                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                    Overdue book loans <b>1</b>
-                                </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Tooltip
-                                        id="auth-button"
-                                        title={'Manage your book loans'}
-                                        placement="left"
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton size={'small'} variant={'contained'} color={'primary'}>
-                                            <NotificationImportantIcon />
-                                        </IconButton>
-                                    </Tooltip>
+                                <Grid container spacing={0}>
+                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                        Overdue fines <b style={{ color: 'red' }}>$7.50</b>
+                                    </Grid>
+                                    <Grid item xs={'auto'}>
+                                        <Tooltip
+                                            id="auth-button"
+                                            title={'Manage your overdue fines'}
+                                            placement="left"
+                                            TransitionProps={{ timeout: 300 }}
+                                        >
+                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'red' }}>
+                                                <MonetizationOnIcon />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -309,23 +308,45 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     <p>
                                         <b>Felicity Berends</b>
                                     </p>
-                                    <Grid container style={{ marginTop: 'auto' }}>
-                                        <Grid item xs={1}>
-                                            <PhoneIcon color={'secondary'} />
+                                    <Grid container>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton size={'small'} style={{ width: 40, height: 40, margin: -6 }}>
+                                                <PhoneIcon
+                                                    size={'small'}
+                                                    color={'secondary'}
+                                                    style={{ paddingRight: 6 }}
+                                                />
+                                            </IconButton>
                                         </Grid>
-                                        <Grid item xs={11}>
+                                        <Grid item xs>
                                             <a href="#">+61 7 336 56752</a>
                                         </Grid>
-                                        <Grid item xs={1}>
-                                            <MailOutlineIcon color={'secondary'} />
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton size={'small'} style={{ width: 40, height: 40, margin: -6 }}>
+                                                <MailOutlineIcon
+                                                    size={'small'}
+                                                    color={'secondary'}
+                                                    style={{ paddingRight: 6 }}
+                                                />
+                                            </IconButton>
                                         </Grid>
-                                        <Grid item xs={11}>
+                                        <Grid item xs>
                                             <a href="#">a.berends@library.uq.edu.au</a>
                                         </Grid>
-                                        <Grid item xs={1}>
-                                            <RoomIcon color={'secondary'} />
+                                    </Grid>
+                                    <Grid container>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton size={'small'} style={{ width: 40, height: 40, margin: -6 }}>
+                                                <RoomIcon
+                                                    size={'small'}
+                                                    color={'secondary'}
+                                                    style={{ paddingRight: 6 }}
+                                                />
+                                            </IconButton>
                                         </Grid>
-                                        <Grid item xs={11}>
+                                        <Grid item xs>
                                             Duhig Tower, St Lucia
                                         </Grid>
                                     </Grid>
