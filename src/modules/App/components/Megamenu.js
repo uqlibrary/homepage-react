@@ -134,7 +134,7 @@ const styles = theme => {
 
 export function Megamenu(props) {
     // an array so we can control each submenu separately
-    const { classes, docked, menuOpen, menuItems, onToggleMenu } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
     const initialSubMenus = [];
     menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
@@ -166,7 +166,7 @@ export function Megamenu(props) {
         }
 
         // if (!props.docked) {
-        //     onToggleMenu();
+        //     toggleMenu();
         // }
     };
 
@@ -281,7 +281,7 @@ export function Megamenu(props) {
                     button
                     key={'submenus-item-close'}
                     id={'submenus-item-close'}
-                    onClick={() => onToggleMenu()}
+                    onClick={() => toggleMenu()}
                 >
                     <ListItemText
                         classes={{
@@ -303,7 +303,7 @@ Megamenu.propTypes = {
     logoLink: PropTypes.string,
     menuOpen: PropTypes.bool,
     docked: PropTypes.bool,
-    onToggleMenu: PropTypes.func,
+    toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
     locale: PropTypes.shape({
         skipNavTitle: PropTypes.string,
