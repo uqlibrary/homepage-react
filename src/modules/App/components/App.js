@@ -223,7 +223,7 @@ export class AppClass extends PureComponent {
                     />
                 </Grid>
                 <Meta routesConfig={routesConfig} />
-                <Header isAuthorizedUser={isAuthorizedUser} />
+                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} />
                 <Grid
                     container
                     spacing={3}

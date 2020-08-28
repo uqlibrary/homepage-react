@@ -19,6 +19,7 @@ import ChatIcon from '@material-ui/icons/Chat';
 import PhoneIcon from '@material-ui/icons/Phone';
 import DescriptionIcon from '@material-ui/icons/Description';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 
 const useStyles = makeStyles(
     theme => ({
@@ -118,7 +119,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Header = ({ isAuthorizedUser }) => {
+export const Header = ({ isAuthorizedUser, account }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -152,6 +153,11 @@ export const Header = ({ isAuthorizedUser }) => {
         },
         checked: {},
     })(props => <Radio color="default" {...props} />);
+    const redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
+        const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
+        const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
+        window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
+    };
 
     return (
         <Grid container className={classes.gradient}>
@@ -284,7 +290,11 @@ export const Header = ({ isAuthorizedUser }) => {
                         <AuthButton
                             isAuthorizedUser={isAuthorizedUser}
                             signInTooltipText={'Login to UQ'}
-                            signOutTooltipText={'Log out of UQ'}
+                            signOutTooltipText={`${(account && account.firstName) || ''} ${(account &&
+                                account &&
+                                account.lastName) ||
+                                ''} - Log out of UQ`}
+                            onClick={redirectUserToLogin(isAuthorizedUser, true)}
                         />
                     </Grid>
                 </Grid>
@@ -325,11 +335,15 @@ export const Header = ({ isAuthorizedUser }) => {
 };
 
 Header.propTypes = {
+    account: PropTypes.object,
     isAuthorizedUser: PropTypes.bool,
+    isAdmin: PropTypes.bool,
     headerExpand: PropTypes.bool,
 };
 
 Header.defaultProps = {
+    account: {},
+    isAdmin: false,
     isAuthorizedUser: false,
     headerExpand: false,
 };
