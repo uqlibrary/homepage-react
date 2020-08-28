@@ -289,7 +289,7 @@ export const Header = ({ isAuthorizedUser, account }) => {
                     <Grid item xs={'auto'}>
                         <AuthButton
                             isAuthorizedUser={isAuthorizedUser}
-                            signInTooltipText={'Login to UQ'}
+                            signInTooltipText={'Login to the UQ Library'}
                             signOutTooltipText={`${(account && account.firstName) || ''} ${(account &&
                                 account &&
                                 account.lastName) ||
