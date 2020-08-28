@@ -5,7 +5,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import Divider from '@material-ui/core/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
@@ -251,9 +250,7 @@ export function Megamenu(props) {
     const renderMenuItems = items =>
         items.map((menuItem, index) => {
             const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
-            return menuItem.divider ? (
-                <Divider key={`menu_item_${index}`} />
-            ) : (
+            return (
                 <span className="menu-item-container" key={`menucontainer-item-${index}`}>
                     <ListItem
                         className={classes.submenus}
