@@ -4475,7 +4475,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               <a
                                                                                 href="#"
                                                                               >
-                                                                                Databases
+                                                                                Database search
                                                                               </a>
                                                                             </div>
                                                                           </ForwardRef(Grid)>

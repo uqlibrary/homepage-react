@@ -181,7 +181,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     <a href="#">Advanced search</a>
                                 </Grid>
                                 <Grid item xs={'auto'} className={classes.searchUnderlinks}>
-                                    <a href="#">Databases</a>
+                                    <a href="#">Database search</a>
                                 </Grid>
                                 <Grid item xs={'auto'} className={classes.searchUnderlinks}>
                                     <a href="#">Browse search</a>
