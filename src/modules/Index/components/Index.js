@@ -37,7 +37,10 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 const useStyles = makeStyles(
     theme => ({
         searchPanel: {
-            padding: 0,
+            paddingTop: 12,
+            paddingRight: 30,
+            paddingBottom: 0,
+            paddingLeft: 30,
         },
         selectInput: {
             fontSize: 24,
@@ -45,7 +48,6 @@ const useStyles = makeStyles(
             color: theme.palette.primary.main,
         },
         searchUnderlinks: {
-            fontSize: 12,
             '&a:link, a:hover, a:visited, a:active': {
                 color: theme.palette.primary.main + ' !important',
             },
@@ -116,72 +118,77 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                 </Tooltip>
             </Fab>
             <div className="layout-card" style={{ marginTop: 12 }}>
-                {/* Search */}
-                <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
-                    <Grid item xs>
-                        <TextField
-                            id="standard-basic"
-                            label="Search the UQ Library"
-                            placeholder="Find books, articles, databases, conferences and more.."
-                            fullWidth
-                            InputLabelProps={{ shrink: true }}
-                            InputProps={{
-                                classes: {
-                                    input: classes.selectInput,
-                                },
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={2}>
-                        <FormControl style={{ minWidth: '100%' }}>
-                            <InputLabel id="demo-simple-select-label" autoFocus>
-                                Search within
-                            </InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={10}
-                                className={classes.selectInput}
-                                // onChange={handleChange}
-                            >
-                                <MenuItem value={10}>Library</MenuItem>
-                                <MenuItem value={20}>Books</MenuItem>
-                                <MenuItem value={30}>Journal articles</MenuItem>
-                                <MenuItem value={30}>Journal articles</MenuItem>
-                                <MenuItem value={30}>Video & Audio</MenuItem>
-                                <MenuItem value={30}>Journals</MenuItem>
-                                <MenuItem value={30}>Physical items</MenuItem>
-                                <MenuItem value={30}>Databases</MenuItem>
-                                <MenuItem value={30}>Past exam papers</MenuItem>
-                                <MenuItem value={30}>Course reading lists</MenuItem>
-                            </Select>
-                        </FormControl>
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        <Button
-                            size={'large'}
-                            variant="contained"
-                            color={'primary'}
-                            style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
-                        >
-                            <SearchIcon />
-                        </Button>
-                    </Grid>
-                </Grid>
-                <Grid container spacing={2} style={{ marginBottom: 24 }}>
-                    <Grid item className={classes.searchUnderlinks}>
-                        <a href="#">Search help</a>
-                    </Grid>
-                    <Grid item className={classes.searchUnderlinks}>
-                        <a href="#">Browse search</a>
-                    </Grid>
-                    <Grid item className={classes.searchUnderlinks}>
-                        <a href="#">Advanced search</a>
-                    </Grid>
-                    <Grid item xs />
-                </Grid>
-
                 <Grid container spacing={6}>
+                    {/* Search */}
+                    <Grid item xs={12}>
+                        <StandardCard noPadding noHeader>
+                            <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
+                                <Grid item xs={2}>
+                                    <FormControl style={{ minWidth: '100%' }}>
+                                        <InputLabel id="demo-simple-select-label" autoFocus>
+                                            Search
+                                        </InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={10}
+                                            className={classes.selectInput}
+                                            // onChange={handleChange}
+                                        >
+                                            <MenuItem value={10}>Library</MenuItem>
+                                            <MenuItem value={20}>Books</MenuItem>
+                                            <MenuItem value={30}>Journal articles</MenuItem>
+                                            <MenuItem value={30}>Journal articles</MenuItem>
+                                            <MenuItem value={30}>Video & Audio</MenuItem>
+                                            <MenuItem value={30}>Journals</MenuItem>
+                                            <MenuItem value={30}>Physical items</MenuItem>
+                                            <MenuItem value={30}>Databases</MenuItem>
+                                            <MenuItem value={30}>Past exam papers</MenuItem>
+                                            <MenuItem value={30}>Course reading lists</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs>
+                                    <TextField
+                                        id="standard-basic"
+                                        placeholder="Find books, articles, databases, conferences and more.."
+                                        fullWidth
+                                        InputLabelProps={{ shrink: true }}
+                                        InputProps={{
+                                            classes: {
+                                                input: classes.selectInput,
+                                            },
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <Button
+                                        size={'large'}
+                                        variant="contained"
+                                        color={'primary'}
+                                        style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
+                                    >
+                                        <SearchIcon />
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                            <Grid container spacing={2} style={{ paddingRight: 30, paddingTop: 12, paddingBottom: 12 }}>
+                                <Grid item xs />
+                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
+                                    <a href="#">Search help</a>
+                                </Grid>
+                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
+                                    <a href="#">Advanced search</a>
+                                </Grid>
+                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
+                                    <a href="#">Databases</a>
+                                </Grid>
+                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
+                                    <a href="#">Browse search</a>
+                                </Grid>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
                     {/* Spotlights */}
                     <Grid item xs={8}>
                         <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
