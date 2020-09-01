@@ -138,7 +138,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <MenuItem value={10}>Library</MenuItem>
                                             <MenuItem value={20}>Books</MenuItem>
                                             <MenuItem value={30}>Journal articles</MenuItem>
-                                            <MenuItem value={30}>Journal articles</MenuItem>
                                             <MenuItem value={30}>Video & Audio</MenuItem>
                                             <MenuItem value={30}>Journals</MenuItem>
                                             <MenuItem value={30}>Physical items</MenuItem>
@@ -222,7 +221,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             <Grid item xs={12} style={{ marginBottom: -12, alignSelf: 'flex-end' }}>
                                 <Grid container spacing={0}>
                                     <Grid item xs style={{ lineHeight: '30px' }}>
-                                        Current print balance <b>$12.50</b>
+                                        Current print balance <b style={{ color: 'green' }}>$12.50</b>
                                     </Grid>
                                     <Grid item xs={'auto'}>
                                         <Tooltip
@@ -231,7 +230,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             placement="left"
                                             TransitionProps={{ timeout: 300 }}
                                         >
-                                            <IconButton size={'small'} variant={'contained'} color={'secondary'}>
+                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'green' }}>
                                                 <PrintIcon />
                                             </IconButton>
                                         </Tooltip>
@@ -256,7 +255,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                 </Grid>
                                 <Grid container spacing={0}>
                                     <Grid item xs style={{ lineHeight: '24px' }}>
-                                        Overdue book loans <b style={{ color: 'red' }}>1</b>
+                                        Overdue book loans <b style={{ color: 'orange' }}>1</b>
                                     </Grid>
                                     <Grid item xs={'auto'}>
                                         <Tooltip
@@ -265,7 +264,11 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             placement="left"
                                             TransitionProps={{ timeout: 300 }}
                                         >
-                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'red' }}>
+                                            <IconButton
+                                                size={'small'}
+                                                variant={'contained'}
+                                                style={{ color: 'orange' }}
+                                            >
                                                 <NotificationImportantIcon />
                                             </IconButton>
                                         </Tooltip>
@@ -366,32 +369,33 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                     <Grid item xs={12} sm={7}>
                         <StandardCard noPadding noHeader fullHeight>
                             <AppBar position="static">
-                                <Tabs value={0} onChange={null} aria-label="simple tabs example">
-                                    <Tooltip
-                                        title={'St Lucia location detected - click to change your location'}
-                                        placement={'top'}
+                                <Grid container spacing={2}>
+                                    <Grid item xs>
+                                        <Tabs value={0} aria-label="simple tabs example">
+                                            <Tab value={0} label="Computer availability" style={{ minWidth: 0 }} />
+                                            <Tab label="Library Hours" style={{ minWidth: 0 }} />
+                                            <Tab label="Training" style={{ minWidth: 0 }} />
+                                        </Tabs>
+                                    </Grid>
+                                    <Grid
+                                        item
+                                        xs={'auto'}
+                                        style={{ paddingTop: 6, paddingBottom: 10, paddingLeft: 24, paddingRight: 24 }}
                                     >
-                                        <Tab
-                                            onClick={() => console.log('ping')}
-                                            icon={<RoomIcon />}
-                                            style={{
-                                                color: 'rgba(255,255,255,0.33)',
-                                                marginLeft: 16,
-                                                width: 20,
-                                                minWidth: 0,
-                                            }}
-                                            color={'secondary'}
-                                        />
-                                    </Tooltip>
-                                    <Tab
-                                        value={0}
-                                        label="Computer availability"
-                                        style={{ minWidth: 0 }}
-                                        color={'primary'}
-                                    />
-                                    <Tab label="Library Hours" style={{ minWidth: 0 }} />
-                                    <Tab label="Training" style={{ minWidth: 0 }} />
-                                </Tabs>
+                                        <Tooltip title={'Select your location'} placement={'left'}>
+                                            <IconButton>
+                                                <RoomIcon
+                                                    style={{
+                                                        height: 24,
+                                                        color: '#FFFFFF',
+                                                        marginLeft: -6,
+                                                        marginRight: -12,
+                                                    }}
+                                                />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Grid>
+                                </Grid>
                             </AppBar>
                             <TabPanel value={0} index={0} style={{ overflowY: 'scroll', height: 200 }}>
                                 Available computers
@@ -458,17 +462,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             <Grid item xs>
                                 <Typography color={'primary'} variant={'h5'}>
                                     Primo account details
-                                </Typography>
-                            </Grid>
-                        </StandardCard>
-                    </Grid>
-
-                    {/* eSpace lure */}
-                    <Grid item xs={12} sm={4}>
-                        <StandardCard fullHeight noHeader>
-                            <Grid item xs>
-                                <Typography color={'primary'} variant={'h5'}>
-                                    eSpace researcher
                                 </Typography>
                             </Grid>
                         </StandardCard>
