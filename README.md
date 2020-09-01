@@ -1,8 +1,8 @@
 # HOMEPAGE-REACT
 
-[![Codeship Status for uqlibrary/fez-frontend](https://app.codeship.com/projects/5f018a50-f4f8-0134-5dd6-4eabb52e4bf9/status?branch=master)](https://app.codeship.com/projects/210111)
-[![Dependency Status](https://david-dm.org/uqlibrary/fez-frontend.svg)](https://david-dm.org/uqlibrary/fez-frontend)
-[![Dev Dependency Status](https://david-dm.org/uqlibrary/fez-frontend/dev-status.svg)](https://david-dm.org/uqlibrary/fez-frontend)
+[![Codebuild Status for uqlibrary/homepage-react](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSUhCeGFUaW5iaHMyYjNIcnNWTGJMOTA3eThjRFFTYVhyY3NiSDVTWlJlbnl5VllnUHlvRzVyeWdhYW52VnduNUNzbDBPZUkreVFvUTFkQkhyQ0YxZUJZPSIsIml2UGFyYW1ldGVyU3BlYyI6IldlOVk5dlVxU0ROSE5IaDciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/homepage-master/view?region=ap-southeast-2)
+[![Dependency Status](https://david-dm.org/uqlibrary/homepage-react.svg)](https://david-dm.org/uqlibrary/homepage-react)
+[![Dev Dependency Status](https://david-dm.org/uqlibrary/homepage-react/dev-status.svg)](https://david-dm.org/uqlibrary/homepage-react)
 
 A repo for the Library of The University of Queensland website homepage
 
@@ -172,7 +172,6 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 - Because FE is served from cloudFront, add a behaviour to serve css/js filename patterns. E.g. behaviours have been
   added for `main-*` and `commons-*` files.
-- if you cant get eg <https://fez-staging.library.uq.edu.au/view/UQ:e6c5854> to load the new FE (it always loads legacy) you can use the alternate url of <https://fez-staging.library.uq.edu.au/view_new/UQ:e6c5854>
 
 #### Optimisation Guidelines
 
@@ -200,9 +199,9 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 - any custom reject() by promises should return an object with status and message defined
   `{status: 401, message: 'Unauthorised user'}`
-  [Example](https://github.com/uqlibrary/fez-frontend/blob/5b77d698065ddbff6f8ffcd31cf95ffcacd6f16b/src/repositories/account.js#L13)
+  [Example](https://github.com/uqlibrary/homepage-react/blob/master/src/repositories/account.js#L13)
 - any custom catch() methods of promises should process known errors and throw other errors.
-  [Example](https://github.com/uqlibrary/fez-frontend/blob/5b77d698065ddbff6f8ffcd31cf95ffcacd6f16b/src/modules/App/actions.js#L27)
+  [Example](https://github.com/uqlibrary/homepage-react/blob/master/src/modules/App/actions.js#L27)
 
 ## Testing
 
@@ -220,9 +219,9 @@ Before committing changes, locally run tests and update stapshots (if required).
 
 #### Guidelines
 
-- [Action creators](https://github.com/uqlibrary/fez-frontend/blob/master/src/actions/README.md#testing)
-- [Rendered components](https://github.com/uqlibrary/fez-frontend/blob/master/src/modules/README.md#testing)
-- [Reducers](https://github.com/uqlibrary/fez-frontend/blob/master/src/reducers/README.md#testing)
+- [Action creators](https://github.com/uqlibrary/homepage-react/blob/master/src/actions/README.md#testing)
+- [Rendered components](https://github.com/uqlibrary/homepage-react/blob/master/src/modules/README.md#testing)
+- [Reducers](https://github.com/uqlibrary/homepage-react/blob/master/src/reducers/README.md#testing)
 
 ### E2E testing
 
@@ -332,21 +331,20 @@ Ask for review from team-mates if you'd like other eyes on your changes.
 
 ## Deployment
 
-Application deployment is 100% automated using Codeship, and is hosted in S3. All deployment configuration (S3 bucket
-access keys, post deployment cache invalidation configuration) is stored within Codeship. Deployment pipelines are setup
-for branches: "master", "staging, "production" and any branch starting with "feature-".
+Application deployment is 100% automated using AWS Codebuild (and Codepipeline), and is hosted in S3. All testing and deployment commands and configuration are stored in the buildspec yaml files in the repo. All secrets (access keys and tokens for PT, Cypress, Sentry and Google) are stored in AWS Parameter Store, and then populated into ENV variables in those buildspec yaml files.
+Deployment pipelines are setup for branches: "master", "staging, "production" and several key branches starting with "feature-".
 
 - Master branch is always deployed to staging/production
-- Deployments to production are hosted on <https://espace.library.uq.edu.au/>
-- Deployments to staging are hosted on <https://fez-staging.library.uq.edu.au/>
-- All other branches are deployed on <https://development.library.uq.edu/espace/branchName/>.
+- Deployments to production are hosted on <https://homepage-production.library.uq.edu.au/>
+- Deployments to staging are hosted on <https://homepage-staging.library.uq.edu.au/>
+- All other branches are deployed on <https://homepage-development.library.uq.edu/branchName/>.
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions
 
 ## Google Analytics integration
 
-Fez-frontend includes GTM (Google Tag Manager). GTM is set at webpack build time in webpack configuration. It can be
+Homepage includes GTM (Google Tag Manager). GTM is set at webpack build time in webpack configuration. It can be
 setup as an environmental variable at CI level if required.
 
 GTM is very flexible and easy to configure to track required events. See more details on
