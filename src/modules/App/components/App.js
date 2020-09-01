@@ -36,7 +36,7 @@ import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import Megamenu from './Megamenu';
 
 const styles = theme => ({
     appBG: {
@@ -98,7 +98,7 @@ export class AppClass extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            menuDrawerOpen: false,
+            menuOpen: false,
             docked: false,
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
             isMobile: window.matchMedia('(max-width: 720px)').matches,
@@ -126,6 +126,8 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.handleResize(this.state.mediaQuery);
+        this.state.mediaQuery.addListener(this.handleResize);
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -133,9 +135,20 @@ export class AppClass extends PureComponent {
             this.sessionExpiredConfirmationBox.showConfirmation();
         }
     }
-    toggleDrawer = () => {
+
+    componentWillUnmount() {
+        this.state.mediaQuery.removeListener(this.handleResize);
+    }
+
+    handleResize = mediaQuery => {
         this.setState({
-            menuDrawerOpen: !this.state.menuDrawerOpen,
+            docked: mediaQuery.matches,
+        });
+    };
+
+    toggleMenu = () => {
+        this.setState({
+            menuOpen: !this.state.menuOpen,
         });
     };
 
@@ -210,7 +223,6 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        // const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
                 <Grid item xs={12}>
@@ -223,43 +235,23 @@ export class AppClass extends PureComponent {
                     />
                 </Grid>
                 <Meta routesConfig={routesConfig} />
-                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} />
-                <Grid
-                    container
-                    spacing={3}
-                    style={{
-                        width: '103%',
-                        height: 60,
-                        lineHeight: 2,
-                        backgroundColor: '#FFFFFF',
-                        marginTop: 2,
-                        marginBottom: 2,
-                        boxShadow: '0px 3px 10px rgba(0,0,0,0.1)',
+                <Header
+                    isAuthorizedUser={isAuthorizedUser}
+                    toggleMenu={this.toggleMenu}
+                    menuOpen={this.state.menuOpen}
+                />
+                <Megamenu
+                    menuItems={menuItems}
+                    history={this.props.history}
+                    isMobile={this.state.isMobile}
+                    locale={{
+                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                        skipNavTitle: locale.global.skipNav.title,
+                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                     }}
-                    justify={'center'}
-                >
-                    <Grid item xs={'auto'}>
-                        Library services <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Research tools & techniques <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Collections <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Borrowing & requesting <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Locations & hours <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        About us <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                    <Grid item xs={'auto'}>
-                        Contact us <ExpandMoreIcon size={'small'} style={{ marginBottom: -6 }} />
-                    </Grid>
-                </Grid>
+                    toggleMenu={this.toggleMenu}
+                    menuOpen={this.state.menuOpen}
+                />
                 <div className="content-container" id="content-container">
                     <ConfirmDialogBox
                         hideCancelButton

@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
+import { default as MenuIcon } from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import CloseIcon from '@material-ui/icons/Close';
@@ -13,12 +14,15 @@ import Radio from '@material-ui/core/Radio';
 const logo = require('../../../../public/images/uq-lockup-landscape--reversed.svg');
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Hidden from '@material-ui/core/Hidden';
+// import Fade from '@material-ui/core/Fade';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import MailIcon from '@material-ui/icons/Mail';
 import ChatIcon from '@material-ui/icons/Chat';
 import PhoneIcon from '@material-ui/icons/Phone';
 import DescriptionIcon from '@material-ui/icons/Description';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+import locale from 'locale/global';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 
 const useStyles = makeStyles(
@@ -119,7 +123,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Header = ({ isAuthorizedUser, account }) => {
+export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -163,6 +167,26 @@ export const Header = ({ isAuthorizedUser, account }) => {
         <Grid container className={classes.gradient}>
             <Grid item xs={12} className={classes.topHeader}>
                 <Grid container alignItems={'center'}>
+                    <Hidden lgUp>
+                        <Grid item id="hamburger">
+                            {/* hamburger button */}
+                            <Tooltip
+                                title={locale.global.mainNavButton.tooltip}
+                                // placement="bottom-end"
+                                // TransitionComponent={Fade}
+                            >
+                                <IconButton
+                                    aria-label={locale.global.mainNavButton.aria}
+                                    // style={{ marginLeft: '-12px', marginRight: '12px' }}
+                                    onClick={toggleMenu}
+                                    id={'main-menu-button'}
+                                >
+                                    {/* <Menu />*/}
+                                    <MenuIcon className={classes.icon} style={{ color: 'white' }} />
+                                </IconButton>
+                            </Tooltip>
+                        </Grid>
+                    </Hidden>
                     <Grid item xs={'auto'}>
                         <a href="#">
                             <div className={classes.logo} />
@@ -207,7 +231,7 @@ export const Header = ({ isAuthorizedUser, account }) => {
                     </Grid>
                     <Grid item xs={'auto'}>
                         <Tooltip
-                            id="auth-button"
+                            id="search-button"
                             title={'Search UQ'}
                             placement="bottom-start"
                             TransitionProps={{ timeout: 300 }}
@@ -223,7 +247,7 @@ export const Header = ({ isAuthorizedUser, account }) => {
                     </Grid>
                     <Grid item xs={'auto'}>
                         <Tooltip
-                            id="auth-button"
+                            id="contact-button"
                             title={'Ask us'}
                             placement="bottom-start"
                             TransitionProps={{ timeout: 300 }}
@@ -338,14 +362,13 @@ Header.propTypes = {
     account: PropTypes.object,
     isAuthorizedUser: PropTypes.bool,
     isAdmin: PropTypes.bool,
-    headerExpand: PropTypes.bool,
+    toggleMenu: PropTypes.func,
 };
 
 Header.defaultProps = {
     account: {},
     isAdmin: false,
     isAuthorizedUser: false,
-    headerExpand: false,
 };
 
 export default Header;
