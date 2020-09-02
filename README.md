@@ -332,14 +332,13 @@ Ask for review from team-mates if you'd like other eyes on your changes.
 
 ## Deployment
 
-Application deployment is 100% automated using Codeship, and is hosted in S3. All deployment configuration (S3 bucket
+Application deployment is 100% automated using AWS Codebuild, and is hosted in S3. All deployment configuration (S3 bucket
 access keys, post deployment cache invalidation configuration) is stored within Codeship. Deployment pipelines are setup
-for branches: "master", "staging, "production" and any branch starting with "feature-".
+for branches: "master", "staging, "production" - other branches have to be done manually (branch per user to come).
 
-- Master branch is always deployed to staging/production
-- Deployments to production are hosted on <https://espace.library.uq.edu.au/>
-- Deployments to staging are hosted on <https://fez-staging.library.uq.edu.au/>
-- All other branches are deployed on <https://development.library.uq.edu/espace/branchName/>.
+- Deployments to production are hosted on <https://www.library.uq.edu.au/>
+- Deployments to staging are hosted on <https://homepage-staging.library.uq.edu.au/>
+- All other branches are deployed on <https://homepage-development.library.uq.edu.au/branchname/#/>.
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions
