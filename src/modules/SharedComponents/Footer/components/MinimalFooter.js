@@ -58,7 +58,7 @@ const styles = theme => ({
 export function MinimalFooter(props) {
     const { classes } = props;
     return (
-        <Grid container className={`${classes.minimalFooter}`} spacing={3}>
+        <Grid container className={`${classes.minimalFooter}`} data-testid="minimal-footer" spacing={3}>
             <Grid item xs={12}>
                 <Grid container>
                     <Grid item xs={12} md={9} className={`${classes.footerContent}`}>
