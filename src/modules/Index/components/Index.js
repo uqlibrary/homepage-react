@@ -4,10 +4,6 @@ import { makeStyles } from '@material-ui/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import ImageGallery from 'react-image-gallery';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
@@ -33,25 +29,10 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { loadSpotlights } from 'actions';
 const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import PrimoSearch from './PrimoSearch';
 
 const useStyles = makeStyles(
     theme => ({
-        searchPanel: {
-            paddingTop: 12,
-            paddingRight: 30,
-            paddingBottom: 0,
-            paddingLeft: 30,
-        },
-        selectInput: {
-            fontSize: 24,
-            fontWeight: 300,
-            color: theme.palette.primary.main,
-        },
-        searchUnderlinks: {
-            '&a:link, a:hover, a:visited, a:active': {
-                color: theme.palette.primary.main + ' !important',
-            },
-        },
         ChatIcon: {
             position: 'absolute',
             bottom: theme.spacing(2),
@@ -121,72 +102,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12}>
-                        <StandardCard noPadding noHeader>
-                            <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
-                                <Grid item xs={2}>
-                                    <FormControl style={{ minWidth: '100%' }}>
-                                        <InputLabel id="demo-simple-select-label" autoFocus>
-                                            Search
-                                        </InputLabel>
-                                        <Select
-                                            labelId="demo-simple-select-label"
-                                            id="demo-simple-select"
-                                            value={10}
-                                            className={classes.selectInput}
-                                            // onChange={handleChange}
-                                        >
-                                            <MenuItem value={10}>Library</MenuItem>
-                                            <MenuItem value={20}>Books</MenuItem>
-                                            <MenuItem value={30}>Journal articles</MenuItem>
-                                            <MenuItem value={30}>Video & Audio</MenuItem>
-                                            <MenuItem value={30}>Journals</MenuItem>
-                                            <MenuItem value={30}>Physical items</MenuItem>
-                                            <MenuItem value={30}>Databases</MenuItem>
-                                            <MenuItem value={30}>Past exam papers</MenuItem>
-                                            <MenuItem value={30}>Course reading lists</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
-                                <Grid item xs>
-                                    <TextField
-                                        id="standard-basic"
-                                        placeholder="Find books, articles, databases, conferences and more.."
-                                        fullWidth
-                                        InputLabelProps={{ shrink: true }}
-                                        InputProps={{
-                                            classes: {
-                                                input: classes.selectInput,
-                                            },
-                                        }}
-                                    />
-                                </Grid>
-                                <Grid item xs={'auto'}>
-                                    <Button
-                                        size={'large'}
-                                        variant="contained"
-                                        color={'primary'}
-                                        style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
-                                    >
-                                        <SearchIcon />
-                                    </Button>
-                                </Grid>
-                            </Grid>
-                            <Grid container spacing={2} style={{ paddingRight: 30, paddingTop: 12, paddingBottom: 12 }}>
-                                <Grid item xs />
-                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
-                                    <a href="#">Search help</a>
-                                </Grid>
-                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
-                                    <a href="#">Advanced search</a>
-                                </Grid>
-                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
-                                    <a href="#">Database search</a>
-                                </Grid>
-                                <Grid item xs={'auto'} className={classes.searchUnderlinks}>
-                                    <a href="#">Browse search</a>
-                                </Grid>
-                            </Grid>
-                        </StandardCard>
+                        <PrimoSearch />
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={8}>
@@ -317,6 +233,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     </Typography>
                                     <p>
                                         <b>Felicity Berends</b>
+                                        <br />
+                                        Faculty goes here
                                     </p>
                                     <Grid container>
                                         <Grid item xs={'auto'}>
