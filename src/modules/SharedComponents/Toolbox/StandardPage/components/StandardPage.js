@@ -34,6 +34,7 @@ const styles = theme => ({
     minimalFooter: {
         backgroundColor: '#51247A',
         color: '#d2c1d7',
+        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
     },
 });
 
