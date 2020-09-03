@@ -16984,6 +16984,7 @@ exports[`Index page should render placeholders 1`] = `
                                   <WithStyles(ForwardRef(Grid))
                                     className="ConnectFooter-connectFooter-348"
                                     container={true}
+                                    data-testid="connect-footer"
                                     spacing={3}
                                   >
                                     <ForwardRef(Grid)
@@ -17096,10 +17097,12 @@ exports[`Index page should render placeholders 1`] = `
                                         }
                                       }
                                       container={true}
+                                      data-testid="connect-footer"
                                       spacing={3}
                                     >
                                       <div
-                                        className="MuiGrid-root ConnectFooter-connectFooter-348 MuiGrid-container MuiGrid-spacing-xs-3"
+                                        className="MuiGrid-root ConnectFooter-connectFooter-359 MuiGrid-container MuiGrid-spacing-xs-3"
+                                        data-testid="connect-footer"
                                       >
                                         <WithStyles(ForwardRef(Grid))
                                           className="ConnectFooter-navigation-349"
@@ -17226,6 +17229,7 @@ exports[`Index page should render placeholders 1`] = `
                                               <ul>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-home-link"
                                                     href="http://www.library.uq.edu.au"
                                                   >
                                                     Library home
@@ -17238,7 +17242,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-services-link"
                                                     href="https://web.library.uq.edu.au/library-services"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     Library services
                                                   </a>
@@ -17250,7 +17256,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-research-link"
                                                     href="https://web.library.uq.edu.au/research-tools-techniques"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     Research tools & techniques
                                                   </a>
@@ -17262,7 +17270,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-collections-link"
                                                     href="https://web.library.uq.edu.au/collections"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     Collections
                                                   </a>
@@ -17274,7 +17284,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-borrowing-link"
                                                     href="https://web.library.uq.edu.au/borrowing-requesting"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     Borrowing & requesting
                                                   </a>
@@ -17286,7 +17298,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-locations-link"
                                                     href="https://web.library.uq.edu.au/locations-hours"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     Locations & hours
                                                   </a>
@@ -17298,7 +17312,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-about-link"
                                                     href="https://web.library.uq.edu.au/about-us"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     About
                                                   </a>
@@ -17310,7 +17326,9 @@ exports[`Index page should render placeholders 1`] = `
                                                 </li>
                                                 <li>
                                                   <a
+                                                    data-testid="connect-contact-link"
                                                     href="https://web.library.uq.edu.au/contact-us"
+                                                    rel="noopener noreferrer"
                                                   >
                                                     Contact us
                                                   </a>
@@ -18011,6 +18029,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           tabIndex="-1"
                                                         >
                                                           <a
+                                                            data-testid="connect-blog-link"
                                                             href="https://web.library.uq.edu.au/blog"
                                                             rel="noopener noreferrer"
                                                             target="_blank"
@@ -18149,6 +18168,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           tabIndex="-1"
                                                         >
                                                           <a
+                                                            data-testid="connect-twitter-link"
                                                             href="https://twitter.com/UQ_Library"
                                                             rel="external noopener noreferrer"
                                                             target="_blank"
@@ -18292,6 +18312,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           tabIndex="-1"
                                                         >
                                                           <a
+                                                            data-testid="connect-facebook-link"
                                                             href="https://www.facebook.com/uniofqldlibrary"
                                                             rel="external noopener noreferrer"
                                                             target="_blank"
@@ -18432,6 +18453,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           role="button"
                                                         >
                                                           <a
+                                                            data-testid="connect-instagram-link"
                                                             href="https://www.instagram.com/uniofqldlibrary/"
                                                             rel="external noopener noreferrer"
                                                             tabIndex="-1"
@@ -18576,6 +18598,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           tabIndex="-1"
                                                         >
                                                           <a
+                                                            data-testid="connect-youtube-link"
                                                             href="https://www.youtube.com/user/uqlibrary"
                                                             rel="external noopener noreferrer"
                                                             target="_blank"
@@ -18598,21 +18621,28 @@ exports[`Index page should render placeholders 1`] = `
                                                 className="ConnectFooter-internal-353"
                                               >
                                                 <a
+                                                  data-testid="connect-feedback-link"
                                                   href="https://support.my.uq.edu.au/app/library/feedback"
+                                                  rel="noopener noreferrer"
                                                 >
                                                   Feedback
                                                 </a>
                                                  | 
                                                  
                                                 <a
+                                                  data-testid="connect-participate-link"
                                                   href="https://web.library.uq.edu.au/about-us/participate-customer-research"
+                                                  rel="noopener noreferrer"
                                                 >
                                                   Help us improve
                                                 </a>
                                                  
-                                                 |  
+                                                 | 
+
                                                 <a
+                                                  data-testid="connect-sitemap-link"
                                                   href="https://web.library.uq.edu.au/sitemap"
+                                                  rel="noopener noreferrer"
                                                 >
                                                   Site Map
                                                 </a>
@@ -18878,7 +18908,9 @@ exports[`Index page should render placeholders 1`] = `
                                                     tabIndex="-1"
                                                   >
                                                     <a
+                                                      data-testid="connect-friends-link"
                                                       href="https://web.library.uq.edu.au/about-us/friends-library"
+                                                      rel="noopener noreferrer"
                                                     >
                                                       Join Friends of the Library
                                                     </a>
@@ -19021,7 +19053,9 @@ exports[`Index page should render placeholders 1`] = `
                                                     tabIndex="-1"
                                                   >
                                                     <a
+                                                      data-testid="connect-give-link"
                                                       href="https://www.uq.edu.au/giving/organisations/university-queensland-library"
+                                                      rel="noopener noreferrer"
                                                     >
                                                       Give to the Library
                                                     </a>
@@ -19521,6 +19555,7 @@ exports[`Index page should render placeholders 1`] = `
                                   <WithStyles(ForwardRef(Grid))
                                     className="MinimalFooter-minimalFooter-356"
                                     container={true}
+                                    data-testid="minimal-footer"
                                     spacing={3}
                                   >
                                     <ForwardRef(Grid)
@@ -19633,10 +19668,12 @@ exports[`Index page should render placeholders 1`] = `
                                         }
                                       }
                                       container={true}
+                                      data-testid="minimal-footer"
                                       spacing={3}
                                     >
                                       <div
-                                        className="MuiGrid-root MinimalFooter-minimalFooter-356 MuiGrid-container MuiGrid-spacing-xs-3"
+                                        className="MuiGrid-root MinimalFooter-minimalFooter-367 MuiGrid-container MuiGrid-spacing-xs-3"
+                                        data-testid="minimal-footer"
                                       >
                                         <WithStyles(ForwardRef(Grid))
                                           item={true}
@@ -20001,15 +20038,19 @@ exports[`Index page should render placeholders 1`] = `
                                                             Enquiries:
                                                              
                                                             <a
+                                                              data-testid="footer-enquiries-link"
                                                               href="tel:+61733651111"
                                                               title="UQ Enquiries phone number"
                                                             >
                                                               +61 7 3365 1111
                                                             </a>
                                                              
-                                                              |   
+                                                              |  
+
                                                             <a
+                                                              data-testid="footer-contacts-link"
                                                               href="http://uq.edu.au/contacts"
+                                                              rel="noopener noreferrer"
                                                             >
                                                               Contact directory
                                                             </a>
@@ -20031,8 +20072,9 @@ exports[`Index page should render placeholders 1`] = `
                                                             Provider No:
                                                              
                                                             <a
+                                                              data-testid="footer-cricos-link"
                                                               href="https://www.uq.edu.au/about/cricos-link"
-                                                              rel="external"
+                                                              rel="noopener noreferrer"
                                                               title="Provider number"
                                                             >
                                                               00025B
@@ -20213,6 +20255,7 @@ exports[`Index page should render placeholders 1`] = `
                                                           Phone:
                                                            
                                                           <a
+                                                            data-testid="footer-emergency-link"
                                                             href="tel:+61733653333"
                                                             title="UQ Emergency phone number"
                                                           >
@@ -20349,16 +20392,18 @@ exports[`Index page should render placeholders 1`] = `
                                             >
                                               <div>
                                                 <a
+                                                  data-testid="footer-terms-link"
                                                   href="https://www.uq.edu.au/terms-of-use/"
-                                                  rel="external"
+                                                  rel="noopener noreferrer"
                                                 >
                                                   Privacy & Terms of use
                                                 </a>
                                                  
                                                   |  
                                                 <a
+                                                  data-testid="footer-feedback-link"
                                                   href="https://support.my.uq.edu.au/app/library/feedback"
-                                                  rel="external"
+                                                  rel="noopener noreferrer"
                                                 >
                                                   Feedback
                                                 </a>
