@@ -129,7 +129,7 @@ const styles = theme => ({
 export function ConnectFooter(props) {
     const { classes } = props;
     return (
-        <Grid className={`${classes.connectFooter}`} container spacing={3}>
+        <Grid className={`${classes.connectFooter}`} container spacing={3} data-testid="connect-footer">
             <Grid item xs={12} md={4} className={`${classes.navigation}`}>
                 {/* if we continue with this display, it should be driven by the json that creates the megamenu... */}
                 <ul>
