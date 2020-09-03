@@ -65,10 +65,21 @@ export function MinimalFooter(props) {
                         <div>&copy; The University of Queensland</div>
                         <div>
                             Enquiries:{' '}
-                            <a href="tel:+61733651111" title="UQ Enquiries phone number">
+                            <a
+                                href="tel:+61733651111"
+                                title="UQ Enquiries phone number"
+                                data-testid="footer-enquiries-link"
+                            >
                                 +61 7 3365 1111
                             </a>{' '}
-                            &nbsp; | &nbsp; <a href="http://uq.edu.au/contacts">Contact directory</a>
+                            &nbsp; | &nbsp;{' '}
+                            <a
+                                href="http://uq.edu.au/contacts"
+                                rel="noopener noreferrer"
+                                data-testid="footer-contacts-link"
+                            >
+                                Contact directory
+                            </a>
                         </div>
                         <div>
                             <abbr title="Australian Business Number">ABN</abbr>: 63 942 912 684 &nbsp; | &nbsp;{' '}
@@ -76,7 +87,12 @@ export function MinimalFooter(props) {
                                 CRICOS
                             </abbr>{' '}
                             Provider No:{' '}
-                            <a href="https://www.uq.edu.au/about/cricos-link" rel="external" title="Provider number">
+                            <a
+                                href="https://www.uq.edu.au/about/cricos-link"
+                                rel="noopener noreferrer"
+                                title="Provider number"
+                                data-testid="footer-cricos-link"
+                            >
                                 00025B
                             </a>
                         </div>
@@ -84,7 +100,11 @@ export function MinimalFooter(props) {
                     <Grid item xs={12} md={3} className={`${classes.footerLegalDetails}`}>
                         <Typography variant={'h3'}>Emergency</Typography>
                         Phone:{' '}
-                        <a href="tel:+61733653333" title="UQ Emergency phone number">
+                        <a
+                            href="tel:+61733653333"
+                            title="UQ Emergency phone number"
+                            data-testid="footer-emergency-link"
+                        >
                             3365 3333
                         </a>
                     </Grid>
@@ -92,11 +112,19 @@ export function MinimalFooter(props) {
             </Grid>
             <Grid item xs={12} className={`${classes.siteFooter}`}>
                 <div>
-                    <a href="https://www.uq.edu.au/terms-of-use/" rel="external">
+                    <a
+                        href="https://www.uq.edu.au/terms-of-use/"
+                        rel="noopener noreferrer"
+                        data-testid="footer-terms-link"
+                    >
                         Privacy &amp; Terms of use
                     </a>{' '}
                     &nbsp; | &nbsp;
-                    <a href="https://support.my.uq.edu.au/app/library/feedback" rel="external">
+                    <a
+                        href="https://support.my.uq.edu.au/app/library/feedback"
+                        rel="noopener noreferrer"
+                        data-testid="footer-feedback-link"
+                    >
                         Feedback
                     </a>
                 </div>

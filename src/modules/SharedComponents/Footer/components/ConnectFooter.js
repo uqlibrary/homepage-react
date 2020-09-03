@@ -134,37 +134,79 @@ export function ConnectFooter(props) {
                 {/* if we continue with this display, it should be driven by the json that creates the megamenu... */}
                 <ul>
                     <li>
-                        <a href="http://www.library.uq.edu.au">Library home</a>
+                        <a href="http://www.library.uq.edu.au" data-testid="connect-home-link">
+                            Library home
+                        </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/library-services">Library services</a>
+                        <a
+                            href="https://web.library.uq.edu.au/library-services"
+                            data-testid="connect-services-link"
+                            rel="noopener noreferrer"
+                        >
+                            Library services
+                        </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/research-tools-techniques">
+                        <a
+                            href="https://web.library.uq.edu.au/research-tools-techniques"
+                            data-testid="connect-research-link"
+                            rel="noopener noreferrer"
+                        >
                             Research tools &amp; techniques
                         </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/collections">Collections</a>
+                        <a
+                            href="https://web.library.uq.edu.au/collections"
+                            data-testid="connect-collections-link"
+                            rel="noopener noreferrer"
+                        >
+                            Collections
+                        </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/borrowing-requesting">Borrowing &amp; requesting</a>
+                        <a
+                            href="https://web.library.uq.edu.au/borrowing-requesting"
+                            data-testid="connect-borrowing-link"
+                            rel="noopener noreferrer"
+                        >
+                            Borrowing &amp; requesting
+                        </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/locations-hours">Locations &amp; hours</a>
+                        <a
+                            href="https://web.library.uq.edu.au/locations-hours"
+                            data-testid="connect-locations-link"
+                            rel="noopener noreferrer"
+                        >
+                            Locations &amp; hours
+                        </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/about-us">About</a>
+                        <a
+                            href="https://web.library.uq.edu.au/about-us"
+                            data-testid="connect-about-link"
+                            rel="noopener noreferrer"
+                        >
+                            About
+                        </a>
                     </li>
                     <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/contact-us">Contact us</a>
+                        <a
+                            href="https://web.library.uq.edu.au/contact-us"
+                            data-testid="connect-contact-link"
+                            rel="noopener noreferrer"
+                        >
+                            Contact us
+                        </a>
                     </li>
                 </ul>
             </Grid>
@@ -186,6 +228,7 @@ export function ConnectFooter(props) {
                             rel="noopener noreferrer"
                             target="_blank"
                             title="Library Blog"
+                            data-testid="connect-blog-link"
                         >
                             Blog
                         </a>
@@ -196,6 +239,7 @@ export function ConnectFooter(props) {
                             rel="external noopener noreferrer"
                             target="_blank"
                             title="Library on Twitter"
+                            data-testid="connect-twitter-link"
                         >
                             <img
                                 alt="Twitter icon"
@@ -211,6 +255,7 @@ export function ConnectFooter(props) {
                             rel="external noopener noreferrer"
                             target="_blank"
                             title="Library on Facebook"
+                            data-testid="connect-facebook-link"
                         >
                             <img
                                 alt="Facebook icon"
@@ -227,6 +272,7 @@ export function ConnectFooter(props) {
                             tabIndex="-1"
                             target="_blank"
                             title="Library on Instagram"
+                            data-testid="connect-instagram-link"
                         >
                             <img
                                 alt="Instagram icon"
@@ -242,6 +288,7 @@ export function ConnectFooter(props) {
                             rel="external noopener noreferrer"
                             target="_blank"
                             title="Library on YouTube"
+                            data-testid="connect-youtube-link"
                         >
                             <img
                                 alt="YouTube icon"
@@ -253,12 +300,29 @@ export function ConnectFooter(props) {
                     </Grid>
                 </Grid>
                 <div className={`${classes.internal}`}>
-                    <a href="https://support.my.uq.edu.au/app/library/feedback">Feedback</a>
+                    <a
+                        href="https://support.my.uq.edu.au/app/library/feedback"
+                        data-testid="connect-feedback-link"
+                        rel="noopener noreferrer"
+                    >
+                        Feedback
+                    </a>
                     &nbsp;|&nbsp;{' '}
-                    <a href="https://web.library.uq.edu.au/about-us/participate-customer-research">
+                    <a
+                        href="https://web.library.uq.edu.au/about-us/participate-customer-research"
+                        data-testid="connect-participate-link"
+                        rel="noopener noreferrer"
+                    >
                         Help us improve
                     </a>{' '}
-                    &nbsp;|&nbsp; <a href="https://web.library.uq.edu.au/sitemap">Site Map</a>
+                    &nbsp;|&nbsp;{' '}
+                    <a
+                        href="https://web.library.uq.edu.au/sitemap"
+                        data-testid="connect-sitemap-link"
+                        rel="noopener noreferrer"
+                    >
+                        Site Map
+                    </a>
                 </div>
             </Grid>
             <Grid item xs={12} md={4} className={`${classes.giving}`}>
@@ -272,7 +336,13 @@ export function ConnectFooter(props) {
                     tabIndex="-1"
                     xs={12}
                 >
-                    <a href="https://web.library.uq.edu.au/about-us/friends-library">Join Friends of the Library</a>
+                    <a
+                        href="https://web.library.uq.edu.au/about-us/friends-library"
+                        data-testid="connect-friends-link"
+                        rel="noopener noreferrer"
+                    >
+                        Join Friends of the Library
+                    </a>
                 </Grid>
                 <Grid
                     aria-disabled="false"
@@ -284,7 +354,11 @@ export function ConnectFooter(props) {
                     tabIndex="-1"
                     xs={12}
                 >
-                    <a href="https://www.uq.edu.au/giving/organisations/university-queensland-library">
+                    <a
+                        href="https://www.uq.edu.au/giving/organisations/university-queensland-library"
+                        data-testid="connect-give-link"
+                        rel="noopener noreferrer"
+                    >
                         Give to the Library
                     </a>
                 </Grid>
