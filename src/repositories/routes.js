@@ -86,6 +86,9 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 // Spotlights API
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Chat availability API
+export const CHAT_API = () => ({ apiUrl: 'chat_status' });
+
 // academic stats apis
 export const VOCABULARIES_API = ({ id }) => ({ apiUrl: `vocabularies?cvo_ids=${id}` });
 export const GET_PUBLICATION_TYPES_API = () => ({ apiUrl: 'records/types' });

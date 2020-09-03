@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import ImageGallery from 'react-image-gallery';
@@ -17,8 +16,6 @@ import Tab from '@material-ui/core/Tab';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 const moment = require('moment');
-import Fab from '@material-ui/core/Fab';
-import FeedbackIcon from '@material-ui/icons/Feedback';
 import Box from '@material-ui/core/Box';
 import { useDispatch } from 'react-redux';
 import RoomIcon from '@material-ui/icons/Room';
@@ -31,17 +28,6 @@ const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jp
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from './PrimoSearch';
 
-const useStyles = makeStyles(
-    theme => ({
-        ChatIcon: {
-            position: 'absolute',
-            bottom: theme.spacing(2),
-            right: theme.spacing(2),
-        },
-    }),
-    { withTheme: true },
-);
-
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
     useEffect(() => {
@@ -49,7 +35,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             dispatch(loadSpotlights());
         }
     }, [spotlightsLoading, dispatch]);
-    const classes = useStyles();
     const images =
         !!spotlights && spotlights.length > 0
             ? spotlights.map(item => {
@@ -93,11 +78,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     };
     return (
         <StandardPage>
-            <Fab size="small" color="secondary" aria-label="help" className={classes.ChatIcon} onClick={null}>
-                <Tooltip title={'Ask a librarian'} placement={'left'}>
-                    <FeedbackIcon />
-                </Tooltip>
-            </Fab>
             <div className="layout-card" style={{ marginTop: 12 }}>
                 <Grid container spacing={6}>
                     {/* Search */}

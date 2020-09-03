@@ -37,6 +37,10 @@ import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Megamenu from './Megamenu';
+import Button from '@material-ui/core/Button';
+import Snackbar from '@material-ui/core/Snackbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 
 const styles = theme => ({
     appBG: {
@@ -88,6 +92,7 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
+        chatStatus: PropTypes.any,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -100,6 +105,7 @@ export class AppClass extends PureComponent {
         this.state = {
             menuOpen: false,
             docked: false,
+            chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
             isMobile: window.matchMedia('(max-width: 720px)').matches,
         };
@@ -126,6 +132,7 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadChatStatus();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -133,6 +140,11 @@ export class AppClass extends PureComponent {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
+        }
+        if (this.props.chatStatus && !!this.props.chatStatus.online) {
+            this.setState({
+                chatStatus: { online: true },
+            });
         }
     }
 
@@ -144,6 +156,19 @@ export class AppClass extends PureComponent {
         this.setState({
             docked: mediaQuery.matches,
         });
+    };
+    closeChatStatus = () => {
+        this.setState({
+            chatStatus: { online: false },
+        });
+    };
+    launchChat = () => {
+        window.open(
+            'https://support.my.uq.edu.au/app/chat/chat_launch_lib/p/45',
+            'chat',
+            'toolbar=no, location=no, status=no, width=400, height=400',
+        );
+        return false;
     };
 
     toggleMenu = () => {
@@ -225,15 +250,25 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <Grid item xs={12}>
-                    <Alert
-                        title="TEST ALERT"
-                        message="This is just a quick test"
-                        type="warning"
-                        dismissAction={() => null}
-                        allowDismiss
-                    />
-                </Grid>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'right',
+                    }}
+                    open={this.state.chatStatus.online}
+                    onClose={this.closeChatStatus}
+                    message="Online chat available"
+                    action={
+                        <React.Fragment>
+                            <Button color="secondary" size="small" onClick={this.launchChat}>
+                                Launch
+                            </Button>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={this.closeChatStatus}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </React.Fragment>
+                    }
+                />
                 <Meta routesConfig={routesConfig} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}

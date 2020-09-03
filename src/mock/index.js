@@ -31,6 +31,7 @@ user = user || 'uqresearcher';
 
 mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
     .reply(() => {
+        console.log('Account API hit');
         // mock account response
         if (['s2222222', 's3333333'].indexOf(user) > -1) {
             return [200, mockData.accounts[user]];
@@ -42,6 +43,7 @@ mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
 
 mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
     .reply(() => {
+        console.log('Account API hit');
         // mock account response
         if (user === 'public') {
             return [403, {}];
@@ -54,5 +56,13 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
 mock.onGet(routes.SPOTLIGHTS_API().apiUrl)
     .reply(() => {
         // mock spotlights
+        console.log('Spotlights API hit');
         return [200, [ ...spotlights ]];
+    });
+
+mock.onGet(routes.CHAT_API().apiUrl)
+    .reply(() => {
+        console.log('Chat status API hit');
+        // mock chat status
+        return [200, {"online":true}];
     });
