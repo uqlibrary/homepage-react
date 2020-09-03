@@ -63,6 +63,13 @@ const styles = theme => {
                 zIndex: 999,
             },
         },
+        megaMenu: {
+            margin: '0 auto',
+            // from layout-card
+            maxWidth: '1200px',
+            width: '90%',
+            padding: 0,
+        },
         mainMenu: {
             outline: 'none',
             paddingTop: 0,
@@ -108,7 +115,9 @@ const styles = theme => {
             },
         },
         shiftLeft: {
-            marginLeft: '-20rem',
+            [theme.breakpoints.down('md')]: {
+                marginLeft: '-20rem',
+            },
         },
         submenus: {
             [theme.breakpoints.up('lg')]: {
@@ -286,7 +295,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className="layout-card">
+        <div className={classes.megaMenu}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
                 <Hidden lgUp>

@@ -169,18 +169,12 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                     <Hidden lgUp>
                         <Grid item id="hamburger">
                             {/* hamburger button */}
-                            <Tooltip
-                                title={locale.global.mainNavButton.tooltip}
-                                // placement="bottom-end"
-                                // TransitionComponent={Fade}
-                            >
+                            <Tooltip title={locale.global.mainNavButton.tooltip}>
                                 <IconButton
                                     aria-label={locale.global.mainNavButton.aria}
-                                    // style={{ marginLeft: '-12px', marginRight: '12px' }}
                                     onClick={toggleMenu}
                                     id={'main-menu-button'}
                                 >
-                                    {/* <Menu />*/}
                                     <MenuIcon className={classes.icon} style={{ color: 'white' }} />
                                 </IconButton>
                             </Tooltip>

@@ -56,24 +56,35 @@ const styles = theme => ({
         maxHeight: '100%',
         height: '100%',
     },
-    titleLink: {
-        textOverflow: 'ellipsis',
-        overflow: 'hidden',
-        color: theme.palette.common.white,
-        '& a': {
-            textOverflow: 'ellipsis',
-            overflow: 'hidden',
-            textDecoration: 'none',
-            '&:hover': {
-                textDecoration: 'underline',
-            },
-        },
+    contentBox: {
+        paddingTop: 0,
+        // from content-container
+        width: '100%',
+        height: 'calc(100% - 90px)',
+        overflowY: 'auto',
+        overflowX: 'hidden',
+        boxSizing: 'border-box',
+        marginTop: '0',
+        paddingBottom: '24px',
     },
-    nowrap: {
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-    },
+    // titleLink: {
+    //     textOverflow: 'ellipsis',
+    //     overflow: 'hidden',
+    //     color: theme.palette.common.white,
+    //     '& a': {
+    //         textOverflow: 'ellipsis',
+    //         overflow: 'hidden',
+    //         textDecoration: 'none',
+    //         '&:hover': {
+    //             textDecoration: 'underline',
+    //         },
+    //     },
+    // },
+    // nowrap: {
+    //     whiteSpace: 'nowrap',
+    //     overflow: 'hidden',
+    //     textOverflow: 'ellipsis',
+    // },
 });
 
 export class AppClass extends PureComponent {
@@ -253,7 +264,7 @@ export class AppClass extends PureComponent {
                     toggleMenu={this.toggleMenu}
                     menuOpen={this.state.menuOpen}
                 />
-                <div className="content-container" id="content-container">
+                <div className={classes.contentBox} id="content-container">
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}
