@@ -20,11 +20,12 @@ const useStyles = makeStyles(
 export const ChatStatus = ({ status }) => {
     const classes = useStyles();
     const [chatState, setChatState] = useState(status);
+    const [closeChatState, setCloseChatState] = useState(false);
     useEffect(() => {
         setChatState(status);
     });
     const closeChatStatus = () => {
-        setChatState({ online: false });
+        setCloseChatState(true);
     };
     const launchChat = () => {
         window.open(
@@ -40,7 +41,7 @@ export const ChatStatus = ({ status }) => {
                 vertical: 'bottom',
                 horizontal: 'right',
             }}
-            open={chatState.online}
+            open={chatState.online && !closeChatState}
             onClose={closeChatStatus}
         >
             <SnackbarContent

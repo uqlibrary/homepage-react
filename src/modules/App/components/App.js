@@ -37,7 +37,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Megamenu from './Megamenu';
 import Header from './Header';
-import ChatStatus from './chatStatus';
+import ChatStatus from './ChatStatus';
 
 const styles = theme => ({
     appBG: {
