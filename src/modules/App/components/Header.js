@@ -15,7 +15,6 @@ const logo = require('../../../../public/images/uq-lockup-landscape--reversed.sv
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Hidden from '@material-ui/core/Hidden';
-// import Fade from '@material-ui/core/Fade';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import MailIcon from '@material-ui/icons/Mail';
 import ChatIcon from '@material-ui/icons/Chat';

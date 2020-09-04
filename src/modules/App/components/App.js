@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
-import Header from './Header';
 
 browserUpdate({
     required: {
@@ -37,10 +36,8 @@ import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Megamenu from './Megamenu';
-import Button from '@material-ui/core/Button';
-import Snackbar from '@material-ui/core/Snackbar';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import Header from './Header';
+import ChatStatus from './chatStatus';
 
 const styles = theme => ({
     appBG: {
@@ -157,19 +154,6 @@ export class AppClass extends PureComponent {
             docked: mediaQuery.matches,
         });
     };
-    closeChatStatus = () => {
-        this.setState({
-            chatStatus: { online: false },
-        });
-    };
-    launchChat = () => {
-        window.open(
-            'https://support.my.uq.edu.au/app/chat/chat_launch_lib/p/45',
-            'chat',
-            'toolbar=no, location=no, status=no, width=400, height=400',
-        );
-        return false;
-    };
 
     toggleMenu = () => {
         this.setState({
@@ -250,25 +234,7 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <Snackbar
-                    anchorOrigin={{
-                        vertical: 'bottom',
-                        horizontal: 'right',
-                    }}
-                    open={this.state.chatStatus.online}
-                    onClose={this.closeChatStatus}
-                    message="Online chat available"
-                    action={
-                        <React.Fragment>
-                            <Button color="secondary" size="small" onClick={this.launchChat}>
-                                Launch
-                            </Button>
-                            <IconButton size="small" aria-label="close" color="inherit" onClick={this.closeChatStatus}>
-                                <CloseIcon fontSize="small" />
-                            </IconButton>
-                        </React.Fragment>
-                    }
-                />
+                <ChatStatus status={this.props.chatStatus} />
                 <Meta routesConfig={routesConfig} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}
