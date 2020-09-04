@@ -17101,7 +17101,7 @@ exports[`Index page should render placeholders 1`] = `
                                       spacing={3}
                                     >
                                       <div
-                                        className="MuiGrid-root ConnectFooter-connectFooter-359 MuiGrid-container MuiGrid-spacing-xs-3"
+                                        className="MuiGrid-root ConnectFooter-connectFooter-348 MuiGrid-container MuiGrid-spacing-xs-3"
                                         data-testid="connect-footer"
                                       >
                                         <WithStyles(ForwardRef(Grid))
@@ -18638,7 +18638,7 @@ exports[`Index page should render placeholders 1`] = `
                                                 </a>
                                                  
                                                  | 
-
+                                                 
                                                 <a
                                                   data-testid="connect-sitemap-link"
                                                   href="https://web.library.uq.edu.au/sitemap"
@@ -19672,7 +19672,7 @@ exports[`Index page should render placeholders 1`] = `
                                       spacing={3}
                                     >
                                       <div
-                                        className="MuiGrid-root MinimalFooter-minimalFooter-367 MuiGrid-container MuiGrid-spacing-xs-3"
+                                        className="MuiGrid-root MinimalFooter-minimalFooter-356 MuiGrid-container MuiGrid-spacing-xs-3"
                                         data-testid="minimal-footer"
                                       >
                                         <WithStyles(ForwardRef(Grid))
@@ -20046,7 +20046,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             </a>
                                                              
                                                               |  
-
+                                                             
                                                             <a
                                                               data-testid="footer-contacts-link"
                                                               href="http://uq.edu.au/contacts"
