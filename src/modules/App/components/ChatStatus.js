@@ -23,7 +23,7 @@ export const ChatStatus = ({ status }) => {
     const [closeChatState, setCloseChatState] = useState(false);
     useEffect(() => {
         setChatState(status);
-    });
+    }, [status]);
     const closeChatStatus = () => {
         setCloseChatState(true);
     };

@@ -35,7 +35,8 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale }) => {
+export const PrimoSearch = ({ locale, solrConnector }) => {
+    console.log(solrConnector);
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState(null);
@@ -44,6 +45,9 @@ export const PrimoSearch = ({ locale }) => {
     };
     const handleSearchKeywordChange = event => {
         setSearchKeyword(event.target.value);
+        // if(event.target.value.length > 3) {
+        //     searchRequest(event.target.value);
+        // }
     };
     const handleSearchButton = event => {
         event.preventDefault();
@@ -120,6 +124,7 @@ export const PrimoSearch = ({ locale }) => {
 
 PrimoSearch.propTypes = {
     locale: PropTypes.any,
+    solrConnector: PropTypes.object,
 };
 
 PrimoSearch.defaultProps = {
