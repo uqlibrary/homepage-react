@@ -79,7 +79,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     };
     const primoSearchParams = keyword => {
         console.log('keyword sent to Index', keyword);
-        if (keyword.length > 3) {
+        if (keyword && keyword.length > 3) {
             return {
                 solrSearchUrl: 'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac',
                 query:
