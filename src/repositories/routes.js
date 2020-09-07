@@ -86,6 +86,18 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 // Spotlights API
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Primo Suggestions API
+export const PRIMO_SUGGESTIONS_API = keyword => ({
+    apiUrl:
+        'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+        keyword +
+        '&facet=off' +
+        '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
+        '&rows=10' +
+        '&wt=json' +
+        '&json.wrf=byutv_jsonp_callback_8f5750d771cd445d80a7eb742f519e69&_=5659175a9b0644c2828fe83a9293637b',
+});
+
 // Chat availability API
 export const CHAT_API = () => ({ apiUrl: 'chat_status' });
 

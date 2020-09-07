@@ -36,7 +36,8 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale }) => {
+export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError }) => {
+    console.log('Values from reducer: ', suggestions, suggestionsLoading, suggestionsError);
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState(null);
@@ -128,6 +129,9 @@ export const PrimoSearch = ({ locale }) => {
 
 PrimoSearch.propTypes = {
     locale: PropTypes.any,
+    suggestions: PropTypes.any,
+    suggestionsLoading: PropTypes.bool,
+    suggestionsError: PropTypes.object,
 };
 
 PrimoSearch.defaultProps = {

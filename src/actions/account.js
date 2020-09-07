@@ -6,6 +6,7 @@ import {
     AUTHOR_DETAILS_API,
     SPOTLIGHTS_API,
     CHAT_API,
+    PRIMO_SUGGESTIONS_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -114,18 +115,10 @@ export function loadSpotlights() {
  * @returns {function(*)}
  */
 export function loadPrimoSuggestions(keyword) {
-    console.log('loadPrimoSuggestions');
+    console.log('loading Primo Suggestions');
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        const url =
-            'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
-            keyword +
-            '&facet=off' +
-            '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
-            '&rows=10' +
-            '&wt=json' +
-            '&json.wrf=byutv_jsonp_callback_8f5750d771cd445d80a7eb742f519e69&_=5659175a9b0644c2828fe83a9293637b';
-        return get(url, {
+        return get(PRIMO_SUGGESTIONS_API(keyword), {
             withCredentials: false,
         })
             .then(response => {

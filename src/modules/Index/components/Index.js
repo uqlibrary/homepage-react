@@ -26,7 +26,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { loadSpotlights } from 'actions';
 const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from './PrimoSearch';
+import PrimoSearch from '../containers/PrimoSearch';
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();

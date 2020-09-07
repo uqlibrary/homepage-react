@@ -61,3 +61,9 @@ mock.onGet(routes.CHAT_API().apiUrl).reply(() => {
     // mock chat status
     return [200, { online: true }];
 });
+
+mock.onGet(routes.PRIMO_SUGGESTIONS_API().apiUrl).reply(() => {
+    console.log('Primo Suggestions API hit');
+    // mock chat status
+    return [200, {}];
+});
