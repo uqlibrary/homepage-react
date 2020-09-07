@@ -27,7 +27,7 @@ import { loadSpotlights } from 'actions';
 const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from './PrimoSearch';
-import SolrConnector from 'react-solr-connector';
+// import SolrConnector from 'react-solr-connector';
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -93,7 +93,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     };
     console.log(primoSearchParams('test'));
     return (
-        <SolrConnector searchParams={primoSearchParams('test')}>
+        // <SolrConnector searchParams={primoSearchParams('test')}>
             <StandardPage>
                 <div className="layout-card" style={{ marginTop: 12 }}>
                     <Grid container spacing={6}>
@@ -409,7 +409,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                     </Grid>
                 </div>
             </StandardPage>
-        </SolrConnector>
+        // </SolrConnector>
     );
 };
 
