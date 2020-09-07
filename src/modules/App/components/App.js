@@ -27,8 +27,6 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
-import { Meta } from 'modules/SharedComponents/Meta';
-import { OfflineSnackbar } from 'modules/SharedComponents/OfflineSnackbar';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import * as pages from './pages';
@@ -235,7 +233,6 @@ export class AppClass extends PureComponent {
         return (
             <Grid container className={classes.layoutFill}>
                 <ChatStatus status={this.props.chatStatus} />
-                <Meta routesConfig={routesConfig} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}
                     toggleMenu={this.toggleMenu}
@@ -293,7 +290,6 @@ export class AppClass extends PureComponent {
                     )}
                 </div>
                 <HelpDrawer />
-                <OfflineSnackbar />
             </Grid>
         );
     }

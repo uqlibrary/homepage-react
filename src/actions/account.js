@@ -129,13 +129,14 @@ export function loadPrimoSuggestions(keyword) {
             withCredentials: false,
         })
             .then(response => {
-                console.log(response, keyword);
+                console.log('IT WORKED', response, keyword);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
                     payload: response,
                 });
             })
             .catch(error => {
+                console.log('IT FAILED', error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,
