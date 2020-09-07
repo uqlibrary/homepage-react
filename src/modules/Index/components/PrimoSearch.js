@@ -12,6 +12,7 @@ import { PropTypes } from 'prop-types';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { default as defaultLocale } from './locale.js';
+import { loadPrimoSuggestions } from 'actions';
 
 const useStyles = makeStyles(
     theme => ({
@@ -35,20 +36,14 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale, solrConnector }) => {
-    console.log('solrConnector', solrConnector);
+export const PrimoSearch = ({ locale }) => {
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState(null);
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
     };
-    const handleSearchKeywordChange = event => {
-        setSearchKeyword(event.target.value);
-        // if(event.target.value.length > 3) {
-        //     searchRequest(event.target.value);
-        // }
-    };
+
     const handleSearchButton = event => {
         event.preventDefault();
         if (!!searchKeyword) {
@@ -56,6 +51,15 @@ export const PrimoSearch = ({ locale, solrConnector }) => {
             window.location.assign(link);
         }
     };
+
+    const handleSearchKeywordChange = event => {
+        console.log(event.target.value);
+        setSearchKeyword(event.target.value);
+        if (event.target.value.length > 3) {
+            loadPrimoSuggestions(event.target.value);
+        }
+    };
+
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
@@ -124,7 +128,6 @@ export const PrimoSearch = ({ locale, solrConnector }) => {
 
 PrimoSearch.propTypes = {
     locale: PropTypes.any,
-    solrConnector: PropTypes.object,
 };
 
 PrimoSearch.defaultProps = {

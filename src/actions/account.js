@@ -110,6 +110,41 @@ export function loadSpotlights() {
 }
 
 /**
+ * Loads the primo search suggestions
+ * @returns {function(*)}
+ */
+export function loadPrimoSuggestions(keyword) {
+    console.log('loadPrimoSuggestions');
+    return dispatch => {
+        dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
+        const url =
+            'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+            keyword +
+            '&facet=off' +
+            '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
+            '&rows=10' +
+            '&wt=json' +
+            '&json.wrf=byutv_jsonp_callback_8f5750d771cd445d80a7eb742f519e69&_=5659175a9b0644c2828fe83a9293637b';
+        return get(url, {
+            withCredentials: false,
+        })
+            .then(response => {
+                console.log(response, keyword);
+                dispatch({
+                    type: actions.PRIMO_SUGGESTIONS_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.PRIMO_SUGGESTIONS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
  * Loads the chat status data
  * @returns {function(*)}
  */
