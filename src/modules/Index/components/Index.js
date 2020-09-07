@@ -77,23 +77,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             </div>
         );
     };
-    const primoSearchParams = keyword => {
-        console.log('keyword sent to Index', keyword);
-        if (keyword && keyword.length > 3) {
-            return {
-                solrSearchUrl: 'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac',
-                query:
-                    'q=' +
-                    keyword +
-                    '&facet=off&fq=scope%3A()%2BAND%2Bcontext%3A(B)&rows=10&wt=json&json.wrf=byutv_jsonp_callback_8f5750d771cd445d80a7eb742f519e69&_=5659175a9b0644c2828fe83a9293637b',
-            };
-        } else {
-            return null;
-        }
-    };
-    console.log(primoSearchParams('test'));
+
     return (
-        // <SolrConnector searchParams={primoSearchParams('test')}>
         <StandardPage>
             <div className="layout-card" style={{ marginTop: 12 }}>
                 <Grid container spacing={6}>
@@ -392,7 +377,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                 </Grid>
             </div>
         </StandardPage>
-        // </SolrConnector>
     );
 };
 
