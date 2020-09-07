@@ -35,7 +35,8 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale }) => {
+export const PrimoSearch = ({ locale, solrConnector }) => {
+    console.log('solrConnector', solrConnector);
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState(null);
