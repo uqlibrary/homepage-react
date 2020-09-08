@@ -235,6 +235,7 @@ export class AppClass extends PureComponent {
                 <ChatStatus status={this.props.chatStatus} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}
+                    account={this.props.account}
                     toggleMenu={this.toggleMenu}
                     menuOpen={this.state.menuOpen}
                 />

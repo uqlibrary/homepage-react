@@ -12,7 +12,6 @@ import { PropTypes } from 'prop-types';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { default as defaultLocale } from './locale.js';
-import { loadPrimoSuggestions } from 'actions';
 
 const useStyles = makeStyles(
     theme => ({
@@ -36,7 +35,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError }) => {
+export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
     console.log('Values from reducer: ', suggestions, suggestionsLoading, suggestionsError);
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
@@ -57,7 +56,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         console.log(event.target.value);
         setSearchKeyword(event.target.value);
         if (event.target.value.length > 3) {
-            loadPrimoSuggestions(event.target.value);
+            actions.loadPrimoSuggestions(event.target.value);
         }
     };
 
@@ -131,7 +130,8 @@ PrimoSearch.propTypes = {
     locale: PropTypes.any,
     suggestions: PropTypes.any,
     suggestionsLoading: PropTypes.bool,
-    suggestionsError: PropTypes.object,
+    suggestionsError: PropTypes.string,
+    actions: PropTypes.any,
 };
 
 PrimoSearch.defaultProps = {
