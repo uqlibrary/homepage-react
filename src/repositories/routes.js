@@ -89,7 +89,7 @@ export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 // Primo Suggestions API
 export const PRIMO_SUGGESTIONS_API = keyword => ({
     apiUrl:
-        'http://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+        'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
         keyword +
         '&facet=off' +
         '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
