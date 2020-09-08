@@ -115,19 +115,17 @@ export function loadSpotlights() {
  * @returns {function(*)}
  */
 export function loadPrimoSuggestions(keyword) {
-    console.log('loading Primo Suggestions');
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return get(PRIMO_SUGGESTIONS_API(keyword))
-            .then(response => {
-                console.log('IT WORKED', response, keyword);
+        return fetch(PRIMO_SUGGESTIONS_API(keyword).apiUrl)
+            .then(response => response.json())
+            .then(data => {
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
-                    payload: response,
+                    payload: data.response,
                 });
             })
             .catch(error => {
-                console.log('IT FAILED', error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,

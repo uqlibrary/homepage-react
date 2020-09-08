@@ -12,6 +12,8 @@ import { PropTypes } from 'prop-types';
 import Button from '@material-ui/core/Button';
 import SearchIcon from '@material-ui/icons/Search';
 import { default as defaultLocale } from './locale.js';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const useStyles = makeStyles(
     theme => ({
@@ -39,7 +41,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     console.log('Values from reducer: ', suggestions, suggestionsLoading, suggestionsError);
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
-    const [searchKeyword, setSearchKeyword] = useState(null);
+    const [searchKeyword, setSearchKeyword] = useState('');
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
     };
@@ -52,14 +54,13 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         }
     };
 
-    const handleSearchKeywordChange = event => {
-        console.log(event.target.value);
-        setSearchKeyword(event.target.value);
-        if (event.target.value.length > 3) {
-            actions.loadPrimoSuggestions(event.target.value);
+    const handleSearchKeywordChange = (event, newValue) => {
+        console.log(newValue);
+        setSearchKeyword(newValue);
+        if (newValue.length > 3) {
+            actions.loadPrimoSuggestions(newValue);
         }
     };
-
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
@@ -85,19 +86,32 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                         </FormControl>
                     </Grid>
                     <Grid item xs>
-                        <TextField
-                            id="search-input"
-                            placeholder="Find books, articles, databases, conferences and more.."
-                            fullWidth
-                            InputLabelProps={{ shrink: true }}
-                            InputProps={{
-                                classes: {
-                                    input: classes.selectInput,
-                                },
-                            }}
-                            onChange={handleSearchKeywordChange}
+                        <Autocomplete
+                            freeSolo
+                            id="free-solo-2-demo"
+                            disableClearable
+                            options={(suggestions && suggestions.docs.map(option => option.text)) || []}
+                            onInputChange={handleSearchKeywordChange}
+                            renderInput={params => (
+                                <TextField
+                                    {...params}
+                                    placeholder="Find books, articles, databases, conferences and more.."
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                        classes: {
+                                            input: classes.selectInput,
+                                        },
+                                    }}
+                                />
+                            )}
                         />
                     </Grid>
+                    {suggestionsLoading && (
+                        <Grid item xs={'auto'}>
+                            <CircularProgress color="inherit" size={20} id="loading-suggestions" />
+                        </Grid>
+                    )}
                     <Grid item xs={'auto'}>
                         <Button
                             id="search-submit"

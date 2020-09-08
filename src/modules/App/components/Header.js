@@ -181,7 +181,6 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
     };
-    console.log(account);
     return (
         <Grid container className={classes.gradient}>
             <Grid item xs={12} className={classes.topHeader}>
