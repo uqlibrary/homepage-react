@@ -118,9 +118,7 @@ export function loadPrimoSuggestions(keyword) {
     console.log('loading Primo Suggestions');
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return get(PRIMO_SUGGESTIONS_API(keyword), {
-            withCredentials: false,
-        })
+        return get(PRIMO_SUGGESTIONS_API(keyword))
             .then(response => {
                 console.log('IT WORKED', response, keyword);
                 dispatch({
