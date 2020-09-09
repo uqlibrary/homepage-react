@@ -239,19 +239,19 @@ export class AppClass extends PureComponent {
                     toggleMenu={this.toggleMenu}
                     menuOpen={this.state.menuOpen}
                 />
-                <Megamenu
-                    menuItems={menuItems}
-                    history={this.props.history}
-                    isMobile={this.state.isMobile}
-                    locale={{
-                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                        skipNavTitle: locale.global.skipNav.title,
-                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                    }}
-                    toggleMenu={this.toggleMenu}
-                    menuOpen={this.state.menuOpen}
-                />
                 <div className="content-container" id="content-container">
+                    <Megamenu
+                        menuItems={menuItems}
+                        history={this.props.history}
+                        isMobile={this.state.isMobile}
+                        locale={{
+                            skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                            skipNavTitle: locale.global.skipNav.title,
+                            closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                        }}
+                        toggleMenu={this.toggleMenu}
+                        menuOpen={this.state.menuOpen}
+                    />
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}
@@ -266,7 +266,7 @@ export class AppClass extends PureComponent {
                             alignItems="center"
                             style={{ marginBottom: 12 }}
                         >
-                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: 0 }}>
+                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: -12 }}>
                                 <Alert {...userStatusAlert} />
                             </Grid>
                         </Grid>

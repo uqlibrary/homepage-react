@@ -286,7 +286,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className="layout-card">
+        <div className="layout-card" style={{ marginTop: 0, marginBottom: 0 }}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
                 <Hidden lgUp>

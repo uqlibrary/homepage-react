@@ -3,6 +3,12 @@
 exports[`Component Megamenu should display mobile correctly 1`] = `
 <div
   className="layout-card"
+  style={
+    Object {
+      "marginBottom": 0,
+      "marginTop": 0,
+    }
+  }
 >
   <WithStyles(ForwardRef(List))
     component="nav"
@@ -89,6 +95,12 @@ exports[`Component Megamenu should render empty drawer 1`] = `
 exports[`Component Megamenu should render opened drawer with menus 1`] = `
 <div
   className="layout-card"
+  style={
+    Object {
+      "marginBottom": 0,
+      "marginTop": 0,
+    }
+  }
 >
   <WithStyles(ForwardRef(List))
     component="nav"
