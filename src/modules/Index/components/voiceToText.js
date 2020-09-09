@@ -2,7 +2,6 @@ import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import MicIcon from '@material-ui/icons/Mic';
-// import MicOffIcon from '@material-ui/icons/MicOff';
 import ClearIcon from '@material-ui/icons/Clear';
 import { default as defaultLocale } from './locale';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';

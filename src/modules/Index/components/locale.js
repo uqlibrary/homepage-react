@@ -81,17 +81,18 @@ export default {
             },
             {
                 label: 'Database search',
-                link: '#',
+                link: 'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ',
                 display: [0, 1, 2, 3, 4, 5, 6],
             },
             {
                 label: 'Database help',
-                link: '#',
+                link:
+                    'https://web.library.uq.edu.au/research-tools-techniques/search-techniques/where-and-how-search/searching-databases',
                 display: [6],
             },
             {
                 label: 'Browse databases',
-                link: '#',
+                link: 'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ',
                 display: [6],
             },
             {

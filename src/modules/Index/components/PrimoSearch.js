@@ -153,7 +153,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 <Grid container spacing={2} className={classes.searchPanel}>
                     <Hidden smDown>
                         <Grid item xs style={{ color: 'red' }}>
-                            {suggestionsError}
+                            {!!suggestionsError && <span>Failed to load auto-suggestions for your search</span>}
                         </Grid>
                     </Hidden>
                     {locale.PrimoSearch.links.map((item, index) => {
