@@ -60,10 +60,14 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
             if (newValue.length > 3) {
                 actions.loadPrimoSuggestions(newValue);
             }
+            document.getElementById('primo-autocomplete').focus();
         },
         [actions],
     );
-    console.log(document.getElementById('primo-autocomplete'));
+
+    const handleClearSuggestions = React.useCallback(() => {
+        actions.clearPrimoSuggestions();
+    });
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
@@ -96,7 +100,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             disableClearable
                             openOnFocus
                             clearOnEscape
-                            open={!!suggestions && !!searchKeyword && searchKeyword.length > 3}
+                            // open={!!suggestions && !!searchKeyword && searchKeyword.length > 3}
                             options={
                                 (suggestions &&
                                     suggestions.docs
@@ -124,12 +128,12 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             }}
                         />
                     </Grid>
-                    <VoiceToText sendHandler={handleSearchKeywordChange} />
                     {suggestionsLoading && (
-                        <Grid item xs={'auto'} style={{ width: 30, marginLeft: -30 }}>
-                            <CircularProgress color="inherit" size={20} id="loading-suggestions" />
+                        <Grid item xs={'auto'} style={{ width: 30, marginLeft: -95, marginRight: 65, marginBottom: 6 }}>
+                            <CircularProgress color="secondary" size={20} id="loading-suggestions" />
                         </Grid>
                     )}
+                    <VoiceToText sendHandler={handleSearchKeywordChange} clearSuggestions={handleClearSuggestions} />
                     <Grid item xs={'auto'}>
                         <Button
                             id="search-submit"

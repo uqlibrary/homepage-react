@@ -8,7 +8,7 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { PropTypes } from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
-export const VoiceToText = ({ sendHandler }) => {
+export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
     const { transcript, resetTranscript, listening } = useSpeechRecognition({
         clearTranscriptOnListen: true,
     });
@@ -28,6 +28,7 @@ export const VoiceToText = ({ sendHandler }) => {
         event && event.preventDefault();
         resetTranscript();
         sendHandler(null, '');
+        clearSuggestions();
         document.getElementById('primo-autocomplete').focus();
     };
     React.useEffect(() => {
@@ -66,6 +67,7 @@ export const VoiceToText = ({ sendHandler }) => {
 
 VoiceToText.propTypes = {
     sendHandler: PropTypes.func,
+    clearSuggestions: PropTypes.func,
 };
 
 VoiceToText.defaultProps = {

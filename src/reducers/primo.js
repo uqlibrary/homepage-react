@@ -24,6 +24,9 @@ const handlers = {
         suggestionsLoading: false,
         suggestionsError: action.payload,
     }),
+    [actions.PRIMO_SUGGESTIONS_CLEAR]: () => ({
+        ...initialState,
+    }),
 };
 
 export default function primoReducer(state = initialState, action) {

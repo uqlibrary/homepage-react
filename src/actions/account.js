@@ -134,6 +134,12 @@ export function loadPrimoSuggestions(keyword) {
     };
 }
 
+export function clearPrimoSuggestions() {
+    return dispatch => {
+        dispatch({ type: actions.PRIMO_SUGGESTIONS_CLEAR });
+    };
+}
+
 /**
  * Loads the chat status data
  * @returns {function(*)}
