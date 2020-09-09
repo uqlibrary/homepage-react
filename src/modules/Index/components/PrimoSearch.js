@@ -82,6 +82,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Select
                                 labelId="search-select-label"
                                 id="search-select"
+                                error={!!suggestionsError}
                                 value={searchType}
                                 className={classes.selectInput}
                                 onChange={handleSearchTypeChange}
@@ -102,7 +103,6 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             disableClearable
                             openOnFocus
                             clearOnEscape
-                            // open={!!suggestions && !!searchKeyword && searchKeyword.length > 3}
                             options={
                                 (suggestions &&
                                     suggestions.docs
@@ -116,8 +116,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                     <TextField
                                         {...params}
                                         placeholder="Find books, articles, databases, conferences and more.."
-                                        error={suggestionsError}
-                                        helperText={suggestionsError}
+                                        error={!!suggestionsError}
                                         InputProps={{
                                             ...params.InputProps,
                                             type: 'search',
@@ -153,7 +152,9 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 </Grid>
                 <Grid container spacing={2} className={classes.searchPanel}>
                     <Hidden smDown>
-                        <Grid item xs />
+                        <Grid item xs style={{ color: 'red' }}>
+                            {suggestionsError}
+                        </Grid>
                     </Hidden>
                     {locale.PrimoSearch.links.map((item, index) => {
                         if (item.display.includes(searchType)) {
