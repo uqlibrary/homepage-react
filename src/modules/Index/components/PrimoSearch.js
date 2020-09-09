@@ -14,6 +14,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { default as defaultLocale } from './locale.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { VoiceToText } from './voiceToText';
 
 const useStyles = makeStyles(
     theme => ({
@@ -38,7 +39,6 @@ const useStyles = makeStyles(
 );
 
 export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
-    console.log('Values from reducer: ', suggestions, suggestionsLoading, suggestionsError);
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -54,13 +54,16 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         }
     };
 
-    const handleSearchKeywordChange = (event, newValue) => {
-        console.log(newValue);
-        setSearchKeyword(newValue);
-        if (newValue.length > 3) {
-            actions.loadPrimoSuggestions(newValue);
-        }
-    };
+    const handleSearchKeywordChange = React.useCallback(
+        (event, newValue) => {
+            setSearchKeyword(newValue);
+            if (newValue.length > 3) {
+                actions.loadPrimoSuggestions(newValue);
+            }
+        },
+        [actions],
+    );
+    console.log(document.getElementById('primo-autocomplete'));
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
@@ -87,28 +90,43 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                     </Grid>
                     <Grid item xs>
                         <Autocomplete
+                            value={searchKeyword}
                             freeSolo
-                            id="free-solo-2-demo"
+                            id="primo-autocomplete"
                             disableClearable
-                            options={(suggestions && suggestions.docs.map(option => option.text)) || []}
+                            openOnFocus
+                            clearOnEscape
+                            open={!!suggestions && !!searchKeyword && searchKeyword.length > 3}
+                            options={
+                                (suggestions &&
+                                    suggestions.docs
+                                        .map(option => option.text)
+                                        .filter(option => option !== searchKeyword)) ||
+                                []
+                            }
                             onInputChange={handleSearchKeywordChange}
-                            renderInput={params => (
-                                <TextField
-                                    {...params}
-                                    placeholder="Find books, articles, databases, conferences and more.."
-                                    InputProps={{
-                                        ...params.InputProps,
-                                        type: 'search',
-                                        classes: {
-                                            input: classes.selectInput,
-                                        },
-                                    }}
-                                />
-                            )}
+                            renderInput={params => {
+                                return (
+                                    <TextField
+                                        {...params}
+                                        placeholder="Find books, articles, databases, conferences and more.."
+                                        error={suggestionsError}
+                                        helperText={suggestionsError}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            type: 'search',
+                                            classes: {
+                                                input: classes.selectInput,
+                                            },
+                                        }}
+                                    />
+                                );
+                            }}
                         />
                     </Grid>
+                    <VoiceToText sendHandler={handleSearchKeywordChange} />
                     {suggestionsLoading && (
-                        <Grid item xs={'auto'}>
+                        <Grid item xs={'auto'} style={{ width: 30, marginLeft: -30 }}>
                             <CircularProgress color="inherit" size={20} id="loading-suggestions" />
                         </Grid>
                     )}
