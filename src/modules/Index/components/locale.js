@@ -72,18 +72,37 @@ export default {
             {
                 label: 'Search help',
                 link: 'https://web.library.uq.edu.au/research-tools-techniques/uq-library-search',
+                display: [0, 1, 2, 3, 4, 5],
             },
             {
                 label: 'Advanced search',
                 link: 'https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced',
+                display: [0, 1, 2, 3, 4, 5],
             },
             {
                 label: 'Database search',
                 link: '#',
+                display: [0, 1, 2, 3, 4, 5, 6],
+            },
+            {
+                label: 'Database help',
+                link: '#',
+                display: [6],
+            },
+            {
+                label: 'Browse databases',
+                link: '#',
+                display: [6],
             },
             {
                 label: 'Browse search',
                 link: 'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank',
+                display: [0, 1, 2, 3, 4, 5],
+            },
+            {
+                label: 'Browse courses',
+                link: 'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank',
+                display: [7, 8],
             },
         ],
     },

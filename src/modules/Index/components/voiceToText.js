@@ -1,7 +1,8 @@
 import React from 'react';
 import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import MicIcon from '@material-ui/icons/Mic';
-import MicOffIcon from '@material-ui/icons/MicOff';
+// import MicOffIcon from '@material-ui/icons/MicOff';
 import ClearIcon from '@material-ui/icons/Clear';
 import { default as defaultLocale } from './locale';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
@@ -43,22 +44,28 @@ export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
             <Grid container spacing={0}>
                 {!listening && (
                     <Grid item xs={'auto'}>
-                        <IconButton onClick={SpeechRecognition.startListening} size={'small'}>
-                            <MicIcon />
-                        </IconButton>
+                        <Tooltip title={'Use your microphone to search'}>
+                            <IconButton onClick={SpeechRecognition.startListening} size={'small'}>
+                                <MicIcon style={{ color: '#CCCCCC' }} />
+                            </IconButton>
+                        </Tooltip>
                     </Grid>
                 )}
                 {listening && (
                     <Grid item xs={'auto'}>
-                        <IconButton onClick={sendTranscript} size={'small'}>
-                            <MicOffIcon />
-                        </IconButton>
+                        <Tooltip title={'Stop recording'}>
+                            <IconButton onClick={sendTranscript} size={'small'}>
+                                <MicIcon style={{ color: '#a8ff00' }} />
+                            </IconButton>
+                        </Tooltip>
                     </Grid>
                 )}
                 <Grid item xs={'auto'}>
-                    <IconButton onClick={handleReset} size={'small'}>
-                        <ClearIcon />
-                    </IconButton>
+                    <Tooltip title={'Clear your search term'}>
+                        <IconButton onClick={handleReset} size={'small'}>
+                            <ClearIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Grid>
             </Grid>
         </Grid>

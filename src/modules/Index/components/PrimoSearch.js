@@ -15,6 +15,7 @@ import { default as defaultLocale } from './locale.js';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { VoiceToText } from './voiceToText';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(
     theme => ({
@@ -30,6 +31,7 @@ const useStyles = makeStyles(
             color: theme.palette.primary.main,
         },
         searchUnderlinks: {
+            marginBottom: 4,
             '&a:link, a:hover, a:visited, a:active': {
                 color: theme.palette.primary.main + ' !important',
             },
@@ -65,9 +67,9 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         [actions],
     );
 
-    const handleClearSuggestions = React.useCallback(() => {
+    const handleClearSuggestions = () => {
         actions.clearPrimoSuggestions();
-    });
+    };
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
@@ -135,27 +137,35 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                     )}
                     <VoiceToText sendHandler={handleSearchKeywordChange} clearSuggestions={handleClearSuggestions} />
                     <Grid item xs={'auto'}>
-                        <Button
-                            id="search-submit"
-                            size={'large'}
-                            variant="contained"
-                            color={'primary'}
-                            style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
-                            onClick={handleSearchButton}
-                        >
-                            <SearchIcon />
-                        </Button>
+                        <Tooltip title={'Perform your search'}>
+                            <Button
+                                id="search-submit"
+                                size={'large'}
+                                variant="contained"
+                                color={'primary'}
+                                style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
+                                onClick={handleSearchButton}
+                            >
+                                <SearchIcon />
+                            </Button>
+                        </Tooltip>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} className={classes.searchPanel}>
                     <Hidden smDown>
                         <Grid item xs />
                     </Hidden>
-                    {locale.PrimoSearch.links.map((item, index) => (
-                        <Grid item xs={'auto'} key={index} className={classes.searchUnderlinks}>
-                            <a href={item.link}>{item.label}</a>
-                        </Grid>
-                    ))}
+                    {locale.PrimoSearch.links.map((item, index) => {
+                        if (item.display.includes(searchType)) {
+                            return (
+                                <Grid item xs={'auto'} key={index} className={classes.searchUnderlinks}>
+                                    <a href={item.link}>{item.label}</a>
+                                </Grid>
+                            );
+                        } else {
+                            return null;
+                        }
+                    })}
                 </Grid>
             </form>
         </StandardCard>
