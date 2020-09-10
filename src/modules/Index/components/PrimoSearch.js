@@ -186,8 +186,8 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 </Grid>
                 <Grid container spacing={2} className={classes.searchPanel}>
                     {!!suggestionsError ? (
-                        <Grid item xs={12} sm style={{ color: 'red', border: '1px solid red' }}>
-                            <span>Failed to load auto-suggestions for your search</span>
+                        <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
+                            <span>Failed to load recommendations for your search</span>
                         </Grid>
                     ) : (
                         <Hidden xsDown>
