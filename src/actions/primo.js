@@ -4,7 +4,7 @@ import {
     PRIMO_SUGGESTIONS_API_EXAMS,
     PRIMO_SUGGESTIONS_API_PAST_COURSE,
 } from '../repositories/routes';
-
+// import { get } from 'repositories/generic';
 /**
  * Loads the primo search suggestions
  * @returns {function(*)}
@@ -12,7 +12,7 @@ import {
 export function loadPrimoSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return fetch(PRIMO_SUGGESTIONS_API_GENERIC(keyword).apiUrl)
+        return fetch(PRIMO_SUGGESTIONS_API_GENERIC({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
                 const payload =
@@ -34,9 +34,10 @@ export function loadPrimoSuggestions(keyword) {
 export function loadExamPaperSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return fetch(PRIMO_SUGGESTIONS_API_EXAMS(keyword).apiUrl)
+        return fetch(PRIMO_SUGGESTIONS_API_EXAMS({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 const payload = data.map(item => item.name);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
@@ -44,6 +45,7 @@ export function loadExamPaperSuggestions(keyword) {
                 });
             })
             .catch(error => {
+                console.log(error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,
@@ -55,9 +57,10 @@ export function loadExamPaperSuggestions(keyword) {
 export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE(keyword).apiUrl)
+        return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
+                console.log(data);
                 const payload = data.map(item => item.name);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
