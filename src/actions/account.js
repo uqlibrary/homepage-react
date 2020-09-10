@@ -6,7 +6,6 @@ import {
     AUTHOR_DETAILS_API,
     SPOTLIGHTS_API,
     CHAT_API,
-    PRIMO_SUGGESTIONS_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -107,36 +106,6 @@ export function loadSpotlights() {
                     payload: error.message,
                 });
             });
-    };
-}
-
-/**
- * Loads the primo search suggestions
- * @returns {function(*)}
- */
-export function loadPrimoSuggestions(keyword) {
-    return dispatch => {
-        dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return fetch(PRIMO_SUGGESTIONS_API(keyword).apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                dispatch({
-                    type: actions.PRIMO_SUGGESTIONS_LOADED,
-                    payload: data.response,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.PRIMO_SUGGESTIONS_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
-export function clearPrimoSuggestions() {
-    return dispatch => {
-        dispatch({ type: actions.PRIMO_SUGGESTIONS_CLEAR });
     };
 }
 

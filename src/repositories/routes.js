@@ -87,7 +87,7 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
 // Primo Suggestions API
-export const PRIMO_SUGGESTIONS_API = keyword => ({
+export const PRIMO_SUGGESTIONS_API_GENERIC = keyword => ({
     apiUrl:
         'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
         keyword +
@@ -95,7 +95,14 @@ export const PRIMO_SUGGESTIONS_API = keyword => ({
         '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
         '&rows=10' +
         '&wt=json',
-    // '&json.wrf=byutv_jsonp_callback_8f5750d771cd445d80a7eb742f519e69&_=5659175a9b0644c2828fe83a9293637b',
+});
+
+export const PRIMO_SUGGESTIONS_API_EXAMS = keyword => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
+});
+
+export const PRIMO_SUGGESTIONS_API_PAST_COURSE = keyword => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
 });
 
 // Chat availability API

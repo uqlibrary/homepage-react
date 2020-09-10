@@ -17,53 +17,62 @@ export default {
                 {
                     name: 'Library',
                     icon: <PublicIcon size="small" color="secondary" />,
+                    placeholder: 'Find books, databases, conferences and more...',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,exclude,newspaper_articles,lk&facet=rtype,exclude,reviews,lk',
                 },
                 {
                     name: 'Books',
                     icon: <ImportContactsIcon size="small" color="secondary" />,
+                    placeholder: 'Enter a keyword, title, author etc...',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,include,books,lk',
                 },
                 {
                     name: 'Journal articles',
                     icon: <SchoolIcon size="small" color="secondary" />,
+                    placeholder: 'Enter a keyword, article title, author, publication etc ...',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&vid=61UQ&offset=0&fctV=articles&facet=rtype,include,articles,lk',
                 },
                 {
                     name: 'Video & audio',
                     icon: <MovieIcon size="small" color="secondary" />,
+                    placeholder: 'Enter a keyword, title, cast, crew, composer, artist etc...',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,include,media,lk',
                 },
                 {
                     name: 'Journals',
                     icon: <DescriptionIcon size="small" color="secondary" />,
+                    placeholder: 'Enter journal or newspaper title',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/search?query=title,contains,[keyword],AND&tab=61uq_all&vid=61UQ&search_scope=61UQ_All&sortby=rank&mfacet=rtype,include,journals,1,lk&mode=advanced&offset=0',
                 },
                 {
                     name: 'Physical items',
                     icon: <InboxIcon size="small" color="secondary" />,
+                    placeholder: 'Enter a keyword, title, author etc...',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&vid=61UQ&offset=0&facet=tlevel,include,physical_items,lk',
                 },
                 {
                     name: 'Databases',
                     icon: <StorageIcon size="small" color="secondary" />,
+                    placeholder: 'Enter database title',
                     link:
                         'https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]',
                 },
                 {
                     name: 'Past exam papers',
                     icon: <FindInPageIcon size="small" color="secondary" />,
+                    placeholder: 'Enter a course code',
                     link: 'https://www.library.uq.edu.au/exams/papers.php?stub=[keyword]',
                 },
                 {
                     name: 'Course reading lists',
                     icon: <ListAltIcon size="small" color="secondary" />,
+                    placeholder: 'Enter a course code',
                     link: 'https://uq.rl.talis.com/search.html?q=[keyword]',
                 },
             ],

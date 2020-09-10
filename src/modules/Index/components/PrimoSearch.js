@@ -29,10 +29,19 @@ const useStyles = makeStyles(
             fontSize: 24,
             fontWeight: 300,
             color: theme.palette.primary.main,
+            textOverflow: 'ellipsis !important',
+            overflow: 'hidden !important',
+            whiteSpace: 'nowrap !important',
+            '&::placeholder': {
+                paddingRight: 50,
+                textOverflow: 'ellipsis !important',
+                overflow: 'hidden !important',
+                whiteSpace: 'nowrap !important',
+            },
         },
         searchUnderlinks: {
             marginBottom: 4,
-            '&a:link, a:hover, a:visited, a:active': {
+            '&a, a:link, a:hover, a:visited, a:active': {
                 color: theme.palette.primary.main + ' !important',
             },
         },
@@ -44,8 +53,15 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState('');
+
+    const handleClearSuggestions = () => {
+        actions.clearPrimoSuggestions();
+    };
+
     const handleSearchTypeChange = event => {
+        console.log('ping');
         setSearchType(event.target.value);
+        actions.clearPrimoSuggestions();
     };
 
     const handleSearchButton = event => {
@@ -60,25 +76,26 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         (event, newValue) => {
             setSearchKeyword(newValue);
             if (newValue.length > 3) {
-                actions.loadPrimoSuggestions(newValue);
+                if ([0, 1, 3, 4, 5].includes(searchType)) {
+                    actions.loadPrimoSuggestions(newValue);
+                } else if (searchType === 7) {
+                    actions.loadExamPaperSuggestions(newValue);
+                } else if (searchType === 8) {
+                    actions.loadCourseReadingListsSuggestions(newValue);
+                }
+                console.log('focussing on the input');
+                document.getElementById('primo-autocomplete').focus();
             }
-            document.getElementById('primo-autocomplete').focus();
         },
-        [actions],
+        [actions, searchType],
     );
-
-    const handleClearSuggestions = () => {
-        actions.clearPrimoSuggestions();
-    };
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
-                        <FormControl style={{ minWidth: '100%' }}>
-                            <InputLabel id="search-select-label" autoFocus>
-                                {locale.PrimoSearch.typeSelect.label}
-                            </InputLabel>
+                        <FormControl style={{ width: '100%' }}>
+                            <InputLabel id="search-select-label">{locale.PrimoSearch.typeSelect.label}</InputLabel>
                             <Select
                                 labelId="search-select-label"
                                 id="search-select"
@@ -103,19 +120,13 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             disableClearable
                             openOnFocus
                             clearOnEscape
-                            options={
-                                (suggestions &&
-                                    suggestions.docs
-                                        .map(option => option.text)
-                                        .filter(option => option !== searchKeyword)) ||
-                                []
-                            }
+                            options={(suggestions && suggestions.filter(option => option !== searchKeyword)) || []}
                             onInputChange={handleSearchKeywordChange}
                             renderInput={params => {
                                 return (
                                     <TextField
                                         {...params}
-                                        placeholder="Find books, articles, databases, conferences and more.."
+                                        placeholder={locale.PrimoSearch.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{
                                             ...params.InputProps,
@@ -129,12 +140,21 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             }}
                         />
                     </Grid>
+                    <Grid item xs={'auto'} style={{ width: 90, marginLeft: -70, marginRight: -20, marginBottom: 6 }}>
+                        <VoiceToText
+                            sendHandler={handleSearchKeywordChange}
+                            clearSuggestions={handleClearSuggestions}
+                        />
+                    </Grid>
                     {suggestionsLoading && (
-                        <Grid item xs={'auto'} style={{ width: 30, marginLeft: -95, marginRight: 65, marginBottom: 6 }}>
-                            <CircularProgress color="secondary" size={20} id="loading-suggestions" />
+                        <Grid
+                            item
+                            xs={'auto'}
+                            style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
+                        >
+                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
                         </Grid>
                     )}
-                    <VoiceToText sendHandler={handleSearchKeywordChange} clearSuggestions={handleClearSuggestions} />
                     <Grid item xs={'auto'}>
                         <Tooltip title={'Perform your search'}>
                             <Button
