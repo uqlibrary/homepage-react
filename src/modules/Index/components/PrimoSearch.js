@@ -190,7 +190,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <span>Failed to load recommendations for your search</span>
                         </Grid>
                     ) : (
-                        <Hidden xsDown>
+                        <Hidden smDown>
                             <Grid item xs />
                         </Hidden>
                     )}
