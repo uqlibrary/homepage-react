@@ -44,6 +44,19 @@ const useStyles = makeStyles(
             '&a, a:link, a:hover, a:visited, a:active': {
                 color: theme.palette.primary.main + ' !important',
             },
+            [theme.breakpoints.down('sm')]: {
+                zoom: 0.9,
+            },
+        },
+        searchButton: {
+            [theme.breakpoints.up('md')]: {
+                width: 40,
+                minWidth: 20,
+                padding: '8px 8px !important',
+            },
+            [theme.breakpoints.down('sm')]: {
+                width: '100%',
+            },
         },
     }),
     { withTheme: true },
@@ -112,7 +125,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             </Select>
                         </FormControl>
                     </Grid>
-                    <Grid item xs>
+                    <Grid item xs={12} sm>
                         <Autocomplete
                             value={searchKeyword}
                             freeSolo
@@ -155,15 +168,16 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <CircularProgress color="primary" size={20} id="loading-suggestions" />
                         </Grid>
                     )}
-                    <Grid item xs={'auto'}>
+                    <Grid item xs={12} md={'auto'}>
                         <Tooltip title={'Perform your search'}>
                             <Button
+                                fullWidth
                                 id="search-submit"
                                 size={'large'}
                                 variant="contained"
                                 color={'primary'}
-                                style={{ width: 20, minWidth: 20, padding: '8px 8px !important' }}
                                 onClick={handleSearchButton}
+                                className={classes.searchButton}
                             >
                                 <SearchIcon />
                             </Button>
@@ -171,11 +185,15 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} className={classes.searchPanel}>
-                    <Hidden smDown>
-                        <Grid item xs style={{ color: 'red' }}>
-                            {!!suggestionsError && <span>Failed to load auto-suggestions for your search</span>}
+                    {!!suggestionsError ? (
+                        <Grid item xs={12} sm style={{ color: 'red', border: '1px solid red' }}>
+                            <span>Failed to load auto-suggestions for your search</span>
                         </Grid>
-                    </Hidden>
+                    ) : (
+                        <Hidden xsDown>
+                            <Grid item xs />
+                        </Hidden>
+                    )}
                     {locale.PrimoSearch.links.map((item, index) => {
                         if (item.display.includes(searchType)) {
                             return (

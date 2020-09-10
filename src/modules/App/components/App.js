@@ -232,13 +232,13 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <ChatStatus status={this.props.chatStatus} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}
                     account={this.props.account}
                     toggleMenu={this.toggleMenu}
                     menuOpen={this.state.menuOpen}
                 />
+                <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
                     <Megamenu
                         menuItems={menuItems}
