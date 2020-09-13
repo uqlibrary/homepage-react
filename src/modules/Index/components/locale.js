@@ -84,11 +84,6 @@ export default {
                 display: [0, 1, 2, 3, 4, 5],
             },
             {
-                label: 'Saved searches/items',
-                link: 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries',
-                display: [0, 1, 2, 3, 4, 5],
-            },
-            {
                 label: 'Advanced search',
                 link: 'https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced',
                 display: [0, 1, 2, 3, 4, 5],
