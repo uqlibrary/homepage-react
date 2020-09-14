@@ -148,6 +148,9 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                                 input: classes.selectInput,
                                             },
                                         }}
+                                        inputProps={{
+                                            'aria-label': 'Search terms',
+                                        }}
                                     />
                                 );
                             }}

@@ -82,7 +82,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             <div className="layout-card" style={{ marginTop: 12 }}>
                 <Grid container spacing={6}>
                     {/* Search */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} id="primo-search">
                         <PrimoSearch />
                     </Grid>
                     {/* Spotlights */}
