@@ -42,7 +42,11 @@ export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
         <Grid container spacing={0}>
             {!listening && (
                 <Grid item xs={'auto'}>
-                    <Tooltip title={'Use your microphone to search'}>
+                    <Tooltip
+                        title={'Use your microphone to search'}
+                        id="primo-search-voice-record"
+                        data-testid="primo-search-voice-record"
+                    >
                         <IconButton onClick={SpeechRecognition.startListening} size={'small'}>
                             <MicIcon />
                         </IconButton>
@@ -51,7 +55,11 @@ export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
             )}
             {listening && (
                 <Grid item xs={'auto'}>
-                    <Tooltip title={'Stop recording'}>
+                    <Tooltip
+                        title={'Stop recording'}
+                        id="primo-search-voice-stop"
+                        data-testid="primo-search-voice-stop"
+                    >
                         <IconButton onClick={sendTranscript} size={'small'}>
                             <MicIcon style={{ color: '#a8ff00' }} />
                         </IconButton>
@@ -59,7 +67,11 @@ export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
                 </Grid>
             )}
             <Grid item xs={'auto'}>
-                <Tooltip title={'Clear your search term'}>
+                <Tooltip
+                    title={'Clear your search term'}
+                    id="primo-search-voice-clear"
+                    data-testid="primo-search-voice-clear"
+                >
                     <IconButton onClick={handleReset} size={'small'}>
                         <ClearIcon />
                     </IconButton>

@@ -72,7 +72,6 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     };
 
     const handleSearchTypeChange = event => {
-        console.log('ping');
         setSearchType(event.target.value);
         actions.clearPrimoSuggestions();
     };
@@ -97,7 +96,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                     actions.loadCourseReadingListsSuggestions(newValue);
                 }
                 console.log('focussing on the input');
-                document.getElementById('primo-autocomplete').focus();
+                document.getElementById('primo-search-autocomplete').focus();
             }
         },
         [actions, searchType],
@@ -111,14 +110,15 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <InputLabel id="search-select-label">{locale.PrimoSearch.typeSelect.label}</InputLabel>
                             <Select
                                 labelId="search-select-label"
-                                id="search-select"
+                                id="primo-search-select"
+                                data-testid="primo-search-select"
                                 error={!!suggestionsError}
                                 value={searchType}
                                 className={classes.selectInput}
                                 onChange={handleSearchTypeChange}
                             >
                                 {locale.PrimoSearch.typeSelect.items.map((item, index) => (
-                                    <MenuItem value={index} key={index}>
+                                    <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
                                         {item.icon}&nbsp;{item.name}
                                     </MenuItem>
                                 ))}
@@ -129,10 +129,12 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                         <Autocomplete
                             value={searchKeyword}
                             freeSolo
-                            id="primo-autocomplete"
+                            id="primo-search-autocomplete"
+                            data-testid="primo-search-autocomplete"
                             disableClearable
                             openOnFocus
                             clearOnEscape
+                            open
                             options={(suggestions && suggestions.filter(option => option !== searchKeyword)) || []}
                             onInputChange={handleSearchKeywordChange}
                             renderInput={params => {
@@ -149,7 +151,9 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                             },
                                         }}
                                         inputProps={{
+                                            ...params.inputProps,
                                             'aria-label': 'Search terms',
+                                            'data-testid': 'primo-search-input',
                                         }}
                                     />
                                 );
@@ -175,7 +179,8 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                         <Tooltip title={'Perform your search'}>
                             <Button
                                 fullWidth
-                                id="search-submit"
+                                id="primo-search-submit"
+                                data-testid="primo-search-submit"
                                 size={'large'}
                                 variant="contained"
                                 color={'primary'}

@@ -1,6 +1,6 @@
-context('Homepage', () => {
-    it('Renders something', () => {
+context('Primo Search', () => {
+    it('Acts as expected', () => {
         cy.visit('/');
-        cy.get('div#content-container').contains('Welcome');
+        cy.get('div#primo-search').contains('Search');
     });
 });
