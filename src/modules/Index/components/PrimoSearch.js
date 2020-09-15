@@ -134,7 +134,6 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             disableClearable
                             openOnFocus
                             clearOnEscape
-                            open
                             options={(suggestions && suggestions.filter(option => option !== searchKeyword)) || []}
                             onInputChange={handleSearchKeywordChange}
                             renderInput={params => {
