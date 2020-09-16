@@ -86,6 +86,25 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 // Spotlights API
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Primo Suggestions API
+export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => ({
+    apiUrl:
+        'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+        keyword +
+        '&facet=off' +
+        '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
+        '&rows=10' +
+        '&wt=json',
+});
+
+export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
+});
+
+export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
+});
+
 // Chat availability API
 export const CHAT_API = () => ({ apiUrl: 'chat_status' });
 

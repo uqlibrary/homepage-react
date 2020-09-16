@@ -11,6 +11,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
+import MenuItem from '@material-ui/core/MenuItem';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import PrintIcon from '@material-ui/icons/Print';
@@ -26,7 +27,7 @@ import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { loadSpotlights } from 'actions';
 const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from './PrimoSearch';
+import PrimoSearch from '../containers/PrimoSearch';
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -81,7 +82,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             <div className="layout-card" style={{ marginTop: 12 }}>
                 <Grid container spacing={6}>
                     {/* Search */}
-                    <Grid item xs={12}>
+                    <Grid item xs={12} id="primo-search">
                         <PrimoSearch />
                     </Grid>
                     {/* Spotlights */}
@@ -102,90 +103,143 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                     </Grid>
 
                     {/* Personalisation panel */}
-                    <Grid item xs={4} style={{ paddingLeft: 24, paddingTop: 28 }}>
+                    <Grid item xs={4} style={{ paddingLeft: 16, paddingTop: 28 }}>
                         <Grid
                             container
                             spacing={1}
-                            style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 24, height: '100%' }}
+                            style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 6, height: '100%' }}
                             justify={'flex-end'}
                         >
                             <Grid item xs={12}>
-                                <Typography variant={'h4'} component={'h4'} color={'primary'}>
+                                <Typography
+                                    variant={'h4'}
+                                    component={'h4'}
+                                    color={'primary'}
+                                    style={{ paddingLeft: 12 }}
+                                >
                                     {greeting()} {(account && account.firstName) || ''}
                                 </Typography>
                             </Grid>
-                            <Grid item xs={12} style={{ marginBottom: -12, alignSelf: 'flex-end' }}>
+                            <Grid item xs={12} style={{ marginBottom: -12, alignSelf: 'flex-end', marginLeft: -24 }}>
                                 <Grid container spacing={0}>
-                                    <Grid item xs style={{ lineHeight: '30px' }}>
-                                        Current print balance <b style={{ color: 'green' }}>$12.50</b>
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Tooltip
-                                            id="auth-button"
-                                            title={'Manage your print balance'}
-                                            placement="left"
-                                            TransitionProps={{ timeout: 300 }}
-                                        >
-                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'green' }}>
-                                                <PrintIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={0}>
-                                    <Grid item xs style={{ lineHeight: '24px' }}>
-                                        Current book loans <b>6</b>
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Tooltip
-                                            id="auth-button"
-                                            title={'Manage your book loans'}
-                                            placement="left"
-                                            TransitionProps={{ timeout: 300 }}
-                                        >
-                                            <IconButton size={'small'} variant={'contained'} color={'secondary'}>
-                                                <MenuBookIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={0}>
-                                    <Grid item xs style={{ lineHeight: '24px' }}>
-                                        Overdue book loans <b style={{ color: 'orange' }}>1</b>
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Tooltip
-                                            id="auth-button"
-                                            title={'Manage your overdue loans'}
-                                            placement="left"
-                                            TransitionProps={{ timeout: 300 }}
-                                        >
-                                            <IconButton
-                                                size={'small'}
-                                                variant={'contained'}
-                                                style={{ color: 'orange' }}
+                                    <MenuItem
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: -3,
+                                            marginTop: -3,
+                                            paddingTop: 3,
+                                            paddingBottom: 3,
+                                        }}
+                                    >
+                                        <Grid item xs style={{ lineHeight: '30px' }}>
+                                            Current print balance <b style={{ color: 'green' }}>$12.50</b>
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
+                                            <Tooltip
+                                                id="auth-button"
+                                                title={'Manage your print balance'}
+                                                placement="left"
+                                                TransitionProps={{ timeout: 300 }}
                                             >
-                                                <NotificationImportantIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
+                                                <IconButton
+                                                    size={'small'}
+                                                    variant={'contained'}
+                                                    style={{ color: 'green' }}
+                                                >
+                                                    <PrintIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                    </MenuItem>
                                 </Grid>
                                 <Grid container spacing={0}>
-                                    <Grid item xs style={{ lineHeight: '24px' }}>
-                                        Overdue fines <b style={{ color: 'red' }}>$7.50</b>
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Tooltip
-                                            id="auth-button"
-                                            title={'Manage your overdue fines'}
-                                            placement="left"
-                                            TransitionProps={{ timeout: 300 }}
-                                        >
-                                            <IconButton size={'small'} variant={'contained'} style={{ color: 'red' }}>
-                                                <MonetizationOnIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                    </Grid>
+                                    <MenuItem
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: -3,
+                                            marginTop: -3,
+                                            paddingTop: 3,
+                                            paddingBottom: 3,
+                                        }}
+                                    >
+                                        <Grid item xs style={{ lineHeight: '24px' }}>
+                                            Current book loans <b>6</b>
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
+                                            <Tooltip
+                                                id="auth-button"
+                                                title={'Manage your book loans'}
+                                                placement="left"
+                                                TransitionProps={{ timeout: 300 }}
+                                            >
+                                                <IconButton size={'small'} variant={'contained'} color={'secondary'}>
+                                                    <MenuBookIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                    </MenuItem>
+                                </Grid>
+                                <Grid container spacing={0}>
+                                    <MenuItem
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: -3,
+                                            marginTop: -3,
+                                            paddingTop: 3,
+                                            paddingBottom: 3,
+                                        }}
+                                    >
+                                        <Grid item xs style={{ lineHeight: '24px' }}>
+                                            Overdue book loans <b style={{ color: 'orange' }}>1</b>
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
+                                            <Tooltip
+                                                id="auth-button"
+                                                title={'Manage your overdue loans'}
+                                                placement="left"
+                                                TransitionProps={{ timeout: 300 }}
+                                            >
+                                                <IconButton
+                                                    size={'small'}
+                                                    variant={'contained'}
+                                                    style={{ color: 'orange' }}
+                                                >
+                                                    <NotificationImportantIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                    </MenuItem>
+                                </Grid>
+                                <Grid container spacing={0}>
+                                    <MenuItem
+                                        style={{
+                                            width: '100%',
+                                            marginBottom: -3,
+                                            marginTop: -3,
+                                            paddingTop: 3,
+                                            paddingBottom: 3,
+                                        }}
+                                    >
+                                        <Grid item xs style={{ lineHeight: '24px' }}>
+                                            Overdue fines <b style={{ color: 'red' }}>$7.50</b>
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
+                                            <Tooltip
+                                                id="auth-button"
+                                                title={'Manage your overdue fines'}
+                                                placement="left"
+                                                TransitionProps={{ timeout: 300 }}
+                                            >
+                                                <IconButton
+                                                    size={'small'}
+                                                    variant={'contained'}
+                                                    style={{ color: 'red' }}
+                                                >
+                                                    <MonetizationOnIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                    </MenuItem>
                                 </Grid>
                             </Grid>
                         </Grid>
@@ -278,7 +332,12 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     <Grid
                                         item
                                         xs={'auto'}
-                                        style={{ paddingTop: 6, paddingBottom: 10, paddingLeft: 24, paddingRight: 24 }}
+                                        style={{
+                                            paddingTop: 6,
+                                            paddingBottom: 10,
+                                            paddingLeft: 24,
+                                            paddingRight: 24,
+                                        }}
                                     >
                                         <Tooltip title={'Select your location'} placement={'left'}>
                                             <IconButton>

@@ -23,6 +23,17 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import locale from 'locale/global';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
+import AppsIcon from '@material-ui/icons/Apps';
+import ComputerIcon from '@material-ui/icons/Computer';
+import SchoolIcon from '@material-ui/icons/School';
+import MoveToInboxIcon from '@material-ui/icons/MoveToInbox';
+import QueryBuilderIcon from '@material-ui/icons/QueryBuilder';
+import PrintIcon from '@material-ui/icons/Print';
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import RoomServiceIcon from '@material-ui/icons/RoomService';
+import YoutubeSearchedForIcon from '@material-ui/icons/YoutubeSearchedFor';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import FeedbackIcon from '@material-ui/icons/Feedback';
 
 const useStyles = makeStyles(
     theme => ({
@@ -126,6 +137,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorEl2, setAnchorEl2] = React.useState(null);
     const [searchType, setSearchType] = useState('1');
     const toggleHeader = () => {
         setExpandHeader(!expandHeader);
@@ -133,6 +145,14 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
 
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
+    };
+
+    const handleClick2 = event => {
+        setAnchorEl2(event.currentTarget);
+    };
+
+    const handleClose2 = () => {
+        setAnchorEl2(null);
     };
 
     const handleClick = event => {
@@ -161,7 +181,6 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
     };
-
     return (
         <Grid container className={classes.gradient}>
             <Grid item xs={12} className={classes.topHeader}>
@@ -238,6 +257,102 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                             </IconButton>
                         </Tooltip>
                     </Grid>
+                    {/* My Library */}
+                    <Grid item xs={'auto'}>
+                        <Tooltip
+                            id="contact-button"
+                            title={'My Library'}
+                            placement="bottom-start"
+                            TransitionProps={{ timeout: 300 }}
+                        >
+                            <IconButton onClick={handleClick2}>
+                                <AppsIcon className={classes.icon} />
+                            </IconButton>
+                        </Tooltip>
+                        <Menu
+                            id="simple-menu2"
+                            anchorEl={anchorEl2}
+                            keepMounted
+                            open={Boolean(anchorEl2)}
+                            onClose={handleClose2}
+                        >
+                            <Grid container spacing={0} style={{ maxWidth: 400 }}>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Borrowing
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Computers
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Course resources
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Document delivery
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Hours
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Masquerade
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Printing balance
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Publication metrics
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Room bookings
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Saved items
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Saved searches
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Feedback
+                                    </MenuItem>
+                                </Grid>
+                            </Grid>
+                        </Menu>
+                    </Grid>
+                    {/* Ask us */}
                     <Grid item xs={'auto'}>
                         <Tooltip
                             id="contact-button"
@@ -256,7 +371,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                             open={Boolean(anchorEl)}
                             onClose={handleClose}
                         >
-                            <Grid container spacing={0} style={{ width: 320 }}>
+                            <Grid container spacing={0} style={{ maxWidth: 350 }}>
                                 <Grid item xs={6}>
                                     <MenuItem onClick={handleClose}>
                                         <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
