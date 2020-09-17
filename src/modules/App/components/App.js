@@ -236,7 +236,7 @@ export class AppClass extends PureComponent {
                     menuOpen={this.state.menuOpen}
                 />
                 <ChatStatus status={this.props.chatStatus} />
-                <div className={classes.contentBox} className="content-container" id="content-container">
+                <div className={classes.contentBox} id="content-container">
                     <Megamenu
                         menuItems={menuItems}
                         history={this.props.history}
