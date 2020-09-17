@@ -63,21 +63,7 @@ const styles = theme => ({
         overflowX: 'hidden',
         boxSizing: 'border-box',
         marginTop: '0',
-        paddingBottom: '24px',
     },
-    // titleLink: {
-    //     textOverflow: 'ellipsis',
-    //     overflow: 'hidden',
-    //     color: theme.palette.common.white,
-    //     '& a': {
-    //         textOverflow: 'ellipsis',
-    //         overflow: 'hidden',
-    //         textDecoration: 'none',
-    //         '&:hover': {
-    //             textDecoration: 'underline',
-    //         },
-    //     },
-    // },
     // nowrap: {
     //     whiteSpace: 'nowrap',
     //     overflow: 'hidden',
