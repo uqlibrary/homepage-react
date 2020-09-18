@@ -40,7 +40,9 @@ export TZ='Australia/Brisbane'
 # Run e2e tests if in master branch, or if the branch name includes 'cypress'
 # Putting * around the test-string gives a test for inclusion of the substring rather than exact match
 BRANCH_RUNS_E2E=false
-if [[ $CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "codebuild" || $CI_COMMIT_MESSAGE == *"cypress"* ]]; then
+printf "Does the commit message contain cypress?"
+printf $CI_COMMIT_MESSAGE == *"cypress"*
+if [[ $CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "codebuild" || $CI_BRANCH == "feature-prototype" || $CI_COMMIT_MESSAGE == *"cypress"* ]]; then
     BRANCH_RUNS_E2E=true
 fi
 
