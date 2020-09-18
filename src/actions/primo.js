@@ -16,7 +16,16 @@ export function loadPrimoSuggestions(keyword) {
             .then(response => response.json())
             .then(data => {
                 const payload =
-                    (data && data.response && data.response.docs && data.response.docs.map(item => item.text)) || [];
+                    (data &&
+                        data.response &&
+                        data.response.docs &&
+                        data.response.docs.map((item, index) => {
+                            return {
+                                ...item,
+                                index,
+                            };
+                        })) ||
+                    [];
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
                     payload: payload,
@@ -37,15 +46,18 @@ export function loadExamPaperSuggestions(keyword) {
         return fetch(PRIMO_SUGGESTIONS_API_EXAMS({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                const payload = data.map(item => item.name);
+                const payload = data.map((item, index) => {
+                    return {
+                        text: item.name,
+                        index,
+                    };
+                });
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
                     payload: payload,
                 });
             })
             .catch(error => {
-                console.log(error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,
@@ -60,8 +72,12 @@ export function loadCourseReadingListsSuggestions(keyword) {
         return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log(data);
-                const payload = data.map(item => item.name);
+                const payload = data.map((item, index) => {
+                    return {
+                        text: item.name,
+                        index,
+                    };
+                });
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
                     payload: payload,

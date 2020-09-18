@@ -14,7 +14,6 @@ export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
     });
     const sendTranscript = event => {
         event && event.preventDefault();
-        console.log(transcript);
         SpeechRecognition.stopListening();
         if (transcript && transcript.length > 3) {
             sendHandler(null, transcript);

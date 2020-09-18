@@ -107,15 +107,20 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
                         <FormControl style={{ width: '100%' }}>
-                            <InputLabel id="search-select-label">{locale.PrimoSearch.typeSelect.label}</InputLabel>
+                            <InputLabel id="primo-search-select-label">
+                                {locale.PrimoSearch.typeSelect.label}
+                            </InputLabel>
                             <Select
-                                labelId="search-select-label"
+                                labelId="primo-search-select-label"
                                 id="primo-search-select"
                                 data-testid="primo-search-select"
                                 error={!!suggestionsError}
                                 value={searchType}
                                 className={classes.selectInput}
                                 onChange={handleSearchTypeChange}
+                                MenuProps={{
+                                    'data-testid': 'primo-search-select-list',
+                                }}
                             >
                                 {locale.PrimoSearch.typeSelect.items.map((item, index) => (
                                     <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
@@ -134,8 +139,21 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             disableClearable
                             openOnFocus
                             clearOnEscape
-                            options={(suggestions && suggestions.filter(option => option !== searchKeyword)) || []}
+                            open
+                            options={
+                                (!!suggestions &&
+                                    suggestions
+                                        .filter(option => option.text !== searchKeyword)
+                                        .map(option => option.text)) ||
+                                []
+                            }
                             onInputChange={handleSearchKeywordChange}
+                            ListboxProps={{
+                                'aria-labelledby': 'primo-search-select-label',
+                                id: 'primo-search-autocomplete-listbox',
+                                'data-testid': 'primo-search-autocomplete-listbox',
+                                'aria-label': 'Suggestion list',
+                            }}
                             renderInput={params => {
                                 return (
                                     <TextField
@@ -151,8 +169,8 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                         }}
                                         inputProps={{
                                             ...params.inputProps,
-                                            'aria-label': 'Search terms',
-                                            'data-testid': 'primo-search-input',
+                                            'aria-label': 'Enter your search terms',
+                                            'data-testid': 'primo-search-autocomplete-input',
                                         }}
                                     />
                                 );
@@ -191,7 +209,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                         </Tooltip>
                     </Grid>
                 </Grid>
-                <Grid container spacing={2} className={classes.searchPanel}>
+                <Grid container spacing={2} className={classes.searchPanel} data-testid={'primo-search-links'}>
                     {!!suggestionsError ? (
                         <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
                             <span>Autocomplete suggestions unavailable</span>
@@ -204,7 +222,12 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                     {locale.PrimoSearch.links.map((item, index) => {
                         if (item.display.includes(searchType)) {
                             return (
-                                <Grid item xs={'auto'} key={index} className={classes.searchUnderlinks}>
+                                <Grid
+                                    item
+                                    xs={'auto'}
+                                    data-testid={`primo-search-links-${index}`}
+                                    className={classes.searchUnderlinks}
+                                >
                                     <a href={item.link}>{item.label}</a>
                                 </Grid>
                             );
@@ -220,6 +243,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
 
 PrimoSearch.propTypes = {
     locale: PropTypes.any,
+    option: PropTypes.any,
     suggestions: PropTypes.any,
     suggestionsLoading: PropTypes.bool,
     suggestionsError: PropTypes.string,
