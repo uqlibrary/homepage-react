@@ -58,8 +58,5 @@ context('Primo Search', () => {
             .find('li')
             .its('length')
             .should('eq', 21);
-
-        cy.get('li#primo-search-autocomplete-option-0').click();
-        cy.get('div[data-testid="primo-search-links"]').contains('Autocomplete suggestions unavailable');
     });
 });
