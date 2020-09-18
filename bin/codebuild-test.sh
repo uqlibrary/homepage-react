@@ -67,7 +67,7 @@ case "$PIPE_NUM" in
     # Second runner for e2e. The first one is in the other pipeline.
     if [[ $BRANCH_RUNS_E2E == true ]]; then
         printf "\n--- \e[1mRUNNING E2E TESTS\e[0m ---\n"
-#        npm run test:e2e:dashboard
+        npm run test:e2e:dashboard
     fi
 
 ;;
@@ -105,11 +105,6 @@ case "$PIPE_NUM" in
 
     if [[ $BRANCH_RUNS_E2E == true ]]; then
         printf "\n--- \e[1mRUNNING E2E TESTS\e[0m ---\n"
-        # Use this variant to only run tests locally in Codeship.
-        # Turn off the e2e tests in other pipeline(s) when using this.
-        # npm run test:e2e
-
-        # Use this variant to turn on the recording to Cypress dashboard and video of the tests:
         npm run test:e2e:dashboard
     fi
 ;;
