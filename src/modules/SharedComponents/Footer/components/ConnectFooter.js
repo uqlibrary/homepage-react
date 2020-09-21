@@ -1,5 +1,8 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
+
+import { default as locale } from './locale.js';
+import { default as menuLocale } from 'locale/menu';
 
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -7,8 +10,6 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     connectFooter: {
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '14px',
         fontWeight: '300',
         lineHeight: '25px',
         margin: '0 auto',
@@ -36,6 +37,9 @@ const styles = theme => ({
             padding: 0,
             [theme.breakpoints.down('sm')]: {
                 display: 'inline-block',
+            },
+            '& a': {
+                fontSize: '14px',
             },
         },
     },
@@ -128,247 +132,110 @@ const styles = theme => ({
 
 export function ConnectFooter(props) {
     const { classes } = props;
+    const separator = <li className={classes.separator}>&nbsp;|&nbsp;</li>;
     return (
-        <Grid className={`${classes.connectFooter}`} container spacing={3} data-testid="connect-footer">
-            <Grid item xs={12} md={4} className={`${classes.navigation}`}>
-                {/* if we continue with this display, it should be driven by the json that creates the megamenu... */}
+        <Grid className={classes.connectFooter} container spacing={3} data-testid="connect-footer">
+            <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
                     <li>
-                        <a href="http://www.library.uq.edu.au" data-testid="connect-home-link">
-                            Library home
+                        <a href={menuLocale.home.linkTo} data-testid={menuLocale.home.dataTestid}>
+                            {menuLocale.home.primaryText}
                         </a>
                     </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/library-services"
-                            data-testid="connect-services-link"
-                            rel="noopener noreferrer"
-                        >
-                            Library services
-                        </a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/research-tools-techniques"
-                            data-testid="connect-research-link"
-                            rel="noopener noreferrer"
-                        >
-                            Research tools &amp; techniques
-                        </a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/collections"
-                            data-testid="connect-collections-link"
-                            rel="noopener noreferrer"
-                        >
-                            Collections
-                        </a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/borrowing-requesting"
-                            data-testid="connect-borrowing-link"
-                            rel="noopener noreferrer"
-                        >
-                            Borrowing &amp; requesting
-                        </a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/locations-hours"
-                            data-testid="connect-locations-link"
-                            rel="noopener noreferrer"
-                        >
-                            Locations &amp; hours
-                        </a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/about-us"
-                            data-testid="connect-about-link"
-                            rel="noopener noreferrer"
-                        >
-                            About
-                        </a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a
-                            href="https://web.library.uq.edu.au/contact-us"
-                            data-testid="connect-contact-link"
-                            rel="noopener noreferrer"
-                        >
-                            Contact us
-                        </a>
-                    </li>
+                    {separator}
+                    {menuLocale.menu.map((item, index) => (
+                        <Fragment>
+                            <li>
+                                <a
+                                    href={item.linkTo}
+                                    data-testid={item.dataTestid}
+                                    rel={item.relOpener || 'noopener noreferrer'}
+                                >
+                                    {item.primaryText}
+                                </a>
+                            </li>
+                            {index < menuLocale.menu.length - 1 && separator}
+                        </Fragment>
+                    ))}
                 </ul>
             </Grid>
-            <Grid item xs={12} md={4} className={`${classes.contacts}`}>
+            <Grid item xs={12} md={4} className={classes.contacts}>
                 <Grid container>
                     <Grid item>
-                        <Typography
-                            style={{ fontSize: '1.2rem', color: '#000', marginBottom: '10px', fontWeight: 400 }}
-                            variant={'h3'}
-                        >
+                        <Typography variant={'h6'} component={'h3'}>
                             Connect with us
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container className={`${classes.buttonSocial}`}>
-                    <Grid aria-disabled="false" item role="button" style={{ paddingTop: '7px' }} tabIndex="-1" xs={2}>
-                        <a
-                            href="https://web.library.uq.edu.au/blog"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                            title="Library Blog"
-                            data-testid="connect-blog-link"
-                        >
-                            Blog
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} tabIndex="-1" role="button" aria-disabled="false">
-                        <a
-                            href="https://twitter.com/UQ_Library"
-                            rel="external noopener noreferrer"
-                            target="_blank"
-                            title="Library on Twitter"
-                            data-testid="connect-twitter-link"
-                        >
-                            <img
-                                alt="Twitter icon"
-                                aria-label="Library on Twitter"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/twitter.png"
-                                title="Twitter"
-                            />
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} tabIndex="-1" role="button" aria-disabled="false">
-                        <a
-                            href="https://www.facebook.com/uniofqldlibrary"
-                            rel="external noopener noreferrer"
-                            target="_blank"
-                            title="Library on Facebook"
-                            data-testid="connect-facebook-link"
-                        >
-                            <img
-                                alt="Facebook icon"
-                                aria-label="Library on Facebook"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/facebook.png"
-                                title="Facebook"
-                            />
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} role="button" aria-disabled="false">
-                        <a
-                            href="https://www.instagram.com/uniofqldlibrary/"
-                            rel="external noopener noreferrer"
-                            tabIndex="-1"
-                            target="_blank"
-                            title="Library on Instagram"
-                            data-testid="connect-instagram-link"
-                        >
-                            <img
-                                alt="Instagram icon"
-                                aria-label="Library on Instagram"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/instagram.png"
-                                title="Instagram"
-                            />
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} tabIndex="-1" role="button" aria-disabled="false">
-                        <a
-                            href="https://www.youtube.com/user/uqlibrary"
-                            rel="external noopener noreferrer"
-                            target="_blank"
-                            title="Library on YouTube"
-                            data-testid="connect-youtube-link"
-                        >
-                            <img
-                                alt="YouTube icon"
-                                aria-label="Library on YouTube"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/youtube.png"
-                                title="YouTube"
-                            />
-                        </a>
-                    </Grid>
+                <Grid container className={classes.buttonSocial}>
+                    {locale.connectFooter.buttonSocial.map(item => (
+                        <Grid aria-disabled="false" item role="button" style={{ paddingTop: '7px' }} xs={2}>
+                            <a
+                                href={item.linkTo}
+                                rel={item.relOpener || 'noopener noreferrer'}
+                                target="_blank"
+                                title={item.linktitle}
+                                data-testid={item.dataTestid}
+                            >
+                                {!!item.linklabel ? (
+                                    item.linklabel
+                                ) : (
+                                    <img
+                                        alt={item.imageAlt}
+                                        aria-label={item.imageAriaLabel}
+                                        src={item.imageSrc}
+                                        title={item.imageTitle}
+                                    />
+                                )}
+                            </a>
+                        </Grid>
+                    ))}
                 </Grid>
-                <div className={`${classes.internal}`}>
-                    <a
-                        href="https://support.my.uq.edu.au/app/library/feedback"
-                        data-testid="connect-feedback-link"
-                        rel="noopener noreferrer"
-                    >
-                        Feedback
-                    </a>
-                    &nbsp;|&nbsp;{' '}
-                    <a
-                        href="https://web.library.uq.edu.au/about-us/participate-customer-research"
-                        data-testid="connect-participate-link"
-                        rel="noopener noreferrer"
-                    >
-                        Help us improve
-                    </a>{' '}
-                    &nbsp;|&nbsp;{' '}
-                    <a
-                        href="https://web.library.uq.edu.au/sitemap"
-                        data-testid="connect-sitemap-link"
-                        rel="noopener noreferrer"
-                    >
-                        Site Map
-                    </a>
+                <div className={classes.internal}>
+                    {locale.connectFooter.internalLinks.map((item, index) => {
+                        return (
+                            <Fragment>
+                                <a
+                                    href={item.linkTo}
+                                    data-testid={item.dataTestid}
+                                    rel={item.relOpener || 'noopener noreferrer'}
+                                >
+                                    {item.linklabel}
+                                </a>
+                                {index < locale.connectFooter.internalLinks.length - 1 && <span>&nbsp;|&nbsp; </span>}
+                            </Fragment>
+                        );
+                    })}
                 </div>
             </Grid>
-            <Grid item xs={12} md={4} className={`${classes.giving}`}>
-                <Grid
-                    aria-disabled="false"
-                    aria-label="Join Friends of the Library"
-                    className={`${classes.buttonColoredAccent}`}
-                    id="joinFriend"
-                    item
-                    role="button"
-                    tabIndex="-1"
-                    xs={12}
-                >
-                    <a
-                        href="https://web.library.uq.edu.au/about-us/friends-library"
-                        data-testid="connect-friends-link"
-                        rel="noopener noreferrer"
-                    >
-                        Join Friends of the Library
-                    </a>
-                </Grid>
-                <Grid
-                    aria-disabled="false"
-                    aria-label="Give to the Library"
-                    className={`${classes.buttonColoredAccent}`}
-                    id="giveToLibrary"
-                    item
-                    role="button"
-                    tabIndex="-1"
-                    xs={12}
-                >
-                    <a
-                        href="https://www.uq.edu.au/giving/organisations/university-queensland-library"
-                        data-testid="connect-give-link"
-                        rel="noopener noreferrer"
-                    >
-                        Give to the Library
-                    </a>
-                </Grid>
+            <Grid item xs={12} md={4} className={classes.giving}>
+                {locale.connectFooter.givingLinks.map(item => {
+                    return (
+                        <Grid
+                            aria-disabled="false"
+                            aria-label={item.ariaLabel}
+                            className={classes.buttonColoredAccent}
+                            id={item.id}
+                            item
+                            role="button"
+                            xs={12}
+                        >
+                            <a
+                                href={item.linkTo}
+                                data-testid={item.dataTestid}
+                                rel={item.relOpener || 'noopener noreferrer'}
+                            >
+                                {item.label}
+                            </a>
+                        </Grid>
+                    );
+                })}
             </Grid>
         </Grid>
     );
 }
 
 ConnectFooter.propTypes = {
-    className: PropTypes.string,
     classes: PropTypes.object.isRequired,
 };
 

@@ -1,7 +1,14 @@
 export default {
-    menu: {
-        libraryServices: {
+    home: {
+        dataTestid: 'connect-home-link',
+        linkTo: 'http://www.library.uq.edu.au',
+        primaryText: 'Library home',
+    },
+    menu: [
+        {
             id: 'libraryServices',
+            dataTestid: 'connect-services-link',
+            linkTo: 'https://web.library.uq.edu.au/library-services',
             primaryText: 'Library services',
             submenuItems: [
                 {
@@ -119,8 +126,10 @@ export default {
                 },
             ],
         },
-        researchToolsTechniques: {
+        {
             id: 'researchToolsTechniques',
+            dataTestid: 'connect-research-link',
+            linkTo: 'https://web.library.uq.edu.au/research-tools-techniques',
             primaryText: 'Research tools & techniques',
             submenuItems: [
                 {
@@ -191,8 +200,10 @@ export default {
                 },
             ],
         },
-        collections: {
+        {
             id: 'collections',
+            dataTestid: 'connect-collections-link',
+            linkTo: 'https://web.library.uq.edu.au/collections',
             primaryText: 'Collections',
             submenuItems: [
                 {
@@ -217,13 +228,15 @@ export default {
                 },
             ],
         },
-        borrowingRequesting: {
+        {
             id: 'borrowingRequesting',
+            dataTestid: 'connect-borrowing-link',
+            linkTo: 'https://web.library.uq.edu.au/borrowing-requesting',
             primaryText: 'Borrowing & requesting',
             submenuItems: [
                 {
                     primaryText: 'View your loans & requests',
-                    href:
+                    linkTo:
                         'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Faccount%3Fvid%3D61UQ%26section%3Doverview%26lang%3Den_US',
                     column: 1,
                 },
@@ -262,8 +275,10 @@ export default {
                 },
             ],
         },
-        locationsHours: {
+        {
             id: 'locationsHours',
+            dataTestid: 'connect-locations-link',
+            linkTo: 'https://web.library.uq.edu.au/locations-hours',
             primaryText: 'Locations & hours',
             shiftLeft: true,
             submenuItems: [
@@ -368,8 +383,10 @@ export default {
                 },
             ],
         },
-        about: {
+        {
             id: 'about',
+            dataTestid: 'connect-about-link',
+            linkTo: 'https://web.library.uq.edu.au/about-us',
             primaryText: 'About',
             submenuItems: [
                 {
@@ -444,10 +461,11 @@ export default {
                 },
             ],
         },
-        contactUs: {
+        {
             id: 'contactUs',
-            primaryText: 'Contact us',
+            dataTestid: 'connect-contact-link',
             linkTo: 'https://web.library.uq.edu.au/contact-us',
+            primaryText: 'Contact us',
         },
-    },
+    ],
 };
