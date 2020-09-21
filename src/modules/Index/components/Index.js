@@ -39,7 +39,10 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const images =
         !!spotlights && spotlights.length > 0
             ? spotlights.map(item => {
-                  return { original: item.img_url };
+                  return {
+                      original: item.img_url,
+                      thumbnail: item.img_url,
+                  };
               })
             : [
                   {
@@ -87,19 +90,17 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={8}>
-                        <div style={{ boxShadow: '0px 0px 5px rgba(0,0,0,0.2' }}>
-                            <ImageGallery
-                                onErrorImageURL={welcomeSpotlight}
-                                items={images}
-                                showThumbnails={false}
-                                showFullscreenButton={false}
-                                showPlayButton={false}
-                                autoPlay
-                                slideDuration={1000}
-                                slideInterval={8000}
-                                showBullets={images.length > 1}
-                            />
-                        </div>
+                        <ImageGallery
+                            onErrorImageURL={welcomeSpotlight}
+                            items={images}
+                            showThumbnails
+                            showFullscreenButton={false}
+                            showPlayButton={false}
+                            autoPlay
+                            slideDuration={1000}
+                            slideInterval={12000}
+                            showBullets={false} // images.length > 1
+                        />
                     </Grid>
 
                     {/* Personalisation panel */}
