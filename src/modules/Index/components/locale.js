@@ -116,4 +116,45 @@ export default {
             },
         ],
     },
+    LibraryServices: {
+        links: [
+            {
+                title: 'Services for community',
+                url: 'https://web.library.uq.edu.au/library-services/services-for-community',
+            },
+            {
+                title: 'Services for hospital staff',
+                url: 'https://web.library.uq.edu.au/library-services/services-for-hospital-staff',
+            },
+            {
+                title: 'Services for professional staff',
+                url: 'https://web.library.uq.edu.au/library-services/services-professional-staff',
+            },
+            {
+                title: 'Services for researchers',
+                url: 'https://web.library.uq.edu.au/library-services/services-researchers',
+            },
+            {
+                title: 'Services for secondary schools',
+                url: 'https://web.library.uq.edu.au/library-services/services-for-secondary-schools',
+            },
+            {
+                title: 'Services for students',
+                url: 'https://web.library.uq.edu.au/library-services/services-students',
+            },
+            {
+                title: 'Services for teaching staff',
+                url: 'https://web.library.uq.edu.au/library-services/services-teaching-staff',
+            },
+            {
+                title: 'Services for UQ alumni',
+                url: 'https://web.library.uq.edu.au/library-services/services-uq-alumni',
+            },
+            {
+                title: 'Services for external and remote students',
+                url:
+                    'https://web.library.uq.edu.au/borrowing-requesting/how-borrow/borrowing-external-and-remote-students',
+            },
+        ],
+    },
 };

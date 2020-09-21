@@ -32,6 +32,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import { default as locale } from './locale';
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -72,28 +73,9 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             return <span>Good evening</span>;
         }
     };
-    // const TabPanel = props => {
-    //     // eslint-disable-next-line react/prop-types
-    //     const { children, value, index, ...other } = props;
-    //     return (
-    //         <div
-    //             role="tabpanel"
-    //             hidden={value !== index}
-    //             id={`simple-tabpanel-${index}`}
-    //             aria-labelledby={`simple-tab-${index}`}
-    //             {...other}
-    //         >
-    //             {value === index && (
-    //                 <Box p={3}>
-    //                     <Typography>{children}</Typography>
-    //                 </Box>
-    //             )}
-    //         </div>
-    //     );
-    // };
     return (
         <StandardPage>
-            <div className="layout-card" style={{ marginTop: 12 }}>
+            <div className="layout-card" style={{ marginTop: 12, marginBottom: 50 }}>
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12} id="primo-search">
@@ -432,35 +414,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     <Grid item xs>
                                         Course resources
                                     </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Tooltip
-                                            id="auth-button"
-                                            title={'Current location is St Lucia - Click to change'}
-                                            placement="top"
-                                            TransitionProps={{ timeout: 300 }}
-                                        >
-                                            <IconButton
-                                                size={'small'}
-                                                variant={'contained'}
-                                                style={{ marginRight: -12 }}
-                                                onClick={handleLocationClick}
-                                            >
-                                                <RoomIcon />
-                                            </IconButton>
-                                        </Tooltip>
-                                        <Menu
-                                            id="simple-menu"
-                                            anchorEl={anchorEl}
-                                            keepMounted
-                                            open={Boolean(anchorEl)}
-                                            onClose={handleLocationClose}
-                                        >
-                                            <MenuItem disabled>Select a preferred location</MenuItem>
-                                            <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
-                                            <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
-                                            <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
-                                        </Menu>
-                                    </Grid>
                                 </Grid>
                             }
                         >
@@ -489,6 +442,54 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                 <Grid item xs={12}>
                                     <a href="#">PH103</a> - Even more applied psychology
                                 </Grid>
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+
+                    {/* Library services */}
+                    <Grid item xs={12} sm={8}>
+                        <StandardCard
+                            customTitleBgColor={'rgb(14, 98, 235)'}
+                            customTitleColor={'white'}
+                            squareTop={false}
+                            title={
+                                <Grid container>
+                                    <Grid item xs>
+                                        Library services
+                                    </Grid>
+                                </Grid>
+                            }
+                            fullHeight
+                        >
+                            <Grid container spacing={1}>
+                                {locale.LibraryServices.links.map((item, index) => {
+                                    return (
+                                        <Grid item xs={12} sm={6} key={index}>
+                                            <a href={item.url}>{item.title}</a>
+                                        </Grid>
+                                    );
+                                })}
+                            </Grid>
+                        </StandardCard>
+                    </Grid>
+
+                    {/* Feedback */}
+                    <Grid item xs={12} sm={4}>
+                        <StandardCard
+                            customTitleBgColor={'rgb(100, 100, 100)'}
+                            customTitleColor={'white'}
+                            squareTop={false}
+                            title={
+                                <Grid container>
+                                    <Grid item xs>
+                                        Feedback
+                                    </Grid>
+                                </Grid>
+                            }
+                            fullHeight
+                        >
+                            <Grid container spacing={1}>
+                                What goes here?
                             </Grid>
                         </StandardCard>
                     </Grid>

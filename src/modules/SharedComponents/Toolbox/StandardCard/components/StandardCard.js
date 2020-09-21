@@ -79,7 +79,9 @@ export class Cards extends Component {
         const customTitle = !!this.props.customTitleColor ? { color: this.props.customTitleColor } : null;
         const customText = !!this.props.customTextColor ? { color: `${this.props.customTextColor} !important` } : null;
         const fullHeight = !!this.props.fullHeight ? { height: '100%' } : null;
-        const squareTop = !!this.props.squareTop ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 } : null;
+        const squareTop = !!this.props.squareTop
+            ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 }
+            : { borderTopLeftRadius: 4, borderTopRightRadius: 4 };
         const standardCardId = !!this.props.standardCardId
             ? this.props.standardCardId
             : `standard-card${typeof title === 'string' ? '-' + title.replace(/ /g, '-').toLowerCase() : ''}`;
