@@ -106,8 +106,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         >
                             <Grid item xs={12}>
                                 <Typography
-                                    variant={'h4'}
-                                    component={'h4'}
+                                    variant={'h5'}
+                                    component={'h5'}
                                     color={'primary'}
                                     style={{ paddingLeft: 12 }}
                                 >

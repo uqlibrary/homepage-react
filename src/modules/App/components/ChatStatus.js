@@ -67,21 +67,23 @@ export const ChatStatus = ({ status }) => {
                 open
                 onClose={closeChatStatus}
             >
-                <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
-                    <Grid item xs>
-                        Online&nbsp;chat&nbsp;available
+                <div>
+                    <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
+                        <Grid item xs>
+                            Online&nbsp;chat&nbsp;available
+                        </Grid>
+                        <Grid item xs={'auto'}>
+                            <Button color="primary" size="small" variant="contained" onClick={launchChat}>
+                                Launch
+                            </Button>
+                        </Grid>
+                        <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={closeChatStatus}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={'auto'}>
-                        <Button color="primary" size="small" variant="contained" onClick={launchChat}>
-                            Launch
-                        </Button>
-                    </Grid>
-                    <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
-                        <IconButton size="small" aria-label="close" color="inherit" onClick={closeChatStatus}>
-                            <CloseIcon fontSize="small" />
-                        </IconButton>
-                    </Grid>
-                </Grid>
+                </div>
             </Snackbar>
         );
     }
