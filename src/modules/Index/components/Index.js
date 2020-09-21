@@ -93,13 +93,13 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         <ImageGallery
                             onErrorImageURL={welcomeSpotlight}
                             items={images}
-                            showThumbnails
+                            showThumbnails={images.length > 1}
                             showFullscreenButton={false}
                             showPlayButton={false}
                             autoPlay
                             slideDuration={1000}
                             slideInterval={12000}
-                            showBullets={false} // images.length > 1
+                            showBullets={false}
                         />
                     </Grid>
 
