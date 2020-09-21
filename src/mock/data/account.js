@@ -1,6 +1,25 @@
 export const accounts = {
     // staff, no espace data
-    public: {},
+    public: null,
+    vanilla: {
+        "id": "uqstaff",
+        "class": ["IS_CURRENT"],
+        "type": 18,
+        "homeLib": "St Lucia",
+        "firstName": "Vanilla",
+        "lastName": "User",
+        "name": "Vanilla user",
+        "mail": "vanilla@example.uq.edu.au",
+        "barcode": "111111111111111",
+        "groups": ["DC=uq,DC=edu,DC=au"],
+        "classes": [],
+        "expiryDate": "31-12-21",
+        "hasSession": true,
+        "tokenBased": false,
+        'canMasquerade': false,
+        'canMasqueradeType': 'none',
+        "blocked": false,
+    },
     uqstaff: {
         "id": "uqstaff",
         "class": ["libstaff", "IS_CURRENT"],

@@ -224,11 +224,14 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             return (
                                 <Grid
                                     item
+                                    key={index}
                                     xs={'auto'}
                                     data-testid={`primo-search-links-${index}`}
                                     className={classes.searchUnderlinks}
                                 >
-                                    <a href={item.link}>{item.label}</a>
+                                    <a href={item.link} rel="noreferrer">
+                                        {item.label}
+                                    </a>
                                 </Grid>
                             );
                         } else {
