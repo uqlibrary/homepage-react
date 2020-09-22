@@ -61,12 +61,12 @@ const styles = theme => ({
 export function MinimalFooter(props) {
     const { classes } = props;
 
-    function renderLine(item, index) {
+    function renderLine(item, index, key) {
         if (item.type === 'link') {
             return (
                 <a
                     href={item.linkTo}
-                    key={`bottomBlock-line1-${index}`}
+                    key={`${key}-${index}`}
                     rel={!!item.relOpener || 'noopener noreferrer'}
                     target="_blank"
                     title={item.linktitle}
@@ -77,10 +77,18 @@ export function MinimalFooter(props) {
             );
         }
         if (item.type === 'header') {
-            return <Typography variant={'h3'}>{item.text}</Typography>;
+            return (
+                <Typography variant={'h3'} key={`${key}-${index}`}>
+                    {item.text}
+                </Typography>
+            );
         }
         if (item.type === 'abbr') {
-            return <abbr title={item.abbrTitle}>{item.abbrDisplay}</abbr>;
+            return (
+                <abbr title={item.abbrMouseoverText} key={`${key}-${index}`}>
+                    {item.abbrDisplay}
+                </abbr>
+            );
         }
         if (item.type === 'space') {
             return ' ';
@@ -101,26 +109,26 @@ export function MinimalFooter(props) {
                     <Grid item xs={12} md={9} className={classes.footerContent}>
                         <div>
                             {locale.minimalFooter.leftColumn.line1.map((item, index) => {
-                                return renderLine(item, index);
+                                return renderLine(item, index, 'leftColumn-line1');
                             })}
                         </div>
                         <div>
                             {locale.minimalFooter.leftColumn.line2.map((item, index) => {
-                                return renderLine(item, index);
+                                return renderLine(item, index, 'leftColumn-line2');
                             })}
                         </div>
                         <div>
                             {locale.minimalFooter.leftColumn.line3.map((item, index) => {
-                                return renderLine(item, index);
+                                return renderLine(item, index, 'leftColumn-line3');
                             })}
                         </div>
                     </Grid>
                     <Grid item xs={12} md={3} className={classes.footerLegalDetails}>
                         {locale.minimalFooter.rightColumn.line1.map((item, index) => {
-                            return renderLine(item, index);
+                            return renderLine(item, index, 'rightColumn-line1');
                         })}
                         {locale.minimalFooter.rightColumn.line2.map((item, index) => {
-                            return renderLine(item, index);
+                            return renderLine(item, index, 'rightColumn-line2');
                         })}
                     </Grid>
                 </Grid>
@@ -128,7 +136,7 @@ export function MinimalFooter(props) {
             <Grid item xs={12} className={classes.siteFooter}>
                 <div>
                     {locale.minimalFooter.bottomBlock.line1.map((item, index) => {
-                        return renderLine(item, index);
+                        return renderLine(item, index, 'bottomBlock-line1');
                     })}
                 </div>
             </Grid>

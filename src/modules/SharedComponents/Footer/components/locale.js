@@ -1,5 +1,12 @@
+import React from 'react';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import YouTubeIcon from '@material-ui/icons/YouTube';
+
 export default {
     connectFooter: {
+        buttonSocialLabel: 'Connect with us',
         buttonSocial: [
             {
                 dataTestid: 'connect-blog-link',
@@ -11,37 +18,25 @@ export default {
                 dataTestid: 'connect-twitter-link',
                 linktitle: 'Library on Twitter',
                 linkTo: 'https://twitter.com/UQ_Library',
-                imageAlt: 'Twitter icon',
-                imageAriaLabel: 'Library on Twitter',
-                imageSrc: '//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/twitter.png',
-                imageTitle: 'Twitter',
+                icon: <TwitterIcon />,
             },
             {
                 dataTestid: 'connect-facebook-link',
                 linktitle: 'Library on Facebook',
                 linkTo: 'https://www.facebook.com/uniofqldlibrary',
-                icon: 'FacebookIcon',
-                imageAlt: 'Facebook icon',
-                imageAriaLabel: 'Library on Facebook',
-                imageTitle: 'Facebook',
+                icon: <FacebookIcon />,
             },
             {
                 dataTestid: 'connect-instagram-link',
                 linktitle: 'Library on Instagram',
                 linkTo: 'https://www.instagram.com/uniofqldlibrary/',
-                imageAlt: 'Instagram icon',
-                imageAriaLabel: 'Library on YouTube',
-                imageSrc: '//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/instagram.png',
-                imageTitle: 'YouTube',
+                icon: <InstagramIcon />,
             },
             {
                 dataTestid: 'connect-youtube-link',
                 linktitle: 'Library on YouTube',
                 linkTo: 'https://www.youtube.com/user/uqlibrary',
-                imageAlt: 'YouTube icon',
-                imageAriaLabel: 'Library on YouTube',
-                imageSrc: '//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/youtube.png',
-                imageTitle: 'YouTube',
+                icon: <YouTubeIcon />,
             },
         ],
         internalLinks: [
@@ -63,16 +58,12 @@ export default {
         ],
         givingLinks: [
             {
-                ariaLabel: 'Join Friends of the Library',
                 dataTestid: 'connect-friends-link',
-                id: 'joinFriend',
                 label: 'Join Friends of the Library',
                 linkTo: 'https://web.library.uq.edu.au/about-us/friends-library',
             },
             {
-                ariaLabel: 'Give to the Library',
                 dataTestid: 'connect-give-link',
-                id: 'giveToLibrary',
                 label: 'Give to the Library',
                 linkTo: 'https://www.uq.edu.au/giving/organisations/university-queensland-library',
             },
@@ -112,7 +103,7 @@ export default {
                 {
                     type: 'abbr',
                     abbrDisplay: 'ABN',
-                    abbrTitle: 'Australian Business Number',
+                    abbrMouseoverText: 'Australian Business Number',
                 },
                 {
                     type: 'space',
@@ -127,7 +118,7 @@ export default {
                 {
                     type: 'abbr',
                     abbrDisplay: 'CRICOS',
-                    abbrTitle: 'Commonwealth Register of Institutions and Courses for Overseas Students',
+                    abbrabbrMouseoverText: 'Commonwealth Register of Institutions and Courses for Overseas Students',
                 },
                 {
                     type: 'space',

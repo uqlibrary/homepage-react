@@ -9,10 +9,6 @@ import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import InstagramIcon from '@material-ui/icons/Instagram';
-import TwitterIcon from '@material-ui/icons/Twitter';
-import YouTubeIcon from '@material-ui/icons/YouTube';
 
 const uqBlue = 'rgb(14, 98, 235)';
 const styles = theme => ({
@@ -91,7 +87,7 @@ const styles = theme => ({
         backgroundColor: uqBlue,
         '&:hover': {
             backgroundColor: theme.palette.white.main,
-            color: 'rgb(14, 98, 235) !important',
+            color: uqBlue + ' !important',
         },
         width: '70%',
         marginBottom: '1rem',
@@ -141,62 +137,25 @@ export function ConnectFooter(props) {
                 <Grid container>
                     <Grid item>
                         <Typography variant={'h6'} component={'h3'}>
-                            Connect with us
+                            {locale.connectFooter.buttonSocialLabel}
                         </Typography>
                     </Grid>
                 </Grid>
                 <Grid container className={classes.socialButtonClass}>
-                    <Grid aria-disabled="false" item role="button" xs={2}>
-                        <IconButton
-                            color="primary"
-                            href="https://web.library.uq.edu.au/blog"
-                            target="_blank"
-                            title="Library Blog"
-                            data-testid="connect-blog-link"
-                        >
-                            Blog
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={2} role="button" aria-disabled="false">
-                        <IconButton
-                            href="https://twitter.com/UQ_Library"
-                            target="_blank"
-                            title="Library on Twitter"
-                            data-testid="connect-twitter-link"
-                        >
-                            <TwitterIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={2} role="button" aria-disabled="false">
-                        <IconButton
-                            href="https://www.facebook.com/uniofqldlibrary"
-                            target="_blank"
-                            title="Library on Facebook"
-                            data-testid="connect-facebook-link"
-                        >
-                            <FacebookIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={2} role="button" aria-disabled="false">
-                        <IconButton
-                            href="https://www.instagram.com/uniofqldlibrary/"
-                            target="_blank"
-                            title="Library on Instagram"
-                            data-testid="connect-instagram-link"
-                        >
-                            <InstagramIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={2} role="button" aria-disabled="false">
-                        <IconButton
-                            href="https://www.youtube.com/user/uqlibrary"
-                            target="_blank"
-                            title="Library on YouTube"
-                            data-testid="connect-youtube-link"
-                        >
-                            <YouTubeIcon />
-                        </IconButton>
-                    </Grid>
+                    {locale.connectFooter.buttonSocial.map((item, index) => (
+                        <Grid aria-disabled="false" item role="button" xs={2}>
+                            <IconButton
+                                color="primary"
+                                data-testid={item.dataTestid}
+                                href={item.linkTo}
+                                key={`buttonSocial-${index}`}
+                                target="_blank"
+                                title={item.linktitle}
+                            >
+                                {!!item.linklabel ? item.linklabel : item.icon}
+                            </IconButton>
+                        </Grid>
+                    ))}
                 </Grid>
                 <div className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((item, index) => {
@@ -205,6 +164,7 @@ export function ConnectFooter(props) {
                                 <a
                                     href={item.linkTo}
                                     data-testid={item.dataTestid}
+                                    key={`internalLinks-${index}`}
                                     rel={item.relOpener || 'noopener noreferrer'}
                                 >
                                     {item.linklabel}
@@ -216,12 +176,13 @@ export function ConnectFooter(props) {
                 </div>
             </Grid>
             <Grid item xs={12} md={4} className={classes.giving}>
-                {locale.connectFooter.givingLinks.map(item => {
+                {locale.connectFooter.givingLinks.map((item, index) => {
                     return (
                         <Button
                             variant="contained"
                             className={classes.givingButtonClass}
                             href={item.linkTo}
+                            key={`givingLinks-${index}`}
                             data-testid={item.dataTestid}
                             children={item.label}
                         />
