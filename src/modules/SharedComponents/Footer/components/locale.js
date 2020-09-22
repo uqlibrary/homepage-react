@@ -20,9 +20,9 @@ export default {
                 dataTestid: 'connect-facebook-link',
                 linktitle: 'Library on Facebook',
                 linkTo: 'https://www.facebook.com/uniofqldlibrary',
+                icon: 'FacebookIcon',
                 imageAlt: 'Facebook icon',
                 imageAriaLabel: 'Library on Facebook',
-                imageSrc: '//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/facebook.png',
                 imageTitle: 'Facebook',
             },
             {

@@ -141,7 +141,6 @@ MinimalFooter.propTypes = {
 };
 
 MinimalFooter.defaultProps = {
-    className: '',
     classes: {},
 };
 

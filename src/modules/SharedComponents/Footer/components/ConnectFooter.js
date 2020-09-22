@@ -4,15 +4,22 @@ import PropTypes from 'prop-types';
 import { default as locale } from './locale.js';
 import { default as menuLocale } from 'locale/menu';
 
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import FacebookIcon from '@material-ui/icons/Facebook';
+import InstagramIcon from '@material-ui/icons/Instagram';
+import TwitterIcon from '@material-ui/icons/Twitter';
+import YouTubeIcon from '@material-ui/icons/YouTube';
 
+const uqBlue = 'rgb(14, 98, 235)';
 const styles = theme => ({
     connectFooter: {
         fontWeight: '300',
         lineHeight: '25px',
-        margin: '0 auto',
+        margin: '20px auto 0 auto',
         maxWidth: '1200px',
         position: 'relative',
         '& a': {
@@ -26,9 +33,7 @@ const styles = theme => ({
         },
     },
     navigation: {
-        padding: '20px',
         '& ul': {
-            margin: '0 0 0 20px',
             padding: 0,
         },
         '& li': {
@@ -49,58 +54,18 @@ const styles = theme => ({
             display: 'inline-block',
         },
     },
-    buttonColoredAccent: {
-        display: 'flex', // needed to get the wiiiide button for Giving buttons
-        margin: '10px auto 0 auto',
-        maxWidth: '244px',
-        width: '100%',
+    socialButtonClass: {
         '& a': {
-            backgroundColor: '#0e62eb',
-            border: '1px solid #0e62eb',
-            borderRadius: '3px',
-            boxShadow:
-                '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)',
+            backgroundColor: '#000 !important',
             color: '#fff',
-            maxWidth: '244px',
-            outlineWidth: 0,
-            padding: '0.7em',
-            textAlign: 'center',
-            transition: 'box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1)',
-            width: '100%',
-            '&:hover': {
-                backgroundColor: '#fff',
-                color: '#0e62eb !important',
-                fontWeight: 'bold',
-                textDecoration: 'none',
-            },
         },
-    },
-    buttonSocial: {
-        maxWidth: '400px',
-        margin: '0 auto',
-        '& div': {
-            backgroundColor: '#000',
-            borderRadius: '4px',
-            height: '33px',
-            margin: '0 5px',
-            padding: '8px 0 0',
-            width: '33px',
-        },
-        '& a': {
-            color: '#fff',
-            display: 'block',
-            margin: 0,
-            textAlign: 'center',
-            textDecoration: 'none',
-            textTransform: 'uppercase',
-        },
-        '& img': {
-            height: '20px',
-            lineHeight: 0,
-            width: '20px',
+        '& div:first-child': {
+            // blog button has to be forced wider
+            minWidth: '5em',
         },
         [theme.breakpoints.down('sm')]: {
-            textAlign: 'center',
+            maxWidth: '400px',
+            margin: '0 auto',
         },
     },
     internal: {
@@ -114,10 +79,23 @@ const styles = theme => ({
     },
     giving: {
         '& div': {
+            marginLeft: 'auto',
             [theme.breakpoints.down('sm')]: {
                 margin: '5px auto',
             },
         },
+        textAlign: 'right',
+    },
+    givingButtonClass: {
+        color: theme.palette.white.main + '!important',
+        backgroundColor: uqBlue,
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: 'rgb(14, 98, 235) !important',
+        },
+        width: '70%',
+        marginBottom: '1rem',
+        padding: '1rem',
     },
     contacts: {
         '& div': {
@@ -134,7 +112,7 @@ export function ConnectFooter(props) {
     const { classes } = props;
     const separator = <li className={classes.separator}>&nbsp;|&nbsp;</li>;
     return (
-        <Grid className={classes.connectFooter} container spacing={3} data-testid="connect-footer">
+        <Grid className={classes.connectFooter} container data-testid="connect-footer">
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
                     <li>
@@ -167,29 +145,58 @@ export function ConnectFooter(props) {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container className={classes.buttonSocial}>
-                    {locale.connectFooter.buttonSocial.map(item => (
-                        <Grid aria-disabled="false" item role="button" style={{ paddingTop: '7px' }} xs={2}>
-                            <a
-                                href={item.linkTo}
-                                rel={item.relOpener || 'noopener noreferrer'}
-                                target="_blank"
-                                title={item.linktitle}
-                                data-testid={item.dataTestid}
-                            >
-                                {!!item.linklabel ? (
-                                    item.linklabel
-                                ) : (
-                                    <img
-                                        alt={item.imageAlt}
-                                        aria-label={item.imageAriaLabel}
-                                        src={item.imageSrc}
-                                        title={item.imageTitle}
-                                    />
-                                )}
-                            </a>
-                        </Grid>
-                    ))}
+                <Grid container className={classes.socialButtonClass}>
+                    <Grid aria-disabled="false" item role="button" xs={2}>
+                        <IconButton
+                            color="primary"
+                            href="https://web.library.uq.edu.au/blog"
+                            target="_blank"
+                            title="Library Blog"
+                            data-testid="connect-blog-link"
+                        >
+                            Blog
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={2} role="button" aria-disabled="false">
+                        <IconButton
+                            href="https://twitter.com/UQ_Library"
+                            target="_blank"
+                            title="Library on Twitter"
+                            data-testid="connect-twitter-link"
+                        >
+                            <TwitterIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={2} role="button" aria-disabled="false">
+                        <IconButton
+                            href="https://www.facebook.com/uniofqldlibrary"
+                            target="_blank"
+                            title="Library on Facebook"
+                            data-testid="connect-facebook-link"
+                        >
+                            <FacebookIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={2} role="button" aria-disabled="false">
+                        <IconButton
+                            href="https://www.instagram.com/uniofqldlibrary/"
+                            target="_blank"
+                            title="Library on Instagram"
+                            data-testid="connect-instagram-link"
+                        >
+                            <InstagramIcon />
+                        </IconButton>
+                    </Grid>
+                    <Grid item xs={2} role="button" aria-disabled="false">
+                        <IconButton
+                            href="https://www.youtube.com/user/uqlibrary"
+                            target="_blank"
+                            title="Library on YouTube"
+                            data-testid="connect-youtube-link"
+                        >
+                            <YouTubeIcon />
+                        </IconButton>
+                    </Grid>
                 </Grid>
                 <div className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((item, index) => {
@@ -211,23 +218,13 @@ export function ConnectFooter(props) {
             <Grid item xs={12} md={4} className={classes.giving}>
                 {locale.connectFooter.givingLinks.map(item => {
                     return (
-                        <Grid
-                            aria-disabled="false"
-                            aria-label={item.ariaLabel}
-                            className={classes.buttonColoredAccent}
-                            id={item.id}
-                            item
-                            role="button"
-                            xs={12}
-                        >
-                            <a
-                                href={item.linkTo}
-                                data-testid={item.dataTestid}
-                                rel={item.relOpener || 'noopener noreferrer'}
-                            >
-                                {item.label}
-                            </a>
-                        </Grid>
+                        <Button
+                            variant="contained"
+                            className={classes.givingButtonClass}
+                            href={item.linkTo}
+                            data-testid={item.dataTestid}
+                            children={item.label}
+                        />
                     );
                 })}
             </Grid>
@@ -240,7 +237,6 @@ ConnectFooter.propTypes = {
 };
 
 ConnectFooter.defaultProps = {
-    className: '',
     classes: {},
 };
 
