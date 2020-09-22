@@ -127,12 +127,12 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                 style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 6, height: '100%' }}
                                 justify={'flex-end'}
                             >
-                                <Grid item xs={12}>
+                                <Grid item xs={12} style={{ marginTop: -16 }}>
                                     <Typography
                                         variant={'h5'}
                                         component={'h5'}
                                         color={'primary'}
-                                        style={{ paddingLeft: 12, fontSize: '2rem' }}
+                                        style={{ paddingLeft: 16, fontSize: '2.25rem' }}
                                     >
                                         {greeting()}
                                         <br />
@@ -788,7 +788,24 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             fullHeight
                         >
                             <Grid container spacing={1}>
-                                Feedback will go here
+                                <Grid item xs={12}>
+                                    <Grid item xs={12} xl={6}>
+                                        <Grid container spacing={1}>
+                                            <Grid item xs={12}>
+                                                <Typography variant={'h6'}>Contact options</Typography>
+                                            </Grid>
+                                            <Grid item xs={12}>
+                                                Phone: +61 7 3506 2615
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            Email: examsupport@library.uq.edu.au
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            Library chat (opens in a new tab)
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </StandardCard>
                     </Grid>
