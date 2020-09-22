@@ -8,6 +8,8 @@ import StorageIcon from '@material-ui/icons/Storage';
 import FindInPageIcon from '@material-ui/icons/FindInPage';
 import ListAltIcon from '@material-ui/icons/ListAlt';
 import SchoolIcon from '@material-ui/icons/School';
+import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 
 export default {
     PrimoSearch: {
@@ -157,4 +159,118 @@ export default {
             },
         ],
     },
+    Hours: [
+        {
+            title: 'Arch music',
+            link: '#',
+            location: '',
+            hours: '7:30am-7:30pm',
+            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+        },
+        {
+            title: 'AskUs',
+            link: '#',
+            location: '',
+            hours: '8am-8pm',
+            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+        },
+        {
+            title: 'Biol Sci',
+            link: '#',
+            location: '',
+            hours: '24hrs',
+            icon: <AccessTimeIcon style={{ color: 'green' }} />,
+        },
+        {
+            title: 'Bundaberg',
+            link: '#',
+            location: '',
+            hours: '8:30am-4:30am',
+            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+        },
+        {
+            title: 'Central',
+            link: '#',
+            location: '',
+            hours: '24hrs',
+            icon: <AccessTimeIcon style={{ color: 'green' }} />,
+        },
+        {
+            title: 'DHEngSci',
+            link: '#',
+            location: '',
+            hours: '24hrs',
+            icon: <AccessTimeIcon style={{ color: 'green' }} />,
+        },
+        {
+            title: 'Duhig Study',
+            link: '#',
+            location: '',
+            hours: '24hrs',
+            icon: <AccessTimeIcon style={{ color: 'green' }} />,
+        },
+        {
+            title: 'Fryer',
+            link: '#',
+            location: '',
+            hours: '9am-5pm by appointment',
+            icon: <AccessTimeIcon style={{ color: 'orange' }} />,
+        },
+        {
+            title: 'Gatton',
+            link: '#',
+            location: '',
+            hours: '24hrs',
+            icon: <AccessTimeIcon style={{ color: 'green' }} />,
+        },
+        {
+            title: 'Herston',
+            link: '#',
+            location: '',
+            hours: 'Chat/Email/Phone',
+            icon: <ImportantDevicesIcon style={{ color: 'orange' }} />,
+        },
+        {
+            title: 'Harvey Bay',
+            link: '#',
+            location: '',
+            hours: 'Online/Phone',
+            icon: <ImportantDevicesIcon style={{ color: 'orange' }} />,
+        },
+        {
+            title: 'Law',
+            link: '#',
+            location: '',
+            hours: '24hrs',
+            icon: <AccessTimeIcon style={{ color: 'green' }} />,
+        },
+        {
+            title: 'PACE',
+            link: '#',
+            location: '',
+            hours: '7am-10:30pm',
+            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+        },
+        {
+            title: 'Rockhampton',
+            link: '#',
+            location: '',
+            hours: 'Online/Phone',
+            icon: <ImportantDevicesIcon style={{ color: 'orange' }} />,
+        },
+        {
+            title: 'Toowoomba',
+            link: '#',
+            location: '',
+            hours: '8:30am-4:30pm',
+            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+        },
+        {
+            title: 'Whitty Mater',
+            link: '#',
+            location: '',
+            hours: '6:30am-10pm',
+            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+        },
+    ],
 };

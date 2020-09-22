@@ -33,6 +33,9 @@ import Menu from '@material-ui/core/Menu';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { default as locale } from './locale';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -57,12 +60,21 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                   },
               ];
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [anchorPrintEl, setAnchorPrintEl] = React.useState(null);
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
     const handleLocationClose = () => {
         setAnchorEl(null);
     };
+
+    const handlePrintClick = event => {
+        setAnchorPrintEl(event.currentTarget);
+    };
+    const handlePrintClose = () => {
+        setAnchorPrintEl(null);
+    };
+
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
@@ -126,12 +138,35 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             paddingTop: 3,
                                             paddingBottom: 3,
                                         }}
+                                        onClick={handlePrintClick}
                                     >
                                         <Grid item xs style={{ lineHeight: '30px' }}>
-                                            <Typography style={{ fontSize: 14 }}>
+                                            <Typography style={{ fontSize: 15, fontWeight: 300 }}>
                                                 Current print balance <b style={{ color: 'green' }}>$12.50</b>
                                             </Typography>
                                         </Grid>
+                                        <Menu
+                                            id="simple-menu"
+                                            anchorEl={anchorPrintEl}
+                                            keepMounted
+                                            open={Boolean(anchorPrintEl)}
+                                            onClose={handlePrintClose}
+                                            onBlur={handlePrintClose}
+                                        >
+                                            <MenuItem disabled>Manage your PaperCut account</MenuItem>
+                                            <MenuItem onClick={handleLocationClose}>
+                                                Log in and manage your print balance
+                                            </MenuItem>
+                                            <MenuItem onClick={handleLocationClose}>
+                                                Top up your print balance - $5
+                                            </MenuItem>
+                                            <MenuItem onClick={handleLocationClose}>
+                                                Top up your print balance - $10
+                                            </MenuItem>
+                                            <MenuItem onClick={handleLocationClose}>
+                                                Top up your print balance - $20
+                                            </MenuItem>
+                                        </Menu>
                                         <Grid item xs={'auto'}>
                                             <Tooltip
                                                 id="auth-button"
@@ -161,7 +196,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         }}
                                     >
                                         <Grid item xs style={{ lineHeight: '24px' }}>
-                                            <Typography style={{ fontSize: 14 }}>
+                                            <Typography style={{ fontSize: 15, fontWeight: 300 }}>
                                                 Current book loans <b>6</b>
                                             </Typography>
                                         </Grid>
@@ -190,7 +225,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         }}
                                     >
                                         <Grid item xs style={{ lineHeight: '24px' }}>
-                                            <Typography style={{ fontSize: 14 }}>
+                                            <Typography style={{ fontSize: 15, fontWeight: 300 }}>
                                                 Overdue book loans <b style={{ color: 'orange' }}>1</b>
                                             </Typography>
                                         </Grid>
@@ -223,7 +258,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         }}
                                     >
                                         <Grid item xs style={{ lineHeight: '24px' }}>
-                                            <Typography style={{ fontSize: 14 }}>
+                                            <Typography style={{ fontSize: 15, fontWeight: 300 }}>
                                                 Overdue fines <b style={{ color: 'red' }}>$7.50</b>
                                             </Typography>
                                         </Grid>
@@ -257,7 +292,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         }}
                                     >
                                         <Grid item xs style={{ lineHeight: '24px' }}>
-                                            <Typography style={{ fontSize: 14 }}>
+                                            <Typography style={{ fontSize: 15, fontWeight: 300 }}>
                                                 Document delivery requests <b>2</b>
                                             </Typography>
                                         </Grid>
@@ -287,7 +322,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         }}
                                     >
                                         <Grid item xs style={{ lineHeight: '24px' }}>
-                                            <Typography style={{ fontSize: 14 }}>
+                                            <Typography style={{ fontSize: 15, fontWeight: 300 }}>
                                                 Room bookings <b style={{ color: 'orange' }}>1 (Today)</b>
                                             </Typography>
                                         </Grid>
@@ -332,7 +367,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <IconButton
                                                 size={'small'}
                                                 variant={'contained'}
-                                                style={{ marginRight: -12 }}
+                                                style={{ marginRight: -12, color: 'white' }}
                                                 onClick={handleLocationClick}
                                             >
                                                 <RoomIcon />
@@ -377,7 +412,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <IconButton
                                                 size={'small'}
                                                 variant={'contained'}
-                                                style={{ marginRight: -12 }}
+                                                style={{ marginRight: -12, color: 'white' }}
                                                 onClick={handleLocationClick}
                                             >
                                                 <RoomIcon />
@@ -400,7 +435,41 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             }
                             fullHeight
                         >
-                            test
+                            <div
+                                style={{
+                                    height: 275,
+                                    overflowX: 'hidden',
+                                    overflowY: 'auto',
+                                    marginRight: -16,
+                                    marginTop: -16,
+                                    marginBottom: -24,
+                                    marginLeft: -16,
+                                    padding: 8,
+                                }}
+                            >
+                                {locale.Hours.map((item, index) => {
+                                    return (
+                                        <Grid
+                                            container
+                                            spacing={2}
+                                            key={index}
+                                            style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
+                                        >
+                                            <Grid item xs={5}>
+                                                <a href={item.link} style={{ marginLeft: 8 }}>
+                                                    {item.title}
+                                                </a>
+                                            </Grid>
+                                            <Grid item xs>
+                                                {item.hours}
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                {item.icon}
+                                            </Grid>
+                                        </Grid>
+                                    );
+                                })}
+                            </div>
                         </StandardCard>
                     </Grid>
 
@@ -418,8 +487,17 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             }
                         >
                             <Grid container spacing={1}>
+                                <Grid item xs={12}>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Select assets to search</InputLabel>
+                                        <Select labelId="demo-simple-select-label" id="demo-simple-select">
+                                            <MenuItem value={1}>Course resources</MenuItem>
+                                            <MenuItem value={2}>Past exam papers</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                </Grid>
                                 <Grid item xs>
-                                    <TextField placeholder="Enter course code to search" fullWidth />
+                                    <TextField placeholder="Enter a course code" fullWidth />
                                 </Grid>
                                 <Grid item xs={'auto'}>
                                     <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
