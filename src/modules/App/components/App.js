@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
-import Header from './Header';
 
 browserUpdate({
     required: {
@@ -28,8 +27,6 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
-import { Meta } from 'modules/SharedComponents/Meta';
-import { OfflineSnackbar } from 'modules/SharedComponents/OfflineSnackbar';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import * as pages from './pages';
@@ -37,6 +34,8 @@ import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Megamenu from './Megamenu';
+import Header from './Header';
+import ChatStatus from './ChatStatus';
 
 const styles = theme => ({
     appBG: {
@@ -88,6 +87,7 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
+        chatStatus: PropTypes.any,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -100,6 +100,7 @@ export class AppClass extends PureComponent {
         this.state = {
             menuOpen: false,
             docked: false,
+            chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
             isMobile: window.matchMedia('(max-width: 720px)').matches,
         };
@@ -126,6 +127,7 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadChatStatus();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -133,6 +135,11 @@ export class AppClass extends PureComponent {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
+        }
+        if (this.props.chatStatus && !!this.props.chatStatus.online) {
+            this.setState({
+                chatStatus: { online: true },
+            });
         }
     }
 
@@ -225,34 +232,26 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <Grid item xs={12}>
-                    <Alert
-                        title="TEST ALERT"
-                        message="This is just a quick test"
-                        type="warning"
-                        dismissAction={() => null}
-                        allowDismiss
-                    />
-                </Grid>
-                <Meta routesConfig={routesConfig} />
                 <Header
                     isAuthorizedUser={isAuthorizedUser}
+                    account={this.props.account}
                     toggleMenu={this.toggleMenu}
                     menuOpen={this.state.menuOpen}
                 />
-                <Megamenu
-                    menuItems={menuItems}
-                    history={this.props.history}
-                    isMobile={this.state.isMobile}
-                    locale={{
-                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                        skipNavTitle: locale.global.skipNav.title,
-                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                    }}
-                    toggleMenu={this.toggleMenu}
-                    menuOpen={this.state.menuOpen}
-                />
+                <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
+                    <Megamenu
+                        menuItems={menuItems}
+                        history={this.props.history}
+                        isMobile={this.state.isMobile}
+                        locale={{
+                            skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                            skipNavTitle: locale.global.skipNav.title,
+                            closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                        }}
+                        toggleMenu={this.toggleMenu}
+                        menuOpen={this.state.menuOpen}
+                    />
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}
@@ -267,7 +266,7 @@ export class AppClass extends PureComponent {
                             alignItems="center"
                             style={{ marginBottom: 12 }}
                         >
-                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: 0 }}>
+                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: -12 }}>
                                 <Alert {...userStatusAlert} />
                             </Grid>
                         </Grid>
@@ -292,7 +291,6 @@ export class AppClass extends PureComponent {
                     )}
                 </div>
                 <HelpDrawer />
-                <OfflineSnackbar />
             </Grid>
         );
     }

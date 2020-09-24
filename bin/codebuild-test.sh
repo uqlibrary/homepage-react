@@ -40,7 +40,9 @@ export TZ='Australia/Brisbane'
 # Run e2e tests if in master branch, or if the branch name includes 'cypress'
 # Putting * around the test-string gives a test for inclusion of the substring rather than exact match
 BRANCH_RUNS_E2E=false
-if [[ $CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "codebuild" || $CI_BRANCH == *"cypress"* ]]; then
+printf "Does the commit message contain cypress?"
+printf $CI_COMMIT_MESSAGE == *"cypress"*
+if [[ $CI_BRANCH == "master" || $CI_BRANCH == "staging" || $CI_BRANCH == "codebuild" || $CI_BRANCH == "feature-prototype" || $CI_COMMIT_MESSAGE == *"cypress"* ]]; then
     BRANCH_RUNS_E2E=true
 fi
 
@@ -67,7 +69,7 @@ case "$PIPE_NUM" in
     # Second runner for e2e. The first one is in the other pipeline.
     if [[ $BRANCH_RUNS_E2E == true ]]; then
         printf "\n--- \e[1mRUNNING E2E TESTS\e[0m ---\n"
-#        npm run test:e2e:dashboard
+        npm run test:e2e:dashboard
     fi
 
 ;;
@@ -105,11 +107,6 @@ case "$PIPE_NUM" in
 
     if [[ $BRANCH_RUNS_E2E == true ]]; then
         printf "\n--- \e[1mRUNNING E2E TESTS\e[0m ---\n"
-        # Use this variant to only run tests locally in Codeship.
-        # Turn off the e2e tests in other pipeline(s) when using this.
-        # npm run test:e2e
-
-        # Use this variant to turn on the recording to Cypress dashboard and video of the tests:
         npm run test:e2e:dashboard
     fi
 ;;

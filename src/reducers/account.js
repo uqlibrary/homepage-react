@@ -111,6 +111,21 @@ const handlers = {
         ...state,
         isSessionExpired: null,
     }),
+
+    [actions.CHAT_STATUS_LOADING]: state => ({
+        ...state,
+        chatStatus: { online: false },
+    }),
+
+    [actions.CHAT_STATUS_LOADED]: (state, action) => ({
+        ...state,
+        chatStatus: action.payload,
+    }),
+
+    [actions.CHAT_STATUS_FAILED]: state => ({
+        ...state,
+        chatStatus: { online: false },
+    }),
 };
 
 export default function accountReducer(state = initialState, action) {
