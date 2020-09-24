@@ -118,7 +118,7 @@ export default {
                 {
                     type: 'abbr',
                     abbrDisplay: 'CRICOS',
-                    abbrabbrMouseoverText: 'Commonwealth Register of Institutions and Courses for Overseas Students',
+                    abbrMouseoverText: 'Commonwealth Register of Institutions and Courses for Overseas Students',
                 },
                 {
                     type: 'space',
