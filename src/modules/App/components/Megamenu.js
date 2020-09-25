@@ -328,6 +328,10 @@ Megamenu.propTypes = {
     classes: PropTypes.object,
 };
 
+Megamenu.defaultProps = {
+    menuOpen: true,
+};
+
 export function isSame(prevProps, nextProps) {
     return (
         nextProps.logoImage === prevProps.logoImage &&

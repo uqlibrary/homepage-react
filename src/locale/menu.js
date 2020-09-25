@@ -1,4 +1,9 @@
 export default {
+    home: {
+        dataTestid: 'connect-home-link',
+        linkTo: 'http://www.library.uq.edu.au',
+        primaryText: 'Library home',
+    },
     menu: {
         libraryServices: {
             id: 'libraryServices',
