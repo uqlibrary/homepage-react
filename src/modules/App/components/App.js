@@ -168,9 +168,7 @@ export class AppClass extends PureComponent {
 
     isPublicPage = menuItems => {
         return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length >
-                0 ||
-            new RegExp(routes.pathConfig.records.view(`(${routes.pidRegExp})`)).test(this.props.location.pathname)
+            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
         );
     };
 
@@ -218,11 +216,11 @@ export class AppClass extends PureComponent {
                 ...locale.global.loginAlert,
                 action: this.redirectUserToLogin(),
             };
-        } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            // user is logged in, but doesn't have eSpace author identifier
-            userStatusAlert = {
-                ...locale.global.notRegisteredAuthorAlert,
-            };
+            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
+            //     // user is logged in, but doesn't have eSpace author identifier
+            //     userStatusAlert = {
+            //         ...locale.global.notRegisteredAuthorAlert,
+            //     };
         }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
