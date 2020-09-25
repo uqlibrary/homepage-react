@@ -285,26 +285,30 @@ export function Megamenu(props) {
         return <div className="megamenu empty" />;
     }
 
+    function renderCloseItem() {
+        return (
+            <ListItem
+                className={classes.submenus}
+                button
+                key={'submenus-item-close'}
+                id={'submenus-item-close'}
+                onClick={() => toggleMenu()}
+            >
+                <ListItemText
+                    classes={{
+                        primary: classes.ListItemTextPrimary,
+                    }}
+                    primary="Close"
+                />
+            </ListItem>
+        );
+    }
+
     return (
         <div className="layout-card" style={{ marginTop: 0, marginBottom: 0 }}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
-                <Hidden lgUp>
-                    <ListItem
-                        className={classes.submenus}
-                        button
-                        key={'submenus-item-close'}
-                        id={'submenus-item-close'}
-                        onClick={() => toggleMenu()}
-                    >
-                        <ListItemText
-                            classes={{
-                                primary: classes.ListItemTextPrimary,
-                            }}
-                            primary="Close"
-                        />
-                    </ListItem>
-                </Hidden>
+                <Hidden lgUp>{renderCloseItem()}</Hidden>
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
         </div>
