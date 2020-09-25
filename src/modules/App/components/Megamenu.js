@@ -116,9 +116,16 @@ const styles = theme => {
                 flexDirection: 'row',
             },
         },
-        menuGroups: {
+        menuColumns: {
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
+            },
+            '& > div': {
+                marginTop: '6px',
+                borderLeft: 'thin solid #ccc',
+            },
+            '& div:first-child': {
+                borderLeft: 'none',
             },
         },
         verticalMenuList: {
@@ -187,15 +194,15 @@ export function Megamenu(props) {
     }
 
     const renderMenuChildren = (menuItem, index, classes) => {
-        const menuGroups = [];
+        const menuColumns = [];
         menuItem.submenuItems
             // .sort((a, b) => (a.column || null) - (b.column || null))
             .map(submenuItem => {
                 const index = submenuItem.column || 1;
-                if (!menuGroups[index]) {
-                    menuGroups[index] = [];
+                if (!menuColumns[index]) {
+                    menuColumns[index] = [];
                 }
-                menuGroups[index].push(submenuItem);
+                menuColumns[index].push(submenuItem);
             });
 
         return (
@@ -205,9 +212,9 @@ export function Megamenu(props) {
                 unmountOnExit
                 className={classNames(!!menuItem.shiftLeft ? classes.shiftLeft : '', classes.menuDropdown)}
             >
-                <div className={classes.menuGroups}>
-                    {menuGroups.length > 0 &&
-                        menuGroups.map((menuGroup, index1) => {
+                <div className={classes.menuColumns}>
+                    {menuColumns.length > 0 &&
+                        menuColumns.map((menuGroup, index1) => {
                             return (
                                 <List
                                     component="div"
