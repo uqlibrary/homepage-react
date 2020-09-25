@@ -72,12 +72,13 @@ const styles = theme => {
             },
             [theme.breakpoints.down('md')]: {
                 overflowY: 'auto',
-                maxWidth: '25rem',
+                width: '100%',
                 backgroundColor: 'white',
                 position: 'absolute',
-                top: '9rem',
+                top: '5.7rem',
                 zIndex: 1000,
                 marginLeft: '-2.5rem',
+                paddingLeft: '1rem',
             },
         },
         ListItemTextPrimary: {
@@ -280,8 +281,7 @@ export function Megamenu(props) {
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
 
-    const isFullDesktop = window.matchMedia('(min-width: 1279px)').matches;
-    if (!menuOpen && !isFullDesktop) {
+    if (!menuOpen) {
         return <div className="megamenu empty" />;
     }
 
