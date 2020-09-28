@@ -12,13 +12,11 @@
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
 .image-gallery-left-nav, .image-gallery-right-nav {
-  zoom: 0.3;
+  padding: 40px 5px 40px 5px !important;
 }
-.image-gallery-bullets {
-  bottom: 10px;
-}
-.image-gallery-bullet {
-  zoom: 0.75;
+.image-gallery-svg {
+  width: 20px !important;
+  height: 40px !important;
 }
 
 html, body {

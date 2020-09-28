@@ -43,6 +43,10 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                   return {
                       original: item.img_url,
                       thumbnail: item.img_url,
+                      originalTitle: item.title,
+                      originalAlt: item.img_alt,
+                      thumbnailAlt: item.img_alt,
+                      thumbnailTitle: item.title,
                   };
               })
             : [
@@ -101,7 +105,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         <PrimoSearch />
                     </Grid>
                     {/* Spotlights */}
-                    <Grid item xs={12} md={8}>
+                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                         <ImageGallery
                             onErrorImageURL={welcomeSpotlight}
                             items={images}
