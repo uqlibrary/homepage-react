@@ -7,7 +7,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const InjectPreloader = require('preloader-html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 
-const port = 3000;
+const port = 2020;
 const url = process.env.URL || 'localhost';
 const useMock = !!process.env.USE_MOCK || false;
 const publicPath = '';

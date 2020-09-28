@@ -25,15 +25,15 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this
   clears & reinstalls npm packages
 - `npm run start`
-  - runs <http://localhost:3000/>
+  - runs <http://localhost:2020/>
   - uses dev api for backend (<http://dev-api.library.uq.edu.au:8050/>) (requires additional setup of uqlibrary/api
     project)
 - `npm run start:mock`
-  - runs <http://localhost:3000/>
+  - runs <http://localhost:2020/>
   - uses mock data from src/mock
 - `npm run start:url`
 
-  - runs <http://dev-espace.library.uq.edu.au:3000/> (add `dev-espace.library.uq.edu.au` to your /etc/hosts)
+  - runs <http://dev-library.library.uq.edu.au:2020/> (add `dev-library.library.uq.edu.au` to your /etc/hosts)
   - uses staging data from the aws api as a backend (you will need to set API_URL in .env to `https://api.library.uq.edu.au/staging/`)
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
 
@@ -50,7 +50,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
 
 - `npm run start:build`
-  - runs production build version on <http://dev-espace.library.uq.edu.au:9000/> and `http://localhost:9000/`
+  - runs production build version on <http://dev-library.library.uq.edu.au:9000/> and `http://localhost:9000/`
   - uses PRODUCTION DATA from the aws api (ie `https://api.library.uq.edu.au/v1/1) as a backend!! Careful!!
 - `npm run start:build:e2e`
   - runs production build version on <http://localhost:9000/>
@@ -291,22 +291,22 @@ If you want Codeship to run cypress tests before you merge to master, include th
 
 ## Mocking
 
-To run website on mock data run `npm run start:mock` webserver will start on `http://localhost:3000/`
+To run website on mock data run `npm run start:mock` webserver will start on `http://localhost:2020/`
 
 The project allows the user to "login" as any test user. Simply add `?user=<username>` to the request and it will log
 you in as that user. Usernames can be found in the `src/mock/data/accounts.js` file.
 
-- anonymous user: <http://localhost:3000/?user=anon>
-- researcher user: <http://localhost:3000/?user=uqresearcher>
-- staff/not author user (has admin): <http://localhost:3000/?user=uqstaff>
-- undegrad student user: <http://localhost:3000/?user=s1111111>
-- postgrad student user: <http://localhost:3000/?user=s2222222>
-- RHD submission form: <http://localhost:3000/rhdsubmission?user=s2222222>
-- user with expired token: <http://localhost:3000/?user=uqexpired>
-- user who has readonly masquerade (but not admin): <http://localhost:3000/?user=uqmasquerade>
-- user who can do CSV Ingest: <http://localhost:3000/?user=digiteamMember>
+- anonymous user: <http://localhost:2020/?user=anon>
+- researcher user: <http://localhost:2020/?user=uqresearcher>
+- staff/not author user (has admin): <http://localhost:2020/?user=uqstaff>
+- undegrad student user: <http://localhost:2020/?user=s1111111>
+- postgrad student user: <http://localhost:2020/?user=s2222222>
+- RHD submission form: <http://localhost:2020/rhdsubmission?user=s2222222>
+- user with expired token: <http://localhost:2020/?user=uqexpired>
+- user who has readonly masquerade (but not admin): <http://localhost:2020/?user=uqmasquerade>
+- user who can do CSV Ingest: <http://localhost:2020/?user=digiteamMember>
 
-So an example staff link for an example admin edit page will be <http://localhost:3000/admin/edit/UQ:358319?user=uqstaff>
+So an example staff link for an example admin edit page will be <http://localhost:2020/admin/edit/UQ:358319?user=uqstaff>
 
 The following access is required:
 
