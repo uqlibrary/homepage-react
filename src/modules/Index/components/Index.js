@@ -26,9 +26,6 @@ import Menu from '@material-ui/core/Menu';
 import AllInboxIcon from '@material-ui/icons/AllInbox';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { default as locale } from './locale';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -572,17 +569,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             }
                         >
                             <Grid container spacing={1}>
-                                <Grid item xs={12}>
-                                    <FormControl fullWidth>
-                                        <InputLabel id="demo-simple-select-label">Select assets to search</InputLabel>
-                                        <Select labelId="demo-simple-select-label" id="demo-simple-select" value={1}>
-                                            <MenuItem value={1}>Course resources</MenuItem>
-                                            <MenuItem value={2}>Past exam papers</MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                </Grid>
                                 <Grid item xs>
-                                    <TextField placeholder="Enter a course code" fullWidth />
+                                    <TextField placeholder="Enter a course code to search" fullWidth />
                                 </Grid>
                                 <Grid item xs={'auto'}>
                                     <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
