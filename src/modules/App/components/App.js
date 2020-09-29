@@ -26,7 +26,6 @@ browserUpdate({
 import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
@@ -207,21 +206,6 @@ export class AppClass extends PureComponent {
             isHdrStudent && !false,
             false,
         );
-        const isPublicPage = this.isPublicPage(menuItems);
-
-        let userStatusAlert = null;
-        if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
-            // user is not logged in
-            userStatusAlert = {
-                ...locale.global.loginAlert,
-                action: this.redirectUserToLogin(),
-            };
-            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            //     // user is logged in, but doesn't have eSpace author identifier
-            //     userStatusAlert = {
-            //         ...locale.global.notRegisteredAuthorAlert,
-            //     };
-        }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
@@ -231,54 +215,43 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
+                <AppAlertContainer />
                 <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
                 <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
-                    <Hidden lgUp>
-                        <Megamenu
-                            menuItems={menuItems}
-                            history={this.props.history}
-                            isMobile
-                            locale={{
-                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                skipNavTitle: locale.global.skipNav.title,
-                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                            }}
-                            toggleMenu={this.toggleMenu}
-                            menuOpen={this.state.menuOpen}
-                        />
-                    </Hidden>
-                    <Hidden mdDown>
-                        <Megamenu
-                            menuItems={menuItems}
-                            history={this.props.history}
-                            locale={{
-                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                skipNavTitle: locale.global.skipNav.title,
-                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                            }}
-                        />
-                    </Hidden>
+                    <div style={{ marginBottom: 24 }}>
+                        <Hidden mdUp>
+                            <Megamenu
+                                menuItems={menuItems}
+                                history={this.props.history}
+                                isMobile
+                                locale={{
+                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                    skipNavTitle: locale.global.skipNav.title,
+                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                }}
+                                toggleMenu={this.toggleMenu}
+                                menuOpen={this.state.menuOpen}
+                            />
+                        </Hidden>
+                        <Hidden smDown>
+                            <Megamenu
+                                menuItems={menuItems}
+                                history={this.props.history}
+                                locale={{
+                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                    skipNavTitle: locale.global.skipNav.title,
+                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                }}
+                            />
+                        </Hidden>
+                    </div>
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}
                         onAction={this.props.actions.logout}
                         locale={locale.global.sessionExpiredConfirmation}
                     />
-                    {userStatusAlert && (
-                        <Grid
-                            container
-                            alignContent="center"
-                            justify="center"
-                            alignItems="center"
-                            style={{ marginBottom: 12 }}
-                        >
-                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: -12 }}>
-                                <Alert {...userStatusAlert} />
-                            </Grid>
-                        </Grid>
-                    )}
-                    <AppAlertContainer />
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
 
                     {!isAuthorLoading && (

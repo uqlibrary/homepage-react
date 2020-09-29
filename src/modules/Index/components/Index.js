@@ -43,8 +43,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                   return {
                       original: item.img_url,
                       thumbnail: item.img_url,
-                      originalTitle: item.title,
-                      originalAlt: item.img_alt,
+                      originalTitle: '',
+                      originalAlt: '',
                       thumbnailAlt: item.img_alt,
                       thumbnailTitle: item.title,
                   };
@@ -52,8 +52,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             : [
                   {
                       original: welcomeSpotlight,
-                      originalAlt: 'Welcome to the UQ Library',
-                      originalTitle: 'UQ Library',
+                      originalAlt: '',
+                      originalTitle: '',
                   },
               ];
     const [anchorEl, setAnchorEl] = React.useState(null);
