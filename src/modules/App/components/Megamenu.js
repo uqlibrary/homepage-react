@@ -5,7 +5,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import Hidden from '@material-ui/core/Hidden';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
@@ -318,7 +317,7 @@ export function Megamenu(props) {
         <div className={classes.megamenu}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
-                <Hidden lgUp>{renderCloseItem()}</Hidden>
+                {props.hasCloseItem && renderCloseItem()}
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
         </div>
@@ -326,7 +325,7 @@ export function Megamenu(props) {
 }
 
 Megamenu.propTypes = {
-    isMobile: PropTypes.bool,
+    hasCloseItem: PropTypes.bool,
     logoImage: PropTypes.string,
     logoText: PropTypes.string,
     logoLink: PropTypes.string,
@@ -344,8 +343,8 @@ Megamenu.propTypes = {
 };
 
 Megamenu.defaultProps = {
+    hasCloseItem: false,
     menuOpen: true,
-    isMobile: false,
 };
 
 export function isSame(prevProps, nextProps) {

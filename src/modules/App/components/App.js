@@ -236,16 +236,16 @@ export class AppClass extends PureComponent {
                 <div className="content-container" id="content-container">
                     <Hidden lgUp>
                         <Megamenu
-                            menuItems={menuItems}
+                            hasCloseItem
                             history={this.props.history}
-                            isMobile
                             locale={{
                                 skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                 skipNavTitle: locale.global.skipNav.title,
                                 closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                             }}
-                            toggleMenu={this.toggleMenu}
+                            menuItems={menuItems}
                             menuOpen={this.state.menuOpen}
+                            toggleMenu={this.toggleMenu}
                         />
                     </Hidden>
                     <Hidden mdDown>
