@@ -190,10 +190,6 @@ export function Megamenu(props) {
                 window.open(url, target);
             }
         }
-
-        // if (!props.docked) {
-        //     toggleMenu();
-        // }
     };
 
     function clickMenuItem(menuItem) {
@@ -204,15 +200,13 @@ export function Megamenu(props) {
 
     const renderMenuChildren = (menuItem, index, classes) => {
         const menuColumns = [];
-        menuItem.submenuItems
-            // .sort((a, b) => (a.column || null) - (b.column || null))
-            .map(submenuItem => {
-                const index = submenuItem.column || 1;
-                if (!menuColumns[index]) {
-                    menuColumns[index] = [];
-                }
-                menuColumns[index].push(submenuItem);
-            });
+        menuItem.submenuItems.map(submenuItem => {
+            const index = submenuItem.column || 1;
+            if (!menuColumns[index]) {
+                menuColumns[index] = [];
+            }
+            menuColumns[index].push(submenuItem);
+        });
 
         return (
             <Collapse
