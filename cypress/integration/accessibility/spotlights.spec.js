@@ -9,7 +9,7 @@ context('ACCESSIBILITY', () => {
             .and($img => {
                 expect($img[0].naturalWidth).to.be.greaterThan(0);
             });
-        cy.checkA11y('div#spotlights', {
+        cy.checkA11y('div[data-testid="spotlights"]', {
             reportName: 'Spotlights',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
