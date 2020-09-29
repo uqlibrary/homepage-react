@@ -9,20 +9,36 @@ A repo for the Library of The University of Queensland website homepage
 ## Technology
 
 - Code: `React (~16.8), Javascript (ES2015 - Babel), Immutable, SASS`
-- State: `Redux, ReduxForm`
-- Design: `Google Material Design` - [Material UI](https://v0.material-ui.com/#/components/app-bar)
+- State: `Redux`, [Formik](https://formik.org/)
+- Design: [Google Material UI](https://material-ui.com/components/app-bar/)
 - Build and dev tools: `Webpack`
 - Unit tests: `Jest`
 - E2E tests: `Cypress`
 - WCAG tests: `Cypress/aXe`
 
-## Development
-
 This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
 
-- make sure to create a .env file based on example.env
-- `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server` - initial setup
-- `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this
+## Installation
+
+1. Clone from github
+
+2. Create a .env file based on example.env
+
+3. install npm: `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server`
+ 
+4. Create these git hooks to manage branches to project standard: 
+
+- `ln -sf "../../scripts/pre-commit" ".git/hooks/pre-commit"`
+
+  (Prevent direct commits to the staging branch and run `prettier-eslint` automatically before every local commit)
+
+- `ln -sf "../../scripts/prepare-commit-msg" ".git/hooks/prepare-commit-msg"`
+
+  (Prevent accidental merges from the staging branch:)
+
+## Development
+
+- `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this coomand
   clears & reinstalls npm packages
 - `npm run start`
   - runs <http://localhost:2020/>
@@ -64,25 +80,6 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 Mock data is provided for all pages and actions under `src/mock/`.
 
 ### Development notes
-
-#### Git safety checks
-
-- Run the following in the project root directory to install the pre-commit hook:
-
-  ```sh
-  ln -sf "../../scripts/pre-commit" ".git/hooks/pre-commit"
-  ```
-
-  It does two things:
-
-  - Prevent direct commits to the staging branch.
-  - Run `prettier-eslint` automatically before every local commit
-
-- Run the following in the project root directory to prevent accidental merges from the staging branch:
-
-  ```sh
-    ln -sf "../../scripts/prepare-commit-msg" ".git/hooks/prepare-commit-msg"
-  ```
 
 #### Naming conventions
 
