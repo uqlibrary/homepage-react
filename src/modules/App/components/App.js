@@ -231,19 +231,14 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <Header
-                    isAuthorizedUser={isAuthorizedUser}
-                    account={this.props.account}
-                    toggleMenu={this.toggleMenu}
-                    menuOpen={this.state.menuOpen}
-                />
+                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
                 <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
-                    <Hidden smUp>
+                    <Hidden lgUp>
                         <Megamenu
                             menuItems={menuItems}
                             history={this.props.history}
-                            isMobile={this.state.isMobile}
+                            isMobile
                             locale={{
                                 skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                 skipNavTitle: locale.global.skipNav.title,
@@ -257,7 +252,6 @@ export class AppClass extends PureComponent {
                         <Megamenu
                             menuItems={menuItems}
                             history={this.props.history}
-                            isMobile={this.state.isMobile}
                             locale={{
                                 skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                 skipNavTitle: locale.global.skipNav.title,

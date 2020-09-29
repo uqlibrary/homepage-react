@@ -323,10 +323,11 @@ export function Megamenu(props) {
 }
 
 Megamenu.propTypes = {
-    menuItems: PropTypes.array.isRequired,
+    isMobile: PropTypes.bool,
     logoImage: PropTypes.string,
     logoText: PropTypes.string,
     logoLink: PropTypes.string,
+    menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
@@ -341,6 +342,7 @@ Megamenu.propTypes = {
 
 Megamenu.defaultProps = {
     menuOpen: true,
+    isMobile: false,
 };
 
 export function isSame(prevProps, nextProps) {
