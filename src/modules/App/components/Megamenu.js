@@ -80,6 +80,10 @@ const styles = theme => {
                 maxWidth: '1200px',
                 margin: '0 auto',
                 paddingTop: '10px',
+                // remove the flash to grey when we mouse over a top menu
+                '& span > div[role="button"]:hover': {
+                    backgroundColor: 'initial',
+                },
             },
             [theme.breakpoints.down('md')]: {
                 overflowY: 'auto',
