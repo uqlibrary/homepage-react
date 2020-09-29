@@ -111,6 +111,9 @@ const styles = theme => {
             [theme.breakpoints.down('md')]: {
                 width: '96%',
             },
+            [theme.breakpoints.up('lg')]: {
+                top: '66px',
+            },
         },
         shiftLeft: {
             marginLeft: '-20rem',

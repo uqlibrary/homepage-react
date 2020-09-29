@@ -388,6 +388,7 @@ export default {
             dataTestid: 'connect-about-link',
             linkTo: 'https://web.library.uq.edu.au/about-us',
             primaryText: 'About',
+            shiftLeft: true,
             submenuItems: [
                 {
                     primaryText: 'Blog',
