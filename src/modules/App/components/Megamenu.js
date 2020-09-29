@@ -13,14 +13,6 @@ import classNames from 'classnames';
 
 const styles = theme => {
     return {
-        megamenu: {
-            backgroundColor: '#fff',
-            maxWidth: 'initial',
-            margin: 0,
-            width: '100%',
-            boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
-            padding: 0,
-        },
         paper: {
             width: 260,
         },
@@ -71,6 +63,14 @@ const styles = theme => {
                 zIndex: 999,
             },
         },
+        megamenu: {
+            backgroundColor: '#fff',
+            boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
+            margin: 0,
+            maxWidth: 'initial',
+            padding: 0,
+            width: '100%',
+        },
         mainMenu: {
             outline: 'none',
             paddingTop: 0,
@@ -86,15 +86,13 @@ const styles = theme => {
                 },
             },
             [theme.breakpoints.down('md')]: {
-                overflowY: 'auto',
-                width: '100%',
                 backgroundColor: 'white',
-                height: '100%',
-                position: 'absolute',
-                top: '5.7rem',
-                zIndex: 1000,
-                marginLeft: '-2.5rem',
+                height: 'auto',
+                overflowY: 'auto',
                 paddingLeft: '1rem',
+                position: 'absolute',
+                width: '100%',
+                zIndex: 1000,
             },
         },
         ListItemTextPrimary: {
@@ -103,21 +101,13 @@ const styles = theme => {
         ListItemTextSecondary: {
             ...theme.typography.caption,
         },
-        // mainMenuFooter: {
-        //     paddingLeft: '12px',
-        //     paddingBottom: '12px',
-        //     fontSize: theme.typography.caption.fontSize,
-        //     color: theme.palette.secondary.main,
-        // },
         iconButton: {
             color: theme.palette.white.main,
         },
         menuDropdown: {
-            // new
             backgroundColor: '#f2f2f2',
             zIndex: 1000,
             position: 'absolute',
-            // },
             [theme.breakpoints.down('md')]: {
                 width: '96%',
             },
@@ -165,8 +155,9 @@ const styles = theme => {
 };
 
 export function Megamenu(props) {
-    // an array so we can control each submenu separately
     const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
+
+    // an array so we can control each submenu separately
     const initialSubMenus = [];
     menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
