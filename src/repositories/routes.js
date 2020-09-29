@@ -83,8 +83,32 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
     apiUrl: `authors/details/${userId}`,
 });
 
-// academic stats apis
+// Spotlights API
+export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Primo Suggestions API
+export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => ({
+    apiUrl:
+        'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+        keyword +
+        '&facet=off' +
+        '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
+        '&rows=10' +
+        '&wt=json',
+});
+
+export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
+});
+
+export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
+});
+
+// Chat availability API
+export const CHAT_API = () => ({ apiUrl: 'chat_status' });
+
+// academic stats apis
 export const VOCABULARIES_API = ({ id }) => ({ apiUrl: `vocabularies?cvo_ids=${id}` });
 export const GET_PUBLICATION_TYPES_API = () => ({ apiUrl: 'records/types' });
 

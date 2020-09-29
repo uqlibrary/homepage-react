@@ -13,7 +13,10 @@ export const styles = theme => ({
         fontWeight: theme.typography.fontWeightRegular,
     },
     cardContentNoPadding: {
-        padding: 0,
+        paddingTop: '0px !important',
+        paddingBottom: '0px !important',
+        paddingLeft: '0px !important',
+        paddingRight: '0px !important',
     },
     cardHeaderPrimary: {
         color: theme.palette.white.main,
@@ -47,10 +50,12 @@ export class Cards extends Component {
         customBackgroundColor: PropTypes.any,
         customTitleColor: PropTypes.any,
         customTitleBgColor: PropTypes.any,
+        customTextColor: PropTypes.any,
         squareTop: PropTypes.bool,
         smallTitle: PropTypes.bool,
         standardCardId: PropTypes.string,
         subCard: PropTypes.bool,
+        style: PropTypes.object,
     };
 
     render() {
@@ -63,6 +68,7 @@ export class Cards extends Component {
             accentHeader,
             smallTitle = false,
             subCard = false,
+            style = {},
         } = this.props;
         const customBG = !!this.props.customBackgroundColor
             ? { backgroundColor: this.props.customBackgroundColor }
@@ -71,8 +77,11 @@ export class Cards extends Component {
             ? { backgroundColor: this.props.customTitleBgColor }
             : null;
         const customTitle = !!this.props.customTitleColor ? { color: this.props.customTitleColor } : null;
+        const customText = !!this.props.customTextColor ? { color: `${this.props.customTextColor} !important` } : null;
         const fullHeight = !!this.props.fullHeight ? { height: '100%' } : null;
-        const squareTop = !!this.props.squareTop ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 } : null;
+        const squareTop = !!this.props.squareTop
+            ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 }
+            : { borderTopLeftRadius: 4, borderTopRightRadius: 4 };
         const standardCardId = !!this.props.standardCardId
             ? this.props.standardCardId
             : `standard-card${typeof title === 'string' ? '-' + title.replace(/ /g, '-').toLowerCase() : ''}`;
@@ -80,11 +89,11 @@ export class Cards extends Component {
             <Card
                 data-testid={standardCardId}
                 className={`${classes.card} StandardCard`}
-                style={{ ...customBG, ...customTitle, ...fullHeight }}
+                style={{ ...customBG, ...fullHeight, ...style }}
             >
                 {!this.props.noHeader && (
                     <CardHeader
-                        style={{ ...squareTop, ...customTitleBG }}
+                        style={{ ...squareTop, ...customTitleBG, ...customTitle }}
                         title={title}
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
@@ -102,7 +111,8 @@ export class Cards extends Component {
                 )}
                 <CardContent
                     data-testid={`${standardCardId}-content`}
-                    className={(this.props.noPadding && classes.cardContentNoPadding) || ''}
+                    className={`${(this.props.noPadding && classes.cardContentNoPadding) || ''}`}
+                    style={{ ...customText }}
                 >
                     {children}
                 </CardContent>

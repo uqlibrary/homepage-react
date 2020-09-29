@@ -37,6 +37,7 @@ const handlers = {
 
     [actions.CURRENT_AUTHOR_FAILED]: state => ({
         ...state,
+        accountLoading: false,
         author: null,
         accountAuthorLoading: false,
     }),
@@ -79,6 +80,7 @@ const handlers = {
 
     [actions.CURRENT_AUTHOR_DETAILS_FAILED]: state => ({
         ...state,
+        accountLoading: false,
         authorDetails: null,
         accountAuthorDetailsLoading: false,
     }),
@@ -108,6 +110,21 @@ const handlers = {
     [actions.CLEAR_CURRENT_ACCOUNT_SESSION_FLAG]: state => ({
         ...state,
         isSessionExpired: null,
+    }),
+
+    [actions.CHAT_STATUS_LOADING]: state => ({
+        ...state,
+        chatStatus: { online: false },
+    }),
+
+    [actions.CHAT_STATUS_LOADED]: (state, action) => ({
+        ...state,
+        chatStatus: action.payload,
+    }),
+
+    [actions.CHAT_STATUS_FAILED]: state => ({
+        ...state,
+        chatStatus: { online: false },
     }),
 };
 

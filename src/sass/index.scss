@@ -8,6 +8,18 @@
 @import "./print";
 // Browser update script styles
 @import './browserUpdate';
+// React image gallery styles
+@import "~react-image-gallery/styles/scss/image-gallery.scss";
+
+.image-gallery-left-nav, .image-gallery-right-nav {
+  zoom: 0.3;
+}
+.image-gallery-bullets {
+  bottom: 10px;
+}
+.image-gallery-bullet {
+  zoom: 0.75;
+}
 
 html, body {
   overflow: hidden;
@@ -60,14 +72,13 @@ a {
 // The container which houses content
 .content-container {
   width: 100%;
-  height: calc(100% - 75px);
+  height: calc(100% - 90px);
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin-top: 70px;
-  padding-top: 24px;
+  margin-top: 0;
   padding-bottom: 24px;
 }
 
@@ -76,4 +87,11 @@ a {
   .citationJournalName, .citationTitle, .citationNewspaper, .citationVolumeNumber {
     font-style: italic;
   }
+}
+
+.image-gallery-thumbnails-wrapper {
+  position: absolute !important;
+  bottom: 5px !important;
+  right: 10px !important;
+  width: 43% !important;
 }

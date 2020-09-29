@@ -1,0 +1,179 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component Megamenu should display mobile correctly 1`] = `
+<div
+  className="layout-card"
+  style={
+    Object {
+      "marginBottom": 0,
+      "marginTop": 0,
+    }
+  }
+>
+  <WithStyles(ForwardRef(List))
+    component="nav"
+    id="mainMenu"
+    tabIndex={-1}
+  >
+    <span
+      className="menu-item-container"
+      key="menucontainer-item-0"
+    >
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        id="submenus-item-0"
+        key="submenus-item-0"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemText))
+          classes={
+            Object {
+              "primary": undefined,
+              "secondary": undefined,
+            }
+          }
+          primary="Primary text 0"
+          secondary="secondary text 0"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </span>
+    <span
+      className="menu-item-container"
+      key="menucontainer-item-1"
+    >
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        id="submenus-item-1"
+        key="submenus-item-1"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemText))
+          classes={
+            Object {
+              "primary": undefined,
+              "secondary": undefined,
+            }
+          }
+          primary="Primary text 1"
+          secondary="secondary text 1"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </span>
+    <Hidden
+      lgUp={true}
+    >
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        id="submenus-item-close"
+        key="submenus-item-close"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemText))
+          classes={
+            Object {
+              "primary": undefined,
+            }
+          }
+          primary="Close"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </Hidden>
+  </WithStyles(ForwardRef(List))>
+  <div
+    id="afterMegamenu"
+    tabIndex={-1}
+  />
+</div>
+`;
+
+exports[`Component Megamenu should render empty drawer 1`] = `
+<div
+  className="megamenu empty"
+/>
+`;
+
+exports[`Component Megamenu should render opened drawer with menus 1`] = `
+<div
+  className="layout-card"
+  style={
+    Object {
+      "marginBottom": 0,
+      "marginTop": 0,
+    }
+  }
+>
+  <WithStyles(ForwardRef(List))
+    component="nav"
+    id="mainMenu"
+    tabIndex={-1}
+  >
+    <span
+      className="menu-item-container"
+      key="menucontainer-item-0"
+    >
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        id="submenus-item-0"
+        key="submenus-item-0"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemText))
+          classes={
+            Object {
+              "primary": undefined,
+              "secondary": undefined,
+            }
+          }
+          primary="Primary text 0"
+          secondary="secondary text 0"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </span>
+    <span
+      className="menu-item-container"
+      key="menucontainer-item-1"
+    >
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        id="submenus-item-1"
+        key="submenus-item-1"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemText))
+          classes={
+            Object {
+              "primary": undefined,
+              "secondary": undefined,
+            }
+          }
+          primary="Primary text 1"
+          secondary="secondary text 1"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </span>
+    <Hidden
+      lgUp={true}
+    >
+      <WithStyles(ForwardRef(ListItem))
+        button={true}
+        id="submenus-item-close"
+        key="submenus-item-close"
+        onClick={[Function]}
+      >
+        <WithStyles(ForwardRef(ListItemText))
+          classes={
+            Object {
+              "primary": undefined,
+            }
+          }
+          primary="Close"
+        />
+      </WithStyles(ForwardRef(ListItem))>
+    </Hidden>
+  </WithStyles(ForwardRef(List))>
+  <div
+    id="afterMegamenu"
+    tabIndex={-1}
+  />
+</div>
+`;

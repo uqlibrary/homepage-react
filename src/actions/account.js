@@ -1,6 +1,12 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { CURRENT_ACCOUNT_API, CURRENT_AUTHOR_API, AUTHOR_DETAILS_API } from 'repositories/routes';
+import {
+    CURRENT_ACCOUNT_API,
+    CURRENT_AUTHOR_API,
+    AUTHOR_DETAILS_API,
+    SPOTLIGHTS_API,
+    CHAT_API,
+} from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
 
@@ -77,6 +83,52 @@ export function loadCurrentAccount() {
                     });
                 });
         }
+    };
+}
+
+/**
+ * Loads the spotlight data
+ * @returns {function(*)}
+ */
+export function loadSpotlights() {
+    return dispatch => {
+        dispatch({ type: actions.SPOTLIGHTS_LOADING });
+        return get(SPOTLIGHTS_API())
+            .then(spotlightsResponse => {
+                dispatch({
+                    type: actions.SPOTLIGHTS_LOADED,
+                    payload: spotlightsResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPOTLIGHTS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the chat status data
+ * @returns {function(*)}
+ */
+export function loadChatStatus() {
+    return dispatch => {
+        dispatch({ type: actions.CHAT_STATUS_LOADING });
+        return get(CHAT_API())
+            .then(chatResponse => {
+                dispatch({
+                    type: actions.CHAT_STATUS_LOADED,
+                    payload: chatResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.CHAT_STATUS_FAILED,
+                    payload: error.message,
+                });
+            });
     };
 }
 

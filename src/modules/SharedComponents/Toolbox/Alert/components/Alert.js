@@ -22,8 +22,7 @@ const classNames = require('classnames');
 const useStyles = makeStyles(
     theme => ({
         common: {
-            borderRadius: 5,
-            boxShadow: theme.shadows[1],
+            borderRadius: 0,
         },
         '@keyframes wiggle': {
             from: { transform: 'rotate(-30deg)', transformOrigin: '40% 50%' },
@@ -38,8 +37,8 @@ const useStyles = makeStyles(
         },
         icon: {
             '& .icon': {
-                fontSize: 48,
-                marginRight: 16,
+                fontSize: 28,
+                marginRight: 12,
                 marginBottom: -6,
             },
             '& .spinner': {
@@ -48,7 +47,7 @@ const useStyles = makeStyles(
         },
         text: {
             alignSelf: 'center',
-            padding: '6px 0',
+            padding: '4px 0',
             textShadow: '1px 1px 1px rgba(0, 0, 0, 0.2)',
         },
         actionButton: {
@@ -64,7 +63,8 @@ const useStyles = makeStyles(
         dismissButton: {
             '& .dismiss': {
                 [theme.breakpoints.up('xs')]: {
-                    marginTop: 0,
+                    marginTop: -12,
+                    marginBottom: -12,
                 },
                 [theme.breakpoints.down('xs')]: {
                     marginRight: -12,

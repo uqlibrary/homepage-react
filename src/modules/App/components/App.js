@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
+import Hidden from '@material-ui/core/Hidden';
 
 browserUpdate({
     required: {
@@ -23,30 +24,19 @@ browserUpdate({
 
 // application components
 import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { ScrollTop } from 'modules/SharedComponents/ScrollTop';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { MenuDrawer } from 'modules/SharedComponents/Toolbox/MenuDrawer';
-import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
-import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
-import { Meta } from 'modules/SharedComponents/Meta';
-import { OfflineSnackbar } from 'modules/SharedComponents/OfflineSnackbar';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import * as pages from './pages';
 import { AccountContext } from 'context';
-// MUI1
-import Tooltip from '@material-ui/core/Tooltip';
-import Fade from '@material-ui/core/Fade';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/icons/Menu';
-import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
+import Megamenu from './Megamenu';
+import Header from './Header';
+import ChatStatus from './ChatStatus';
 
 const styles = theme => ({
     appBG: {
@@ -98,6 +88,7 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
+        chatStatus: PropTypes.any,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -108,8 +99,9 @@ export class AppClass extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            menuDrawerOpen: false,
+            menuOpen: false,
             docked: false,
+            chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
             isMobile: window.matchMedia('(max-width: 720px)').matches,
         };
@@ -136,6 +128,7 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadChatStatus();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -143,6 +136,11 @@ export class AppClass extends PureComponent {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
+        }
+        if (this.props.chatStatus && !!this.props.chatStatus.online) {
+            this.setState({
+                chatStatus: { online: true },
+            });
         }
     }
 
@@ -156,9 +154,9 @@ export class AppClass extends PureComponent {
         });
     };
 
-    toggleDrawer = () => {
+    toggleMenu = () => {
         this.setState({
-            menuDrawerOpen: !this.state.menuDrawerOpen,
+            menuOpen: !this.state.menuOpen,
         });
     };
 
@@ -170,9 +168,7 @@ export class AppClass extends PureComponent {
 
     isPublicPage = menuItems => {
         return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length >
-                0 ||
-            new RegExp(routes.pathConfig.records.view(`(${routes.pidRegExp})`)).test(this.props.location.pathname)
+            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
         );
     };
 
@@ -213,12 +209,6 @@ export class AppClass extends PureComponent {
         );
         const isPublicPage = this.isPublicPage(menuItems);
 
-        const containerStyle = this.state.docked && true ? { paddingLeft: 260 } : {};
-        // if (!isAuthorizedUser) {
-        //     this.redirectUserToLogin()();
-        //     return <div />;
-        // }
-
         let userStatusAlert = null;
         if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
             // user is not logged in
@@ -226,11 +216,11 @@ export class AppClass extends PureComponent {
                 ...locale.global.loginAlert,
                 action: this.redirectUserToLogin(),
             };
-        } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            // user is logged in, but doesn't have eSpace author identifier
-            userStatusAlert = {
-                ...locale.global.notRegisteredAuthorAlert,
-            };
+            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
+            //     // user is logged in, but doesn't have eSpace author identifier
+            //     userStatusAlert = {
+            //         ...locale.global.notRegisteredAuthorAlert,
+            //     };
         }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
@@ -239,100 +229,35 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
-                <Meta routesConfig={routesConfig} />
-                <AppBar className="AppBar" color="primary" position="fixed">
-                    <Toolbar style={{ height: '70px' }}>
-                        <Grid
-                            container
-                            spacing={1}
-                            alignItems="center"
-                            direction="row"
-                            wrap="nowrap"
-                            justify="flex-start"
-                        >
-                            {!this.state.docked && !this.state.menuDrawerOpen && true && (
-                                <Grid item>
-                                    {/* hamburger button */}
-                                    <Tooltip
-                                        title={locale.global.mainNavButton.tooltip}
-                                        placement="bottom-end"
-                                        TransitionComponent={Fade}
-                                    >
-                                        <IconButton
-                                            aria-label={locale.global.mainNavButton.aria}
-                                            style={{ marginLeft: '-12px', marginRight: '12px' }}
-                                            onClick={this.toggleDrawer}
-                                            id={'main-menu-button'}
-                                        >
-                                            <Menu style={{ color: 'white' }} />
-                                        </IconButton>
-                                    </Tooltip>
-                                </Grid>
-                            )}
-                            <Grid item xs style={titleStyle} className={classes.nowrap}>
-                                <Grid container spacing={2} alignItems="center" justify="flex-start" wrap={'nowrap'}>
-                                    {!this.state.docked && !this.state.menuDrawerOpen && (
-                                        <Hidden xsDown>
-                                            <Grid item>
-                                                <div id="logo" className="smallLogo" style={{ height: 66, width: 60 }}>
-                                                    {locale.global.logo.label}
-                                                </div>
-                                            </Grid>
-                                        </Hidden>
-                                    )}
-                                    <Grid item xs={'auto'} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                        <Typography variant="h5" component={'h1'} noWrap className={classes.titleLink}>
-                                            {locale.global.appTitle}
-                                        </Typography>
-                                    </Grid>
-                                </Grid>
-                            </Grid>
-                            {/* Search */}
-                            <Grid item>
-                                <AuthButton
-                                    isAuthorizedUser={isAuthorizedUser}
-                                    onClick={this.redirectUserToLogin(
-                                        isAuthorizedUser,
-                                        isAuthorizedUser && !isHdrStudent && false,
-                                    )}
-                                    signInTooltipText={locale.global.authentication.signInText}
-                                    signOutTooltipText={
-                                        isAuthorizedUser
-                                            ? `${locale.global.authentication.signOutText} - ${this.props.account.name}`
-                                            : ''
-                                    }
-                                    ariaLabel={
-                                        isAuthorizedUser
-                                            ? locale.global.authentication.ariaOut
-                                            : locale.global.authentication.ariaIn
-                                    }
-                                />
-                            </Grid>
-                        </Grid>
-                    </Toolbar>
-                </AppBar>
-                <MenuDrawer
-                    menuItems={menuItems}
-                    drawerOpen={this.state.docked || this.state.menuDrawerOpen}
-                    docked={this.state.docked}
-                    history={this.props.history}
-                    logoImage="largeLogo"
-                    logoText={locale.global.logo.label}
-                    logoLink={locale.global.logo.link}
-                    onToggleDrawer={this.toggleDrawer}
-                    isMobile={this.state.isMobile}
-                    locale={{
-                        skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                        skipNavTitle: locale.global.skipNav.title,
-                        closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                    }}
-                />
-                <div className="content-container" id="content-container" style={containerStyle}>
-                    <Hidden smDown>
-                        <ScrollTop show containerId="content-container" />
+                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
+                <ChatStatus status={this.props.chatStatus} />
+                <div className="content-container" id="content-container">
+                    <Hidden lgUp>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            isMobile
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                            toggleMenu={this.toggleMenu}
+                            menuOpen={this.state.menuOpen}
+                        />
+                    </Hidden>
+                    <Hidden mdDown>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                        />
                     </Hidden>
                     <ConfirmDialogBox
                         hideCancelButton
@@ -348,7 +273,7 @@ export class AppClass extends PureComponent {
                             alignItems="center"
                             style={{ marginBottom: 12 }}
                         >
-                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: 0 }}>
+                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: -12 }}>
                                 <Alert {...userStatusAlert} />
                             </Grid>
                         </Grid>
@@ -373,7 +298,6 @@ export class AppClass extends PureComponent {
                     )}
                 </div>
                 <HelpDrawer />
-                <OfflineSnackbar />
             </Grid>
         );
     }
