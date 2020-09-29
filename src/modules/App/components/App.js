@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
+import Hidden from '@material-ui/core/Hidden';
 
 browserUpdate({
     required: {
@@ -167,9 +168,7 @@ export class AppClass extends PureComponent {
 
     isPublicPage = menuItems => {
         return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length >
-                0 ||
-            new RegExp(routes.pathConfig.records.view(`(${routes.pidRegExp})`)).test(this.props.location.pathname)
+            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
         );
     };
 
@@ -217,11 +216,11 @@ export class AppClass extends PureComponent {
                 ...locale.global.loginAlert,
                 action: this.redirectUserToLogin(),
             };
-        } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            // user is logged in, but doesn't have eSpace author identifier
-            userStatusAlert = {
-                ...locale.global.notRegisteredAuthorAlert,
-            };
+            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
+            //     // user is logged in, but doesn't have eSpace author identifier
+            //     userStatusAlert = {
+            //         ...locale.global.notRegisteredAuthorAlert,
+            //     };
         }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
@@ -232,26 +231,34 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <Header
-                    isAuthorizedUser={isAuthorizedUser}
-                    account={this.props.account}
-                    toggleMenu={this.toggleMenu}
-                    menuOpen={this.state.menuOpen}
-                />
+                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
                 <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
-                    <Megamenu
-                        menuItems={menuItems}
-                        history={this.props.history}
-                        isMobile={this.state.isMobile}
-                        locale={{
-                            skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                            skipNavTitle: locale.global.skipNav.title,
-                            closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                        }}
-                        toggleMenu={this.toggleMenu}
-                        menuOpen={this.state.menuOpen}
-                    />
+                    <Hidden lgUp>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            isMobile
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                            toggleMenu={this.toggleMenu}
+                            menuOpen={this.state.menuOpen}
+                        />
+                    </Hidden>
+                    <Hidden mdDown>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                        />
+                    </Hidden>
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}

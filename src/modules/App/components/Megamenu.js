@@ -63,48 +63,56 @@ const styles = theme => {
                 zIndex: 999,
             },
         },
+        megamenu: {
+            backgroundColor: '#fff',
+            boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
+            margin: 0,
+            maxWidth: 'initial',
+            padding: 0,
+            width: '100%',
+        },
         mainMenu: {
             outline: 'none',
             paddingTop: 0,
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
                 flexGrow: 1,
+                maxWidth: '1200px',
+                margin: '0 auto',
+                paddingTop: '10px',
+                // remove the flash to grey when we mouse over a top menu
+                '& span > div[role="button"]:hover': {
+                    backgroundColor: 'initial',
+                },
             },
             [theme.breakpoints.down('md')]: {
-                overflowY: 'auto',
-                maxWidth: '25rem',
                 backgroundColor: 'white',
+                height: 'auto',
+                overflowY: 'auto',
+                paddingLeft: '1rem',
                 position: 'absolute',
-                top: '9rem',
+                width: '100%',
                 zIndex: 1000,
-                marginLeft: '-2.5rem',
             },
         },
         ListItemTextPrimary: {
-            ...theme.typography.body2,
             whiteSpace: 'nowrap',
-            fontWeight: theme.typography.fontWeightMedium,
         },
         ListItemTextSecondary: {
             ...theme.typography.caption,
         },
-        // mainMenuFooter: {
-        //     paddingLeft: '12px',
-        //     paddingBottom: '12px',
-        //     fontSize: theme.typography.caption.fontSize,
-        //     color: theme.palette.secondary.main,
-        // },
         iconButton: {
             color: theme.palette.white.main,
         },
         menuDropdown: {
-            // new
             backgroundColor: '#f2f2f2',
             zIndex: 1000,
             position: 'absolute',
-            // },
             [theme.breakpoints.down('md')]: {
-                width: '100%',
+                width: '96%',
+            },
+            [theme.breakpoints.up('lg')]: {
+                top: '66px',
             },
         },
         shiftLeft: {
@@ -115,9 +123,16 @@ const styles = theme => {
                 flexDirection: 'row',
             },
         },
-        menuGroups: {
+        menuColumns: {
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
+            },
+            '& > div': {
+                marginTop: '6px',
+                borderLeft: 'thin solid #ccc',
+            },
+            '& div:first-child': {
+                borderLeft: 'none',
             },
         },
         verticalMenuList: {
@@ -136,14 +151,16 @@ const styles = theme => {
             verticalAlign: 'top',
             [theme.breakpoints.down('lg')]: {
                 paddingLeft: '2rem',
+                paddingTop: '0',
             },
         },
     };
 };
 
 export function Megamenu(props) {
-    // an array so we can control each submenu separately
     const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
+
+    // an array so we can control each submenu separately
     const initialSubMenus = [];
     menuItems.forEach(item => (initialSubMenus[item.id] = false));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
@@ -186,15 +203,15 @@ export function Megamenu(props) {
     }
 
     const renderMenuChildren = (menuItem, index, classes) => {
-        const menuGroups = [];
+        const menuColumns = [];
         menuItem.submenuItems
             // .sort((a, b) => (a.column || null) - (b.column || null))
             .map(submenuItem => {
                 const index = submenuItem.column || 1;
-                if (!menuGroups[index]) {
-                    menuGroups[index] = [];
+                if (!menuColumns[index]) {
+                    menuColumns[index] = [];
                 }
-                menuGroups[index].push(submenuItem);
+                menuColumns[index].push(submenuItem);
             });
 
         return (
@@ -204,9 +221,9 @@ export function Megamenu(props) {
                 unmountOnExit
                 className={classNames(!!menuItem.shiftLeft ? classes.shiftLeft : '', classes.menuDropdown)}
             >
-                <div className={classes.menuGroups}>
-                    {menuGroups.length > 0 &&
-                        menuGroups.map((menuGroup, index1) => {
+                <div className={classes.menuColumns}>
+                    {menuColumns.length > 0 &&
+                        menuColumns.map((menuGroup, index1) => {
                             return (
                                 <List
                                     component="div"
@@ -280,31 +297,34 @@ export function Megamenu(props) {
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
 
-    const isFullDesktop = window.matchMedia('(min-width: 1279px)').matches;
-    if (!menuOpen && !isFullDesktop) {
+    if (!menuOpen) {
         return <div className="megamenu empty" />;
     }
 
+    function renderCloseItem() {
+        return (
+            <ListItem
+                className={classes.submenus}
+                button
+                key={'submenus-item-close'}
+                id={'submenus-item-close'}
+                onClick={() => toggleMenu()}
+            >
+                <ListItemText
+                    classes={{
+                        primary: classes.ListItemTextPrimary,
+                    }}
+                    primary="Close"
+                />
+            </ListItem>
+        );
+    }
+
     return (
-        <div className="layout-card" style={{ marginTop: 0, marginBottom: 0 }}>
+        <div className={classes.megamenu}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
-                <Hidden lgUp>
-                    <ListItem
-                        className={classes.submenus}
-                        button
-                        key={'submenus-item-close'}
-                        id={'submenus-item-close'}
-                        onClick={() => toggleMenu()}
-                    >
-                        <ListItemText
-                            classes={{
-                                primary: classes.ListItemTextPrimary,
-                            }}
-                            primary="Close"
-                        />
-                    </ListItem>
-                </Hidden>
+                <Hidden lgUp>{renderCloseItem()}</Hidden>
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
         </div>
@@ -312,10 +332,11 @@ export function Megamenu(props) {
 }
 
 Megamenu.propTypes = {
-    menuItems: PropTypes.array.isRequired,
+    isMobile: PropTypes.bool,
     logoImage: PropTypes.string,
     logoText: PropTypes.string,
     logoLink: PropTypes.string,
+    menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
@@ -326,6 +347,11 @@ Megamenu.propTypes = {
         closeMenuLabel: PropTypes.string,
     }),
     classes: PropTypes.object,
+};
+
+Megamenu.defaultProps = {
+    menuOpen: true,
+    isMobile: false,
 };
 
 export function isSame(prevProps, nextProps) {
