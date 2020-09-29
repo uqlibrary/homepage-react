@@ -13,6 +13,14 @@ import classNames from 'classnames';
 
 const styles = theme => {
     return {
+        megamenu: {
+            backgroundColor: '#fff',
+            maxWidth: 'initial',
+            margin: 0,
+            width: '100%',
+            boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
+            padding: 0,
+        },
         paper: {
             width: 260,
         },
@@ -69,11 +77,15 @@ const styles = theme => {
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
                 flexGrow: 1,
+                maxWidth: '1200px',
+                margin: '0 auto',
+                paddingTop: '10px',
             },
             [theme.breakpoints.down('md')]: {
                 overflowY: 'auto',
                 width: '100%',
                 backgroundColor: 'white',
+                height: '100%',
                 position: 'absolute',
                 top: '5.7rem',
                 zIndex: 1000,
@@ -82,9 +94,7 @@ const styles = theme => {
             },
         },
         ListItemTextPrimary: {
-            ...theme.typography.body2,
             whiteSpace: 'nowrap',
-            fontWeight: theme.typography.fontWeightMedium,
         },
         ListItemTextSecondary: {
             ...theme.typography.caption,
@@ -105,7 +115,7 @@ const styles = theme => {
             position: 'absolute',
             // },
             [theme.breakpoints.down('md')]: {
-                width: '100%',
+                width: '96%',
             },
         },
         shiftLeft: {
@@ -144,6 +154,7 @@ const styles = theme => {
             verticalAlign: 'top',
             [theme.breakpoints.down('lg')]: {
                 paddingLeft: '2rem',
+                paddingTop: '0',
             },
         },
     };
@@ -312,7 +323,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className="layout-card" style={{ marginTop: 0, marginBottom: 0 }}>
+        <div className={classes.megamenu}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
                 {renderMenuItems(menuItems)}
                 <Hidden lgUp>{renderCloseItem()}</Hidden>
