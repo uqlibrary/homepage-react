@@ -51,25 +51,6 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
         />
       </WithStyles(ForwardRef(ListItem))>
     </span>
-    <Hidden
-      lgUp={true}
-    >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        id="submenus-item-close"
-        key="submenus-item-close"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-            }
-          }
-          primary="Close"
-        />
-      </WithStyles(ForwardRef(ListItem))>
-    </Hidden>
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"
@@ -135,25 +116,6 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
         />
       </WithStyles(ForwardRef(ListItem))>
     </span>
-    <Hidden
-      lgUp={true}
-    >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        id="submenus-item-close"
-        key="submenus-item-close"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-            }
-          }
-          primary="Close"
-        />
-      </WithStyles(ForwardRef(ListItem))>
-    </Hidden>
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"

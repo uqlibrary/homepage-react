@@ -165,7 +165,7 @@ export function Megamenu(props) {
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
 
     const setParticularSubMenuOpen = (changingId, newOpen) => {
-        // array allows us to update one element of the open/closed array, to match one menuitem change
+        // using an array allows us to update one element of the open/closed array, to match one menuitem change
         const newValue = [];
         Object.keys(isSubMenuOpen).forEach(key => {
             newValue[key] = key === changingId ? newOpen : initialSubMenus[key];
@@ -197,7 +197,42 @@ export function Megamenu(props) {
             : navigateToLink(menuItem.linkTo, menuItem.target);
     }
 
-    const renderMenuChildren = (menuItem, index, classes) => {
+    function renderSingleColumn(index, classes, menuColumn) {
+        return (
+            <List
+                component="div"
+                disablePadding
+                key={`menu-group-${index}`}
+                id={`menu-group-${index}`}
+                className={classes.verticalMenuList}
+            >
+                {!!menuColumn &&
+                    menuColumn.length > 0 &&
+                    menuColumn.map((submenuItem, index2) => {
+                        return (
+                            <ListItem
+                                button
+                                key={`menu-group-${index}-item-${index2}`}
+                                id={`menu-group-${index}-item-${index2}`}
+                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
+                                className={classes.menuItem}
+                            >
+                                <ListItemText
+                                    classes={{
+                                        primary: classes.ListItemTextPrimary,
+                                        secondary: classes.ListItemTextSecondary,
+                                    }}
+                                    primary={submenuItem.primaryText}
+                                    secondary={submenuItem.secondaryText}
+                                />
+                            </ListItem>
+                        );
+                    })}
+            </List>
+        );
+    }
+
+    const renderSubMenu = (menuItem, index, classes) => {
         const menuColumns = [];
         menuItem.submenuItems.map(submenuItem => {
             const index = submenuItem.column || 1;
@@ -216,74 +251,40 @@ export function Megamenu(props) {
             >
                 <div className={classes.menuColumns}>
                     {menuColumns.length > 0 &&
-                        menuColumns.map((menuGroup, index1) => {
-                            return (
-                                <List
-                                    component="div"
-                                    disablePadding
-                                    key={`menu-group-${index1}`}
-                                    id={`menu-group-${index1}`}
-                                    className={classes.verticalMenuList}
-                                >
-                                    {!!menuGroup &&
-                                        menuGroup.length > 0 &&
-                                        menuGroup.map((submenuItem, index2) => {
-                                            return (
-                                                <ListItem
-                                                    button
-                                                    key={`menu-group-${index1}-item-${index2}`}
-                                                    id={`menu-group-${index1}-item-${index2}`}
-                                                    onClick={() =>
-                                                        navigateToLink(submenuItem.linkTo, submenuItem.target)
-                                                    }
-                                                    className={classes.menuItem}
-                                                >
-                                                    <ListItemText
-                                                        classes={{
-                                                            primary: classes.ListItemTextPrimary,
-                                                            secondary: classes.ListItemTextSecondary,
-                                                        }}
-                                                        primary={submenuItem.primaryText}
-                                                        secondary={submenuItem.secondaryText}
-                                                    />
-                                                </ListItem>
-                                            );
-                                        })}
-                                </List>
-                            );
+                        menuColumns.map((menuColumn, index1) => {
+                            return renderSingleColumn(index1, classes, menuColumn);
                         })}
                 </div>
             </Collapse>
         );
     };
 
-    const renderMenuItems = items =>
-        items.map((menuItem, index) => {
-            const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
-            return (
-                <span className="menu-item-container" key={`menucontainer-item-${index}`}>
-                    <ListItem
-                        className={classes.submenus}
-                        button
-                        key={`submenus-item-${index}`}
-                        id={`submenus-item-${index}`}
-                        onClick={() => clickMenuItem(menuItem)}
-                    >
-                        <ListItemText
-                            classes={{
-                                primary: classes.ListItemTextPrimary,
-                                secondary: classes.ListItemTextSecondary,
-                            }}
-                            primary={menuItem.primaryText}
-                            secondary={menuItem.secondaryText}
-                        />
-                        {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
-                        {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
-                    </ListItem>
-                    {hasChildren && renderMenuChildren(menuItem, index, classes)}
-                </span>
-            );
-        });
+    const renderSingleMenu = (menuItem, index) => {
+        const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
+        return (
+            <span className="menu-item-container" key={`menucontainer-item-${index}`}>
+                <ListItem
+                    className={classes.submenus}
+                    button
+                    key={`submenus-item-${index}`}
+                    id={`submenus-item-${index}`}
+                    onClick={() => clickMenuItem(menuItem)}
+                >
+                    <ListItemText
+                        classes={{
+                            primary: classes.ListItemTextPrimary,
+                            secondary: classes.ListItemTextSecondary,
+                        }}
+                        primary={menuItem.primaryText}
+                        secondary={menuItem.secondaryText}
+                    />
+                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
+                </ListItem>
+                {hasChildren && renderSubMenu(menuItem, index, classes)}
+            </span>
+        );
+    };
 
     if (menuOpen && !docked) {
         // set focus on menu on mobile view if menu is opened
@@ -316,7 +317,9 @@ export function Megamenu(props) {
     return (
         <div className={classes.megamenu}>
             <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
-                {renderMenuItems(menuItems)}
+                {menuItems.map((menuItem, index) => {
+                    return renderSingleMenu(menuItem, index);
+                })}
                 {props.hasCloseItem && renderCloseItem()}
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
