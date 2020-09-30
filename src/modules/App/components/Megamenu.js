@@ -1,4 +1,4 @@
-import React, { useEffect, createRef } from 'react';
+import React, { createRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // MUI 1
 import List from '@material-ui/core/List';
@@ -190,7 +190,6 @@ export function Megamenu(props) {
         );
     }
 
-    // const [menuRef, setSubMenuRef] = React.useState(menuItems.forEach(createRef()));
     const menuRef = createRef();
 
     // an array so we can control each submenu separately
@@ -208,12 +207,22 @@ export function Megamenu(props) {
         setSubMenuOpen(newValues);
     };
 
+    const isAnyMenuOpen = () => {
+        return !!Object.values(isSubMenuOpen).find(item => {
+            return item === true;
+        });
+    };
+
     const closeAllSubMenus = () => {
+        if (!isAnyMenuOpen()) {
+            return false;
+        }
         const newValues = [];
         Object.keys(isSubMenuOpen).forEach(key => {
-            newValues[key] = defaultMenuPosition; // initialSubMenus[key];
+            newValues[key] = defaultMenuPosition;
         });
         setSubMenuOpen(newValues);
+        return true;
     };
 
     useOnClickOutside(menuRef, () => closeAllSubMenus(false));
@@ -374,19 +383,12 @@ export function Megamenu(props) {
 
 Megamenu.propTypes = {
     hasCloseItem: PropTypes.bool,
-    logoImage: PropTypes.string,
-    logoText: PropTypes.string,
     logoLink: PropTypes.string,
     menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
-    locale: PropTypes.shape({
-        skipNavTitle: PropTypes.string,
-        skipNavAriaLabel: PropTypes.string,
-        closeMenuLabel: PropTypes.string,
-    }),
     classes: PropTypes.object,
 };
 
@@ -397,10 +399,7 @@ Megamenu.defaultProps = {
 
 export function isSame(prevProps, nextProps) {
     return (
-        nextProps.logoImage === prevProps.logoImage &&
-        nextProps.logoText === prevProps.logoText &&
         nextProps.menuOpen === prevProps.menuOpen &&
-        JSON.stringify(nextProps.locale) === JSON.stringify(prevProps.locale) &&
         JSON.stringify(nextProps.menuItems) === JSON.stringify(prevProps.menuItems) &&
         nextProps.docked === prevProps.docked
     );
