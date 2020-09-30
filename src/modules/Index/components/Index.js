@@ -43,8 +43,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                   return {
                       original: item.img_url,
                       thumbnail: item.img_url,
-                      originalTitle: '',
-                      originalAlt: '',
+                      originalTitle: item.title,
+                      originalAlt: item.img_alt,
                       thumbnailAlt: item.img_alt,
                       thumbnailTitle: item.title,
                   };
@@ -64,14 +64,12 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const handleLocationClose = () => {
         setAnchorEl(null);
     };
-
     const handlePrintClick = event => {
         setAnchorPrintEl(event.currentTarget);
     };
     const handlePrintClose = () => {
         setAnchorPrintEl(null);
     };
-
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
@@ -82,7 +80,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             return <span>Good evening</span>;
         }
     };
-
     const circleColor = value => {
         if (value < 25) {
             return 'red';
@@ -95,7 +92,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
         }
         return '#999';
     };
-
     return (
         <StandardPage>
             <div className="layout-card" style={{ marginTop: 12, marginBottom: 50 }}>
@@ -429,7 +425,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             >
                                 {locale.Computers.map((item, index) => {
                                     const percent = parseInt((item.free / item.total) * 100, 10);
-                                    console.log(item.free, item.total, percent, circleColor(percent));
                                     return (
                                         <Grid
                                             container
