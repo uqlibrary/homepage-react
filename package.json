@@ -185,7 +185,7 @@
         "react-hot-loader": "4.1.2",
         "react-html-parser": "^2.0.2",
         "react-image": "^2.2.0",
-        "react-image-gallery": "^1.0.8",
+        "react-image-gallery": "github:uqlibrary/github.com/uqlibrary/react-image-gallery#master",
         "react-infinite": "0.13.0",
         "react-json-pretty": "^2.1.0",
         "react-json-tree": "0.11.0",
