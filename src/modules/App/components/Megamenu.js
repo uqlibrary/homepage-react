@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, createRef } from 'react';
 import PropTypes from 'prop-types';
 // MUI 1
 import List from '@material-ui/core/List';
@@ -159,19 +159,64 @@ const styles = theme => {
 export function Megamenu(props) {
     const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
 
+    // from https://usehooks.com/useOnClickOutside/
+    function useOnClickOutside(ref, handler) {
+        useEffect(
+            () => {
+                const listener = event => {
+                    // Do nothing if clicking ref's element or descendent elements
+                    if (!ref.current || ref.current.contains(event.target)) {
+                        return;
+                    }
+
+                    handler(event);
+                };
+
+                document.addEventListener('mousedown', listener);
+                document.addEventListener('touchstart', listener);
+
+                return () => {
+                    document.removeEventListener('mousedown', listener);
+                    document.removeEventListener('touchstart', listener);
+                };
+            },
+            // Add ref and handler to effect dependencies
+            // It's worth noting that because passed in handler is a new ...
+            // ... function on every render that will cause this effect ...
+            // ... callback/cleanup to run every render. It's not a big deal ...
+            // ... but to optimize you can wrap handler in useCallback before ...
+            // ... passing it into this hook.
+            [ref, handler],
+        );
+    }
+
+    // const [menuRef, setSubMenuRef] = React.useState(menuItems.forEach(createRef()));
+    const menuRef = createRef();
+
     // an array so we can control each submenu separately
     const initialSubMenus = [];
-    menuItems.forEach(item => (initialSubMenus[item.id] = false));
+    const defaultMenuPosition = false;
+    menuItems.forEach(item => (initialSubMenus[item.id] = defaultMenuPosition));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
 
     const setParticularSubMenuOpen = (changingId, newOpen) => {
         // using an array allows us to update one element of the open/closed array, to match one menuitem change
-        const newValue = [];
+        const newValues = [];
         Object.keys(isSubMenuOpen).forEach(key => {
-            newValue[key] = key === changingId ? newOpen : initialSubMenus[key];
+            newValues[key] = key === changingId ? newOpen : initialSubMenus[key];
         });
-        setSubMenuOpen(newValue);
+        setSubMenuOpen(newValues);
     };
+
+    const closeAllSubMenus = () => {
+        const newValues = [];
+        Object.keys(isSubMenuOpen).forEach(key => {
+            newValues[key] = defaultMenuPosition; // initialSubMenus[key];
+        });
+        setSubMenuOpen(newValues);
+    };
+
+    useOnClickOutside(menuRef, () => closeAllSubMenus(false));
 
     const focusOnElementId = elementId => {
         if (document.getElementById(elementId)) {
@@ -316,7 +361,7 @@ export function Megamenu(props) {
 
     return (
         <div className={classes.megamenu}>
-            <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
+            <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1} ref={menuRef}>
                 {menuItems.map((menuItem, index) => {
                     return renderSingleMenu(menuItem, index);
                 })}
