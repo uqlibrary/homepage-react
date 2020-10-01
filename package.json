@@ -177,6 +177,7 @@
         "prop-types": "^15.7.2",
         "raven-js": "^3.24.2",
         "react": "^16.8",
+        "react-aria-live": "^2.0.5",
         "react-dom": ">=16.8",
         "react-dropzone": "^6.2.4",
         "react-event-listener": "^0.6.4",
