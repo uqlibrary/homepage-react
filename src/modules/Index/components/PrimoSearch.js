@@ -139,7 +139,6 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             disableClearable
                             openOnFocus
                             clearOnEscape
-                            open
                             options={
                                 (!!suggestions &&
                                     suggestions
