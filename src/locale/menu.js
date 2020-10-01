@@ -7,58 +7,9 @@ export default {
     publicmenu: [
         {
             id: 'libraryServices',
-            dataTestid: 'connect-services-link',
             linkTo: 'https://web.library.uq.edu.au/library-services',
             primaryText: 'Library services',
             submenuItems: [
-                {
-                    primaryText: 'COVID-19',
-                    secondaryText: 'Latest updates and service info',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/covid-19',
-                    column: 2,
-                },
-                {
-                    primaryText: 'Your librarian',
-                    secondaryText: 'Expert advice for your discipline',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/liaison-librarians',
-                    column: 2,
-                },
-                {
-                    primaryText: 'Book a room',
-                    secondaryText: 'Student meeting and study rooms',
-                    linkTo: 'https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb',
-                    column: 2,
-                },
-                {
-                    primaryText: 'Training',
-                    secondaryText: 'Online & in-person classes',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/training',
-                    column: 2,
-                },
-                {
-                    primaryText: 'I.T.',
-                    secondaryText: 'Printing, WiFi, available computers',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/it',
-                    column: 2,
-                },
-                {
-                    primaryText: 'Copyright advice',
-                    secondaryText: 'For teaching, research, publishing ...',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/copyright-advice',
-                    column: 2,
-                },
-                {
-                    primaryText: 'Digitisation',
-                    secondaryText: 'Convert material to digital format',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/digitisation',
-                    column: 2,
-                },
-                {
-                    primaryText: 'Special collections',
-                    secondaryText: 'Search, request, access & copy',
-                    linkTo: 'https://web.library.uq.edu.au/library-services/special-collections',
-                    column: 2,
-                },
                 {
                     primaryText: 'for Students',
                     secondaryText: 'Reading lists, past exams ...',
@@ -124,11 +75,58 @@ export default {
                     linkTo: 'https://web.library.uq.edu.au/library-services/for-other-libraries',
                     column: 1,
                 },
+                {
+                    primaryText: 'COVID-19',
+                    secondaryText: 'Latest updates and service info',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/covid-19',
+                    column: 2,
+                },
+                {
+                    primaryText: 'Your librarian',
+                    secondaryText: 'Expert advice for your discipline',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/liaison-librarians',
+                    column: 2,
+                },
+                {
+                    primaryText: 'Book a room',
+                    secondaryText: 'Student meeting and study rooms',
+                    linkTo: 'https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb',
+                    column: 2,
+                },
+                {
+                    primaryText: 'Training',
+                    secondaryText: 'Online & in-person classes',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/training',
+                    column: 2,
+                },
+                {
+                    primaryText: 'I.T.',
+                    secondaryText: 'Printing, WiFi, available computers',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/it',
+                    column: 2,
+                },
+                {
+                    primaryText: 'Copyright advice',
+                    secondaryText: 'For teaching, research, publishing ...',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/copyright-advice',
+                    column: 2,
+                },
+                {
+                    primaryText: 'Digitisation',
+                    secondaryText: 'Convert material to digital format',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/digitisation',
+                    column: 2,
+                },
+                {
+                    primaryText: 'Special collections',
+                    secondaryText: 'Search, request, access & copy',
+                    linkTo: 'https://web.library.uq.edu.au/library-services/special-collections',
+                    column: 2,
+                },
             ],
         },
         {
             id: 'researchToolsTechniques',
-            dataTestid: 'connect-research-link',
             linkTo: 'https://web.library.uq.edu.au/research-tools-techniques',
             primaryText: 'Research tools & techniques',
             submenuItems: [
@@ -202,7 +200,6 @@ export default {
         },
         {
             id: 'collections',
-            dataTestid: 'connect-collections-link',
             linkTo: 'https://web.library.uq.edu.au/collections',
             primaryText: 'Collections',
             submenuItems: [
@@ -230,7 +227,6 @@ export default {
         },
         {
             id: 'borrowingRequesting',
-            dataTestid: 'connect-borrowing-link',
             linkTo: 'https://web.library.uq.edu.au/borrowing-requesting',
             primaryText: 'Borrowing & requesting',
             submenuItems: [
@@ -277,7 +273,6 @@ export default {
         },
         {
             id: 'locationsHours',
-            dataTestid: 'connect-locations-link',
             linkTo: 'https://web.library.uq.edu.au/locations-hours',
             primaryText: 'Locations & hours',
             shiftLeft: true,
@@ -385,7 +380,6 @@ export default {
         },
         {
             id: 'about',
-            dataTestid: 'connect-about-link',
             linkTo: 'https://web.library.uq.edu.au/about-us',
             primaryText: 'About',
             shiftLeft: true,
@@ -464,7 +458,6 @@ export default {
         },
         {
             id: 'contactUs',
-            dataTestid: 'connect-contact-link',
             linkTo: 'https://web.library.uq.edu.au/contact-us',
             primaryText: 'Contact us',
         },

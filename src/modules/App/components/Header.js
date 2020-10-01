@@ -186,7 +186,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
             <Grid item xs={12} className={classes.topHeader}>
                 <Grid container alignItems={'center'}>
                     <Hidden lgUp>
-                        <Grid item id="hamburger">
+                        <Grid item id="hamburger" data-testid="hamburger">
                             {/* hamburger button */}
                             <Tooltip
                                 title={locale.global.mainNavButton.tooltip}

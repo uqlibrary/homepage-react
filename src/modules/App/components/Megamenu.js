@@ -233,14 +233,16 @@ export function Megamenu(props) {
         }
     };
 
-    const navigateToLink = (url, target = '_top') => {
+    const navigateToLink = (url, target = null) => {
         if (!!url) {
             if (url.indexOf('http') === -1) {
                 // internal link
                 props.history.push(url);
-            } else {
+            } else if (target !== null) {
                 // external link
                 window.open(url, target);
+            } else {
+                window.location.assign(url);
             }
         }
     };
@@ -248,7 +250,7 @@ export function Megamenu(props) {
     function clickMenuItem(menuItem) {
         return !!menuItem.submenuItems && menuItem.submenuItems.length > 0
             ? setParticularSubMenuOpen(menuItem.id, !isSubMenuOpen[menuItem.id])
-            : navigateToLink(menuItem.linkTo, menuItem.target);
+            : navigateToLink(menuItem.linkTo, menuItem.target || null);
     }
 
     function renderSingleColumn(index, classes, menuColumn) {
@@ -266,9 +268,10 @@ export function Megamenu(props) {
                         return (
                             <ListItem
                                 button
+                                data-testid={`menu-group-${index}-item-${index2}`}
                                 key={`menu-group-${index}-item-${index2}`}
                                 id={`menu-group-${index}-item-${index2}`}
-                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target)}
+                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
                                 className={classes.menuItem}
                             >
                                 <ListItemText
@@ -318,8 +321,9 @@ export function Megamenu(props) {
         return (
             <span className="menu-item-container" key={`menucontainer-item-${index}`}>
                 <ListItem
-                    className={classes.submenus}
                     button
+                    className={classes.submenus}
+                    data-testid={`submenus-item-${index}`}
                     key={`submenus-item-${index}`}
                     id={`submenus-item-${index}`}
                     onClick={() => clickMenuItem(menuItem)}
@@ -352,8 +356,9 @@ export function Megamenu(props) {
     function renderCloseItem() {
         return (
             <ListItem
-                className={classes.submenus}
                 button
+                className={classes.submenus}
+                data-testid="submenus-item-close"
                 key={'submenus-item-close'}
                 id={'submenus-item-close'}
                 onClick={() => toggleMenu()}
@@ -370,7 +375,14 @@ export function Megamenu(props) {
 
     return (
         <div className={classes.megamenu}>
-            <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1} ref={menuRef}>
+            <List
+                component="nav"
+                data-testid="mainMenu"
+                id="mainMenu"
+                className={classes.mainMenu}
+                tabIndex={-1}
+                ref={menuRef}
+            >
                 {menuItems.map((menuItem, index) => {
                     return renderSingleMenu(menuItem, index);
                 })}
