@@ -13,8 +13,6 @@ import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 
 const primoPrefix = '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0';
 
-const primoPrefix = '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0';
-
 export default {
     PrimoSearch: {
         typeSelect: {
