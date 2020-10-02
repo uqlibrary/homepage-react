@@ -138,12 +138,12 @@ export function ConnectFooter(props) {
         <Grid className={classes.connectFooter} container data-testid="connect-footer">
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
-                    <li>{renderLink(menuLocale.home.primaryText, menuLocale.home, 'homepage')}</li>
+                    <li>{renderLink(menuLocale.menuhome.primaryText, menuLocale.menuhome, 'footermenu-homepage')}</li>
                     {separator}
-                    {menuLocale.menu.map((linkProperties, index) => (
+                    {menuLocale.publicmenu.map((linkProperties, index) => (
                         <Fragment>
                             <li>{renderLink(linkProperties.primaryText, linkProperties, `footermenu-${index}`)}</li>
-                            {index < menuLocale.menu.length - 1 && separator}
+                            {index < menuLocale.publicmenu.length - 1 && separator}
                         </Fragment>
                     ))}
                 </ul>

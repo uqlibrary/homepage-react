@@ -5,9 +5,9 @@ export const fullPath = process.env.FULL_PATH || 'https://fez-staging.library.uq
 export const pidRegExp = 'UQ:[a-z0-9]+';
 export const isFileUrl = route => new RegExp('\\/view\\/UQ:[a-z0-9]+\\/.*').test(route);
 
-const isAdmin = authorDetails => {
-    return authorDetails && (!!authorDetails.is_administrator || !!authorDetails.is_super_administrator);
-};
+// const isAdmin = authorDetails => {
+//     return authorDetails && (!!authorDetails.is_administrator || !!authorDetails.is_super_administrator);
+// };
 
 export const getDatastreamVersionQueryString = (fileName, checksum) => {
     if (!checksum) {
@@ -69,64 +69,19 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 export const getMenuConfig = (account, author, authorDetails, disabled) => {
     const homePage = [
         {
-            linkTo: pathConfig.index,
-            ...locale.menu.index,
+            ...locale.menuhome,
             public: true,
         },
     ];
-    const publicPages = [
-        {
-            ...locale.menu.libraryServices,
-            public: true,
-        },
-        {
-            ...locale.menu.researchToolsTechniques,
-            public: true,
-        },
-        {
-            ...locale.menu.collections,
-            public: true,
-        },
-        {
-            ...locale.menu.borrowingRequesting,
-            public: true,
-        },
-        {
-            ...locale.menu.locationsHours,
-            public: true,
-        },
-        {
-            ...locale.menu.about,
-            public: true,
-        },
-        {
-            ...locale.menu.contactUs,
-            public: true,
-        },
-    ];
+
+    const publicPages = [];
+    locale.publicmenu.map(item => {
+        publicPages.push(item);
+    });
 
     if (disabled) {
         return [...homePage, ...publicPages];
     }
 
-    return [
-        ...homePage,
-        ...(account && account.canMasquerade
-            ? [
-                  {
-                      linkTo: pathConfig.admin.masquerade,
-                      ...locale.menu.masquerade,
-                  },
-              ]
-            : []),
-        ...((account && account.canMasquerade) || isAdmin(authorDetails)
-            ? [
-                  {
-                      divider: true,
-                      path: '/234234234242',
-                  },
-              ]
-            : []),
-        ...publicPages,
-    ];
+    return [...publicPages];
 };

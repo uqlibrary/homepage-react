@@ -43,10 +43,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                   return {
                       original: item.img_url,
                       thumbnail: item.img_url,
-                      originalTitle: item.title,
-                      originalAlt: item.img_alt,
-                      thumbnailAlt: item.img_alt,
-                      thumbnailTitle: item.title,
                   };
               })
             : [

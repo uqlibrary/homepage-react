@@ -63,6 +63,9 @@ export const mui1theme = createMuiTheme({
         fontWeightMedium: 400,
         useNextVariants: true,
         suppressDeprecationWarnings: true,
+        caption: {
+            color: '#000',
+        },
     },
     overrides: {
         MuiFormLabel: {

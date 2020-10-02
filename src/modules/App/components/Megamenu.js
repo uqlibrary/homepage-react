@@ -1,11 +1,10 @@
-import React from 'react';
+import React, { createRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 // MUI 1
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
-import Hidden from '@material-ui/core/Hidden';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
@@ -63,12 +62,13 @@ const styles = theme => {
                 zIndex: 999,
             },
         },
-        megaMenu: {
-            margin: '0 auto',
-            // from layout-card
-            maxWidth: '1200px',
-            width: '90%',
+        megamenu: {
+            backgroundColor: '#fff',
+            boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
+            margin: 0,
+            maxWidth: 'initial',
             padding: 0,
+            width: '100%',
         },
         mainMenu: {
             outline: 'none',
@@ -76,57 +76,62 @@ const styles = theme => {
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
                 flexGrow: 1,
+                maxWidth: '1200px',
+                margin: '0 auto',
+                paddingTop: '10px',
+                // remove the flash to grey when we mouse over a top menu
+                '& span > div[role="button"]:hover': {
+                    backgroundColor: 'initial',
+                },
             },
             [theme.breakpoints.down('md')]: {
-                overflowY: 'auto',
-                maxWidth: '25rem',
                 backgroundColor: 'white',
+                height: 'auto',
+                overflowY: 'auto',
+                paddingLeft: '1rem',
                 position: 'absolute',
-                top: '9rem',
+                width: '100%',
                 zIndex: 1000,
-                marginLeft: '-2.5rem',
             },
         },
         ListItemTextPrimary: {
-            ...theme.typography.body2,
             whiteSpace: 'nowrap',
-            fontWeight: theme.typography.fontWeightMedium,
         },
         ListItemTextSecondary: {
             ...theme.typography.caption,
         },
-        // mainMenuFooter: {
-        //     paddingLeft: '12px',
-        //     paddingBottom: '12px',
-        //     fontSize: theme.typography.caption.fontSize,
-        //     color: theme.palette.secondary.main,
-        // },
         iconButton: {
             color: theme.palette.white.main,
         },
         menuDropdown: {
-            // new
             backgroundColor: '#f2f2f2',
             zIndex: 1000,
             position: 'absolute',
-            // },
             [theme.breakpoints.down('md')]: {
-                width: '100%',
+                width: '96%',
+            },
+            [theme.breakpoints.up('lg')]: {
+                top: '66px',
             },
         },
         shiftLeft: {
-            [theme.breakpoints.down('md')]: {
-                marginLeft: '-20rem',
-            },
+            marginLeft: '-20rem',
         },
         submenus: {
             [theme.breakpoints.up('lg')]: {
                 flexDirection: 'row',
             },
         },
-        menuGroups: {
+        menuColumns: {
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
+            },
+            '& > div': {
+                marginTop: '6px',
+                borderLeft: 'thin solid #ccc',
+            },
+            '& div:first-child': {
+                borderLeft: 'none',
             },
         },
         verticalMenuList: {
@@ -145,26 +150,82 @@ const styles = theme => {
             verticalAlign: 'top',
             [theme.breakpoints.down('lg')]: {
                 paddingLeft: '2rem',
+                paddingTop: '0',
             },
         },
     };
 };
 
 export function Megamenu(props) {
-    // an array so we can control each submenu separately
     const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
+
+    // from https://usehooks.com/useOnClickOutside/
+    function useOnClickOutside(ref, handler) {
+        useEffect(
+            () => {
+                const listener = event => {
+                    // Do nothing if clicking ref's element or descendent elements
+                    if (!ref.current || ref.current.contains(event.target)) {
+                        return;
+                    }
+
+                    handler(event);
+                };
+
+                document.addEventListener('mousedown', listener);
+                document.addEventListener('touchstart', listener);
+
+                return () => {
+                    document.removeEventListener('mousedown', listener);
+                    document.removeEventListener('touchstart', listener);
+                };
+            },
+            // Add ref and handler to effect dependencies
+            // It's worth noting that because passed in handler is a new ...
+            // ... function on every render that will cause this effect ...
+            // ... callback/cleanup to run every render. It's not a big deal ...
+            // ... but to optimize you can wrap handler in useCallback before ...
+            // ... passing it into this hook.
+            [ref, handler],
+        );
+    }
+
+    const menuRef = createRef();
+
+    // an array so we can control each submenu separately
     const initialSubMenus = [];
-    menuItems.forEach(item => (initialSubMenus[item.id] = false));
+    const defaultMenuPosition = false;
+    menuItems.forEach(item => (initialSubMenus[item.id] = defaultMenuPosition));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
 
     const setParticularSubMenuOpen = (changingId, newOpen) => {
-        // array allows us to update one element of the open/closed array, to match one menuitem change
-        const newValue = [];
+        // using an array allows us to update one element of the open/closed array, to match one menuitem change
+        const newValues = [];
         Object.keys(isSubMenuOpen).forEach(key => {
-            newValue[key] = key === changingId ? newOpen : initialSubMenus[key];
+            newValues[key] = key === changingId ? newOpen : initialSubMenus[key];
         });
-        setSubMenuOpen(newValue);
+        setSubMenuOpen(newValues);
     };
+
+    const isAnyMenuOpen = () => {
+        return !!Object.values(isSubMenuOpen).find(item => {
+            return item === true;
+        });
+    };
+
+    const closeAllSubMenus = () => {
+        if (!isAnyMenuOpen()) {
+            return false;
+        }
+        const newValues = [];
+        Object.keys(isSubMenuOpen).forEach(key => {
+            newValues[key] = defaultMenuPosition;
+        });
+        setSubMenuOpen(newValues);
+        return true;
+    };
+
+    useOnClickOutside(menuRef, () => closeAllSubMenus(false));
 
     const focusOnElementId = elementId => {
         if (document.getElementById(elementId)) {
@@ -172,39 +233,71 @@ export function Megamenu(props) {
         }
     };
 
-    const navigateToLink = (url, target = '_top') => {
+    const navigateToLink = (url, target = null) => {
         if (!!url) {
             if (url.indexOf('http') === -1) {
                 // internal link
                 props.history.push(url);
-            } else {
+            } else if (target !== null) {
                 // external link
                 window.open(url, target);
+            } else {
+                window.location.assign(url);
             }
         }
-
-        // if (!props.docked) {
-        //     toggleMenu();
-        // }
     };
 
     function clickMenuItem(menuItem) {
         return !!menuItem.submenuItems && menuItem.submenuItems.length > 0
             ? setParticularSubMenuOpen(menuItem.id, !isSubMenuOpen[menuItem.id])
-            : navigateToLink(menuItem.linkTo, menuItem.target);
+            : navigateToLink(menuItem.linkTo, menuItem.target || null);
     }
 
-    const renderMenuChildren = (menuItem, index, classes) => {
-        const menuGroups = [];
-        menuItem.submenuItems
-            // .sort((a, b) => (a.column || null) - (b.column || null))
-            .map(submenuItem => {
-                const index = submenuItem.column || 1;
-                if (!menuGroups[index]) {
-                    menuGroups[index] = [];
-                }
-                menuGroups[index].push(submenuItem);
-            });
+    function renderSingleColumn(index, classes, menuColumn) {
+        return (
+            <List
+                component="div"
+                disablePadding
+                key={`menu-group-${index}`}
+                id={`menu-group-${index}`}
+                className={classes.verticalMenuList}
+            >
+                {!!menuColumn &&
+                    menuColumn.length > 0 &&
+                    menuColumn.map((submenuItem, index2) => {
+                        return (
+                            <ListItem
+                                button
+                                data-testid={`menu-group-${index}-item-${index2}`}
+                                key={`menu-group-${index}-item-${index2}`}
+                                id={`menu-group-${index}-item-${index2}`}
+                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
+                                className={classes.menuItem}
+                            >
+                                <ListItemText
+                                    classes={{
+                                        primary: classes.ListItemTextPrimary,
+                                        secondary: classes.ListItemTextSecondary,
+                                    }}
+                                    primary={submenuItem.primaryText}
+                                    secondary={submenuItem.secondaryText}
+                                />
+                            </ListItem>
+                        );
+                    })}
+            </List>
+        );
+    }
+
+    const renderSubMenu = (menuItem, index, classes) => {
+        const menuColumns = [];
+        menuItem.submenuItems.map(submenuItem => {
+            const index = submenuItem.column || 1;
+            if (!menuColumns[index]) {
+                menuColumns[index] = [];
+            }
+            menuColumns[index].push(submenuItem);
+        });
 
         return (
             <Collapse
@@ -213,107 +306,87 @@ export function Megamenu(props) {
                 unmountOnExit
                 className={classNames(!!menuItem.shiftLeft ? classes.shiftLeft : '', classes.menuDropdown)}
             >
-                <div className={classes.menuGroups}>
-                    {menuGroups.length > 0 &&
-                        menuGroups.map((menuGroup, index1) => {
-                            return (
-                                <List
-                                    component="div"
-                                    disablePadding
-                                    key={`menu-group-${index1}`}
-                                    id={`menu-group-${index1}`}
-                                    className={classes.verticalMenuList}
-                                >
-                                    {!!menuGroup &&
-                                        menuGroup.length > 0 &&
-                                        menuGroup.map((submenuItem, index2) => {
-                                            return (
-                                                <ListItem
-                                                    button
-                                                    key={`menu-group-${index1}-item-${index2}`}
-                                                    id={`menu-group-${index1}-item-${index2}`}
-                                                    onClick={() =>
-                                                        navigateToLink(submenuItem.linkTo, submenuItem.target)
-                                                    }
-                                                    className={classes.menuItem}
-                                                >
-                                                    <ListItemText
-                                                        classes={{
-                                                            primary: classes.ListItemTextPrimary,
-                                                            secondary: classes.ListItemTextSecondary,
-                                                        }}
-                                                        primary={submenuItem.primaryText}
-                                                        secondary={submenuItem.secondaryText}
-                                                    />
-                                                </ListItem>
-                                            );
-                                        })}
-                                </List>
-                            );
+                <div className={classes.menuColumns}>
+                    {menuColumns.length > 0 &&
+                        menuColumns.map((menuColumn, index1) => {
+                            return renderSingleColumn(index1, classes, menuColumn);
                         })}
                 </div>
             </Collapse>
         );
     };
 
-    const renderMenuItems = items =>
-        items.map((menuItem, index) => {
-            const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
-            return (
-                <span className="menu-item-container" key={`menucontainer-item-${index}`}>
-                    <ListItem
-                        className={classes.submenus}
-                        button
-                        key={`submenus-item-${index}`}
-                        id={`submenus-item-${index}`}
-                        onClick={() => clickMenuItem(menuItem)}
-                    >
-                        <ListItemText
-                            classes={{
-                                primary: classes.ListItemTextPrimary,
-                                secondary: classes.ListItemTextSecondary,
-                            }}
-                            primary={menuItem.primaryText}
-                            secondary={menuItem.secondaryText}
-                        />
-                        {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
-                        {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
-                    </ListItem>
-                    {hasChildren && renderMenuChildren(menuItem, index, classes)}
-                </span>
-            );
-        });
+    const renderSingleMenu = (menuItem, index) => {
+        const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
+        return (
+            <span className="menu-item-container" key={`menucontainer-item-${index}`}>
+                <ListItem
+                    button
+                    className={classes.submenus}
+                    data-testid={`submenus-item-${index}`}
+                    key={`submenus-item-${index}`}
+                    id={`submenus-item-${index}`}
+                    onClick={() => clickMenuItem(menuItem)}
+                >
+                    <ListItemText
+                        classes={{
+                            primary: classes.ListItemTextPrimary,
+                            secondary: classes.ListItemTextSecondary,
+                        }}
+                        primary={menuItem.primaryText}
+                        secondary={menuItem.secondaryText}
+                    />
+                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
+                </ListItem>
+                {hasChildren && renderSubMenu(menuItem, index, classes)}
+            </span>
+        );
+    };
 
     if (menuOpen && !docked) {
         // set focus on menu on mobile view if menu is opened
         setTimeout(focusOnElementId.bind(this, 'mainMenu'), 0);
     }
 
-    const isFullDesktop = window.matchMedia('(min-width: 1279px)').matches;
-    if (!menuOpen && !isFullDesktop) {
+    if (!menuOpen) {
         return <div className="megamenu empty" />;
     }
 
+    function renderCloseItem() {
+        return (
+            <ListItem
+                button
+                className={classes.submenus}
+                data-testid="submenus-item-close"
+                key={'submenus-item-close'}
+                id={'submenus-item-close'}
+                onClick={() => toggleMenu()}
+            >
+                <ListItemText
+                    classes={{
+                        primary: classes.ListItemTextPrimary,
+                    }}
+                    primary="Close"
+                />
+            </ListItem>
+        );
+    }
+
     return (
-        <div className={classes.megaMenu}>
-            <List component="nav" id="mainMenu" className={classes.mainMenu} tabIndex={-1}>
-                {renderMenuItems(menuItems)}
-                <Hidden lgUp>
-                    <ListItem
-                        className={classes.submenus}
-                        button
-                        key={'submenus-item-close'}
-                        id={'submenus-item-close'}
-                        onClick={() => toggleMenu()}
-                    >
-                        <ListItemText
-                            classes={{
-                                primary: classes.ListItemTextPrimary,
-                            }}
-                            primary="Close"
-                        />
-                    </ListItem>
-                </Hidden>
+        <div className={classes.megamenu}>
+            <List
+                component="nav"
+                data-testid="mainMenu"
+                id="mainMenu"
+                className={classes.mainMenu}
+                tabIndex={-1}
+                ref={menuRef}
+            >
+                {menuItems.map((menuItem, index) => {
+                    return renderSingleMenu(menuItem, index);
+                })}
+                {props.hasCloseItem && renderCloseItem()}
             </List>
             <div id="afterMegamenu" tabIndex={-1} />
         </div>
@@ -321,28 +394,24 @@ export function Megamenu(props) {
 }
 
 Megamenu.propTypes = {
-    menuItems: PropTypes.array.isRequired,
-    logoImage: PropTypes.string,
-    logoText: PropTypes.string,
+    hasCloseItem: PropTypes.bool,
     logoLink: PropTypes.string,
+    menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
-    locale: PropTypes.shape({
-        skipNavTitle: PropTypes.string,
-        skipNavAriaLabel: PropTypes.string,
-        closeMenuLabel: PropTypes.string,
-    }),
     classes: PropTypes.object,
+};
+
+Megamenu.defaultProps = {
+    hasCloseItem: false,
+    menuOpen: true,
 };
 
 export function isSame(prevProps, nextProps) {
     return (
-        nextProps.logoImage === prevProps.logoImage &&
-        nextProps.logoText === prevProps.logoText &&
         nextProps.menuOpen === prevProps.menuOpen &&
-        JSON.stringify(nextProps.locale) === JSON.stringify(prevProps.locale) &&
         JSON.stringify(nextProps.menuItems) === JSON.stringify(prevProps.menuItems) &&
         nextProps.docked === prevProps.docked
     );

@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
+import Hidden from '@material-ui/core/Hidden';
 
 browserUpdate({
     required: {
@@ -54,21 +55,24 @@ const styles = theme => ({
         maxHeight: '100%',
         height: '100%',
     },
-    contentBox: {
-        paddingTop: 0,
-        // from content-container
-        width: '100%',
-        height: 'calc(100% - 90px)',
-        overflowY: 'auto',
-        overflowX: 'hidden',
-        boxSizing: 'border-box',
-        marginTop: '0',
+    titleLink: {
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+        color: theme.palette.common.white,
+        '& a': {
+            textOverflow: 'ellipsis',
+            overflow: 'hidden',
+            textDecoration: 'none',
+            '&:hover': {
+                textDecoration: 'underline',
+            },
+        },
     },
-    // nowrap: {
-    //     whiteSpace: 'nowrap',
-    //     overflow: 'hidden',
-    //     textOverflow: 'ellipsis',
-    // },
+    nowrap: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+    },
 });
 
 export class AppClass extends PureComponent {
@@ -164,9 +168,7 @@ export class AppClass extends PureComponent {
 
     isPublicPage = menuItems => {
         return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length >
-                0 ||
-            new RegExp(routes.pathConfig.records.view(`(${routes.pidRegExp})`)).test(this.props.location.pathname)
+            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
         );
     };
 
@@ -214,11 +216,11 @@ export class AppClass extends PureComponent {
                 ...locale.global.loginAlert,
                 action: this.redirectUserToLogin(),
             };
-        } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            // user is logged in, but doesn't have eSpace author identifier
-            userStatusAlert = {
-                ...locale.global.notRegisteredAuthorAlert,
-            };
+            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
+            //     // user is logged in, but doesn't have eSpace author identifier
+            //     userStatusAlert = {
+            //         ...locale.global.notRegisteredAuthorAlert,
+            //     };
         }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
@@ -229,26 +231,34 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <Header
-                    isAuthorizedUser={isAuthorizedUser}
-                    account={this.props.account}
-                    toggleMenu={this.toggleMenu}
-                    menuOpen={this.state.menuOpen}
-                />
+                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
                 <ChatStatus status={this.props.chatStatus} />
-                <div className={classes.contentBox} id="content-container">
-                    <Megamenu
-                        menuItems={menuItems}
-                        history={this.props.history}
-                        isMobile={this.state.isMobile}
-                        locale={{
-                            skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                            skipNavTitle: locale.global.skipNav.title,
-                            closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                        }}
-                        toggleMenu={this.toggleMenu}
-                        menuOpen={this.state.menuOpen}
-                    />
+                <div className="content-container" id="content-container">
+                    <Hidden lgUp>
+                        <Megamenu
+                            hasCloseItem
+                            history={this.props.history}
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                            menuItems={menuItems}
+                            menuOpen={this.state.menuOpen}
+                            toggleMenu={this.toggleMenu}
+                        />
+                    </Hidden>
+                    <Hidden mdDown>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                        />
+                    </Hidden>
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}

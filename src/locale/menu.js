@@ -1,10 +1,10 @@
 export default {
-    home: {
+    menuhome: {
         dataTestid: 'connect-home-link',
         linkTo: 'http://www.library.uq.edu.au',
         primaryText: 'Library home',
     },
-    menu: [
+    publicmenu: [
         {
             id: 'libraryServices',
             dataTestid: 'connect-services-link',
@@ -388,6 +388,7 @@ export default {
             dataTestid: 'connect-about-link',
             linkTo: 'https://web.library.uq.edu.au/about-us',
             primaryText: 'About',
+            shiftLeft: true,
             submenuItems: [
                 {
                     primaryText: 'Blog',
