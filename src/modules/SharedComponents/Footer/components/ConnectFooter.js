@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { default as locale } from './locale.js';
@@ -119,32 +119,31 @@ export function ConnectFooter(props) {
         }
     };
 
-    const separator = <li className={classes.separator}>&nbsp;|&nbsp;</li>;
-
-    const renderLink = (label, properties, keyLabel) => {
-        return (
-            <a
-                data-testid={properties.dataTestid || null}
-                href={properties.linkTo}
-                key={`${keyLabel}`}
-                rel={properties.relOpener || 'noopener noreferrer'}
-            >
-                {label}
-            </a>
-        );
-    };
+    const separator = keyLabel => (
+        <li className={classes.separator} key={`${keyLabel}`}>
+            &nbsp;|&nbsp;
+        </li>
+    );
 
     return (
         <Grid className={classes.connectFooter} container data-testid="connect-footer">
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
-                    <li>{renderLink(menuLocale.menuhome.primaryText, menuLocale.menuhome, 'footermenu-homepage')}</li>
-                    {separator}
+                    <li>
+                        <a data-testid="footermenu-homepage" href={menuLocale.menuhome.linkTo}>
+                            {menuLocale.menuhome.primaryText}
+                        </a>
+                    </li>
+                    {separator('footerseparator-homepage')}
                     {menuLocale.publicmenu.map((linkProperties, index) => (
-                        <Fragment>
-                            <li>{renderLink(linkProperties.primaryText, linkProperties, `footermenu-${index}`)}</li>
-                            {index < menuLocale.publicmenu.length - 1 && separator}
-                        </Fragment>
+                        <span key={`footerli-${index}`}>
+                            <li>
+                                <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                                    {linkProperties.primaryText}
+                                </a>
+                            </li>
+                            {index < menuLocale.publicmenu.length - 1 && separator(`footerseparator-${index}`)}
+                        </span>
                     ))}
                 </ul>
             </Grid>
@@ -158,11 +157,10 @@ export function ConnectFooter(props) {
                 </Grid>
                 <Grid container className={classes.socialButtonClass}>
                     {locale.connectFooter.buttonSocial.map((item, index) => (
-                        <Grid aria-disabled="false" item role="button" xs={2}>
+                        <Grid aria-disabled="false" item role="button" xs={2} key={`buttonSocial-${index}`}>
                             <IconButton
                                 color="primary"
                                 data-testid={item.dataTestid}
-                                key={`buttonSocial-${index}`}
                                 onClick={() => _navigateToLink(item.linkTo, '_blank')}
                                 title={item.linkMouseOver}
                             >
@@ -174,10 +172,12 @@ export function ConnectFooter(props) {
                 <Grid className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((linkProperties, index) => {
                         return (
-                            <Fragment>
-                                {renderLink(linkProperties.linklabel, linkProperties, `internalLinks-${index}`)}
+                            <span key={`internallabel-${index}`}>
+                                <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                                    {linkProperties.linklabel}
+                                </a>
                                 {index < locale.connectFooter.internalLinks.length - 1 && <span>&nbsp;|&nbsp; </span>}
-                            </Fragment>
+                            </span>
                         );
                     })}
                 </Grid>
