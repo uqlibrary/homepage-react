@@ -61,7 +61,7 @@ const styles = theme => ({
 export function MinimalFooter(props) {
     const { classes } = props;
 
-    function renderLine(item, index, key) {
+    function renderItem(item, index, key) {
         if (item.type === 'link') {
             return (
                 <a
@@ -94,7 +94,7 @@ export function MinimalFooter(props) {
             return ' ';
         }
         if (item.type === 'text') {
-            return item.text + ' ';
+            return item.text;
         }
         if (item.type === 'divider') {
             return ReactHtmlParser('&nbsp; | &nbsp;');
@@ -109,26 +109,26 @@ export function MinimalFooter(props) {
                     <Grid item xs={12} md={9} className={classes.footerContent}>
                         <div>
                             {locale.minimalFooter.leftColumn.line1.map((item, index) => {
-                                return renderLine(item, index, 'leftColumn-line1');
+                                return renderItem(item, index, 'leftColumn-line1');
                             })}
                         </div>
                         <div>
                             {locale.minimalFooter.leftColumn.line2.map((item, index) => {
-                                return renderLine(item, index, 'leftColumn-line2');
+                                return renderItem(item, index, 'leftColumn-line2');
                             })}
                         </div>
                         <div>
                             {locale.minimalFooter.leftColumn.line3.map((item, index) => {
-                                return renderLine(item, index, 'leftColumn-line3');
+                                return renderItem(item, index, 'leftColumn-line3');
                             })}
                         </div>
                     </Grid>
                     <Grid item xs={12} md={3} className={classes.footerLegalDetails}>
                         {locale.minimalFooter.rightColumn.line1.map((item, index) => {
-                            return renderLine(item, index, 'rightColumn-line1');
+                            return renderItem(item, index, 'rightColumn-line1');
                         })}
                         {locale.minimalFooter.rightColumn.line2.map((item, index) => {
-                            return renderLine(item, index, 'rightColumn-line2');
+                            return renderItem(item, index, 'rightColumn-line2');
                         })}
                     </Grid>
                 </Grid>
@@ -136,7 +136,7 @@ export function MinimalFooter(props) {
             <Grid item xs={12} className={classes.siteFooter}>
                 <div>
                     {locale.minimalFooter.bottomBlock.line1.map((item, index) => {
-                        return renderLine(item, index, 'bottomBlock-line1');
+                        return renderItem(item, index, 'bottomBlock-line1');
                     })}
                 </div>
             </Grid>

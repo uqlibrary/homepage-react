@@ -39,9 +39,6 @@ const styles = theme => ({
             [theme.breakpoints.down('sm')]: {
                 display: 'inline-block',
             },
-            '& a': {
-                fontSize: '14px',
-            },
         },
     },
     separator: {
@@ -51,13 +48,14 @@ const styles = theme => ({
         },
     },
     socialButtonClass: {
-        '& a': {
+        '& button': {
             backgroundColor: '#000 !important',
             color: '#fff',
         },
         '& div:first-child': {
             // blog button has to be forced wider
             minWidth: '5em',
+            marginRight: '12px',
         },
         [theme.breakpoints.down('sm')]: {
             maxWidth: '400px',
@@ -106,13 +104,29 @@ const styles = theme => ({
 
 export function ConnectFooter(props) {
     const { classes } = props;
+
+    const _navigateToLink = (url, target = '_self') => {
+        if (!!url) {
+            if (url.indexOf('http') === -1) {
+                // internal link
+                props.history.push(url);
+            } else if (target === '_self') {
+                window.location.assign(url);
+            } else {
+                // external link
+                window.open(url, target);
+            }
+        }
+    };
+
     const separator = <li className={classes.separator}>&nbsp;|&nbsp;</li>;
+
     return (
         <Grid className={classes.connectFooter} container data-testid="connect-footer">
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
                     <li>
-                        <a href={menuLocale.home.linkTo} data-testid={menuLocale.home.dataTestid}>
+                        <a data-testid={menuLocale.home.dataTestid} href={menuLocale.home.linkTo}>
                             {menuLocale.home.primaryText}
                         </a>
                     </li>
@@ -121,8 +135,8 @@ export function ConnectFooter(props) {
                         <Fragment>
                             <li>
                                 <a
-                                    href={item.linkTo}
                                     data-testid={item.dataTestid}
+                                    href={item.linkTo}
                                     rel={item.relOpener || 'noopener noreferrer'}
                                 >
                                     {item.primaryText}
@@ -147,23 +161,22 @@ export function ConnectFooter(props) {
                             <IconButton
                                 color="primary"
                                 data-testid={item.dataTestid}
-                                href={item.linkTo}
                                 key={`buttonSocial-${index}`}
-                                target="_blank"
-                                title={item.linktitle}
+                                onClick={() => _navigateToLink(item.linkTo, '_blank')}
+                                title={item.linkMouseOver}
                             >
                                 {!!item.linklabel ? item.linklabel : item.icon}
                             </IconButton>
                         </Grid>
                     ))}
                 </Grid>
-                <div className={classes.internal}>
+                <Grid className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((item, index) => {
                         return (
                             <Fragment>
                                 <a
-                                    href={item.linkTo}
                                     data-testid={item.dataTestid}
+                                    href={item.linkTo}
                                     key={`internalLinks-${index}`}
                                     rel={item.relOpener || 'noopener noreferrer'}
                                 >
@@ -173,18 +186,18 @@ export function ConnectFooter(props) {
                             </Fragment>
                         );
                     })}
-                </div>
+                </Grid>
             </Grid>
             <Grid item xs={12} md={4} className={classes.giving}>
                 {locale.connectFooter.givingLinks.map((item, index) => {
                     return (
                         <Button
-                            variant="contained"
-                            className={classes.givingButtonClass}
-                            href={item.linkTo}
-                            key={`givingLinks-${index}`}
-                            data-testid={item.dataTestid}
                             children={item.label}
+                            className={classes.givingButtonClass}
+                            data-testid={item.dataTestid}
+                            key={`givingLinks-${index}`}
+                            onClick={() => _navigateToLink(item.linkTo)}
+                            variant="contained"
                         />
                     );
                 })}
@@ -195,6 +208,7 @@ export function ConnectFooter(props) {
 
 ConnectFooter.propTypes = {
     classes: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 ConnectFooter.defaultProps = {

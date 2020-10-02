@@ -74,19 +74,19 @@ export default {
             line1: [
                 {
                     type: 'text',
-                    text: '© The University of Queensland',
+                    text: '© The University of Queensland ',
                 },
             ],
             line2: [
                 {
                     type: 'text',
-                    text: 'Enquiries:',
+                    text: 'Enquiries: ',
                 },
                 {
                     type: 'link',
                     dataTestid: 'footer-enquiries-link',
                     linkLabel: '+61 7 3365 1111',
-                    linktitle: 'UQ Enquiries phone number',
+                    linkMouseOver: 'UQ Enquiries phone number',
                     linkTo: 'tel:+61733651111',
                 },
                 {
@@ -110,7 +110,7 @@ export default {
                 },
                 {
                     type: 'text',
-                    text: '63 942 912 684:',
+                    text: '63 942 912 684 ',
                 },
                 {
                     type: 'divider',
@@ -127,7 +127,7 @@ export default {
                     type: 'link',
                     dataTestid: 'footer-cricos-link',
                     linkLabel: '00025B',
-                    linktitle: 'Provider number',
+                    linkMouseOver: 'Provider number',
                     linkTo: 'https://www.uq.edu.au/about/cricos-link',
                 },
             ],
@@ -142,13 +142,13 @@ export default {
             line2: [
                 {
                     type: 'text',
-                    text: 'Phone:',
+                    text: 'Phone: ',
                 },
                 {
                     type: 'link',
                     dataTestid: 'footer-emergency-link',
                     linkLabel: '3365 3333',
-                    linktitle: 'UQ Emergency phone number',
+                    linkMouseOver: 'UQ Emergency phone number',
                     linkTo: 'tel:+61733653333',
                 },
             ],

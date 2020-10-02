@@ -44,6 +44,7 @@ export class Page extends Component {
         help: PropTypes.object,
         children: PropTypes.any,
         classes: PropTypes.object,
+        history: PropTypes.object,
     };
 
     render() {
@@ -72,10 +73,10 @@ export class Page extends Component {
                     {children}
                 </Grid>
                 <Grid container className={classes.connectFooter}>
-                    <ConnectFooter />
+                    <ConnectFooter history={this.props.history} />
                 </Grid>
                 <Grid container className={classes.minimalFooter}>
-                    <MinimalFooter />
+                    <MinimalFooter history={this.props.history} />
                 </Grid>
             </Grid>
         );
