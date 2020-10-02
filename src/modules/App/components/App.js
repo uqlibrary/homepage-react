@@ -206,6 +206,21 @@ export class AppClass extends PureComponent {
             isHdrStudent && !false,
             false,
         );
+        const isPublicPage = this.isPublicPage(menuItems);
+
+        let userStatusAlert = null;
+        if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
+            // user is not logged in
+            userStatusAlert = {
+                ...locale.global.loginAlert,
+                action: this.redirectUserToLogin(),
+            };
+            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
+            //     // user is logged in, but doesn't have eSpace author identifier
+            //     userStatusAlert = {
+            //         ...locale.global.notRegisteredAuthorAlert,
+            //     };
+        }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
@@ -222,16 +237,16 @@ export class AppClass extends PureComponent {
                     <div style={{ marginBottom: 24 }}>
                         <Hidden mdUp>
                             <Megamenu
-                                menuItems={menuItems}
+                                hasCloseItem
                                 history={this.props.history}
-                                isMobile
                                 locale={{
                                     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                     skipNavTitle: locale.global.skipNav.title,
                                     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                                 }}
-                                toggleMenu={this.toggleMenu}
+                                menuItems={menuItems}
                                 menuOpen={this.state.menuOpen}
+                                toggleMenu={this.toggleMenu}
                             />
                         </Hidden>
                         <Hidden smDown>

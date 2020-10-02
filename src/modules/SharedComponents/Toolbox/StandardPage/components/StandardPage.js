@@ -34,6 +34,7 @@ const styles = theme => ({
     minimalFooter: {
         backgroundColor: '#51247A',
         color: '#d2c1d7',
+        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
     },
 });
 
@@ -43,6 +44,7 @@ export class Page extends Component {
         help: PropTypes.object,
         children: PropTypes.any,
         classes: PropTypes.object,
+        history: PropTypes.object,
     };
 
     render() {
@@ -71,10 +73,10 @@ export class Page extends Component {
                     {children}
                 </Grid>
                 <Grid container className={classes.connectFooter}>
-                    <ConnectFooter />
+                    <ConnectFooter history={this.props.history} />
                 </Grid>
                 <Grid container className={classes.minimalFooter}>
-                    <MinimalFooter />
+                    <MinimalFooter history={this.props.history} />
                 </Grid>
             </Grid>
         );

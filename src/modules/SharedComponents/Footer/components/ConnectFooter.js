@@ -1,17 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import { default as locale } from './locale.js';
+import { default as menuLocale } from 'locale/menu';
+
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
+const uqBlue = 'rgb(14, 98, 235)';
 const styles = theme => ({
     connectFooter: {
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '14px',
         fontWeight: '300',
         lineHeight: '25px',
-        margin: '0 auto',
+        margin: '20px auto 0 auto',
         maxWidth: '1200px',
         position: 'relative',
         '& a': {
@@ -25,9 +29,7 @@ const styles = theme => ({
         },
     },
     navigation: {
-        padding: '20px',
         '& ul': {
-            margin: '0 0 0 20px',
             padding: 0,
         },
         '& li': {
@@ -45,58 +47,19 @@ const styles = theme => ({
             display: 'inline-block',
         },
     },
-    buttonColoredAccent: {
-        display: 'flex', // needed to get the wiiiide button for Giving buttons
-        margin: '10px auto 0 auto',
-        maxWidth: '244px',
-        width: '100%',
-        '& a': {
-            backgroundColor: '#0e62eb',
-            border: '1px solid #0e62eb',
-            borderRadius: '3px',
-            boxShadow:
-                '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2)',
+    socialButtonClass: {
+        '& button': {
+            backgroundColor: '#000 !important',
             color: '#fff',
-            maxWidth: '244px',
-            outlineWidth: 0,
-            padding: '0.7em',
-            textAlign: 'center',
-            transition: 'box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1)',
-            width: '100%',
-            '&:hover': {
-                backgroundColor: '#fff',
-                color: '#0e62eb !important',
-                fontWeight: 'bold',
-                textDecoration: 'none',
-            },
         },
-    },
-    buttonSocial: {
-        maxWidth: '400px',
-        margin: '0 auto',
-        '& div': {
-            backgroundColor: '#000',
-            borderRadius: '4px',
-            height: '33px',
-            margin: '0 5px',
-            padding: '8px 0 0',
-            width: '33px',
-        },
-        '& a': {
-            color: '#fff',
-            display: 'block',
-            margin: 0,
-            textAlign: 'center',
-            textDecoration: 'none',
-            textTransform: 'uppercase',
-        },
-        '& img': {
-            height: '20px',
-            lineHeight: 0,
-            width: '20px',
+        '& div:first-child': {
+            // blog button has to be forced wider
+            minWidth: '5em',
+            marginRight: '12px',
         },
         [theme.breakpoints.down('sm')]: {
-            textAlign: 'center',
+            maxWidth: '400px',
+            margin: '0 auto',
         },
     },
     internal: {
@@ -110,10 +73,23 @@ const styles = theme => ({
     },
     giving: {
         '& div': {
+            marginLeft: 'auto',
             [theme.breakpoints.down('sm')]: {
                 margin: '5px auto',
             },
         },
+        textAlign: 'right',
+    },
+    givingButtonClass: {
+        color: theme.palette.white.main + '!important',
+        backgroundColor: uqBlue,
+        '&:hover': {
+            backgroundColor: theme.palette.white.main,
+            color: uqBlue + ' !important',
+        },
+        width: '70%',
+        marginBottom: '1rem',
+        padding: '1rem',
     },
     contacts: {
         '& div': {
@@ -128,178 +104,108 @@ const styles = theme => ({
 
 export function ConnectFooter(props) {
     const { classes } = props;
+
+    const _navigateToLink = (url, target = '_self') => {
+        if (!!url) {
+            if (url.indexOf('http') === -1) {
+                // internal link
+                props.history.push(url);
+            } else if (target === '_self') {
+                window.location.assign(url);
+            } else {
+                // external link
+                window.open(url, target);
+            }
+        }
+    };
+
+    const separator = keyLabel => (
+        <li className={classes.separator} key={`${keyLabel}`}>
+            &nbsp;|&nbsp;
+        </li>
+    );
+
     return (
-        <Grid className={`${classes.connectFooter}`} container spacing={3}>
-            <Grid item xs={12} md={4} className={`${classes.navigation}`}>
-                {/* if we continue with this display, it should be driven by the json that creates the megamenu... */}
+        <Grid className={classes.connectFooter} container data-testid="connect-footer">
+            <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
                     <li>
-                        <a href="http://www.library.uq.edu.au">Library home</a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/library-services">Library services</a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/research-tools-techniques">
-                            Research tools &amp; techniques
+                        <a data-testid="footermenu-homepage" href={menuLocale.menuhome.linkTo}>
+                            {menuLocale.menuhome.primaryText}
                         </a>
                     </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/collections">Collections</a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/borrowing-requesting">Borrowing &amp; requesting</a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/locations-hours">Locations &amp; hours</a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/about-us">About</a>
-                    </li>
-                    <li className={`${classes.separator}`}>&nbsp;|&nbsp;</li>
-                    <li>
-                        <a href="https://web.library.uq.edu.au/contact-us">Contact us</a>
-                    </li>
+                    {separator('footerseparator-homepage')}
+                    {menuLocale.publicmenu.map((linkProperties, index) => (
+                        <span key={`footerli-${index}`}>
+                            <li>
+                                <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                                    {linkProperties.primaryText}
+                                </a>
+                            </li>
+                            {index < menuLocale.publicmenu.length - 1 && separator(`footerseparator-${index}`)}
+                        </span>
+                    ))}
                 </ul>
             </Grid>
-            <Grid item xs={12} md={4} className={`${classes.contacts}`}>
+            <Grid item xs={12} md={4} className={classes.contacts}>
                 <Grid container>
                     <Grid item>
-                        <Typography
-                            style={{ fontSize: '1.2rem', color: '#000', marginBottom: '10px', fontWeight: 400 }}
-                            variant={'h3'}
-                        >
-                            Connect with us
+                        <Typography variant={'h6'} component={'h3'}>
+                            {locale.connectFooter.buttonSocialLabel}
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container className={`${classes.buttonSocial}`}>
-                    <Grid aria-disabled="false" item role="button" style={{ paddingTop: '7px' }} tabIndex="-1" xs={2}>
-                        <a
-                            href="https://web.library.uq.edu.au/blog"
-                            rel="noopener noreferrer"
-                            target="_blank"
-                            title="Library Blog"
-                        >
-                            Blog
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} tabIndex="-1" role="button" aria-disabled="false">
-                        <a
-                            href="https://twitter.com/UQ_Library"
-                            rel="external noopener noreferrer"
-                            target="_blank"
-                            title="Library on Twitter"
-                        >
-                            <img
-                                alt="Twitter icon"
-                                aria-label="Library on Twitter"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/twitter.png"
-                                title="Twitter"
-                            />
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} tabIndex="-1" role="button" aria-disabled="false">
-                        <a
-                            href="https://www.facebook.com/uniofqldlibrary"
-                            rel="external noopener noreferrer"
-                            target="_blank"
-                            title="Library on Facebook"
-                        >
-                            <img
-                                alt="Facebook icon"
-                                aria-label="Library on Facebook"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/facebook.png"
-                                title="Facebook"
-                            />
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} role="button" aria-disabled="false">
-                        <a
-                            href="https://www.instagram.com/uniofqldlibrary/"
-                            rel="external noopener noreferrer"
-                            tabIndex="-1"
-                            target="_blank"
-                            title="Library on Instagram"
-                        >
-                            <img
-                                alt="Instagram icon"
-                                aria-label="Library on Instagram"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/instagram.png"
-                                title="Instagram"
-                            />
-                        </a>
-                    </Grid>
-                    <Grid item xs={2} tabIndex="-1" role="button" aria-disabled="false">
-                        <a
-                            href="https://www.youtube.com/user/uqlibrary"
-                            rel="external noopener noreferrer"
-                            target="_blank"
-                            title="Library on YouTube"
-                        >
-                            <img
-                                alt="YouTube icon"
-                                aria-label="Library on YouTube"
-                                src="//assets.library.uq.edu.au/reusable-components/resources/social-media-icons/youtube.png"
-                                title="YouTube"
-                            />
-                        </a>
-                    </Grid>
+                <Grid container className={classes.socialButtonClass}>
+                    {locale.connectFooter.buttonSocial.map((item, index) => (
+                        <Grid aria-disabled="false" item role="button" xs={2} key={`buttonSocial-${index}`}>
+                            <IconButton
+                                color="primary"
+                                data-testid={item.dataTestid}
+                                onClick={() => _navigateToLink(item.linkTo, '_blank')}
+                                title={item.linkMouseOver}
+                            >
+                                {!!item.linklabel ? item.linklabel : item.icon}
+                            </IconButton>
+                        </Grid>
+                    ))}
                 </Grid>
-                <div className={`${classes.internal}`}>
-                    <a href="https://support.my.uq.edu.au/app/library/feedback">Feedback</a>
-                    &nbsp;|&nbsp;{' '}
-                    <a href="https://web.library.uq.edu.au/about-us/participate-customer-research">
-                        Help us improve
-                    </a>{' '}
-                    &nbsp;|&nbsp; <a href="https://web.library.uq.edu.au/sitemap">Site Map</a>
-                </div>
+                <Grid className={classes.internal}>
+                    {locale.connectFooter.internalLinks.map((linkProperties, index) => {
+                        return (
+                            <span key={`internallabel-${index}`}>
+                                <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                                    {linkProperties.linklabel}
+                                </a>
+                                {index < locale.connectFooter.internalLinks.length - 1 && <span>&nbsp;|&nbsp; </span>}
+                            </span>
+                        );
+                    })}
+                </Grid>
             </Grid>
-            <Grid item xs={12} md={4} className={`${classes.giving}`}>
-                <Grid
-                    aria-disabled="false"
-                    aria-label="Join Friends of the Library"
-                    className={`${classes.buttonColoredAccent}`}
-                    id="joinFriend"
-                    item
-                    role="button"
-                    tabIndex="-1"
-                    xs={12}
-                >
-                    <a href="https://web.library.uq.edu.au/about-us/friends-library">Join Friends of the Library</a>
-                </Grid>
-                <Grid
-                    aria-disabled="false"
-                    aria-label="Give to the Library"
-                    className={`${classes.buttonColoredAccent}`}
-                    id="giveToLibrary"
-                    item
-                    role="button"
-                    tabIndex="-1"
-                    xs={12}
-                >
-                    <a href="https://www.uq.edu.au/giving/organisations/university-queensland-library">
-                        Give to the Library
-                    </a>
-                </Grid>
+            <Grid item xs={12} md={4} className={classes.giving}>
+                {locale.connectFooter.givingLinks.map((item, index) => {
+                    return (
+                        <Button
+                            children={item.label}
+                            className={classes.givingButtonClass}
+                            data-testid={item.dataTestid}
+                            key={`givingLinks-${index}`}
+                            onClick={() => _navigateToLink(item.linkTo)}
+                            variant="contained"
+                        />
+                    );
+                })}
             </Grid>
         </Grid>
     );
 }
 
 ConnectFooter.propTypes = {
-    className: PropTypes.string,
     classes: PropTypes.object.isRequired,
+    history: PropTypes.object.isRequired,
 };
 
 ConnectFooter.defaultProps = {
-    className: '',
     classes: {},
 };
 

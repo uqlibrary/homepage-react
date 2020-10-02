@@ -4,6 +4,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
 <div>
   <WithStyles(ForwardRef(List))
     component="nav"
+    data-testid="mainMenu"
     id="mainMenu"
     tabIndex={-1}
   >
@@ -13,6 +14,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
+        data-testid="submenus-item-0"
         id="submenus-item-0"
         key="submenus-item-0"
         onClick={[Function]}
@@ -35,6 +37,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
+        data-testid="submenus-item-1"
         id="submenus-item-1"
         key="submenus-item-1"
         onClick={[Function]}
@@ -51,25 +54,6 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
         />
       </WithStyles(ForwardRef(ListItem))>
     </span>
-    <Hidden
-      lgUp={true}
-    >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        id="submenus-item-close"
-        key="submenus-item-close"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-            }
-          }
-          primary="Close"
-        />
-      </WithStyles(ForwardRef(ListItem))>
-    </Hidden>
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"
@@ -88,6 +72,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
 <div>
   <WithStyles(ForwardRef(List))
     component="nav"
+    data-testid="mainMenu"
     id="mainMenu"
     tabIndex={-1}
   >
@@ -97,6 +82,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
+        data-testid="submenus-item-0"
         id="submenus-item-0"
         key="submenus-item-0"
         onClick={[Function]}
@@ -119,6 +105,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
+        data-testid="submenus-item-1"
         id="submenus-item-1"
         key="submenus-item-1"
         onClick={[Function]}
@@ -135,25 +122,6 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
         />
       </WithStyles(ForwardRef(ListItem))>
     </span>
-    <Hidden
-      lgUp={true}
-    >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        id="submenus-item-close"
-        key="submenus-item-close"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-            }
-          }
-          primary="Close"
-        />
-      </WithStyles(ForwardRef(ListItem))>
-    </Hidden>
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"
