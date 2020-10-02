@@ -50,6 +50,7 @@ const styles = theme => ({
         },
     },
     footerLegalDetails: {
+        textAlign: 'right',
         [theme.breakpoints.down('sm')]: {
             borderTop: '1px solid rgba(255,255,255,0.3)',
             marginTop: '1rem',
@@ -103,10 +104,10 @@ export function MinimalFooter(props) {
     }
 
     return (
-        <Grid container className={classes.minimalFooter} data-testid="minimal-footer" spacing={3}>
+        <Grid container className={classes.minimalFooter} data-testid="minimal-footer">
             <Grid item xs={12}>
                 <Grid container>
-                    <Grid item xs={12} md={9} className={classes.footerContent}>
+                    <Grid item xs={12} md={10} className={classes.footerContent}>
                         <div>
                             {locale.minimalFooter.leftColumn.line1.map((item, index) => {
                                 return renderItem(item, index, 'leftColumn-line1');
@@ -123,7 +124,7 @@ export function MinimalFooter(props) {
                             })}
                         </div>
                     </Grid>
-                    <Grid item xs={12} md={3} className={classes.footerLegalDetails}>
+                    <Grid item xs={12} md={2} className={classes.footerLegalDetails}>
                         {locale.minimalFooter.rightColumn.line1.map((item, index) => {
                             return renderItem(item, index, 'rightColumn-line1');
                         })}
