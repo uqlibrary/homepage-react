@@ -121,27 +121,28 @@ export function ConnectFooter(props) {
 
     const separator = <li className={classes.separator}>&nbsp;|&nbsp;</li>;
 
+    const renderLink = (label, properties, keyLabel) => {
+        return (
+            <a
+                data-testid={properties.dataTestid || null}
+                href={properties.linkTo}
+                key={`${keyLabel}`}
+                rel={properties.relOpener || 'noopener noreferrer'}
+            >
+                {label}
+            </a>
+        );
+    };
+
     return (
         <Grid className={classes.connectFooter} container data-testid="connect-footer">
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
-                    <li>
-                        <a data-testid={menuLocale.home.dataTestid} href={menuLocale.home.linkTo}>
-                            {menuLocale.home.primaryText}
-                        </a>
-                    </li>
+                    <li>{renderLink(menuLocale.home.primaryText, menuLocale.home, 'homepage')}</li>
                     {separator}
-                    {menuLocale.menu.map((item, index) => (
+                    {menuLocale.menu.map((linkProperties, index) => (
                         <Fragment>
-                            <li>
-                                <a
-                                    data-testid={item.dataTestid}
-                                    href={item.linkTo}
-                                    rel={item.relOpener || 'noopener noreferrer'}
-                                >
-                                    {item.primaryText}
-                                </a>
-                            </li>
+                            <li>{renderLink(linkProperties.primaryText, linkProperties, `footermenu-${index}`)}</li>
                             {index < menuLocale.menu.length - 1 && separator}
                         </Fragment>
                     ))}
@@ -171,17 +172,10 @@ export function ConnectFooter(props) {
                     ))}
                 </Grid>
                 <Grid className={classes.internal}>
-                    {locale.connectFooter.internalLinks.map((item, index) => {
+                    {locale.connectFooter.internalLinks.map((linkProperties, index) => {
                         return (
                             <Fragment>
-                                <a
-                                    data-testid={item.dataTestid}
-                                    href={item.linkTo}
-                                    key={`internalLinks-${index}`}
-                                    rel={item.relOpener || 'noopener noreferrer'}
-                                >
-                                    {item.linklabel}
-                                </a>
+                                {renderLink(linkProperties.linklabel, linkProperties, `internalLinks-${index}`)}
                                 {index < locale.connectFooter.internalLinks.length - 1 && <span>&nbsp;|&nbsp; </span>}
                             </Fragment>
                         );
