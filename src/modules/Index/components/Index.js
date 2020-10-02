@@ -30,6 +30,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
+const ordinal = require('ordinal');
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -59,7 +60,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
               ];
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorPrintEl, setAnchorPrintEl] = React.useState(null);
-    const [allyMessage, setallyMessage] = React.useState('');
+    // const [allyMessage, setallyMessage] = React.useState('');
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -94,12 +95,12 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
         }
         return '#999';
     };
-    const handleSpotlightFocus = message => {
-        setallyMessage(message);
-    };
+    // const handleSpotlightFocus = message => {
+    //     setallyMessage(message);
+    // };
     return (
         <LiveAnnouncer>
-            <LiveMessage message={allyMessage} aria-live="polite" />
+            <LiveMessage message={''} aria-live="polite" />
             <StandardPage>
                 <div className="layout-card" style={{ marginTop: 12, marginBottom: 50 }}>
                     <Grid container spacing={6}>
@@ -109,7 +110,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                         {/* Spotlights */}
                         <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                            <div onFocus={handleSpotlightFocus('This is a test')}>
+                            <div>
                                 <ImageGallery
                                     onErrorImageURL={welcomeSpotlight}
                                     items={images}
@@ -686,7 +687,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 alignContent={'center'}
                                                 alignItems={'center'}
                                             >
-                                                <Grid item xs={2}>
+                                                <Grid item xs={'auto'}>
                                                     <Grid
                                                         container
                                                         spacing={0}
@@ -698,10 +699,11 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                             item
                                                             xs={12}
                                                             style={{
-                                                                fontSize: 16,
+                                                                fontSize: 19,
                                                                 color: 'purple',
                                                                 textAlign: 'center',
                                                             }}
+                                                            aria-label={ordinal(item.dayDate)}
                                                         >
                                                             {item.dayDate}
                                                         </Grid>
@@ -713,29 +715,44 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                                 color: 'purple',
                                                                 textAlign: 'center',
                                                                 marginTop: -4,
+                                                                textTransform: 'uppercase',
                                                             }}
+                                                            aria-label={item.day}
                                                         >
-                                                            {item.day}
+                                                            <abbr title={item.day} aria-label={item.day}>
+                                                                {item.day.substring(0, 3)}
+                                                            </abbr>
                                                         </Grid>
                                                         <Grid
                                                             item
                                                             xs={12}
                                                             style={{
-                                                                fontSize: 12,
+                                                                fontSize: 16,
                                                                 color: 'purple',
                                                                 textAlign: 'center',
                                                                 marginTop: -4,
+                                                                textTransform: 'uppercase',
                                                             }}
+                                                            aria-label={item.monthDate}
                                                         >
-                                                            {item.monthDate}
+                                                            <abbr title={item.monthDate} aria-label={item.monthDate}>
+                                                                {item.monthDate.substring(0, 3)}
+                                                            </abbr>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
                                                 <Grid item xs>
-                                                    <a href={item.link}>{item.title}</a>
+                                                    <a
+                                                        href={item.link}
+                                                        aria-label={`${item.date} ${item.time} ${item.format} - ${item.title}`}
+                                                    >
+                                                        {item.title}
+                                                    </a>
                                                     <br />
                                                     <span style={{ fontSize: '0.8rem', color: '#999' }}>
-                                                        {item.time}, {item.format}
+                                                        {item.date} - {item.time}
+                                                        <br />
+                                                        {item.format}
                                                     </span>
                                                 </Grid>
                                             </Grid>
