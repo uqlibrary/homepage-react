@@ -206,21 +206,6 @@ export class AppClass extends PureComponent {
             isHdrStudent && !false,
             false,
         );
-        const isPublicPage = this.isPublicPage(menuItems);
-
-        let userStatusAlert = null;
-        if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
-            // user is not logged in
-            userStatusAlert = {
-                ...locale.global.loginAlert,
-                action: this.redirectUserToLogin(),
-            };
-            // } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            //     // user is logged in, but doesn't have eSpace author identifier
-            //     userStatusAlert = {
-            //         ...locale.global.notRegisteredAuthorAlert,
-            //     };
-        }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
