@@ -68,9 +68,9 @@ export function MinimalFooter(props) {
                 <a
                     href={item.linkTo}
                     key={`${key}-${index}`}
-                    rel={!!item.relOpener || 'noopener noreferrer'}
-                    target="_blank"
-                    title={item.linktitle}
+                    rel={!!item.target && item.target === '_blank' ? 'noopener noreferrer' : undefined}
+                    target={!!item.target ? item.target : undefined}
+                    title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
                     data-testid={item.dataTestid}
                 >
                     {item.linkLabel}

@@ -146,7 +146,7 @@ export function ConnectFooter(props) {
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <Typography variant={'h6'} component={'h3'}>
-                            {locale.connectFooter.buttonSocialLabel}
+                            {locale.connectFooter.buttonSocialHeader}
                         </Typography>
                     </Grid>
                 </Grid>
@@ -170,7 +170,7 @@ export function ConnectFooter(props) {
                                     variant="contained"
                                     data-testid={item.dataTestid}
                                     onClick={() => _navigateToLink(item.linkTo, '_blank')}
-                                    title={item.linkMouseOver}
+                                    title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
                                 >
                                     {!!item.linklabel ? item.linklabel : item.icon}
                                 </Button>
@@ -196,7 +196,7 @@ export function ConnectFooter(props) {
                 <Grid container spacing={2}>
                     {locale.connectFooter.givingLinks.map((item, index) => {
                         return (
-                            <Grid item xs={12} md={8}>
+                            <Grid item xs={12} md={8} key={`givingLinks-${index}`}>
                                 <Button
                                     fullWidth
                                     children={item.label}
