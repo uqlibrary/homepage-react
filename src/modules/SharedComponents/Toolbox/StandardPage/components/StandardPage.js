@@ -31,7 +31,7 @@ const styles = theme => ({
         backgroundColor: theme.hexToRGBA(theme.palette.secondary.main, 0.15),
     },
     minimalFooter: {
-        backgroundColor: '#51247A',
+        backgroundColor: theme.palette.primary.main,
         color: theme.palette.white.main,
         backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
     },

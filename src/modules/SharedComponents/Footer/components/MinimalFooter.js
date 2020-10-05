@@ -31,11 +31,11 @@ const styles = theme => ({
         '& h3': {
             fontSize: '17px',
             fontWeight: '500',
-            color: '#fff',
+            color: theme.palette.white.main,
             margin: 0,
         },
         '& a': {
-            color: '#fff',
+            color: theme.palette.white.main,
             fontWeight: 'bold',
         },
     },

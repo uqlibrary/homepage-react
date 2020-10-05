@@ -63,7 +63,7 @@ const styles = theme => {
             },
         },
         megamenu: {
-            backgroundColor: '#fff',
+            backgroundColor: theme.palette.white.main,
             boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
             margin: 0,
             maxWidth: 'initial',
@@ -85,7 +85,7 @@ const styles = theme => {
                 },
             },
             [theme.breakpoints.down('md')]: {
-                backgroundColor: 'white',
+                backgroundColor: theme.palette.white.main,
                 height: 'auto',
                 overflowY: 'auto',
                 paddingLeft: '1rem',
@@ -104,7 +104,7 @@ const styles = theme => {
             color: theme.palette.white.main,
         },
         menuDropdown: {
-            backgroundColor: '#f2f2f2',
+            backgroundColor: theme.palette.secondary.light,
             zIndex: 1000,
             position: 'absolute',
             [theme.breakpoints.down('md')]: {

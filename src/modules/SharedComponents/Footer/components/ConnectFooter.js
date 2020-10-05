@@ -11,7 +11,6 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-// const uqBlue = 'rgb(14, 98, 235)';
 const styles = theme => ({
     connectFooter: {
         fontWeight: '300',
@@ -50,7 +49,7 @@ const styles = theme => ({
     },
     socialButtonClass: {
         backgroundColor: '#000 !important',
-        color: '#fff',
+        color: theme.palette.white.main,
         '&:hover': {
             backgroundColor: theme.palette.accent.dark + '!important',
         },
