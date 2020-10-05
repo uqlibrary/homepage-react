@@ -1,0 +1,415 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component Megamenu should render 1`] = `
+<WithStyles(ForwardRef(Grid))
+  alignItems="flex-start"
+  container={true}
+  data-testid="connect-footer"
+  justify="center"
+>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    md={4}
+    xs={12}
+  >
+    <ul>
+      <li>
+        <a
+          data-testid="footermenu-homepage"
+          href="http://www.library.uq.edu.au"
+        >
+          Library home
+        </a>
+      </li>
+      <li
+        key="footerseparator-homepage"
+      >
+         | 
+      </li>
+      <span
+        key="footerli-0"
+      >
+        <li>
+          <a
+            data-testid="connect-services-link"
+            href="https://web.library.uq.edu.au/library-services"
+          >
+            Library services
+          </a>
+        </li>
+        <li
+          key="footerseparator-0"
+        >
+           | 
+        </li>
+      </span>
+      <span
+        key="footerli-1"
+      >
+        <li>
+          <a
+            data-testid="connect-research-link"
+            href="https://web.library.uq.edu.au/research-tools-techniques"
+          >
+            Research tools & techniques
+          </a>
+        </li>
+        <li
+          key="footerseparator-1"
+        >
+           | 
+        </li>
+      </span>
+      <span
+        key="footerli-2"
+      >
+        <li>
+          <a
+            data-testid="connect-collections-link"
+            href="https://web.library.uq.edu.au/collections"
+          >
+            Collections
+          </a>
+        </li>
+        <li
+          key="footerseparator-2"
+        >
+           | 
+        </li>
+      </span>
+      <span
+        key="footerli-3"
+      >
+        <li>
+          <a
+            data-testid="connect-borrowing-link"
+            href="https://web.library.uq.edu.au/borrowing-requesting"
+          >
+            Borrowing & requesting
+          </a>
+        </li>
+        <li
+          key="footerseparator-3"
+        >
+           | 
+        </li>
+      </span>
+      <span
+        key="footerli-4"
+      >
+        <li>
+          <a
+            data-testid="connect-locations-link"
+            href="https://web.library.uq.edu.au/locations-hours"
+          >
+            Locations & hours
+          </a>
+        </li>
+        <li
+          key="footerseparator-4"
+        >
+           | 
+        </li>
+      </span>
+      <span
+        key="footerli-5"
+      >
+        <li>
+          <a
+            data-testid="connect-about-link"
+            href="https://web.library.uq.edu.au/about-us"
+          >
+            About
+          </a>
+        </li>
+        <li
+          key="footerseparator-5"
+        >
+           | 
+        </li>
+      </span>
+      <span
+        key="footerli-6"
+      >
+        <li>
+          <a
+            data-testid="connect-contact-link"
+            href="https://web.library.uq.edu.au/contact-us"
+          >
+            Contact us
+          </a>
+        </li>
+      </span>
+    </ul>
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    md={4}
+    xs={12}
+  >
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+    >
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        xs="auto"
+      >
+        <WithStyles(ForwardRef(Typography))
+          component="h3"
+          variant="h6"
+        >
+          Connect with us
+        </WithStyles(ForwardRef(Typography))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        mdUp={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="buttonSocial-0"
+        xs="auto"
+      >
+        <WithStyles(ForwardRef(Tooltip))
+          TransitionProps={
+            Object {
+              "timeout": 300,
+            }
+          }
+          id="auth-button"
+          placement="bottom"
+          title="Visit the Library Blog"
+        >
+          <WithStyles(ForwardRef(Button))
+            classes={
+              Object {
+                "root": undefined,
+              }
+            }
+            color="primary"
+            data-testid="connect-blog-link"
+            onClick={[Function]}
+            variant="contained"
+          >
+            Blog
+          </WithStyles(ForwardRef(Button))>
+        </WithStyles(ForwardRef(Tooltip))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="buttonSocial-1"
+        xs="auto"
+      >
+        <WithStyles(ForwardRef(Tooltip))
+          TransitionProps={
+            Object {
+              "timeout": 300,
+            }
+          }
+          id="auth-button"
+          placement="bottom"
+          title="Visit the Library on Twitter"
+        >
+          <WithStyles(ForwardRef(Button))
+            classes={
+              Object {
+                "root": undefined,
+              }
+            }
+            color="primary"
+            data-testid="connect-twitter-link"
+            onClick={[Function]}
+            variant="contained"
+          >
+            <TwitterIcon />
+          </WithStyles(ForwardRef(Button))>
+        </WithStyles(ForwardRef(Tooltip))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="buttonSocial-2"
+        xs="auto"
+      >
+        <WithStyles(ForwardRef(Tooltip))
+          TransitionProps={
+            Object {
+              "timeout": 300,
+            }
+          }
+          id="auth-button"
+          placement="bottom"
+          title="Visit the Library on Facebook"
+        >
+          <WithStyles(ForwardRef(Button))
+            classes={
+              Object {
+                "root": undefined,
+              }
+            }
+            color="primary"
+            data-testid="connect-facebook-link"
+            onClick={[Function]}
+            variant="contained"
+          >
+            <FacebookIcon />
+          </WithStyles(ForwardRef(Button))>
+        </WithStyles(ForwardRef(Tooltip))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="buttonSocial-3"
+        xs="auto"
+      >
+        <WithStyles(ForwardRef(Tooltip))
+          TransitionProps={
+            Object {
+              "timeout": 300,
+            }
+          }
+          id="auth-button"
+          placement="bottom"
+          title="Visit the Library on Instagram"
+        >
+          <WithStyles(ForwardRef(Button))
+            classes={
+              Object {
+                "root": undefined,
+              }
+            }
+            color="primary"
+            data-testid="connect-instagram-link"
+            onClick={[Function]}
+            variant="contained"
+          >
+            <InstagramIcon />
+          </WithStyles(ForwardRef(Button))>
+        </WithStyles(ForwardRef(Tooltip))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="buttonSocial-4"
+        xs="auto"
+      >
+        <WithStyles(ForwardRef(Tooltip))
+          TransitionProps={
+            Object {
+              "timeout": 300,
+            }
+          }
+          id="auth-button"
+          placement="bottom"
+          title="Visit the Library on YouTube"
+        >
+          <WithStyles(ForwardRef(Button))
+            classes={
+              Object {
+                "root": undefined,
+              }
+            }
+            color="primary"
+            data-testid="connect-youtube-link"
+            onClick={[Function]}
+            variant="contained"
+          >
+            <YouTubeIcon />
+          </WithStyles(ForwardRef(Button))>
+        </WithStyles(ForwardRef(Tooltip))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        xs={true}
+      />
+    </WithStyles(ForwardRef(Grid))>
+    <WithStyles(ForwardRef(Grid))>
+      <span
+        key="internallabel-0"
+      >
+        <a
+          data-testid="connect-feedback-link"
+          href="https://support.my.uq.edu.au/app/library/feedback"
+        >
+          Feedback
+        </a>
+        <span>
+           |  
+        </span>
+      </span>
+      <span
+        key="internallabel-1"
+      >
+        <a
+          data-testid="connect-participate-link"
+          href="https://web.library.uq.edu.au/about-us/participate-customer-research"
+        >
+          Help us improve
+        </a>
+        <span>
+           |  
+        </span>
+      </span>
+      <span
+        key="internallabel-2"
+      >
+        <a
+          data-testid="connect-sitemap-link"
+          href="https://web.library.uq.edu.au/sitemap"
+        >
+          Site Map
+        </a>
+      </span>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    md={4}
+    xs={12}
+  >
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={2}
+    >
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="givingLinks-0"
+        md={8}
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          data-testid="connect-friends-link"
+          fullWidth={true}
+          key="givingLinks-0"
+          onClick={[Function]}
+          variant="contained"
+        >
+          Join Friends of the Library
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        key="givingLinks-1"
+        md={8}
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          data-testid="connect-give-link"
+          fullWidth={true}
+          key="givingLinks-1"
+          onClick={[Function]}
+          variant="contained"
+        >
+          Give to the Library
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(Grid))>
+</WithStyles(ForwardRef(Grid))>
+`;

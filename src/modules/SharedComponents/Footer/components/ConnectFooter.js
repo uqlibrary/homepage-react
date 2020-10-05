@@ -5,26 +5,26 @@ import { default as locale } from './locale.js';
 import { default as menuLocale } from 'locale/menu';
 
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
-const uqBlue = 'rgb(14, 98, 235)';
 const styles = theme => ({
     connectFooter: {
         fontWeight: '300',
         lineHeight: '25px',
-        margin: '20px auto 0 auto',
+        margin: '0 auto 0 auto',
         maxWidth: '1200px',
+        padding: 20,
         position: 'relative',
         '& a': {
-            color: '#333',
+            color: theme.palette.secondary.dark,
             textDecoration: 'none',
-        },
-        '& div': {
-            [theme.breakpoints.down('sm')]: {
-                textAlign: 'center',
+            '&:hover': {
+                color: theme.palette.primary.main,
+                textDecoration: 'underline',
             },
         },
     },
@@ -48,18 +48,10 @@ const styles = theme => ({
         },
     },
     socialButtonClass: {
-        '& button': {
-            backgroundColor: '#000 !important',
-            color: '#fff',
-        },
-        '& div:first-child': {
-            // blog button has to be forced wider
-            minWidth: '5em',
-            marginRight: '12px',
-        },
-        [theme.breakpoints.down('sm')]: {
-            maxWidth: '400px',
-            margin: '0 auto',
+        backgroundColor: '#000 !important',
+        color: theme.palette.white.main,
+        '&:hover': {
+            backgroundColor: theme.palette.accent.dark + '!important',
         },
     },
     internal: {
@@ -82,13 +74,10 @@ const styles = theme => ({
     },
     givingButtonClass: {
         color: theme.palette.white.main + '!important',
-        backgroundColor: uqBlue,
+        backgroundColor: theme.palette.accent.main,
         '&:hover': {
-            backgroundColor: theme.palette.white.main,
-            color: uqBlue + ' !important',
+            backgroundColor: theme.palette.accent.dark,
         },
-        width: '70%',
-        marginBottom: '1rem',
         padding: '1rem',
     },
     contacts: {
@@ -126,7 +115,13 @@ export function ConnectFooter(props) {
     );
 
     return (
-        <Grid className={classes.connectFooter} container data-testid="connect-footer">
+        <Grid
+            className={classes.connectFooter}
+            container
+            data-testid="connect-footer"
+            alignItems="flex-start"
+            justify="center"
+        >
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
                     <li>
@@ -149,25 +144,40 @@ export function ConnectFooter(props) {
             </Grid>
             <Grid item xs={12} md={4} className={classes.contacts}>
                 <Grid container>
-                    <Grid item>
+                    <Grid item xs={'auto'}>
                         <Typography variant={'h6'} component={'h3'}>
-                            {locale.connectFooter.buttonSocialLabel}
+                            {locale.connectFooter.buttonSocialHeader}
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container className={classes.socialButtonClass}>
+                <Grid container spacing={1}>
+                    <Hidden mdUp>
+                        <Grid item xs />
+                    </Hidden>
                     {locale.connectFooter.buttonSocial.map((item, index) => (
-                        <Grid aria-disabled="false" item role="button" xs={2} key={`buttonSocial-${index}`}>
-                            <IconButton
-                                color="primary"
-                                data-testid={item.dataTestid}
-                                onClick={() => _navigateToLink(item.linkTo, '_blank')}
-                                title={item.linkMouseOver}
+                        <Grid item xs={'auto'} key={`buttonSocial-${index}`}>
+                            <Tooltip
+                                id="auth-button"
+                                title={`Visit the ${item.linktitle}`}
+                                placement="bottom"
+                                TransitionProps={{ timeout: 300 }}
                             >
-                                {!!item.linklabel ? item.linklabel : item.icon}
-                            </IconButton>
+                                <Button
+                                    classes={{
+                                        root: classes.socialButtonClass,
+                                    }}
+                                    color="primary"
+                                    variant="contained"
+                                    data-testid={item.dataTestid}
+                                    onClick={() => _navigateToLink(item.linkTo, '_blank')}
+                                    title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
+                                >
+                                    {!!item.linklabel ? item.linklabel : item.icon}
+                                </Button>
+                            </Tooltip>
                         </Grid>
                     ))}
+                    <Grid item xs />
                 </Grid>
                 <Grid className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((linkProperties, index) => {
@@ -183,18 +193,23 @@ export function ConnectFooter(props) {
                 </Grid>
             </Grid>
             <Grid item xs={12} md={4} className={classes.giving}>
-                {locale.connectFooter.givingLinks.map((item, index) => {
-                    return (
-                        <Button
-                            children={item.label}
-                            className={classes.givingButtonClass}
-                            data-testid={item.dataTestid}
-                            key={`givingLinks-${index}`}
-                            onClick={() => _navigateToLink(item.linkTo)}
-                            variant="contained"
-                        />
-                    );
-                })}
+                <Grid container spacing={2}>
+                    {locale.connectFooter.givingLinks.map((item, index) => {
+                        return (
+                            <Grid item xs={12} md={8} key={`givingLinks-${index}`}>
+                                <Button
+                                    fullWidth
+                                    children={item.label}
+                                    className={classes.givingButtonClass}
+                                    data-testid={item.dataTestid}
+                                    key={`givingLinks-${index}`}
+                                    onClick={() => _navigateToLink(item.linkTo)}
+                                    variant="contained"
+                                />
+                            </Grid>
+                        );
+                    })}
+                </Grid>
             </Grid>
         </Grid>
     );

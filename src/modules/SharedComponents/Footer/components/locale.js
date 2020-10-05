@@ -6,7 +6,7 @@ import YouTubeIcon from '@material-ui/icons/YouTube';
 
 export default {
     connectFooter: {
-        buttonSocialLabel: 'Connect with us',
+        buttonSocialHeader: 'Connect with us',
         buttonSocial: [
             {
                 dataTestid: 'connect-blog-link',
@@ -16,27 +16,27 @@ export default {
             },
             {
                 dataTestid: 'connect-twitter-link',
+                icon: <TwitterIcon />,
                 linktitle: 'Library on Twitter',
                 linkTo: 'https://twitter.com/UQ_Library',
-                icon: <TwitterIcon />,
             },
             {
                 dataTestid: 'connect-facebook-link',
+                icon: <FacebookIcon />,
                 linktitle: 'Library on Facebook',
                 linkTo: 'https://www.facebook.com/uniofqldlibrary',
-                icon: <FacebookIcon />,
             },
             {
                 dataTestid: 'connect-instagram-link',
+                icon: <InstagramIcon />,
                 linktitle: 'Library on Instagram',
                 linkTo: 'https://www.instagram.com/uniofqldlibrary/',
-                icon: <InstagramIcon />,
             },
             {
                 dataTestid: 'connect-youtube-link',
+                icon: <YouTubeIcon />,
                 linktitle: 'Library on YouTube',
                 linkTo: 'https://www.youtube.com/user/uqlibrary',
-                icon: <YouTubeIcon />,
             },
         ],
         internalLinks: [
