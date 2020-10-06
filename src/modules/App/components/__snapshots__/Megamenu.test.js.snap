@@ -6,7 +6,6 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
     component="nav"
     data-testid="mainMenu"
     id="mainMenu"
-    tabIndex={-1}
   >
     <span
       className="menu-item-container"
@@ -57,7 +56,6 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"
-    tabIndex={-1}
   />
 </div>
 `;
@@ -74,7 +72,6 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
     component="nav"
     data-testid="mainMenu"
     id="mainMenu"
-    tabIndex={-1}
   >
     <span
       className="menu-item-container"
@@ -125,7 +122,6 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"
-    tabIndex={-1}
   />
 </div>
 `;

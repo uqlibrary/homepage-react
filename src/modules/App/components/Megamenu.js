@@ -385,20 +385,13 @@ export function Megamenu(props) {
 
     return (
         <div className={classes.megamenu}>
-            <List
-                component="nav"
-                data-testid="mainMenu"
-                id="mainMenu"
-                className={classes.mainMenu}
-                tabIndex={-1}
-                ref={menuRef}
-            >
+            <List component="nav" data-testid="mainMenu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
                 {menuItems.map((menuItem, index) => {
                     return renderSingleMenu(menuItem, index);
                 })}
                 {props.hasCloseItem && renderCloseItem()}
             </List>
-            <div id="afterMegamenu" tabIndex={-1} />
+            <div id="afterMegamenu" />
         </div>
     );
 }
