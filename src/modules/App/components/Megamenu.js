@@ -78,7 +78,8 @@ const styles = theme => {
                 flexGrow: 1,
                 maxWidth: '1200px',
                 margin: '0 auto',
-                paddingTop: '10px',
+                paddingBottom: 0,
+                paddingTop: 0,
                 // remove the flash to grey when we mouse over a top menu
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
@@ -110,14 +111,13 @@ const styles = theme => {
             [theme.breakpoints.down('md')]: {
                 width: '96%',
             },
-            [theme.breakpoints.up('lg')]: {
-                top: '66px',
-            },
         },
         shiftLeft: {
             marginLeft: '-20rem',
         },
         submenus: {
+            paddingBottom: '8px',
+            paddingTop: '10px',
             [theme.breakpoints.up('lg')]: {
                 flexDirection: 'row',
             },
@@ -198,11 +198,19 @@ export function Megamenu(props) {
     menuItems.forEach(item => (initialSubMenus[item.id] = defaultMenuPosition));
     const [isSubMenuOpen, setSubMenuOpen] = React.useState(initialSubMenus);
 
+    function setBackGroundColourOfMenuHeader(id, color) {
+        document.getElementById(id).style.backgroundColor = color;
+    }
+
     const setParticularSubMenuOpen = (changingId, newOpen) => {
         // using an array allows us to update one element of the open/closed array, to match one menuitem change
         const newValues = [];
         Object.keys(isSubMenuOpen).forEach(key => {
             newValues[key] = key === changingId ? newOpen : initialSubMenus[key];
+
+            // set the menu label to match background colour
+            setBackGroundColourOfMenuHeader(key, newOpen && key === changingId ? '#f2f2f2' : '#fff');
+            setBackGroundColourOfMenuHeader(key, !newOpen || key !== changingId ? '#fff' : '#f2f2f2');
         });
         setSubMenuOpen(newValues);
     };
@@ -220,6 +228,8 @@ export function Megamenu(props) {
         const newValues = [];
         Object.keys(isSubMenuOpen).forEach(key => {
             newValues[key] = defaultMenuPosition;
+            // set the menu header back to default colour
+            setBackGroundColourOfMenuHeader(key, '#fff');
         });
         setSubMenuOpen(newValues);
         return true;
@@ -319,7 +329,7 @@ export function Megamenu(props) {
     const renderSingleMenu = (menuItem, index) => {
         const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
         return (
-            <span className="menu-item-container" key={`menucontainer-item-${index}`}>
+            <span className="menu-item-container" key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
                     className={classes.submenus}
