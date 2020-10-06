@@ -451,31 +451,37 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                     {item.free} of {item.total} available
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
-                                                    <Box position="relative" display="inline-flex">
-                                                        <CircularProgress
-                                                            size={20}
-                                                            variant="static"
-                                                            value={100}
-                                                            style={{ color: circleColor(percent) }}
-                                                        />
-                                                        <Box
-                                                            top={0}
-                                                            left={0}
-                                                            bottom={0}
-                                                            right={0}
-                                                            position="absolute"
-                                                            display="flex"
-                                                            alignItems="center"
-                                                            justifyContent="center"
-                                                        >
+                                                    <Tooltip
+                                                        title={`${percent}% available = ${item.free} of ${item.total}`}
+                                                        placement="left"
+                                                        TransitionProps={{ timeout: 300 }}
+                                                    >
+                                                        <Box position="relative" display="inline-flex">
                                                             <CircularProgress
-                                                                variant="static"
                                                                 size={20}
-                                                                value={100 - percent}
-                                                                style={{ color: '#ececec' }}
+                                                                variant="static"
+                                                                value={100}
+                                                                style={{ color: circleColor(percent) }}
                                                             />
+                                                            <Box
+                                                                top={0}
+                                                                left={0}
+                                                                bottom={0}
+                                                                right={0}
+                                                                position="absolute"
+                                                                display="flex"
+                                                                alignItems="center"
+                                                                justifyContent="center"
+                                                            >
+                                                                <CircularProgress
+                                                                    variant="static"
+                                                                    size={20}
+                                                                    value={100 - percent}
+                                                                    style={{ color: '#ececec' }}
+                                                                />
+                                                            </Box>
                                                         </Box>
-                                                    </Box>
+                                                    </Tooltip>
                                                 </Grid>
                                             </Grid>
                                         );
@@ -547,15 +553,37 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
                                             >
                                                 <Grid item xs={5}>
-                                                    <a href={item.link} style={{ marginLeft: 8 }}>
-                                                        {item.title}
-                                                    </a>
+                                                    {!!item.iconInfo ? (
+                                                        <Tooltip
+                                                            title={item.iconInfo || null}
+                                                            placement="right"
+                                                            TransitionProps={{ timeout: 300 }}
+                                                        >
+                                                            <a href={item.link} style={{ marginLeft: 8 }}>
+                                                                {item.title}
+                                                            </a>
+                                                        </Tooltip>
+                                                    ) : (
+                                                        <a href={item.link} style={{ marginLeft: 8 }}>
+                                                            {item.title}
+                                                        </a>
+                                                    )}
                                                 </Grid>
                                                 <Grid item xs>
                                                     {item.hours}
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
-                                                    {item.icon}
+                                                    {!!item.iconInfo ? (
+                                                        <Tooltip
+                                                            title={item.iconInfo}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
+                                                        >
+                                                            {item.icon}
+                                                        </Tooltip>
+                                                    ) : (
+                                                        item.icon
+                                                    )}
                                                 </Grid>
                                             </Grid>
                                         );
