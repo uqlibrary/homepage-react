@@ -157,7 +157,7 @@ export function ConnectFooter(props) {
                     {locale.connectFooter.buttonSocial.map((item, index) => (
                         <Grid item xs={'auto'} key={`buttonSocial-${index}`}>
                             <Tooltip
-                                id="auth-button"
+                                id={`auth-button-${index}`}
                                 title={`Visit the ${item.linktitle}`}
                                 placement="bottom"
                                 TransitionProps={{ timeout: 300 }}
@@ -168,7 +168,7 @@ export function ConnectFooter(props) {
                                     }}
                                     color="primary"
                                     variant="contained"
-                                    data-testid={item.dataTestid}
+                                    data-testid={`item-dataTestid-${index}`}
                                     onClick={() => _navigateToLink(item.linkTo, '_blank')}
                                     title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
                                 >

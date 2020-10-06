@@ -16,7 +16,7 @@ context('ACCESSIBILITY', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('[data-testid=connect-footer]').contains('Connect with us');
+        cy.get('[data-testid=connect-footer] h3').contains('Connect with us');
         cy.log('Connect Footer');
         cy.checkA11y('[data-testid=connect-footer]', {
             reportName: 'Connect Footer',
