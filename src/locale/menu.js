@@ -7,6 +7,7 @@ export default {
     publicmenu: [
         {
             id: 'libraryServices',
+            dataTestid: 'connect-services-link',
             linkTo: 'https://web.library.uq.edu.au/library-services',
             primaryText: 'Library services',
             submenuItems: [
@@ -127,6 +128,7 @@ export default {
         },
         {
             id: 'researchToolsTechniques',
+            dataTestid: 'connect-research-link',
             linkTo: 'https://web.library.uq.edu.au/research-tools-techniques',
             primaryText: 'Research tools & techniques',
             submenuItems: [
@@ -200,6 +202,7 @@ export default {
         },
         {
             id: 'collections',
+            dataTestid: 'connect-collections-link',
             linkTo: 'https://web.library.uq.edu.au/collections',
             primaryText: 'Collections',
             submenuItems: [
@@ -227,6 +230,7 @@ export default {
         },
         {
             id: 'borrowingRequesting',
+            dataTestid: 'connect-borrowing-link',
             linkTo: 'https://web.library.uq.edu.au/borrowing-requesting',
             primaryText: 'Borrowing & requesting',
             submenuItems: [
@@ -273,6 +277,7 @@ export default {
         },
         {
             id: 'locationsHours',
+            dataTestid: 'connect-locations-link',
             linkTo: 'https://web.library.uq.edu.au/locations-hours',
             primaryText: 'Locations & hours',
             shiftLeft: true,
@@ -380,6 +385,7 @@ export default {
         },
         {
             id: 'about',
+            dataTestid: 'connect-about-link',
             linkTo: 'https://web.library.uq.edu.au/about-us',
             primaryText: 'About',
             shiftLeft: true,
@@ -458,6 +464,7 @@ export default {
         },
         {
             id: 'contactUs',
+            dataTestid: 'connect-contact-link',
             linkTo: 'https://web.library.uq.edu.au/contact-us',
             primaryText: 'Contact us',
         },

@@ -83,7 +83,6 @@ describe('Component Megamenu', () => {
     it('should have a valid locale', () => {
         // because the menu locale is meant to be maintained by the user, we check the file is valid
         menuLocale.publicmenu.forEach(menu => {
-            expect(menu.dataTestid.length).not.toBe(0);
             expect(menu.linkTo.length).not.toBe(0);
             expect(menu.primaryText.length).not.toBe(0);
             !menu.shiftLeft || expect(menu.shiftLeft).toEqual(true);
