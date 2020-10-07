@@ -7,6 +7,7 @@ const logo = require('../../../../public/images/uq-lockup-landscape--reversed.sv
 
 import locale from 'locale/global';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
+import { pathConfig } from 'config/routes';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, withStyles } from '@material-ui/styles';
@@ -138,7 +139,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
+export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -166,6 +167,10 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const showMasquerade = () => {
+        history.push(pathConfig.admin.masquerade);
     };
 
     const UQRadio = withStyles({
@@ -319,7 +324,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                                     </MenuItem>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem onClick={showMasquerade}>
                                         <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
                                         Masquerade
                                     </MenuItem>
@@ -479,6 +484,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
 
 Header.propTypes = {
     account: PropTypes.object,
+    history: PropTypes.object,
     isAuthorizedUser: PropTypes.bool,
     isAdmin: PropTypes.bool,
     toggleMenu: PropTypes.func,
