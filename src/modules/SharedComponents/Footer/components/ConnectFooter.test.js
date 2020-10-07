@@ -38,8 +38,8 @@ describe('Component Megamenu', () => {
         expect(locale.connectFooter.buttonSocialHeader.length).not.toBe(0);
         locale.connectFooter.buttonSocial.forEach(menu => {
             expect(menu.dataTestid.length).not.toBe(0);
-            expect(menu.linktitle.length).not.toBe(0);
             expect(menu.linkTo.length).not.toBe(0);
+            expect(menu.linkMouseOver.length).not.toBe(0);
             (!!menu.linklabel && expect(menu.linklabel.length).not.toBe(0)) ||
                 (!!menu.icon && expect(menu.icon.length).not.toBe(0));
         });
@@ -66,6 +66,7 @@ describe('Component Megamenu', () => {
         menuLocale.publicmenu.forEach(menu => {
             expect(menu.dataTestid.length).not.toBe(0);
             expect(menu.linkTo.length).not.toBe(0);
+            expect(menu.primaryText.length).not.toBe(0);
             expect(menu.primaryText.length).not.toBe(0);
         });
     });

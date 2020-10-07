@@ -31,6 +31,9 @@ const styles = theme => ({
     navigation: {
         '& ul': {
             padding: 0,
+            [theme.breakpoints.down('sm')]: {
+                textAlign: 'center',
+            },
         },
         '& li': {
             listStyle: 'none',
@@ -42,10 +45,7 @@ const styles = theme => ({
         },
     },
     separator: {
-        display: 'none',
-        [theme.breakpoints.down('sm')]: {
-            display: 'inline-block',
-        },
+        display: 'inline-block',
     },
     socialButtonClass: {
         backgroundColor: '#000 !important',
@@ -61,6 +61,7 @@ const styles = theme => ({
             bottom: 'auto',
             marginTop: '1rem',
             position: 'relative',
+            textAlign: 'center',
         },
     },
     giving: {
@@ -68,6 +69,7 @@ const styles = theme => ({
             marginLeft: 'auto',
             [theme.breakpoints.down('sm')]: {
                 margin: '5px auto',
+                maxWidth: '300px',
             },
         },
         textAlign: 'right',
@@ -108,10 +110,10 @@ export function ConnectFooter(props) {
         }
     };
 
-    const separator = keyLabel => (
-        <li className={classes.separator} key={`${keyLabel}`}>
+    const separator = () => (
+        <Hidden mdUp className={classes.separator}>
             &nbsp;|&nbsp;
-        </li>
+        </Hidden>
     );
 
     return (
@@ -128,17 +130,15 @@ export function ConnectFooter(props) {
                         <a data-testid="footermenu-homepage" href={menuLocale.menuhome.linkTo}>
                             {menuLocale.menuhome.primaryText}
                         </a>
+                        {separator()}
                     </li>
-                    {separator('footerseparator-homepage')}
                     {menuLocale.publicmenu.map((linkProperties, index) => (
-                        <span key={`footerli-${index}`}>
-                            <li>
-                                <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
-                                    {linkProperties.primaryText}
-                                </a>
-                            </li>
-                            {index < menuLocale.publicmenu.length - 1 && separator(`footerseparator-${index}`)}
-                        </span>
+                        <li key={`footerli-${index}`}>
+                            <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                                {linkProperties.primaryText}
+                            </a>
+                            {index < menuLocale.publicmenu.length - 1 && separator()}
+                        </li>
                     ))}
                 </ul>
             </Grid>
@@ -155,22 +155,23 @@ export function ConnectFooter(props) {
                         <Grid item xs />
                     </Hidden>
                     {locale.connectFooter.buttonSocial.map((item, index) => (
-                        <Grid item xs={'auto'} key={`buttonSocial-${index}`}>
+                        <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
                             <Tooltip
-                                id="auth-button"
-                                title={`Visit the ${item.linktitle}`}
+                                id={`auth-button-${index}`}
+                                title={`${item.linkMouseOver}`}
                                 placement="bottom"
                                 TransitionProps={{ timeout: 300 }}
                             >
                                 <Button
+                                    aria-label={item.linkMouseOver}
                                     classes={{
                                         root: classes.socialButtonClass,
                                     }}
                                     color="primary"
                                     variant="contained"
                                     data-testid={item.dataTestid}
+                                    id={`socialbutton-${index}`}
                                     onClick={() => _navigateToLink(item.linkTo, '_blank')}
-                                    title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
                                 >
                                     {!!item.linklabel ? item.linklabel : item.icon}
                                 </Button>

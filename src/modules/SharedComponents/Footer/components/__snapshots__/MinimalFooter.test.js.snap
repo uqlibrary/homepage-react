@@ -20,126 +20,112 @@ exports[`Component MinimalFooter should render 1`] = `
         >
           Library home
         </a>
+        <Hidden
+          mdUp={true}
+        >
+           | 
+        </Hidden>
       </li>
       <li
-        key="footerseparator-homepage"
-      >
-         | 
-      </li>
-      <span
         key="footerli-0"
       >
-        <li>
-          <a
-            data-testid="connect-services-link"
-            href="https://web.library.uq.edu.au/library-services"
-          >
-            Library services
-          </a>
-        </li>
-        <li
-          key="footerseparator-0"
+        <a
+          data-testid="connect-services-link"
+          href="https://web.library.uq.edu.au/library-services"
+        >
+          Library services
+        </a>
+        <Hidden
+          mdUp={true}
         >
            | 
-        </li>
-      </span>
-      <span
+        </Hidden>
+      </li>
+      <li
         key="footerli-1"
       >
-        <li>
-          <a
-            data-testid="connect-research-link"
-            href="https://web.library.uq.edu.au/research-tools-techniques"
-          >
-            Research tools & techniques
-          </a>
-        </li>
-        <li
-          key="footerseparator-1"
+        <a
+          data-testid="connect-research-link"
+          href="https://web.library.uq.edu.au/research-tools-techniques"
+        >
+          Research tools & techniques
+        </a>
+        <Hidden
+          mdUp={true}
         >
            | 
-        </li>
-      </span>
-      <span
+        </Hidden>
+      </li>
+      <li
         key="footerli-2"
       >
-        <li>
-          <a
-            data-testid="connect-collections-link"
-            href="https://web.library.uq.edu.au/collections"
-          >
-            Collections
-          </a>
-        </li>
-        <li
-          key="footerseparator-2"
+        <a
+          data-testid="connect-collections-link"
+          href="https://web.library.uq.edu.au/collections"
+        >
+          Collections
+        </a>
+        <Hidden
+          mdUp={true}
         >
            | 
-        </li>
-      </span>
-      <span
+        </Hidden>
+      </li>
+      <li
         key="footerli-3"
       >
-        <li>
-          <a
-            data-testid="connect-borrowing-link"
-            href="https://web.library.uq.edu.au/borrowing-requesting"
-          >
-            Borrowing & requesting
-          </a>
-        </li>
-        <li
-          key="footerseparator-3"
+        <a
+          data-testid="connect-borrowing-link"
+          href="https://web.library.uq.edu.au/borrowing-requesting"
+        >
+          Borrowing & requesting
+        </a>
+        <Hidden
+          mdUp={true}
         >
            | 
-        </li>
-      </span>
-      <span
+        </Hidden>
+      </li>
+      <li
         key="footerli-4"
       >
-        <li>
-          <a
-            data-testid="connect-locations-link"
-            href="https://web.library.uq.edu.au/locations-hours"
-          >
-            Locations & hours
-          </a>
-        </li>
-        <li
-          key="footerseparator-4"
+        <a
+          data-testid="connect-locations-link"
+          href="https://web.library.uq.edu.au/locations-hours"
+        >
+          Locations & hours
+        </a>
+        <Hidden
+          mdUp={true}
         >
            | 
-        </li>
-      </span>
-      <span
+        </Hidden>
+      </li>
+      <li
         key="footerli-5"
       >
-        <li>
-          <a
-            data-testid="connect-about-link"
-            href="https://web.library.uq.edu.au/about-us"
-          >
-            About
-          </a>
-        </li>
-        <li
-          key="footerseparator-5"
+        <a
+          data-testid="connect-about-link"
+          href="https://web.library.uq.edu.au/about-us"
+        >
+          About
+        </a>
+        <Hidden
+          mdUp={true}
         >
            | 
-        </li>
-      </span>
-      <span
+        </Hidden>
+      </li>
+      <li
         key="footerli-6"
       >
-        <li>
-          <a
-            data-testid="connect-contact-link"
-            href="https://web.library.uq.edu.au/contact-us"
-          >
-            Contact us
-          </a>
-        </li>
-      </span>
+        <a
+          data-testid="connect-contact-link"
+          href="https://web.library.uq.edu.au/contact-us"
+        >
+          Contact us
+        </a>
+      </li>
     </ul>
   </WithStyles(ForwardRef(Grid))>
   <WithStyles(ForwardRef(Grid))
@@ -175,6 +161,7 @@ exports[`Component MinimalFooter should render 1`] = `
         />
       </Hidden>
       <WithStyles(ForwardRef(Grid))
+        id="buttonSocial-0"
         item={true}
         key="buttonSocial-0"
         xs="auto"
@@ -185,11 +172,12 @@ exports[`Component MinimalFooter should render 1`] = `
               "timeout": 300,
             }
           }
-          id="auth-button"
+          id="auth-button-0"
           placement="bottom"
-          title="Visit the Library Blog"
+          title="Library Blog"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library Blog"
             classes={
               Object {
                 "root": undefined,
@@ -197,6 +185,7 @@ exports[`Component MinimalFooter should render 1`] = `
             }
             color="primary"
             data-testid="connect-blog-link"
+            id="socialbutton-0"
             onClick={[Function]}
             variant="contained"
           >
@@ -205,6 +194,7 @@ exports[`Component MinimalFooter should render 1`] = `
         </WithStyles(ForwardRef(Tooltip))>
       </WithStyles(ForwardRef(Grid))>
       <WithStyles(ForwardRef(Grid))
+        id="buttonSocial-1"
         item={true}
         key="buttonSocial-1"
         xs="auto"
@@ -215,11 +205,12 @@ exports[`Component MinimalFooter should render 1`] = `
               "timeout": 300,
             }
           }
-          id="auth-button"
+          id="auth-button-1"
           placement="bottom"
-          title="Visit the Library on Twitter"
+          title="Library on Twitter"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on Twitter"
             classes={
               Object {
                 "root": undefined,
@@ -227,6 +218,7 @@ exports[`Component MinimalFooter should render 1`] = `
             }
             color="primary"
             data-testid="connect-twitter-link"
+            id="socialbutton-1"
             onClick={[Function]}
             variant="contained"
           >
@@ -235,6 +227,7 @@ exports[`Component MinimalFooter should render 1`] = `
         </WithStyles(ForwardRef(Tooltip))>
       </WithStyles(ForwardRef(Grid))>
       <WithStyles(ForwardRef(Grid))
+        id="buttonSocial-2"
         item={true}
         key="buttonSocial-2"
         xs="auto"
@@ -245,11 +238,12 @@ exports[`Component MinimalFooter should render 1`] = `
               "timeout": 300,
             }
           }
-          id="auth-button"
+          id="auth-button-2"
           placement="bottom"
-          title="Visit the Library on Facebook"
+          title="Library on Facebook"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on Facebook"
             classes={
               Object {
                 "root": undefined,
@@ -257,6 +251,7 @@ exports[`Component MinimalFooter should render 1`] = `
             }
             color="primary"
             data-testid="connect-facebook-link"
+            id="socialbutton-2"
             onClick={[Function]}
             variant="contained"
           >
@@ -265,6 +260,7 @@ exports[`Component MinimalFooter should render 1`] = `
         </WithStyles(ForwardRef(Tooltip))>
       </WithStyles(ForwardRef(Grid))>
       <WithStyles(ForwardRef(Grid))
+        id="buttonSocial-3"
         item={true}
         key="buttonSocial-3"
         xs="auto"
@@ -275,11 +271,12 @@ exports[`Component MinimalFooter should render 1`] = `
               "timeout": 300,
             }
           }
-          id="auth-button"
+          id="auth-button-3"
           placement="bottom"
-          title="Visit the Library on Instagram"
+          title="Library on Instagram"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on Instagram"
             classes={
               Object {
                 "root": undefined,
@@ -287,6 +284,7 @@ exports[`Component MinimalFooter should render 1`] = `
             }
             color="primary"
             data-testid="connect-instagram-link"
+            id="socialbutton-3"
             onClick={[Function]}
             variant="contained"
           >
@@ -295,6 +293,7 @@ exports[`Component MinimalFooter should render 1`] = `
         </WithStyles(ForwardRef(Tooltip))>
       </WithStyles(ForwardRef(Grid))>
       <WithStyles(ForwardRef(Grid))
+        id="buttonSocial-4"
         item={true}
         key="buttonSocial-4"
         xs="auto"
@@ -305,11 +304,12 @@ exports[`Component MinimalFooter should render 1`] = `
               "timeout": 300,
             }
           }
-          id="auth-button"
+          id="auth-button-4"
           placement="bottom"
-          title="Visit the Library on YouTube"
+          title="Library on YouTube"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on YouTube"
             classes={
               Object {
                 "root": undefined,
@@ -317,6 +317,7 @@ exports[`Component MinimalFooter should render 1`] = `
             }
             color="primary"
             data-testid="connect-youtube-link"
+            id="socialbutton-4"
             onClick={[Function]}
             variant="contained"
           >
