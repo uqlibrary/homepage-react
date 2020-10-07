@@ -10,6 +10,7 @@ import ListAltIcon from '@material-ui/icons/ListAlt';
 import SchoolIcon from '@material-ui/icons/School';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
+import InfoOutlined from '@material-ui/icons/InfoOutlined';
 
 const primoPrefix = '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0';
 
@@ -180,6 +181,7 @@ export default {
             location: '',
             hours: '7:30am-7:30pm',
             icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            iconInfo: null,
         },
         {
             title: 'AskUs',
@@ -187,6 +189,7 @@ export default {
             location: '',
             hours: '8am-8pm',
             icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            iconInfo: null,
         },
         {
             title: 'Biol Sci',
@@ -194,6 +197,7 @@ export default {
             location: '',
             hours: '24hrs',
             icon: <AccessTimeIcon style={{ color: 'green' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'Bundaberg',
@@ -201,6 +205,7 @@ export default {
             location: '',
             hours: '8:30am-4:30am',
             icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            iconInfo: null,
         },
         {
             title: 'Central',
@@ -208,6 +213,7 @@ export default {
             location: '',
             hours: '24hrs',
             icon: <AccessTimeIcon style={{ color: 'green' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'DHEngSci',
@@ -215,6 +221,7 @@ export default {
             location: '',
             hours: '24hrs',
             icon: <AccessTimeIcon style={{ color: 'green' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'Duhig Study',
@@ -222,6 +229,7 @@ export default {
             location: '',
             hours: '24hrs',
             icon: <AccessTimeIcon style={{ color: 'green' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'Fryer',
@@ -229,6 +237,7 @@ export default {
             location: '',
             hours: '9am-5pm by appointment',
             icon: <AccessTimeIcon style={{ color: 'orange' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'Gatton',
@@ -236,6 +245,7 @@ export default {
             location: '',
             hours: '24hrs',
             icon: <AccessTimeIcon style={{ color: 'green' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'Herston',
@@ -243,6 +253,7 @@ export default {
             location: '',
             hours: 'Chat/Email/Phone',
             icon: <ImportantDevicesIcon style={{ color: 'orange' }} />,
+            iconInfo: 'Online via Chat/Email/Phone only',
         },
         {
             title: 'Harvey Bay',
@@ -250,6 +261,7 @@ export default {
             location: '',
             hours: 'Online/Phone',
             icon: <ImportantDevicesIcon style={{ color: 'orange' }} />,
+            iconInfo: 'Online via Chat/Phone only',
         },
         {
             title: 'Law',
@@ -257,13 +269,15 @@ export default {
             location: '',
             hours: '24hrs',
             icon: <AccessTimeIcon style={{ color: 'green' }} />,
+            iconInfo: 'Part of this location is open 24hrs',
         },
         {
             title: 'PACE',
             link: '#',
             location: '',
             hours: '7am-10:30pm',
-            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            icon: <InfoOutlined style={{ color: '#316799' }} />,
+            iconInfo: 'Extended study space hours',
         },
         {
             title: 'Rockhampton',
@@ -271,6 +285,7 @@ export default {
             location: '',
             hours: 'Online/Phone',
             icon: <ImportantDevicesIcon style={{ color: 'orange' }} />,
+            iconInfo: 'Online via Chat/Phone only',
         },
         {
             title: 'Toowoomba',
@@ -351,54 +366,60 @@ export default {
     ],
     Training: [
         {
-            day: 'TUE',
-            dayDate: '22',
-            monthDate: 'SEP',
+            date: 'Tuesday 22nd September 2020',
+            day: 'Tuesday',
+            dayDate: 22,
+            monthDate: 'September',
             title: 'NVivo Pro - Next steps',
             time: '9:30am',
             format: 'Online',
             link: '#',
         },
         {
-            day: 'WED',
-            dayDate: '23',
-            monthDate: 'SEP',
+            date: 'Wednesday 23rd September 2020',
+            day: 'Wednesday',
+            dayDate: 23,
+            monthDate: 'September',
             title: 'Excel: processing data',
             time: '9:30am',
             format: 'Online',
             link: '#',
         },
         {
-            day: 'WED',
-            dayDate: '23',
-            monthDate: 'SEP',
+            date: 'Wednesday 23rd September 2020',
+            day: 'Wednesday',
+            dayDate: 23,
+            monthDate: 'September',
             title: 'Endnote: getting started',
             time: '1:30pm',
             format: 'Online',
             link: '#',
         },
         {
-            day: 'WED',
-            dayDate: '23',
-            monthDate: 'SEP',
+            date: 'Wednesday 23rd September 2020',
+            day: 'Wednesday',
+            dayDate: 23,
+            monthDate: 'September',
             title: 'EndNote for thesis and publications writing',
             time: '1:30pm',
             format: 'Online',
             link: '#',
         },
         {
-            day: 'THU',
-            dayDate: '24',
-            monthDate: 'SEP',
+            date: 'Thursday 24th September 2020',
+            day: 'Thursday',
+            dayDate: 24,
+            monthDate: 'September',
             title: 'R data manipulation with RStudio and dplyr:',
             time: '9:30am',
             format: 'Online',
             link: '#',
         },
         {
-            day: 'THU',
-            dayDate: '24',
-            monthDate: 'SEP',
+            date: 'Thursday 24th September 2020',
+            day: 'Thursday',
+            dayDate: 24,
+            monthDate: 'September',
             title: 'Researcher Lunchbox Session: Who’s looking at your research?',
             time: '12:00pm',
             format: 'Online',

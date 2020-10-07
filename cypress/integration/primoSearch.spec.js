@@ -1,6 +1,7 @@
 context('Primo Search', () => {
     it('Acts as expected', () => {
         cy.visit('/');
+        cy.viewport(1300, 1000);
         cy.get('div#primo-search').contains('Search');
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-0"]')
