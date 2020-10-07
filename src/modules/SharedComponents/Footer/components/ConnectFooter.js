@@ -158,20 +158,20 @@ export function ConnectFooter(props) {
                         <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
                             <Tooltip
                                 id={`auth-button-${index}`}
-                                title={`Visit the ${item.linktitle}`}
+                                title={`${item.linkMouseOver}`}
                                 placement="bottom"
                                 TransitionProps={{ timeout: 300 }}
                             >
                                 <Button
+                                    aria-label={item.linkMouseOver}
                                     classes={{
                                         root: classes.socialButtonClass,
                                     }}
                                     color="primary"
                                     variant="contained"
-                                    data-testid={`socialbutton-dataTestid-${index}`}
+                                    data-testid={item.dataTestid}
                                     id={`socialbutton-${index}`}
                                     onClick={() => _navigateToLink(item.linkTo, '_blank')}
-                                    title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
                                 >
                                     {!!item.linklabel ? item.linklabel : item.icon}
                                 </Button>

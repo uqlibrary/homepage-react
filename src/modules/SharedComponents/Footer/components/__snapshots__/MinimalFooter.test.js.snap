@@ -174,16 +174,17 @@ exports[`Component MinimalFooter should render 1`] = `
           }
           id="auth-button-0"
           placement="bottom"
-          title="Visit the Library Blog"
+          title="Library Blog"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library Blog"
             classes={
               Object {
                 "root": undefined,
               }
             }
             color="primary"
-            data-testid="socialbutton-dataTestid-0"
+            data-testid="connect-blog-link"
             id="socialbutton-0"
             onClick={[Function]}
             variant="contained"
@@ -206,16 +207,17 @@ exports[`Component MinimalFooter should render 1`] = `
           }
           id="auth-button-1"
           placement="bottom"
-          title="Visit the Library on Twitter"
+          title="Library on Twitter"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on Twitter"
             classes={
               Object {
                 "root": undefined,
               }
             }
             color="primary"
-            data-testid="socialbutton-dataTestid-1"
+            data-testid="connect-twitter-link"
             id="socialbutton-1"
             onClick={[Function]}
             variant="contained"
@@ -238,16 +240,17 @@ exports[`Component MinimalFooter should render 1`] = `
           }
           id="auth-button-2"
           placement="bottom"
-          title="Visit the Library on Facebook"
+          title="Library on Facebook"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on Facebook"
             classes={
               Object {
                 "root": undefined,
               }
             }
             color="primary"
-            data-testid="socialbutton-dataTestid-2"
+            data-testid="connect-facebook-link"
             id="socialbutton-2"
             onClick={[Function]}
             variant="contained"
@@ -270,16 +273,17 @@ exports[`Component MinimalFooter should render 1`] = `
           }
           id="auth-button-3"
           placement="bottom"
-          title="Visit the Library on Instagram"
+          title="Library on Instagram"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on Instagram"
             classes={
               Object {
                 "root": undefined,
               }
             }
             color="primary"
-            data-testid="socialbutton-dataTestid-3"
+            data-testid="connect-instagram-link"
             id="socialbutton-3"
             onClick={[Function]}
             variant="contained"
@@ -302,16 +306,17 @@ exports[`Component MinimalFooter should render 1`] = `
           }
           id="auth-button-4"
           placement="bottom"
-          title="Visit the Library on YouTube"
+          title="Library on YouTube"
         >
           <WithStyles(ForwardRef(Button))
+            aria-label="Library on YouTube"
             classes={
               Object {
                 "root": undefined,
               }
             }
             color="primary"
-            data-testid="socialbutton-dataTestid-4"
+            data-testid="connect-youtube-link"
             id="socialbutton-4"
             onClick={[Function]}
             variant="contained"
