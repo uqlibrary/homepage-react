@@ -220,7 +220,7 @@ export class AppClass extends PureComponent {
                 <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
                     <div style={{ marginBottom: 24 }}>
-                        <Hidden mdUp>
+                        <Hidden lgUp>
                             <Megamenu
                                 hasCloseItem
                                 history={this.props.history}
@@ -234,7 +234,7 @@ export class AppClass extends PureComponent {
                                 toggleMenu={this.toggleMenu}
                             />
                         </Hidden>
-                        <Hidden smDown>
+                        <Hidden mdDown>
                             <Megamenu
                                 menuItems={menuItems}
                                 history={this.props.history}
