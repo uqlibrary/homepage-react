@@ -7,6 +7,7 @@
 .idea/markdown-exported-files.xml
 .idea/dbnavigator.xml
 .idea/markdown-navigator.xml
+.idea/shelf/
 node_modules
 dist
 npm-debug.log*
