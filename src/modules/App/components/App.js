@@ -141,6 +141,15 @@ export class AppClass extends PureComponent {
                 chatStatus: { online: true },
             });
         }
+        this.props.actions.showAppAlert({
+            title: 'We are open on-campus and online.',
+            message: 'Access collections, services, and support to help you continue your work and study.',
+            type: 'info_outline',
+            action: () => (window.location.href = 'https://web.library.uq.edu.au/library-services/covid-19'),
+            actionButtonLabel: 'UQ Library COVID-19 Updates',
+            dismissAction: this.props.actions.dismissAppAlert,
+            allowDismiss: true,
+        });
     }
 
     componentWillUnmount() {

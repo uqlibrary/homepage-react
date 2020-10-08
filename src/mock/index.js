@@ -61,6 +61,7 @@ mock.onGet(routes.CHAT_API().apiUrl).reply(() => {
     console.log('Chat status API hit');
     // mock chat status
     return [200, { online: true }];
+    // return [200, { online: false }];
 });
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {

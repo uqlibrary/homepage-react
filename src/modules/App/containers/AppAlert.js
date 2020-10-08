@@ -11,10 +11,8 @@ const AppAlert = ({ appAlert }) => {
     if (!appAlert) return null;
 
     return (
-        <div className="dashAlert">
-            <div className="layout-card">
-                <Alert {...appAlert} />
-            </div>
+        <div style={{ width: '100%' }}>
+            <Alert {...appAlert} />
         </div>
     );
 };
