@@ -54,10 +54,10 @@ export default class Masquerade extends PureComponent {
                 <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
                     <StandardCard noPadding noHeader>
                         <Grid
+                            alignItems={'flex-end'}
                             container
                             spacing={1}
                             style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
-                            alignItems={'flex-end'}
                         >
                             <Grid item xs={12} md={'auto'} id="masquerade">
                                 <InputLabel id="masquerade-form-label">{txt.title}</InputLabel>
@@ -67,23 +67,25 @@ export default class Masquerade extends PureComponent {
                                 <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
                                     <Grid item xs>
                                         <TextField
+                                            data-testid="masquerade-userName"
                                             fullWidth
                                             id="userName"
                                             label={txt.labels.hint}
-                                            value={this.state.userName}
                                             onChange={this._usernameChanged}
                                             onKeyPress={this._masqueradeAs}
+                                            value={this.state.userName}
                                         />
                                     </Grid>
                                     <Grid item xs={12} sm={'auto'}>
                                         <Button
-                                            variant="contained"
-                                            id="submitMasquerade"
-                                            fullWidth
-                                            color="primary"
                                             children={txt.labels.submit}
+                                            color="primary"
+                                            data-testid="masquerade-submit"
                                             disabled={this.state.loading}
+                                            fullWidth
+                                            id="submitMasquerade"
                                             onClick={this._masqueradeAs}
+                                            variant="contained"
                                         />
                                     </Grid>
                                 </Grid>
