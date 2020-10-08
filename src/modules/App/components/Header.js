@@ -174,7 +174,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
     };
 
     const MasqueradeLink = () => {
-        return !!account.canMasquerade ? (
+        return !!account && !!account.canMasquerade ? (
             <Grid item xs={6}>
                 <MenuItem onClick={_navigateToMasquerade}>
                     <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
