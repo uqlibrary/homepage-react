@@ -171,6 +171,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
 
     const _navigateToMasquerade = () => {
         history.push(pathConfig.admin.masquerade);
+        handleClose2();
     };
 
     const MasqueradeLink = () => {
