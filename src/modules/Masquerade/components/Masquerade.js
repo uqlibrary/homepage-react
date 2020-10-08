@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import txt from './masqueradeLocale';
-import { routes } from 'config';
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -31,7 +30,7 @@ export default class Masquerade extends PureComponent {
             loading: true,
         });
 
-        const redirectUrl = `${window.location.protocol}//${window.location.hostname}${routes.pathConfig.dashboard}`;
+        const redirectUrl = `${window.location.protocol}//${window.location.hostname}/`;
         window.location.assign(
             `https://auth.library.uq.edu.au/masquerade?user=${this.state.userName}&return=${window.btoa(redirectUrl)}`,
         );
@@ -43,8 +42,8 @@ export default class Masquerade extends PureComponent {
         });
     };
 
-    userCapabilityStatement = account => {
-        return account.canMasqueradeType && account.canMasqueradeType === 'readonly'
+    userCapabilityStatement = canMasqueradeType => {
+        return canMasqueradeType && canMasqueradeType === 'readonly'
             ? txt.user.access.readonly.capabilityStatement
             : txt.user.access.full.capabilityStatement;
     };
@@ -62,7 +61,9 @@ export default class Masquerade extends PureComponent {
                         >
                             <Grid item xs={12} md={'auto'} id="masquerade">
                                 <InputLabel id="masquerade-form-label">{txt.title}</InputLabel>
-                                <Typography>{this.userCapabilityStatement(this.props.account)}</Typography>
+                                <Typography>
+                                    {this.userCapabilityStatement(this.props.account.canMasqueradeType)}
+                                </Typography>
                                 <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
                                     <Grid item xs>
                                         <TextField
