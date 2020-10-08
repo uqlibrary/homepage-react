@@ -169,8 +169,20 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
         setAnchorEl(null);
     };
 
-    const showMasquerade = () => {
+    const _navigateToMasquerade = () => {
         history.push(pathConfig.admin.masquerade);
+        handleClose2();
+    };
+
+    const MasqueradeLink = () => {
+        return !!account && !!account.canMasquerade ? (
+            <Grid item xs={6}>
+                <MenuItem onClick={_navigateToMasquerade}>
+                    <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
+                    Masquerade
+                </MenuItem>
+            </Grid>
+        ) : null;
     };
 
     const UQRadio = withStyles({
@@ -323,12 +335,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                         Hours
                                     </MenuItem>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={showMasquerade}>
-                                        <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Masquerade
-                                    </MenuItem>
-                                </Grid>
+                                <MasqueradeLink />
                                 <Grid item xs={6}>
                                     <MenuItem onClick={handleClose}>
                                         <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />

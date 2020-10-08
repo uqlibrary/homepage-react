@@ -61,6 +61,7 @@ exports[`Component Masquerade Should render form as expected 1`] = `
               xs={true}
             >
               <WithStyles(ForwardRef(TextField))
+                data-testid="masquerade-userName"
                 fullWidth={true}
                 id="userName"
                 label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
@@ -76,6 +77,7 @@ exports[`Component Masquerade Should render form as expected 1`] = `
             >
               <WithStyles(ForwardRef(Button))
                 color="primary"
+                data-testid="masquerade-submit"
                 disabled={false}
                 fullWidth={true}
                 id="submitMasquerade"
@@ -154,6 +156,7 @@ exports[`Component Masquerade Should render readonly description 1`] = `
               xs={true}
             >
               <WithStyles(ForwardRef(TextField))
+                data-testid="masquerade-userName"
                 fullWidth={true}
                 id="userName"
                 label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
@@ -169,6 +172,7 @@ exports[`Component Masquerade Should render readonly description 1`] = `
             >
               <WithStyles(ForwardRef(Button))
                 color="primary"
+                data-testid="masquerade-submit"
                 disabled={false}
                 fullWidth={true}
                 id="submitMasquerade"
