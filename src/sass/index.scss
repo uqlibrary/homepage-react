@@ -69,15 +69,14 @@ a {
 
 // The container which houses content
 .content-container {
-  width: 100%;
-  height: calc(100% - 90px);
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
   margin-top: 0;
-  padding-bottom: 24px;
+}
+
+.content-header {
+  flex: 0 1 auto;
 }
 
 // Citation styles

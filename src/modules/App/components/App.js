@@ -49,6 +49,8 @@ const styles = theme => ({
         },
     },
     layoutFill: {
+        display: 'flex',
+        flexFlow: 'column',
         margin: 0,
         padding: 0,
         maxHeight: '100%',
@@ -99,6 +101,7 @@ export class AppClass extends PureComponent {
         super(props);
         this.state = {
             menuOpen: false,
+            alertOpen: false,
             docked: false,
             chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
@@ -224,9 +227,15 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <AppAlertContainer />
-                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
-                <ChatStatus status={this.props.chatStatus} />
+                <div className="content-header">
+                    <ChatStatus status={this.props.chatStatus} />
+                    <AppAlertContainer />
+                    <Header
+                        isAuthorizedUser={isAuthorizedUser}
+                        account={this.props.account}
+                        toggleMenu={this.toggleMenu}
+                    />
+                </div>
                 <div className="content-container" id="content-container">
                     <div style={{ marginBottom: 24 }}>
                         <Hidden mdUp>
