@@ -6,7 +6,7 @@ context('ACCESSIBILITY Megamenu', () => {
         cy.get('[data-testid=mainMenu]').contains('Library services');
         cy.log('Megamenu Desktop');
         // open first menu
-        cy.get('#mainMenu span:first-child div:first-child div span').click();
+        cy.get('[data-testid=submenus-item-0').click();
         cy.checkA11y('[data-testid=mainMenu]', {
             reportName: 'Megamenu',
             scopeName: 'Content',
@@ -18,7 +18,7 @@ context('ACCESSIBILITY Megamenu', () => {
         cy.viewport(414, 736);
         cy.get('[data-testid=hamburger]');
         cy.log('Megamenu mobile');
-        // open first menu
+        // open menu
         cy.get('[data-testid=hamburger]').click();
         cy.checkA11y('[data-testid=hamburger]', {
             reportName: 'Megamenu',
