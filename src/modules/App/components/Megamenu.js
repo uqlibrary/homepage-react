@@ -240,7 +240,8 @@ export function Megamenu(props) {
     // from https://stackoverflow.com/questions/37440408/how-to-detect-esc-key-press-in-react-and-how-to-handle-it/46123962
     // close menu when escape key pressed
     const escFunction = event => {
-        if (event.keyCode === 27) {
+        const escapeKeyCode = 27;
+        if (event.keyCode === escapeKeyCode) {
             closeAllSubMenus(false);
         }
     };

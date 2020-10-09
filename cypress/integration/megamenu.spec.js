@@ -25,10 +25,18 @@ context('Megamenu', () => {
         cy.viewport(1300, 1000);
         cy.get('[data-testid=mainMenu]').contains('Library services');
         cy.log('Megamenu Desktop');
+
         // open first menu
         cy.get('[data-testid=submenus-item-0').click();
+        cy.get('[data-testid=menu-group-1-item-0]').should('be.visible');
+
+        // a menu can be closed with an escape key click
+        cy.get('[data-testid=submenus-item-0]').type('{esc}', { force: true });
+        cy.get('[data-testid=menu-group-1-item-0]').should('not.be.visible');
+
         // if the menu locale changes, this test may need updating
-        cy.get('[data-testid=menu-group-1-item-0')
+        cy.get('[data-testid=submenus-item-0').click();
+        cy.get('[data-testid=menu-group-1-item-0]')
             .contains('for Students')
             .click();
         // just check the domain - less likely to change and good enough as most menu items go there
