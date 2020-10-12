@@ -23,12 +23,16 @@ export const getDatastreamVersionQueryString = (fileName, checksum) => {
 
 export const pathConfig = {
     index: '/',
+    // I dont think this is needed as contact is handled through web.library, but keep it for the notfound test for now
     contact: '/contact',
     admin: {
         masquerade: '/admin/masquerade',
     },
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
 };
+
+// a duplicate list of routes for checking validity easily
+export const flattedPathConfig = ['/', '/contact', '/admin/masquerade'];
 
 // TODO: will we even have roles?
 export const roles = {
@@ -63,6 +67,9 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
                   },
               ]
             : []),
+        {
+            component: components.NotFound,
+        },
     ];
 };
 
