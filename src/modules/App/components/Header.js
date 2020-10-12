@@ -1,28 +1,34 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
+
+import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
+
+const logo = require('../../../../public/images/uq-lockup-landscape--reversed.svg');
+
+import locale from 'locale/global';
+import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
+import { pathConfig } from 'config/routes';
+
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
-import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
+import Input from '@material-ui/core/Input';
+import Tooltip from '@material-ui/core/Tooltip';
+import Radio from '@material-ui/core/Radio';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
+import Hidden from '@material-ui/core/Hidden';
+
 import { default as MenuIcon } from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import CloseIcon from '@material-ui/icons/Close';
-import Input from '@material-ui/core/Input';
-import Tooltip from '@material-ui/core/Tooltip';
-import Radio from '@material-ui/core/Radio';
-const logo = require('../../../../public/images/uq-lockup-landscape--reversed.svg');
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Hidden from '@material-ui/core/Hidden';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
 import MailIcon from '@material-ui/icons/Mail';
 import ChatIcon from '@material-ui/icons/Chat';
 import PhoneIcon from '@material-ui/icons/Phone';
 import DescriptionIcon from '@material-ui/icons/Description';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
-import locale from 'locale/global';
-import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 import AppsIcon from '@material-ui/icons/Apps';
 import ComputerIcon from '@material-ui/icons/Computer';
 import SchoolIcon from '@material-ui/icons/School';
@@ -133,7 +139,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
+export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -161,6 +167,22 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
 
     const handleClose = () => {
         setAnchorEl(null);
+    };
+
+    const _navigateToMasquerade = () => {
+        history.push(pathConfig.admin.masquerade);
+        handleClose2();
+    };
+
+    const MasqueradeLink = () => {
+        return !!account && !!account.canMasquerade ? (
+            <Grid item xs={6}>
+                <MenuItem onClick={_navigateToMasquerade}>
+                    <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
+                    Masquerade
+                </MenuItem>
+            </Grid>
+        ) : null;
     };
 
     const UQRadio = withStyles({
@@ -313,12 +335,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                                         Hours
                                     </MenuItem>
                                 </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Masquerade
-                                    </MenuItem>
-                                </Grid>
+                                <MasqueradeLink />
                                 <Grid item xs={6}>
                                     <MenuItem onClick={handleClose}>
                                         <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
@@ -474,6 +491,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
 
 Header.propTypes = {
     account: PropTypes.object,
+    history: PropTypes.object,
     isAuthorizedUser: PropTypes.bool,
     isAdmin: PropTypes.bool,
     toggleMenu: PropTypes.func,
