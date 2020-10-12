@@ -30,6 +30,10 @@ context('Megamenu', () => {
         cy.get('[data-testid=submenus-item-0').click();
         cy.get('[data-testid=menu-group-1-item-0]').should('be.visible');
 
+        // menus close when user tabs out of end of menu or
+        // shift-tabs out of the beginning of a menu and then off the header
+        // tbd - cypress support coming https://github.com/cypress-io/cypress/issues/299
+
         // a menu can be closed with an escape key click
         cy.get('[data-testid=submenus-item-0]').type('{esc}', { force: true });
         cy.get('[data-testid=menu-group-1-item-0]').should('not.be.visible');
