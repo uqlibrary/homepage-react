@@ -3,7 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import MicIcon from '@material-ui/icons/Mic';
 import ClearIcon from '@material-ui/icons/Clear';
-import { default as defaultLocale } from './locale';
+import { default as defaultLocale } from '../../../Index/components/locale';
 import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognition';
 import { PropTypes } from 'prop-types';
 import Grid from '@material-ui/core/Grid';

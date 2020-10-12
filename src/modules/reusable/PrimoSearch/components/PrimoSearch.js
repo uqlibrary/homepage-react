@@ -1,20 +1,23 @@
 import React, { useState } from 'react';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { makeStyles } from '@material-ui/styles';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import TextField from '@material-ui/core/TextField';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
+
 import { PropTypes } from 'prop-types';
-import Button from '@material-ui/core/Button';
-import SearchIcon from '@material-ui/icons/Search';
-import { default as defaultLocale } from './locale.js';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { primoSearch as defaultLocale } from './primoSearchLocale';
 import { VoiceToText } from './voiceToText';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import FormControl from '@material-ui/core/FormControl';
+import Hidden from '@material-ui/core/Hidden';
+import Grid from '@material-ui/core/Grid';
+import InputLabel from '@material-ui/core/InputLabel';
+import { makeStyles } from '@material-ui/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import SearchIcon from '@material-ui/icons/Search';
+import Select from '@material-ui/core/Select';
+import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(
@@ -79,7 +82,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     const handleSearchButton = event => {
         event.preventDefault();
         if (!!searchKeyword) {
-            const link = locale.PrimoSearch.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
+            const link = locale.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
             window.location.assign(link);
         }
     };
@@ -101,15 +104,14 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         },
         [actions, searchType],
     );
+
     return (
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
                         <FormControl style={{ width: '100%' }}>
-                            <InputLabel id="primo-search-select-label">
-                                {locale.PrimoSearch.typeSelect.label}
-                            </InputLabel>
+                            <InputLabel id="primo-search-select-label">{locale.typeSelect.label}</InputLabel>
                             <Select
                                 labelId="primo-search-select-label"
                                 id="primo-search-select"
@@ -122,7 +124,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                     'data-testid': 'primo-search-select-list',
                                 }}
                             >
-                                {locale.PrimoSearch.typeSelect.items.map((item, index) => (
+                                {locale.typeSelect.items.map((item, index) => (
                                     <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
                                         {item.icon}&nbsp;{item.name}
                                     </MenuItem>
@@ -157,7 +159,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                 return (
                                     <TextField
                                         {...params}
-                                        placeholder={locale.PrimoSearch.typeSelect.items[searchType].placeholder}
+                                        placeholder={locale.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{
                                             ...params.InputProps,
@@ -218,7 +220,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Grid item xs />
                         </Hidden>
                     )}
-                    {locale.PrimoSearch.links.map((item, index) => {
+                    {locale.links.map((item, index) => {
                         if (item.display.includes(searchType)) {
                             return (
                                 <Grid
