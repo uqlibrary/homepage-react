@@ -65,9 +65,12 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
+export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions, displayType }) => {
     const classes = useStyles();
-    const [searchType, setSearchType] = useState(0);
+
+    const searchTypeCourseResources = 8;
+    const searchTypeAll = 0;
+    const [searchType, setSearchType] = useState(displayType === 'all' ? searchTypeAll : searchTypeCourseResources);
     const [searchKeyword, setSearchKeyword] = useState('');
 
     const handleClearSuggestions = () => {
@@ -91,11 +94,11 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         (event, newValue) => {
             setSearchKeyword(newValue);
             if (newValue.length > 3) {
-                if ([0, 1, 3, 4, 5].includes(searchType)) {
+                if ([searchTypeAll, 1, 3, 4, 5].includes(searchType)) {
                     actions.loadPrimoSuggestions(newValue);
                 } else if (searchType === 7) {
                     actions.loadExamPaperSuggestions(newValue);
-                } else if (searchType === 8) {
+                } else if (searchType === searchTypeCourseResources) {
                     actions.loadCourseReadingListsSuggestions(newValue);
                 }
                 console.log('focussing on the input');
@@ -109,29 +112,31 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
         <StandardCard noPadding noHeader>
             <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
-                    <Grid item xs={12} md={'auto'}>
-                        <FormControl style={{ width: '100%' }}>
-                            <InputLabel id="primo-search-select-label">{locale.typeSelect.label}</InputLabel>
-                            <Select
-                                labelId="primo-search-select-label"
-                                id="primo-search-select"
-                                data-testid="primo-search-select"
-                                error={!!suggestionsError}
-                                value={searchType}
-                                className={classes.selectInput}
-                                onChange={handleSearchTypeChange}
-                                MenuProps={{
-                                    'data-testid': 'primo-search-select-list',
-                                }}
-                            >
-                                {locale.typeSelect.items.map((item, index) => (
-                                    <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
-                                        {item.icon}&nbsp;{item.name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Grid>
+                    {displayType === 'all' && (
+                        <Grid item xs={12} md={'auto'}>
+                            <FormControl style={{ width: '100%' }}>
+                                <InputLabel id="primo-search-select-label">{locale.typeSelect.label}</InputLabel>
+                                <Select
+                                    labelId="primo-search-select-label"
+                                    id="primo-search-select"
+                                    data-testid="primo-search-select"
+                                    error={!!suggestionsError}
+                                    value={searchType}
+                                    className={classes.selectInput}
+                                    onChange={handleSearchTypeChange}
+                                    MenuProps={{
+                                        'data-testid': 'primo-search-select-list',
+                                    }}
+                                >
+                                    {locale.typeSelect.items.map((item, index) => (
+                                        <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
+                                            {item.icon}&nbsp;{item.name}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </Grid>
+                    )}
                     <Grid item xs={12} sm>
                         <Autocomplete
                             value={searchKeyword}
@@ -220,25 +225,26 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Grid item xs />
                         </Hidden>
                     )}
-                    {locale.links.map((item, index) => {
-                        if (item.display.includes(searchType)) {
-                            return (
-                                <Grid
-                                    item
-                                    key={index}
-                                    xs={'auto'}
-                                    data-testid={`primo-search-links-${index}`}
-                                    className={classes.searchUnderlinks}
-                                >
-                                    <a href={item.link} rel="noreferrer">
-                                        {item.label}
-                                    </a>
-                                </Grid>
-                            );
-                        } else {
-                            return null;
-                        }
-                    })}
+                    {displayType === 'all' &&
+                        locale.links.map((item, index) => {
+                            if (item.display.includes(searchType)) {
+                                return (
+                                    <Grid
+                                        item
+                                        key={index}
+                                        xs={'auto'}
+                                        data-testid={`primo-search-links-${index}`}
+                                        className={classes.searchUnderlinks}
+                                    >
+                                        <a href={item.link} rel="noreferrer">
+                                            {item.label}
+                                        </a>
+                                    </Grid>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
                 </Grid>
             </form>
         </StandardCard>
@@ -246,6 +252,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
 };
 
 PrimoSearch.propTypes = {
+    displayType: PropTypes.string, // 'all' for full homepage display or 'courseresources' for course resource search
     locale: PropTypes.any,
     option: PropTypes.any,
     suggestions: PropTypes.any,
@@ -255,6 +262,7 @@ PrimoSearch.propTypes = {
 };
 
 PrimoSearch.defaultProps = {
+    displayType: 'all',
     locale: defaultLocale,
 };
 
