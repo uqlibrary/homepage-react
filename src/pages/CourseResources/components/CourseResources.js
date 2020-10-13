@@ -103,13 +103,7 @@ export const CourseResources = () => {
     const renderCurrentCourses = (
         <Fragment>
             <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
-                <Tabs
-                    // centered
-                    onChange={handleCourseTabChange}
-                    scrollButtons="auto"
-                    value={coursemenu}
-                    variant="scrollable"
-                >
+                <Tabs onChange={handleCourseTabChange} scrollButtons="auto" value={coursemenu} variant="scrollable">
                     {account.currentclasses.map((item, index) => {
                         return (
                             <Tab
@@ -130,11 +124,10 @@ export const CourseResources = () => {
                         index={`class-${index}`}
                         key={`classpanel-${index}`}
                         tabId="coursemenu"
-                        value={item}
-                        style={{ backgroundColor: 'red', height: '200px' }}
+                        value={coursemenu}
                     >
                         <Grid>
-                            <span>{item.classnumber}dsfskfkfg dsfasfas afdsgddsg</span>
+                            <span>{item.classnumber}</span>
                         </Grid>
                     </TabPanel>
                 );
