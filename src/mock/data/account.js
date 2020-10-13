@@ -70,6 +70,26 @@ export const accounts = {
         "mail": "undegraduate@student.uq.edu.au",
         "barcode": "111111111111111",
         "groups": null,
+        "currentclasses": [
+            {
+                "subject": "FREN",
+                "subjectLevel": "1010",
+                "classnumber": "FREN1010",
+                "classname": "Introductory French 1",
+            },
+            {
+                "subject": "HIST",
+                "subjectLevel": "1201",
+                "classnumber": "HIST1201",
+                "classname": "The Australian  Experience",
+            },
+            {
+                "subject": "HIST",
+                "subjectLevel": "312",
+                "classnumber": "HIST2312",
+                "classname": "The History Makers",
+            },
+        ],
         "classes": [{
             "ACAD_CAREER": "UGRD",
             "DESCR": "Real Estate Development Plg",
