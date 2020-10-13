@@ -5,6 +5,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
 import InputLabel from '@material-ui/core/InputLabel';
+import PrimoSearch from '../../../modules/reusable/PrimoSearch/containers/PrimoSearch';
 
 export const CourseResources = () => {
     return (
@@ -19,6 +20,9 @@ export const CourseResources = () => {
                     >
                         <Grid item xs={12} md={'auto'} id="courseresources">
                             <InputLabel id="courseresources-label">Course Resources</InputLabel>
+                        </Grid>
+                        <Grid item xs={12} id="courseresource-search">
+                            <PrimoSearch displayType="courseresources" />
                         </Grid>
                     </Grid>
                 </StandardCard>
