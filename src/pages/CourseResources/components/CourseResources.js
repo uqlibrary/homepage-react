@@ -210,6 +210,16 @@ export const CourseResources = () => {
             );
         };
 
+        const alphabeticSort = (a, b) => {
+            if (a < b) {
+                return -1;
+            }
+            if (a > b) {
+                return 1;
+            }
+            return 0;
+        };
+
         return (
             <Grid container>
                 <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -239,15 +249,7 @@ export const CourseResources = () => {
                                 !!courseReadingList &&
                                 courseReadingList.length > 0 &&
                                 courseReadingList
-                                    .sort((a, b) => {
-                                        if (a.referenceType < b.referenceType) {
-                                            return -1;
-                                        }
-                                        if (a.referenceType > b.referenceType) {
-                                            return 1;
-                                        }
-                                        return 0;
-                                    })
+                                    .sort((a, b) => alphabeticSort(a.referenceType, b.referenceType))
                                     .slice(0, locale.visibleItemsCount.readingLists)
                                     .map((list, index) => {
                                         return (
