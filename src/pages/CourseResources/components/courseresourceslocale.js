@@ -33,4 +33,15 @@ export default {
             linkTo: 'https://web.library.uq.edu.au/library-services/training',
         },
     ],
+    visibleItemsCount: {
+        // max number of items of each type we should display
+        readingLists: 2,
+        examPapers: 2,
+        libGuides: 2,
+    },
+    notesTrimLength: 90,
+    examPapersSearchUrl: 'https://www.library.uq.edu.au/exams/papers.php?stub=',
+    ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
+    blackboardUrl: 'https://learn.uq.edu.au/',
+    readingListText: 'Reading lists',
 };

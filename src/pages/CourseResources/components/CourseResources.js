@@ -16,10 +16,15 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+
+// mock data in early stage of dev
+import courseReadingList from '../../../../src/mock/data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
+import learningResourceData from '../../../../src/mock/data/records/learningResources_FREN1010';
+import libraryGuide from '../../../../src/mock/data/records/libraryGuides_FREN1010';
+
 function TabPanel(props) {
     const { children, value, tabId, index, ...other } = props;
-
-    console.log('tab ', tabId, index, ': ', children);
 
     return (
         <div
@@ -80,14 +85,17 @@ export const CourseResources = () => {
             {!!locale.studyHelpLinks &&
                 locale.studyHelpLinks.length > 0 &&
                 locale.studyHelpLinks.map((item, index) => {
-                    console.log('studylink: ', index);
                     return item.linkTo && item.linkLabel ? (
-                        <Grid item xs={12} style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
+                        <Grid
+                            item
+                            key={`studylink-${index}`}
+                            xs={12}
+                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
+                        >
                             <a
                                 // on-tap="linkClicked"
                                 id={item.id || null}
                                 href={item.linkTo}
-                                key={`studylink-${index}`}
                             >
                                 {!!item.icon && item.icon}
                                 {item.linkLabel}
@@ -100,6 +108,286 @@ export const CourseResources = () => {
         </Fragment>
     );
 
+    const _pluralise = (word, num) => {
+        return word + (num === 1 ? '' : 's');
+    };
+
+    const _trimNotes = value => {
+        if (value && value.length > this.notesTrimLength) {
+            let _trimmed = value.substring(0, this.notesTrimLength);
+            // trim on word boundary
+            _trimmed = _trimmed.substring(0, _trimmed.lastIndexOf(' '));
+            return _trimmed + '...';
+        } else {
+            return value;
+        }
+    };
+
+    const _extractExtension = url => {
+        return url.substring(url.lastIndexOf('.') + 1);
+    };
+
+    const _courseLink = (courseId, url) => {
+        return url + courseId;
+    };
+
+    const renderSubjectTab = subject => {
+        // load data here?
+
+        const courseTitle = learningResourceData.length > 0 ? learningResourceData[0].course_title : null;
+        // const readingLists = courseReadingList.length > 0 ? courseReadingList[0].reading_lists : null;
+
+        const talisReadingListLink =
+            (learningResourceData.length > 0 &&
+                !!learningResourceData.reading_lists &&
+                learningResourceData.reading_lists.length > 0 &&
+                learningResourceData.reading_lists[0].url) ||
+            null;
+
+        const numberExcessReadingLists =
+            courseReadingList.length > locale.visibleItemsCount.readingLists
+                ? courseReadingList.length - locale.visibleItemsCount.readingLists
+                : 0;
+
+        const examList = learningResourceData.length === 1 ? learningResourceData[0].exam_papers : null;
+        const numberExcessExams =
+            !!learningResourceData[0] &&
+            learningResourceData[0].exam_papers.length > locale.visibleItemsCount.examPapers
+                ? learningResourceData[0].exam_papers.length - locale.visibleItemsCount.examPapers
+                : 0;
+
+        const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
+        const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
+
+        console.log('learningResourceData = ', learningResourceData);
+        console.log('courseReadingList = ', courseReadingList);
+        console.log('libraryGuide = ', libraryGuide);
+        libraryGuide.map(guide => {
+            console.log(guide.title, ': ', guide.url);
+        });
+        return (
+            <Grid container>
+                <Grid item xs={12} style={{ textAlign: 'center' }}>
+                    <Typography color={'primary'} variant={'h5'} component={'span'} style={{ fontSize: '1.33rem' }}>
+                        {subject.classnumber} - {courseTitle}
+                    </Typography>
+                </Grid>
+
+                <StandardCard
+                    className="readingLists"
+                    style={{ width: '100%', marginBottom: '1rem', marginTop: '1rem' }}
+                    title={`${locale.readingListText} (${courseReadingList.length})`}
+                >
+                    {/* <div>Loading</div> */}
+                    <Grid container>
+                        <Grid item xs={12}>
+                            {(!learningResourceData || learningResourceData.length === 0) && (
+                                <Typography>No reading lists for this course</Typography>
+                            )}
+
+                            {/* PHIL1002 is currently an example of multiple reading lists */}
+                            {!!learningResourceData && learningResourceData.length > 1 && (
+                                <Typography>
+                                    More than one reading list found for
+                                    <span>{subject.classnumber}</span>. Please select a list:
+                                </Typography>
+                            )}
+                            {!!learningResourceData &&
+                                learningResourceData.length > 1 &&
+                                learningResourceData.map((list, index) => {
+                                    <Grid container style={{ borderTop: '1px solid #e8e8e8' }}>
+                                        <a
+                                            aria-label={`Reading list for  ${list.title} ${list.period}`}
+                                            href={list.url}
+                                            key={`lrlink-${index}`}
+                                        >
+                                            {list.title}, {list.period}
+                                        </a>
+                                    </Grid>;
+                                })}
+                            {!!learningResourceData && learningResourceData.length > 1 && (
+                                <Grid>
+                                    <a href="http://lr.library.uq.edu.au/index.html">
+                                        <ArrowForwardIcon />
+                                        Search other reading lists
+                                    </a>
+                                </Grid>
+                            )}
+                            {!!courseReadingList &&
+                                courseReadingList.length > 0 &&
+                                courseReadingList.slice(0, locale.visibleItemsCount.readingLists).map((list, index) => {
+                                    return (
+                                        <Grid
+                                            key={`readingList-${index}`}
+                                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
+                                        >
+                                            {!!list.itemLink && !!list.title && (
+                                                <Grid className="subhead">
+                                                    <a
+                                                        aria-label={readingListItemAriaLabel}
+                                                        className="reading-list-item"
+                                                        href={list.itemLink}
+                                                        on-click="linkClicked"
+                                                    >
+                                                        {list.title}
+                                                    </a>
+                                                </Grid>
+                                            )}
+                                            {!list.itemLink && !!list.title && <Typography>{list.title}</Typography>}
+                                            {!!list.author && (
+                                                <Typography>
+                                                    <i>
+                                                        <span>
+                                                            {list.author}, {list.year}
+                                                        </span>{' '}
+                                                    </i>
+                                                </Typography>
+                                            )}
+                                            {/* is the logic here right? */}
+                                            {!!list.notes && !(!list.startPage || !list.endPage) && (
+                                                <Typography>
+                                                    {!!list.startPage && !!list.endPage && (
+                                                        <span>
+                                                            Pages from {list.startPage} to {list.endPage}
+                                                        </span>
+                                                    )}
+                                                    <span>{_trimNotes(list.notes)}</span>
+                                                </Typography>
+                                            )}
+                                            <Typography>
+                                                {list.referenceType}
+                                                {!!list.importance && (
+                                                    <span>
+                                                        - <span>{list.importance}</span>
+                                                    </span>
+                                                )}
+                                            </Typography>
+                                        </Grid>
+                                    );
+                                })}
+                            {/* eg MATH4091 has 12 reading lists */}
+                            {!!talisReadingListLink && !!numberExcessReadingLists && (
+                                <div className="card-actions">
+                                    <a on-click="linkClicked" href={talisReadingListLink}>
+                                        <ArrowForwardIcon />
+                                        {numberExcessReadingLists} more {_pluralise('item', numberExcessReadingLists)}
+                                    </a>
+                                </div>
+                            )}
+                        </Grid>
+                    </Grid>
+                </StandardCard>
+
+                <StandardCard
+                    className="exams"
+                    style={{ width: '100%', marginBottom: '1rem' }}
+                    title={`Past exam papers (${examList.length})`}
+                >
+                    {/* exams loading spinner */}
+                    {!!examList && examList.length === 0 && (
+                        <Grid>
+                            <Typography>No Past Exam Papers for this course</Typography>
+                            <a href={locale.examPapersSearchUrl}>
+                                <ArrowForwardIcon />
+                                Search for other exam papers
+                            </a>
+                        </Grid>
+                    )}
+                    {!!examList && examList.length > 0 && (
+                        <Grid id="pastExamPapers">
+                            {examList.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
+                                return (
+                                    <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
+                                        <a
+                                            aria-label={examAriaLabel(paper)}
+                                            className="exam-paper-item"
+                                            data-title="examPaperItem"
+                                            href={paper.url}
+                                            key={`exam-${index}`}
+                                            on-click="linkClicked"
+                                        >
+                                            {paper.period} ({_extractExtension(paper.url)})
+                                        </a>
+                                    </Grid>
+                                );
+                            })}
+
+                            {!!numberExcessExams && (
+                                <div className="card-actions">
+                                    <a
+                                        on-click="linkClicked"
+                                        href={_courseLink(subject.classnumber, locale.examPapersSearchUrl)}
+                                    >
+                                        <ArrowForwardIcon />
+                                        {numberExcessExams} more past exam {_pluralise('paper', numberExcessExams)}
+                                    </a>
+                                </div>
+                            )}
+                        </Grid>
+                    )}
+                </StandardCard>
+
+                <StandardCard className="Guides" style={{ width: '100%', marginBottom: '1rem' }} title="Library guides">
+                    <Grid>
+                        {!!libraryGuide && libraryGuide.length === 0 && (
+                            <Typography>No Library guides for this course</Typography>
+                        )}
+
+                        {!!libraryGuide &&
+                            libraryGuide.length > 0 &&
+                            libraryGuide.map((guide, index) => {
+                                return (
+                                    <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
+                                        <a
+                                            aria-label={`library guide for ${guide.title}`}
+                                            className="library-guide-item"
+                                            data-title="libraryGuideItem"
+                                            href={guide.url}
+                                            key={`guide-${index}`}
+                                            on-click="linkClicked"
+                                        >
+                                            {guide.title}
+                                        </a>
+                                    </Grid>
+                                );
+                            })}
+
+                        <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
+                            <a on-tap="linkClicked" id="allLibraryGuides" href="http://guides.library.uq.edu.au">
+                                <ArrowForwardIcon />
+                                All library guides
+                            </a>
+                        </Grid>
+                    </Grid>
+                </StandardCard>
+                <StandardCard
+                    className="CourseLinks"
+                    style={{ width: '100%', marginBottom: '1rem' }}
+                    title="Course links"
+                >
+                    <Grid>
+                        <Grid>
+                            <a on-click="linkClicked" href={_courseLink(subject.classnumber, locale.ecpLinkUrl)}>
+                                <ArrowForwardIcon />
+                                Electronic Course Profile
+                            </a>
+                        </Grid>
+                        <Grid>
+                            <a
+                                on-click="linkClicked"
+                                id="blackboard"
+                                href={_courseLink(subject.classnumber, locale.blackboardUrl)}
+                            >
+                                <ArrowForwardIcon />
+                                Learn.UQ (Blackboard)
+                            </a>
+                        </Grid>
+                    </Grid>
+                </StandardCard>
+            </Grid>
+        );
+    };
+
     const renderCurrentCourses = (
         <Fragment>
             <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
@@ -110,6 +398,7 @@ export const CourseResources = () => {
                                 {...a11yProps(index, 'classtab')}
                                 data-testid={`classtab-${index}`}
                                 key={`classtab-${index}`}
+                                id={`classtab-${index}`}
                                 label={item.classnumber}
                                 value={`class-${index}`}
                             />
@@ -126,9 +415,7 @@ export const CourseResources = () => {
                         tabId="coursemenu"
                         value={coursemenu}
                     >
-                        <Grid>
-                            <span>{item.classnumber}</span>
-                        </Grid>
+                        <Grid>{renderSubjectTab(item)}</Grid>
                     </TabPanel>
                 );
             })}
