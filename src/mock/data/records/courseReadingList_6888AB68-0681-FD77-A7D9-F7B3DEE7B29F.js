@@ -15,7 +15,7 @@ export default [{
     "created": "2014-07-07T05:36:47+01:00",
     "studentNote": "",
     "libraryNote": "Recommended FREN1010 Semester 2 2020 sw | Ext FREN1010 semester 2 2020 sw",
-    "importance": "Recommended"
+    "importance": "Recommended",
 }, {
     "referenceType": "Webpage",
     "isbn": "",
@@ -26,7 +26,7 @@ export default [{
     "itemLink": "http:\/\/lr.library.uq.edu.au\/items\/F2B8A5DC-27C7-0BC4-3985-C44A61D3CD5A.html",
     "created": "2014-09-29T03:35:08+01:00",
     "studentNote": "Follow the link and search for past exam papers by course code.",
-    "importance": ""
+    "importance": "",
 }, {
     "referenceType": "Book",
     "author": "Chahi, Fatiha; Denyer, Monique; Gloanec, Audrey; Ollivier, Christian; Garmendia, Agust\u00edn",
@@ -42,5 +42,5 @@ export default [{
     "created": "2019-06-12T05:22:56+00:00",
     "studentNote": "",
     "libraryNote": "Required FREN1010 Semester 2 2020 sw | Ext FREN1010 semester 2 2020 sw",
-    "importance": "Required"
+    "importance": "Required",
 }];

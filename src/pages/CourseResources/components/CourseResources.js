@@ -239,7 +239,7 @@ export const CourseResources = () => {
                                 !!courseReadingList &&
                                 courseReadingList.length > 0 &&
                                 courseReadingList
-                                    // remove the exam links
+                                    // remove the exam links (they are shown below)
                                     .filter(item => item.url !== 'https://www.library.uq.edu.au/exams/search.html')
                                     // we only show a small number - theres a link to viewall on Talis if there are more
                                     .slice(0, locale.visibleItemsCount.readingLists)
@@ -265,31 +265,24 @@ export const CourseResources = () => {
                                                     <Typography>{list.title}</Typography>
                                                 )}
                                                 {!!list.author && (
-                                                    <Typography>
-                                                        <i>
-                                                            <span>
-                                                                {list.author}, {list.year}
-                                                            </span>{' '}
-                                                        </i>
+                                                    <Typography style={{ fontStyle: 'italic' }}>
+                                                        {list.author}
+                                                        {!!list.year && <Fragment>{`, ${list.year} `}</Fragment>}
                                                     </Typography>
                                                 )}
-                                                {/* is the logic here right? */}
-                                                {!!list.notes && !(!list.startPage || !list.endPage) && (
+                                                {!!list.startPage && (
                                                     <Typography>
-                                                        {!!list.startPage && !!list.endPage && (
-                                                            <span>
-                                                                Pages from {list.startPage} to {list.endPage}
-                                                            </span>
+                                                        Pages from {list.startPage}
+                                                        {!!list.endPage && (
+                                                            <Fragment>{` to  ${list.endPage}`}</Fragment>
                                                         )}
-                                                        <span>{_trimNotes(list.notes)}</span>
                                                     </Typography>
                                                 )}
+                                                {!!list.notes && <Typography>{_trimNotes(list.notes)}</Typography>}
                                                 <Typography>
                                                     {list.referenceType}
                                                     {!!list.importance && (
-                                                        <span>
-                                                            - <span>{list.importance}</span>
-                                                        </span>
+                                                        <Fragment>{` - ${list.importance}`}</Fragment>
                                                     )}
                                                 </Typography>
                                             </Grid>
