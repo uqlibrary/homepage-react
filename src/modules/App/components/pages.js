@@ -2,7 +2,7 @@ import React from 'react';
 
 // lazy loaded components
 export const NotFound = React.lazy(() => import('pages/NotFound/components/NotFound'));
-export const CourseResources = React.lazy(() => import('pages/CourseResources/components/CourseResources'));
+export const CourseResources = React.lazy(() => import('pages/CourseResources/containers/CourseResources'));
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';

@@ -10,8 +10,10 @@ import {
  * @returns {function(*)}
  */
 export function loadPrimoSuggestions(keyword) {
+    console.log('loadPrimoSuggestions, keyword = ', keyword);
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
+        console.log('loadPrimoSuggestions 2, keyword = ', keyword);
         return fetch(PRIMO_SUGGESTIONS_API_GENERIC({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
@@ -72,6 +74,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
         return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
+                console.log('PRIMO_SUGGESTIONS_API_PAST_COURSE: ', data);
                 const payload = data.map((item, index) => {
                     return {
                         text: item.name,

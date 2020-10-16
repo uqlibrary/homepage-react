@@ -93,6 +93,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
             setSearchKeyword(newValue);
+            console.log('handleSearchKeywordChange, newValue = ', newValue);
             if (newValue.length > 3) {
                 if ([searchTypeAll, 1, 3, 4, 5].includes(searchType)) {
                     actions.loadPrimoSuggestions(newValue);

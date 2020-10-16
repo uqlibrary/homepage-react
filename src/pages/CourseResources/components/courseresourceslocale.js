@@ -44,4 +44,5 @@ export default {
     ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
     blackboardUrl: 'https://learn.uq.edu.au/',
     readingListText: 'Reading lists',
+    exampPapersTitle: 'Past exam papers',
 };
