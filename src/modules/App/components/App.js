@@ -227,33 +227,26 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <div className="content-header">
-                    <ChatStatus status={this.props.chatStatus} />
-                    <AppAlertContainer />
-                    <Header
-                        account={this.props.account}
-                        history={this.props.history}
-                        isAuthorizedUser={isAuthorizedUser}
-                        toggleMenu={this.toggleMenu}
-                    />
-                </div>
+                <AppAlertContainer />
+                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
+                <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
                     <div style={{ marginBottom: 24 }}>
-                        <Hidden mdUp>
+                        <Hidden lgUp>
                             <Megamenu
-                                menuItems={menuItems}
+                                hasCloseItem
                                 history={this.props.history}
-                                isMobile
                                 locale={{
                                     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                     skipNavTitle: locale.global.skipNav.title,
                                     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                                 }}
-                                toggleMenu={this.toggleMenu}
+                                menuItems={menuItems}
                                 menuOpen={this.state.menuOpen}
+                                toggleMenu={this.toggleMenu}
                             />
                         </Hidden>
-                        <Hidden smDown>
+                        <Hidden mdDown>
                             <Megamenu
                                 menuItems={menuItems}
                                 history={this.props.history}
