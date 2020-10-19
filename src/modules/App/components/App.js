@@ -229,7 +229,6 @@ export class AppClass extends PureComponent {
             <Grid container className={classes.layoutFill}>
                 <div className="content-header">
                     <ChatStatus status={this.props.chatStatus} />
-                    <AppAlertContainer />
                     <Header
                         isAuthorizedUser={isAuthorizedUser}
                         account={this.props.account}
@@ -237,33 +236,32 @@ export class AppClass extends PureComponent {
                     />
                 </div>
                 <div className="content-container" id="content-container">
-                    <div style={{ marginBottom: 24 }}>
-                        <Hidden mdUp>
-                            <Megamenu
-                                menuItems={menuItems}
-                                history={this.props.history}
-                                isMobile
-                                locale={{
-                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                    skipNavTitle: locale.global.skipNav.title,
-                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                }}
-                                toggleMenu={this.toggleMenu}
-                                menuOpen={this.state.menuOpen}
-                            />
-                        </Hidden>
-                        <Hidden smDown>
-                            <Megamenu
-                                menuItems={menuItems}
-                                history={this.props.history}
-                                locale={{
-                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                    skipNavTitle: locale.global.skipNav.title,
-                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                }}
-                            />
-                        </Hidden>
-                    </div>
+                    <Hidden mdUp>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            isMobile
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                            toggleMenu={this.toggleMenu}
+                            menuOpen={this.state.menuOpen}
+                        />
+                    </Hidden>
+                    <Hidden smDown>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                        />
+                    </Hidden>
+                    <AppAlertContainer />
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}

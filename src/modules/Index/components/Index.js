@@ -95,14 +95,11 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
         }
         return '#999';
     };
-    // const handleSpotlightFocus = message => {
-    //     setallyMessage(message);
-    // };
     return (
         <LiveAnnouncer>
             <LiveMessage message={''} aria-live="polite" />
             <StandardPage>
-                <div className="layout-card" style={{ marginTop: 12, marginBottom: 50 }}>
+                <div className="layout-card" style={{ marginTop: 24, marginBottom: 50 }}>
                     <Grid container spacing={6}>
                         {/* Search */}
                         <Grid item xs={12} id="primo-search">
