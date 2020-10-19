@@ -12,6 +12,13 @@ const useStyles = makeStyles(
         iconButton: {
             color: theme.palette.white.main,
         },
+        iconButtonLabel: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        iconButtonRoot: {
+            marginTop: -12,
+        },
     }),
     { withTheme: true },
 );
@@ -23,7 +30,7 @@ export const AuthButton = ({ isAuthorizedUser, signOutTooltipText, ariaLabel, si
             <Tooltip
                 id="auth-button"
                 title={isAuthorizedUser ? signOutTooltipText : signInTooltipText}
-                placement="bottom-start"
+                placement="bottom"
                 TransitionComponent={Fade}
                 TransitionProps={{ timeout: 300 }}
             >
@@ -31,12 +38,17 @@ export const AuthButton = ({ isAuthorizedUser, signOutTooltipText, ariaLabel, si
                     aria-label={ariaLabel}
                     onClick={onClick}
                     className={isAuthorizedUser ? 'log-out-button' : 'log-in-button'}
+                    classes={{
+                        root: classes.iconButtonRoot,
+                        label: classes.iconButtonLabel,
+                    }}
                 >
                     {isAuthorizedUser ? (
                         <Person id="logged-in-icon" className={classes.iconButton} />
                     ) : (
                         <PersonOutline id="logged-out-icon" className={classes.iconButton} />
                     )}
+                    <div style={{ color: 'white', fontSize: 12 }}>{!!isAuthorizedUser ? 'Log out' : 'Log in'}</div>
                 </IconButton>
             </Tooltip>
         </div>

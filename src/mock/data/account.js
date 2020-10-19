@@ -2,7 +2,7 @@ export const accounts = {
     // staff, no espace data
     public: null,
     vanilla: {
-        "id": "uqstaff",
+        "id": "uqvanill",
         "class": ["IS_CURRENT"],
         "type": 18,
         "homeLib": "St Lucia",

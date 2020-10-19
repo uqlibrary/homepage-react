@@ -129,6 +129,13 @@ const useStyles = makeStyles(
                 color: 'red',
             },
         },
+        headerIconButtonLabel: {
+            display: 'flex',
+            flexDirection: 'column',
+        },
+        headerIconButton: {
+            marginTop: -12,
+        },
     }),
     { withTheme: true },
 );
@@ -251,15 +258,19 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                         <Tooltip
                             id="search-button"
                             title={'Search UQ'}
-                            placement="bottom-start"
+                            placement="bottom"
                             TransitionProps={{ timeout: 300 }}
                         >
-                            <IconButton onClick={toggleHeader}>
+                            <IconButton
+                                onClick={toggleHeader}
+                                classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
+                            >
                                 {!expandHeader ? (
                                     <SearchIcon className={classes.icon} />
                                 ) : (
                                     <CloseIcon className={classes.icon} />
                                 )}
+                                <div style={{ color: 'white', fontSize: 12 }}>UQ Search</div>
                             </IconButton>
                         </Tooltip>
                     </Grid>
@@ -268,11 +279,15 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                         <Tooltip
                             id="contact-button"
                             title={'My Library'}
-                            placement="bottom-start"
+                            placement="bottom"
                             TransitionProps={{ timeout: 300 }}
                         >
-                            <IconButton onClick={handleClick2}>
+                            <IconButton
+                                onClick={handleClick2}
+                                classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
+                            >
                                 <AppsIcon className={classes.icon} />
+                                <div style={{ color: 'white', fontSize: 12 }}>My Library</div>
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -363,11 +378,15 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu }) => {
                         <Tooltip
                             id="contact-button"
                             title={'Ask us'}
-                            placement="bottom-start"
+                            placement="bottom"
                             TransitionProps={{ timeout: 300 }}
                         >
-                            <IconButton onClick={handleClick}>
+                            <IconButton
+                                onClick={handleClick}
+                                classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
+                            >
                                 <QuestionAnswer className={classes.icon} />
+                                <div style={{ color: 'white', fontSize: 12 }}>ASK US</div>
                             </IconButton>
                         </Tooltip>
                         <Menu
