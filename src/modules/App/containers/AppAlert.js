@@ -8,8 +8,9 @@ import * as actions from 'actions';
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 
 const AppAlert = ({ appAlert, customAlert }) => {
+    let appAlerts = [];
     if (appAlert && appAlert.length > 0) {
-        const appAlerts = appAlert.map(item => {
+        appAlerts = appAlert.map(item => {
             // Strip marked down links from the body and assign to Alert props
             const linkRegex = item.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
             let markdownBody = {};
@@ -27,16 +28,19 @@ const AppAlert = ({ appAlert, customAlert }) => {
                 type: item.urgent === 1 ? 'warning' : 'info_outline',
             };
         });
-        if (!!customAlert) {
-            appAlerts.push({ ...customAlert });
-        }
+    }
+    if (!!customAlert) {
+        appAlerts.push({ ...customAlert });
+    }
+    if (appAlerts && appAlerts.length > 0) {
         return appAlerts.map((item, index) => (
             <div style={{ width: '100%' }} key={index}>
                 <Alert {...item} />
             </div>
         ));
+    } else {
+        return null;
     }
-    return null;
 };
 
 AppAlert.propTypes = {

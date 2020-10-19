@@ -95,7 +95,6 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 } else if (searchType === 8) {
                     actions.loadCourseReadingListsSuggestions(newValue);
                 }
-                console.log('focussing on the input');
                 document.getElementById('primo-search-autocomplete').focus();
             }
         },
