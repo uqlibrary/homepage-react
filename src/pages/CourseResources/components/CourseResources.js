@@ -68,8 +68,8 @@ export const CourseResources = ({
     const { account } = useAccountContext();
 
     const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
-    const handleTopTabChange = (event, newValue) => {
-        setCurrentTopTab(newValue);
+    const handleTopTabChange = (event, topMenuTabId) => {
+        setCurrentTopTab(topMenuTabId);
     };
 
     const handleSubjectChange = classnumber => {
@@ -80,9 +80,9 @@ export const CourseResources = ({
 
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
-    const handleCourseTabChange = (event, newValue) => {
+    const handleCourseTabChange = (event, subjectTabId) => {
         !!event.target.innerText && handleSubjectChange(event.target.innerText);
-        setCurrentMenuTab(newValue);
+        setCurrentMenuTab(subjectTabId);
     };
 
     const renderNoListedCourses = (
@@ -239,7 +239,7 @@ export const CourseResources = ({
                                 key={`classtab-${index}`}
                                 id={`classtab-${index}`}
                                 label={item.classnumber}
-                                value={`${courseTabLabel}-${index}`} // must match index in Tabpanel
+                                value={`${courseTabLabel}-${index}`} // must match index in TabPanel
                             />
                         );
                     })}
