@@ -237,7 +237,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
-                                                    <b>6</b> | <b style={{ color: 'red', marginRight: 12 }}>1</b>
+                                                    <b>6</b> | <b style={{ color: 'orange', marginRight: 12 }}>1</b>
                                                     <Tooltip
                                                         id="auth-button"
                                                         title={'Manage your book loans (6 current | 1 overdue)'}
@@ -271,7 +271,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
-                                                    <b style={{ color: 'red', marginRight: 12 }}>$7.50</b>
+                                                    <b style={{ color: 'orange', marginRight: 12 }}>$7.50</b>
                                                     <Tooltip
                                                         id="auth-button"
                                                         title={'Manage your overdue fines'}
