@@ -86,14 +86,12 @@ export const CourseResources = ({
     };
 
     React.useEffect(() => {
-        console.log('run useeffect without param only once');
         const firstEnrolledClassNumber =
             (!!account.classes &&
                 account.classes.length > 0 &&
                 !!account.classes[0] &&
                 account.classes[0].classnumber) ||
             null;
-        console.log('firstEnrolledClassNumber =  ', firstEnrolledClassNumber);
         if (firstEnrolledClassNumber !== null) {
             !!firstEnrolledClassNumber && actions.loadLearningResources(firstEnrolledClassNumber);
 
@@ -108,7 +106,7 @@ export const CourseResources = ({
             </Typography>
             <p>Courses will be shown 3 weeks prior to the start of semester</p>
             <p>Please check back closer to the next enrollment period</p>
-            <p>You can search for information on courses using the &quot;Search&quot; tab, above</p>
+            <p>You can search for information on courses using the &quot;Course Search&quot; tab, above</p>
         </Fragment>
     );
 
@@ -175,7 +173,7 @@ export const CourseResources = ({
             !!learningResourcesList && learningResourcesList.length > 0 ? learningResourcesList[0].course_title : null;
 
         return (
-            <Grid container>
+            <Grid container style={{ marginLeft: '-24px', marginRight: '-24px' }}>
                 <Grid item xs={12} style={{ textAlign: 'center' }}>
                     <Typography color={'primary'} variant={'h5'} component={'span'} style={{ fontSize: '1.33rem' }}>
                         {subject.classnumber} - {courseTitle}
@@ -269,8 +267,9 @@ export const CourseResources = ({
                         key={`classpanel-${index}`}
                         tabId="coursemenu"
                         value={coursemenu}
+                        style={{ margin: 0 }}
                     >
-                        <Grid>{renderSubjectTabBody(item)}</Grid>
+                        {renderSubjectTabBody(item)}
                     </TabPanel>
                 );
             })}
