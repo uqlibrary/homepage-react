@@ -79,7 +79,7 @@ export const LearningResources = ({
         return id;
     };
 
-    function getReadingListWhenResourceListAvailable(learningResourcesList) {
+    const getReadingListWhenResourceListAvailable = learningResourcesList => {
         const filteredReadingLists =
             !!learningResourcesList && learningResourcesList.length > 0
                 ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
@@ -92,7 +92,7 @@ export const LearningResources = ({
                 actions.loadReadingLists(readingListId);
             }
         }
-    }
+    };
 
     React.useEffect(() => {
         getReadingListWhenResourceListAvailable(learningResourcesList);
@@ -150,14 +150,14 @@ export const LearningResources = ({
 
     const talisReadingListLink =
         (!!learningResourcesList &&
-            learningResourcesList.length > 0 &&
+            learningResourcesList.length === 1 &&
             !!learningResourcesList[0].reading_lists &&
             learningResourcesList[0].reading_lists.length > 0 &&
             learningResourcesList[0].reading_lists[0].url) ||
         null;
 
     const numberExcessReadingLists =
-        !!readingList && readingList.length > locale.visibleItemsCount.readingLists
+        filteredReadingLists.length === 1 && !!readingList && readingList.length > locale.visibleItemsCount.readingLists
             ? readingList.length - locale.visibleItemsCount.readingLists
             : 0;
 
