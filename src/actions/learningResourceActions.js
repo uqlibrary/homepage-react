@@ -8,20 +8,19 @@ import { LEARNING_RESOURCES_API, GUIDES_API, READING_LIST_API } from '../reposit
  * @returns {function(*)}
  */
 export function loadLearningResources(keyword) {
+    console.log('will load loadLearningResources for ', keyword);
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCES_LOADING });
-        console.log('loadLearningResources - fetching ', LEARNING_RESOURCES_API({ keyword }).apiUrl);
         return fetch(LEARNING_RESOURCES_API({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log('loadLearningResources data = ', data);
+                console.log('fetched LEARNING_RESOURCES_API');
                 dispatch({
                     type: actions.LEARNING_RESOURCES_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('loadLearningResources got error = ', error);
                 dispatch({
                     type: actions.LEARNING_RESOURCES_FAILED,
                     payload: error.message,
@@ -37,12 +36,13 @@ export function clearLearningResources() {
 }
 
 export function loadGuides(keyword) {
+    console.log('will load loadGuides for ', keyword);
     return dispatch => {
         dispatch({ type: actions.GUIDES_LOADING });
         return fetch(GUIDES_API({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log('loadGuides data = ', data);
+                console.log('fetched GUIDES_API');
                 dispatch({
                     type: actions.GUIDES_LOADED,
                     payload: data,
@@ -64,20 +64,19 @@ export function clearGuides() {
 }
 
 export function loadReadingLists(keyword) {
+    console.log('will load loadReadingLists for ', keyword);
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
-        console.log('loadReadingLists: fetching ', READING_LIST_API({ keyword }).apiUrl);
         return fetch(READING_LIST_API({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log('loadReadingLists data = ', data);
+                console.log('fetched READING_LIST_API');
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('loadReadingLists: dispatch failed');
                 dispatch({
                     type: actions.READING_LIST_FAILED,
                     payload: error.message,

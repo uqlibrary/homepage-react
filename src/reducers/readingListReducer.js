@@ -34,6 +34,5 @@ export default function readingListReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('readingListReducer ', state, action);
     return handler(state, action);
 }

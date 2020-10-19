@@ -228,7 +228,12 @@ export class AppClass extends PureComponent {
         return (
             <Grid container className={classes.layoutFill}>
                 <AppAlertContainer />
-                <Header isAuthorizedUser={isAuthorizedUser} account={this.props.account} toggleMenu={this.toggleMenu} />
+                <Header
+                    account={this.props.account}
+                    history={this.props.history}
+                    isAuthorizedUser={isAuthorizedUser}
+                    toggleMenu={this.toggleMenu}
+                />
                 <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
                     <div style={{ marginBottom: 24 }}>

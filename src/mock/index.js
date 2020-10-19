@@ -10,13 +10,13 @@ import fetchMock from 'fetch-mock';
 
 import learningResources_FREN1010 from './data/records/learningResources_FREN1010';
 import learningResources_HIST1201 from './data/records/learningResources_HIST1201';
-import learningResources_HIST2312 from './data/records/learningResources_HIST2312';
+import learningResources_PHIL1002 from './data/records/learningResources_PHIL1002';
 import libraryGuides_FREN1010 from './data/records/libraryGuides_FREN1010';
 import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
-import libraryGuides_HIST2312 from './data/records/libraryGuides_HIST2312';
+import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
 import courseReadingList_6888AB68 from './data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
 import courseReadingList_2109F2EC from './data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
-import courseReadingList_FE54098F from './data/records/courseReadingList_FE54098F-2CB3-267D-50F8-4B2895FE94B9';
+// import courseReadingList_FE54098F from './data/records/courseReadingList_FE54098F-2CB3-267D-50F8-4B2895FE94B9';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -321,12 +321,12 @@ fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=l
 
 fetchMock.mock('https://api.library.uq.edu.au/v1/learning_resources/FREN1010', learningResources_FREN1010);
 fetchMock.mock('https://api.library.uq.edu.au/v1/learning_resources/HIST1201', learningResources_HIST1201);
-fetchMock.mock('https://api.library.uq.edu.au/v1/learning_resources/HIST2312', learningResources_HIST2312);
+fetchMock.mock('https://api.library.uq.edu.au/v1/learning_resources/PHIL1002', learningResources_PHIL1002);
 
 fetchMock.mock('https://api.library.uq.edu.au/v1/library_guides/FREN1010', libraryGuides_FREN1010);
 fetchMock.mock('https://api.library.uq.edu.au/v1/library_guides/HIST1201', libraryGuides_HIST1201);
-fetchMock.mock('https://api.library.uq.edu.au/v1/library_guides/HIST2312', libraryGuides_HIST2312);
+fetchMock.mock('https://api.library.uq.edu.au/v1/library_guides/PHIL1002', libraryGuides_PHIL1002);
 
-fetchMock.mock('https://api.library.uq.edu.au/v1/course_reading_list/FE54098F-2CB3-267D-50F8-4B2895FE94B9', courseReadingList_FE54098F);
+// fetchMock.mock('https://api.library.uq.edu.au/v1/course_reading_list/FE54098F-2CB3-267D-50F8-4B2895FE94B9', courseReadingList_FE54098F);
 fetchMock.mock('https://api.library.uq.edu.au/v1/course_reading_list/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F', courseReadingList_6888AB68);
 fetchMock.mock('https://api.library.uq.edu.au/v1/course_reading_list/2109F2EC-AB0B-482F-4D30-1DD3531E46BE', courseReadingList_2109F2EC);

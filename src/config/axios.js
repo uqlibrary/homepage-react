@@ -60,7 +60,6 @@ api.isCancel = axios.isCancel; // needed for cancelling requests and the instanc
 let isGet = null;
 api.interceptors.request.use(request => {
     isGet = request.method === 'get';
-    console.log('axios: request.url = ', request.url);
     if (
         !!request.url &&
         (request.url.includes('records/search') || request.url.includes('records/export')) &&

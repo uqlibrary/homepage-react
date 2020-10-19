@@ -5,7 +5,6 @@ import * as actions from 'actions';
 import PrimoSearch from '../components/PrimoSearch';
 
 const mapStateToProps = state => {
-    console.log('mapStateToProps, state = ', state);
     return {
         ...state.get('primoReducer'),
     };

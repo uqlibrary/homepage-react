@@ -4,11 +4,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-export const mapStateToProps = (state, ownProps) => {
-    console.log('mapStateToProps, ownProps = ', ownProps);
-    console.log('mapStateToProps, state = ', state);
-    // const { currentclasses } = state.get('accountReducer') || {};
-    // console.log('currentclasses = ', currentclasses);
+export const mapStateToProps = state => {
     return {
         ...state.get('readingListReducer'),
         ...state.get('guidesReducer'),
@@ -17,13 +13,7 @@ export const mapStateToProps = (state, ownProps) => {
 };
 
 const mapDispatchToProps = dispatch => {
-    console.log('mapDispatchToProps: actions = ', actions);
-    console.log('mapDispatchToProps: dispatch = ', dispatch);
-    // const { learningResourceReducer, guidesReducer, readingListReducer } = bindActionCreators(actions, dispatch);
     return {
-        // learningResourceReducer,
-        // guidesReducer,
-        // readingListReducer,
         actions: bindActionCreators(actions, dispatch),
     };
 };

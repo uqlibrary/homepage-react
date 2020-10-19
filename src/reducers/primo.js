@@ -34,6 +34,5 @@ export default function primoReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('primoReducer ', state, action);
     return handler(state, action);
 }
