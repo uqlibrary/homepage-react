@@ -85,6 +85,22 @@ export const CourseResources = ({
         setCurrentMenuTab(subjectTabId);
     };
 
+    React.useEffect(() => {
+        console.log('run useeffect without param only once');
+        const firstEnrolledClassNumber =
+            (!!account.classes &&
+                account.classes.length > 0 &&
+                !!account.classes[0] &&
+                account.classes[0].classnumber) ||
+            null;
+        console.log('firstEnrolledClassNumber =  ', firstEnrolledClassNumber);
+        if (firstEnrolledClassNumber !== null) {
+            !!firstEnrolledClassNumber && actions.loadLearningResources(firstEnrolledClassNumber);
+
+            !!firstEnrolledClassNumber && actions.loadGuides(firstEnrolledClassNumber);
+        }
+    }, [account, actions]);
+
     const renderNoListedCourses = (
         <Fragment>
             <Typography component={'h2'} variant={'h6'}>
