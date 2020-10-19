@@ -22,38 +22,30 @@ export const LearningResources = ({
     readingListError,
     subject,
 }) => {
-    console.log('LearningResources start: readingList = ', readingList);
     const _pluralise = (word, num) => {
         return word + (num === 1 ? '' : 's');
     };
 
     const filterReadingLists = (learningResourcesList, classnumber, classes) => {
-        console.log('filterReadingLists classnumber = ', classnumber);
-        console.log('filterReadingLists learningResourcesList = ', learningResourcesList);
         const readingLists =
             (!!learningResourcesList &&
                 learningResourcesList.length > 0 &&
                 !!learningResourcesList[0] &&
                 learningResourcesList[0].reading_lists) ||
             [];
-        console.log('filterReadingLists: learningResourcesList[0].reading_lists =  ', readingLists);
 
         if (!readingLists || readingLists.length === 0) {
-            console.log('filterReadingLists: list is empty');
             return [];
         }
 
-        console.log('before filter: ', readingLists[0].reading_lists);
         if (readingLists.length === 1) {
-            console.log('filterReadingLists: single reading list');
             return readingLists;
         }
 
         // do better
         const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
 
-        console.log('befor filter, resourcesList[0].reading_lists = ', learningResourcesList[0].reading_lists);
-        const x = readingLists.filter(item => {
+        return readingLists.filter(item => {
             // // if (searchedCourse != null && searchedCourse.courseId === course.courseId) {
             // /*
             //     search results are currently an array of results like this:
@@ -69,16 +61,9 @@ export const LearningResources = ({
             // //     semesterString = searchedCourse.term === enrolment.semester;
             // //     campus = searchedCourse.campus;
             // // } else {
-            if (item.period === enrolment.semester) {
-                console.log('filterReadingLists: matches ', enrolment.semester);
-            } else {
-                console.log('filterReadingLists: no match ', enrolment.semester, ' != ', item.period);
-            }
             return item.period === enrolment.semester;
             // }
         });
-        console.log('filterReadingLists produces: ', x);
-        return x;
     };
 
     // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
@@ -95,29 +80,21 @@ export const LearningResources = ({
     };
 
     function getReadingListWhenResourceListAvailable(learningResourcesList) {
-        // console.log('getReadingListWhenResourceListAvailable: filteredReadingLists = ', filteredReadingLists);
         const filteredReadingLists =
             !!learningResourcesList && learningResourcesList.length > 0
                 ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
                 : [];
-        console.log('LearningResources 1: filteredReadingLists = ', filteredReadingLists);
 
         if (!!filteredReadingLists && filteredReadingLists.length === 1) {
             const readingListId = getReadingListId(filteredReadingLists[0]);
-            console.log('readingListId = ', readingListId);
             if (readingListId !== '' && readingListId !== false) {
                 // I think false is the value to check against here?
-                // !!actions.loadReadingLists &&
                 actions.loadReadingLists(readingListId);
-                console.log('readingList fetched');
-            } else {
-                console.log('readingList not fetched');
             }
         }
     }
 
     React.useEffect(() => {
-        console.log('useEffect');
         getReadingListWhenResourceListAvailable(learningResourcesList);
     }, [learningResourcesList]);
 
@@ -125,7 +102,6 @@ export const LearningResources = ({
         !!learningResourcesList && learningResourcesList.length > 0
             ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
             : [];
-    console.log('LearningResources 2: filteredReadingLists = ', filteredReadingLists);
 
     const _trimNotes = value => {
         if (value && value.length > this.notesTrimLength) {
@@ -140,8 +116,6 @@ export const LearningResources = ({
 
     // PHIL1002 is currently an example of multiple reading lists
     const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
-        console.log('renderMultipleReadingListReference: readingLists = ', readingListSummaries);
-        console.log('renderMultipleReadingListReference: classnumber = ', classnumber);
         const chooseListprompt = !!classnumber
             ? `More than one reading list found for ${classnumber}. Please select a list:`
             : '';
@@ -193,8 +167,6 @@ export const LearningResources = ({
         !!readingList && readingList.length > 0 ? `(${readingList.length})` : ''
     }`;
 
-    console.log('check learningResourcesList for mult lusts: ', learningResourcesList);
-
     /*
     let classes = account.classes || null;
 
@@ -222,22 +194,6 @@ export const LearningResources = ({
         ];
     }
     */
-
-    console.log('LearningResources: learningResourcesList = ', learningResourcesList);
-    console.log('LearningResources: learningResourcesListLoading = ', learningResourcesListLoading);
-    console.log('LearningResources: learningResourcesListError = ', learningResourcesListError);
-    // const classnumber = 'FREN1010';
-
-    // if (!(!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList)) {
-    //     console.log('debug: !!filteredReadingLists = ', !!filteredReadingLists);
-    //     console.log('debug: length = ', !!filteredReadingLists && filteredReadingLists.length === 1);
-    //     console.log('debug: readingList = ', readingList);
-    // }
-    // if (!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList) {
-    //     console.log('now we will display ', readingList);
-    // } else {
-    //     console.log('wont display reading list');
-    // }
 
     return (
         <StandardCard

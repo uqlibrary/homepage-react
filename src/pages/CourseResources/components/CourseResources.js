@@ -67,83 +67,23 @@ export const CourseResources = ({
 }) => {
     const { account } = useAccountContext();
 
-    /* istanbul ignore next */
-    // React.useEffect(() => {
-    //     // Load user's subject lists if it hasn't
-    //     account.classes.map(aclass => {
-    //         !!aclass.classnumber && !!loadReadingLists && loadReadingLists(aclass.classnumber);
-    //         !!aclass.classnumber && !!loadGuides && loadGuides(aclass.classnumber);
-    //         !!aclass.classnumber && !!loadLearningResources && loadLearningResources(aclass.classnumber);
-    //     });
-    // }, [loadReadingLists, loadGuides, loadLearningResources, account]);
-
     const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
     const handleTopTabChange = (event, newValue) => {
         setCurrentTopTab(newValue);
     };
 
-    // // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
-    // const getReadingListId = readingList => {
-    //     let id = '';
-    //     if (!!readingList.url) {
-    //         const url = readingList.url;
-    //         id = url.substring(url.lastIndexOf('/') + 1);
-    //         if (id.indexOf('.') !== -1) {
-    //             id = id.substring(0, url.indexOf('.'));
-    //         }
-    //     }
-    //     return id;
-    // };
-
     const handleSubjectChange = classnumber => {
-        console.log('handleSubjectChange for', classnumber);
-
-        actions.clearLearningResources();
-        actions.clearGuides();
-        actions.clearReadingLists();
-
-        console.log('should be cleared now');
-
-        // !!classnumber && !!actions.loadLearningResources && actions.loadLearningResources(classnumber);
         !!classnumber && actions.loadLearningResources(classnumber);
-        // console.log('learningResourcesList = ', learningResourcesList);
-        // filteredReadingLists = filterReadingLists(learningResourcesList, classnumber);
-        // console.log('after filter, filteredReadingLists = ', filteredReadingLists);
 
-        // !!classnumber && !!actions.loadGuides && actions.loadGuides(classnumber);
         !!classnumber && actions.loadGuides(classnumber);
-        console.log('guideList = ', guideList);
-
-        // console.log('handleSubjectChange: learningResourcesList = ', learningResourcesList);
-        // if (
-        //     !!learningResourcesList &&
-        //     learningResourcesList.length > 0 &&
-        //     learningResourcesList[0].reading_lists &&
-        //     learningResourcesList[0].reading_lists.length === 1
-        // ) {
-        //     const readingListId = getReadingListId(learningResourcesList[0].reading_lists);
-        //     if (readingListId !== '' && readingListId !== false) {
-        //         // I think false is the 'wrong' value here
-        //         // !!actions.loadReadingLists &&
-        //         actions.loadReadingLists(readingListId);
-        //         console.log('readingList = ', readingList);
-        //     } else {
-        //         console.log('readingList not fetched');
-        //     }
-        // }
     };
-
-    let selectedCourse = '';
 
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, newValue) => {
         !!event.target.innerText && handleSubjectChange(event.target.innerText);
-        selectedCourse = !!event.target.innerText ? event.target.innerText : '';
         setCurrentMenuTab(newValue);
-        console.log('at end of handleSubjectChange: filteredReadingLists = ', learningResourcesList);
     };
-    console.log('selectedCourse = ', selectedCourse);
 
     const renderNoListedCourses = (
         <Fragment>
@@ -287,46 +227,40 @@ export const CourseResources = ({
     }
     */
 
-    const renderCurrentCourses = readingLists => {
-        console.log('renderCurrentCourses: readingLists = ', readingLists);
-        return (
-            <Fragment>
-                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
-                    <Tabs onChange={handleCourseTabChange} scrollButtons="auto" value={coursemenu} variant="scrollable">
-                        {account.classes.map((item, index) => {
-                            return (
-                                <Tab
-                                    {...a11yProps(index, 'classtab')}
-                                    data-testid={`classtab-${index}`}
-                                    key={`classtab-${index}`}
-                                    id={`classtab-${index}`}
-                                    label={item.classnumber}
-                                    value={`${courseTabLabel}-${index}`} // must match index in Tabpanel
-                                />
-                            );
-                        })}
-                    </Tabs>
-                </AppBar>
-                {account.classes.map((item, index) => {
-                    return (
-                        <TabPanel
-                            data-testid={`classpanel-${index}`}
-                            index={`${courseTabLabel}-${index}`} // must match value in Tabs
-                            key={`classpanel-${index}`}
-                            tabId="coursemenu"
-                            value={coursemenu}
-                        >
-                            <Grid>{renderSubjectTabBody(item)}</Grid>
-                        </TabPanel>
-                    );
-                })}
-            </Fragment>
-        );
-    };
+    const renderCurrentCourses = (
+        <Fragment>
+            <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                <Tabs onChange={handleCourseTabChange} scrollButtons="auto" value={coursemenu} variant="scrollable">
+                    {account.classes.map((item, index) => {
+                        return (
+                            <Tab
+                                {...a11yProps(index, 'classtab')}
+                                data-testid={`classtab-${index}`}
+                                key={`classtab-${index}`}
+                                id={`classtab-${index}`}
+                                label={item.classnumber}
+                                value={`${courseTabLabel}-${index}`} // must match index in Tabpanel
+                            />
+                        );
+                    })}
+                </Tabs>
+            </AppBar>
+            {account.classes.map((item, index) => {
+                return (
+                    <TabPanel
+                        data-testid={`classpanel-${index}`}
+                        index={`${courseTabLabel}-${index}`} // must match value in Tabs
+                        key={`classpanel-${index}`}
+                        tabId="coursemenu"
+                        value={coursemenu}
+                    >
+                        <Grid>{renderSubjectTabBody(item)}</Grid>
+                    </TabPanel>
+                );
+            })}
+        </Fragment>
+    );
 
-    console.log('just before render, readingLists = ', learningResourcesList);
-    const readingLists =
-        !!learningResourcesList && learningResourcesList.length > 0 ? learningResourcesList[0].reading_lists : [];
     return (
         <StandardPage>
             <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
@@ -351,7 +285,7 @@ export const CourseResources = ({
 
                             <TabPanel value={topmenu} index="top0" tabId="topmenu">
                                 {!!account.classes && account.classes.length > 0 ? (
-                                    <Grid>{renderCurrentCourses(readingLists)}</Grid>
+                                    <Grid>{renderCurrentCourses}</Grid>
                                 ) : (
                                     <Grid>{renderNoListedCourses}</Grid>
                                 )}
