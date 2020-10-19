@@ -90,6 +90,8 @@ export class AppClass extends PureComponent {
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
         chatStatus: PropTypes.any,
+        alertStatus: PropTypes.any,
+        alertStatusLoading: PropTypes.any,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -131,6 +133,7 @@ export class AppClass extends PureComponent {
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
         this.props.actions.loadChatStatus();
+        this.props.actions.loadAlerts();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -150,8 +153,6 @@ export class AppClass extends PureComponent {
             type: 'info_outline',
             action: () => (window.location.href = 'https://web.library.uq.edu.au/library-services/covid-19'),
             actionButtonLabel: 'UQ Library COVID-19 Updates',
-            dismissAction: this.props.actions.dismissAppAlert,
-            allowDismiss: true,
         });
     }
 
