@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
-import Badge from '@material-ui/core/Badge';
 
 const useStyles = makeStyles(
     theme => ({
@@ -139,21 +138,13 @@ export const ChatStatus = ({ status }) => {
                 placement="left"
                 TransitionProps={{ timeout: 300 }}
             >
-                <Fab color="secondary" className={classes.chatAction} onClick={openChatStatus} size={'small'}>
-                    <Badge
-                        classes={{
-                            badge: !!chatState.online ? classes.badgeOnline : classes.badgeOffline,
-                        }}
-                        color="primary"
-                        variant="dot"
-                        invisible={false}
-                        anchorOrigin={{
-                            vertical: 'top',
-                            horizontal: 'left',
-                        }}
-                    >
-                        <QuestionAnswerIcon className={classes.chatIcon} />
-                    </Badge>
+                <Fab
+                    color="secondary"
+                    className={`${classes.chatAction} ${chatState.online ? classes.badgeOnline : classes.badgeOffline}`}
+                    onClick={openChatStatus}
+                    size={'small'}
+                >
+                    <QuestionAnswerIcon className={classes.chatIcon} />
                 </Fab>
             </Tooltip>
         );
