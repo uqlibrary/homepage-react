@@ -94,19 +94,19 @@ export const LearningResources = ({
         return id;
     };
 
-    const filteredReadingLists =
-        !!learningResourcesList && learningResourcesList.length > 0
-            ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
-            : [];
-    console.log('LearningResources: filteredReadingLists = ', filteredReadingLists);
+    function getReadingListWhenResourceListAvailable(learningResourcesList) {
+        // console.log('getReadingListWhenResourceListAvailable: filteredReadingLists = ', filteredReadingLists);
+        const filteredReadingLists =
+            !!learningResourcesList && learningResourcesList.length > 0
+                ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
+                : [];
+        console.log('LearningResources 1: filteredReadingLists = ', filteredReadingLists);
 
-    React.useEffect(() => {
-        console.log('useEffect: filteredReadingLists = ', filteredReadingLists);
         if (!!filteredReadingLists && filteredReadingLists.length === 1) {
             const readingListId = getReadingListId(filteredReadingLists[0]);
             console.log('readingListId = ', readingListId);
             if (readingListId !== '' && readingListId !== false) {
-                // I think false is the 'wrong' value here
+                // I think false is the value to check against here?
                 // !!actions.loadReadingLists &&
                 actions.loadReadingLists(readingListId);
                 console.log('readingList fetched');
@@ -114,7 +114,18 @@ export const LearningResources = ({
                 console.log('readingList not fetched');
             }
         }
-    }, [filteredReadingLists, actions]);
+    }
+
+    React.useEffect(() => {
+        console.log('useEffect');
+        getReadingListWhenResourceListAvailable(learningResourcesList);
+    }, [learningResourcesList]);
+
+    const filteredReadingLists =
+        !!learningResourcesList && learningResourcesList.length > 0
+            ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
+            : [];
+    console.log('LearningResources 2: filteredReadingLists = ', filteredReadingLists);
 
     const _trimNotes = value => {
         if (value && value.length > this.notesTrimLength) {
@@ -217,16 +228,16 @@ export const LearningResources = ({
     console.log('LearningResources: learningResourcesListError = ', learningResourcesListError);
     // const classnumber = 'FREN1010';
 
-    if (!(!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList)) {
-        console.log('debug: !!filteredReadingLists = ', !!filteredReadingLists);
-        console.log('debug: length = ', !!filteredReadingLists && filteredReadingLists.length === 1);
-        console.log('debug: readingList = ', readingList);
-    }
-    if (!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList) {
-        console.log('now we will display ', readingList);
-    } else {
-        console.log('wont display reading list');
-    }
+    // if (!(!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList)) {
+    //     console.log('debug: !!filteredReadingLists = ', !!filteredReadingLists);
+    //     console.log('debug: length = ', !!filteredReadingLists && filteredReadingLists.length === 1);
+    //     console.log('debug: readingList = ', readingList);
+    // }
+    // if (!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList) {
+    //     console.log('now we will display ', readingList);
+    // } else {
+    //     console.log('wont display reading list');
+    // }
 
     return (
         <StandardCard
