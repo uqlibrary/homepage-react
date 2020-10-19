@@ -1,4 +1,5 @@
 export default [{
+    "notRequiredAsHIST2312noLongerMockData": true,
     "referenceType": "Webpage",
     "isbn": "",
     "url": "https:\/\/www.library.uq.edu.au\/exams\/search.html",

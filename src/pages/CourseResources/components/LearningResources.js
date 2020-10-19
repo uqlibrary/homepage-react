@@ -11,17 +11,110 @@ import Typography from '@material-ui/core/Typography';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 export const LearningResources = ({
-    subject,
-    readingList,
-    readingListLoading,
-    readingListError,
-    learningResourcesList,
+    actions,
+    classnumber,
+    currentClasses,
+    learningResourcesList, // has sub element reading_lists (summary)
     learningResourcesListLoading,
     learningResourcesListError,
+    readingList, // is list of books and chapeters, etc
+    readingListLoading,
+    readingListError,
+    subject,
 }) => {
+    console.log('LearningResources start: readingList = ', readingList);
     const _pluralise = (word, num) => {
         return word + (num === 1 ? '' : 's');
     };
+
+    const filterReadingLists = (learningResourcesList, classnumber, classes) => {
+        console.log('filterReadingLists classnumber = ', classnumber);
+        console.log('filterReadingLists learningResourcesList = ', learningResourcesList);
+        const readingLists =
+            (!!learningResourcesList &&
+                learningResourcesList.length > 0 &&
+                !!learningResourcesList[0] &&
+                learningResourcesList[0].reading_lists) ||
+            [];
+        console.log('filterReadingLists: learningResourcesList[0].reading_lists =  ', readingLists);
+
+        if (!readingLists || readingLists.length === 0) {
+            console.log('filterReadingLists: list is empty');
+            return [];
+        }
+
+        console.log('before filter: ', readingLists[0].reading_lists);
+        if (readingLists.length === 1) {
+            console.log('filterReadingLists: single reading list');
+            return readingLists;
+        }
+
+        // do better
+        const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
+
+        console.log('befor filter, resourcesList[0].reading_lists = ', learningResourcesList[0].reading_lists);
+        const x = readingLists.filter(item => {
+            // // if (searchedCourse != null && searchedCourse.courseId === course.courseId) {
+            // /*
+            //     search results are currently an array of results like this:
+            //     {
+            //         "name": "MATH2010",
+            //         "url": "http:\/\/lr.library.uq.edu.au\/lists\/B89931FE-50AE-7102-7925-18EE386EAA4D",
+            //         "type": "learning_resource",
+            //         "course_title": "Analysis of Ordinary Differential Equations",
+            //         "campus": "St Lucia",
+            //         "period": "Semester 2 2020"
+            //     }
+            // */
+            // //     semesterString = searchedCourse.term === enrolment.semester;
+            // //     campus = searchedCourse.campus;
+            // // } else {
+            if (item.period === enrolment.semester) {
+                console.log('filterReadingLists: matches ', enrolment.semester);
+            } else {
+                console.log('filterReadingLists: no match ', enrolment.semester, ' != ', item.period);
+            }
+            return item.period === enrolment.semester;
+            // }
+        });
+        console.log('filterReadingLists produces: ', x);
+        return x;
+    };
+
+    // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
+    const getReadingListId = readingList => {
+        let id = '';
+        if (!!readingList.url) {
+            const url = readingList.url;
+            id = url.substring(url.lastIndexOf('/') + 1);
+            if (id.indexOf('.') !== -1) {
+                id = id.substring(0, url.indexOf('.'));
+            }
+        }
+        return id;
+    };
+
+    const filteredReadingLists =
+        !!learningResourcesList && learningResourcesList.length > 0
+            ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
+            : [];
+    console.log('LearningResources: filteredReadingLists = ', filteredReadingLists);
+
+    React.useEffect(() => {
+        console.log('useEffect: filteredReadingLists = ', filteredReadingLists);
+        if (!!filteredReadingLists && filteredReadingLists.length === 1) {
+            const readingListId = getReadingListId(filteredReadingLists[0]);
+            console.log('readingListId = ', readingListId);
+            if (readingListId !== '' && readingListId !== false) {
+                // I think false is the 'wrong' value here
+                // !!actions.loadReadingLists &&
+                actions.loadReadingLists(readingListId);
+                console.log('readingList fetched');
+            } else {
+                console.log('readingList not fetched');
+            }
+        }
+    }, [filteredReadingLists, actions]);
 
     const _trimNotes = value => {
         if (value && value.length > this.notesTrimLength) {
@@ -35,24 +128,30 @@ export const LearningResources = ({
     };
 
     // PHIL1002 is currently an example of multiple reading lists
-    const renderMultipleReadingListReference = (readingLists, classnumber) => {
-        console.log('multiple: readingLists = ', readingLists);
+    const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
+        console.log('renderMultipleReadingListReference: readingLists = ', readingListSummaries);
+        console.log('renderMultipleReadingListReference: classnumber = ', classnumber);
         const chooseListprompt = !!classnumber
             ? `More than one reading list found for ${classnumber}. Please select a list:`
             : '';
         return (
             <Fragment>
-                <Typography>{chooseListprompt}</Typography>
-                {readingLists.map((list, index) => {
-                    <Grid key={`multiplereadinglist-${index}`} container style={{ borderTop: '1px solid #e8e8e8' }}>
-                        <a
-                            aria-label={`Reading list for  ${list.title} ${list.period}`}
-                            href={list.url}
-                            key={`lrlink-${index}`}
+                <Typography style={{ paddingBottom: '15px' }}>{chooseListprompt}</Typography>
+                {readingListSummaries.map((list, index) => {
+                    return (
+                        <Grid
+                            key={`multiplereadinglist-${index}`}
+                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
                         >
-                            {list.title}, {list.period}
-                        </a>
-                    </Grid>;
+                            <a
+                                aria-label={`Reading list for  ${list.title} ${list.period}`}
+                                href={list.url}
+                                key={`lrlink-${index}`}
+                            >
+                                {list.title}, {list.period}
+                            </a>
+                        </Grid>
+                    );
                 })}
                 <Grid>
                     <a href="http://lr.library.uq.edu.au/index.html">
@@ -113,6 +212,22 @@ export const LearningResources = ({
     }
     */
 
+    console.log('LearningResources: learningResourcesList = ', learningResourcesList);
+    console.log('LearningResources: learningResourcesListLoading = ', learningResourcesListLoading);
+    console.log('LearningResources: learningResourcesListError = ', learningResourcesListError);
+    // const classnumber = 'FREN1010';
+
+    if (!(!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList)) {
+        console.log('debug: !!filteredReadingLists = ', !!filteredReadingLists);
+        console.log('debug: length = ', !!filteredReadingLists && filteredReadingLists.length === 1);
+        console.log('debug: readingList = ', readingList);
+    }
+    if (!!filteredReadingLists && filteredReadingLists.length === 1 && !!readingList) {
+        console.log('now we will display ', readingList);
+    } else {
+        console.log('wont display reading list');
+    }
+
     return (
         <StandardCard
             className="readingLists"
@@ -141,20 +256,22 @@ export const LearningResources = ({
                     )}
 
                     {(!readingListError || !learningResourcesListError) &&
+                        !!filteredReadingLists &&
+                        filteredReadingLists.length === 1 &&
                         (!learningResourcesList || learningResourcesList.length === 0) && (
                             <Typography>No reading lists for this course</Typography>
                         )}
 
-                    {!!learningResourcesList &&
-                        learningResourcesList.length > 0 &&
-                        !!learningResourcesList[0].reading_lists &&
+                    {!!filteredReadingLists &&
+                        filteredReadingLists.length > 1 &&
                         renderMultipleReadingListReference(
-                            learningResourcesList[0].reading_lists,
+                            // learningResourcesList[0].reading_lists,
+                            filteredReadingLists,
                             subject.classnumber || '',
                         )}
 
-                    {!!learningResourcesList &&
-                        learningResourcesList.length === 1 &&
+                    {!!filteredReadingLists &&
+                        filteredReadingLists.length === 1 &&
                         !!readingList &&
                         readingList.length > 0 &&
                         readingList
@@ -220,13 +337,16 @@ export const LearningResources = ({
 };
 
 LearningResources.propTypes = {
-    subject: PropTypes.any,
-    readingList: PropTypes.any,
-    readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
+    actions: PropTypes.object,
+    classnumber: PropTypes.any,
+    currentClasses: PropTypes.any,
     learningResourcesList: PropTypes.any,
     learningResourcesListLoading: PropTypes.bool,
     learningResourcesListError: PropTypes.string,
+    readingList: PropTypes.any,
+    readingListLoading: PropTypes.bool,
+    readingListError: PropTypes.string,
+    subject: PropTypes.any,
 };
 
 export default React.memo(LearningResources);

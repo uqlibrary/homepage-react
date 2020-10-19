@@ -82,62 +82,18 @@ export const CourseResources = ({
         setCurrentTopTab(newValue);
     };
 
-    const getReadingListId = readingList => {
-        let id = '';
-        if (!!readingList.url) {
-            const url = readingList.url;
-            id = url.substring(url.lastIndexOf('/') + 1);
-            if (id.indexOf('.') !== -1) {
-                id = id.substring(0, url.indexOf('.'));
-            }
-        }
-        return id;
-    };
-
-    const filterReadingLists = classnumber => {
-        console.log('filterReadingLists for ', classnumber);
-        if (
-            !learningResourcesList ||
-            learningResourcesList.length !== 1 ||
-            (!!learningResourcesList[0] &&
-                !!learningResourcesList[0].reading_lists &&
-                learningResourcesList[0].reading_lists.length < 2)
-        ) {
-            return;
-        }
-
-        // do better
-        const enrolment = account.classes.filter(aClass => aClass.classnumber === classnumber)[0];
-
-        console.log('befor filter, learningResourcesList[0].reading_lists = ', learningResourcesList[0].reading_lists);
-        const readingLists = learningResourcesList[0].reading_lists;
-        learningResourcesList[0].reading_lists = readingLists.filter(listentry => {
-            // // if (searchedCourse != null && searchedCourse.courseId === course.courseId) {
-            // /*
-            //     search results are currently an array of results like this:
-            //     {
-            //         "name": "MATH2010",
-            //         "url": "http:\/\/lr.library.uq.edu.au\/lists\/B89931FE-50AE-7102-7925-18EE386EAA4D",
-            //         "type": "learning_resource",
-            //         "course_title": "Analysis of Ordinary Differential Equations",
-            //         "campus": "St Lucia",
-            //         "period": "Semester 2 2020"
-            //     }
-            // */
-            // //     semesterString = searchedCourse.term === enrolment.semester;
-            // //     campus = searchedCourse.campus;
-            // // } else {
-            console.log(
-                'readingLists filter: comapre listentry.period = ',
-                listentry.period,
-                ' to enrolment.semester = ',
-                enrolment.semester,
-            );
-            return listentry.period === enrolment.semester;
-            // }
-        });
-        console.log('after filter, learningResourcesList[0].reading_lists = ', learningResourcesList[0].reading_lists);
-    };
+    // // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
+    // const getReadingListId = readingList => {
+    //     let id = '';
+    //     if (!!readingList.url) {
+    //         const url = readingList.url;
+    //         id = url.substring(url.lastIndexOf('/') + 1);
+    //         if (id.indexOf('.') !== -1) {
+    //             id = id.substring(0, url.indexOf('.'));
+    //         }
+    //     }
+    //     return id;
+    // };
 
     const handleSubjectChange = classnumber => {
         console.log('handleSubjectChange for', classnumber);
@@ -150,42 +106,44 @@ export const CourseResources = ({
 
         // !!classnumber && !!actions.loadLearningResources && actions.loadLearningResources(classnumber);
         !!classnumber && actions.loadLearningResources(classnumber);
-        console.log('learningResourcesList = ', learningResourcesList);
-        filterReadingLists(classnumber);
-        console.log('after filter, learningResourcesList = ', learningResourcesList);
+        // console.log('learningResourcesList = ', learningResourcesList);
+        // filteredReadingLists = filterReadingLists(learningResourcesList, classnumber);
+        // console.log('after filter, filteredReadingLists = ', filteredReadingLists);
 
         // !!classnumber && !!actions.loadGuides && actions.loadGuides(classnumber);
         !!classnumber && actions.loadGuides(classnumber);
         console.log('guideList = ', guideList);
 
-        console.log('learningResourcesList = ', learningResourcesList);
-        if (!!learningResourcesList && learningResourcesList.length === 1) {
-            const learningResourcesEntry = learningResourcesList[0];
-            console.log('learningResourcesEntry = ', learningResourcesEntry);
-            const readingListId =
-                !!learningResourcesEntry &&
-                !!learningResourcesEntry.reading_lists &&
-                learningResourcesEntry.reading_lists.length === 1 &&
-                getReadingListId(learningResourcesEntry.reading_lists[0]);
-            console.log('readingListId =', readingListId);
-            if (readingListId !== '') {
-                !!learningResourcesEntry &&
-                    !!learningResourcesEntry.reading_lists &&
-                    // !!actions.loadReadingLists &&
-                    actions.loadReadingLists(readingListId);
-                console.log('readingList = ', readingList);
-            } else {
-                console.log('readingList not fetched');
-            }
-        }
+        // console.log('handleSubjectChange: learningResourcesList = ', learningResourcesList);
+        // if (
+        //     !!learningResourcesList &&
+        //     learningResourcesList.length > 0 &&
+        //     learningResourcesList[0].reading_lists &&
+        //     learningResourcesList[0].reading_lists.length === 1
+        // ) {
+        //     const readingListId = getReadingListId(learningResourcesList[0].reading_lists);
+        //     if (readingListId !== '' && readingListId !== false) {
+        //         // I think false is the 'wrong' value here
+        //         // !!actions.loadReadingLists &&
+        //         actions.loadReadingLists(readingListId);
+        //         console.log('readingList = ', readingList);
+        //     } else {
+        //         console.log('readingList not fetched');
+        //     }
+        // }
     };
+
+    let selectedCourse = '';
 
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, newValue) => {
         !!event.target.innerText && handleSubjectChange(event.target.innerText);
+        selectedCourse = !!event.target.innerText ? event.target.innerText : '';
         setCurrentMenuTab(newValue);
+        console.log('at end of handleSubjectChange: filteredReadingLists = ', learningResourcesList);
     };
+    console.log('selectedCourse = ', selectedCourse);
 
     const renderNoListedCourses = (
         <Fragment>
@@ -256,11 +214,10 @@ export const CourseResources = ({
         );
     };
 
-    const renderSubjectTab = subject => {
+    const renderSubjectTabBody = subject => {
         const courseTitle =
             !!learningResourcesList && learningResourcesList.length > 0 ? learningResourcesList[0].course_title : null;
 
-        console.log('check learningResourcesList for mult lusts: ', learningResourcesList);
         return (
             <Grid container>
                 <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -270,13 +227,16 @@ export const CourseResources = ({
                 </Grid>
 
                 <LearningResources
-                    subject={subject}
+                    actions={actions}
+                    classnumber={subject.classnumber}
+                    currentClasses={account.classes}
                     readingList={readingList}
                     readingListLoading={readingListLoading}
                     readingListError={readingListError}
                     learningResourcesList={learningResourcesList}
                     learningResourcesListLoading={learningResourcesListLoading}
                     learningResourcesListError={learningResourcesListError}
+                    subject={subject}
                 />
 
                 <PastExamPapers
@@ -327,40 +287,46 @@ export const CourseResources = ({
     }
     */
 
-    const renderCurrentCourses = (
-        <Fragment>
-            <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
-                <Tabs onChange={handleCourseTabChange} scrollButtons="auto" value={coursemenu} variant="scrollable">
-                    {account.classes.map((item, index) => {
-                        return (
-                            <Tab
-                                {...a11yProps(index, 'classtab')}
-                                data-testid={`classtab-${index}`}
-                                key={`classtab-${index}`}
-                                id={`classtab-${index}`}
-                                label={item.classnumber}
-                                value={`${courseTabLabel}-${index}`} // must match index in Tabpanel
-                            />
-                        );
-                    })}
-                </Tabs>
-            </AppBar>
-            {account.classes.map((item, index) => {
-                return (
-                    <TabPanel
-                        data-testid={`classpanel-${index}`}
-                        index={`${courseTabLabel}-${index}`} // must match value in Tabs
-                        key={`classpanel-${index}`}
-                        tabId="coursemenu"
-                        value={coursemenu}
-                    >
-                        <Grid>{renderSubjectTab(item)}</Grid>
-                    </TabPanel>
-                );
-            })}
-        </Fragment>
-    );
+    const renderCurrentCourses = readingLists => {
+        console.log('renderCurrentCourses: readingLists = ', readingLists);
+        return (
+            <Fragment>
+                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                    <Tabs onChange={handleCourseTabChange} scrollButtons="auto" value={coursemenu} variant="scrollable">
+                        {account.classes.map((item, index) => {
+                            return (
+                                <Tab
+                                    {...a11yProps(index, 'classtab')}
+                                    data-testid={`classtab-${index}`}
+                                    key={`classtab-${index}`}
+                                    id={`classtab-${index}`}
+                                    label={item.classnumber}
+                                    value={`${courseTabLabel}-${index}`} // must match index in Tabpanel
+                                />
+                            );
+                        })}
+                    </Tabs>
+                </AppBar>
+                {account.classes.map((item, index) => {
+                    return (
+                        <TabPanel
+                            data-testid={`classpanel-${index}`}
+                            index={`${courseTabLabel}-${index}`} // must match value in Tabs
+                            key={`classpanel-${index}`}
+                            tabId="coursemenu"
+                            value={coursemenu}
+                        >
+                            <Grid>{renderSubjectTabBody(item)}</Grid>
+                        </TabPanel>
+                    );
+                })}
+            </Fragment>
+        );
+    };
 
+    console.log('just before render, readingLists = ', learningResourcesList);
+    const readingLists =
+        !!learningResourcesList && learningResourcesList.length > 0 ? learningResourcesList[0].reading_lists : [];
     return (
         <StandardPage>
             <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
@@ -385,7 +351,7 @@ export const CourseResources = ({
 
                             <TabPanel value={topmenu} index="top0" tabId="topmenu">
                                 {!!account.classes && account.classes.length > 0 ? (
-                                    <Grid>{renderCurrentCourses}</Grid>
+                                    <Grid>{renderCurrentCourses(readingLists)}</Grid>
                                 ) : (
                                     <Grid>{renderNoListedCourses}</Grid>
                                 )}
