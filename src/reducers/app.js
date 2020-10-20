@@ -31,6 +31,23 @@ const handlers = {
         ...state,
         redirectPath: null,
     }),
+    [actions.ALERT_STATUS_LOADING]: state => ({
+        ...state,
+        alertStatusLoading: true,
+        alertStatus: null,
+    }),
+
+    [actions.ALERT_STATUS_LOADED]: (state, action) => ({
+        ...state,
+        alertStatusLoading: false,
+        alertStatus: action.payload,
+    }),
+
+    [actions.ALERT_STATUS_FAILED]: state => ({
+        ...state,
+        alertStatusLoading: false,
+        alertStatus: null,
+    }),
 };
 
 export default function appReducer(state = initialState, action) {

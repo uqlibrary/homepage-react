@@ -24,6 +24,11 @@ const useStyles = makeStyles(
         common: {
             borderRadius: 0,
         },
+        wrapper: {
+            maxWidth: 1190,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
         '@keyframes wiggle': {
             from: { transform: 'rotate(-30deg)', transformOrigin: '40% 50%' },
             to: { transform: 'rotate(15deg)', transformOrigin: '40% 50%' },
@@ -49,6 +54,7 @@ const useStyles = makeStyles(
             alignSelf: 'center',
             padding: '4px 0',
             textShadow: '1px 1px 1px rgba(0, 0, 0, 0.2)',
+            verticalAlign: 'middle',
         },
         actionButton: {
             '& .action': {
@@ -65,6 +71,8 @@ const useStyles = makeStyles(
                 [theme.breakpoints.up('xs')]: {
                     marginTop: -12,
                     marginBottom: -12,
+                    marginRight: -6,
+                    marginLeft: -24,
                 },
                 [theme.breakpoints.down('xs')]: {
                     marginRight: -12,
@@ -291,18 +299,22 @@ export const Alert = ({
     };
 
     return (
-        <div style={{ padding: 12 }} className="Alert">
+        <div
+            style={{ padding: 12 }}
+            className="Alert"
+            className={classNames(classes[!!customIcon ? customType : type], classes.common)}
+        >
             <Grid
                 container
                 spacing={3}
-                className={classNames(classes[!!customIcon ? customType : type], classes.common)}
                 justify="center"
-                alignItems="flex-start"
+                alignItems="center"
                 alignContent="center"
                 data-testid={alertId}
+                className={classes.wrapper}
             >
                 <Grid item xs={12} sm className={action && !disableAlertClick && classes.linked}>
-                    <Grid container justify="center" alignItems="flex-start" alignContent="center">
+                    <Grid container justify="center" alignItems="center" alignContent="center">
                         <Grid
                             item
                             className={`${classes.icon} alert-icon ${wiggle ? classes.wiggler : ''}`}

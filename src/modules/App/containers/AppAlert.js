@@ -7,24 +7,51 @@ import * as actions from 'actions';
 
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 
-const AppAlert = ({ appAlert }) => {
-    if (!appAlert) return null;
-
-    return (
-        <div className="dashAlert">
-            <div className="layout-card">
-                <Alert {...appAlert} />
+const AppAlert = ({ appAlert, customAlert }) => {
+    let appAlerts = [];
+    if (appAlert && appAlert.length > 0) {
+        appAlerts = appAlert.map(item => {
+            // Strip marked down links from the body and assign to Alert props
+            const linkRegex = item.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
+            let markdownBody = {};
+            if (!!linkRegex && linkRegex.length === 3) {
+                markdownBody = {
+                    message: item.body.replace(linkRegex[0], '').replace('  ', ' '),
+                    action: () => (window.location.href = linkRegex[2]),
+                    actionButtonLabel: linkRegex[1],
+                };
+            }
+            return {
+                title: item.title,
+                message: item.body,
+                ...markdownBody,
+                type: item.urgent === 1 ? 'warning' : 'info_outline',
+            };
+        });
+    }
+    if (!!customAlert) {
+        appAlerts.push({ ...customAlert });
+    }
+    if (appAlerts && appAlerts.length > 0) {
+        return appAlerts.map((item, index) => (
+            <div style={{ width: '100%' }} key={index}>
+                <Alert {...item} />
             </div>
-        </div>
-    );
+        ));
+    } else {
+        return null;
+    }
 };
 
 AppAlert.propTypes = {
-    appAlert: PropTypes.object,
+    appAlert: PropTypes.array,
+    customAlert: PropTypes.object,
 };
 
 const mapStateToProps = state => ({
     appAlert:
+        state.get('appReducer') && state.get('appReducer').alertStatus ? state.get('appReducer').alertStatus : null,
+    customAlert:
         state.get('appReducer') && state.get('appReducer').appAlert ? { ...state.get('appReducer').appAlert } : null,
 });
 

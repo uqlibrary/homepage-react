@@ -108,7 +108,7 @@ export default {
             {
                 label: 'Database search',
                 link: 'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ',
-                display: [0, 1, 2, 3, 4, 5, 6],
+                display: [0, 1, 2, 3, 4, 5],
             },
             {
                 label: 'Database help',

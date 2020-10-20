@@ -49,6 +49,8 @@ const styles = theme => ({
         },
     },
     layoutFill: {
+        display: 'flex',
+        flexFlow: 'column',
         margin: 0,
         padding: 0,
         maxHeight: '100%',
@@ -88,6 +90,8 @@ export class AppClass extends PureComponent {
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
         chatStatus: PropTypes.any,
+        alertStatus: PropTypes.any,
+        alertStatusLoading: PropTypes.any,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -99,6 +103,7 @@ export class AppClass extends PureComponent {
         super(props);
         this.state = {
             menuOpen: false,
+            alertOpen: false,
             docked: false,
             chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
@@ -128,6 +133,7 @@ export class AppClass extends PureComponent {
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
         this.props.actions.loadChatStatus();
+        this.props.actions.loadAlerts();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -141,6 +147,13 @@ export class AppClass extends PureComponent {
                 chatStatus: { online: true },
             });
         }
+        this.props.actions.showAppAlert({
+            title: 'We are open on-campus and online.',
+            message: 'Access collections, services, and support to help you continue your work and study.',
+            type: 'info_outline',
+            action: () => (window.location.href = 'https://web.library.uq.edu.au/library-services/covid-19'),
+            actionButtonLabel: 'UQ Library COVID-19 Updates',
+        });
     }
 
     componentWillUnmount() {
@@ -215,15 +228,43 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <AppAlertContainer />
-                <Header
-                    account={this.props.account}
-                    history={this.props.history}
-                    isAuthorizedUser={isAuthorizedUser}
-                    toggleMenu={this.toggleMenu}
-                />
                 <ChatStatus status={this.props.chatStatus} />
+                <div className="content-header">
+                    <ChatStatus status={this.props.chatStatus} />
+                    <Header
+                        account={this.props.account}
+                        history={this.props.history}
+                        isAuthorizedUser={isAuthorizedUser}
+                        toggleMenu={this.toggleMenu}
+                    />
+                </div>
                 <div className="content-container" id="content-container">
+                    <Hidden mdUp>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            isMobile
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                            toggleMenu={this.toggleMenu}
+                            menuOpen={this.state.menuOpen}
+                        />
+                    </Hidden>
+                    <Hidden smDown>
+                        <Megamenu
+                            menuItems={menuItems}
+                            history={this.props.history}
+                            locale={{
+                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                skipNavTitle: locale.global.skipNav.title,
+                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                            }}
+                        />
+                    </Hidden>
+                    <AppAlertContainer />
                     <div style={{ marginBottom: 24 }}>
                         <Hidden mdUp>
                             <Megamenu

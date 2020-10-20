@@ -11,7 +11,8 @@ import fetchMock from 'fetch-mock';
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 200 });
-const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+const escapeRegExp = input => input.replace('.\\*', '.*')
+    .replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
 Cookies.set(SESSION_COOKIE_NAME, 'abc123');
 
@@ -29,39 +30,62 @@ if (user && !mockData.accounts[user]) {
 // default user is researcher if user is not defined
 user = user || 'vanilla';
 
-mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
-    console.log('Account API hit');
-    // mock account response
-    if (['s2222222', 's3333333'].indexOf(user) > -1) {
-        return [200, mockData.accounts[user]];
-    } else if (mockData.accounts[user]) {
-        return [403, {}];
-    }
-    return [404, {}];
-});
+mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
+    .reply(() => {
+        console.log('Account API hit');
+        // mock account response
+        if (['s2222222', 's3333333'].indexOf(user) > -1) {
+            return [200, mockData.accounts[user]];
+        } else if (mockData.accounts[user]) {
+            return [403, {}];
+        }
+        return [404, {}];
+    });
 
-mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
-    console.log('Account API hit');
-    // mock account response
-    if (user === 'public') {
-        return [403, {}];
-    } else if (mockData.accounts[user]) {
-        return [200, mockData.accounts[user]];
-    }
-    return [404, {}];
-});
+mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
+    .reply(() => {
+        console.log('Account API hit');
+        // mock account response
+        if (user === 'public') {
+            return [403, {}];
+        } else if (mockData.accounts[user]) {
+            return [200, mockData.accounts[user]];
+        }
+        return [404, {}];
+    });
 
-mock.onGet(routes.SPOTLIGHTS_API().apiUrl).reply(() => {
-    // mock spotlights
-    console.log('Spotlights API hit');
-    return [200, [...spotlights]];
-});
+mock.onGet(routes.SPOTLIGHTS_API().apiUrl)
+    .reply(() => {
+        // mock spotlights
+        console.log('Spotlights API hit');
+        return [200, [...spotlights]];
+    });
 
-mock.onGet(routes.CHAT_API().apiUrl).reply(() => {
-    console.log('Chat status API hit');
-    // mock chat status
-    return [200, { online: true }];
-});
+mock.onGet(routes.CHAT_API().apiUrl)
+    .reply(() => {
+        console.log('Chat status API hit');
+        // mock chat status
+        return [200, { online: true }];
+        // return [200, { online: false }];
+    });
+
+mock.onGet(routes.ALERT_API().apiUrl)
+    .reply(() => {
+        console.log('Alert status API hit');
+        // mock chat status
+        return [200,
+            [
+                {
+                'id': 'e895b270-d62b-11e7-954e-57c2cc19d151',
+                'start': '2020-10-12 09:58:02',
+                'end': '2020-11-22 09:58:02',
+                'title': 'Test urgent alert 2',
+                'body': '[urgent link description](http:\/\/www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+                'urgent': 1,
+                },
+            ],
+        ];
+    });
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,

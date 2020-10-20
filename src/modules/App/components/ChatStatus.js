@@ -31,6 +31,15 @@ const useStyles = makeStyles(
             bottom: theme.spacing(2),
             right: theme.spacing(2),
         },
+        chatIcon: {
+            color: theme.palette.white.main,
+        },
+        badgeOnline: {
+            backgroundColor: theme.palette.success.main,
+        },
+        badgeOffline: {
+            backgroundColor: theme.palette.error.main,
+        },
     }),
     { withTheme: true },
 );
@@ -47,6 +56,9 @@ export const ChatStatus = ({ status }) => {
     };
     const openChatStatus = () => {
         setCloseChatState(false);
+    };
+    const openContactUs = () => {
+        window.location.href = 'https://web.library.uq.edu.au/contact-us';
     };
     const launchChat = () => {
         window.open(
@@ -70,7 +82,7 @@ export const ChatStatus = ({ status }) => {
                 <div>
                     <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
                         <Grid item xs>
-                            Online&nbsp;chat&nbsp;available
+                            Chat&nbsp;online&nbsp;now
                         </Grid>
                         <Grid item xs={'auto'}>
                             <Button color="primary" size="small" variant="contained" onClick={launchChat}>
@@ -87,16 +99,52 @@ export const ChatStatus = ({ status }) => {
             </Snackbar>
         );
     }
-    if (chatState.online && closeChatState) {
+    if (!chatState.online && !closeChatState) {
+        return (
+            <Snackbar
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'right',
+                }}
+                className={classes.chatStatus}
+                open
+                onClose={closeChatStatus}
+            >
+                <div>
+                    <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
+                        <Grid item xs>
+                            Online&nbsp;chat&nbsp;unavailable
+                        </Grid>
+                        <Grid item xs={'auto'}>
+                            <Button color="primary" size="small" variant="contained" onClick={openContactUs}>
+                                Contact us
+                            </Button>
+                        </Grid>
+                        <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
+                            <IconButton size="small" aria-label="close" color="inherit" onClick={closeChatStatus}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </Grid>
+                    </Grid>
+                </div>
+            </Snackbar>
+        );
+    }
+    if (!!closeChatState) {
         return (
             <Tooltip
-                id="auth-button"
+                id="chat-icon-button"
                 title={'Click to open online chat'}
                 placement="left"
                 TransitionProps={{ timeout: 300 }}
             >
-                <Fab color="secondary" className={classes.chatAction} onClick={openChatStatus} size={'small'}>
-                    <QuestionAnswerIcon />
+                <Fab
+                    color="secondary"
+                    className={`${classes.chatAction} ${chatState.online ? classes.badgeOnline : classes.badgeOffline}`}
+                    onClick={openChatStatus}
+                    size={'small'}
+                >
+                    <QuestionAnswerIcon className={classes.chatIcon} />
                 </Fab>
             </Tooltip>
         );

@@ -95,19 +95,18 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 } else if (searchType === 8) {
                     actions.loadCourseReadingListsSuggestions(newValue);
                 }
-                console.log('focussing on the input');
                 document.getElementById('primo-search-autocomplete').focus();
             }
         },
         [actions, searchType],
     );
     return (
-        <StandardCard noPadding noHeader>
+        <StandardCard noPadding noHeader standardCardId="primo-search">
             <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
                         <FormControl style={{ width: '100%' }}>
-                            <InputLabel id="primo-search-select-label">
+                            <InputLabel id="primo-search-select-label" data-testid="primo-search-title">
                                 {locale.PrimoSearch.typeSelect.label}
                             </InputLabel>
                             <Select
