@@ -26,15 +26,19 @@ function TabPanel(props) {
     const { children, value, tabId, index, ...other } = props;
 
     return (
-        <div
+        <Grid
             role="tabpanel"
             hidden={value !== index}
             id={tabId || `tabpanel-${index}`}
             aria-labelledby={tabId || `tabpanel-${index}`}
             {...other}
         >
-            {value === index && <Box p={3}>{children}</Box>}
-        </div>
+            {value === index && (
+                <Box p={3} style={{ paddingLeft: 0, paddingRight: 0 }}>
+                    {children}
+                </Box>
+            )}
+        </Grid>
     );
 }
 
@@ -307,7 +311,7 @@ export const CourseResources = ({
             !!learningResourcesList && learningResourcesList.length > 0 ? learningResourcesList[0].course_title : null;
 
         return (
-            <Grid container style={{ marginLeft: '-24px', marginRight: '-24px' }}>
+            <Grid container>
                 <Grid item xs={12} style={{ textAlign: 'center' }}>
                     <Typography color={'primary'} variant={'h5'} component={'span'} style={{ fontSize: '1.33rem' }}>
                         {subject.classnumber} - {courseTitle}
