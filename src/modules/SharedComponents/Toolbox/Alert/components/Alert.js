@@ -25,7 +25,7 @@ const useStyles = makeStyles(
             borderRadius: 0,
         },
         wrapper: {
-            maxWidth: 1220,
+            maxWidth: 1190,
             marginLeft: 'auto',
             marginRight: 'auto',
         },
