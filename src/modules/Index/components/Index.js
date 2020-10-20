@@ -130,38 +130,44 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 6, height: '100%' }}
                                     justify={'flex-end'}
                                 >
-                                    <Grid item xs={12} style={{ marginTop: -16 }}>
-                                        <Typography
-                                            variant={'h5'}
-                                            component={'h5'}
-                                            color={'primary'}
-                                            style={{ paddingLeft: 16, fontSize: '2.25rem' }}
-                                        >
-                                            {greeting()}
-                                            <br />
-                                            {(account && account.firstName) || ''}
-                                        </Typography>
-                                        <Tooltip
-                                            id="auth-button"
-                                            title={`Your UQ username is ${account && account.id}`}
-                                            placement="right"
-                                            TransitionProps={{ timeout: 300 }}
-                                        >
-                                            <Typography component={'span'} color={'secondary'} style={{ fontSize: 12 }}>
-                                                <AccountBoxIcon
-                                                    fontSize={'small'}
-                                                    style={{
-                                                        marginLeft: 16,
-                                                        marginBottom: -2,
-                                                        marginRight: 6,
-                                                        height: 12,
-                                                        width: 12,
-                                                    }}
-                                                />
-                                                {(account && account.id) || ''}
+                                    {account && account.id && (
+                                        <Grid item xs={12} style={{ marginTop: -16 }}>
+                                            <Typography
+                                                variant={'h5'}
+                                                component={'h5'}
+                                                color={'primary'}
+                                                style={{ paddingLeft: 16, fontSize: '2.25rem' }}
+                                            >
+                                                {greeting()}
+                                                <br />
+                                                {(account && account.firstName) || ''}
                                             </Typography>
-                                        </Tooltip>
-                                    </Grid>
+                                            <Tooltip
+                                                id="auth-button"
+                                                title={`Your UQ username is ${account && account.id}`}
+                                                placement="right"
+                                                TransitionProps={{ timeout: 300 }}
+                                            >
+                                                <Typography
+                                                    component={'span'}
+                                                    color={'secondary'}
+                                                    style={{ fontSize: 12 }}
+                                                >
+                                                    <AccountBoxIcon
+                                                        fontSize={'small'}
+                                                        style={{
+                                                            marginLeft: 16,
+                                                            marginBottom: -2,
+                                                            marginRight: 6,
+                                                            height: 12,
+                                                            width: 12,
+                                                        }}
+                                                    />
+                                                    {(account && account.id) || ''}
+                                                </Typography>
+                                            </Tooltip>
+                                        </Grid>
+                                    )}
                                     <Grid
                                         item
                                         xs={12}
