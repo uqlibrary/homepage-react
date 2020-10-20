@@ -4,11 +4,6 @@ exports[`Component Masquerade Should render form as expected 1`] = `
 <StandardPage>
   <div
     className="layout-card"
-    style={
-      Object {
-        "margin": "-8px auto 16px",
-      }
-    }
   >
     <StandardCard
       noHeader={true}
@@ -99,11 +94,6 @@ exports[`Component Masquerade Should render readonly description 1`] = `
 <StandardPage>
   <div
     className="layout-card"
-    style={
-      Object {
-        "margin": "-8px auto 16px",
-      }
-    }
   >
     <StandardCard
       noHeader={true}
