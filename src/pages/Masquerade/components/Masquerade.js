@@ -51,7 +51,7 @@ export default class Masquerade extends PureComponent {
     render() {
         return (
             <StandardPage>
-                <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
+                <div className="layout-card">
                     <StandardCard noPadding noHeader>
                         <Grid
                             alignItems={'flex-end'}
