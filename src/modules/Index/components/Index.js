@@ -22,7 +22,6 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from '../containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import AllInboxIcon from '@material-ui/icons/AllInbox';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { default as locale } from './locale';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -280,41 +279,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                     >
                                                         <IconButton size={'small'} variant={'contained'}>
                                                             <MonetizationOnIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        {/* Doc del */}
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ fontSize: 15, fontWeight: 300 }}>
-                                                        Manage document delivery requests
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <b style={{ marginRight: 12 }}>2</b>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your document delivery'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <IconButton
-                                                            size={'small'}
-                                                            variant={'contained'}
-                                                            color={'secondary'}
-                                                        >
-                                                            <AllInboxIcon />
                                                         </IconButton>
                                                     </Tooltip>
                                                 </Grid>
