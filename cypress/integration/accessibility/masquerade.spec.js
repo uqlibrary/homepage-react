@@ -5,7 +5,7 @@ context('ACCESSIBILITY', () => {
         cy.viewport(1300, 1000);
         cy.get('div#masquerade').contains('Masquerade');
         cy.log('Masquerade');
-        cy.checkA11y('div#content-container', {
+        cy.checkA11y('div#masquerade', {
             reportName: 'Masquerade',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -18,7 +18,7 @@ context('ACCESSIBILITY', () => {
         cy.viewport(1300, 1000);
         cy.get('div#masquerade').contains('Masquerade');
         cy.log('Masquerade');
-        cy.checkA11y('div#content-container', {
+        cy.checkA11y('div#masquerade', {
             reportName: 'Masquerade',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
