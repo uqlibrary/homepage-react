@@ -70,7 +70,7 @@ export function loadReadingLists(keyword) {
         return fetch(READING_LIST_API({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log('fetched READING_LIST_API');
+                console.log('fetched READING_LIST_API for ', keyword);
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: data,

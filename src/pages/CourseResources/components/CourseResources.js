@@ -54,16 +54,16 @@ function a11yProps(index, classname = null) {
 }
 
 export const CourseResources = ({
-    readingList,
-    readingListLoading,
-    readingListError,
-    learningResourcesList,
-    learningResourcesListLoading,
-    learningResourcesListError,
+    actions,
     guideList,
     guideListLoading,
     guideListError,
-    actions,
+    learningResourcesList, // has sub element reading_lists (summary)
+    learningResourcesListLoading,
+    learningResourcesListError,
+    readingList, // list of books. chapters, etc
+    readingListLoading,
+    readingListError,
 }) => {
     const { account } = useAccountContext();
 
@@ -72,10 +72,18 @@ export const CourseResources = ({
         setCurrentTopTab(topMenuTabId);
     };
 
-    const handleSubjectChange = classnumber => {
-        !!classnumber && actions.loadLearningResources(classnumber);
+    const [currentLearningResourcesList, updateLearningResourcesList] = useState([]);
+    const [currentGuidesList, updateGuidesList] = useState([]);
+    const [currentReadingLists, updateReadingLists] = useState([]);
 
-        !!classnumber && actions.loadGuides(classnumber);
+    const handleSubjectChange = classnumber => {
+        if (!currentLearningResourcesList[classnumber]) {
+            !!classnumber && actions.loadLearningResources(classnumber);
+        }
+
+        if (!currentGuidesList[classnumber]) {
+            !!classnumber && actions.loadGuides(classnumber);
+        }
     };
 
     const courseTabLabel = 'subjecttab';
@@ -84,7 +92,133 @@ export const CourseResources = ({
         !!event.target.innerText && handleSubjectChange(event.target.innerText);
         setCurrentMenuTab(subjectTabId);
     };
+    const filterReadingLists = (learningResourcesList, classnumber, classes) => {
+        const readingLists =
+            (!!learningResourcesList &&
+                learningResourcesList.length > 0 &&
+                !!learningResourcesList[0] &&
+                learningResourcesList[0].reading_lists) ||
+            [];
 
+        if (!readingLists || readingLists.length === 0) {
+            return [];
+        }
+
+        if (readingLists.length === 1) {
+            return readingLists;
+        }
+
+        // do better
+        const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
+
+        return readingLists.filter(item => {
+            // // if (searchedCourse != null && searchedCourse.courseId === course.courseId) {
+            // /*
+            //     search results are currently an array of results like this:
+            //     {
+            //         "name": "MATH2010",
+            //         "url": "http:\/\/lr.library.uq.edu.au\/lists\/B89931FE-50AE-7102-7925-18EE386EAA4D",
+            //         "type": "learning_resource",
+            //         "course_title": "Analysis of Ordinary Differential Equations",
+            //         "campus": "St Lucia",
+            //         "period": "Semester 2 2020"
+            //     }
+            // */
+            // //     semesterString = searchedCourse.term === enrolment.semester;
+            // //     campus = searchedCourse.campus;
+            // // } else {
+            return item.period === enrolment.semester;
+            // }
+        });
+    };
+
+    // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
+    const getReadingListId = readingList => {
+        let id = '';
+        if (!!readingList.url) {
+            const url = readingList.url;
+            id = url.substring(url.lastIndexOf('/') + 1);
+            if (id.indexOf('.') !== -1) {
+                id = id.substring(0, url.indexOf('.'));
+            }
+        }
+        return id;
+    };
+
+    const requestReadingListLoad = (learningResources, subjectNumber, currentClasses) => {
+        const filteredReadingLists =
+            !!learningResources && learningResources.length > 0
+                ? filterReadingLists(learningResources, subjectNumber, currentClasses)
+                : [];
+        if (filteredReadingLists.length === 1) {
+            const talisId = getReadingListId(filteredReadingLists[0]);
+            if (!!talisId && currentReadingLists.talisId === undefined) {
+                actions.loadReadingLists(talisId);
+            }
+        }
+    };
+
+    const updateLearningResourceSubjectList = React.useCallback((learningResourcesList, currentClasses) => {
+        if (!!learningResourcesList && learningResourcesList.length > 0 && learningResourcesList[0].title) {
+            const subjectNumber = learningResourcesList[0].title;
+            if (currentLearningResourcesList.subjectNumber === undefined) {
+                const newLearningResourcesList = {};
+                newLearningResourcesList[subjectNumber] = learningResourcesList;
+                updateLearningResourcesList(currentLearningResourcesList =>
+                    Object.assign({}, ...currentLearningResourcesList, ...newLearningResourcesList),
+                );
+
+                requestReadingListLoad(learningResourcesList, subjectNumber, currentClasses);
+            }
+        }
+    });
+
+    const getSubjectNumberbyTalisid = talisId => {
+        let subjectNumber = false;
+        Object.values(currentLearningResourcesList).map(item => {
+            const readingList = !!item[0].reading_lists && item[0].reading_lists.length > 0 && item[0].reading_lists[0];
+            if (talisId === getReadingListId(readingList)) {
+                subjectNumber = item[0].title;
+            }
+        });
+        return subjectNumber;
+    };
+
+    React.useEffect(() => {
+        updateLearningResourceSubjectList(learningResourcesList, account.classes);
+    }, [learningResourcesList]);
+
+    const updateListOfReadingLists = React.useCallback(readingList => {
+        if (!!readingList && readingList.length > 0 && !!readingList[0].talisId) {
+            const subject = getSubjectNumberbyTalisid(readingList[0].talisId);
+            if (currentReadingLists.subject === undefined) {
+                const newReadingList = {};
+                newReadingList[subject] = readingList;
+                updateReadingLists(currentReadingLists => Object.assign({}, ...currentReadingLists, ...newReadingList));
+            }
+        }
+    });
+
+    React.useEffect(() => {
+        updateListOfReadingLists(readingList);
+    }, [readingList]);
+
+    const updateGuidesSubjectList = React.useCallback(guideList => {
+        if (!!guideList && guideList.length > 0 && guideList[0].coursecode) {
+            const subjectNumber = guideList[0].coursecode;
+            if (currentGuidesList.subjectNumber === undefined) {
+                const newGuidesList = {};
+                newGuidesList[subjectNumber] = guideList;
+                updateGuidesList(currentGuidesList => Object.assign({}, ...currentGuidesList, ...newGuidesList));
+            }
+        }
+    });
+
+    React.useEffect(() => {
+        updateGuidesSubjectList(guideList);
+    }, [guideList]);
+
+    // load the data for the first class (it is automatically displayed). Should only run once
     React.useEffect(() => {
         const firstEnrolledClassNumber =
             (!!account.classes &&
@@ -181,13 +315,13 @@ export const CourseResources = ({
                 </Grid>
 
                 <LearningResources
-                    actions={actions}
+                    // actions={actions}
                     classnumber={subject.classnumber}
                     currentClasses={account.classes}
-                    readingList={readingList}
+                    readingList={currentReadingLists[[subject.classnumber]]}
                     readingListLoading={readingListLoading}
                     readingListError={readingListError}
-                    learningResourcesList={learningResourcesList}
+                    learningResourcesList={currentLearningResourcesList[subject.classnumber]}
                     learningResourcesListLoading={learningResourcesListLoading}
                     learningResourcesListError={learningResourcesListError}
                     subject={subject}
@@ -200,7 +334,11 @@ export const CourseResources = ({
                     learningResourcesListError={learningResourcesListError}
                 />
 
-                <Guides guideList={guideList} guideListLoading={guideListLoading} guideListError={guideListError} />
+                <Guides
+                    guideList={currentGuidesList[subject.classnumber]}
+                    guideListLoading={guideListLoading}
+                    guideListError={guideListError}
+                />
 
                 <StandardCard
                     className="CourseLinks"

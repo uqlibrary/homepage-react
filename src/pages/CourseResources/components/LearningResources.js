@@ -11,13 +11,12 @@ import Typography from '@material-ui/core/Typography';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 export const LearningResources = ({
-    actions,
     classnumber,
     currentClasses,
     learningResourcesList, // has sub element reading_lists (summary)
     learningResourcesListLoading,
     learningResourcesListError,
-    readingList, // is list of books and chapeters, etc
+    readingList, // list of books. chapters, etc
     readingListLoading,
     readingListError,
     subject,
@@ -65,38 +64,6 @@ export const LearningResources = ({
             // }
         });
     };
-
-    // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
-    const getReadingListId = readingList => {
-        let id = '';
-        if (!!readingList.url) {
-            const url = readingList.url;
-            id = url.substring(url.lastIndexOf('/') + 1);
-            if (id.indexOf('.') !== -1) {
-                id = id.substring(0, url.indexOf('.'));
-            }
-        }
-        return id;
-    };
-
-    const getReadingListWhenResourceListAvailable = learningResourcesList => {
-        const filteredReadingLists =
-            !!learningResourcesList && learningResourcesList.length > 0
-                ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
-                : [];
-
-        if (!!filteredReadingLists && filteredReadingLists.length === 1) {
-            const readingListId = getReadingListId(filteredReadingLists[0]);
-            if (readingListId !== '' && readingListId !== false) {
-                // I think false is the value to check against here?
-                actions.loadReadingLists(readingListId);
-            }
-        }
-    };
-
-    React.useEffect(() => {
-        getReadingListWhenResourceListAvailable(learningResourcesList);
-    }, [learningResourcesList]);
 
     const filteredReadingLists =
         !!learningResourcesList && learningResourcesList.length > 0
@@ -231,11 +198,7 @@ export const LearningResources = ({
 
                     {!!filteredReadingLists &&
                         filteredReadingLists.length > 1 &&
-                        renderMultipleReadingListReference(
-                            // learningResourcesList[0].reading_lists,
-                            filteredReadingLists,
-                            subject.classnumber || '',
-                        )}
+                        renderMultipleReadingListReference(filteredReadingLists, subject.classnumber || '')}
 
                     {!!filteredReadingLists &&
                         filteredReadingLists.length === 1 &&
@@ -304,7 +267,6 @@ export const LearningResources = ({
 };
 
 LearningResources.propTypes = {
-    actions: PropTypes.object,
     classnumber: PropTypes.any,
     currentClasses: PropTypes.any,
     learningResourcesList: PropTypes.any,

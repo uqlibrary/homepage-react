@@ -1,4 +1,5 @@
 export default [{
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Webpage",
     "isbn": "",
     "url": "https:\/\/www.library.uq.edu.au\/exams\/search.html",
@@ -10,6 +11,7 @@ export default [{
     "studentNote": "Follow the link and search for past exam papers by course code.",
     "importance": ""
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Clendinnen, Inga; Australian Broadcasting Corporation",
     "placePublished": "Melbourne",
@@ -28,6 +30,7 @@ export default [{
     "libraryNote": "Print book contents: Chapter 1 = pp,5-23 nh 10.7.2020 -- Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "publisher": "Aboriginal Studies Press",
     "onlineResource": true,
@@ -47,6 +50,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Tench, Watkin; Flannery, Tim F.",
     "placePublished": "Melbourne, Vic",
@@ -65,6 +69,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "onlineResource": true,
     "uri": "http:\/\/lr.library.uq.edu.au\/items\/B20B0A16-4ECD-265A-794A-2ED99B9B207C",
@@ -84,6 +89,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Connors, Libby",
     "placePublished": "Crows Nest, N.S.W.",
@@ -101,6 +107,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "0670887412; 9780670887415",
     "publisher": "Viking",
     "placeOfPublication": "Ringwood, Vic",
@@ -122,6 +129,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Hirst, John",
     "placePublished": "Collingwood, Victoria",
@@ -140,6 +148,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Crotty, Martin; Roberts, David Andrew",
     "placePublished": "Sydney",
@@ -158,6 +167,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Bean, C. E. W.; Cambridge University Library",
     "placePublished": "London",
@@ -176,6 +186,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "onlineResource": true,
     "uri": "http:\/\/lr.library.uq.edu.au\/items\/CF816761-E655-2078-24CF-CD008CCDD88B",
@@ -195,6 +206,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Webpage",
     "isbn": "",
     "url": "http:\/\/pmtranscripts.pmc.gov.au\/prime-minister\/abbott-tony?page=111",
@@ -207,6 +219,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Grant, Lachlan",
     "placePublished": "Sydney, N.S.W.",
@@ -225,6 +238,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Sobocinska, Agnieszka",
     "placePublished": "Sydney, N.S.W.",
@@ -242,6 +256,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Hamilton, Clive; Joske, Alex",
     "placePublished": "Richmond, Victoria",
@@ -259,6 +274,7 @@ export default [{
     "libraryNote": "Print book contents: Chapter 7 = p.134-150 nh 10.7.2020 -- Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "publisher": "Black Inc.",
     "onlineResource": true,
@@ -278,6 +294,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Document",
     "year": "May 2017",
     "isbn": "",
@@ -291,6 +308,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Clark, Anna",
     "placePublished": "Carlton, Vic",
@@ -308,6 +326,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Summers, Anne",
     "placePublished": "Coogee, N.S.W.",
@@ -325,6 +344,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Lydon, Jane; Ryan, Lyndall",
     "placePublished": "Kensington, NSW",
@@ -342,6 +362,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "MacIntyre, Stuart; Hirst, J. B; Davison, Graeme",
     "placePublished": "South Melbourne",
@@ -360,6 +381,7 @@ export default [{
     "studentNote": "",
     "importance": "Recommended"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Macintyre, Stuart; Bashford, Alison",
     "placePublished": "Melbourne, Vic",
@@ -377,6 +399,7 @@ export default [{
     "libraryNote": "eBook contains both volume 1 & 2 nh 10.7.2020",
     "importance": "Recommended"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "publisher": "Angus and Robertson",
     "placeOfPublication": "Sydney",
@@ -397,6 +420,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "publisher": "Angus and Robertson",
     "placeOfPublication": "Sydney",
@@ -417,6 +441,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "publisher": "Angus and Robertson",
     "placeOfPublication": "Sydney",
@@ -437,6 +462,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Bongiorno, Frank",
     "placePublished": "Collingwood, Vic",
@@ -454,6 +480,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Hansen, Christine; Griffiths, Tom",
     "placePublished": "Collingwood, Vic",
@@ -471,6 +498,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Macintyre, Stuart; Bashford, Alison",
     "placePublished": "Melbourne, Vic",
@@ -488,6 +516,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Website",
     "isbn": "",
     "url": "https:\/\/climatelinkedfires.wordpress.com\/",
@@ -500,6 +529,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "url": "https:\/\/theconversation.com\/lockdown-lessons-from-the-history-of-solitude-134611",
     "onlineResource": true,
@@ -515,6 +545,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "url": "https:\/\/theconversation.com\/what-will-the-world-be-like-after-coronavirus-four-possible-futures-134085",
     "onlineResource": true,
@@ -530,6 +561,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "onlineResource": true,
     "uri": "http:\/\/lr.library.uq.edu.au\/items\/679e80b0-06ae-48c7-a4fa-6d34ee57ae5f",
@@ -546,6 +578,7 @@ export default [{
     "libraryNote": "need to check subscribed databases for when\/if this article is added - and to then add new link to this bookmark nh 14.7.2020 -- Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "placePublished": "Singapore",
     "catalogueRecordId": "991014145997903131",
@@ -564,6 +597,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 20.7.2020 for Semester 2 2020 nh",
     "importance": "Recommended"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "isbn": "",
     "onlineResource": true,
     "uri": "http:\/\/lr.library.uq.edu.au\/items\/d9ca8b37-bfd2-4416-8910-b04ad91178e5",
@@ -583,6 +617,7 @@ export default [{
     "libraryNote": "Requested by lec Martin Crotty 24.7.2020 for Semester 2 2020 nh",
     "importance": "Required"
 }, {
+    "talisId": "2109F2EC-AB0B-482F-4D30-1DD3531E46BE",
     "referenceType": "Book",
     "author": "Crotty, Martin",
     "catalogueRecordId": "991014157398503131",

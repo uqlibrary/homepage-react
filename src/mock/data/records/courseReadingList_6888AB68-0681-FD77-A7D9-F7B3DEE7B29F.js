@@ -1,4 +1,5 @@
 export default [{
+    "talisId": "6888AB68-0681-FD77-A7D9-F7B3DEE7B29F",
     "referenceType": "Book",
     "author": "Le Fur, Dominique",
     "placePublished": "Glasgow",
@@ -17,6 +18,7 @@ export default [{
     "libraryNote": "Recommended FREN1010 Semester 2 2020 sw | Ext FREN1010 semester 2 2020 sw",
     "importance": "Recommended",
 }, {
+    "talisId": "6888AB68-0681-FD77-A7D9-F7B3DEE7B29F",
     "referenceType": "Webpage",
     "isbn": "",
     "url": "https:\/\/www.library.uq.edu.au\/exams\/search.html",
@@ -28,6 +30,7 @@ export default [{
     "studentNote": "Follow the link and search for past exam papers by course code.",
     "importance": "",
 }, {
+    "talisId": "6888AB68-0681-FD77-A7D9-F7B3DEE7B29F",
     "referenceType": "Book",
     "author": "Chahi, Fatiha; Denyer, Monique; Gloanec, Audrey; Ollivier, Christian; Garmendia, Agust\u00edn",
     "placePublished": "[Barcelona]",
