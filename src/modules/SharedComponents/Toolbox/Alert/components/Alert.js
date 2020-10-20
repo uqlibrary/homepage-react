@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -271,8 +271,10 @@ export const Alert = ({
     title,
     type,
     wiggle,
+    canHide,
 }) => {
     const classes = useStyles();
+    const [hideAlert, setHideAlert] = useState(false);
     const renderIcon = type => {
         switch (type) {
             case 'custom':
@@ -297,97 +299,142 @@ export const Alert = ({
                 return <Error id="error-icon" className="icon" />;
         }
     };
+    const hideThisAlert = () => {
+        setHideAlert(true);
+    };
 
-    return (
-        <div
-            style={{ padding: 12 }}
-            className="Alert"
-            className={classNames(classes[!!customIcon ? customType : type], classes.common)}
-        >
-            <Grid
-                container
-                spacing={3}
-                justify="center"
-                alignItems="center"
-                alignContent="center"
+    if (!!hideAlert) {
+        return null;
+    } else {
+        return (
+            <div
+                style={{ padding: 12 }}
+                className={classNames(classes[!!customIcon ? customType : type], classes.common)}
                 data-testid={alertId}
-                className={classes.wrapper}
+                id={alertId}
             >
-                <Grid item xs={12} sm className={action && !disableAlertClick && classes.linked}>
-                    <Grid container justify="center" alignItems="center" alignContent="center">
-                        <Grid
-                            item
-                            className={`${classes.icon} alert-icon ${wiggle ? classes.wiggler : ''}`}
-                            onClick={!disableAlertClick && action}
-                            onKeyDown={!disableAlertClick && action}
-                        >
-                            {showLoader ? (
-                                <CircularProgress id="spinner" className="spinner" size={38} thickness={3} />
-                            ) : (
-                                renderIcon(type)
+                <Grid
+                    container
+                    spacing={3}
+                    justify="center"
+                    alignItems="center"
+                    alignContent="center"
+                    className={classes.wrapper}
+                >
+                    <Grid item xs={12} sm className={action && !disableAlertClick && classes.linked}>
+                        <Grid container justify="center" alignItems="center" alignContent="center">
+                            <Grid
+                                item
+                                className={`${classes.icon} alert-icon ${wiggle ? classes.wiggler : ''}`}
+                                onClick={!disableAlertClick && action}
+                                onKeyDown={!disableAlertClick && action}
+                                id={`${alertId}-action-icon-button`}
+                                data-testid={`${alertId}-action-icon-button`}
+                            >
+                                {showLoader ? (
+                                    <CircularProgress id="spinner" className="spinner" size={38} thickness={3} />
+                                ) : (
+                                    renderIcon(type)
+                                )}
+                            </Grid>
+                            <Grid
+                                item
+                                xs
+                                className={`${classes.text} alert-text`}
+                                onClick={!disableAlertClick && action}
+                                onKeyDown={!disableAlertClick && action}
+                                id={`${alertId}-action-message-button`}
+                                data-testid={`${alertId}-action-message-button`}
+                            >
+                                <b>{title && `${title} - `}</b>
+                                {message}
+                            </Grid>
+                            {allowDismiss && dismissAction && (
+                                <Hidden smUp>
+                                    <Grid item className={classes.dismissButton}>
+                                        <IconButton
+                                            onClick={dismissAction}
+                                            title={dismissTitle}
+                                            aria-label={dismissTitle}
+                                            id={`${alertId}-dismiss-button-mobile`}
+                                            data-testid={`${alertId}-dismiss-button-mobile`}
+                                        >
+                                            <Close className="dismiss" />
+                                        </IconButton>
+                                    </Grid>
+                                </Hidden>
+                            )}
+                            {canHide && (
+                                <Hidden smUp>
+                                    <Grid item className={classes.dismissButton}>
+                                        <IconButton
+                                            onClick={hideThisAlert}
+                                            title={'Hide this alert'}
+                                            aria-label={'Hide this alert'}
+                                            id={`${alertId}-hide-button-mobile`}
+                                            data-testid={`${alertId}-hide-button-mobile`}
+                                        >
+                                            <Close className="dismiss" />
+                                        </IconButton>
+                                    </Grid>
+                                </Hidden>
                             )}
                         </Grid>
-                        <Grid
-                            item
-                            xs
-                            className={`${classes.text} alert-text`}
-                            onClick={!disableAlertClick && action}
-                            onKeyDown={!disableAlertClick && action}
-                        >
-                            <b>{title && `${title} - `}</b>
-                            {message}
-                        </Grid>
-                        {allowDismiss && dismissAction && (
-                            <Hidden smUp>
-                                <Grid item className={classes.dismissButton}>
-                                    <IconButton
-                                        onClick={dismissAction}
-                                        title={dismissTitle}
-                                        aria-label={dismissTitle}
-                                        id="dismiss-mobile"
-                                    >
-                                        <Close className="dismiss" />
-                                    </IconButton>
-                                </Grid>
-                            </Hidden>
-                        )}
                     </Grid>
+                    {action && actionButtonLabel && (
+                        <Grid item xs sm="auto" className={classes.actionButton}>
+                            <Button
+                                variant="text"
+                                children={actionButtonLabel}
+                                onClick={action}
+                                fullWidth
+                                className="action alert-button"
+                                id={`${alertId}-action-button`}
+                                data-testid={`${alertId}-action-button`}
+                            />
+                        </Grid>
+                    )}
+                    {allowDismiss && dismissAction && (
+                        <Hidden xsDown>
+                            <Grid item className={classes.dismissButton}>
+                                <IconButton
+                                    onClick={dismissAction}
+                                    title={dismissTitle}
+                                    aria-label={dismissTitle}
+                                    id={`${alertId}-dismiss-button`}
+                                    data-testid={`${alertId}-dismiss-button`}
+                                >
+                                    <Close className="dismiss" />
+                                </IconButton>
+                            </Grid>
+                        </Hidden>
+                    )}
+                    {!!canHide && (
+                        <Hidden xsDown>
+                            <Grid item className={classes.dismissButton}>
+                                <IconButton
+                                    onClick={hideThisAlert}
+                                    title={'Hide this alert'}
+                                    aria-label={'Hide this alert'}
+                                    id={`${alertId}-hide-button`}
+                                    data-testid={`${alertId}-hide-button`}
+                                >
+                                    <Close className="dismiss" />
+                                </IconButton>
+                            </Grid>
+                        </Hidden>
+                    )}
                 </Grid>
-                {action && actionButtonLabel && (
-                    <Grid item xs sm="auto" className={classes.actionButton}>
-                        <Button
-                            variant="text"
-                            children={actionButtonLabel}
-                            onClick={action}
-                            fullWidth
-                            className="action alert-button"
-                            id="action-button"
-                        />
-                    </Grid>
-                )}
-                {allowDismiss && dismissAction && (
-                    <Hidden xsDown>
-                        <Grid item className={classes.dismissButton}>
-                            <IconButton
-                                onClick={dismissAction}
-                                title={dismissTitle}
-                                aria-label={dismissTitle}
-                                id="dismiss"
-                            >
-                                <Close className="dismiss" />
-                            </IconButton>
-                        </Grid>
-                    </Hidden>
-                )}
-            </Grid>
-        </div>
-    );
+            </div>
+        );
+    }
 };
 
 Alert.propTypes = {
     action: PropTypes.func,
     actionButtonLabel: PropTypes.string,
     allowDismiss: PropTypes.bool,
+    canHide: PropTypes.bool,
     customIcon: PropTypes.any,
     customType: PropTypes.oneOf([
         null,
@@ -424,6 +471,7 @@ Alert.propTypes = {
 
 Alert.defaultProps = {
     allowDismiss: false,
+    canHide: false,
     customIcon: null,
     customType: null,
     disableAlertClick: false,

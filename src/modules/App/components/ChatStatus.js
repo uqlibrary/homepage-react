@@ -78,6 +78,8 @@ export const ChatStatus = ({ status }) => {
                 className={classes.chatStatus}
                 open
                 onClose={closeChatStatus}
+                id={'chat-status-snackbar-online'}
+                data-testid={'chat-status-snackbar-online'}
             >
                 <div>
                     <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
@@ -85,12 +87,26 @@ export const ChatStatus = ({ status }) => {
                             Chat&nbsp;online&nbsp;now
                         </Grid>
                         <Grid item xs={'auto'}>
-                            <Button color="primary" size="small" variant="contained" onClick={launchChat}>
+                            <Button
+                                color="primary"
+                                size="small"
+                                variant="contained"
+                                onClick={launchChat}
+                                id={'chat-status-snackbar-online-launch-button'}
+                                data-testid={'chat-status-snackbar-online-launch-button'}
+                            >
                                 Launch
                             </Button>
                         </Grid>
                         <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
-                            <IconButton size="small" aria-label="close" color="inherit" onClick={closeChatStatus}>
+                            <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={closeChatStatus}
+                                id={'chat-status-snackbar-online-close-button'}
+                                data-testid={'chat-status-snackbar-online-close-button'}
+                            >
                                 <CloseIcon fontSize="small" />
                             </IconButton>
                         </Grid>
@@ -109,6 +125,8 @@ export const ChatStatus = ({ status }) => {
                 className={classes.chatStatus}
                 open
                 onClose={closeChatStatus}
+                id={'chat-status-snackbar-offline'}
+                data-testid={'chat-status-snackbar-offline'}
             >
                 <div>
                     <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
@@ -116,12 +134,26 @@ export const ChatStatus = ({ status }) => {
                             Online&nbsp;chat&nbsp;unavailable
                         </Grid>
                         <Grid item xs={'auto'}>
-                            <Button color="primary" size="small" variant="contained" onClick={openContactUs}>
+                            <Button
+                                color="primary"
+                                size="small"
+                                variant="contained"
+                                onClick={openContactUs}
+                                id={'chat-status-snackbar-offline-launch-button'}
+                                data-testid={'chat-status-snackbar-offline-launch-button'}
+                            >
                                 Contact us
                             </Button>
                         </Grid>
                         <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
-                            <IconButton size="small" aria-label="close" color="inherit" onClick={closeChatStatus}>
+                            <IconButton
+                                size="small"
+                                aria-label="close"
+                                color="inherit"
+                                onClick={closeChatStatus}
+                                id={'chat-status-snackbar-offline-close-button'}
+                                data-testid={'chat-status-snackbar-offline-close-button'}
+                            >
                                 <CloseIcon fontSize="small" />
                             </IconButton>
                         </Grid>
@@ -132,19 +164,20 @@ export const ChatStatus = ({ status }) => {
     }
     if (!!closeChatState) {
         return (
-            <Tooltip
-                id="chat-icon-button"
-                title={'Click to open online chat'}
-                placement="left"
-                TransitionProps={{ timeout: 300 }}
-            >
+            <Tooltip title={'Click to open online chat'} placement="left" TransitionProps={{ timeout: 300 }}>
                 <Fab
                     color="secondary"
                     className={`${classes.chatAction} ${chatState.online ? classes.badgeOnline : classes.badgeOffline}`}
                     onClick={openChatStatus}
                     size={'small'}
+                    id={`chat-status-icon-button-${chatState.online ? 'online' : 'offline'}`}
+                    data-testid={`chat-status-icon-button-${chatState.online ? 'online' : 'offline'}`}
                 >
-                    <QuestionAnswerIcon className={classes.chatIcon} />
+                    <QuestionAnswerIcon
+                        className={classes.chatIcon}
+                        id={`chat-status-icon-${chatState.online ? 'online' : 'offline'}`}
+                        data-testid={`chat-status-icon-${chatState.online ? 'online' : 'offline'}`}
+                    />
                 </Fab>
             </Tooltip>
         );

@@ -35,7 +35,7 @@ const AppAlert = ({ appAlert, customAlert }) => {
     if (appAlerts && appAlerts.length > 0) {
         return appAlerts.map((item, index) => (
             <div style={{ width: '100%' }} key={index}>
-                <Alert {...item} />
+                <Alert {...item} canHide alertId={`alert-${index}`} />
             </div>
         ));
     } else {
