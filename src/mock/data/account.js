@@ -85,7 +85,7 @@ export const accounts = {
         {
             "ACAD_CAREER": "UGRD",
             "DESCR": "Reg F\/works for Envl Mmgt &",
-            "SUBJECT": "ENVM",
+            "SUBJECT": "HIST",
             "CATALOG_NBR": "1201",
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
