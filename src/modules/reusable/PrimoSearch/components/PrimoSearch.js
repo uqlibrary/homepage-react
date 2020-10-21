@@ -65,7 +65,15 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions, displayType }) => {
+export const PrimoSearch = ({
+    actions,
+    displayType,
+    locale,
+    searchKeywordSelected,
+    suggestions,
+    suggestionsLoading,
+    suggestionsError,
+}) => {
     const classes = useStyles();
 
     const searchTypeCourseResources = 8;
@@ -84,7 +92,10 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
 
     const handleSearchButton = event => {
         event.preventDefault();
-        if (!!searchKeyword) {
+        if (displayType === 'courseresources') {
+            console.log('searchKeyword = ', searchKeyword);
+            searchKeywordSelected(searchKeyword);
+        } else if (!!searchKeyword) {
             const link = locale.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
             window.location.assign(link);
         }
@@ -255,6 +266,7 @@ PrimoSearch.propTypes = {
     displayType: PropTypes.string, // 'all' for full homepage display or 'courseresources' for course resource search
     locale: PropTypes.any,
     option: PropTypes.any,
+    searchKeywordSelected: PropTypes.function,
     suggestions: PropTypes.any,
     suggestionsLoading: PropTypes.bool,
     suggestionsError: PropTypes.string,

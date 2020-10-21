@@ -70,6 +70,9 @@ export const CourseResources = ({
 }) => {
     const { account } = useAccountContext();
 
+    const [listSearchedSubjects, updateSearchList] = useState([]);
+    // may need state of 'listMyCourses' which then shows the mycourses tab?
+
     const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);
@@ -221,7 +224,7 @@ export const CourseResources = ({
         updateGuidesSubjectList(guideList);
     }, [guideList]);
 
-    // load the data for the first class (it is automatically displayed). Should only run once
+    // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
         const firstEnrolledClassNumber =
             (!!account.classes &&
@@ -417,6 +420,17 @@ export const CourseResources = ({
         </Fragment>
     );
 
+    const searchKeywordSelected = searchKeyword => {
+        console.log('searchKeywordSelected got searchKeyword = ', searchKeyword);
+        updateSearchList(listSearchedSubjects.concat(searchKeyword));
+    };
+
+    React.useEffect(() => {
+        if (listSearchedSubjects.length > 0) {
+            console.log('listSearchedSubjects has changed: ', listSearchedSubjects);
+        }
+    }, [listSearchedSubjects]);
+
     return (
         <StandardPage>
             <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
@@ -448,7 +462,10 @@ export const CourseResources = ({
                             </TabPanel>
                             <TabPanel value={topmenu} index="top1" tabId="topmenu">
                                 <Grid item xs={12} id="courseresource-search">
-                                    <PrimoSearch displayType="courseresources" />
+                                    <PrimoSearch
+                                        displayType="courseresources"
+                                        searchKeywordSelected={searchKeywordSelected}
+                                    />
                                 </Grid>
                             </TabPanel>
                             <TabPanel value={topmenu} index="top2" tabId="topmenu">
