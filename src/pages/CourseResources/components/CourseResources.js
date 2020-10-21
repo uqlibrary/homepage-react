@@ -7,6 +7,7 @@ import locale from './courseresourceslocale';
 import { Guides } from './Guides';
 import { LearningResources } from './LearningResources';
 import { PastExamPapers } from './PastExamPapers';
+import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -19,8 +20,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
-
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 function TabPanel(props) {
     const { children, value, tabId, index, ...other } = props;
@@ -288,7 +287,7 @@ export const CourseResources = ({
                         // on-click="linkClicked"
                         href={_courseLink(subject.classnumber, locale.ecpLinkUrl)}
                     >
-                        <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
+                        <SpacedArrowForwardIcon />
                         Electronic Course Profile
                     </a>
                 </Grid>
@@ -298,7 +297,7 @@ export const CourseResources = ({
                         id="blackboard"
                         href={_courseLink(subject.classnumber, locale.blackboardUrl)}
                     >
-                        <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
+                        <SpacedArrowForwardIcon />
                         Learn.UQ (Blackboard)
                     </a>
                 </Grid>

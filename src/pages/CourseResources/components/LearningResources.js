@@ -1,14 +1,14 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
+import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
+
 import locale from './courseresourceslocale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 export const LearningResources = ({
     classnumber,
@@ -107,7 +107,7 @@ export const LearningResources = ({
                 })}
                 <Grid>
                     <a href="http://lr.library.uq.edu.au/index.html">
-                        <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
+                        <SpacedArrowForwardIcon />
                         Search other reading lists
                     </a>
                 </Grid>
@@ -255,7 +255,7 @@ export const LearningResources = ({
                                 // on-click="linkClicked"
                                 href={talisReadingListLink}
                             >
-                                <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
+                                <SpacedArrowForwardIcon />
                                 {numberExcessReadingLists} more {_pluralise('item', numberExcessReadingLists)}
                             </a>
                         </div>
