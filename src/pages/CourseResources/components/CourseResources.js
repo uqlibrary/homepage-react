@@ -153,8 +153,10 @@ export const CourseResources = ({
             const semesterString = enrolment.semester;
             const campus = getCampusByCode(enrolment.CAMPUS);
             return readingLists.filter(item => {
-                item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || enrolment.INSTRUCTION_MODE === 'EX');
+                return (
+                    item.period === semesterString &&
+                    (item.campus.indexOf(campus) !== -1 || enrolment.INSTRUCTION_MODE === 'EX')
+                );
             });
         }
     };
