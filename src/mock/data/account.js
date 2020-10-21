@@ -84,7 +84,7 @@ export const accounts = {
         },
         {
             "ACAD_CAREER": "UGRD",
-            "DESCR": "Reg F\/works for Envl Mmgt &",
+            "DESCR": "The Australian Experience",
             "SUBJECT": "HIST",
             "CATALOG_NBR": "1201",
             "CAMPUS": "STLUC",

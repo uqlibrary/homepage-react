@@ -160,7 +160,11 @@ export const PrimoSearch = ({
                                 (!!suggestions &&
                                     suggestions
                                         .filter(option => option.text !== searchKeyword)
-                                        .map(option => option.text)) ||
+                                        .map(option => {
+                                            return !!option.rest
+                                                ? `${option.text} (${option.rest.course_title}, ${option.rest.period})`
+                                                : option.text;
+                                        })) ||
                                 []
                             }
                             onInputChange={handleSearchKeywordChange}
