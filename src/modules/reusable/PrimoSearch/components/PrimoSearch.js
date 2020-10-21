@@ -100,16 +100,23 @@ export const PrimoSearch = ({
         }
     };
 
+    const extractCourseCodeFromBeginningOfDescription = courseDescription => courseDescription.trim().split(' ')[0];
+
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
-            setSearchKeyword(newValue);
-            if (newValue.length > 3) {
+            // this is a hack, but I couldnt get getOptionLabel and renderOption
+            // working on Autocomplete to return just the course code :(
+            const selectedValue =
+                displayType === 'courseresources' ? extractCourseCodeFromBeginningOfDescription(newValue) : newValue;
+
+            setSearchKeyword(selectedValue);
+            if (selectedValue.length > 3) {
                 if ([searchTypeAll, 1, 3, 4, 5].includes(searchType)) {
-                    actions.loadPrimoSuggestions(newValue);
+                    actions.loadPrimoSuggestions(selectedValue);
                 } else if (searchType === 7) {
-                    actions.loadExamPaperSuggestions(newValue);
+                    actions.loadExamPaperSuggestions(selectedValue);
                 } else if (searchType === searchTypeCourseResources) {
-                    actions.loadCourseReadingListsSuggestions(newValue);
+                    actions.loadCourseReadingListsSuggestions(selectedValue);
                 }
                 console.log('focussing on the input');
                 document.getElementById('primo-search-autocomplete').focus();
@@ -269,7 +276,7 @@ PrimoSearch.propTypes = {
     displayType: PropTypes.string, // 'all' for full homepage display or 'courseresources' for course resource search
     locale: PropTypes.any,
     option: PropTypes.any,
-    searchKeywordSelected: PropTypes.function,
+    searchKeywordSelected: PropTypes.any,
     suggestions: PropTypes.any,
     suggestionsLoading: PropTypes.bool,
     suggestionsError: PropTypes.string,

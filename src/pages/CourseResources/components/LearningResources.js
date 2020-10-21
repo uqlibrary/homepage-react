@@ -233,7 +233,7 @@ export const LearningResources = ({
 LearningResources.propTypes = {
     classnumber: PropTypes.any,
     currentClasses: PropTypes.any,
-    filterReadingLists: PropTypes.function,
+    filterReadingLists: PropTypes.any,
     learningResourcesList: PropTypes.any,
     learningResourcesListLoading: PropTypes.bool,
     learningResourcesListError: PropTypes.string,

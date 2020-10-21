@@ -333,7 +333,12 @@ export const CourseResources = ({
 
     const renderSubjectTabBody = subject => {
         const courseTitle =
-            !!learningResourcesList && learningResourcesList.length > 0 ? learningResourcesList[0].course_title : null;
+            !!currentLearningResourcesList &&
+            !!currentLearningResourcesList[subject.classnumber] &&
+            !!currentLearningResourcesList[subject.classnumber][0] &&
+            !!currentLearningResourcesList[subject.classnumber][0].course_title
+                ? currentLearningResourcesList[subject.classnumber][0].course_title
+                : null;
 
         return (
             <Grid container>
