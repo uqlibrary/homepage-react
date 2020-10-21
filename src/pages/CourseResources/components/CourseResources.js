@@ -70,9 +70,6 @@ export const CourseResources = ({
 }) => {
     const { account } = useAccountContext();
 
-    const [listSearchedSubjects, updateSearchList] = useState([]);
-    // may need state of 'listMyCourses' which then shows the mycourses tab?
-
     const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);
@@ -82,7 +79,7 @@ export const CourseResources = ({
     const [currentGuidesList, updateGuidesList] = useState([]);
     const [currentReadingLists, updateReadingLists] = useState([]);
 
-    const handleSubjectChange = classnumber => {
+    const loadNewSubject = classnumber => {
         if (!currentLearningResourcesList[classnumber]) {
             !!classnumber && actions.loadLearningResources(classnumber);
         }
@@ -92,12 +89,41 @@ export const CourseResources = ({
         }
     };
 
+    const [displayType, setDisplayType] = useState('mycourses');
+    const [keywordPresets, setKeywordPresets] = useState({});
+
+    const [listSearchedSubjects, updateSearchList] = useState([]);
+    // may need state of 'listMyCourses' which then shows the mycourses tab?
+
+    // this isnt quite what we want. the search tab should already loaded
+    const subjectTabLabel = 'searchtab';
+    const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
+    const handleSearchTabChange = (event, subjectTabId) => {
+        !!event.target.innerText && loadNewSubject(event.target.innerText);
+        setCurrentSearchTab(subjectTabId);
+    };
+
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
-        !!event.target.innerText && handleSubjectChange(event.target.innerText);
+        !!event.target.innerText && loadNewSubject(event.target.innerText);
         setCurrentMenuTab(subjectTabId);
     };
+
+    const getCampusByCode = code => {
+        const campuses = {
+            STLUC: 'St Lucia',
+            GATTN: 'Gatton',
+            IPSWC: 'Ipswich',
+            HERST: 'Herston',
+        };
+        if (campuses.hasOwnProperty(code)) {
+            return campuses[code];
+        }
+
+        return null;
+    };
+
     const filterReadingLists = (learningResourcesList, classnumber, classes) => {
         const readingLists =
             (!!learningResourcesList &&
@@ -117,25 +143,20 @@ export const CourseResources = ({
         // do better
         const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
 
-        return readingLists.filter(item => {
-            // // if (searchedCourse != null && searchedCourse.courseId === course.courseId) {
-            // /*
-            //     search results are currently an array of results like this:
-            //     {
-            //         "name": "MATH2010",
-            //         "url": "http:\/\/lr.library.uq.edu.au\/lists\/B89931FE-50AE-7102-7925-18EE386EAA4D",
-            //         "type": "learning_resource",
-            //         "course_title": "Analysis of Ordinary Differential Equations",
-            //         "campus": "St Lucia",
-            //         "period": "Semester 2 2020"
-            //     }
-            // */
-            // //     semesterString = searchedCourse.term === enrolment.semester;
-            // //     campus = searchedCourse.campus;
-            // // } else {
-            return item.period === enrolment.semester;
-            // }
-        });
+        if (displayType === 'searchresults') {
+            const semesterString = keywordPresets.period;
+            const campus = keywordPresets.campus;
+            return readingLists.filter(item => {
+                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
+            });
+        } else {
+            const semesterString = enrolment.semester;
+            const campus = getCampusByCode(enrolment.CAMPUS);
+            return readingLists.filter(item => {
+                item.period === semesterString &&
+                    (item.campus.indexOf(campus) !== -1 || enrolment.INSTRUCTION_MODE === 'EX');
+            });
+        }
     };
 
     // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
@@ -324,13 +345,13 @@ export const CourseResources = ({
                     // actions={actions}
                     classnumber={subject.classnumber}
                     currentClasses={account.classes}
+                    filterReadingLists={filterReadingLists}
                     readingList={currentReadingLists[[subject.classnumber]]}
                     readingListLoading={readingListLoading}
                     readingListError={readingListError}
                     learningResourcesList={currentLearningResourcesList[subject.classnumber]}
                     learningResourcesListLoading={learningResourcesListLoading}
                     learningResourcesListError={learningResourcesListError}
-                    subject={subject}
                 />
 
                 <PastExamPapers
@@ -397,7 +418,7 @@ export const CourseResources = ({
                                 key={`classtab-${index}`}
                                 id={`classtab-${index}`}
                                 label={item.classnumber}
-                                value={`${courseTabLabel}-${index}`} // must match index in TabPanel
+                                value={`${courseTabLabel}-${index}`} // must match 'index' in TabPanel
                             />
                         );
                     })}
@@ -407,7 +428,7 @@ export const CourseResources = ({
                 return (
                     <TabPanel
                         data-testid={`classpanel-${index}`}
-                        index={`${courseTabLabel}-${index}`} // must match value in Tabs
+                        index={`${courseTabLabel}-${index}`} // must match 'value' in Tab
                         key={`classpanel-${index}`}
                         tabId="coursemenu"
                         value={coursemenu}
@@ -420,16 +441,75 @@ export const CourseResources = ({
         </Fragment>
     );
 
-    const searchKeywordSelected = searchKeyword => {
-        console.log('searchKeywordSelected got searchKeyword = ', searchKeyword);
-        updateSearchList(listSearchedSubjects.concat(searchKeyword));
+    const renderSearchResults = searchedSubjects => {
+        return (
+            <Fragment>
+                <p>renderSearchResults</p>
+                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                    <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
+                        {searchedSubjects.map((item, index) => {
+                            return (
+                                <Tab
+                                    {...a11yProps(index, 'classtab')}
+                                    data-testid={`classtab-${index}`}
+                                    key={`classtab-${index}`}
+                                    id={`classtab-${index}`}
+                                    label={item}
+                                    value={`${subjectTabLabel}-${index}`} // must match 'index' in TabPanel
+                                />
+                            );
+                        })}
+                    </Tabs>
+                </AppBar>
+                {searchedSubjects.map((item, index) => {
+                    const subject = {};
+                    subject.classnumber = item;
+                    return (
+                        <TabPanel
+                            data-testid={`classpanel-${index}`}
+                            index={`${subjectTabLabel}-${index}`} // must match 'value' in Tabs
+                            key={`classpanel-${index}`}
+                            tabId="searchTab"
+                            value={searchTab}
+                            style={{ margin: 0 }}
+                        >
+                            {renderSubjectTabBody(subject)}
+                            {/* {item}*/}
+                        </TabPanel>
+                    );
+                })}
+            </Fragment>
+        );
     };
 
-    React.useEffect(() => {
-        if (listSearchedSubjects.length > 0) {
-            console.log('listSearchedSubjects has changed: ', listSearchedSubjects);
+    /**
+     * find the entry in the suggestions that matches the suggested keyword
+     * @param searchKeyword
+     * @param suggestions
+     */
+    const getPresetData = (searchKeyword, suggestions) => {
+        const filtered = suggestions.filter(item => {
+            return item.text === searchKeyword;
+        });
+        return (filtered.length > 0 && filtered[0].rest) || {};
+    };
+
+    const searchKeywordSelected = (searchKeyword, suggestions) => {
+        setKeywordPresets(getPresetData(searchKeyword, suggestions));
+
+        setDisplayType('searchresults');
+        if (!listSearchedSubjects.searchKeyword) {
+            loadNewSubject(searchKeyword);
         }
-    }, [listSearchedSubjects]);
+        updateSearchList(listSearchedSubjects.concat(searchKeyword));
+        // updateSearchList(listSearchedSubjects => Object.assign({}, ...listSearchedSubjects, ...newGuidesList));
+    };
+
+    // React.useEffect(() => {
+    //     if (listSearchedSubjects.length > 0) {
+    //         console.log('listSearchedSubjects has changed: ', listSearchedSubjects);
+    //     }
+    // }, [listSearchedSubjects]);
 
     return (
         <StandardPage>
@@ -466,6 +546,9 @@ export const CourseResources = ({
                                         displayType="courseresources"
                                         searchKeywordSelected={searchKeywordSelected}
                                     />
+                                    {listSearchedSubjects.length > 0 && (
+                                        <Grid>{renderSearchResults(listSearchedSubjects)}</Grid>
+                                    )}
                                 </Grid>
                             </TabPanel>
                             <TabPanel value={topmenu} index="top2" tabId="topmenu">

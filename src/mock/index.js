@@ -16,6 +16,7 @@ import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
 import courseReadingList_6888AB68 from './data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
 import courseReadingList_2109F2EC from './data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
+import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
 // import courseReadingList_FE54098F from './data/records/courseReadingList_FE54098F-2CB3-267D-50F8-4B2895FE94B9';
 
 const queryString = require('query-string');
@@ -236,88 +237,10 @@ fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=e
     },
 ]);
 
-fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource', [
-    {
-        name: 'ACCT7804',
-        url: 'http://lr.library.uq.edu.au/lists/60758626-F1E5-2A1C-C96B-0B3BCB8863FB',
-        type: 'learning_resource',
-        course_title: 'Accounting and Business Analysis',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT2102',
-        url: 'http://lr.library.uq.edu.au/lists/10B6BFC6-D734-376F-A779-FA9E29D162D4',
-        type: 'learning_resource',
-        course_title: 'Principles of Management Accounting',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT1101',
-        url: 'http://lr.library.uq.edu.au/lists/8DED5E86-60FD-8C20-29F3-0E960FEC791B',
-        type: 'learning_resource',
-        course_title: 'Accounting for Decision Making',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT7101',
-        url: 'http://lr.library.uq.edu.au/lists/B888B026-16C7-F589-8F70-67614268862A',
-        type: 'learning_resource',
-        course_title: 'Accounting',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT7107',
-        url: 'http://lr.library.uq.edu.au/lists/C6A4040F-7111-DB7D-2C9D-855C0B0B77F9',
-        type: 'learning_resource',
-        course_title: 'Management Accounting and Control',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT2111',
-        url: 'http://lr.library.uq.edu.au/lists/5D07E508-E79E-850D-1BE9-1DCD7F7A121F',
-        type: 'learning_resource',
-        course_title: 'Principles of Financial Accounting',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT7106',
-        url: 'http://lr.library.uq.edu.au/lists/503EF651-FF56-2739-478C-CBDC5DFAB8E8',
-        type: 'learning_resource',
-        course_title: 'Financial Statement Analysis',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT7103',
-        url: 'http://lr.library.uq.edu.au/lists/12A921A6-1B6F-2FBC-6952-D85E24132829',
-        type: 'learning_resource',
-        course_title: 'Auditing',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT2101',
-        url: 'http://lr.library.uq.edu.au/lists/4CD00138-EF29-FEA1-1F0C-FC1B1431B68C',
-        type: 'learning_resource',
-        course_title: 'Financial Reporting',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-    {
-        name: 'ACCT3103',
-        url: 'http://lr.library.uq.edu.au/lists/9290F8D7-E2CC-77B7-F272-0DD398391E90',
-        type: 'learning_resource',
-        course_title: 'Advanced Financial Accounting',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    },
-]);
+fetchMock.mock(
+    'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
+    learningResourceSearchSuggestions
+);
 
 fetchMock.mock('https://api.library.uq.edu.au/v1/learning_resources/FREN1010', learningResources_FREN1010);
 fetchMock.mock('https://api.library.uq.edu.au/v1/learning_resources/HIST1201', learningResources_HIST1201);

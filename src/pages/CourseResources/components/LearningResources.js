@@ -13,56 +13,16 @@ import Typography from '@material-ui/core/Typography';
 export const LearningResources = ({
     classnumber,
     currentClasses,
+    filterReadingLists,
     learningResourcesList, // has sub element reading_lists (summary)
     learningResourcesListLoading,
     learningResourcesListError,
     readingList, // list of books. chapters, etc
     readingListLoading,
     readingListError,
-    subject,
 }) => {
     const _pluralise = (word, num) => {
         return word + (num === 1 ? '' : 's');
-    };
-
-    const filterReadingLists = (learningResourcesList, classnumber, classes) => {
-        const readingLists =
-            (!!learningResourcesList &&
-                learningResourcesList.length > 0 &&
-                !!learningResourcesList[0] &&
-                learningResourcesList[0].reading_lists) ||
-            [];
-
-        if (!readingLists || readingLists.length === 0) {
-            return [];
-        }
-
-        if (readingLists.length === 1) {
-            return readingLists;
-        }
-
-        // do better
-        const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
-
-        return readingLists.filter(item => {
-            // // if (searchedCourse != null && searchedCourse.courseId === course.courseId) {
-            // /*
-            //     search results are currently an array of results like this:
-            //     {
-            //         "name": "MATH2010",
-            //         "url": "http:\/\/lr.library.uq.edu.au\/lists\/B89931FE-50AE-7102-7925-18EE386EAA4D",
-            //         "type": "learning_resource",
-            //         "course_title": "Analysis of Ordinary Differential Equations",
-            //         "campus": "St Lucia",
-            //         "period": "Semester 2 2020"
-            //     }
-            // */
-            // //     semesterString = searchedCourse.term === enrolment.semester;
-            // //     campus = searchedCourse.campus;
-            // // } else {
-            return item.period === enrolment.semester;
-            // }
-        });
     };
 
     const filteredReadingLists =
@@ -198,7 +158,7 @@ export const LearningResources = ({
 
                     {!!filteredReadingLists &&
                         filteredReadingLists.length > 1 &&
-                        renderMultipleReadingListReference(filteredReadingLists, subject.classnumber || '')}
+                        renderMultipleReadingListReference(filteredReadingLists, classnumber || '')}
 
                     {!!filteredReadingLists &&
                         filteredReadingLists.length === 1 &&
@@ -206,6 +166,10 @@ export const LearningResources = ({
                         readingList.length > 0 &&
                         readingList
                             // remove the exam links (they are shown below)
+                            // TODO
+                            // MATH4106 is an example with only an exam. check this works prperly
+                            // ie the count matches the number displayed
+                            // we may have to instead sort it so exam is last? Ugh :(
                             .filter(item => item.url !== 'https://www.library.uq.edu.au/exams/search.html')
                             // we only show a small number - theres a link to viewall on Talis if there are more
                             .slice(0, locale.visibleItemsCount.readingLists)
@@ -269,13 +233,13 @@ export const LearningResources = ({
 LearningResources.propTypes = {
     classnumber: PropTypes.any,
     currentClasses: PropTypes.any,
+    filterReadingLists: PropTypes.function,
     learningResourcesList: PropTypes.any,
     learningResourcesListLoading: PropTypes.bool,
     learningResourcesListError: PropTypes.string,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
     readingListError: PropTypes.string,
-    subject: PropTypes.any,
 };
 
 export default React.memo(LearningResources);

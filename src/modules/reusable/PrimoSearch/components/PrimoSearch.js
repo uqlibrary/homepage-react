@@ -93,8 +93,7 @@ export const PrimoSearch = ({
     const handleSearchButton = event => {
         event.preventDefault();
         if (displayType === 'courseresources') {
-            console.log('searchKeyword = ', searchKeyword);
-            searchKeywordSelected(searchKeyword);
+            searchKeywordSelected(searchKeyword, suggestions);
         } else if (!!searchKeyword) {
             const link = locale.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
             window.location.assign(link);
