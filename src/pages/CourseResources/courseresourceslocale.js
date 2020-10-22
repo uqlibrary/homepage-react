@@ -77,7 +77,7 @@ export default {
         guides: {
             title: 'Library guides',
             unavailableMessage: 'No Library guides for this course',
-            allLibraryGuidesLabel: 'All library guides',
+            linkOut: 'All library guides',
         },
         links: {
             title: 'Course links',

@@ -69,7 +69,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         href="http://guides.library.uq.edu.au"
                     >
                         <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                        {locale.myCourses.guides.allLibraryGuidesLabel}
+                        {locale.myCourses.guides.linkOut}
                     </a>
                 </Grid>
             </Grid>

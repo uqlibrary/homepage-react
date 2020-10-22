@@ -81,8 +81,6 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
 };
 
 MyCourses.propTypes = {
-    onChange: PropTypes.func,
-    value: PropTypes.any,
     a11yProps: PropTypes.func,
     loadNewSubject: PropTypes.func,
     renderSubjectTabBody: PropTypes.func,
