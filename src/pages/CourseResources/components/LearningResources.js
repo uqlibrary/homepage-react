@@ -44,7 +44,7 @@ export const LearningResources = ({
     // PHIL1002 is currently an example of multiple reading lists
     const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
         const chooseListPrompt = !!classnumber
-            ? locale.subject.readingLists.multiple.title.replace('[classnumber]', classnumber)
+            ? locale.myCourses.readingLists.multiple.title.replace('[classnumber]', classnumber)
             : '';
         return (
             <Fragment>
@@ -68,7 +68,7 @@ export const LearningResources = ({
                 <Grid>
                     <a href="http://lr.library.uq.edu.au/index.html">
                         <SpacedArrowForwardIcon />
-                        {locale.subject.readingLists.multiple.linkOut}
+                        {locale.myCourses.readingLists.multiple.linkOut}
                     </a>
                 </Grid>
             </Fragment>
@@ -90,7 +90,7 @@ export const LearningResources = ({
 
     const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
 
-    const readingListTitle = `${locale.subject.readingLists.title} ${
+    const readingListTitle = `${locale.myCourses.readingLists.title} ${
         !!readingList && readingList.length > 0 ? `(${readingList.length})` : ''
     }`;
 
@@ -220,7 +220,7 @@ export const LearningResources = ({
                                 href={talisReadingListLink}
                             >
                                 <SpacedArrowForwardIcon />
-                                {locale.subject.readingLists.linkOut
+                                {locale.myCourses.readingLists.linkOut
                                     .replace('[numberExcessReadingLists]', numberExcessReadingLists)
                                     .replace('[readingListNumber]', _pluralise('item', numberExcessReadingLists))}
                             </a>

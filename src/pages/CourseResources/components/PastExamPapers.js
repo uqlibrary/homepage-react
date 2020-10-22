@@ -39,13 +39,13 @@ export const PastExamPapers = ({
 
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
-    const examPaperTitle = `${locale.subject.examPapers.title} ${
+    const examPaperTitle = `${locale.myCourses.examPapers.title} ${
         !!examList && examList.length > 0 ? `(${examList.length})` : ''
     }`;
 
     return (
         <StandardCard className="exams" style={{ width: '100%', marginBottom: '1rem' }} title={examPaperTitle}>
-            {!!learningResourcesListError && <Typography>{locale.subject.examPapers.unavailable}</Typography>}
+            {!!learningResourcesListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
 
             {!learningResourcesListError && learningResourcesListLoading && (
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
@@ -58,7 +58,7 @@ export const PastExamPapers = ({
                     <Typography>No Past Exam Papers for this course</Typography>
                     <a href={locale.examPapersSearchUrl}>
                         <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                        {locale.subject.examPapers.linkOut}
+                        {locale.myCourses.examPapers.linkOut}
                     </a>
                 </Grid>
             )}
@@ -89,10 +89,10 @@ export const PastExamPapers = ({
                         <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                             <a
                                 // on-click="linkClicked"
-                                href={_courseLink(subject.classnumber, locale.subject.examPapers.searchUrl)}
+                                href={_courseLink(subject.classnumber, locale.myCourses.examPapers.searchUrl)}
                             >
                                 <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                {locale.subject.examPapers.morePastExams
+                                {locale.myCourses.examPapers.morePastExams
                                     .replace('[numberExcessExams]', numberExcessExams)
                                     .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
                             </a>

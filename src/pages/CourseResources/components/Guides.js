@@ -15,7 +15,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
         <StandardCard
             className="Guides"
             style={{ width: '100%', marginBottom: '1rem' }}
-            title={locale.subject.guides.title}
+            title={locale.myCourses.guides.title}
         >
             <Grid>
                 {guideListLoading && (
@@ -36,7 +36,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                 {!!guideListError && <Typography>Library guides list currently unavailable</Typography>}
 
                 {!guideListError && !!guideList && guideList.length === 0 && (
-                    <Typography>{locale.subject.guides.unavailableMessage}</Typography>
+                    <Typography>{locale.myCourses.guides.unavailableMessage}</Typography>
                 )}
 
                 {!!guideList &&
@@ -69,7 +69,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         href="http://guides.library.uq.edu.au"
                     >
                         <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                        {locale.subject.guides.allLibraryGuidesLabel}
+                        {locale.myCourses.guides.allLibraryGuidesLabel}
                     </a>
                 </Grid>
             </Grid>

@@ -8,7 +8,7 @@ import { Guides } from './Guides';
 import { LearningResources } from './LearningResources';
 import { MyCourses } from './MyCourses';
 import { PastExamPapers } from './PastExamPapers';
-import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
+import { SubjectLinks } from './SubjectLinks';
 import { TabPanel } from './TabPanel';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -229,72 +229,41 @@ export const CourseResources = ({
         }
     }, [account, actions]);
 
-    const renderNoListedCourses = (
-        <Fragment>
-            <Typography component={'h2'} variant={'h6'}>
-                {locale.userHasNoSubjects.title}
-            </Typography>
-            {locale.userHasNoSubjects.description}
-        </Fragment>
-    );
-
     const renderStudyHelpLinks = (
-        <Fragment>
-            {!!locale.studyHelpLinks &&
-                locale.studyHelpLinks.length > 0 &&
-                locale.studyHelpLinks.map((item, index) => {
-                    return item.linkTo && item.linkLabel ? (
-                        <Grid
-                            item
-                            key={`studylink-${index}`}
-                            xs={12}
-                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
-                        >
-                            <a
-                                // on-tap="linkClicked"
-                                id={item.id || null}
-                                href={item.linkTo}
-                            >
-                                {!!item.icon && item.icon}
-                                {item.linkLabel}
-                            </a>
-                        </Grid>
-                    ) : (
-                        <Typography>{locale.studyHelpLinksUnavailable}</Typography>
-                    );
-                })}
-        </Fragment>
-    );
-
-    const _courseLink = (courseId, url) => {
-        return url + courseId;
-    };
-
-    const renderSubjectCourseLinks = subject => {
-        return (
-            <Grid>
-                <Grid style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
-                    <a
-                        // on-click="linkClicked"
-                        href={_courseLink(subject.classnumber, locale.ecpLinkUrl)}
-                    >
-                        <SpacedArrowForwardIcon />
-                        {locale.subject.links.ecp}
-                    </a>
-                </Grid>
-                <Grid style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
-                    <a
-                        // on-click="linkClicked"
-                        id="blackboard"
-                        href={_courseLink(subject.classnumber, locale.blackboardUrl)}
-                    >
-                        <SpacedArrowForwardIcon />
-                        {locale.subject.links.blackboard}
-                    </a>
+        <StandardCard
+            className="noreadingLists"
+            style={{ width: '100%', marginBottom: '1rem', marginTop: '1rem' }}
+            title={locale.studyHelp.title}
+        >
+            <Grid container>
+                <Grid item xs={12}>
+                    {!!locale.studyHelp.links &&
+                        locale.studyHelp.links.length > 0 &&
+                        locale.studyHelp.links.map((item, index) => {
+                            return item.linkTo && item.linkLabel ? (
+                                <Grid
+                                    item
+                                    key={`studylink-${index}`}
+                                    xs={12}
+                                    style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
+                                >
+                                    <a
+                                        // on-tap="linkClicked"
+                                        id={item.id || null}
+                                        href={item.linkTo}
+                                    >
+                                        {!!item.icon && item.icon}
+                                        {item.linkLabel}
+                                    </a>
+                                </Grid>
+                            ) : (
+                                <Typography>{locale.studyHelp.unavailable}</Typography>
+                            );
+                        })}
                 </Grid>
             </Grid>
-        );
-    };
+        </StandardCard>
+    );
 
     const renderSubjectTabBody = subject => {
         const courseTitle =
@@ -339,13 +308,7 @@ export const CourseResources = ({
                     guideListError={guideListError}
                 />
 
-                <StandardCard
-                    className="CourseLinks"
-                    style={{ width: '100%', marginBottom: '1rem' }}
-                    title={locale.subject.links.title}
-                >
-                    {renderSubjectCourseLinks(subject)}
-                </StandardCard>
+                <SubjectLinks subject={subject} />
             </Grid>
         );
     };
@@ -463,22 +426,18 @@ export const CourseResources = ({
                         <Grid item xs={12} id="courseresource-search">
                             <AppBar position="static">
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="top0" label="My courses" {...a11yProps('top0')} />
-                                    <Tab value="top1" label="Course Search" {...a11yProps('top1')} />
-                                    <Tab value="top2" label="Study help" {...a11yProps('top2')} />
+                                    <Tab value="top0" label={locale.myCourses.tabLabel} {...a11yProps('top0')} />
+                                    <Tab value="top1" label={locale.search.tabLabel} {...a11yProps('top1')} />
+                                    <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('top2')} />
                                 </Tabs>
                             </AppBar>
 
                             <TabPanel value={topmenu} index="top0" tabId="topmenu">
-                                {!!account.classes && account.classes.length > 0 ? (
-                                    <MyCourses
-                                        a11yProps={a11yProps}
-                                        loadNewSubject={loadNewSubject}
-                                        renderSubjectTabBody={renderSubjectTabBody}
-                                    />
-                                ) : (
-                                    <Grid>{renderNoListedCourses}</Grid>
-                                )}
+                                <MyCourses
+                                    a11yProps={a11yProps}
+                                    loadNewSubject={loadNewSubject}
+                                    renderSubjectTabBody={renderSubjectTabBody}
+                                />
                             </TabPanel>
                             <TabPanel value={topmenu} index="top1" tabId="topmenu">
                                 <Grid item xs={12} id="courseresource-search">

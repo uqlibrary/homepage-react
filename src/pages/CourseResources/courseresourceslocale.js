@@ -7,43 +7,39 @@ import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 
 export default {
     title: 'Course Resources',
-    userHasNoSubjects: {
-        title: 'No listed courses',
-        description: (
-            <Fragment>
-                <p>Courses will be shown 3 weeks prior to the start of semester</p>
-                <p>Please check back closer to the next enrollment period</p>
-                <p>You can search for information on courses using the &quot;Course Search&quot; tab, above</p>
-            </Fragment>
-        ),
+    search: {
+        tabLabel: 'Course search',
     },
-    studyHelpLinksUnavailable: 'No resources right now',
-    studyHelpLinks: [
-        {
-            icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
-            id: 'referencingGuides',
-            linkLabel: 'Referencing guides',
-            linkTo: 'https://guides.library.uq.edu.au/referencing',
-        },
-        {
-            icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
-            id: 'digitalessentials',
-            linkLabel: 'Digital Essentials',
-            linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
-        },
-        {
-            icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
-            id: 'legalResearchEssentials',
-            linkLabel: 'Legal Research Essentials',
-            linkTo: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
-        },
-        {
-            icon: <InfoIcon style={{ marginRight: 6 }} />,
-            id: 'libraryTraining',
-            linkLabel: 'Library training',
-            linkTo: 'https://web.library.uq.edu.au/library-services/training',
-        },
-    ],
+    studyHelp: {
+        title: 'Study Help',
+        unavailable: 'No resources right now',
+        links: [
+            {
+                icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
+                id: 'referencingGuides',
+                linkLabel: 'Referencing guides',
+                linkTo: 'https://guides.library.uq.edu.au/referencing',
+            },
+            {
+                icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
+                id: 'digitalessentials',
+                linkLabel: 'Digital Essentials',
+                linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
+            },
+            {
+                icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
+                id: 'legalResearchEssentials',
+                linkLabel: 'Legal Research Essentials',
+                linkTo: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
+            },
+            {
+                icon: <InfoIcon style={{ marginRight: 6 }} />,
+                id: 'libraryTraining',
+                linkLabel: 'Library training',
+                linkTo: 'https://web.library.uq.edu.au/library-services/training',
+            },
+        ],
+    },
     visibleItemsCount: {
         // max number of items of each type we should display
         readingLists: 2,
@@ -51,9 +47,18 @@ export default {
         libGuides: 2,
     },
     notesTrimLength: 90,
-    ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
-    blackboardUrl: 'https://learn.uq.edu.au/',
-    subject: {
+    myCourses: {
+        tabLabel: 'My courses',
+        none: {
+            title: 'No listed courses',
+            description: (
+                <Fragment>
+                    <p>Courses will be shown 3 weeks prior to the start of semester</p>
+                    <p>Please check back closer to the next enrollment period</p>
+                    <p>You can search for information on courses using the &quot;Course Search&quot; tab, above</p>
+                </Fragment>
+            ),
+        },
         readingLists: {
             title: 'Reading lists',
             multiple: {
@@ -79,5 +84,7 @@ export default {
             ecp: 'Electronic Course Profile',
             blackboard: 'Learn.UQ (Blackboard)',
         },
+        ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
+        blackboardUrl: 'https://learn.uq.edu.au/',
     },
 };
