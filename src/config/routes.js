@@ -25,6 +25,7 @@ export const pathConfig = {
     index: '/',
     // I dont think this is needed as contact is handled through web.library, but keep it for the notfound test for now
     contact: '/contact',
+    courseresources: '/courseresources',
     admin: {
         masquerade: '/admin/masquerade',
     },
@@ -54,8 +55,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const loggedinPages = [
+        {
+            path: pathConfig.courseresources,
+            component: components.CourseResources,
+            exact: true,
+            pageTitle: locale.pages.courseresources.title,
+        },
+    ];
+
     return [
         ...publicPages,
+        ...loggedinPages,
         ...(account && account.canMasquerade
             ? [
                   {

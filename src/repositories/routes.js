@@ -1,5 +1,5 @@
 import { validation } from 'config';
-import { IN_CREATION, IN_DRAFT, IN_REVIEW, UNPUBLISHED, RETRACTED, SUBMITTED_FOR_APPROVAL } from 'config/general';
+import { IN_CREATION, IN_DRAFT, IN_REVIEW, RETRACTED, SUBMITTED_FOR_APPROVAL, UNPUBLISHED } from 'config/general';
 
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
 
@@ -87,15 +87,17 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
 // Primo Suggestions API
-export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => ({
-    apiUrl:
-        'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
-        keyword +
-        '&facet=off' +
-        '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
-        '&rows=10' +
-        '&wt=json',
-});
+export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
+    return {
+        apiUrl:
+            'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+            keyword +
+            '&facet=off' +
+            '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
+            '&rows=10' +
+            '&wt=json',
+    };
+};
 
 export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
@@ -295,4 +297,19 @@ export const BATCH_IMPORT_API = () => ({
 
 export const UNLOCK_RECORD_API = ({ pid }) => ({
     apiUrl: `records/${pid}/unlock`,
+});
+
+// coursePrefix
+export const LEARNING_RESOURCES_API = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/learning_resources/' + keyword,
+});
+
+// coursePrefix
+export const GUIDES_API = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/library_guides/' + keyword,
+});
+
+// talisId
+export const READING_LIST_API = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/course_reading_list/' + keyword,
 });

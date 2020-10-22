@@ -49,6 +49,8 @@ const styles = theme => ({
         },
     },
     layoutFill: {
+        display: 'flex',
+        flexFlow: 'column',
         margin: 0,
         padding: 0,
         maxHeight: '100%',
@@ -99,6 +101,7 @@ export class AppClass extends PureComponent {
         super(props);
         this.state = {
             menuOpen: false,
+            alertOpen: false,
             docked: false,
             chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
@@ -141,6 +144,15 @@ export class AppClass extends PureComponent {
                 chatStatus: { online: true },
             });
         }
+        this.props.actions.showAppAlert({
+            title: 'We are open on-campus and online.',
+            message: 'Access collections, services, and support to help you continue your work and study.',
+            type: 'info_outline',
+            action: () => (window.location.href = 'https://web.library.uq.edu.au/library-services/covid-19'),
+            actionButtonLabel: 'UQ Library COVID-19 Updates',
+            dismissAction: this.props.actions.dismissAppAlert,
+            allowDismiss: true,
+        });
     }
 
     componentWillUnmount() {
@@ -225,21 +237,21 @@ export class AppClass extends PureComponent {
                 <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container">
                     <div style={{ marginBottom: 24 }}>
-                        <Hidden mdUp>
+                        <Hidden lgUp>
                             <Megamenu
-                                menuItems={menuItems}
+                                hasCloseItem
                                 history={this.props.history}
-                                isMobile
                                 locale={{
                                     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                     skipNavTitle: locale.global.skipNav.title,
                                     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
                                 }}
-                                toggleMenu={this.toggleMenu}
+                                menuItems={menuItems}
                                 menuOpen={this.state.menuOpen}
+                                toggleMenu={this.toggleMenu}
                             />
                         </Hidden>
-                        <Hidden smDown>
+                        <Hidden mdDown>
                             <Megamenu
                                 menuItems={menuItems}
                                 history={this.props.history}

@@ -76,6 +76,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
                     return {
                         text: item.name,
                         index,
+                        rest: item,
                     };
                 });
                 dispatch({
