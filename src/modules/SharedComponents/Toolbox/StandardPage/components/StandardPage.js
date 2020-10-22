@@ -28,12 +28,12 @@ const styles = theme => ({
         right: '10px',
     },
     connectFooter: {
-        backgroundColor: '#e5e5e5',
-        color: '#333',
+        backgroundColor: theme.hexToRGBA(theme.palette.secondary.main, 0.15),
     },
     minimalFooter: {
-        backgroundColor: '#51247A',
-        color: '#d2c1d7',
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
     },
 });
 
@@ -43,6 +43,7 @@ export class Page extends Component {
         help: PropTypes.object,
         children: PropTypes.any,
         classes: PropTypes.object,
+        history: PropTypes.object,
     };
 
     render() {
@@ -71,10 +72,10 @@ export class Page extends Component {
                     {children}
                 </Grid>
                 <Grid container className={classes.connectFooter}>
-                    <ConnectFooter />
+                    <ConnectFooter history={this.props.history} />
                 </Grid>
                 <Grid container className={classes.minimalFooter}>
-                    <MinimalFooter />
+                    <MinimalFooter history={this.props.history} />
                 </Grid>
             </Grid>
         );

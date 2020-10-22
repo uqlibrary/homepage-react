@@ -118,7 +118,6 @@ export const PrimoSearch = ({
                 } else if (searchType === searchTypeCourseResources) {
                     actions.loadCourseReadingListsSuggestions(selectedValue);
                 }
-                console.log('focussing on the input');
                 document.getElementById('primo-search-autocomplete').focus();
             }
         },
@@ -126,13 +125,15 @@ export const PrimoSearch = ({
     );
 
     return (
-        <StandardCard noPadding noHeader>
+        <StandardCard noPadding noHeader standardCardId="primo-search">
             <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     {displayType === 'all' && (
                         <Grid item xs={12} md={'auto'}>
                             <FormControl style={{ width: '100%' }}>
-                                <InputLabel id="primo-search-select-label">{locale.typeSelect.label}</InputLabel>
+                                <InputLabel id="primo-search-select-label" data-testid="primo-search-title">
+                                    {locale.PrimoSearch.typeSelect.label}
+                                </InputLabel>
                                 <Select
                                     labelId="primo-search-select-label"
                                     id="primo-search-select"
@@ -145,7 +146,7 @@ export const PrimoSearch = ({
                                         'data-testid': 'primo-search-select-list',
                                     }}
                                 >
-                                    {locale.typeSelect.items.map((item, index) => (
+                                    {locale.PrimoSearch.typeSelect.items.map((item, index) => (
                                         <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
                                             {item.icon}&nbsp;{item.name}
                                         </MenuItem>

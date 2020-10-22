@@ -6,6 +6,7 @@ import {
     AUTHOR_DETAILS_API,
     SPOTLIGHTS_API,
     CHAT_API,
+    ALERT_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -126,6 +127,29 @@ export function loadChatStatus() {
             .catch(error => {
                 dispatch({
                     type: actions.CHAT_STATUS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the alerts data
+ * @returns {function(*)}
+ */
+export function loadAlerts() {
+    return dispatch => {
+        dispatch({ type: actions.ALERT_STATUS_LOADING });
+        return get(ALERT_API())
+            .then(alertResponse => {
+                dispatch({
+                    type: actions.ALERT_STATUS_LOADED,
+                    payload: alertResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.ALERT_STATUS_FAILED,
                     payload: error.message,
                 });
             });

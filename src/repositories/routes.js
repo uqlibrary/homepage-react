@@ -108,7 +108,10 @@ export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
 });
 
 // Chat availability API
-export const CHAT_API = () => ({ apiUrl: 'chat_status' });
+export const CHAT_API = () => ({ apiUrl: 'chat_status', options: { params: { ts: `${new Date().getTime()}` } } });
+
+// Alerts API
+export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });
 
 // academic stats apis
 export const VOCABULARIES_API = ({ id }) => ({ apiUrl: `vocabularies?cvo_ids=${id}` });

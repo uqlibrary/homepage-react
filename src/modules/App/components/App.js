@@ -90,6 +90,8 @@ export class AppClass extends PureComponent {
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
         chatStatus: PropTypes.any,
+        alertStatus: PropTypes.any,
+        alertStatusLoading: PropTypes.any,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -131,6 +133,7 @@ export class AppClass extends PureComponent {
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
         this.props.actions.loadChatStatus();
+        this.props.actions.loadAlerts();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -150,8 +153,6 @@ export class AppClass extends PureComponent {
             type: 'info_outline',
             action: () => (window.location.href = 'https://web.library.uq.edu.au/library-services/covid-19'),
             actionButtonLabel: 'UQ Library COVID-19 Updates',
-            dismissAction: this.props.actions.dismissAppAlert,
-            allowDismiss: true,
         });
     }
 
@@ -227,16 +228,17 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <AppAlertContainer />
-                <Header
-                    account={this.props.account}
-                    history={this.props.history}
-                    isAuthorizedUser={isAuthorizedUser}
-                    toggleMenu={this.toggleMenu}
-                />
                 <ChatStatus status={this.props.chatStatus} />
-                <div className="content-container" id="content-container">
-                    <div style={{ marginBottom: 24 }}>
+                <div className="content-header" role="region" aria-label="Site header">
+                    <Header
+                        account={this.props.account}
+                        history={this.props.history}
+                        isAuthorizedUser={isAuthorizedUser}
+                        toggleMenu={this.toggleMenu}
+                    />
+                </div>
+                <div className="content-container" id="content-container" role="region" aria-label="Site content">
+                    <div role="region" aria-label="Main site navigation">
                         <Hidden lgUp>
                             <Megamenu
                                 hasCloseItem
@@ -262,6 +264,9 @@ export class AppClass extends PureComponent {
                                 }}
                             />
                         </Hidden>
+                    </div>
+                    <div role="region" aria-label="UQ Library Alerts">
+                        <AppAlertContainer />
                     </div>
                     <ConfirmDialogBox
                         hideCancelButton

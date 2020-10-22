@@ -11,13 +11,8 @@
 // React image gallery styles
 @import "~react-image-gallery/styles/scss/image-gallery.scss";
 
-.image-gallery-left-nav, .image-gallery-right-nav {
-  padding: 40px 5px 40px 5px !important;
-}
-.image-gallery-svg {
-  width: 20px !important;
-  height: 40px !important;
-}
+//pure.react.carousel styles
+@import '~pure-react-carousel/dist/react-carousel.es.css';
 
 html, body {
   overflow: hidden;
@@ -96,3 +91,4 @@ a {
 abbr {
   text-decoration: none !important;
 }
+

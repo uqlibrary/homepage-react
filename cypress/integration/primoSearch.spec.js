@@ -20,7 +20,7 @@ context('Primo Search', () => {
         cy.get('div[data-testid="primo-search-links"]')
             .find('div')
             .its('length')
-            .should('eq', 3 + 1);
+            .should('eq', 2 + 1);
 
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-7"]').click();
