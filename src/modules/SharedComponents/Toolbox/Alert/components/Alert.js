@@ -312,6 +312,7 @@ export const Alert = ({
                 className={classNames(classes[!!customIcon ? customType : type], classes.common)}
                 data-testid={alertId}
                 id={alertId}
+                role="alert"
             >
                 <Grid
                     container

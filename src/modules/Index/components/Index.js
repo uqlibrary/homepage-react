@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import ImageGallery from 'react-image-gallery';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
@@ -13,7 +12,6 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-const moment = require('moment');
 import { useDispatch } from 'react-redux';
 import RoomIcon from '@material-ui/icons/Room';
 import { loadSpotlights } from 'actions';
@@ -30,6 +28,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
 const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+const moment = require('moment');
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -38,28 +37,9 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             dispatch(loadSpotlights());
         }
     }, [spotlightsLoading, dispatch]);
-    const images =
-        !!spotlights && spotlights.length > 0
-            ? spotlights.map(item => {
-                  return {
-                      original: item.img_url,
-                      thumbnail: item.img_url,
-                      originalTitle: item.title,
-                      originalAlt: item.img_alt,
-                      thumbnailAlt: item.img_alt,
-                      thumbnailTitle: item.title,
-                  };
-              })
-            : [
-                  {
-                      original: welcomeSpotlight,
-                      originalAlt: '',
-                      originalTitle: '',
-                  },
-              ];
+    console.log(spotlights);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorPrintEl, setAnchorPrintEl] = React.useState(null);
-    // const [allyMessage, setallyMessage] = React.useState('');
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -107,17 +87,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         {/* Spotlights */}
                         <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                             <div>
-                                <ImageGallery
-                                    onErrorImageURL={welcomeSpotlight}
-                                    items={images}
-                                    showThumbnails={images.length > 1}
-                                    showFullscreenButton={false}
-                                    showPlayButton={false}
-                                    autoPlay={!account}
-                                    slideDuration={1000}
-                                    slideInterval={12000}
-                                    showBullets={false}
-                                />
+                                <img src={welcomeSpotlight} style={{ width: '100%' }} />
                             </div>
                         </Grid>
 
