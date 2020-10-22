@@ -33,7 +33,7 @@ export const pathConfig = {
 };
 
 // a duplicate list of routes for checking validity easily
-export const flattedPathConfig = ['/', '/contact', '/admin/masquerade'];
+export const flattedPathConfig = ['/', '/contact', '/courseresources', '/admin/masquerade'];
 
 // TODO: will we even have roles?
 export const roles = {
@@ -66,7 +66,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     return [
         ...publicPages,
-        ...loggedinPages,
+        ...(account ? loggedinPages : []),
         ...(account && account.canMasquerade
             ? [
                   {
