@@ -8,6 +8,8 @@ import { AUTH_URL_LOGIN } from 'config';
 import locale from './notfoundLocale';
 import { flattedPathConfig } from 'config/routes';
 
+// tests done in cypress
+/* istanbul ignore next */
 export const NotFound = () => {
     const location = useLocation();
     const { account } = useAccountContext();
@@ -38,8 +40,8 @@ export const NotFound = () => {
         return <StandardPage standardPageId="not-found" {...locale.notFound} />;
     }
 
-    // should never happen? - account object did not load properly?
-    return <div id="empty" />;
+    // should never happen? - account did not load properly?
+    return <StandardPage standardPageId="not-found" {...locale.accountError} />;
 };
 
 export default React.memo(NotFound);

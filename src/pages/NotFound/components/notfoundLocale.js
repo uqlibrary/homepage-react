@@ -74,4 +74,23 @@ export default {
             </div>
         ),
     },
+    accountError: {
+        children: (
+            <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
+                <StandardCard noPadding noHeader>
+                    <Grid
+                        alignItems={'flex-end'}
+                        container
+                        spacing={1}
+                        style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
+                    >
+                        <Grid item xs={12} md={'auto'} id="notfound-unauthorised">
+                            <InputLabel id="unauthorised-label">Error</InputLabel>
+                            <p>There has been a problem. Please refresh and try again.</p>
+                        </Grid>
+                    </Grid>
+                </StandardCard>
+            </div>
+        ),
+    },
 };
