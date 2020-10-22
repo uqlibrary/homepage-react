@@ -263,7 +263,7 @@ export class AppClass extends PureComponent {
                             }}
                         />
                     </Hidden>
-                    <div role="region" aria-label="Alerts">
+                    <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
                     <ConfirmDialogBox
