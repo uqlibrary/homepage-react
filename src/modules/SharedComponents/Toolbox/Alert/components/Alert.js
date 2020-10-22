@@ -346,7 +346,7 @@ export const Alert = ({
                                 id={`${alertId}-action-message-button`}
                                 data-testid={`${alertId}-action-message-button`}
                             >
-                                <b>{title}</b>
+                                <strong>{title}</strong>
                                 &nbsp;
                                 {message}
                             </Grid>
@@ -355,12 +355,11 @@ export const Alert = ({
                                     <Grid item className={classes.dismissButton}>
                                         <IconButton
                                             onClick={dismissAction}
-                                            title={dismissTitle}
-                                            aria-label={dismissTitle}
+                                            aria-label={dismissTitle || 'Hide this alert'}
                                             id={`${alertId}-dismiss-button-mobile`}
                                             data-testid={`${alertId}-dismiss-button-mobile`}
                                         >
-                                            <Close className="dismiss" />
+                                            <Close />
                                         </IconButton>
                                     </Grid>
                                 </Hidden>
@@ -370,8 +369,7 @@ export const Alert = ({
                                     <Grid item className={classes.dismissButton}>
                                         <IconButton
                                             onClick={hideThisAlert}
-                                            title={'Hide this alert'}
-                                            aria-label={'Hide this alert'}
+                                            aria-label={dismissTitle || 'Hide this alert'}
                                             id={`${alertId}-hide-button-mobile`}
                                             data-testid={`${alertId}-hide-button-mobile`}
                                         >
@@ -400,8 +398,7 @@ export const Alert = ({
                             <Grid item className={classes.dismissButton}>
                                 <IconButton
                                     onClick={dismissAction}
-                                    title={dismissTitle}
-                                    aria-label={dismissTitle}
+                                    aria-label={dismissTitle || 'Hide this alert'}
                                     id={`${alertId}-dismiss-button`}
                                     data-testid={`${alertId}-dismiss-button`}
                                 >
@@ -415,8 +412,7 @@ export const Alert = ({
                             <Grid item className={classes.dismissButton}>
                                 <IconButton
                                     onClick={hideThisAlert}
-                                    title={'Hide this alert'}
-                                    aria-label={'Hide this alert'}
+                                    aria-label={dismissTitle || 'Hide this alert'}
                                     id={`${alertId}-hide-button`}
                                     data-testid={`${alertId}-hide-button`}
                                 >
