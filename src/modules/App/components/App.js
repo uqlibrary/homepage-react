@@ -229,7 +229,7 @@ export class AppClass extends PureComponent {
         return (
             <Grid container className={classes.layoutFill}>
                 <ChatStatus status={this.props.chatStatus} />
-                <div className="content-header">
+                <div className="content-header" role="region" aria-label="Site header">
                     <Header
                         account={this.props.account}
                         history={this.props.history}

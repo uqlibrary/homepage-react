@@ -1,5 +1,5 @@
-context('Homepage', () => {
-    it('Renders as expected', () => {
+context('Alerts', () => {
+    it('Render as expected', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="alert-0"]').contains('Test urgent alert 2');
@@ -16,7 +16,7 @@ context('Homepage', () => {
             .contains('UQ Library COVID-19 Updates');
 
         cy.get('button[data-testid="alert-0-hide-button"]').should('be.visible');
-        cy.get('button[data-testid="alert-1-hide-button"]').should('be.visible');
+        cy.get('button[data-testid="alert-1-hide-button"]').should('not.be.visible');
     });
     it('Hides as expected', () => {
         cy.visit('/');
@@ -27,9 +27,5 @@ context('Homepage', () => {
         cy.get('button[data-testid="alert-0-hide-button"]').click();
         cy.get('div[data-testid="alert-0"]').should('not.be.visible');
         cy.get('div[data-testid="alert-1"]').should('be.visible');
-
-        cy.get('button[data-testid="alert-1-hide-button"]').click();
-        cy.get('div[data-testid="alert-0"]').should('not.be.visible');
-        cy.get('div[data-testid="alert-1"]').should('not.be.visible');
     });
 });

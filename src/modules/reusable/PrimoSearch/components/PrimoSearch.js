@@ -131,7 +131,9 @@ export const PrimoSearch = ({
                     {displayType === 'all' && (
                         <Grid item xs={12} md={'auto'}>
                             <FormControl style={{ width: '100%' }}>
-                                <InputLabel id="primo-search-select-label">{locale.typeSelect.label}</InputLabel>
+                                <InputLabel id="primo-search-select-label" data-testid="primo-search-title">
+                                    {locale.typeSelect.label}
+                                </InputLabel>
                                 <Select
                                     labelId="primo-search-select-label"
                                     id="primo-search-select"

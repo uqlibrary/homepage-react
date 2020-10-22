@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import ImageGallery from 'react-image-gallery';
 import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
@@ -13,11 +12,10 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
-const moment = require('moment');
 import { useDispatch } from 'react-redux';
 import RoomIcon from '@material-ui/icons/Room';
 import { loadSpotlights } from 'actions';
-const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
+// const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from '../../reusable/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -30,6 +28,20 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
 const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import {
+    CarouselProvider,
+    Slider,
+    Slide,
+    ButtonBack,
+    ButtonNext,
+    ButtonPlay,
+    ButtonFirst,
+    ButtonLast,
+    DotGroup,
+    Image,
+} from 'pure-react-carousel';
+// import 'pure-react-carousel/dist/react-carousel.es.css';
+const moment = require('moment');
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const dispatch = useDispatch();
@@ -38,28 +50,9 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             dispatch(loadSpotlights());
         }
     }, [spotlightsLoading, dispatch]);
-    const images =
-        !!spotlights && spotlights.length > 0
-            ? spotlights.map(item => {
-                  return {
-                      original: item.img_url,
-                      thumbnail: item.img_url,
-                      originalTitle: item.title,
-                      originalAlt: item.img_alt,
-                      thumbnailAlt: item.img_alt,
-                      thumbnailTitle: item.title,
-                  };
-              })
-            : [
-                  {
-                      original: welcomeSpotlight,
-                      originalAlt: '',
-                      originalTitle: '',
-                  },
-              ];
+    console.log(spotlights);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorPrintEl, setAnchorPrintEl] = React.useState(null);
-    // const [allyMessage, setallyMessage] = React.useState('');
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -107,17 +100,41 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         {/* Spotlights */}
                         <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                             <div>
-                                <ImageGallery
-                                    onErrorImageURL={welcomeSpotlight}
-                                    items={images}
-                                    showThumbnails={images.length > 1}
-                                    showFullscreenButton={false}
-                                    showPlayButton={false}
-                                    autoPlay={!account}
-                                    slideDuration={1000}
-                                    slideInterval={12000}
-                                    showBullets={false}
-                                />
+                                <CarouselProvider
+                                    visibleSlides={1}
+                                    totalSlides={3}
+                                    step={1}
+                                    naturalSlideWidth={1967}
+                                    naturalSlideHeight={721}
+                                    isPlaying
+                                >
+                                    <Slider>
+                                        <Slide index={0}>
+                                            <Image
+                                                src="https://app.library.uq.edu.au/file/public/c7ce4070-0f71-11eb-9138-53c32be5af5c.jpg"
+                                                style={{ width: '100%' }}
+                                            />
+                                        </Slide>
+                                        <Slide index={1}>
+                                            <Image
+                                                src="https://app.library.uq.edu.au/file/public/c7d1a910-0c41-11eb-86ad-c9112b007fcc.jpg"
+                                                style={{ width: '100%' }}
+                                            />
+                                        </Slide>
+                                        <Slide index={2}>
+                                            <Image
+                                                src="https://app.library.uq.edu.au/file/public/5902a780-51e9-11e9-b2aa-e17ca7351ccc.jpg"
+                                                style={{ width: '100%' }}
+                                            />
+                                        </Slide>
+                                    </Slider>
+                                    <ButtonPlay childrenPlaying="Pause" childrenPaused="Play" />
+                                    <ButtonFirst>First</ButtonFirst>
+                                    <ButtonBack>Back</ButtonBack>
+                                    <ButtonNext>Next</ButtonNext>
+                                    <ButtonLast>Last</ButtonLast>
+                                    <DotGroup />
+                                </CarouselProvider>
                             </div>
                         </Grid>
 
@@ -662,7 +679,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 alignContent={'center'}
                                                 alignItems={'center'}
                                             >
-                                                <Grid item xs={'auto'}>
+                                                <Grid item xs={3}>
                                                     <Grid
                                                         container
                                                         spacing={0}
@@ -670,49 +687,68 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                         alignItems={'center'}
                                                         justify={'center'}
                                                     >
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            style={{
-                                                                fontSize: 19,
-                                                                color: 'purple',
-                                                                textAlign: 'center',
-                                                            }}
-                                                            aria-label={ordinal(item.dayDate)}
-                                                        >
-                                                            {item.dayDate}
+                                                        <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
+                                                            <div
+                                                                style={{
+                                                                    fontFamily: 'DM Mono',
+                                                                    color: 'purple',
+                                                                    width: '2ch',
+                                                                    textTransform: 'uppercase',
+                                                                    overflow: 'hidden',
+                                                                    whiteSpace: 'nowrap',
+                                                                    margin: '0 auto',
+                                                                    fontWeight: 300,
+                                                                    fontSize: '1.2em',
+                                                                }}
+                                                            >
+                                                                {ordinal(item.dayDate)}
+                                                            </div>
                                                         </Grid>
                                                         <Grid
                                                             item
                                                             xs={12}
                                                             style={{
-                                                                fontSize: 16,
-                                                                color: 'purple',
-                                                                textAlign: 'center',
-                                                                marginTop: -4,
-                                                                textTransform: 'uppercase',
+                                                                marginTop: -6,
                                                             }}
                                                             aria-label={item.day}
                                                         >
-                                                            <abbr title={item.day} aria-label={item.day}>
-                                                                {item.day.substring(0, 3)}
-                                                            </abbr>
+                                                            <div
+                                                                style={{
+                                                                    fontFamily: 'DM Mono',
+                                                                    color: 'purple',
+                                                                    width: '3ch',
+                                                                    textTransform: 'uppercase',
+                                                                    overflow: 'hidden',
+                                                                    whiteSpace: 'nowrap',
+                                                                    margin: '0 auto',
+                                                                    fontWeight: 300,
+                                                                    fontSize: '1.1em',
+                                                                }}
+                                                            >
+                                                                {item.day}
+                                                            </div>
                                                         </Grid>
                                                         <Grid
                                                             item
                                                             xs={12}
-                                                            style={{
-                                                                fontSize: 16,
-                                                                color: 'purple',
-                                                                textAlign: 'center',
-                                                                marginTop: -4,
-                                                                textTransform: 'uppercase',
-                                                            }}
                                                             aria-label={item.monthDate}
+                                                            style={{ marginTop: -6 }}
                                                         >
-                                                            <abbr title={item.monthDate} aria-label={item.monthDate}>
-                                                                {item.monthDate.substring(0, 3)}
-                                                            </abbr>
+                                                            <div
+                                                                style={{
+                                                                    fontFamily: 'DM Mono',
+                                                                    color: 'purple',
+                                                                    width: '3ch',
+                                                                    textTransform: 'uppercase',
+                                                                    overflow: 'hidden',
+                                                                    whiteSpace: 'nowrap',
+                                                                    margin: '0 auto',
+                                                                    fontWeight: 300,
+                                                                    fontSize: '1.1em',
+                                                                }}
+                                                            >
+                                                                {item.monthDate}
+                                                            </div>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>

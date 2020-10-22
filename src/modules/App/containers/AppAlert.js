@@ -26,6 +26,7 @@ const AppAlert = ({ appAlert, customAlert }) => {
                 message: item.body,
                 ...markdownBody,
                 type: item.urgent === 1 ? 'warning' : 'info_outline',
+                canHide: true,
             };
         });
     }
@@ -35,7 +36,7 @@ const AppAlert = ({ appAlert, customAlert }) => {
     if (appAlerts && appAlerts.length > 0) {
         return appAlerts.map((item, index) => (
             <div style={{ width: '100%' }} key={index}>
-                <Alert {...item} canHide alertId={`alert-${index}`} />
+                <Alert {...item} alertId={`alert-${index}`} />
             </div>
         ));
     } else {

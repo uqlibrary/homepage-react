@@ -408,7 +408,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
                             >
                                 <QuestionAnswer className={classes.icon} />
-                                <div style={{ color: 'white', fontSize: 12 }}>ASK US</div>
+                                <div style={{ color: 'white', fontSize: 12 }}>Ask us</div>
                             </IconButton>
                         </Tooltip>
                         <Menu
