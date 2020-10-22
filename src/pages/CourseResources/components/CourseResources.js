@@ -6,6 +6,7 @@ import locale from './courseresourceslocale';
 
 import { Guides } from './Guides';
 import { LearningResources } from './LearningResources';
+import { MyCourses } from './MyCourses';
 import { PastExamPapers } from './PastExamPapers';
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 import { TabPanel } from './TabPanel';
@@ -74,13 +75,6 @@ export const CourseResources = ({
     const handleSearchTabChange = (event, subjectTabId) => {
         !!event.target.innerText && loadNewSubject(event.target.innerText);
         setCurrentSearchTab(subjectTabId);
-    };
-
-    const courseTabLabel = 'subjecttab';
-    const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
-    const handleCourseTabChange = (event, subjectTabId) => {
-        !!event.target.innerText && loadNewSubject(event.target.innerText);
-        setCurrentMenuTab(subjectTabId);
     };
 
     const getCampusByCode = code => {
@@ -386,45 +380,9 @@ export const CourseResources = ({
     }
     */
 
-    const renderCurrentCourses = (
-        <Fragment>
-            <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
-                <Tabs onChange={handleCourseTabChange} scrollButtons="auto" value={coursemenu} variant="scrollable">
-                    {account.classes.map((item, index) => {
-                        return (
-                            <Tab
-                                {...a11yProps(index, 'classtab')}
-                                data-testid={`classtab-${index}`}
-                                key={`classtab-${index}`}
-                                id={`classtab-${index}`}
-                                label={item.classnumber}
-                                value={`${courseTabLabel}-${index}`} // must match 'index' in TabPanel
-                            />
-                        );
-                    })}
-                </Tabs>
-            </AppBar>
-            {account.classes.map((item, index) => {
-                return (
-                    <TabPanel
-                        data-testid={`classpanel-${index}`}
-                        index={`${courseTabLabel}-${index}`} // must match 'value' in Tab
-                        key={`classpanel-${index}`}
-                        tabId="coursemenu"
-                        value={coursemenu}
-                        style={{ margin: 0 }}
-                    >
-                        {renderSubjectTabBody(item)}
-                    </TabPanel>
-                );
-            })}
-        </Fragment>
-    );
-
     const renderSearchResults = searchedSubjects => {
         return (
             <Fragment>
-                <p>renderSearchResults</p>
                 <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
                         {searchedSubjects.map((item, index) => {
@@ -515,7 +473,11 @@ export const CourseResources = ({
 
                             <TabPanel value={topmenu} index="top0" tabId="topmenu">
                                 {!!account.classes && account.classes.length > 0 ? (
-                                    <Grid>{renderCurrentCourses}</Grid>
+                                    <MyCourses
+                                        a11yProps={a11yProps}
+                                        loadNewSubject={loadNewSubject}
+                                        renderSubjectTabBody={renderSubjectTabBody}
+                                    />
                                 ) : (
                                     <Grid>{renderNoListedCourses}</Grid>
                                 )}
