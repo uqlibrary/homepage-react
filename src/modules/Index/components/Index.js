@@ -20,7 +20,7 @@ import NotificationImportantIcon from '@material-ui/icons/NotificationImportant'
 import { loadSpotlights } from 'actions';
 const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from '../containers/PrimoSearch';
+import PrimoSearch from '../../reusable/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import AllInboxIcon from '@material-ui/icons/AllInbox';

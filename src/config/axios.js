@@ -61,6 +61,7 @@ let isGet = null;
 api.interceptors.request.use(request => {
     isGet = request.method === 'get';
     if (
+        !!request.url &&
         (request.url.includes('records/search') || request.url.includes('records/export')) &&
         !!request.params &&
         !!request.params.mode &&

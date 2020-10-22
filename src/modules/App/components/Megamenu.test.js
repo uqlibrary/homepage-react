@@ -1,3 +1,5 @@
+import { default as menuLocale } from 'locale/menu';
+
 Object.defineProperty(window, 'matchMedia', {
     writable: true,
     value: jest.fn().mockImplementation(query => ({
@@ -77,4 +79,18 @@ describe('Component Megamenu', () => {
     //
     // it('should have working method for focusing on given element ID', () => {
     // });
+
+    it('should have a valid locale', () => {
+        // because the menu locale is meant to be maintained by the user, we check the file is valid
+        menuLocale.publicmenu.forEach(menu => {
+            expect(menu.linkTo.length).not.toBe(0);
+            expect(menu.primaryText.length).not.toBe(0);
+            !menu.shiftLeft || expect(menu.shiftLeft).toEqual(true);
+            !menu.submenuItems ||
+                menu.submenuItems.forEach(submenu => {
+                    expect(submenu.linkTo.length).not.toBe(0);
+                    expect(submenu.primaryText.length).not.toBe(0);
+                });
+        });
+    });
 });
