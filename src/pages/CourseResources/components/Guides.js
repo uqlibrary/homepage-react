@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import locale from './courseresourceslocale';
+import locale from '../courseresourceslocale';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
@@ -11,7 +12,11 @@ import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 export const Guides = ({ guideList, guideListLoading, guideListError }) => {
     return (
-        <StandardCard className="Guides" style={{ width: '100%', marginBottom: '1rem' }} title="Library guides">
+        <StandardCard
+            className="Guides"
+            style={{ width: '100%', marginBottom: '1rem' }}
+            title={locale.subject.guides.title}
+        >
             <Grid>
                 {guideListLoading && (
                     <Grid
@@ -31,7 +36,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                 {!!guideListError && <Typography>Library guides list currently unavailable</Typography>}
 
                 {!guideListError && !!guideList && guideList.length === 0 && (
-                    <Typography>No Library guides for this course</Typography>
+                    <Typography>{locale.subject.guides.unavailableMessage}</Typography>
                 )}
 
                 {!!guideList &&
@@ -64,7 +69,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         href="http://guides.library.uq.edu.au"
                     >
                         <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                        All library guides
+                        {locale.subject.guides.allLibraryGuidesLabel}
                     </a>
                 </Grid>
             </Grid>

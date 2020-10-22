@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
 // find an appropriate icon from https://material-ui.com/components/material-icons/ to use
 import REPLACEMEIcon from '@material-ui/icons/AcUnit';
@@ -7,6 +7,17 @@ import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 
 export default {
     title: 'Course Resources',
+    userHasNoSubjects: {
+        title: 'No listed courses',
+        description: (
+            <Fragment>
+                <p>Courses will be shown 3 weeks prior to the start of semester</p>
+                <p>Please check back closer to the next enrollment period</p>
+                <p>You can search for information on courses using the &quot;Course Search&quot; tab, above</p>
+            </Fragment>
+        ),
+    },
+    studyHelpLinksUnavailable: 'No resources right now',
     studyHelpLinks: [
         {
             icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
@@ -40,9 +51,33 @@ export default {
         libGuides: 2,
     },
     notesTrimLength: 90,
-    examPapersSearchUrl: 'https://www.library.uq.edu.au/exams/papers.php?stub=',
     ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
     blackboardUrl: 'https://learn.uq.edu.au/',
-    readingListText: 'Reading lists',
-    exampPapersTitle: 'Past exam papers',
+    subject: {
+        readingLists: {
+            title: 'Reading lists',
+            multiple: {
+                title: 'More than one reading list found for [classnumber]. Please select a list:',
+                linkOut: 'Search other reading lists',
+            },
+            linkOut: '[numberExcessReadingLists] more [readingListNumber]',
+        },
+        examPapers: {
+            title: 'Past exam papers',
+            searchUrl: 'https://www.library.uq.edu.au/exams/papers.php?stub=',
+            unavailable: 'Exam papers list currently unavailable',
+            linkOut: 'Search for other exam papers',
+            morePastExams: '[numberExcessExams] more past [examNumber]',
+        },
+        guides: {
+            title: 'Library guides',
+            unavailableMessage: 'No Library guides for this course',
+            allLibraryGuidesLabel: 'All library guides',
+        },
+        links: {
+            title: 'Course links',
+            ecp: 'Electronic Course Profile',
+            blackboard: 'Learn.UQ (Blackboard)',
+        },
+    },
 };

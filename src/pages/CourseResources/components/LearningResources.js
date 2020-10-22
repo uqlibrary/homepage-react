@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
-import locale from './courseresourceslocale';
+import locale from '../courseresourceslocale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -43,12 +43,12 @@ export const LearningResources = ({
 
     // PHIL1002 is currently an example of multiple reading lists
     const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
-        const chooseListprompt = !!classnumber
-            ? `More than one reading list found for ${classnumber}. Please select a list:`
+        const chooseListPrompt = !!classnumber
+            ? locale.subject.readingLists.multiple.title.replace('[classnumber]', classnumber)
             : '';
         return (
             <Fragment>
-                <Typography style={{ paddingBottom: '15px' }}>{chooseListprompt}</Typography>
+                <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt}</Typography>
                 {readingListSummaries.map((list, index) => {
                     return (
                         <Grid
@@ -68,7 +68,7 @@ export const LearningResources = ({
                 <Grid>
                     <a href="http://lr.library.uq.edu.au/index.html">
                         <SpacedArrowForwardIcon />
-                        Search other reading lists
+                        {locale.subject.readingLists.multiple.linkOut}
                     </a>
                 </Grid>
             </Fragment>
@@ -90,7 +90,7 @@ export const LearningResources = ({
 
     const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
 
-    const readingListTitle = `${locale.readingListText} ${
+    const readingListTitle = `${locale.subject.readingLists.title} ${
         !!readingList && readingList.length > 0 ? `(${readingList.length})` : ''
     }`;
 
@@ -220,7 +220,9 @@ export const LearningResources = ({
                                 href={talisReadingListLink}
                             >
                                 <SpacedArrowForwardIcon />
-                                {numberExcessReadingLists} more {_pluralise('item', numberExcessReadingLists)}
+                                {locale.subject.readingLists.linkOut
+                                    .replace('[numberExcessReadingLists]', numberExcessReadingLists)
+                                    .replace('[readingListNumber]', _pluralise('item', numberExcessReadingLists))}
                             </a>
                         </div>
                     )}

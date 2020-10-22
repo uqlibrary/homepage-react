@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import locale from './courseresourceslocale';
+import locale from '../courseresourceslocale';
 
 import { Guides } from './Guides';
 import { LearningResources } from './LearningResources';
@@ -232,11 +232,9 @@ export const CourseResources = ({
     const renderNoListedCourses = (
         <Fragment>
             <Typography component={'h2'} variant={'h6'}>
-                No listed courses
+                {locale.userHasNoSubjects.title}
             </Typography>
-            <p>Courses will be shown 3 weeks prior to the start of semester</p>
-            <p>Please check back closer to the next enrollment period</p>
-            <p>You can search for information on courses using the &quot;Course Search&quot; tab, above</p>
+            {locale.userHasNoSubjects.description}
         </Fragment>
     );
 
@@ -262,7 +260,7 @@ export const CourseResources = ({
                             </a>
                         </Grid>
                     ) : (
-                        <Typography>No resources right now</Typography>
+                        <Typography>{locale.studyHelpLinksUnavailable}</Typography>
                     );
                 })}
         </Fragment>
@@ -281,7 +279,7 @@ export const CourseResources = ({
                         href={_courseLink(subject.classnumber, locale.ecpLinkUrl)}
                     >
                         <SpacedArrowForwardIcon />
-                        Electronic Course Profile
+                        {locale.subject.links.ecp}
                     </a>
                 </Grid>
                 <Grid style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
@@ -291,7 +289,7 @@ export const CourseResources = ({
                         href={_courseLink(subject.classnumber, locale.blackboardUrl)}
                     >
                         <SpacedArrowForwardIcon />
-                        Learn.UQ (Blackboard)
+                        {locale.subject.links.blackboard}
                     </a>
                 </Grid>
             </Grid>
@@ -344,7 +342,7 @@ export const CourseResources = ({
                 <StandardCard
                     className="CourseLinks"
                     style={{ width: '100%', marginBottom: '1rem' }}
-                    title="Course links"
+                    title={locale.subject.links.title}
                 >
                     {renderSubjectCourseLinks(subject)}
                 </StandardCard>

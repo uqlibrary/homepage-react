@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from './courseresourceslocale';
+import locale from '../courseresourceslocale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
@@ -39,13 +39,13 @@ export const PastExamPapers = ({
 
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
-    const examPaperTitle = `${locale.exampPapersTitle} ${
+    const examPaperTitle = `${locale.subject.examPapers.title} ${
         !!examList && examList.length > 0 ? `(${examList.length})` : ''
     }`;
 
     return (
         <StandardCard className="exams" style={{ width: '100%', marginBottom: '1rem' }} title={examPaperTitle}>
-            {!!learningResourcesListError && <Typography>Exam papers list currently unavailable</Typography>}
+            {!!learningResourcesListError && <Typography>{locale.subject.examPapers.unavailable}</Typography>}
 
             {!learningResourcesListError && learningResourcesListLoading && (
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
@@ -58,7 +58,7 @@ export const PastExamPapers = ({
                     <Typography>No Past Exam Papers for this course</Typography>
                     <a href={locale.examPapersSearchUrl}>
                         <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                        Search for other exam papers
+                        {locale.subject.examPapers.linkOut}
                     </a>
                 </Grid>
             )}
@@ -89,10 +89,12 @@ export const PastExamPapers = ({
                         <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                             <a
                                 // on-click="linkClicked"
-                                href={_courseLink(subject.classnumber, locale.examPapersSearchUrl)}
+                                href={_courseLink(subject.classnumber, locale.subject.examPapers.searchUrl)}
                             >
                                 <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                {numberExcessExams} more past exam {_pluralise('paper', numberExcessExams)}
+                                {locale.subject.examPapers.morePastExams
+                                    .replace('[numberExcessExams]', numberExcessExams)
+                                    .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
                             </a>
                         </Grid>
                     )}
