@@ -15,8 +15,10 @@ export default {
                         spacing={1}
                         style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                     >
-                        <Grid item xs={12} md={'auto'} id="notfound">
-                            <InputLabel id="notfound-label">Page not found</InputLabel>
+                        <Grid item xs={12} md={'auto'} data-testid="notfound" id="notfound">
+                            <InputLabel data-testid="notfound-label" id="notfound-label">
+                                Page not found
+                            </InputLabel>
                             <p>The requested page could not be found.</p>
                             <p>Sorry about that, but here's what you can do next:</p>
                             <ul>
@@ -65,8 +67,10 @@ export default {
                         spacing={1}
                         style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                     >
-                        <Grid item xs={12} md={'auto'} id="notfound-unauthorised">
-                            <InputLabel id="unauthorised-label">Permissions denied</InputLabel>
+                        <Grid item xs={12} md={'auto'} data-testid="notfound-unauthorised" id="notfound-unauthorised">
+                            <InputLabel data-testid="unauthorised-label" id="unauthorised-label">
+                                Permissions denied
+                            </InputLabel>
                             <p>The requested page is available to authorised users only.</p>
                         </Grid>
                     </Grid>
@@ -84,8 +88,8 @@ export default {
                         spacing={1}
                         style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                     >
-                        <Grid item xs={12} md={'auto'} id="notfound-unauthorised">
-                            <InputLabel id="unauthorised-label">Error</InputLabel>
+                        <Grid item xs={12} md={'auto'} data-testid="notfound-error" id="notfound-error">
+                            <InputLabel id="unauthorised-error">Error</InputLabel>
                             <p>There has been a problem. Please refresh and try again.</p>
                         </Grid>
                     </Grid>
