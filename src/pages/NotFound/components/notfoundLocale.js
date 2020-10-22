@@ -47,8 +47,10 @@ export default {
                         spacing={1}
                         style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                     >
-                        <Grid item xs={12} md={'auto'} id="notfound-authenticate">
-                            <InputLabel id="authenticate-label">Authentication required</InputLabel>
+                        <Grid item xs={12} md={'auto'} data-testid="notfound-authenticate" id="notfound-authenticate">
+                            <InputLabel data-testid="authenticate-label" id="authenticate-label">
+                                Authentication required
+                            </InputLabel>
                             <p>The requested page is available to authenticated users only.</p>`
                             <p>Please login to continue</p>
                         </Grid>
@@ -89,7 +91,9 @@ export default {
                         style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                     >
                         <Grid item xs={12} md={'auto'} data-testid="notfound-error" id="notfound-error">
-                            <InputLabel id="unauthorised-error">Error</InputLabel>
+                            <InputLabel data-testid="unauthorised-error" id="unauthorised-error">
+                                Error
+                            </InputLabel>
                             <p>There has been a problem. Please refresh and try again.</p>
                         </Grid>
                     </Grid>
