@@ -263,7 +263,9 @@ export class AppClass extends PureComponent {
                             }}
                         />
                     </Hidden>
-                    <AppAlertContainer />
+                    <div role="region" aria-label="Alerts">
+                        <AppAlertContainer />
+                    </div>
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}

@@ -280,23 +280,61 @@ export const Alert = ({
             case 'custom':
                 return customIcon;
             case 'error':
-                return <Error id="error-icon" className="icon" />;
+                return (
+                    <Error id="error-icon" className="icon" aria-label="Error alert." focusable aria-hidden="false" />
+                );
             case 'error_outline':
-                return <ErrorOutline id="error-outline-icon" className="icon" />;
+                return (
+                    <ErrorOutline
+                        id="error-outline-icon"
+                        className="icon"
+                        aria-label="Error alert."
+                        focusable
+                        aria-hidden="false"
+                    />
+                );
             case 'warning':
-                return <Warning id="warning-icon" className="icon" />;
+                return (
+                    <Warning
+                        id="warning-icon"
+                        className="icon"
+                        aria-label="Important alert."
+                        focusable
+                        aria-hidden="false"
+                    />
+                );
             case 'info':
-                return <Info id="info-icon" className="icon" />;
+                return <Info id="info-icon" className="icon" aria-label="Alert." focusable aria-hidden="false" />;
             case 'info_outline':
-                return <InfoOutlined id="info-outline-icon" className="icon" />;
+                return (
+                    <InfoOutlined
+                        id="info-outline-icon"
+                        className="icon"
+                        aria-label="Alert."
+                        focusable
+                        aria-hidden="false"
+                    />
+                );
             case 'help':
-                return <Help id="help-icon" className="icon" />;
+                return <Help id="help-icon" className="icon" aria-label="Help alert." focusable aria-hidden="false" />;
             case 'help_outline':
-                return <HelpOutline id="help-outline-icon" className="icon" />;
+                return (
+                    <HelpOutline
+                        id="help-outline-icon"
+                        className="icon"
+                        aria-label="Help aler.t"
+                        focusable
+                        aria-hidden="false"
+                    />
+                );
             case 'done':
-                return <Done id="done-icon" className="icon" />;
+                return (
+                    <Done id="done-icon" className="icon" aria-label="Success alert." focusable aria-hidden="false" />
+                );
             default:
-                return <Error id="error-icon" className="icon" />;
+                return (
+                    <Error id="error-icon" className="icon" aria-label="Error alert." focusable aria-hidden="false" />
+                );
         }
     };
     const hideThisAlert = () => {
@@ -312,7 +350,6 @@ export const Alert = ({
                 className={classNames(classes[!!customIcon ? customType : type], classes.common)}
                 data-testid={alertId}
                 id={alertId}
-                role="alert"
             >
                 <Grid
                     container
