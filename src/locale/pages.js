@@ -38,5 +38,8 @@ export default {
         masquerade: {
             title: 'Masquerade',
         },
+        courseresources: {
+            title: 'Course resources',
+        },
     },
 };

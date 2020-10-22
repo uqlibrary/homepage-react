@@ -237,6 +237,47 @@ export function Megamenu(props) {
 
     useOnClickOutside(menuRef, () => closeAllSubMenus(false));
 
+    // from https://stackoverflow.com/questions/37440408/how-to-detect-esc-key-press-in-react-and-how-to-handle-it/46123962
+    const catchKeyClick = event => {
+        // close menu when escape key pressed
+        const escapeKeyCode = 27;
+        if (event.keyCode === escapeKeyCode) {
+            closeAllSubMenus(false);
+        }
+
+        const tabKeyCode = 9;
+        // if they tab out the end of a submenu, close the menu
+        if (event.keyCode === tabKeyCode) {
+            const focusedItem = document.activeElement;
+            if (
+                !!document.getElementById(focusedItem.id) &&
+                !!document.getElementById(focusedItem.id).classList &&
+                document.getElementById(focusedItem.id).classList.contains('endmenuItem')
+            ) {
+                closeAllSubMenus(false);
+            }
+        }
+
+        // if they shift-tab back out of a menu, close the menu
+        if (event.shiftKey && event.keyCode === tabKeyCode) {
+            const focusedItem = document.activeElement;
+            if (
+                !!document.getElementById(focusedItem.id) &&
+                !!document.getElementById(focusedItem.id).classList &&
+                document.getElementById(focusedItem.id).classList.contains('submenuheader')
+            ) {
+                closeAllSubMenus(false);
+            }
+        }
+    };
+    useEffect(() => {
+        document.addEventListener('keydown', catchKeyClick, false);
+
+        return () => {
+            document.removeEventListener('keydown', catchKeyClick, false);
+        };
+    });
+
     const focusOnElementId = elementId => {
         if (document.getElementById(elementId)) {
             document.getElementById(elementId).focus();
@@ -263,7 +304,7 @@ export function Megamenu(props) {
             : navigateToLink(menuItem.linkTo, menuItem.target || null);
     }
 
-    function renderSingleColumn(index, classes, menuColumn) {
+    function renderSingleColumn(index, classes, menuColumn, isLastColumn) {
         return (
             <List
                 component="div"
@@ -275,6 +316,7 @@ export function Megamenu(props) {
                 {!!menuColumn &&
                     menuColumn.length > 0 &&
                     menuColumn.map((submenuItem, index2) => {
+                        const endItemClass = isLastColumn && index2 === menuColumn.length - 1 ? 'endmenuItem' : '';
                         return (
                             <ListItem
                                 button
@@ -282,7 +324,7 @@ export function Megamenu(props) {
                                 key={`menu-group-${index}-item-${index2}`}
                                 id={`menu-group-${index}-item-${index2}`}
                                 onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
-                                className={classes.menuItem}
+                                className={`classes.menuItem ${endItemClass}`}
                             >
                                 <ListItemText
                                     classes={{
@@ -319,7 +361,7 @@ export function Megamenu(props) {
                 <div className={classes.menuColumns}>
                     {menuColumns.length > 0 &&
                         menuColumns.map((menuColumn, index1) => {
-                            return renderSingleColumn(index1, classes, menuColumn);
+                            return renderSingleColumn(index1, classes, menuColumn, index1 === menuColumns.length - 1);
                         })}
                 </div>
             </Collapse>
@@ -332,7 +374,7 @@ export function Megamenu(props) {
             <span className="menu-item-container" key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
-                    className={classes.submenus}
+                    className={'submenuheader classes.submenus'}
                     data-testid={`submenus-item-${index}`}
                     key={`submenus-item-${index}`}
                     id={`submenus-item-${index}`}
