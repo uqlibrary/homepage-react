@@ -25,9 +25,16 @@ const useStyles = makeStyles(
             borderRadius: 0,
         },
         wrapper: {
-            maxWidth: 1190,
-            marginLeft: 'auto',
-            marginRight: 'auto',
+            [theme.breakpoints.up('xs')]: {
+                maxWidth: 1190,
+                marginLeft: 'auto',
+                marginRight: 'auto',
+            },
+            [theme.breakpoints.down('xs')]: {
+                maxWidth: '100%',
+                marginLeft: 'auto',
+                marginRight: 'auto',
+            },
         },
         '@keyframes wiggle': {
             from: { transform: 'rotate(-30deg)', transformOrigin: '40% 50%' },
@@ -67,17 +74,10 @@ const useStyles = makeStyles(
             },
         },
         dismissButton: {
-            '& .dismiss': {
-                [theme.breakpoints.up('xs')]: {
-                    marginTop: -12,
-                    marginBottom: -12,
-                    marginRight: -6,
-                    marginLeft: -24,
-                },
-                [theme.breakpoints.down('xs')]: {
-                    marginRight: -12,
-                },
-            },
+            margin: -24,
+            marginRight: -24,
+            marginTop: -12,
+            marginBottom: -12,
         },
         linked: {
             '&:hover': {
@@ -346,7 +346,8 @@ export const Alert = ({
                                 id={`${alertId}-action-message-button`}
                                 data-testid={`${alertId}-action-message-button`}
                             >
-                                <b>{title && `${title} - `}</b>
+                                <b>{title}</b>
+                                &nbsp;
                                 {message}
                             </Grid>
                             {allowDismiss && dismissAction && (
@@ -374,7 +375,7 @@ export const Alert = ({
                                             id={`${alertId}-hide-button-mobile`}
                                             data-testid={`${alertId}-hide-button-mobile`}
                                         >
-                                            <Close className="dismiss" />
+                                            <Close />
                                         </IconButton>
                                     </Grid>
                                 </Hidden>
@@ -404,7 +405,7 @@ export const Alert = ({
                                     id={`${alertId}-dismiss-button`}
                                     data-testid={`${alertId}-dismiss-button`}
                                 >
-                                    <Close className="dismiss" />
+                                    <Close />
                                 </IconButton>
                             </Grid>
                         </Hidden>
@@ -419,7 +420,7 @@ export const Alert = ({
                                     id={`${alertId}-hide-button`}
                                     data-testid={`${alertId}-hide-button`}
                                 >
-                                    <Close className="dismiss" />
+                                    <Close />
                                 </IconButton>
                             </Grid>
                         </Hidden>
