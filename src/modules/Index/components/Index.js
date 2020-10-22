@@ -662,7 +662,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 alignContent={'center'}
                                                 alignItems={'center'}
                                             >
-                                                <Grid item xs={'auto'}>
+                                                <Grid item xs={3}>
                                                     <Grid
                                                         container
                                                         spacing={0}
@@ -670,49 +670,68 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                         alignItems={'center'}
                                                         justify={'center'}
                                                     >
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            style={{
-                                                                fontSize: 19,
-                                                                color: 'purple',
-                                                                textAlign: 'center',
-                                                            }}
-                                                            aria-label={ordinal(item.dayDate)}
-                                                        >
-                                                            {item.dayDate}
+                                                        <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
+                                                            <div
+                                                                style={{
+                                                                    fontFamily: 'DM Mono',
+                                                                    color: 'purple',
+                                                                    width: '2ch',
+                                                                    textTransform: 'uppercase',
+                                                                    overflow: 'hidden',
+                                                                    whiteSpace: 'nowrap',
+                                                                    margin: '0 auto',
+                                                                    fontWeight: 300,
+                                                                    fontSize: '1.2em',
+                                                                }}
+                                                            >
+                                                                {ordinal(item.dayDate)}
+                                                            </div>
                                                         </Grid>
                                                         <Grid
                                                             item
                                                             xs={12}
                                                             style={{
-                                                                fontSize: 16,
-                                                                color: 'purple',
-                                                                textAlign: 'center',
-                                                                marginTop: -4,
-                                                                textTransform: 'uppercase',
+                                                                marginTop: -6,
                                                             }}
                                                             aria-label={item.day}
                                                         >
-                                                            <abbr title={item.day} aria-label={item.day}>
-                                                                {item.day.substring(0, 3)}
-                                                            </abbr>
+                                                            <div
+                                                                style={{
+                                                                    fontFamily: 'DM Mono',
+                                                                    color: 'purple',
+                                                                    width: '3ch',
+                                                                    textTransform: 'uppercase',
+                                                                    overflow: 'hidden',
+                                                                    whiteSpace: 'nowrap',
+                                                                    margin: '0 auto',
+                                                                    fontWeight: 300,
+                                                                    fontSize: '1.1em',
+                                                                }}
+                                                            >
+                                                                {item.day}
+                                                            </div>
                                                         </Grid>
                                                         <Grid
                                                             item
                                                             xs={12}
-                                                            style={{
-                                                                fontSize: 16,
-                                                                color: 'purple',
-                                                                textAlign: 'center',
-                                                                marginTop: -4,
-                                                                textTransform: 'uppercase',
-                                                            }}
                                                             aria-label={item.monthDate}
+                                                            style={{ marginTop: -6 }}
                                                         >
-                                                            <abbr title={item.monthDate} aria-label={item.monthDate}>
-                                                                {item.monthDate.substring(0, 3)}
-                                                            </abbr>
+                                                            <div
+                                                                style={{
+                                                                    fontFamily: 'DM Mono',
+                                                                    color: 'purple',
+                                                                    width: '3ch',
+                                                                    textTransform: 'uppercase',
+                                                                    overflow: 'hidden',
+                                                                    whiteSpace: 'nowrap',
+                                                                    margin: '0 auto',
+                                                                    fontWeight: 300,
+                                                                    fontSize: '1.1em',
+                                                                }}
+                                                            >
+                                                                {item.monthDate}
+                                                            </div>
                                                         </Grid>
                                                     </Grid>
                                                 </Grid>
