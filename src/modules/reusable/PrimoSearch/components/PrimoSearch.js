@@ -132,7 +132,7 @@ export const PrimoSearch = ({
                         <Grid item xs={12} md={'auto'}>
                             <FormControl style={{ width: '100%' }}>
                                 <InputLabel id="primo-search-select-label" data-testid="primo-search-title">
-                                    {locale.PrimoSearch.typeSelect.label}
+                                    {locale.typeSelect.label}
                                 </InputLabel>
                                 <Select
                                     labelId="primo-search-select-label"
@@ -146,7 +146,7 @@ export const PrimoSearch = ({
                                         'data-testid': 'primo-search-select-list',
                                     }}
                                 >
-                                    {locale.PrimoSearch.typeSelect.items.map((item, index) => (
+                                    {locale.typeSelect.items.map((item, index) => (
                                         <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
                                             {item.icon}&nbsp;{item.name}
                                         </MenuItem>
