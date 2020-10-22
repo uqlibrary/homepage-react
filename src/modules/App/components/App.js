@@ -229,7 +229,7 @@ export class AppClass extends PureComponent {
         return (
             <Grid container className={classes.layoutFill}>
                 <ChatStatus status={this.props.chatStatus} />
-                <div className="content-header">
+                <div className="content-header" role="region" aria-label="Site header">
                     <Header
                         account={this.props.account}
                         history={this.props.history}
@@ -237,32 +237,34 @@ export class AppClass extends PureComponent {
                         toggleMenu={this.toggleMenu}
                     />
                 </div>
-                <div className="content-container" id="content-container">
-                    <Hidden lgUp>
-                        <Megamenu
-                            hasCloseItem
-                            history={this.props.history}
-                            locale={{
-                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                skipNavTitle: locale.global.skipNav.title,
-                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                            }}
-                            menuItems={menuItems}
-                            menuOpen={this.state.menuOpen}
-                            toggleMenu={this.toggleMenu}
-                        />
-                    </Hidden>
-                    <Hidden mdDown>
-                        <Megamenu
-                            menuItems={menuItems}
-                            history={this.props.history}
-                            locale={{
-                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                skipNavTitle: locale.global.skipNav.title,
-                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                            }}
-                        />
-                    </Hidden>
+                <div className="content-container" id="content-container" role="region" aria-label="Site content">
+                    <div role="region" aria-label="Main site navigation">
+                        <Hidden lgUp>
+                            <Megamenu
+                                hasCloseItem
+                                history={this.props.history}
+                                locale={{
+                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                    skipNavTitle: locale.global.skipNav.title,
+                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                }}
+                                menuItems={menuItems}
+                                menuOpen={this.state.menuOpen}
+                                toggleMenu={this.toggleMenu}
+                            />
+                        </Hidden>
+                        <Hidden mdDown>
+                            <Megamenu
+                                menuItems={menuItems}
+                                history={this.props.history}
+                                locale={{
+                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                    skipNavTitle: locale.global.skipNav.title,
+                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                }}
+                            />
+                        </Hidden>
+                    </div>
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>

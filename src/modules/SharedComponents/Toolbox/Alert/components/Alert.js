@@ -26,7 +26,7 @@ const useStyles = makeStyles(
         },
         wrapper: {
             [theme.breakpoints.up('xs')]: {
-                maxWidth: 1190,
+                maxWidth: 1175,
                 marginLeft: 'auto',
                 marginRight: 'auto',
             },
@@ -75,7 +75,7 @@ const useStyles = makeStyles(
         },
         dismissButton: {
             margin: -24,
-            marginRight: -24,
+            marginRight: -18,
             marginTop: -12,
             marginBottom: -12,
         },

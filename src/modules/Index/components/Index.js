@@ -40,7 +40,7 @@ import {
     DotGroup,
     Image,
 } from 'pure-react-carousel';
-import 'pure-react-carousel/dist/react-carousel.es.css';
+// import 'pure-react-carousel/dist/react-carousel.es.css';
 const moment = require('moment');
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
