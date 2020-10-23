@@ -15,7 +15,6 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
 import RoomIcon from '@material-ui/icons/Room';
 import { loadSpotlights } from 'actions';
-// const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from '../containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -28,19 +27,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { LiveAnnouncer, LiveMessage } from 'react-aria-live';
 const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-import {
-    CarouselProvider,
-    Slider,
-    Slide,
-    ButtonBack,
-    ButtonNext,
-    ButtonPlay,
-    ButtonFirst,
-    ButtonLast,
-    DotGroup,
-    Image,
-} from 'pure-react-carousel';
-// import 'pure-react-carousel/dist/react-carousel.es.css';
+import Spotlights from './Spotlights';
 const moment = require('moment');
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
@@ -99,43 +86,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                         {/* Spotlights */}
                         <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                            <div>
-                                <CarouselProvider
-                                    visibleSlides={1}
-                                    totalSlides={3}
-                                    step={1}
-                                    naturalSlideWidth={1967}
-                                    naturalSlideHeight={721}
-                                    isPlaying
-                                >
-                                    <Slider>
-                                        <Slide index={0}>
-                                            <Image
-                                                src="https://app.library.uq.edu.au/file/public/c7ce4070-0f71-11eb-9138-53c32be5af5c.jpg"
-                                                style={{ width: '100%' }}
-                                            />
-                                        </Slide>
-                                        <Slide index={1}>
-                                            <Image
-                                                src="https://app.library.uq.edu.au/file/public/c7d1a910-0c41-11eb-86ad-c9112b007fcc.jpg"
-                                                style={{ width: '100%' }}
-                                            />
-                                        </Slide>
-                                        <Slide index={2}>
-                                            <Image
-                                                src="https://app.library.uq.edu.au/file/public/5902a780-51e9-11e9-b2aa-e17ca7351ccc.jpg"
-                                                style={{ width: '100%' }}
-                                            />
-                                        </Slide>
-                                    </Slider>
-                                    <ButtonPlay childrenPlaying="Pause" childrenPaused="Play" />
-                                    <ButtonFirst>First</ButtonFirst>
-                                    <ButtonBack>Back</ButtonBack>
-                                    <ButtonNext>Next</ButtonNext>
-                                    <ButtonLast>Last</ButtonLast>
-                                    <DotGroup />
-                                </CarouselProvider>
-                            </div>
+                            <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} />
                         </Grid>
 
                         {/* Personalisation panel */}
