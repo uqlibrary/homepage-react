@@ -4,7 +4,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
 <div>
   <WithStyles(ForwardRef(List))
     component="nav"
-    data-testid="mainMenu"
+    data-testid="main-menu"
     id="mainMenu"
   >
     <span
@@ -72,7 +72,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
 <div>
   <WithStyles(ForwardRef(List))
     component="nav"
-    data-testid="mainMenu"
+    data-testid="main-menu"
     id="mainMenu"
   >
     <span
