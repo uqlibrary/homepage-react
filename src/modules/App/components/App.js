@@ -237,33 +237,38 @@ export class AppClass extends PureComponent {
                         toggleMenu={this.toggleMenu}
                     />
                 </div>
-                <div className="content-container" id="content-container">
-                    <Hidden lgUp>
-                        <Megamenu
-                            hasCloseItem
-                            history={this.props.history}
-                            locale={{
-                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                skipNavTitle: locale.global.skipNav.title,
-                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                            }}
-                            menuItems={menuItems}
-                            menuOpen={this.state.menuOpen}
-                            toggleMenu={this.toggleMenu}
-                        />
-                    </Hidden>
-                    <Hidden mdDown>
-                        <Megamenu
-                            menuItems={menuItems}
-                            history={this.props.history}
-                            locale={{
-                                skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                skipNavTitle: locale.global.skipNav.title,
-                                closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                            }}
-                        />
-                    </Hidden>
-                    <AppAlertContainer />
+                <div className="content-container" id="content-container" role="region" aria-label="Site content">
+                    <div role="region" aria-label="Main site navigation">
+                        <Hidden lgUp>
+                            <Megamenu
+                                hasHomePageItem
+                                hasCloseItem
+                                history={this.props.history}
+                                // locale={{
+                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                //     skipNavTitle: locale.global.skipNav.title,
+                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                // }}
+                                menuItems={menuItems}
+                                menuOpen={this.state.menuOpen}
+                                toggleMenu={this.toggleMenu}
+                            />
+                        </Hidden>
+                        <Hidden mdDown>
+                            <Megamenu
+                                menuItems={menuItems}
+                                history={this.props.history}
+                                // locale={{
+                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                //     skipNavTitle: locale.global.skipNav.title,
+                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                // }}
+                            />
+                        </Hidden>
+                    </div>
+                    <div role="region" aria-label="UQ Library Alerts">
+                        <AppAlertContainer />
+                    </div>
                     <ConfirmDialogBox
                         hideCancelButton
                         onRef={this.setSessionExpiredConfirmation}

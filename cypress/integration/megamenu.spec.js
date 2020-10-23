@@ -16,8 +16,9 @@ context('Megamenu', () => {
         // close sub menu so the Close button isnt covered up
         cy.get('[data-testid=submenus-item-0]').click();
 
-        cy.get('[data-testid=submenus-item-close]').contains('Close');
-        cy.get('[data-testid=submenus-item-close]').click();
+        cy.get('[data-testid=close-action]')
+            .contains('Close')
+            .click();
     });
 
     it('Megamenu Desktop', () => {

@@ -85,20 +85,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 };
 
 export const getMenuConfig = (account, author, authorDetails, disabled) => {
-    const homePage = [
-        {
-            ...locale.menuhome,
-            public: true,
-        },
-    ];
-
     const publicPages = [];
     locale.publicmenu.map(item => {
         publicPages.push(item);
     });
 
     if (disabled) {
-        return [...homePage, ...publicPages];
+        return [...publicPages];
     }
 
     return [...publicPages];
