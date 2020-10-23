@@ -47,60 +47,69 @@ const Spotlights = ({ spotlights, spotlightsLoading, defaultSlide }) => {
                     naturalSlideWidth={1967}
                     naturalSlideHeight={721}
                     isPlaying
+                    interval={10000}
                     style={{ height: '100%' }}
                 >
-                    <div
-                        style={{
-                            width: 36,
-                            height: '100%',
-                            position: 'absolute',
-                            top: 4,
-                            left: 4,
-                            zIndex: 101,
-                        }}
-                    >
-                        <ButtonBack>
-                            <ChevronLeftIcon />
-                        </ButtonBack>
-                    </div>
-                    <div
-                        style={{
-                            width: 36,
-                            height: '100%',
-                            position: 'absolute',
-                            top: 4,
-                            right: 0,
-                            zIndex: 101,
-                        }}
-                    >
-                        <ButtonNext>
-                            <ChevronRightIcon />
-                        </ButtonNext>
-                    </div>
-                    <div
-                        style={{
-                            width: 36,
-                            position: 'absolute',
-                            bottom: 0,
-                            left: 4,
-                            zIndex: 101,
-                        }}
-                    >
-                        <ButtonPlay childrenPlaying={<PauseIcon />} childrenPaused={<PlayArrowIcon />} />
-                    </div>
-                    <div
-                        style={{
-                            width: 200,
-                            marginLeft: -100,
-                            position: 'absolute',
-                            bottom: 10,
-                            left: '50%',
-                            zIndex: 101,
-                            textAlign: 'center',
-                        }}
-                    >
-                        <DotGroup />
-                    </div>
+                    {totalSlides > 1 && (
+                        <div
+                            style={{
+                                width: 36,
+                                height: '100%',
+                                position: 'absolute',
+                                top: 4,
+                                left: 4,
+                                zIndex: 101,
+                            }}
+                        >
+                            <ButtonBack>
+                                <ChevronLeftIcon />
+                            </ButtonBack>
+                        </div>
+                    )}
+                    {totalSlides > 1 && (
+                        <div
+                            style={{
+                                width: 36,
+                                height: '100%',
+                                position: 'absolute',
+                                top: 4,
+                                right: 0,
+                                zIndex: 101,
+                            }}
+                        >
+                            <ButtonNext>
+                                <ChevronRightIcon />
+                            </ButtonNext>
+                        </div>
+                    )}
+                    {totalSlides > 1 && (
+                        <div
+                            style={{
+                                width: 36,
+                                position: 'absolute',
+                                bottom: 0,
+                                left: 4,
+                                zIndex: 101,
+                            }}
+                        >
+                            <ButtonPlay childrenPlaying={<PauseIcon />} childrenPaused={<PlayArrowIcon />} />
+                        </div>
+                    )}
+                    {totalSlides > 1 && (
+                        <div
+                            style={{
+                                width: 200,
+                                marginLeft: -100,
+                                position: 'absolute',
+                                bottom: 10,
+                                left: '50%',
+                                zIndex: 101,
+                                textAlign: 'center',
+                            }}
+                        >
+                            <DotGroup />
+                        </div>
+                    )}
                     <div
                         style={{
                             zIndex: 99,
