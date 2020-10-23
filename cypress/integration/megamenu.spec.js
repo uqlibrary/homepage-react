@@ -23,7 +23,7 @@ context('Megamenu', () => {
     it('Megamenu Desktop', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.get('[data-testid=mainMenu]').contains('Library services');
+        cy.get('[data-testid=main-menu]').contains('Library services');
         cy.log('Megamenu Desktop');
 
         // open first menu

@@ -75,7 +75,7 @@ export class Page extends Component {
                     <ConnectFooter history={this.props.history} />
                 </Grid>
                 <Grid container className={classes.minimalFooter}>
-                    <MinimalFooter history={this.props.history} />
+                    <MinimalFooter />
                 </Grid>
             </Grid>
         );
