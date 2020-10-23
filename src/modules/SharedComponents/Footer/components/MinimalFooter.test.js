@@ -14,15 +14,14 @@ Object.defineProperty(window, 'matchMedia', {
     })),
 });
 
-import { ConnectFooter } from './ConnectFooter';
+import { MinimalFooter } from './MinimalFooter';
 
 function setup(testProps = {}) {
     const props = {
         ...testProps,
         classes: {},
-        history: testProps.history || { push: jest.fn() },
     };
-    return getElement(ConnectFooter, props);
+    return getElement(MinimalFooter, props);
 }
 
 describe('Component MinimalFooter', () => {
