@@ -241,13 +241,14 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="Main site navigation">
                         <Hidden lgUp>
                             <Megamenu
+                                hasHomePageItem
                                 hasCloseItem
                                 history={this.props.history}
-                                locale={{
-                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                    skipNavTitle: locale.global.skipNav.title,
-                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                }}
+                                // locale={{
+                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                //     skipNavTitle: locale.global.skipNav.title,
+                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                // }}
                                 menuItems={menuItems}
                                 menuOpen={this.state.menuOpen}
                                 toggleMenu={this.toggleMenu}
@@ -257,11 +258,11 @@ export class AppClass extends PureComponent {
                             <Megamenu
                                 menuItems={menuItems}
                                 history={this.props.history}
-                                locale={{
-                                    skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                    skipNavTitle: locale.global.skipNav.title,
-                                    closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                }}
+                                // locale={{
+                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
+                                //     skipNavTitle: locale.global.skipNav.title,
+                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
+                                // }}
                             />
                         </Hidden>
                     </div>

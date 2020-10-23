@@ -1,6 +1,9 @@
 import React, { createRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-// MUI 1
+
+import { default as menuLocale } from 'locale/menu';
+import classNames from 'classnames';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -8,7 +11,6 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
 
 const styles = theme => {
     return {
@@ -157,7 +159,7 @@ const styles = theme => {
 };
 
 export function Megamenu(props) {
-    const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu, history } = props;
 
     // from https://usehooks.com/useOnClickOutside/
     function useOnClickOutside(ref, handler) {
@@ -285,10 +287,10 @@ export function Megamenu(props) {
     };
 
     const navigateToLink = (url, target = null) => {
+        const isInternaLink = url => url.indexOf('http') === -1;
         if (!!url) {
-            if (url.indexOf('http') === -1) {
-                // internal link
-                props.history.push(url);
+            if (isInternaLink(url)) {
+                history.push(url);
             } else if (target !== null) {
                 // external link
                 window.open(url, target);
@@ -406,21 +408,41 @@ export function Megamenu(props) {
         return <div className="megamenu empty" />;
     }
 
+    const renderHomePageItem = () => {
+        return (
+            <ListItem
+                button
+                className={classes.submenus}
+                data-testid={menuLocale.menuhome.dataTestid}
+                key={menuLocale.menuhome.dataTestid}
+                id={menuLocale.menuhome.dataTestid}
+                onClick={() => navigateToLink(menuLocale.menuhome.linkTo || null)}
+            >
+                <ListItemText
+                    classes={{
+                        primary: classes.ListItemTextPrimary,
+                    }}
+                    primary={menuLocale.menuhome.primaryText}
+                />
+            </ListItem>
+        );
+    };
+
     function renderCloseItem() {
         return (
             <ListItem
                 button
                 className={classes.submenus}
-                data-testid="submenus-item-close"
-                key={'submenus-item-close'}
-                id={'submenus-item-close'}
+                data-testid={menuLocale.responsiveClose.dataTestid}
+                key={menuLocale.responsiveClose.dataTestid}
+                id={menuLocale.responsiveClose.dataTestid}
                 onClick={() => toggleMenu()}
             >
                 <ListItemText
                     classes={{
                         primary: classes.ListItemTextPrimary,
                     }}
-                    primary="Close"
+                    primary={menuLocale.responsiveClose.primaryText}
                 />
             </ListItem>
         );
@@ -429,6 +451,7 @@ export function Megamenu(props) {
     return (
         <div className={classes.megamenu}>
             <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
+                {props.hasHomePageItem && renderHomePageItem()}
                 {menuItems.map((menuItem, index) => {
                     return renderSingleMenu(menuItem, index);
                 })}
@@ -441,6 +464,7 @@ export function Megamenu(props) {
 
 Megamenu.propTypes = {
     hasCloseItem: PropTypes.bool,
+    hasHomePageItem: PropTypes.bool,
     logoLink: PropTypes.string,
     menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
@@ -452,6 +476,7 @@ Megamenu.propTypes = {
 
 Megamenu.defaultProps = {
     hasCloseItem: false,
+    hasHomePageItem: false,
     menuOpen: true,
 };
 
