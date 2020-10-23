@@ -94,13 +94,13 @@ const styles = theme => ({
 });
 
 export function ConnectFooter(props) {
-    const { classes } = props;
+    const { classes, history } = props;
 
     const _navigateToLink = (url, target = '_self') => {
+        const isInternaLink = url => url.indexOf('http') === -1;
         if (!!url) {
-            if (url.indexOf('http') === -1) {
-                // internal link
-                props.history.push(url);
+            if (isInternaLink(url)) {
+                history.push(url);
             } else if (target === '_self') {
                 window.location.assign(url);
             } else {
