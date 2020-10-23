@@ -310,6 +310,7 @@ export function Megamenu(props) {
                 component="div"
                 disablePadding
                 key={`menu-group-${index}`}
+                data-testid={`menu-group-${index}`}
                 id={`menu-group-${index}`}
                 className={classes.verticalMenuList}
             >
@@ -358,7 +359,7 @@ export function Megamenu(props) {
                 unmountOnExit
                 className={classNames(!!menuItem.shiftLeft ? classes.shiftLeft : '', classes.menuDropdown)}
             >
-                <div className={classes.menuColumns}>
+                <div className={classes.menuColumns} data-testid={`submenu-${index}`}>
                     {menuColumns.length > 0 &&
                         menuColumns.map((menuColumn, index1) => {
                             return renderSingleColumn(index1, classes, menuColumn, index1 === menuColumns.length - 1);
@@ -427,7 +428,7 @@ export function Megamenu(props) {
 
     return (
         <div className={classes.megamenu}>
-            <List component="nav" data-testid="mainMenu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
+            <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
                 {menuItems.map((menuItem, index) => {
                     return renderSingleMenu(menuItem, index);
                 })}
