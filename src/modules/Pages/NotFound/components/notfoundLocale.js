@@ -102,7 +102,11 @@ export default {
                             style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                         >
                             <Grid item xs={12} md={'auto'} data-testid="notfound-error" id="notfound-error">
-                                <p>There has been a problem. Please refresh and try again.</p>
+                                <p>There has been a problem. Please refresh the page to try again.</p>
+                                <p>
+                                    If the problem persists, email us at{' '}
+                                    <a href="mailto:webmaster@library.uq.edu.au">webmaster@library.uq.edu.au</a>.
+                                </p>
                             </Grid>
                         </Grid>
                     </StandardCard>
