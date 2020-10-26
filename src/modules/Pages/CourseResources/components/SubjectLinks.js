@@ -23,7 +23,7 @@ export const SubjectLinks = ({ subject }) => (
             <Grid item xs={12} style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                 <a
                     // on-click="linkClicked"
-                    href={_courseLink(subject.classnumber, locale.myCourses.ecpLinkUrl)}
+                    href={_courseLink(subject.classnumber, locale.myCourses.electronicCourseProfileLinkPrefix)}
                 >
                     <SpacedArrowForwardIcon />
                     {locale.myCourses.links.ecp}
@@ -33,7 +33,7 @@ export const SubjectLinks = ({ subject }) => (
                 <a
                     // on-click="linkClicked"
                     id="blackboard"
-                    href={_courseLink(subject.classnumber, locale.myCourses.blackboardUrl)}
+                    href={_courseLink(subject.classnumber, locale.myCourses.blackboardLinkOut)}
                 >
                     <SpacedArrowForwardIcon />
                     {locale.myCourses.links.blackboard}
