@@ -13,7 +13,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
-        className="submenuheader classes.submenus"
+        className="submenuheader"
         data-testid="submenus-item-0"
         id="submenus-item-0"
         key="submenus-item-0"
@@ -37,7 +37,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
-        className="submenuheader classes.submenus"
+        className="submenuheader"
         data-testid="submenus-item-1"
         id="submenus-item-1"
         key="submenus-item-1"
@@ -81,7 +81,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
-        className="submenuheader classes.submenus"
+        className="submenuheader"
         data-testid="submenus-item-0"
         id="submenus-item-0"
         key="submenus-item-0"
@@ -105,7 +105,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
     >
       <WithStyles(ForwardRef(ListItem))
         button={true}
-        className="submenuheader classes.submenus"
+        className="submenuheader"
         data-testid="submenus-item-1"
         id="submenus-item-1"
         key="submenus-item-1"

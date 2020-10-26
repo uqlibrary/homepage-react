@@ -374,7 +374,7 @@ export function Megamenu(props) {
             <span className="menu-item-container" key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
-                    className={'submenuheader classes.submenus'}
+                    className="submenuheader"
                     data-testid={`submenus-item-${index}`}
                     key={`submenus-item-${index}`}
                     id={`submenus-item-${index}`}
