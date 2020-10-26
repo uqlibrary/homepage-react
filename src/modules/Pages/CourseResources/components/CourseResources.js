@@ -348,8 +348,8 @@ export const CourseResources = ({
                         <Grid item xs={12} id="courseresource-search">
                             <AppBar position="static">
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="top0" label={locale.myCourses.tabLabel} {...a11yProps('top0')} />
-                                    <Tab value="top1" label={locale.search.tabLabel} {...a11yProps('top1')} />
+                                    <Tab value="top0" label={locale.myCourses.title} {...a11yProps('top0')} />
+                                    <Tab value="top1" label={locale.search.title} {...a11yProps('top1')} />
                                     <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('top2')} />
                                 </Tabs>
                             </AppBar>
