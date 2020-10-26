@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 
-// find an appropriate icon from https://material-ui.com/components/material-icons/ to use
-import REPLACEMEIcon from '@material-ui/icons/AcUnit';
+import JigsawIcon from '@material-ui/icons/Extension';
+import DocumentIcon from '@material-ui/icons/Description';
 import InfoIcon from '@material-ui/icons/ErrorOutline';
 import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 
@@ -15,13 +15,13 @@ export default {
         unavailable: 'No resources right now',
         links: [
             {
-                icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
+                icon: <DocumentIcon style={{ marginRight: 6 }} />,
                 id: 'referencingGuides',
                 linkLabel: 'Referencing guides',
                 linkTo: 'https://guides.library.uq.edu.au/referencing',
             },
             {
-                icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
+                icon: <JigsawIcon style={{ marginRight: 6 }} />,
                 id: 'digitalessentials',
                 linkLabel: 'Digital Essentials',
                 linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
@@ -65,27 +65,35 @@ export default {
                 title: 'More than one reading list found for [classnumber]. Please select a list:',
                 linkOut: 'Search other reading lists',
             },
-            linkOut: '[numberExcessReadingLists] more [readingListNumber]',
+            footer: {
+                linkLabel: '[numberExcessReadingLists] more [readingListNumber]',
+            },
         },
         examPapers: {
             title: 'Past exam papers',
-            searchUrl: 'https://www.library.uq.edu.au/exams/papers.php?stub=',
             unavailable: 'Exam papers list currently unavailable',
-            linkOut: 'Search for other exam papers',
             morePastExams: '[numberExcessExams] more past [examNumber]',
+            footer: {
+                linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',
+                linkLabel: 'Search for other exam papers',
+            },
         },
         guides: {
             title: 'Library guides',
             noGuides: 'No Library guides for this course',
             unavailableMessage: 'Library guides list currently unavailable',
-            linkOut: 'All library guides',
+            linkLabelFooter: 'All library guides',
         },
         links: {
             title: 'Course links',
-            ecp: 'Electronic Course Profile',
-            blackboard: 'Learn.UQ (Blackboard)',
+            blackboard: {
+                title: 'Learn.UQ (Blackboard)',
+                linkOutPattern: 'https://learn.uq.edu.au/[courseCode]',
+            },
+            ecp: {
+                title: 'Electronic Course Profile',
+                linkOutPattern: 'http://www.uq.edu.au/study/course.html?course_code=[courseCode]',
+            },
         },
-        electronicCourseProfileLinkPrefix: 'http://www.uq.edu.au/study/course.html?course_code=',
-        blackboardLinkOut: 'https://learn.uq.edu.au/',
     },
 };

@@ -77,7 +77,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                                 href="http://guides.library.uq.edu.au"
                             >
                                 <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                {locale.myCourses.guides.linkOut}
+                                {locale.myCourses.guides.linkLabelFooter}
                             </a>
                         </Grid>
                     </Grid>

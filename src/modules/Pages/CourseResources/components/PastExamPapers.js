@@ -23,8 +23,8 @@ export const PastExamPapers = ({
         return url.substring(url.lastIndexOf('.') + 1);
     };
 
-    const _courseLink = (courseId, url) => {
-        return url + courseId;
+    const _courseLink = (courseCode, url) => {
+        return url.replace('[courseCode]', courseCode);
     };
 
     const examList =
@@ -60,7 +60,7 @@ export const PastExamPapers = ({
                             <Typography>No Past Exam Papers for this course</Typography>
                             <a href={locale.examPapersSearchUrl}>
                                 <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                {locale.myCourses.examPapers.linkOut}
+                                {locale.myCourses.examPapers.footer.linkLabel}
                             </a>
                         </Grid>
                     )}
@@ -91,7 +91,10 @@ export const PastExamPapers = ({
                                 <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                                     <a
                                         // on-click="linkClicked"
-                                        href={_courseLink(subject.classnumber, locale.myCourses.examPapers.searchUrl)}
+                                        href={_courseLink(
+                                            subject.classnumber,
+                                            locale.myCourses.examPapers.footer.linkOutPattern,
+                                        )}
                                     >
                                         <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
                                         {locale.myCourses.examPapers.morePastExams
