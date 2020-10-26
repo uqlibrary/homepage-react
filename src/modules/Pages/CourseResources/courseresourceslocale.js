@@ -84,7 +84,7 @@ export default {
             ecp: 'Electronic Course Profile',
             blackboard: 'Learn.UQ (Blackboard)',
         },
-        ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
-        blackboardUrl: 'https://learn.uq.edu.au/',
+        electronicCourseProfileLinkPrefix: 'http://www.uq.edu.au/study/course.html?course_code=',
+        blackboardLinkOut: 'https://learn.uq.edu.au/',
     },
 };
