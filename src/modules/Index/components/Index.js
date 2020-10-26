@@ -29,8 +29,64 @@ const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Spotlights from './Spotlights';
 const moment = require('moment');
+import { makeStyles } from '@material-ui/styles';
+import Badge from '@material-ui/core/Badge';
+
+const useStyles = makeStyles(theme => ({
+    ppButton: {
+        width: 24,
+        minWidth: 24,
+        height: 24,
+        padding: 8,
+        margin: 2,
+        backgroundColor: theme.palette.accent.main,
+        '&:hover': {
+            backgroundColor: theme.palette.accent.dark,
+        },
+        '& svg': {
+            width: 18,
+            height: 18,
+            padding: 4,
+            color: theme.palette.white.main,
+        },
+    },
+    ppBadgeError: {
+        zIndex: 999,
+        width: 12,
+        minWidth: 12,
+        height: 12,
+        fontSize: 8,
+        backgroundColor: 'red',
+        left: -8,
+        top: 8,
+        padding: 1,
+    },
+    ppBadgeWarning: {
+        zIndex: 999,
+        width: 12,
+        minWidth: 12,
+        height: 12,
+        fontSize: 8,
+        backgroundColor: 'orange',
+        left: -8,
+        top: 8,
+        padding: 1,
+    },
+    ppBadgeInfo: {
+        zIndex: 999,
+        width: 12,
+        minWidth: 12,
+        height: 12,
+        fontSize: 8,
+        backgroundColor: '#656565',
+        left: -8,
+        top: 8,
+        padding: 1,
+    },
+}));
 
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
+    const classes = useStyles();
     const dispatch = useDispatch();
     useEffect(() => {
         if (spotlightsLoading === null) {
@@ -153,8 +209,8 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 onClick={handlePrintClick}
                                             >
                                                 <Grid item xs style={{ lineHeight: '30px' }}>
-                                                    <Typography style={{ fontSize: 15, fontWeight: 300 }}>
-                                                        Manage your print balance
+                                                    <Typography style={{ color: '#316799' }}>
+                                                        Manage your print balance ($12.50)
                                                     </Typography>
                                                 </Grid>
                                                 <Menu
@@ -180,50 +236,19 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                     </MenuItem>
                                                 </Menu>
                                                 <Grid item xs={'auto'}>
-                                                    <b style={{ color: '#333', marginRight: 12 }}>$12.50</b>
                                                     <Tooltip
                                                         id="auth-button"
                                                         title={'Manage your print balance'}
                                                         placement="left"
                                                         TransitionProps={{ timeout: 300 }}
                                                     >
-                                                        <IconButton size={'small'} variant={'contained'}>
-                                                            <PrintIcon />
-                                                        </IconButton>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ fontSize: 15, fontWeight: 300 }}>
-                                                        Manage book loans
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <b>6</b> | <b style={{ color: 'orange', marginRight: 12 }}>1</b>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your book loans (6 current | 1 overdue)'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <IconButton
+                                                        <Button
                                                             size={'small'}
                                                             variant={'contained'}
-                                                            color={'secondary'}
+                                                            className={classes.ppButton}
                                                         >
-                                                            <MenuBookIcon />
-                                                        </IconButton>
+                                                            <PrintIcon />
+                                                        </Button>
                                                     </Tooltip>
                                                 </Grid>
                                             </MenuItem>
@@ -239,21 +264,69 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 }}
                                             >
                                                 <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ fontSize: 15, fontWeight: 300 }}>
-                                                        Manage overdue fines
+                                                    <Typography style={{ color: '#316799' }}>
+                                                        Manage your library loans (2 overdue)
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
-                                                    <b style={{ color: 'orange', marginRight: 12 }}>$7.50</b>
                                                     <Tooltip
                                                         id="auth-button"
-                                                        title={'Manage your overdue fines'}
+                                                        title={'Manage your item loans (6 current | 2 overdue)'}
                                                         placement="left"
                                                         TransitionProps={{ timeout: 300 }}
                                                     >
-                                                        <IconButton size={'small'} variant={'contained'}>
-                                                            <MonetizationOnIcon />
-                                                        </IconButton>
+                                                        <Badge
+                                                            badgeContent={2}
+                                                            color="error"
+                                                            classes={{ badge: classes.ppBadgeWarning }}
+                                                        >
+                                                            <Button
+                                                                size={'small'}
+                                                                variant={'contained'}
+                                                                className={classes.ppButton}
+                                                            >
+                                                                <MenuBookIcon />
+                                                            </Button>
+                                                        </Badge>
+                                                    </Tooltip>
+                                                </Grid>
+                                            </MenuItem>
+                                        </Grid>
+                                        <Grid container spacing={0}>
+                                            <MenuItem
+                                                style={{
+                                                    width: '100%',
+                                                    marginBottom: -3,
+                                                    marginTop: -3,
+                                                    paddingTop: 3,
+                                                    paddingBottom: 3,
+                                                }}
+                                            >
+                                                <Grid item xs style={{ lineHeight: '24px' }}>
+                                                    <Typography style={{ color: '#316799' }}>
+                                                        Pay overdue fines (1 outstanding)
+                                                    </Typography>
+                                                </Grid>
+                                                <Grid item xs={'auto'}>
+                                                    <Tooltip
+                                                        id="auth-button"
+                                                        title={'Pay your overdue fines | 1 outstanding'}
+                                                        placement="left"
+                                                        TransitionProps={{ timeout: 300 }}
+                                                    >
+                                                        <Badge
+                                                            badgeContent={1}
+                                                            color="error"
+                                                            classes={{ badge: classes.ppBadgeError }}
+                                                        >
+                                                            <Button
+                                                                size={'small'}
+                                                                variant={'contained'}
+                                                                className={classes.ppButton}
+                                                            >
+                                                                <MonetizationOnIcon />
+                                                            </Button>
+                                                        </Badge>
                                                     </Tooltip>
                                                 </Grid>
                                             </MenuItem>
@@ -270,21 +343,24 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                 }}
                                             >
                                                 <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ fontSize: 15, fontWeight: 300 }}>
+                                                    <Typography style={{ color: '#316799' }}>
                                                         Manage room bookings
                                                     </Typography>
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
-                                                    <b style={{ color: 'orange', marginRight: 12 }}>1 (Today)</b>
                                                     <Tooltip
                                                         id="auth-button"
                                                         title={'Manage your room bookings (1 today)'}
                                                         placement="left"
                                                         TransitionProps={{ timeout: 300 }}
                                                     >
-                                                        <IconButton size={'small'} variant={'contained'}>
+                                                        <Button
+                                                            size={'small'}
+                                                            variant={'contained'}
+                                                            className={classes.ppButton}
+                                                        >
                                                             <MeetingRoomIcon />
-                                                        </IconButton>
+                                                        </Button>
                                                     </Tooltip>
                                                 </Grid>
                                             </MenuItem>
