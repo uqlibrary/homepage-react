@@ -17,7 +17,7 @@ import RoomIcon from '@material-ui/icons/Room';
 import { loadSpotlights } from 'actions';
 // const welcomeSpotlight = require('../../../../public/images/Welcome_Spotlight.jpg');
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from '../../reusable/PrimoSearch/containers/PrimoSearch';
+import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
