@@ -44,63 +44,67 @@ export const PastExamPapers = ({
     }`;
 
     return (
-        <StandardCard className="exams" style={{ width: '100%', marginBottom: '1rem' }} title={examPaperTitle}>
-            {!!learningResourcesListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
+        <Grid container spacing={3} className={'exams'}>
+            <Grid item xs={12}>
+                <StandardCard style={{ marginBottom: '1rem' }} title={examPaperTitle}>
+                    {!!learningResourcesListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
 
-            {!learningResourcesListError && learningResourcesListLoading && (
-                <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                    <CircularProgress color="primary" size={20} id="loading-suggestions" />
-                </Grid>
-            )}
+                    {!learningResourcesListError && learningResourcesListLoading && (
+                        <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
+                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                        </Grid>
+                    )}
 
-            {!!examList && examList.length === 0 && (
-                <Grid>
-                    <Typography>No Past Exam Papers for this course</Typography>
-                    <a href={locale.examPapersSearchUrl}>
-                        <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                        {locale.myCourses.examPapers.linkOut}
-                    </a>
-                </Grid>
-            )}
-            {!!examList && examList.length > 0 && (
-                <Grid id="pastExamPapers">
-                    {examList.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
-                        return (
-                            <Grid
-                                container
-                                key={`examPapers-${index}`}
-                                style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
-                            >
-                                <a
-                                    aria-label={examAriaLabel(paper)}
-                                    className="exam-paper-item"
-                                    data-title="examPaperItem"
-                                    href={paper.url}
-                                    key={`exam-${index}`}
-                                    // on-click="linkClicked"
-                                >
-                                    {paper.period} ({_extractExtension(paper.url)})
-                                </a>
-                            </Grid>
-                        );
-                    })}
-
-                    {!!numberExcessExams && (
-                        <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
-                            <a
-                                // on-click="linkClicked"
-                                href={_courseLink(subject.classnumber, locale.myCourses.examPapers.searchUrl)}
-                            >
+                    {!!examList && examList.length === 0 && (
+                        <Grid>
+                            <Typography>No Past Exam Papers for this course</Typography>
+                            <a href={locale.examPapersSearchUrl}>
                                 <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                {locale.myCourses.examPapers.morePastExams
-                                    .replace('[numberExcessExams]', numberExcessExams)
-                                    .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
+                                {locale.myCourses.examPapers.linkOut}
                             </a>
                         </Grid>
                     )}
-                </Grid>
-            )}
-        </StandardCard>
+                    {!!examList && examList.length > 0 && (
+                        <Grid id="pastExamPapers">
+                            {examList.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
+                                return (
+                                    <Grid
+                                        container
+                                        key={`examPapers-${index}`}
+                                        style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
+                                    >
+                                        <a
+                                            aria-label={examAriaLabel(paper)}
+                                            className="exam-paper-item"
+                                            data-title="examPaperItem"
+                                            href={paper.url}
+                                            key={`exam-${index}`}
+                                            // on-click="linkClicked"
+                                        >
+                                            {paper.period} ({_extractExtension(paper.url)})
+                                        </a>
+                                    </Grid>
+                                );
+                            })}
+
+                            {!!numberExcessExams && (
+                                <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
+                                    <a
+                                        // on-click="linkClicked"
+                                        href={_courseLink(subject.classnumber, locale.myCourses.examPapers.searchUrl)}
+                                    >
+                                        <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
+                                        {locale.myCourses.examPapers.morePastExams
+                                            .replace('[numberExcessExams]', numberExcessExams)
+                                            .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
+                                    </a>
+                                </Grid>
+                            )}
+                        </Grid>
+                    )}
+                </StandardCard>
+            </Grid>
+        </Grid>
     );
 };
 

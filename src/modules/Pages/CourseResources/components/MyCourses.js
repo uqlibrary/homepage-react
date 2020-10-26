@@ -12,9 +12,28 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles(
+    theme => ({
+        myCoursesTabBar: {
+            backgroundColor: theme.palette.accent.main,
+            color: 'white',
+        },
+        noclasses: {
+            marginBottom: '1rem',
+            marginTop: '1rem',
+        },
+        courseTabs: {
+            margin: 0,
+        },
+    }),
+    { withTheme: true },
+);
 
 export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) => {
     const { account } = useAccountContext();
+    const classes = useStyles();
 
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
@@ -27,7 +46,7 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
         <Fragment>
             {!!account.classes && account.classes.length > 0 ? (
                 <Fragment>
-                    <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                    <AppBar position="static" className={classes.myCoursesTabBar}>
                         <Tabs
                             onChange={handleCourseTabChange}
                             scrollButtons="auto"
@@ -51,12 +70,12 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
                     {account.classes.map((item, index) => {
                         return (
                             <TabPanel
+                                className={classes.courseTabs}
                                 data-testid={`classpanel-${index}`}
                                 index={`${courseTabLabel}-${index}`} // must match 'value' in Tab
                                 key={`classpanel-${index}`}
                                 tabId="coursemenu"
                                 value={coursemenu}
-                                style={{ margin: 0 }}
                             >
                                 {renderSubjectTabBody(item)}
                             </TabPanel>
@@ -64,17 +83,17 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
                     })}
                 </Fragment>
             ) : (
-                <StandardCard
-                    className="noreadingLists"
-                    style={{ width: '100%', marginBottom: '1rem', marginTop: '1rem' }}
-                    title={locale.myCourses.none.title}
-                >
-                    <Grid container>
-                        <Grid item xs={12}>
-                            {locale.myCourses.none.description}
-                        </Grid>
+                <Grid container spacing={3} className={'noreadingLists'}>
+                    <Grid item xs={12}>
+                        <StandardCard className={classes.noclasses} title={locale.myCourses.none.title}>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    {locale.myCourses.none.description}
+                                </Grid>
+                            </Grid>
+                        </StandardCard>
                     </Grid>
-                </StandardCard>
+                </Grid>
             )}
         </Fragment>
     );
@@ -85,3 +104,5 @@ MyCourses.propTypes = {
     loadNewSubject: PropTypes.func,
     renderSubjectTabBody: PropTypes.func,
 };
+
+export default MyCourses;
