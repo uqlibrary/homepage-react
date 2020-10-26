@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TabPanel } from './TabPanel';
 
-import PrimoSearch from 'modules/reusable/PrimoSearch/containers/PrimoSearch';
+import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
 
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
