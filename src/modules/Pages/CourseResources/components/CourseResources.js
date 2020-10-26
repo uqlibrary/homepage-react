@@ -68,8 +68,13 @@ export const CourseResources = ({
         setCurrentTopTab(topMenuTabId);
     };
 
+    // store a list of the Learning Resources that have been loaded, by subject
     const [currentLearningResourcesList, updateLearningResourcesList] = useState([]);
+
+    // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
+
+    // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
 
     const loadNewSubject = classnumber => {
@@ -118,7 +123,7 @@ export const CourseResources = ({
             return readingLists;
         }
 
-        // do better
+        // TODO, improve this
         const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
 
         if (displayType === 'searchresults') {
@@ -180,6 +185,10 @@ export const CourseResources = ({
         }
     });
 
+    React.useEffect(() => {
+        updateLearningResourceSubjectList(learningResourcesList, account.classes);
+    }, [learningResourcesList]);
+
     const getSubjectNumberbyTalisid = talisId => {
         let subjectNumber = false;
         Object.values(currentLearningResourcesList).map(item => {
@@ -190,10 +199,6 @@ export const CourseResources = ({
         });
         return subjectNumber;
     };
-
-    React.useEffect(() => {
-        updateLearningResourceSubjectList(learningResourcesList, account.classes);
-    }, [learningResourcesList]);
 
     const updateListOfReadingLists = React.useCallback(readingList => {
         if (!!readingList && readingList.length > 0 && !!readingList[0].talisId) {
