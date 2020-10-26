@@ -8,7 +8,7 @@ import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 export default {
     title: 'Course Resources',
     search: {
-        tabLabel: 'Course search',
+        title: 'Course search',
     },
     studyHelp: {
         title: 'Study Help',
@@ -48,7 +48,7 @@ export default {
     },
     notesTrimLength: 90,
     myCourses: {
-        tabLabel: 'My courses',
+        title: 'My courses',
         none: {
             title: 'No listed courses',
             description: (
