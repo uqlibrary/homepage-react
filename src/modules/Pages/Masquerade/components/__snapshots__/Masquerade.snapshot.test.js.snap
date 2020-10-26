@@ -1,7 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component Masquerade Should render form as expected 1`] = `
-<StandardPage>
+<StandardPage
+  title="Masquerade"
+>
   <div
     className="layout-card"
   >
@@ -28,11 +30,6 @@ exports[`Component Masquerade Should render form as expected 1`] = `
           md="auto"
           xs={12}
         >
-          <WithStyles(ForwardRef(InputLabel))
-            id="masquerade-form-label"
-          >
-            Masquerade
-          </WithStyles(ForwardRef(InputLabel))>
           <WithStyles(ForwardRef(Typography))>
             <p>
               <strong>
@@ -91,7 +88,9 @@ exports[`Component Masquerade Should render form as expected 1`] = `
 `;
 
 exports[`Component Masquerade Should render readonly description 1`] = `
-<StandardPage>
+<StandardPage
+  title="Masquerade"
+>
   <div
     className="layout-card"
   >
@@ -118,11 +117,6 @@ exports[`Component Masquerade Should render readonly description 1`] = `
           md="auto"
           xs={12}
         >
-          <WithStyles(ForwardRef(InputLabel))
-            id="masquerade-form-label"
-          >
-            Masquerade
-          </WithStyles(ForwardRef(InputLabel))>
           <WithStyles(ForwardRef(Typography))>
             <p>
               <strong>

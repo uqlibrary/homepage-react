@@ -4,7 +4,6 @@ import txt from './masqueradeLocale';
 
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import Typography from '@material-ui/core/Typography';
@@ -50,7 +49,7 @@ export default class Masquerade extends PureComponent {
 
     render() {
         return (
-            <StandardPage>
+            <StandardPage title={txt.title}>
                 <div className="layout-card">
                     <StandardCard noPadding noHeader>
                         <Grid
@@ -60,7 +59,6 @@ export default class Masquerade extends PureComponent {
                             style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
                         >
                             <Grid item xs={12} md={'auto'} id="masquerade">
-                                <InputLabel id="masquerade-form-label">{txt.title}</InputLabel>
                                 <Typography>
                                     {this.userCapabilityStatement(this.props.account.canMasqueradeType)}
                                 </Typography>
