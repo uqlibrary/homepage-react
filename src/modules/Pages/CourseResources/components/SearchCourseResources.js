@@ -29,7 +29,7 @@ export const SearchCourseResources = ({
     const renderSearchResults = searchedSubjects => {
         return (
             <Fragment>
-                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black', marginTop: '24px' }}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
                         {searchedSubjects.map((item, index) => {
                             return (

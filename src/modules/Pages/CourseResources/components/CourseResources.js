@@ -5,7 +5,7 @@ import { useAccountContext } from 'context';
 import locale from '../courseresourceslocale';
 
 import { Guides } from './Guides';
-import { LearningResources } from './LearningResources';
+import { ReadingLists } from './ReadingLists';
 import { MyCourses } from './MyCourses';
 import { PastExamPapers } from './PastExamPapers';
 import { SearchCourseResources } from './SearchCourseResources';
@@ -15,9 +15,10 @@ import { TabPanel } from './TabPanel';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+import { makeStyles } from '@material-ui/styles';
+
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
@@ -29,6 +30,23 @@ function a11yProps(index, classname = null) {
         'aria-controls': `${label}panel-${index}`,
     };
 }
+
+const useStyles = makeStyles(
+    () => ({
+        resourceBackground: {
+            borderTop: '1px solid #e8e8e8',
+            padding: '15px 0',
+        },
+        panelLayout: {
+            padding: '12px 30px',
+        },
+        studyLinks: {
+            borderBottom: '1px solid #e8e8e8',
+            minHeight: '10rem',
+        },
+    }),
+    { withTheme: true },
+);
 
 export const CourseResources = ({
     actions,
@@ -43,6 +61,7 @@ export const CourseResources = ({
     readingListError,
 }) => {
     const { account } = useAccountContext();
+    const classes = useStyles();
 
     const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
     const handleTopTabChange = (event, topMenuTabId) => {
@@ -222,23 +241,14 @@ export const CourseResources = ({
     }, [account, actions]);
 
     const renderStudyHelpLinks = (
-        <StandardCard
-            className="noreadingLists"
-            style={{ width: '100%', marginBottom: '1rem', marginTop: '1rem' }}
-            title={locale.studyHelp.title}
-        >
-            <Grid container>
-                <Grid item xs={12}>
+        <Grid alignContent={'space-between'} className={classes.studyLinks} container>
+            <Grid item xs={12}>
+                <StandardCard title={locale.studyHelp.title}>
                     {!!locale.studyHelp.links &&
                         locale.studyHelp.links.length > 0 &&
                         locale.studyHelp.links.map((item, index) => {
                             return item.linkTo && item.linkLabel ? (
-                                <Grid
-                                    item
-                                    key={`studylink-${index}`}
-                                    xs={12}
-                                    style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
-                                >
+                                <Grid className={classes.resourceBackground} item key={`studylink-${index}`} xs={12}>
                                     <a
                                         // on-tap="linkClicked"
                                         id={item.id || null}
@@ -252,9 +262,9 @@ export const CourseResources = ({
                                 <Typography>{locale.studyHelp.unavailable}</Typography>
                             );
                         })}
-                </Grid>
+                </StandardCard>
             </Grid>
-        </StandardCard>
+        </Grid>
     );
 
     const renderSubjectTabBody = subject => {
@@ -268,13 +278,13 @@ export const CourseResources = ({
 
         return (
             <Grid container>
-                <Grid item xs={12} style={{ textAlign: 'center' }}>
-                    <Typography color={'primary'} variant={'h5'} component={'span'} style={{ fontSize: '1.33rem' }}>
+                <Grid item xs={12}>
+                    <Typography color={'primary'} component={'h3'} variant={'h5'} style={{ textAlign: 'center' }}>
                         {subject.classnumber} - {courseTitle}
                     </Typography>
                 </Grid>
 
-                <LearningResources
+                <ReadingLists
                     // actions={actions}
                     classnumber={subject.classnumber}
                     currentClasses={account.classes}
@@ -334,17 +344,10 @@ export const CourseResources = ({
     */
 
     return (
-        <StandardPage>
-            <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
+        <StandardPage title={locale.title}>
+            <div className="layout-card" style={{ margin: '16px auto' }}>
                 <StandardCard noPadding noHeader>
-                    <Grid
-                        container
-                        spacing={1}
-                        style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
-                    >
-                        <Grid item xs={12} md={'auto'} id="courseresources">
-                            <InputLabel id="courseresources-label">Course Resources</InputLabel>
-                        </Grid>
+                    <Grid className={classes.panelLayout} container spacing={1}>
                         <Grid item xs={12} id="courseresource-search">
                             <AppBar position="static">
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
@@ -373,13 +376,7 @@ export const CourseResources = ({
                                 />
                             </TabPanel>
                             <TabPanel value={topmenu} index="top2" tabId="topmenu">
-                                <Grid
-                                    alignContent={'space-between'}
-                                    container
-                                    style={{ minHeight: '10rem', borderBottom: '1px solid #e8e8e8' }}
-                                >
-                                    {renderStudyHelpLinks}
-                                </Grid>
+                                {renderStudyHelpLinks}
                             </TabPanel>
                         </Grid>
                     </Grid>

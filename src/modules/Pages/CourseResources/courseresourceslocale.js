@@ -76,7 +76,8 @@ export default {
         },
         guides: {
             title: 'Library guides',
-            unavailableMessage: 'No Library guides for this course',
+            noGuides: 'No Library guides for this course',
+            unavailableMessage: 'Library guides list currently unavailable',
             linkOut: 'All library guides',
         },
         links: {
