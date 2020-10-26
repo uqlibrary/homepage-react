@@ -224,7 +224,7 @@ export const ReadingLists = ({
                                         href={talisReadingListLink}
                                     >
                                         <SpacedArrowForwardIcon />
-                                        {locale.myCourses.readingLists.linkOut
+                                        {locale.myCourses.readingLists.footer.linkLabel
                                             .replace('[numberExcessReadingLists]', numberExcessReadingLists)
                                             .replace(
                                                 '[readingListNumber]',

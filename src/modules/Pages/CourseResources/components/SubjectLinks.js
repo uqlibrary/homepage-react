@@ -9,8 +9,8 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
 
-const _courseLink = (courseId, url) => {
-    return url + courseId;
+const _courseLink = (courseCode, url) => {
+    return url.replace('[courseCode]', courseCode);
 };
 
 export const SubjectLinks = ({ subject }) => (
@@ -21,20 +21,20 @@ export const SubjectLinks = ({ subject }) => (
                     <Grid item xs={12} style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                         <a
                             // on-click="linkClicked"
-                            href={_courseLink(subject.classnumber, locale.myCourses.electronicCourseProfileLinkPrefix)}
+                            href={_courseLink(subject.classnumber, locale.myCourses.links.ecp.linkOutPattern)}
                         >
                             <SpacedArrowForwardIcon />
-                            {locale.myCourses.links.ecp}
+                            {locale.myCourses.links.ecp.title}
                         </a>
                     </Grid>
                     <Grid style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                         <a
                             // on-click="linkClicked"
                             id="blackboard"
-                            href={_courseLink(subject.classnumber, locale.myCourses.blackboardLinkOut)}
+                            href={_courseLink(subject.classnumber, locale.myCourses.links.blackboard.linkOutPattern)}
                         >
                             <SpacedArrowForwardIcon />
-                            {locale.myCourses.links.blackboard}
+                            {locale.myCourses.links.blackboard.title}
                         </a>
                     </Grid>
                 </Grid>
