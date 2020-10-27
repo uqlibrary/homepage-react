@@ -2,13 +2,31 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
-import locale from '../courseresourceslocale';
+import locale from '../courseResourcesLocale';
 import { _pluralise } from '../courseResourcesHelpers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles(
+    () => ({
+        courseResourceLineItem: {
+            borderTop: '1px solid #e8e8e8',
+            padding: '15px 0',
+        },
+        panelLayout: {
+            padding: '12px 30px',
+        },
+        studyLinks: {
+            borderBottom: '1px solid #e8e8e8',
+            minHeight: '10rem',
+        },
+    }),
+    { withTheme: true },
+);
 
 export const ReadingLists = ({
     classnumber,
@@ -21,6 +39,8 @@ export const ReadingLists = ({
     readingListLoading,
     readingListError,
 }) => {
+    const classes = useStyles();
+
     const filteredReadingLists =
         !!learningResourcesList && learningResourcesList.length > 0
             ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
@@ -45,27 +65,32 @@ export const ReadingLists = ({
         return (
             <Fragment>
                 <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt}</Typography>
-                {readingListSummaries.map((list, index) => {
-                    return (
-                        <Grid
-                            key={`multiplereadinglist-${index}`}
-                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
-                        >
-                            <a
-                                aria-label={`Reading list for  ${list.title} ${list.period}`}
-                                href={list.url}
-                                key={`lrlink-${index}`}
+                <Grid container>
+                    {readingListSummaries.map((list, index) => {
+                        return (
+                            <Grid
+                                item
+                                xs={12}
+                                data-testid={`multiple-reading-lists-${index}`}
+                                key={`multiple-reading-lists-${index}`}
+                                className={classes.courseResourceLineItem}
                             >
-                                {list.title}, {list.period}
-                            </a>
-                        </Grid>
-                    );
-                })}
-                <Grid style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
-                    <a href="http://lr.library.uq.edu.au/index.html">
-                        <SpacedArrowForwardIcon />
-                        {locale.myCourses.readingLists.multiple.linkOut}
-                    </a>
+                                <a
+                                    aria-label={`Reading list for ${list.title} ${list.period}`}
+                                    href={list.url}
+                                    key={`reading-list-link-${index}`}
+                                >
+                                    {list.title}, {list.period}
+                                </a>
+                            </Grid>
+                        );
+                    })}
+                    <Grid item xs={12} className={classes.courseResourceLineItem}>
+                        <a href="http://lr.library.uq.edu.au/index.html">
+                            <SpacedArrowForwardIcon />
+                            {locale.myCourses.readingLists.multiple.linkOut}
+                        </a>
+                    </Grid>
                 </Grid>
             </Fragment>
         );
@@ -95,113 +120,107 @@ export const ReadingLists = ({
             <Grid item xs={12}>
                 <StandardCard style={{ marginBottom: '1rem', marginTop: '1rem' }} title={readingListTitle}>
                     <Grid container>
-                        <Grid item xs={12}>
-                            {(!!readingListLoading || !!learningResourcesListLoading) && (
-                                <Grid
-                                    item
-                                    xs={'auto'}
-                                    style={{
-                                        width: 80,
-                                        marginRight: 20,
-                                        marginBottom: 6,
-                                        opacity: 0.3,
-                                    }}
-                                >
-                                    <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                        {(!!readingListLoading || !!learningResourcesListLoading) && (
+                            <Grid
+                                item
+                                xs={'auto'}
+                                style={{
+                                    width: 80,
+                                    marginRight: 20,
+                                    marginBottom: 6,
+                                    opacity: 0.3,
+                                }}
+                            >
+                                <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                            </Grid>
+                        )}
+
+                        {(!!readingListError || !!learningResourcesListError) && (
+                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                <Typography>Reading lists currently unavailable</Typography>
+                            </Grid>
+                        )}
+
+                        {(!readingListError || !learningResourcesListError) &&
+                            !!filteredReadingLists &&
+                            filteredReadingLists.length === 1 &&
+                            (!learningResourcesList || learningResourcesList.length === 0) && (
+                                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                    <Typography>No reading lists for this course</Typography>
                                 </Grid>
                             )}
 
-                            {(!!readingListError || !!learningResourcesListError) && (
-                                <Typography>Reading lists currently unavailable</Typography>
-                            )}
+                        {!!filteredReadingLists &&
+                            filteredReadingLists.length > 1 &&
+                            renderMultipleReadingListReference(filteredReadingLists, classnumber || '')}
 
-                            {(!readingListError || !learningResourcesListError) &&
-                                !!filteredReadingLists &&
-                                filteredReadingLists.length === 1 &&
-                                (!learningResourcesList || learningResourcesList.length === 0) && (
-                                    <Typography>No reading lists for this course</Typography>
-                                )}
-
-                            {!!filteredReadingLists &&
-                                filteredReadingLists.length > 1 &&
-                                renderMultipleReadingListReference(filteredReadingLists, classnumber || '')}
-
-                            {!!filteredReadingLists &&
-                                filteredReadingLists.length === 1 &&
-                                !!readingList &&
-                                readingList.length > 0 &&
-                                readingList
-                                    // remove the exam links (they are shown below)
-                                    // TODO
-                                    // MATH4106 is an example with only an exam. check this works prperly
-                                    // ie the count matches the number displayed
-                                    // we may have to instead sort it so exam is last? Ugh :(
-                                    .filter(item => item.url !== 'https://www.library.uq.edu.au/exams/search.html')
-                                    // we only show a small number - theres a link to viewall on Talis if there are more
-                                    .slice(0, locale.visibleItemsCount.readingLists)
-                                    .map((list, index) => {
-                                        return (
-                                            <Grid
-                                                key={`readingList-${index}`}
-                                                style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
-                                            >
-                                                {!!list.itemLink && !!list.title && (
-                                                    <Grid className="subhead">
-                                                        <a
-                                                            aria-label={readingListItemAriaLabel}
-                                                            className="reading-list-item"
-                                                            href={list.itemLink}
-                                                            // on-click="linkClicked"
-                                                        >
-                                                            {list.title}
-                                                        </a>
-                                                    </Grid>
-                                                )}
-                                                {!list.itemLink && !!list.title && (
-                                                    <Typography>{list.title}</Typography>
-                                                )}
-                                                {!!list.author && (
-                                                    <Typography style={{ fontStyle: 'italic' }}>
-                                                        {list.author}
-                                                        {!!list.year && <Fragment>{`, ${list.year} `}</Fragment>}
-                                                    </Typography>
-                                                )}
-                                                {!!list.startPage && (
-                                                    <Typography>
-                                                        Pages from {list.startPage}
-                                                        {!!list.endPage && (
-                                                            <Fragment>{` to  ${list.endPage}`}</Fragment>
-                                                        )}
-                                                    </Typography>
-                                                )}
-                                                {!!list.notes && <Typography>{_trimNotes(list.notes)}</Typography>}
-                                                <Typography>
-                                                    {list.referenceType}
-                                                    {!!list.importance && (
-                                                        <Fragment>{` - ${list.importance}`}</Fragment>
-                                                    )}
-                                                </Typography>
-                                            </Grid>
-                                        );
-                                    })}
-                            {/* eg MATH4091 has 12 reading lists */}
-                            {!!talisReadingListLink && !!numberExcessReadingLists && (
-                                <div>
-                                    <a
-                                        // on-click="linkClicked"
-                                        href={talisReadingListLink}
-                                    >
-                                        <SpacedArrowForwardIcon />
-                                        {locale.myCourses.readingLists.footer.linkLabel
-                                            .replace('[numberExcessReadingLists]', numberExcessReadingLists)
-                                            .replace(
-                                                '[readingListNumber]',
-                                                _pluralise('item', numberExcessReadingLists),
+                        {!!filteredReadingLists &&
+                            filteredReadingLists.length === 1 &&
+                            !!readingList &&
+                            readingList.length > 0 &&
+                            readingList
+                                // remove the exam links (they are shown below)
+                                // TODO
+                                // MATH4106 is an example with only an exam. check this works prperly
+                                // ie the count matches the number displayed
+                                // we may have to instead sort it so exam is last? Ugh :(
+                                .filter(item => item.url !== 'https://www.library.uq.edu.au/exams/search.html')
+                                // we only show a small number - theres a link to viewall on Talis if there are more
+                                .slice(0, locale.visibleItemsCount.readingLists)
+                                .map((list, index) => {
+                                    return (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            data-testid={`reading-list-${index}`}
+                                            key={`reading-list-${index}`}
+                                            className={classes.courseResourceLineItem}
+                                        >
+                                            {!!list.itemLink && !!list.title && (
+                                                <a
+                                                    aria-label={readingListItemAriaLabel}
+                                                    className="reading-list-item"
+                                                    href={list.itemLink}
+                                                    // on-click="linkClicked"
+                                                >
+                                                    {list.title}
+                                                </a>
                                             )}
-                                    </a>
-                                </div>
-                            )}
-                        </Grid>
+                                            {!list.itemLink && !!list.title && <Typography>{list.title}</Typography>}
+                                            {!!list.author && (
+                                                <Typography style={{ fontStyle: 'italic' }}>
+                                                    {list.author}
+                                                    {!!list.year && <Fragment>{`, ${list.year} `}</Fragment>}
+                                                </Typography>
+                                            )}
+                                            {!!list.startPage && (
+                                                <Typography>
+                                                    Pages from {list.startPage}
+                                                    {!!list.endPage && <Fragment>{` to  ${list.endPage}`}</Fragment>}
+                                                </Typography>
+                                            )}
+                                            {!!list.notes && <Typography>{_trimNotes(list.notes)}</Typography>}
+                                            <Typography>
+                                                {list.referenceType}
+                                                {!!list.importance && <Fragment>{` - ${list.importance}`}</Fragment>}
+                                            </Typography>
+                                        </Grid>
+                                    );
+                                })}
+                        {/* eg MATH4091 has 12 reading lists */}
+                        {!!talisReadingListLink && !!numberExcessReadingLists && (
+                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                <a
+                                    // on-click="linkClicked"
+                                    href={talisReadingListLink}
+                                >
+                                    <SpacedArrowForwardIcon />
+                                    {locale.myCourses.readingLists.footer.linkLabel
+                                        .replace('[numberExcessReadingLists]', numberExcessReadingLists)
+                                        .replace('[readingListNumber]', _pluralise('item', numberExcessReadingLists))}
+                                </a>
+                            </Grid>
+                        )}
                     </Grid>
                 </StandardCard>
             </Grid>

@@ -91,7 +91,7 @@ export const SearchCourseResources = ({
     return (
         <Grid item xs={12} id="courseresource-search">
             <PrimoSearch displayType="courseresources" searchKeywordSelected={searchKeywordSelected} />
-            {listSearchedSubjects.length > 0 && <Grid>{renderSearchResults(listSearchedSubjects)}</Grid>}
+            {listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
         </Grid>
     );
 };
