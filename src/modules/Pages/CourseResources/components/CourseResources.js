@@ -36,15 +36,11 @@ const useStyles = makeStyles(
         courseResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
-            '&:last-child': {
-                borderBottom: '1px solid #e8e8e8',
-            },
         },
         panelLayout: {
             padding: '12px 30px',
         },
         studyLinks: {
-            borderBottom: '1px solid #e8e8e8',
             minHeight: '10rem',
         },
     }),
