@@ -2,12 +2,12 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
-
 import locale from '../courseresourceslocale';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { _pluralise } from '../courseResourcesHelpers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@material-ui/core/Typography';
 
 export const ReadingLists = ({
@@ -21,10 +21,6 @@ export const ReadingLists = ({
     readingListLoading,
     readingListError,
 }) => {
-    const _pluralise = (word, num) => {
-        return word + (num === 1 ? '' : 's');
-    };
-
     const filteredReadingLists =
         !!learningResourcesList && learningResourcesList.length > 0
             ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
@@ -93,34 +89,6 @@ export const ReadingLists = ({
     const readingListTitle = `${locale.myCourses.readingLists.title} ${
         !!readingList && readingList.length > 0 ? `(${readingList.length})` : ''
     }`;
-
-    /*
-    let classes = account.classes || null;
-
-    // dev hack while we wait for api update (needs more fields)
-    if (classes === null) {
-        classes = [
-            {
-                SUBJECT: 'FREN',
-                subjectLevel: '1010',
-                classnumber: 'FREN1010',
-                classname: 'Introductory French 1',
-            },
-            {
-                SUBJECT: 'HIST',
-                subjectLevel: '1201',
-                classnumber: 'HIST1201',
-                classname: 'The Australian  Experience',
-            },
-            {
-                SUBJECT: 'PHIL',
-                subjectLevel: '1002',
-                classnumber: 'PHIL1002',
-                classname: 'Introduction to Philosophy: What is Philosophy?',
-            },
-        ];
-    }
-    */
 
     return (
         <Grid container spacing={3} className={'readingLists'}>
