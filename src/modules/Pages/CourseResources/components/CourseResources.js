@@ -36,6 +36,10 @@ const useStyles = makeStyles(
         courseResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
+            '& a': {
+                display: 'flex',
+                alignItems: 'center',
+            },
         },
         panelLayout: {
             padding: '12px 30px',
