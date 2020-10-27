@@ -2,6 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import locale from '../courseresourceslocale';
+import { _courseLink, _pluralise } from '../courseResourcesHelpers';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
@@ -15,16 +17,8 @@ export const PastExamPapers = ({
     learningResourcesListLoading,
     learningResourcesListError,
 }) => {
-    const _pluralise = (word, num) => {
-        return word + (num === 1 ? '' : 's');
-    };
-
     const _extractExtension = url => {
         return url.substring(url.lastIndexOf('.') + 1);
-    };
-
-    const _courseLink = (courseCode, url) => {
-        return url.replace('[courseCode]', courseCode);
     };
 
     const examList =

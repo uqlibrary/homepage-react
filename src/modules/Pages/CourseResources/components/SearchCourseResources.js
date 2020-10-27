@@ -86,14 +86,7 @@ export const SearchCourseResources = ({
             loadNewSubject(searchKeyword);
         }
         updateSearchList(listSearchedSubjects.concat(searchKeyword));
-        // updateSearchList(listSearchedSubjects => Object.assign({}, ...listSearchedSubjects, ...newGuidesList));
     };
-
-    // React.useEffect(() => {
-    //     if (listSearchedSubjects.length > 0) {
-    //         console.log('listSearchedSubjects has changed: ', listSearchedSubjects);
-    //     }
-    // }, [listSearchedSubjects]);
 
     return (
         <Grid item xs={12} id="courseresource-search">

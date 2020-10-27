@@ -2,16 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import locale from '../courseresourceslocale';
-
+import { _courseLink } from '../courseResourcesHelpers';
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
-
-const _courseLink = (courseCode, url) => {
-    return url.replace('[courseCode]', courseCode);
-};
 
 export const SubjectLinks = ({ subject }) => (
     <Grid container spacing={3} className={'CourseLinks'}>
