@@ -1,4 +1,4 @@
-import { default as locale } from './locale';
+import { default as locale } from '../footerLocale';
 
 Object.defineProperty(window, 'matchMedia', {
     writable: true,
