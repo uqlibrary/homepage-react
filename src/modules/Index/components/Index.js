@@ -93,7 +93,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             dispatch(loadSpotlights());
         }
     }, [spotlightsLoading, dispatch]);
-    console.log(spotlights);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorPrintEl, setAnchorPrintEl] = React.useState(null);
     const handleLocationClick = event => {
@@ -145,230 +144,333 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} />
                         </Grid>
 
-                        {/* Personalisation panel */}
-                        <Hidden smDown>
-                            <Grid item xs={12} md={4} style={{ paddingLeft: 16, paddingTop: 28 }}>
-                                <Grid
-                                    container
-                                    spacing={1}
-                                    style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 6, height: '100%' }}
-                                    justify={'flex-end'}
-                                >
-                                    {account && account.id && (
-                                        <Grid item xs={12} style={{ marginTop: -16 }}>
-                                            <Typography
-                                                variant={'h5'}
-                                                component={'h5'}
-                                                color={'primary'}
-                                                style={{ paddingLeft: 16, fontSize: '2.25rem' }}
-                                            >
-                                                {greeting()}
-                                                <br />
-                                                {(account && account.firstName) || ''}
-                                            </Typography>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={`Your UQ username is ${account && account.id}`}
-                                                placement="right"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <Typography
-                                                    component={'span'}
-                                                    color={'secondary'}
-                                                    style={{ fontSize: 12 }}
-                                                >
-                                                    <AccountBoxIcon
-                                                        fontSize={'small'}
-                                                        style={{
-                                                            marginLeft: 16,
-                                                            marginBottom: -2,
-                                                            marginRight: 6,
-                                                            height: 12,
-                                                            width: 12,
-                                                        }}
-                                                    />
-                                                    {(account && account.id) || ''}
-                                                </Typography>
-                                            </Tooltip>
-                                        </Grid>
-                                    )}
+                        {/* Personalisation panel or hours */}
+                        {!!account ? (
+                            <Hidden smDown>
+                                <Grid item xs={12} md={4} style={{ paddingLeft: 16, paddingTop: 28 }}>
                                     <Grid
-                                        item
-                                        xs={12}
-                                        style={{ marginBottom: -12, alignSelf: 'flex-end', marginLeft: -24 }}
+                                        container
+                                        spacing={1}
+                                        style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 6, height: '100%' }}
+                                        justify={'flex-end'}
                                     >
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                                onClick={handlePrintClick}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '30px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Manage your print balance ($12.50)
-                                                    </Typography>
-                                                </Grid>
-                                                <Menu
-                                                    id="simple-menu"
-                                                    anchorEl={anchorPrintEl}
-                                                    keepMounted
-                                                    open={Boolean(anchorPrintEl)}
-                                                    onClose={handlePrintClose}
-                                                    onBlur={handlePrintClose}
+                                        {account && account.id && (
+                                            <Grid item xs={12} style={{ marginTop: -16 }}>
+                                                <Typography
+                                                    variant={'h5'}
+                                                    component={'h5'}
+                                                    color={'primary'}
+                                                    style={{ paddingLeft: 16, fontSize: '2.25rem' }}
                                                 >
-                                                    <MenuItem disabled>Manage your PaperCut account</MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>
-                                                        Log in and manage your print balance
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>
-                                                        Top up your print balance - $5
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>
-                                                        Top up your print balance - $10
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>
-                                                        Top up your print balance - $20
-                                                    </MenuItem>
-                                                </Menu>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your print balance'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
+                                                    {greeting()}
+                                                    <br />
+                                                    {(account && account.firstName) || ''}
+                                                </Typography>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={`Your UQ username is ${account && account.id}`}
+                                                    placement="right"
+                                                    TransitionProps={{ timeout: 300 }}
+                                                >
+                                                    <Typography
+                                                        component={'span'}
+                                                        color={'secondary'}
+                                                        style={{ fontSize: 12 }}
                                                     >
-                                                        <Button
-                                                            size={'small'}
-                                                            variant={'contained'}
-                                                            className={classes.ppButton}
-                                                        >
-                                                            <PrintIcon />
-                                                        </Button>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Manage your library loans (2 overdue)
+                                                        <AccountBoxIcon
+                                                            fontSize={'small'}
+                                                            style={{
+                                                                marginLeft: 16,
+                                                                marginBottom: -2,
+                                                                marginRight: 6,
+                                                                height: 12,
+                                                                width: 12,
+                                                            }}
+                                                        />
+                                                        {(account && account.id) || ''}
                                                     </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your item loans (6 current | 2 overdue)'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
+                                                </Tooltip>
+                                            </Grid>
+                                        )}
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            style={{ marginBottom: -12, alignSelf: 'flex-end', marginLeft: -24 }}
+                                        >
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                    onClick={handlePrintClick}
+                                                >
+                                                    <Grid item xs style={{ lineHeight: '30px' }}>
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Manage your print balance ($12.50)
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Menu
+                                                        id="simple-menu"
+                                                        anchorEl={anchorPrintEl}
+                                                        keepMounted
+                                                        open={Boolean(anchorPrintEl)}
+                                                        onClose={handlePrintClose}
+                                                        onBlur={handlePrintClose}
                                                     >
-                                                        <Badge
-                                                            badgeContent={2}
-                                                            color="error"
-                                                            classes={{ badge: classes.ppBadgeWarning }}
+                                                        <MenuItem disabled>Manage your PaperCut account</MenuItem>
+                                                        <MenuItem onClick={handleLocationClose}>
+                                                            Log in and manage your print balance
+                                                        </MenuItem>
+                                                        <MenuItem onClick={handleLocationClose}>
+                                                            Top up your print balance - $5
+                                                        </MenuItem>
+                                                        <MenuItem onClick={handleLocationClose}>
+                                                            Top up your print balance - $10
+                                                        </MenuItem>
+                                                        <MenuItem onClick={handleLocationClose}>
+                                                            Top up your print balance - $20
+                                                        </MenuItem>
+                                                    </Menu>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Manage your print balance'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
                                                         >
                                                             <Button
                                                                 size={'small'}
                                                                 variant={'contained'}
                                                                 className={classes.ppButton}
                                                             >
-                                                                <MenuBookIcon />
+                                                                <PrintIcon />
                                                             </Button>
-                                                        </Badge>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Pay overdue fines (1 outstanding)
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Pay your overdue fines | 1 outstanding'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <Badge
-                                                            badgeContent={1}
-                                                            color="error"
-                                                            classes={{ badge: classes.ppBadgeError }}
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                >
+                                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Manage your library loans (2 overdue)
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Manage your item loans (6 current | 2 overdue)'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
+                                                        >
+                                                            <Badge
+                                                                badgeContent={2}
+                                                                color="error"
+                                                                classes={{ badge: classes.ppBadgeWarning }}
+                                                            >
+                                                                <Button
+                                                                    size={'small'}
+                                                                    variant={'contained'}
+                                                                    className={classes.ppButton}
+                                                                >
+                                                                    <MenuBookIcon />
+                                                                </Button>
+                                                            </Badge>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                >
+                                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Pay overdue fines (1 outstanding)
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Pay your overdue fines | 1 outstanding'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
+                                                        >
+                                                            <Badge
+                                                                badgeContent={1}
+                                                                color="error"
+                                                                classes={{ badge: classes.ppBadgeError }}
+                                                            >
+                                                                <Button
+                                                                    size={'small'}
+                                                                    variant={'contained'}
+                                                                    className={classes.ppButton}
+                                                                >
+                                                                    <MonetizationOnIcon />
+                                                                </Button>
+                                                            </Badge>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
+                                            {/* Room bookings */}
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                >
+                                                    <Grid item xs style={{ lineHeight: '24px' }}>
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Manage room bookings
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Manage your room bookings (1 today)'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
                                                         >
                                                             <Button
                                                                 size={'small'}
                                                                 variant={'contained'}
                                                                 className={classes.ppButton}
                                                             >
-                                                                <MonetizationOnIcon />
+                                                                <MeetingRoomIcon />
                                                             </Button>
-                                                        </Badge>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        {/* Room bookings */}
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Manage room bookings
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your room bookings (1 today)'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <Button
-                                                            size={'small'}
-                                                            variant={'contained'}
-                                                            className={classes.ppButton}
-                                                        >
-                                                            <MeetingRoomIcon />
-                                                        </Button>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
                                         </Grid>
                                     </Grid>
                                 </Grid>
+                            </Hidden>
+                        ) : (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    accentHeader
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Library hours
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'Current location is St Lucia - Click to change'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
+                                                >
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: -12, color: 'white' }}
+                                                        onClick={handleLocationClick}
+                                                    >
+                                                        <RoomIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleLocationClose}
+                                                >
+                                                    <MenuItem disabled>Select a preferred location</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
+                                                </Menu>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                    fullHeight
+                                >
+                                    <div
+                                        style={{
+                                            height: 210,
+                                            overflowX: 'hidden',
+                                            overflowY: 'auto',
+                                            marginRight: -16,
+                                            marginTop: -16,
+                                            marginBottom: -24,
+                                            marginLeft: -16,
+                                            padding: 8,
+                                        }}
+                                    >
+                                        {locale.Hours.map((item, index) => {
+                                            return (
+                                                <Grid
+                                                    container
+                                                    spacing={2}
+                                                    key={index}
+                                                    style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
+                                                >
+                                                    <Grid item xs={5}>
+                                                        {!!item.iconInfo ? (
+                                                            <Tooltip
+                                                                title={item.iconInfo || null}
+                                                                placement="right"
+                                                                TransitionProps={{ timeout: 300 }}
+                                                            >
+                                                                <a href={item.link} style={{ marginLeft: 8 }}>
+                                                                    {item.title}
+                                                                </a>
+                                                            </Tooltip>
+                                                        ) : (
+                                                            <a href={item.link} style={{ marginLeft: 8 }}>
+                                                                {item.title}
+                                                            </a>
+                                                        )}
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        {item.hours}
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        {!!item.iconInfo ? (
+                                                            <Tooltip
+                                                                title={item.iconInfo}
+                                                                placement="left"
+                                                                TransitionProps={{ timeout: 300 }}
+                                                            >
+                                                                {item.icon}
+                                                            </Tooltip>
+                                                        ) : (
+                                                            item.icon
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        })}
+                                    </div>
+                                </StandardCard>
                             </Grid>
-                        </Hidden>
+                        )}
 
                         {/* Comp Avail */}
                         <Grid item xs={12} md={4}>
@@ -481,108 +583,283 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             </StandardCard>
                         </Grid>
 
-                        {/* Library hours */}
-                        <Grid item xs={12} md={4}>
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Library hours
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={'Current location is St Lucia - Click to change'}
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <IconButton
-                                                    size={'small'}
-                                                    variant={'contained'}
-                                                    style={{ marginRight: -12, color: 'white' }}
-                                                    onClick={handleLocationClick}
+                        {/* Library hours or training */}
+                        {!!account ? (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    accentHeader
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Library hours
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'Current location is St Lucia - Click to change'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
                                                 >
-                                                    <RoomIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Menu
-                                                id="simple-menu"
-                                                anchorEl={anchorEl}
-                                                keepMounted
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleLocationClose}
-                                            >
-                                                <MenuItem disabled>Select a preferred location</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
-                                            </Menu>
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: -12, color: 'white' }}
+                                                        onClick={handleLocationClick}
+                                                    >
+                                                        <RoomIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleLocationClose}
+                                                >
+                                                    <MenuItem disabled>Select a preferred location</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
+                                                </Menu>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <div
-                                    style={{
-                                        height: 275,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
+                                    }
+                                    fullHeight
                                 >
-                                    {locale.Hours.map((item, index) => {
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                            >
-                                                <Grid item xs={5}>
-                                                    {!!item.iconInfo ? (
-                                                        <Tooltip
-                                                            title={item.iconInfo || null}
-                                                            placement="right"
-                                                            TransitionProps={{ timeout: 300 }}
-                                                        >
+                                    <div
+                                        style={{
+                                            height: 275,
+                                            overflowX: 'hidden',
+                                            overflowY: 'auto',
+                                            marginRight: -16,
+                                            marginTop: -16,
+                                            marginBottom: -24,
+                                            marginLeft: -16,
+                                            padding: 8,
+                                        }}
+                                    >
+                                        {locale.Hours.map((item, index) => {
+                                            return (
+                                                <Grid
+                                                    container
+                                                    spacing={2}
+                                                    key={index}
+                                                    style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
+                                                >
+                                                    <Grid item xs={5}>
+                                                        {!!item.iconInfo ? (
+                                                            <Tooltip
+                                                                title={item.iconInfo || null}
+                                                                placement="right"
+                                                                TransitionProps={{ timeout: 300 }}
+                                                            >
+                                                                <a href={item.link} style={{ marginLeft: 8 }}>
+                                                                    {item.title}
+                                                                </a>
+                                                            </Tooltip>
+                                                        ) : (
                                                             <a href={item.link} style={{ marginLeft: 8 }}>
                                                                 {item.title}
                                                             </a>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <a href={item.link} style={{ marginLeft: 8 }}>
+                                                        )}
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        {item.hours}
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        {!!item.iconInfo ? (
+                                                            <Tooltip
+                                                                title={item.iconInfo}
+                                                                placement="left"
+                                                                TransitionProps={{ timeout: 300 }}
+                                                            >
+                                                                {item.icon}
+                                                            </Tooltip>
+                                                        ) : (
+                                                            item.icon
+                                                        )}
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        })}
+                                    </div>
+                                </StandardCard>
+                            </Grid>
+                        ) : (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    accentHeader
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Training
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'More training'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
+                                                >
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: 0, color: 'white' }}
+                                                        onClick={handleLocationClick}
+                                                    >
+                                                        <OpenInNewIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'Current location is St Lucia - Click to change'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
+                                                >
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: -12, color: 'white' }}
+                                                        onClick={handleLocationClick}
+                                                    >
+                                                        <RoomIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleLocationClose}
+                                                >
+                                                    <MenuItem disabled>Select a preferred location</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
+                                                </Menu>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                    fullHeight
+                                >
+                                    <div
+                                        style={{
+                                            height: 275,
+                                            overflowX: 'hidden',
+                                            overflowY: 'auto',
+                                            marginRight: -16,
+                                            marginTop: -16,
+                                            marginBottom: -24,
+                                            marginLeft: -16,
+                                            padding: 8,
+                                        }}
+                                    >
+                                        {locale.Training.map((item, index) => {
+                                            return (
+                                                <Grid
+                                                    container
+                                                    spacing={2}
+                                                    key={index}
+                                                    style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
+                                                    alignContent={'center'}
+                                                    alignItems={'center'}
+                                                >
+                                                    <Grid item xs={3}>
+                                                        <Grid
+                                                            container
+                                                            spacing={0}
+                                                            alignContent={'center'}
+                                                            alignItems={'center'}
+                                                            justify={'center'}
+                                                        >
+                                                            <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
+                                                                <div
+                                                                    style={{
+                                                                        fontFamily: 'DM Mono',
+                                                                        color: 'purple',
+                                                                        width: '2ch',
+                                                                        textTransform: 'uppercase',
+                                                                        overflow: 'hidden',
+                                                                        whiteSpace: 'nowrap',
+                                                                        margin: '0 auto',
+                                                                        fontWeight: 300,
+                                                                        fontSize: '1.2em',
+                                                                    }}
+                                                                >
+                                                                    {ordinal(item.dayDate)}
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                style={{
+                                                                    marginTop: -6,
+                                                                }}
+                                                                aria-label={item.day}
+                                                            >
+                                                                <div
+                                                                    style={{
+                                                                        fontFamily: 'DM Mono',
+                                                                        color: 'purple',
+                                                                        width: '3ch',
+                                                                        textTransform: 'uppercase',
+                                                                        overflow: 'hidden',
+                                                                        whiteSpace: 'nowrap',
+                                                                        margin: '0 auto',
+                                                                        fontWeight: 300,
+                                                                        fontSize: '1.1em',
+                                                                    }}
+                                                                >
+                                                                    {item.day}
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                aria-label={item.monthDate}
+                                                                style={{ marginTop: -6 }}
+                                                            >
+                                                                <div
+                                                                    style={{
+                                                                        fontFamily: 'DM Mono',
+                                                                        color: 'purple',
+                                                                        width: '3ch',
+                                                                        textTransform: 'uppercase',
+                                                                        overflow: 'hidden',
+                                                                        whiteSpace: 'nowrap',
+                                                                        margin: '0 auto',
+                                                                        fontWeight: 300,
+                                                                        fontSize: '1.1em',
+                                                                    }}
+                                                                >
+                                                                    {item.monthDate}
+                                                                </div>
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        <a
+                                                            href={item.link}
+                                                            aria-label={`${item.date} ${item.time} ${item.format} - ${item.title}`}
+                                                        >
                                                             {item.title}
                                                         </a>
-                                                    )}
+                                                        <br />
+                                                        <span style={{ fontSize: '0.8rem', color: '#999' }}>
+                                                            {item.date} - {item.time}
+                                                            <br />
+                                                            {item.format}
+                                                        </span>
+                                                    </Grid>
                                                 </Grid>
-                                                <Grid item xs>
-                                                    {item.hours}
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    {!!item.iconInfo ? (
-                                                        <Tooltip
-                                                            title={item.iconInfo}
-                                                            placement="left"
-                                                            TransitionProps={{ timeout: 300 }}
-                                                        >
-                                                            {item.icon}
-                                                        </Tooltip>
-                                                    ) : (
-                                                        item.icon
-                                                    )}
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
-                        </Grid>
-
+                                            );
+                                        })}
+                                    </div>
+                                </StandardCard>
+                            </Grid>
+                        )}
                         {/* Course resources*/}
                         <Grid item xs={12} md={4}>
                             <StandardCard
@@ -626,179 +903,181 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
 
                         {/* Training */}
-                        <Grid item xs={12} md={4}>
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Training
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={'More training'}
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <IconButton
-                                                    size={'small'}
-                                                    variant={'contained'}
-                                                    style={{ marginRight: 0, color: 'white' }}
-                                                    onClick={handleLocationClick}
+                        {!!account && (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    accentHeader
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Training
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'More training'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
                                                 >
-                                                    <OpenInNewIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={'Current location is St Lucia - Click to change'}
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <IconButton
-                                                    size={'small'}
-                                                    variant={'contained'}
-                                                    style={{ marginRight: -12, color: 'white' }}
-                                                    onClick={handleLocationClick}
-                                                >
-                                                    <RoomIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Menu
-                                                id="simple-menu"
-                                                anchorEl={anchorEl}
-                                                keepMounted
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleLocationClose}
-                                            >
-                                                <MenuItem disabled>Select a preferred location</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
-                                            </Menu>
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <div
-                                    style={{
-                                        height: 275,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
-                                >
-                                    {locale.Training.map((item, index) => {
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                                alignContent={'center'}
-                                                alignItems={'center'}
-                                            >
-                                                <Grid item xs={3}>
-                                                    <Grid
-                                                        container
-                                                        spacing={0}
-                                                        alignContent={'center'}
-                                                        alignItems={'center'}
-                                                        justify={'center'}
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: 0, color: 'white' }}
+                                                        onClick={handleLocationClick}
                                                     >
-                                                        <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
-                                                            <div
-                                                                style={{
-                                                                    fontFamily: 'DM Mono',
-                                                                    color: 'purple',
-                                                                    width: '2ch',
-                                                                    textTransform: 'uppercase',
-                                                                    overflow: 'hidden',
-                                                                    whiteSpace: 'nowrap',
-                                                                    margin: '0 auto',
-                                                                    fontWeight: 300,
-                                                                    fontSize: '1.2em',
-                                                                }}
-                                                            >
-                                                                {ordinal(item.dayDate)}
-                                                            </div>
-                                                        </Grid>
+                                                        <OpenInNewIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'Current location is St Lucia - Click to change'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
+                                                >
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: -12, color: 'white' }}
+                                                        onClick={handleLocationClick}
+                                                    >
+                                                        <RoomIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleLocationClose}
+                                                >
+                                                    <MenuItem disabled>Select a preferred location</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
+                                                </Menu>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                    fullHeight
+                                >
+                                    <div
+                                        style={{
+                                            height: 275,
+                                            overflowX: 'hidden',
+                                            overflowY: 'auto',
+                                            marginRight: -16,
+                                            marginTop: -16,
+                                            marginBottom: -24,
+                                            marginLeft: -16,
+                                            padding: 8,
+                                        }}
+                                    >
+                                        {locale.Training.map((item, index) => {
+                                            return (
+                                                <Grid
+                                                    container
+                                                    spacing={2}
+                                                    key={index}
+                                                    style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
+                                                    alignContent={'center'}
+                                                    alignItems={'center'}
+                                                >
+                                                    <Grid item xs={3}>
                                                         <Grid
-                                                            item
-                                                            xs={12}
-                                                            style={{
-                                                                marginTop: -6,
-                                                            }}
-                                                            aria-label={item.day}
+                                                            container
+                                                            spacing={0}
+                                                            alignContent={'center'}
+                                                            alignItems={'center'}
+                                                            justify={'center'}
                                                         >
-                                                            <div
+                                                            <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
+                                                                <div
+                                                                    style={{
+                                                                        fontFamily: 'DM Mono',
+                                                                        color: 'purple',
+                                                                        width: '2ch',
+                                                                        textTransform: 'uppercase',
+                                                                        overflow: 'hidden',
+                                                                        whiteSpace: 'nowrap',
+                                                                        margin: '0 auto',
+                                                                        fontWeight: 300,
+                                                                        fontSize: '1.2em',
+                                                                    }}
+                                                                >
+                                                                    {ordinal(item.dayDate)}
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
                                                                 style={{
-                                                                    fontFamily: 'DM Mono',
-                                                                    color: 'purple',
-                                                                    width: '3ch',
-                                                                    textTransform: 'uppercase',
-                                                                    overflow: 'hidden',
-                                                                    whiteSpace: 'nowrap',
-                                                                    margin: '0 auto',
-                                                                    fontWeight: 300,
-                                                                    fontSize: '1.1em',
+                                                                    marginTop: -6,
                                                                 }}
+                                                                aria-label={item.day}
                                                             >
-                                                                {item.day}
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            aria-label={item.monthDate}
-                                                            style={{ marginTop: -6 }}
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    fontFamily: 'DM Mono',
-                                                                    color: 'purple',
-                                                                    width: '3ch',
-                                                                    textTransform: 'uppercase',
-                                                                    overflow: 'hidden',
-                                                                    whiteSpace: 'nowrap',
-                                                                    margin: '0 auto',
-                                                                    fontWeight: 300,
-                                                                    fontSize: '1.1em',
-                                                                }}
+                                                                <div
+                                                                    style={{
+                                                                        fontFamily: 'DM Mono',
+                                                                        color: 'purple',
+                                                                        width: '3ch',
+                                                                        textTransform: 'uppercase',
+                                                                        overflow: 'hidden',
+                                                                        whiteSpace: 'nowrap',
+                                                                        margin: '0 auto',
+                                                                        fontWeight: 300,
+                                                                        fontSize: '1.1em',
+                                                                    }}
+                                                                >
+                                                                    {item.day}
+                                                                </div>
+                                                            </Grid>
+                                                            <Grid
+                                                                item
+                                                                xs={12}
+                                                                aria-label={item.monthDate}
+                                                                style={{ marginTop: -6 }}
                                                             >
-                                                                {item.monthDate}
-                                                            </div>
+                                                                <div
+                                                                    style={{
+                                                                        fontFamily: 'DM Mono',
+                                                                        color: 'purple',
+                                                                        width: '3ch',
+                                                                        textTransform: 'uppercase',
+                                                                        overflow: 'hidden',
+                                                                        whiteSpace: 'nowrap',
+                                                                        margin: '0 auto',
+                                                                        fontWeight: 300,
+                                                                        fontSize: '1.1em',
+                                                                    }}
+                                                                >
+                                                                    {item.monthDate}
+                                                                </div>
+                                                            </Grid>
                                                         </Grid>
                                                     </Grid>
-                                                </Grid>
-                                                <Grid item xs>
-                                                    <a
-                                                        href={item.link}
-                                                        aria-label={`${item.date} ${item.time} ${item.format} - ${item.title}`}
-                                                    >
-                                                        {item.title}
-                                                    </a>
-                                                    <br />
-                                                    <span style={{ fontSize: '0.8rem', color: '#999' }}>
-                                                        {item.date} - {item.time}
+                                                    <Grid item xs>
+                                                        <a
+                                                            href={item.link}
+                                                            aria-label={`${item.date} ${item.time} ${item.format} - ${item.title}`}
+                                                        >
+                                                            {item.title}
+                                                        </a>
                                                         <br />
-                                                        {item.format}
-                                                    </span>
+                                                        <span style={{ fontSize: '0.8rem', color: '#999' }}>
+                                                            {item.date} - {item.time}
+                                                            <br />
+                                                            {item.format}
+                                                        </span>
+                                                    </Grid>
                                                 </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
-                        </Grid>
+                                            );
+                                        })}
+                                    </div>
+                                </StandardCard>
+                            </Grid>
+                        )}
 
                         {/* Library services */}
                         <Grid item xs={12} md={4}>

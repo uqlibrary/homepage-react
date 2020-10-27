@@ -180,7 +180,7 @@ export default {
             link: '#',
             location: '',
             hours: '7:30am-7:30pm',
-            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            icon: null,
             iconInfo: null,
         },
         {
@@ -188,7 +188,7 @@ export default {
             link: '#',
             location: '',
             hours: '8am-8pm',
-            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            icon: null,
             iconInfo: null,
         },
         {
@@ -204,7 +204,7 @@ export default {
             link: '#',
             location: '',
             hours: '8:30am-4:30am',
-            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            icon: null,
             iconInfo: null,
         },
         {
@@ -292,14 +292,14 @@ export default {
             link: '#',
             location: '',
             hours: '8:30am-4:30pm',
-            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            icon: null,
         },
         {
             title: 'Whitty Mater',
             link: '#',
             location: '',
             hours: '6:30am-10pm',
-            icon: <AccessTimeIcon style={{ color: '#CCC' }} />,
+            icon: null,
         },
     ],
     Computers: [

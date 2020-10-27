@@ -16,8 +16,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 const defaultSlide = require('../../../../public/images/Welcome_Spotlight.jpg');
 
-const Spotlights = ({ spotlights, spotlightsLoading, defaultSlide }) => {
-    console.log(defaultSlide, spotlightsLoading);
+const Spotlights = ({ spotlights, spotlightsLoading }) => {
     const totalSlides = spotlights && spotlights.length;
     const slides =
         spotlights && spotlights.length > 0
@@ -101,7 +100,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, defaultSlide }) => {
                                 width: 200,
                                 marginLeft: -100,
                                 position: 'absolute',
-                                bottom: 10,
+                                top: 250,
                                 left: '50%',
                                 zIndex: 101,
                                 textAlign: 'center',
@@ -117,7 +116,6 @@ const Spotlights = ({ spotlights, spotlightsLoading, defaultSlide }) => {
                     >
                         <Slider>
                             {slides.map((item, index) => {
-                                console.log(slides);
                                 return (
                                     <Slide index={item.index} key={index}>
                                         <a href={item.link} aria-label={item.aria}>
