@@ -18,6 +18,10 @@ const useStyles = makeStyles(
             '&:last-child': {
                 borderBottom: '1px solid #e8e8e8',
             },
+            '& a': {
+                display: 'flex',
+                alignItems: 'center',
+            },
         },
     }),
     { withTheme: true },
