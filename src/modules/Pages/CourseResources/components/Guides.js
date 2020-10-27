@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseresourceslocale';
+import locale from '../courseResourcesLocale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -10,11 +10,11 @@ import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/styles';
 
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 const useStyles = makeStyles(
     () => ({
-        resourceBackground: {
+        courseResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
         },
@@ -25,6 +25,7 @@ const useStyles = makeStyles(
 export const Guides = ({ guideList, guideListLoading, guideListError }) => {
     const classes = useStyles();
 
+    console.log('guideList = ', guideList);
     return (
         <Grid container spacing={3} className={'guides'}>
             <Grid item xs={12}>
@@ -47,15 +48,22 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 
                         {!!guideListError && <Typography>{locale.myCourses.guides.unavailableMessage}</Typography>}
 
-                        {!guideListError && !!guideList && guideList.length === 0 && (
-                            <Typography>{locale.myCourses.guides.noGuides}</Typography>
+                        {!guideListError && (!guideList || guideList.length === 0) && (
+                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                <Typography>{locale.myCourses.guides.none}</Typography>
+                            </Grid>
                         )}
 
                         {!!guideList &&
                             guideList.length > 0 &&
                             guideList.map((guide, index) => {
                                 return (
-                                    <Grid item xs={12} className={classes.resourceBackground} key={`guides-${index}`}>
+                                    <Grid
+                                        item
+                                        xs={12}
+                                        className={classes.courseResourceLineItem}
+                                        key={`guides-${index}`}
+                                    >
                                         <a
                                             aria-label={`library guide for ${guide.title}`}
                                             className="library-guide-item"
@@ -70,13 +78,13 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                                 );
                             })}
 
-                        <Grid item xs={12} className={classes.resourceBackground}>
+                        <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <a
                                 // on-tap="linkClicked"
                                 id="allguideLists"
                                 href="http://guides.library.uq.edu.au"
                             >
-                                <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
+                                <SpacedArrowForwardIcon />
                                 {locale.myCourses.guides.linkLabelFooter}
                             </a>
                         </Grid>

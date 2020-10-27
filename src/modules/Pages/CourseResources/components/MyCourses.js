@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import locale from '../courseresourceslocale';
+import locale from '../courseResourcesLocale';
 
 import { TabPanel } from './TabPanel';
 

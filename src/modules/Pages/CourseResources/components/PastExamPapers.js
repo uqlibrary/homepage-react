@@ -1,15 +1,29 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseresourceslocale';
+import locale from '../courseResourcesLocale';
 import { _courseLink, _pluralise } from '../courseResourcesHelpers';
+import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles(
+    () => ({
+        courseResourceLineItem: {
+            borderTop: '1px solid #e8e8e8',
+            padding: '15px 0',
+            // '&:last-child': {
+            //     borderBottom: '1px solid #e8e8e8',
+            // },
+        },
+    }),
+    { withTheme: true },
+);
 
 export const PastExamPapers = ({
     subject,
@@ -17,6 +31,8 @@ export const PastExamPapers = ({
     learningResourcesListLoading,
     learningResourcesListError,
 }) => {
+    const classes = useStyles();
+
     const _extractExtension = url => {
         return url.substring(url.lastIndexOf('.') + 1);
     };
@@ -41,31 +57,37 @@ export const PastExamPapers = ({
         <Grid container spacing={3} className={'exams'}>
             <Grid item xs={12}>
                 <StandardCard style={{ marginBottom: '1rem' }} title={examPaperTitle}>
-                    {!!learningResourcesListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
-
-                    {!learningResourcesListError && learningResourcesListLoading && (
-                        <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
-                        </Grid>
-                    )}
-
-                    {!!examList && examList.length === 0 && (
-                        <Grid item style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
-                            <Typography>{locale.myCourses.examPapers.none}</Typography>
-                            <a href={locale.examPapersSearchUrl}>
-                                <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                {locale.myCourses.examPapers.footer.linkLabel}
-                            </a>
-                        </Grid>
-                    )}
-                    {!!examList && examList.length > 0 && (
-                        <Grid id="pastExamPapers">
-                            {examList.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
+                    <Grid container>
+                        {!!learningResourcesListError && (
+                            <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
+                        )}
+                        {!learningResourcesListError && learningResourcesListLoading && (
+                            <Grid
+                                item
+                                xs={'auto'}
+                                style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
+                            >
+                                <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                            </Grid>
+                        )}
+                        {!!examList && examList.length === 0 && (
+                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                <Typography>{locale.myCourses.examPapers.none}</Typography>
+                                <a href={locale.examPapersSearchUrl}>
+                                    <SpacedArrowForwardIcon />
+                                    {locale.myCourses.examPapers.footer.linkLabel}
+                                </a>
+                            </Grid>
+                        )}
+                        {!!examList &&
+                            examList.length > 0 &&
+                            examList.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
                                 return (
                                     <Grid
-                                        container
+                                        item
+                                        xs={12}
                                         key={`examPapers-${index}`}
-                                        style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
+                                        className={classes.courseResourceLineItem}
                                     >
                                         <a
                                             aria-label={examAriaLabel(paper)}
@@ -80,25 +102,23 @@ export const PastExamPapers = ({
                                     </Grid>
                                 );
                             })}
-
-                            {!!numberExcessExams && (
-                                <Grid container style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
-                                    <a
-                                        // on-click="linkClicked"
-                                        href={_courseLink(
-                                            subject.classnumber,
-                                            locale.myCourses.examPapers.footer.linkOutPattern,
-                                        )}
-                                    >
-                                        <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
-                                        {locale.myCourses.examPapers.morePastExams
-                                            .replace('[numberExcessExams]', numberExcessExams)
-                                            .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
-                                    </a>
-                                </Grid>
-                            )}
-                        </Grid>
-                    )}
+                        {!!examList && examList.length > 0 && !!numberExcessExams && (
+                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                <a
+                                    // on-click="linkClicked"
+                                    href={_courseLink(
+                                        subject.classnumber,
+                                        locale.myCourses.examPapers.footer.linkOutPattern,
+                                    )}
+                                >
+                                    <SpacedArrowForwardIcon />
+                                    {locale.myCourses.examPapers.morePastExams
+                                        .replace('[numberExcessExams]', numberExcessExams)
+                                        .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
+                                </a>
+                            </Grid>
+                        )}
+                    </Grid>
                 </StandardCard>
             </Grid>
         </Grid>

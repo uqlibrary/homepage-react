@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import locale from '../courseresourceslocale';
+import locale from '../courseResourcesLocale';
 
 import { Guides } from './Guides';
 import { ReadingLists } from './ReadingLists';
@@ -33,9 +33,12 @@ function a11yProps(index, classname = null) {
 
 const useStyles = makeStyles(
     () => ({
-        resourceBackground: {
+        courseResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
+            '&:last-child': {
+                borderBottom: '1px solid #e8e8e8',
+            },
         },
         panelLayout: {
             padding: '12px 30px',
@@ -275,27 +278,34 @@ export const CourseResources = ({
     }, [account, actions]);
 
     const renderStudyHelpLinks = (
-        <Grid alignContent={'space-between'} className={classes.studyLinks} container>
+        <Grid container alignContent={'space-between'} className={classes.studyLinks}>
             <Grid item xs={12}>
                 <StandardCard title={locale.studyHelp.title}>
-                    {!!locale.studyHelp.links &&
-                        locale.studyHelp.links.length > 0 &&
-                        locale.studyHelp.links.map((item, index) => {
-                            return item.linkTo && item.linkLabel ? (
-                                <Grid className={classes.resourceBackground} item key={`studylink-${index}`} xs={12}>
-                                    <a
-                                        // on-tap="linkClicked"
-                                        id={item.id || null}
-                                        href={item.linkTo}
+                    <Grid container spacing={2}>
+                        {!!locale.studyHelp.links &&
+                            locale.studyHelp.links.length > 0 &&
+                            locale.studyHelp.links.map((item, index) => {
+                                return item.linkTo && item.linkLabel ? (
+                                    <Grid
+                                        item
+                                        className={classes.courseResourceLineItem}
+                                        key={`studylink-${index}`}
+                                        xs={12}
                                     >
-                                        {!!item.icon && item.icon}
-                                        {item.linkLabel}
-                                    </a>
-                                </Grid>
-                            ) : (
-                                <Typography>{locale.studyHelp.unavailable}</Typography>
-                            );
-                        })}
+                                        <a
+                                            // on-tap="linkClicked"
+                                            id={item.id || null}
+                                            href={item.linkTo}
+                                        >
+                                            {!!item.icon && item.icon}
+                                            {item.linkLabel}
+                                        </a>
+                                    </Grid>
+                                ) : (
+                                    <Typography>{locale.studyHelp.unavailable}</Typography>
+                                );
+                            })}
+                    </Grid>
                 </StandardCard>
             </Grid>
         </Grid>
@@ -381,7 +391,7 @@ export const CourseResources = ({
         <StandardPage title={locale.title}>
             <div className="layout-card" style={{ margin: '16px auto' }}>
                 <StandardCard noPadding noHeader>
-                    <Grid className={classes.panelLayout} container spacing={1}>
+                    <Grid container className={classes.panelLayout} spacing={1}>
                         <Grid item xs={12} id="courseresource-search">
                             <AppBar position="static">
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
