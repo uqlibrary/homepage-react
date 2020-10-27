@@ -17,9 +17,6 @@ const useStyles = makeStyles(
         courseResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
-            // '&:last-child': {
-            //     borderBottom: '1px solid #e8e8e8',
-            // },
         },
     }),
     { withTheme: true },

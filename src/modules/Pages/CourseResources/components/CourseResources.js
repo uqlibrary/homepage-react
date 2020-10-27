@@ -343,7 +343,7 @@ export const CourseResources = ({
 
                 <PastExamPapers
                     subject={subject}
-                    learningResourcesList={learningResourcesList}
+                    learningResourcesList={currentLearningResourcesList[subject.classnumber]}
                     learningResourcesListLoading={learningResourcesListLoading}
                     learningResourcesListError={learningResourcesListError}
                 />
