@@ -56,8 +56,8 @@ export const PastExamPapers = ({
                     )}
 
                     {!!examList && examList.length === 0 && (
-                        <Grid>
-                            <Typography>No Past Exam Papers for this course</Typography>
+                        <Grid item style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
+                            <Typography>{locale.myCourses.examPapers.none}</Typography>
                             <a href={locale.examPapersSearchUrl}>
                                 <ArrowForwardIcon style={{ paddingRight: '1rem' }} />
                                 {locale.myCourses.examPapers.footer.linkLabel}

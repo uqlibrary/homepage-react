@@ -53,7 +53,7 @@ export const ReadingLists = ({
                     return (
                         <Grid
                             key={`multiplereadinglist-${index}`}
-                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0 0 0' }}
+                            style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
                         >
                             <a
                                 aria-label={`Reading list for  ${list.title} ${list.period}`}
@@ -65,7 +65,7 @@ export const ReadingLists = ({
                         </Grid>
                     );
                 })}
-                <Grid>
+                <Grid style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}>
                     <a href="http://lr.library.uq.edu.au/index.html">
                         <SpacedArrowForwardIcon />
                         {locale.myCourses.readingLists.multiple.linkOut}
@@ -175,7 +175,7 @@ export const ReadingLists = ({
                                         return (
                                             <Grid
                                                 key={`readingList-${index}`}
-                                                style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0 0 0' }}
+                                                style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
                                             >
                                                 {!!list.itemLink && !!list.title && (
                                                     <Grid className="subhead">
