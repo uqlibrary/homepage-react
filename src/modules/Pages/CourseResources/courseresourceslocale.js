@@ -72,6 +72,7 @@ export default {
         examPapers: {
             title: 'Past exam papers',
             unavailable: 'Exam papers list currently unavailable',
+            none: 'No Past Exam Papers for this course',
             morePastExams: '[numberExcessExams] more past [examNumber]',
             footer: {
                 linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',

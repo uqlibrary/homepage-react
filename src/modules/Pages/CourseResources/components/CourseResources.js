@@ -107,56 +107,59 @@ export const CourseResources = ({
         return null;
     };
 
-    const filterReadingLists = (learningResourcesList, classnumber, classes) => {
-        const readingLists =
-            (!!learningResourcesList &&
-                learningResourcesList.length > 0 &&
-                !!learningResourcesList[0] &&
-                learningResourcesList[0].reading_lists) ||
-            [];
+    const filterReadingLists = React.useCallback(
+        (learningResourcesList, classnumber, classes) => {
+            const readingLists =
+                (!!learningResourcesList &&
+                    learningResourcesList.length > 0 &&
+                    !!learningResourcesList[0] &&
+                    learningResourcesList[0].reading_lists) ||
+                [];
 
-        if (!readingLists || readingLists.length === 0) {
-            return [];
-        }
+            if (!readingLists || readingLists.length === 0) {
+                return [];
+            }
 
-        if (readingLists.length === 1) {
-            return readingLists;
-        }
+            if (readingLists.length === 1) {
+                return readingLists;
+            }
 
-        const extractDetailsOfEnrolmentFromCurrentClassList = (classes, classnumber) => {
-            const subjectTemplate = {
-                semester: null,
-                CAMPUS: null,
-                INSTRUCTION_MODE: null,
+            const extractDetailsOfEnrolmentFromCurrentClassList = (classes, classnumber) => {
+                const subjectTemplate = {
+                    semester: null,
+                    CAMPUS: null,
+                    INSTRUCTION_MODE: null,
+                };
+                const subjectlist =
+                    !!classes && classes.filter(aClass => !!aClass && aClass.classnumber === classnumber);
+                const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+                return {
+                    semester: thisSubject.semester || subjectTemplate.semester,
+                    CAMPUS: thisSubject.CAMPUS || subjectTemplate.CAMPUS,
+                    INSTRUCTION_MODE: thisSubject.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+                };
             };
-            const subjectlist = !!classes && classes.filter(aClass => !!aClass && aClass.classnumber === classnumber);
-            const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
-            return {
-                semester: thisSubject.semester || subjectTemplate.semester,
-                CAMPUS: thisSubject.CAMPUS || subjectTemplate.CAMPUS,
-                INSTRUCTION_MODE: thisSubject.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
-            };
-        };
 
-        const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classes, classnumber);
-
-        if (displayType === 'searchresults') {
-            const semesterString = keywordPresets.period;
-            const campus = keywordPresets.campus;
-            return readingLists.filter(item => {
-                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
-            });
-        } else {
-            const semesterString = subjectEnrolment.semester;
-            const campus = getCampusByCode(subjectEnrolment.CAMPUS);
-            return readingLists.filter(item => {
-                return (
-                    item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
-                );
-            });
-        }
-    };
+            if (displayType === 'searchresults') {
+                const semesterString = keywordPresets.period;
+                const campus = keywordPresets.campus;
+                return readingLists.filter(item => {
+                    return item.period === semesterString && item.campus.indexOf(campus) !== -1;
+                });
+            } else {
+                const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classes, classnumber);
+                const semesterString = subjectEnrolment.semester;
+                const campus = getCampusByCode(subjectEnrolment.CAMPUS);
+                return readingLists.filter(item => {
+                    return (
+                        item.period === semesterString &&
+                        (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
+                    );
+                });
+            }
+        },
+        [displayType, keywordPresets],
+    );
 
     // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
     const getReadingListId = readingList => {
@@ -171,78 +174,90 @@ export const CourseResources = ({
         return id;
     };
 
-    const requestReadingListLoad = (learningResources, subjectNumber, currentClasses) => {
-        const filteredReadingLists =
-            !!learningResources && learningResources.length > 0
-                ? filterReadingLists(learningResources, subjectNumber, currentClasses)
-                : [];
-        if (filteredReadingLists.length === 1) {
-            const talisId = getReadingListId(filteredReadingLists[0]);
-            if (!!talisId && currentReadingLists.talisId === undefined) {
-                actions.loadReadingLists(talisId);
-            }
-        }
-    };
+    const isReadingListKnown = React.useCallback(talisId => !!talisId && currentReadingLists[talisId] === undefined, [
+        currentReadingLists,
+    ]);
 
-    const updateLearningResourceSubjectList = React.useCallback((learningResourcesList, currentClasses) => {
+    const addReadingListToCurrentList = React.useCallback(
+        subjectNumber => {
+            const currentClasses = account.classes || null;
+            const filteredReadingLists =
+                !!learningResourcesList && learningResourcesList.length > 0
+                    ? filterReadingLists(learningResourcesList, subjectNumber, currentClasses)
+                    : [];
+            if (filteredReadingLists.length === 1) {
+                const talisId = getReadingListId(filteredReadingLists[0]);
+                if (isReadingListKnown(talisId)) {
+                    actions.loadReadingLists(talisId);
+                }
+            }
+        },
+        [learningResourcesList, account, actions, filterReadingLists, isReadingListKnown],
+    );
+
+    const addLearningResourceToCurrentList = React.useCallback(() => {
         if (!!learningResourcesList && learningResourcesList.length > 0 && learningResourcesList[0].title) {
             const subjectNumber = learningResourcesList[0].title;
-            if (currentLearningResourcesList.subjectNumber === undefined) {
+            // if (subjectNumber !== false && currentLearningResourcesList.subjectNumber === undefined) {
+            if (subjectNumber !== false && currentLearningResourcesList[subjectNumber] === undefined) {
                 const newLearningResourcesList = {};
                 newLearningResourcesList[subjectNumber] = learningResourcesList;
                 updateLearningResourcesList(currentLearningResourcesList =>
                     Object.assign({}, ...currentLearningResourcesList, ...newLearningResourcesList),
                 );
-
-                requestReadingListLoad(learningResourcesList, subjectNumber, currentClasses);
+                addReadingListToCurrentList(subjectNumber);
             }
         }
-    });
+    }, [learningResourcesList, currentLearningResourcesList, addReadingListToCurrentList]);
 
     React.useEffect(() => {
-        updateLearningResourceSubjectList(learningResourcesList, account.classes);
-    }, [learningResourcesList]);
+        // per https://wanago.io/2019/11/18/useeffect-hook-in-react-custom-hooks/
+        addLearningResourceToCurrentList();
+    }, [addLearningResourceToCurrentList]);
 
-    const getSubjectNumberbyTalisid = talisId => {
-        let subjectNumber = false;
-        Object.values(currentLearningResourcesList).map(item => {
-            const readingList = !!item[0].reading_lists && item[0].reading_lists.length > 0 && item[0].reading_lists[0];
-            if (talisId === getReadingListId(readingList)) {
-                subjectNumber = item[0].title;
-            }
-        });
-        return subjectNumber;
-    };
+    // store the reading list for this subject in currentReadingLists by subject
+    const updateListOfReadingLists = React.useCallback(() => {
+        const getSubjectNumberbyTalisid = talisId => {
+            let subjectNumber = false;
+            Object.values(currentLearningResourcesList).map(item => {
+                const readingList =
+                    !!item[0].reading_lists && item[0].reading_lists.length > 0 && item[0].reading_lists[0];
+                if (talisId === getReadingListId(readingList)) {
+                    subjectNumber = item[0].title;
+                }
+            });
+            return subjectNumber;
+        };
 
-    const updateListOfReadingLists = React.useCallback(readingList => {
         if (!!readingList && readingList.length > 0 && !!readingList[0].talisId) {
             const subject = getSubjectNumberbyTalisid(readingList[0].talisId);
-            if (currentReadingLists.subject === undefined) {
+            if (subject !== false && currentReadingLists[subject] === undefined) {
                 const newReadingList = {};
                 newReadingList[subject] = readingList;
                 updateReadingLists(currentReadingLists => Object.assign({}, ...currentReadingLists, ...newReadingList));
             }
         }
-    });
+    }, [readingList, currentReadingLists, currentLearningResourcesList]);
 
     React.useEffect(() => {
-        updateListOfReadingLists(readingList);
-    }, [readingList]);
+        updateListOfReadingLists();
+    }, [updateListOfReadingLists]);
 
-    const updateGuidesSubjectList = React.useCallback(guideList => {
+    const updateGuidesSubjectList = React.useCallback(() => {
         if (!!guideList && guideList.length > 0 && guideList[0].coursecode) {
             const subjectNumber = guideList[0].coursecode;
-            if (currentGuidesList.subjectNumber === undefined) {
+            // if (subjectNumber !== false && currentGuidesList.subjectNumber === undefined) {
+            if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;
                 updateGuidesList(currentGuidesList => Object.assign({}, ...currentGuidesList, ...newGuidesList));
             }
         }
-    });
+    }, [guideList, currentGuidesList]);
 
     React.useEffect(() => {
-        updateGuidesSubjectList(guideList);
-    }, [guideList]);
+        updateGuidesSubjectList();
+    }, [updateGuidesSubjectList]);
 
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
