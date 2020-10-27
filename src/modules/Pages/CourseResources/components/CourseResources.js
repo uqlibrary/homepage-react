@@ -123,8 +123,22 @@ export const CourseResources = ({
             return readingLists;
         }
 
-        // TODO, improve this
-        const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
+        const extractDetailsOfEnrolmentFromCurrentClassList = (classes, classnumber) => {
+            const subjectTemplate = {
+                semester: null,
+                CAMPUS: null,
+                INSTRUCTION_MODE: null,
+            };
+            const subjectlist = !!classes && classes.filter(aClass => !!aClass && aClass.classnumber === classnumber);
+            const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+            return {
+                semester: thisSubject.semester || subjectTemplate.semester,
+                CAMPUS: thisSubject.CAMPUS || subjectTemplate.CAMPUS,
+                INSTRUCTION_MODE: thisSubject.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+            };
+        };
+
+        const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classes, classnumber);
 
         if (displayType === 'searchresults') {
             const semesterString = keywordPresets.period;
@@ -133,12 +147,12 @@ export const CourseResources = ({
                 return item.period === semesterString && item.campus.indexOf(campus) !== -1;
             });
         } else {
-            const semesterString = enrolment.semester;
-            const campus = getCampusByCode(enrolment.CAMPUS);
+            const semesterString = subjectEnrolment.semester;
+            const campus = getCampusByCode(subjectEnrolment.CAMPUS);
             return readingLists.filter(item => {
                 return (
                     item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || enrolment.INSTRUCTION_MODE === 'EX')
+                    (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
                 );
             });
         }
