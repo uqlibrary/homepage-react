@@ -63,7 +63,8 @@ export default {
             title: 'Reading lists',
             multiple: {
                 title: 'More than one reading list found for [classnumber]. Please select a list:',
-                linkOut: 'Search other reading lists',
+                linkLabel: 'Search other reading lists',
+                linkOut: 'http://lr.library.uq.edu.au/index.html',
             },
             footer: {
                 linkLabel: '[numberExcessReadingLists] more [readingListNumber]',
@@ -84,6 +85,7 @@ export default {
             none: 'No Library guides for this course',
             unavailableMessage: 'Library guides list currently unavailable',
             linkLabelFooter: 'All library guides',
+            homepageLink: 'https://guides.library.uq.edu.au',
         },
         links: {
             title: 'Course links',
@@ -93,7 +95,7 @@ export default {
             },
             ecp: {
                 title: 'Electronic Course Profile',
-                linkOutPattern: 'http://www.uq.edu.au/study/course.html?course_code=[courseCode]',
+                linkOutPattern: 'https://www.uq.edu.au/study/course.html?course_code=[courseCode]',
             },
         },
     },

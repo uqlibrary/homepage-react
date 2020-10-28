@@ -90,9 +90,12 @@ export const ReadingLists = ({
                         );
                     })}
                     <Grid item xs={12} className={classes.courseResourceLineItem}>
-                        <a href="http://lr.library.uq.edu.au/index.html">
+                        <a
+                            data-testid="multiple-reading-list-search-link"
+                            href={locale.myCourses.readingLists.multiple.linkOut}
+                        >
                             <SpacedArrowForwardIcon />
-                            {locale.myCourses.readingLists.multiple.linkOut}
+                            {locale.myCourses.readingLists.multiple.linkLabel}
                         </a>
                     </Grid>
                 </Grid>
@@ -217,7 +220,12 @@ export const ReadingLists = ({
                                 })}
                         {/* eg MATH4091 has 12 reading lists */}
                         {!!talisReadingListLink && !!numberExcessReadingLists && (
-                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                            <Grid
+                                item
+                                xs={12}
+                                className={classes.courseResourceLineItem}
+                                data-testid="reading-list-more-link"
+                            >
                                 <a
                                     // on-click="linkClicked"
                                     href={talisReadingListLink}
