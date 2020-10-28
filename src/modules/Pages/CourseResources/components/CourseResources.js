@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
 import locale from '../courseResourcesLocale';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { Guides } from './Guides';
 import { ReadingLists } from './ReadingLists';
@@ -11,25 +12,17 @@ import { PastExamPapers } from './PastExamPapers';
 import { SearchCourseResources } from './SearchCourseResources';
 import { SubjectLinks } from './SubjectLinks';
 import { TabPanel } from './TabPanel';
+import { NonHeaderAppBar } from './NonHeaderAppBar';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import { makeStyles } from '@material-ui/styles';
 
-import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
-
-function a11yProps(index, classname = null) {
-    const label = classname || index;
-    return {
-        id: `${label}-${index}`,
-        'aria-controls': `${label}panel-${index}`,
-    };
-}
 
 const useStyles = makeStyles(
     () => ({
@@ -392,25 +385,37 @@ export const CourseResources = ({
             <div className="layout-card" style={{ margin: '16px auto' }}>
                 <StandardCard noPadding noHeader>
                     <Grid container className={classes.panelLayout} spacing={1}>
-                        <Grid item xs={12} id="courseresource-search">
-                            <AppBar position="static">
+                        <Grid item xs={12} data-testid="course-resources">
+                            <NonHeaderAppBar
+                                data-testid="course-resource-top-menu"
+                                id="course-resource-top-menu"
+                                position="static"
+                            >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="top0" label={locale.myCourses.title} {...a11yProps('top0')} />
-                                    <Tab value="top1" label={locale.search.title} {...a11yProps('top1')} />
-                                    <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('top2')} />
+                                    <Tab value="top0" label={locale.myCourses.title} {...a11yProps('0')} />
+                                    <Tab value="top1" label={locale.search.title} {...a11yProps('1')} />
+                                    <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('2')} />
                                 </Tabs>
-                            </AppBar>
+                            </NonHeaderAppBar>
 
-                            <TabPanel value={topmenu} index="top0" tabId="topmenu">
+                            <TabPanel
+                                value={topmenu}
+                                index="top0" // must match 'value' in Tabs
+                                label="topmenu"
+                                {...reverseA11yProps('0')}
+                            >
                                 <MyCourses
-                                    a11yProps={a11yProps}
                                     loadNewSubject={loadNewSubject}
                                     renderSubjectTabBody={renderSubjectTabBody}
                                 />
                             </TabPanel>
-                            <TabPanel value={topmenu} index="top1" tabId="topmenu">
+                            <TabPanel
+                                value={topmenu}
+                                index="top1" // must match 'value' in Tabs
+                                label="topmenu"
+                                {...reverseA11yProps('1')}
+                            >
                                 <SearchCourseResources
-                                    a11yProps={a11yProps}
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
                                     renderSubjectTabBody={renderSubjectTabBody}
@@ -419,7 +424,13 @@ export const CourseResources = ({
                                     updateSearchList={updateSearchList}
                                 />
                             </TabPanel>
-                            <TabPanel value={topmenu} index="top2" tabId="topmenu">
+                            <TabPanel
+                                value={topmenu}
+                                index="top2"
+                                tabId="topmenu"
+                                label="topmenu"
+                                {...reverseA11yProps('2')}
+                            >
                                 {renderStudyHelpLinks}
                             </TabPanel>
                         </Grid>

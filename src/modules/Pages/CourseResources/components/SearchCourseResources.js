@@ -11,7 +11,6 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
 export const SearchCourseResources = ({
-    a11yProps,
     loadNewSubject,
     renderSubjectTabBody,
     setDisplayType,
@@ -34,7 +33,6 @@ export const SearchCourseResources = ({
                         {searchedSubjects.map((item, index) => {
                             return (
                                 <Tab
-                                    {...a11yProps(index, 'classtab')}
                                     data-testid={`classtab-${index}`}
                                     key={`classtab-${index}`}
                                     id={`classtab-${index}`}
@@ -52,6 +50,7 @@ export const SearchCourseResources = ({
                         <TabPanel
                             data-testid={`classpanel-${index}`}
                             index={`${subjectTabLabel}-${index}`} // must match 'value' in Tabs
+                            label="classpanel"
                             key={`classpanel-${index}`}
                             tabId="searchTab"
                             value={searchTab}
@@ -97,7 +96,6 @@ export const SearchCourseResources = ({
 };
 
 SearchCourseResources.propTypes = {
-    a11yProps: PropTypes.func,
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
     renderSubjectTabBody: PropTypes.func,

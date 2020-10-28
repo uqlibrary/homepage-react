@@ -46,7 +46,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                                     opacity: 0.3,
                                 }}
                             >
-                                <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                                <CircularProgress color="primary" size={20} data-testid="loading-guide-suggestions" />
                             </Grid>
                         )}
 
@@ -85,7 +85,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <a
                                 // on-tap="linkClicked"
-                                id="allguideLists"
+                                data-testid="allguideLists"
                                 href="http://guides.library.uq.edu.au"
                             >
                                 <SpacedArrowForwardIcon />

@@ -158,7 +158,7 @@ const styles = theme => {
 };
 
 export function Megamenu(props) {
-    const { classes, docked, menuOpen, menuItems, toggleMenu, history } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu, history, ...rest } = props;
 
     // from https://usehooks.com/useOnClickOutside/
     function useOnClickOutside(ref, handler) {
@@ -448,7 +448,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className={classes.megamenu}>
+        <div className={classes.megamenu} id={rest.id || 'megamenu'}>
             <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
                 {props.hasHomePageItem && renderHomePageItem()}
                 {menuItems.map((menuItem, index) => {

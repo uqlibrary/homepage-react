@@ -68,7 +68,11 @@ export const PastExamPapers = ({
                                 xs={'auto'}
                                 style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
                             >
-                                <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                                <CircularProgress
+                                    color="primary"
+                                    size={20}
+                                    data-testid="loading-exampaper-suggestions"
+                                />
                             </Grid>
                         )}
                         {!!examList && examList.length === 0 && (

@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
 import locale from '../courseResourcesLocale';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { TabPanel } from './TabPanel';
+import { NonHeaderAppBar } from './NonHeaderAppBar';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -17,8 +18,8 @@ import { makeStyles } from '@material-ui/styles';
 const useStyles = makeStyles(
     theme => ({
         myCoursesTabBar: {
-            backgroundColor: theme.palette.accent.main,
-            color: 'white',
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.secondary.dark,
         },
         noclasses: {
             marginBottom: '1rem',
@@ -31,7 +32,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) => {
+export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
     const { account } = useAccountContext();
     const classes = useStyles();
 
@@ -42,11 +43,12 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
         setCurrentMenuTab(subjectTabId);
     };
 
+    // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
         <Fragment>
             {!!account.classes && account.classes.length > 0 ? (
                 <Fragment>
-                    <AppBar position="static" className={classes.myCoursesTabBar}>
+                    <NonHeaderAppBar position="static" className={classes.myCoursesTabBar}>
                         <Tabs
                             onChange={handleCourseTabChange}
                             scrollButtons="auto"
@@ -59,23 +61,24 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
                                         {...a11yProps(index, 'classtab')}
                                         data-testid={`classtab-${index}`}
                                         key={`classtab-${index}`}
-                                        id={`classtab-${index}`}
                                         label={item.classnumber}
                                         value={`${courseTabLabel}-${index}`} // must match 'index' in TabPanel
                                     />
                                 );
                             })}
                         </Tabs>
-                    </AppBar>
+                    </NonHeaderAppBar>
                     {account.classes.map((item, index) => {
                         return (
                             <TabPanel
                                 className={classes.courseTabs}
                                 data-testid={`classpanel-${index}`}
                                 index={`${courseTabLabel}-${index}`} // must match 'value' in Tab
+                                label="classpanel"
                                 key={`classpanel-${index}`}
                                 tabId="coursemenu"
                                 value={coursemenu}
+                                {...reverseA11yProps(index, 'classtab')}
                             >
                                 {renderSubjectTabBody(item)}
                             </TabPanel>
@@ -100,7 +103,6 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
 };
 
 MyCourses.propTypes = {
-    a11yProps: PropTypes.func,
     loadNewSubject: PropTypes.func,
     renderSubjectTabBody: PropTypes.func,
 };

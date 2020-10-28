@@ -135,7 +135,11 @@ export const ReadingLists = ({
                                     opacity: 0.3,
                                 }}
                             >
-                                <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                                <CircularProgress
+                                    color="primary"
+                                    size={20}
+                                    data-testid="loading-readinglist-suggestions"
+                                />
                             </Grid>
                         )}
 

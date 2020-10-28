@@ -37,6 +37,7 @@ export const SubjectLinks = ({ subject }) => {
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <a
                                 // on-click="linkClicked"
+                                id={`ecp-${subject.classnumber}`}
                                 href={_courseLink(subject.classnumber, locale.myCourses.links.ecp.linkOutPattern)}
                             >
                                 <SpacedArrowForwardIcon />
@@ -46,7 +47,7 @@ export const SubjectLinks = ({ subject }) => {
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <a
                                 // on-click="linkClicked"
-                                id="blackboard"
+                                id={`blackboard-${subject.classnumber}`}
                                 href={_courseLink(
                                     subject.classnumber,
                                     locale.myCourses.links.blackboard.linkOutPattern,
