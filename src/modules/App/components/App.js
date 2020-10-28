@@ -244,6 +244,7 @@ export class AppClass extends PureComponent {
                                 hasHomePageItem
                                 hasCloseItem
                                 history={this.props.history}
+                                id="responsiveMenu"
                                 // locale={{
                                 //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                 //     skipNavTitle: locale.global.skipNav.title,
@@ -258,6 +259,7 @@ export class AppClass extends PureComponent {
                             <Megamenu
                                 menuItems={menuItems}
                                 history={this.props.history}
+                                id="desktopMenu"
                                 // locale={{
                                 //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
                                 //     skipNavTitle: locale.global.skipNav.title,
