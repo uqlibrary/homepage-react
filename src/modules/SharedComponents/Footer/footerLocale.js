@@ -147,7 +147,8 @@ export default {
                 {
                     type: 'link',
                     dataTestid: 'footer-emergency-link',
-                    linkLabel: '3365 3333',
+                    // \u00A0 is a non-breaking space and makes the phone number stay on one line
+                    linkLabel: '3365\u00A03333',
                     linkMouseOver: 'UQ Emergency phone number',
                     linkTo: 'tel:+61733653333',
                 },
