@@ -41,7 +41,7 @@ export default {
         logo: {
             // image: 'https://static.uq.net.au/v2/logos/corporate/uq-logo-white.svg',
             label: 'The University of Queensland',
-            link: 'http://www.uq.edu.au',
+            link: 'https://www.uq.edu.au',
         },
         orgTitle: 'The University of Queensland',
         loading: 'Loading',

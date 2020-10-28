@@ -85,8 +85,8 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <a
                                 // on-tap="linkClicked"
-                                data-testid="allguideLists"
-                                href="http://guides.library.uq.edu.au"
+                                data-testid="all-guides"
+                                href={locale.myCourses.guides.homepageLink}
                             >
                                 <SpacedArrowForwardIcon />
                                 {locale.myCourses.guides.linkLabelFooter}

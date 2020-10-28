@@ -78,7 +78,7 @@ export const PastExamPapers = ({
                         {!!examList && examList.length === 0 && (
                             <Grid item xs={12} className={classes.courseResourceLineItem}>
                                 <Typography>{locale.myCourses.examPapers.none}</Typography>
-                                <a href={locale.examPapersSearchUrl}>
+                                <a href={_courseLink('', locale.myCourses.examPapers.footer.linkOutPattern)}>
                                     <SpacedArrowForwardIcon />
                                     {locale.myCourses.examPapers.footer.linkLabel}
                                 </a>
@@ -108,7 +108,7 @@ export const PastExamPapers = ({
                                 );
                             })}
                         {!!examList && examList.length > 0 && !!numberExcessExams && (
-                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                            <Grid item xs={12} data-testid="exam-more-link" className={classes.courseResourceLineItem}>
                                 <a
                                     // on-click="linkClicked"
                                     href={_courseLink(
