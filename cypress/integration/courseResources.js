@@ -1,69 +1,79 @@
 import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
-import { _pluralise, _courseLink } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
+import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
+import { default as FREN1010LearningResources } from '../../src/mock/data/records/learningResources_FREN1010';
+import { default as FREN1010ReadingList1 } from '../../src/mock/data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
+import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';
+import { default as HIST1201LearningResources } from '../../src/mock/data/records/learningResources_HIST1201';
+import { default as HIST1201ReadingList1 } from '../../src/mock/data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
+import { default as PHIL1002LearningResources } from '../../src/mock/data/records/learningResources_PHIL1002';
 
 context('Course Resources', () => {
-    it('User with classes', () => {
-        cy.visit('/courseresources?user=s1111111');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
+    function itDisplaysTheFirstSubjectTabValidly(learningResource, readingList, guides) {
+        const courseCode = learningResource.title;
 
-        cy.get('button#classtab-0').contains('FREN101');
-        cy.get('div[data-testid=classpanel-0] h3').contains('Introductory French 1');
+        cy.get('button#classtab-0').contains(courseCode);
+        cy.get('div[data-testid=classpanel-0] h3').contains(learningResource.course_title);
 
-        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (2)`);
+        cy.get('.readingLists h3').contains(
+            `${locale.myCourses.readingLists.title} (${learningResource.reading_lists.length})`,
+        );
         cy.get('.readingLists a')
-            .contains('Collins Robert French dictionary')
-            .should('have.attr', 'href', 'http://lr.library.uq.edu.au/items/598CB489-69A1-49E3-CDA5-BCDD0B4EFA3F.html');
+            .contains(readingList[0].title)
+            .should('have.attr', 'href', readingList[0].itemLink);
 
-        cy.get('.exams h3').contains(`${locale.myCourses.examPapers.title} (8)`);
+        const examPapers = learningResource.exam_papers;
+        cy.get('.exams h3').contains(`${locale.myCourses.examPapers.title} (${examPapers.length})`);
         cy.get('.exams a')
-            .contains('Semester 2 2019 (pdf)')
-            .should(
-                'have.attr',
-                'href',
-                'https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations_2019_FREN1010.pdf',
-            );
+            .contains(`${examPapers[0].period} (${examPapers[0].url.slice(-3)})`)
+            .should('have.attr', 'href', examPapers[0].url);
+        const numberExcessExams = examPapers.length - 2;
         cy.get('div[data-testid=exam-more-link] a')
             .contains(
                 locale.myCourses.examPapers.morePastExams
-                    .replace('[numberExcessExams]', 6)
-                    .replace('[examNumber]', _pluralise('paper', 6)),
+                    .replace('[numberExcessExams]', numberExcessExams)
+                    .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
             )
-            .should('have.attr', 'href', _courseLink('FREN1010', locale.myCourses.examPapers.footer.linkOutPattern));
+            .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.examPapers.footer.linkOutPattern));
 
         cy.get('h3[data-testid=standard-card-library-guides-header]').contains(locale.myCourses.guides.title);
         cy.get('div[data-testid=standard-card-library-guides-content] a')
-            .contains('French Studies')
-            .should('have.attr', 'href', 'https://guides.library.uq.edu.au/french');
+            .contains(guides.title)
+            .should('have.attr', 'href', guides.url);
         cy.get('a[data-testid=all-guides]')
             .contains(locale.myCourses.guides.footer.linkLabel)
             .should('have.attr', 'href', locale.myCourses.guides.footer.linkOut);
 
         cy.get('a[data-testid=ecp-FREN1010]')
             .contains(locale.myCourses.links.ecp.title)
-            .should('have.attr', 'href', _courseLink('FREN1010', locale.myCourses.links.ecp.linkOutPattern));
+            .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.ecp.linkOutPattern));
 
         cy.get('a[data-testid=blackboard-FREN1010]')
             .contains(locale.myCourses.links.blackboard.title)
-            .should('have.attr', 'href', _courseLink('FREN1010', locale.myCourses.links.blackboard.linkOutPattern));
+            .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.blackboard.linkOutPattern));
+    }
 
-        // click the second subject tab, HIST1201
+    function itDisplaysTheSecondSubjectTabValidly(learningResource, readingList) {
         cy.get('button#classtab-1')
-            .contains('HIST1201')
+            .contains(learningResource.title)
             .click();
-        cy.get('div[data-testid=classpanel-1] h3').contains('The Australian Experience');
-        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (35)`);
-        cy.get('div[data-testid=reading-list-more-link] a')
-            .contains('33 more items')
-            .should('have.attr', 'href', 'http://lr.library.uq.edu.au/lists/2109F2EC-AB0B-482F-4D30-1DD3531E46BE');
-        cy.get('div[data-testid=exam-more-link] a').should('not.exist');
+        cy.get('div[data-testid=classpanel-1] h3').contains(learningResource.course_title);
+        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (${readingList.length})`);
 
-        // click the third subject tab, PHIL1002
+        const numberExcessReadingLists = readingList.length - 2;
+        cy.get('div[data-testid=reading-list-more-link] a')
+            .contains(`${numberExcessReadingLists} more items`)
+            .should('have.attr', 'href', learningResource.reading_lists[0].url);
+
+        cy.get('div[data-testid=exam-more-link] a').should('not.exist');
+    }
+
+    function itDisplaysTheThirdSubjectTabValidly(learningResource) {
+        const courseCode = learningResource.title;
         cy.get('button#classtab-2')
-            .contains('PHIL1002')
+            .contains(courseCode)
             .click();
         cy.get('div[data-testid=standard-card-reading-lists--content]').contains(
-            locale.myCourses.readingLists.multiple.title.replace('[classnumber]', 'PHIL1002'),
+            locale.myCourses.readingLists.multiple.title.replace('[classnumber]', courseCode),
         );
         cy.get('a[data-testid=multiple-reading-list-search-link]')
             .contains(locale.myCourses.readingLists.multiple.linkLabel)
@@ -75,6 +85,33 @@ context('Course Resources', () => {
             'href',
             _courseLink('', locale.myCourses.examPapers.footer.linkOutPattern),
         );
+    }
+
+    it('User with classes', () => {
+        cy.visit('/courseresources?user=s1111111');
+        cy.viewport(1300, 1000);
+        cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
+
+        /**
+         * the mock data has been selected to cover the display options:
+         *
+         *          |  reading lists               | exams   | guides |
+         * ---------+------------------------------+---------+--------+
+         * FREN1010 | has 1 with exactly 2 entries | has > 2 | has 1  |
+         * ---------+------------------------------+---------+--------+
+         * HIST1201 | has 1 with > 2 entries       | has 1   | has 0  |
+         * ---------+------------------------------+---------+--------+
+         * PHIL1002 | has 2 reading lists          | has 0   | has 1  |
+         * ---------+------------------------------+---------+--------+
+         */
+
+        itDisplaysTheFirstSubjectTabValidly(FREN1010LearningResources[0], FREN1010ReadingList1, FREN1010Guide[0]);
+
+        // click the second subject tab, HIST1201
+        itDisplaysTheSecondSubjectTabValidly(HIST1201LearningResources[0], HIST1201ReadingList1);
+
+        // click the third subject tab, PHIL1002
+        itDisplaysTheThirdSubjectTabValidly(PHIL1002LearningResources[0]);
 
         // click the course search button
         cy.get('button#topmenu-1')
