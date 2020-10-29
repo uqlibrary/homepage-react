@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { makeStyles } from '@material-ui/styles';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -52,9 +53,9 @@ export const SearchCourseResources = ({
                                 <Tab
                                     data-testid={`classtab-${index}`}
                                     key={`classtab-${index}`}
-                                    id={`classtab-${index}`}
                                     label={item}
                                     value={`${subjectTabLabel}-${index}`} // must match 'index' in TabPanel
+                                    {...a11yProps(index, 'searchtab')}
                                 />
                             );
                         })}
@@ -72,6 +73,7 @@ export const SearchCourseResources = ({
                             tabId="searchTab"
                             value={searchTab}
                             className={classes.tabPanel}
+                            {...reverseA11yProps(index, 'searchtab')}
                         >
                             {renderSubjectTabBody(subject)}
                             {/* {item}*/}
