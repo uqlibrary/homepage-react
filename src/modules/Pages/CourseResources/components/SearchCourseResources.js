@@ -9,6 +9,21 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { makeStyles } from '@material-ui/styles';
+
+const useStyles = makeStyles(
+    theme => ({
+        subjectTabBar: {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.secondary.dark,
+            marginTop: '24px',
+        },
+        tabPanel: {
+            margin: 0,
+        },
+    }),
+    { withTheme: true },
+);
 
 export const SearchCourseResources = ({
     loadNewSubject,
@@ -18,6 +33,8 @@ export const SearchCourseResources = ({
     listSearchedSubjects,
     updateSearchList,
 }) => {
+    const classes = useStyles();
+
     const subjectTabLabel = 'searchtab';
     const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
     const handleSearchTabChange = (event, subjectTabId) => {
@@ -28,7 +45,7 @@ export const SearchCourseResources = ({
     const renderSearchResults = searchedSubjects => {
         return (
             <Fragment>
-                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black', marginTop: '24px' }}>
+                <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
                         {searchedSubjects.map((item, index) => {
                             return (
@@ -54,7 +71,7 @@ export const SearchCourseResources = ({
                             key={`classpanel-${index}`}
                             tabId="searchTab"
                             value={searchTab}
-                            style={{ margin: 0 }}
+                            className={classes.tabPanel}
                         >
                             {renderSubjectTabBody(subject)}
                             {/* {item}*/}
