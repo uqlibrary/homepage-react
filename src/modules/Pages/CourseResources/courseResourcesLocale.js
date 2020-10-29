@@ -84,8 +84,10 @@ export default {
             title: 'Library guides',
             none: 'No Library guides for this course',
             unavailableMessage: 'Library guides list currently unavailable',
-            linkLabelFooter: 'All library guides',
-            homepageLink: 'https://guides.library.uq.edu.au',
+            footer: {
+                linkOut: 'https://guides.library.uq.edu.au',
+                linkLabel: 'All library guides',
+            },
         },
         links: {
             title: 'Course links',
