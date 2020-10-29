@@ -86,10 +86,10 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                             <a
                                 // on-tap="linkClicked"
                                 data-testid="all-guides"
-                                href={locale.myCourses.guides.homepageLink}
+                                href={locale.myCourses.guides.footer.linkOut}
                             >
                                 <SpacedArrowForwardIcon />
-                                {locale.myCourses.guides.linkLabelFooter}
+                                {locale.myCourses.guides.footer.linkLabel}
                             </a>
                         </Grid>
                     </Grid>
