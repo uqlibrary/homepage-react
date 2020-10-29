@@ -124,6 +124,9 @@ export const PrimoSearch = ({
         [actions, searchType, displayType],
     );
 
+    const courseResourceSubjectDisplay = option =>
+        `${option.text} (${option.rest.course_title}, ${option.rest.period})`;
+
     return (
         <StandardCard noPadding noHeader standardCardId="primo-search">
             <form onSubmit={handleSearchButton}>
@@ -169,9 +172,7 @@ export const PrimoSearch = ({
                                     suggestions
                                         .filter(option => option.text !== searchKeyword)
                                         .map(option => {
-                                            return !!option.rest
-                                                ? `${option.text} (${option.rest.course_title}, ${option.rest.period})`
-                                                : option.text;
+                                            return !!option.rest ? courseResourceSubjectDisplay(option) : option.text;
                                         })) ||
                                 []
                             }
