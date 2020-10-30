@@ -1,4 +1,5 @@
 import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
+import { primoSearch as searchLocale } from '../../src/modules/SharedComponents/PrimoSearch/components/primoSearchLocale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010LearningResources } from '../../src/mock/data/records/learningResources_FREN1010';
 import { default as FREN1010ReadingList1 } from '../../src/mock/data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
@@ -6,6 +7,7 @@ import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGui
 import { default as HIST1201LearningResources } from '../../src/mock/data/records/learningResources_HIST1201';
 import { default as HIST1201ReadingList1 } from '../../src/mock/data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
 import { default as PHIL1002LearningResources } from '../../src/mock/data/records/learningResources_PHIL1002';
+import { default as learningResourceSearchSuggestions } from '../../src/mock/data/records/learningResourceSearchSuggestions';
 
 context('Course Resources', () => {
     function itDisplaysTheFirstSubjectTabValidly(learningResourceList, readingLists, guides) {
@@ -134,21 +136,28 @@ context('Course Resources', () => {
         // click the third subject tab
         itDisplaysTheThirdSubjectTabValidly(PHIL1002LearningResources);
 
-        // click the course search button
+        // click the course search button, user gets a search form
         cy.get('button#topmenu-1')
             .contains(locale.search.title)
             .click();
+        const courseResourceSearchParams = searchLocale.typeSelect.items
+            .filter(obj => {
+                return obj.name === 'Course reading lists';
+            })
+            .pop();
         cy.get('div[data-testid=primo-search-autocomplete] input').should(
             'have.attr',
             'placeholder',
-            'Enter a course code',
+            courseResourceSearchParams.placeholder,
         );
 
-        // click the Study Help button
+        // click the Study Help button, see correct links
         cy.get('button#topmenu-2')
             .contains(locale.studyHelp.title)
             .click();
         cy.get('h3[data-testid=standard-card-study-help-header]').contains(locale.studyHelp.title);
+        expect(locale.studyHelp.links).to.be.an('array');
+        expect(locale.studyHelp.links.length).to.not.equals(0);
         locale.studyHelp.links.map(link => {
             cy.get(`a#${link.id}`)
                 .contains(link.linkLabel)
@@ -157,6 +166,13 @@ context('Course Resources', () => {
     });
 
     it('User without classes', () => {
+        const learningResource = FREN1010LearningResources[0] || {};
+        const frenchSearchSuggestion = learningResourceSearchSuggestions
+            .filter(obj => {
+                return obj.name === 'FREN1010';
+            })
+            .pop();
+
         cy.visit('/courseresources?user=s2222222');
         cy.viewport(1300, 1000);
         // a user with no classes loads the Course Search tab
@@ -168,10 +184,9 @@ context('Course Resources', () => {
             .type('FREN');
         cy.get('[data-testid="primo-search-autocomplete"]').click();
         cy.get('li#primo-search-autocomplete-option-0')
-            .contains('FREN1010 (Introductory French 1 (has search results), Semester 2 2020)')
+            .contains(`${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.period}`)
             .click();
         cy.get('button[data-testid=primo-search-submit]').click();
-        const learningResource = FREN1010LearningResources[0] || {};
         cy.get('div[data-testid=classpanel-0] h3').contains(learningResource.course_title);
 
         // click the My Courses button, see student has no classes
