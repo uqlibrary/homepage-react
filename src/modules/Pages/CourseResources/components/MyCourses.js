@@ -86,7 +86,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
                     })}
                 </Fragment>
             ) : (
-                <Grid container spacing={3} className={'noreadingLists'}>
+                <Grid container spacing={3} data-testid="no-classes" className={'noreadingLists'}>
                     <Grid item xs={12}>
                         <StandardCard className={classes.noclasses} title={locale.myCourses.none.title}>
                             <Grid container>
