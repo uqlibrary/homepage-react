@@ -8,24 +8,35 @@ import { default as HIST1201ReadingList1 } from '../../src/mock/data/records/cou
 import { default as PHIL1002LearningResources } from '../../src/mock/data/records/learningResources_PHIL1002';
 
 context('Course Resources', () => {
-    function itDisplaysTheFirstSubjectTabValidly(learningResource, readingList, guides) {
-        const courseCode = learningResource.title;
+    function itDisplaysTheFirstSubjectTabValidly(learningResourceList, readingLists, guides) {
+        const learningResource = learningResourceList[0] || {};
+        const courseCode = learningResource.title || 'mock data is missing';
+        const title = learningResource.course_title || 'mock data is missing';
+
+        const examPapers = learningResource.exam_papers || [];
+        const examPaper = examPapers[0] || {};
+        const examPeriod = examPaper.period || 'mock data is missing';
+        const examPaperLink = examPaper.url || 'mock data is missing';
+
+        const readingList = readingLists[0] || {};
+        const readingListTitle = readingList.title || 'mock data is missing';
+        const readingListLink = readingList.itemLink || 'mock data is missing';
+
+        const guide = guides[0] || {};
+        const guideTitle = guide.title || 'mock data is missing';
+        const guideLink = guide.url || 'mock data is missing';
 
         cy.get('button#classtab-0').contains(courseCode);
-        cy.get('div[data-testid=classpanel-0] h3').contains(learningResource.course_title);
+        cy.get('div[data-testid=classpanel-0] h3').contains(title);
 
-        cy.get('.readingLists h3').contains(
-            `${locale.myCourses.readingLists.title} (${learningResource.reading_lists.length})`,
-        );
+        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (${readingLists.length})`);
         cy.get('.readingLists a')
-            .contains(readingList[0].title)
-            .should('have.attr', 'href', readingList[0].itemLink);
-
-        const examPapers = learningResource.exam_papers;
+            .contains(readingListTitle)
+            .should('have.attr', 'href', readingListLink);
         cy.get('.exams h3').contains(`${locale.myCourses.examPapers.title} (${examPapers.length})`);
         cy.get('.exams a')
-            .contains(`${examPapers[0].period} (${examPapers[0].url.slice(-3)})`)
-            .should('have.attr', 'href', examPapers[0].url);
+            .contains(`${examPeriod} (${examPaperLink.slice(-3)})`)
+            .should('have.attr', 'href', examPaperLink);
         const numberExcessExams = examPapers.length - 2;
         cy.get('div[data-testid=exam-more-link] a')
             .contains(
@@ -37,8 +48,8 @@ context('Course Resources', () => {
 
         cy.get('h3[data-testid=standard-card-library-guides-header]').contains(locale.myCourses.guides.title);
         cy.get('div[data-testid=standard-card-library-guides-content] a')
-            .contains(guides.title)
-            .should('have.attr', 'href', guides.url);
+            .contains(guideTitle)
+            .should('have.attr', 'href', guideLink);
         cy.get('a[data-testid=all-guides]')
             .contains(locale.myCourses.guides.footer.linkLabel)
             .should('have.attr', 'href', locale.myCourses.guides.footer.linkOut);
@@ -52,23 +63,31 @@ context('Course Resources', () => {
             .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.blackboard.linkOutPattern));
     }
 
-    function itDisplaysTheSecondSubjectTabValidly(learningResource, readingList) {
-        cy.get('button#classtab-1')
-            .contains(learningResource.title)
-            .click();
-        cy.get('div[data-testid=classpanel-1] h3').contains(learningResource.course_title);
-        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (${readingList.length})`);
+    function itDisplaysTheSecondSubjectTabValidly(learningResourceList, readingLists) {
+        const learningResource = learningResourceList[0] || {};
+        const courseCode = learningResource.title || 'mock data is missing';
+        const title = learningResource.course_title;
 
-        const numberExcessReadingLists = readingList.length - 2;
+        const readingList = (!!learningResource.reading_lists && learningResource.reading_lists[0]) || {};
+
+        cy.get('button#classtab-1')
+            .contains(courseCode)
+            .click();
+        cy.get('div[data-testid=classpanel-1] h3').contains(title);
+        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (${readingLists.length})`);
+
+        const numberExcessReadingLists = readingLists.length - 2;
         cy.get('div[data-testid=reading-list-more-link] a')
             .contains(`${numberExcessReadingLists} more items`)
-            .should('have.attr', 'href', learningResource.reading_lists[0].url);
+            .should('have.attr', 'href', readingList.url);
 
         cy.get('div[data-testid=exam-more-link] a').should('not.exist');
     }
 
-    function itDisplaysTheThirdSubjectTabValidly(learningResource) {
-        const courseCode = learningResource.title;
+    function itDisplaysTheThirdSubjectTabValidly(learningResourceList) {
+        const learningResource = learningResourceList[0] || {};
+        const courseCode = learningResource.title || 'mock data is missing';
+
         cy.get('button#classtab-2')
             .contains(courseCode)
             .click();
@@ -93,25 +112,27 @@ context('Course Resources', () => {
         cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
 
         /**
-         * the mock data has been selected to cover the display options:
+         * Show a user with 3 classes can see all the variations correctly
+         * The mock data has been selected to cover the display options:
          *
-         *          |  reading lists               | exams   | guides |
-         * ---------+------------------------------+---------+--------+
-         * FREN1010 | has 1 with exactly 2 entries | has > 2 | has 1  |
-         * ---------+------------------------------+---------+--------+
-         * HIST1201 | has 1 with > 2 entries       | has 1   | has 0  |
-         * ---------+------------------------------+---------+--------+
-         * PHIL1002 | has 2 reading lists          | has 0   | has 1  |
-         * ---------+------------------------------+---------+--------+
+         *          |  reading lists                    | exams         | guides       |
+         * ---------+-----------------------------------+---------------+--------------+
+         * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide  |
+         * ---------+-----------------------------------+---------------+--------------+
+         * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides |
+         * ---------+-----------------------------------+---------------+--------------+
+         * PHIL1002 | has > 1 list reading lists        | has 0 exams   | -            |
+         * ---------+-----------------------------------+---------------+--------------+
          */
 
-        itDisplaysTheFirstSubjectTabValidly(FREN1010LearningResources[0], FREN1010ReadingList1, FREN1010Guide[0]);
+        // click the first subject tab
+        itDisplaysTheFirstSubjectTabValidly(FREN1010LearningResources, FREN1010ReadingList1, FREN1010Guide);
 
-        // click the second subject tab, HIST1201
-        itDisplaysTheSecondSubjectTabValidly(HIST1201LearningResources[0], HIST1201ReadingList1);
+        // click the second subject tab
+        itDisplaysTheSecondSubjectTabValidly(HIST1201LearningResources, HIST1201ReadingList1);
 
-        // click the third subject tab, PHIL1002
-        itDisplaysTheThirdSubjectTabValidly(PHIL1002LearningResources[0]);
+        // click the third subject tab
+        itDisplaysTheThirdSubjectTabValidly(PHIL1002LearningResources);
 
         // click the course search button
         cy.get('button#topmenu-1')
@@ -133,5 +154,30 @@ context('Course Resources', () => {
                 .contains(link.linkLabel)
                 .should('have.attr', 'href', link.linkTo);
         });
+    });
+
+    it('User without classes', () => {
+        cy.visit('/courseresources?user=s2222222');
+        cy.viewport(1300, 1000);
+        // a user with no classes loads the Course Search tab
+        cy.get('div[data-testid="course-resources"]').contains(locale.search.title);
+
+        // a user can use the search bar to load a subject
+        cy.get('div[data-testid=primo-search-autocomplete] input')
+            .should('exist')
+            .type('FREN');
+        cy.get('[data-testid="primo-search-autocomplete"]').click();
+        cy.get('li#primo-search-autocomplete-option-0')
+            .contains('FREN1010 (Introductory French 1 (has search results), Semester 2 2020)')
+            .click();
+        cy.get('button[data-testid=primo-search-submit]').click();
+        const learningResource = FREN1010LearningResources[0] || {};
+        cy.get('div[data-testid=classpanel-0] h3').contains(learningResource.course_title);
+
+        // click the My Courses button, see student has no classes
+        cy.get('button#topmenu-0')
+            .contains(locale.myCourses.title)
+            .click();
+        cy.get('div[data-testid=no-classes]').contains(locale.myCourses.none.title);
     });
 });
