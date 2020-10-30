@@ -1,9 +1,9 @@
 context('Masquerade', () => {
-    // not found route not done yet
-    // it('unprivileged users cant masquerade', () => {
-    //     cy.visit('/admin/masquerade');
-    //     cy.get('body').contains('The requested page is available to authorised users only.');
-    // });
+    it('unprivileged users cant masquerade', () => {
+        cy.visit('/admin/masquerade?user=s1111111');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authorised users only.');
+    });
 
     it('readonly users can masquerade', () => {
         cy.visit('/admin/masquerade/?user=uqmasquerade');

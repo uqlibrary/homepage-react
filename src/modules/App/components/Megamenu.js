@@ -1,6 +1,9 @@
 import React, { createRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
-// MUI 1
+
+import { default as menuLocale } from 'locale/menu';
+import classNames from 'classnames';
+
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -8,7 +11,6 @@ import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { withStyles } from '@material-ui/core/styles';
-import classNames from 'classnames';
 
 const styles = theme => {
     return {
@@ -157,7 +159,7 @@ const styles = theme => {
 };
 
 export function Megamenu(props) {
-    const { classes, docked, menuOpen, menuItems, toggleMenu } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu, history } = props;
 
     // from https://usehooks.com/useOnClickOutside/
     function useOnClickOutside(ref, handler) {
@@ -237,6 +239,47 @@ export function Megamenu(props) {
 
     useOnClickOutside(menuRef, () => closeAllSubMenus(false));
 
+    // from https://stackoverflow.com/questions/37440408/how-to-detect-esc-key-press-in-react-and-how-to-handle-it/46123962
+    const catchKeyClick = event => {
+        // close menu when escape key pressed
+        const escapeKeyCode = 27;
+        if (event.keyCode === escapeKeyCode) {
+            closeAllSubMenus(false);
+        }
+
+        const tabKeyCode = 9;
+        // if they tab out the end of a submenu, close the menu
+        if (event.keyCode === tabKeyCode) {
+            const focusedItem = document.activeElement;
+            if (
+                !!document.getElementById(focusedItem.id) &&
+                !!document.getElementById(focusedItem.id).classList &&
+                document.getElementById(focusedItem.id).classList.contains('endmenuItem')
+            ) {
+                closeAllSubMenus(false);
+            }
+        }
+
+        // if they shift-tab back out of a menu, close the menu
+        if (event.shiftKey && event.keyCode === tabKeyCode) {
+            const focusedItem = document.activeElement;
+            if (
+                !!document.getElementById(focusedItem.id) &&
+                !!document.getElementById(focusedItem.id).classList &&
+                document.getElementById(focusedItem.id).classList.contains('submenuheader')
+            ) {
+                closeAllSubMenus(false);
+            }
+        }
+    };
+    useEffect(() => {
+        document.addEventListener('keydown', catchKeyClick, false);
+
+        return () => {
+            document.removeEventListener('keydown', catchKeyClick, false);
+        };
+    });
+
     const focusOnElementId = elementId => {
         if (document.getElementById(elementId)) {
             document.getElementById(elementId).focus();
@@ -244,10 +287,10 @@ export function Megamenu(props) {
     };
 
     const navigateToLink = (url, target = null) => {
+        const isInternaLink = url => url.indexOf('http') === -1;
         if (!!url) {
-            if (url.indexOf('http') === -1) {
-                // internal link
-                props.history.push(url);
+            if (isInternaLink(url)) {
+                history.push(url);
             } else if (target !== null) {
                 // external link
                 window.open(url, target);
@@ -263,18 +306,20 @@ export function Megamenu(props) {
             : navigateToLink(menuItem.linkTo, menuItem.target || null);
     }
 
-    function renderSingleColumn(index, classes, menuColumn) {
+    function renderSingleColumn(index, classes, menuColumn, isLastColumn) {
         return (
             <List
                 component="div"
                 disablePadding
                 key={`menu-group-${index}`}
+                data-testid={`menu-group-${index}`}
                 id={`menu-group-${index}`}
                 className={classes.verticalMenuList}
             >
                 {!!menuColumn &&
                     menuColumn.length > 0 &&
                     menuColumn.map((submenuItem, index2) => {
+                        const endItemClass = isLastColumn && index2 === menuColumn.length - 1 ? 'endmenuItem' : '';
                         return (
                             <ListItem
                                 button
@@ -282,7 +327,7 @@ export function Megamenu(props) {
                                 key={`menu-group-${index}-item-${index2}`}
                                 id={`menu-group-${index}-item-${index2}`}
                                 onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
-                                className={classes.menuItem}
+                                className={`classes.menuItem ${endItemClass}`}
                             >
                                 <ListItemText
                                     classes={{
@@ -316,10 +361,10 @@ export function Megamenu(props) {
                 unmountOnExit
                 className={classNames(!!menuItem.shiftLeft ? classes.shiftLeft : '', classes.menuDropdown)}
             >
-                <div className={classes.menuColumns}>
+                <div className={classes.menuColumns} data-testid={`submenu-${index}`}>
                     {menuColumns.length > 0 &&
                         menuColumns.map((menuColumn, index1) => {
-                            return renderSingleColumn(index1, classes, menuColumn);
+                            return renderSingleColumn(index1, classes, menuColumn, index1 === menuColumns.length - 1);
                         })}
                 </div>
             </Collapse>
@@ -332,7 +377,7 @@ export function Megamenu(props) {
             <span className="menu-item-container" key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
-                    className={classes.submenus}
+                    className="submenuheader"
                     data-testid={`submenus-item-${index}`}
                     key={`submenus-item-${index}`}
                     id={`submenus-item-${index}`}
@@ -363,21 +408,41 @@ export function Megamenu(props) {
         return <div className="megamenu empty" />;
     }
 
+    const renderHomePageItem = () => {
+        return (
+            <ListItem
+                button
+                className={classes.submenus}
+                data-testid={menuLocale.menuhome.dataTestid}
+                key={menuLocale.menuhome.dataTestid}
+                id={menuLocale.menuhome.dataTestid}
+                onClick={() => navigateToLink(menuLocale.menuhome.linkTo || null)}
+            >
+                <ListItemText
+                    classes={{
+                        primary: classes.ListItemTextPrimary,
+                    }}
+                    primary={menuLocale.menuhome.primaryText}
+                />
+            </ListItem>
+        );
+    };
+
     function renderCloseItem() {
         return (
             <ListItem
                 button
                 className={classes.submenus}
-                data-testid="submenus-item-close"
-                key={'submenus-item-close'}
-                id={'submenus-item-close'}
+                data-testid={menuLocale.responsiveClose.dataTestid}
+                key={menuLocale.responsiveClose.dataTestid}
+                id={menuLocale.responsiveClose.dataTestid}
                 onClick={() => toggleMenu()}
             >
                 <ListItemText
                     classes={{
                         primary: classes.ListItemTextPrimary,
                     }}
-                    primary="Close"
+                    primary={menuLocale.responsiveClose.primaryText}
                 />
             </ListItem>
         );
@@ -385,7 +450,8 @@ export function Megamenu(props) {
 
     return (
         <div className={classes.megamenu}>
-            <List component="nav" data-testid="mainMenu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
+            <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
+                {props.hasHomePageItem && renderHomePageItem()}
                 {menuItems.map((menuItem, index) => {
                     return renderSingleMenu(menuItem, index);
                 })}
@@ -398,6 +464,7 @@ export function Megamenu(props) {
 
 Megamenu.propTypes = {
     hasCloseItem: PropTypes.bool,
+    hasHomePageItem: PropTypes.bool,
     logoLink: PropTypes.string,
     menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
@@ -409,6 +476,7 @@ Megamenu.propTypes = {
 
 Megamenu.defaultProps = {
     hasCloseItem: false,
+    hasHomePageItem: false,
     menuOpen: true,
 };
 

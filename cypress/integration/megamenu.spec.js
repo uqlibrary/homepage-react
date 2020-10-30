@@ -16,19 +16,32 @@ context('Megamenu', () => {
         // close sub menu so the Close button isnt covered up
         cy.get('[data-testid=submenus-item-0]').click();
 
-        cy.get('[data-testid=submenus-item-close]').contains('Close');
-        cy.get('[data-testid=submenus-item-close]').click();
+        cy.get('[data-testid=close-action]')
+            .contains('Close')
+            .click();
     });
 
     it('Megamenu Desktop', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.get('[data-testid=mainMenu]').contains('Library services');
+        cy.get('[data-testid=main-menu]').contains('Library services');
         cy.log('Megamenu Desktop');
+
         // open first menu
         cy.get('[data-testid=submenus-item-0').click();
+        cy.get('[data-testid=menu-group-1-item-0]').should('be.visible');
+
+        // menus close when user tabs out of end of menu or
+        // shift-tabs out of the beginning of a menu and then off the header
+        // tbd - cypress support coming https://github.com/cypress-io/cypress/issues/299
+
+        // a menu can be closed with an escape key click
+        cy.get('[data-testid=submenus-item-0]').type('{esc}', { force: true });
+        cy.get('[data-testid=menu-group-1-item-0]').should('not.be.visible');
+
         // if the menu locale changes, this test may need updating
-        cy.get('[data-testid=menu-group-1-item-0')
+        cy.get('[data-testid=submenus-item-0').click();
+        cy.get('[data-testid=menu-group-1-item-0]')
             .contains('for Students')
             .click();
         // just check the domain - less likely to change and good enough as most menu items go there

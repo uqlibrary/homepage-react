@@ -176,6 +176,11 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
         setAnchorEl(null);
     };
 
+    const _navigateToCourseResources = () => {
+        history.push(pathConfig.courseresources);
+        handleClose2();
+    };
+
     const _navigateToMasquerade = () => {
         history.push(pathConfig.admin.masquerade);
         handleClose2();
@@ -333,7 +338,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </MenuItem>
                                 </Grid>
                                 <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
+                                    <MenuItem onClick={_navigateToCourseResources}>
                                         <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
                                         Course resources
                                     </MenuItem>

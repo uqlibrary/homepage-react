@@ -1,4 +1,4 @@
-import { default as locale } from './locale';
+import { default as locale } from '../footerLocale';
 import { default as menuLocale } from 'locale/menu';
 
 Object.defineProperty(window, 'matchMedia', {

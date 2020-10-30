@@ -4,6 +4,10 @@ export default {
         linkTo: 'http://www.library.uq.edu.au',
         primaryText: 'Library home',
     },
+    responsiveClose: {
+        dataTestid: 'close-action',
+        primaryText: 'Close',
+    },
     publicmenu: [
         {
             id: 'libraryServices',

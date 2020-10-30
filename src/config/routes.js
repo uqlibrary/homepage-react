@@ -25,6 +25,7 @@ export const pathConfig = {
     index: '/',
     // I dont think this is needed as contact is handled through web.library, but keep it for the notfound test for now
     contact: '/contact',
+    courseresources: '/courseresources',
     admin: {
         masquerade: '/admin/masquerade',
     },
@@ -32,7 +33,7 @@ export const pathConfig = {
 };
 
 // a duplicate list of routes for checking validity easily
-export const flattedPathConfig = ['/', '/contact', '/admin/masquerade'];
+export const flattedPathConfig = ['/', '/contact', '/courseresources', '/admin/masquerade'];
 
 // TODO: will we even have roles?
 export const roles = {
@@ -54,8 +55,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const loggedinPages = [
+        {
+            path: pathConfig.courseresources,
+            component: components.CourseResources,
+            exact: true,
+            pageTitle: locale.pages.courseresources.title,
+        },
+    ];
+
     return [
         ...publicPages,
+        ...(account ? loggedinPages : []),
         ...(account && account.canMasquerade
             ? [
                   {
@@ -74,20 +85,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 };
 
 export const getMenuConfig = (account, author, authorDetails, disabled) => {
-    const homePage = [
-        {
-            ...locale.menuhome,
-            public: true,
-        },
-    ];
-
     const publicPages = [];
     locale.publicmenu.map(item => {
         publicPages.push(item);
     });
 
     if (disabled) {
-        return [...homePage, ...publicPages];
+        return [...publicPages];
     }
 
     return [...publicPages];
