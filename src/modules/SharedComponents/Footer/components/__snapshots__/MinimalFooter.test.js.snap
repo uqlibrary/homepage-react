@@ -17,55 +17,65 @@ exports[`Component MinimalFooter should render 1`] = `
         md={10}
         xs={12}
       >
-        <div>
-          © The University of Queensland 
-        </div>
-        <div>
-          Enquiries: 
-          <a
-            data-testid="footer-enquiries-link"
-            href="tel:+61733651111"
-            key="leftColumn-line2-1"
-            title="UQ Enquiries phone number"
-          >
-            +61 7 3365 1111
-          </a>
-            |  
-          <a
-            data-testid="footer-contacts-link"
-            href="http://uq.edu.au/contacts"
-            key="leftColumn-line2-3"
-          >
-            Contact directory
-          </a>
-        </div>
-        <div>
-          <abbr
-            key="leftColumn-line3-0"
-            title="Australian Business Number"
-          >
-            ABN
-          </abbr>
-           
-          63 942 912 684 
-            |  
-          <abbr
-            key="leftColumn-line3-4"
-            title="Commonwealth Register of Institutions and Courses for Overseas Students"
-          >
-            CRICOS
-          </abbr>
-           
-          <a
-            data-testid="footer-cricos-link"
-            href="https://www.uq.edu.au/about/cricos-link"
-            key="leftColumn-line3-6"
-            title="Provider number"
-          >
-            00025B
-          </a>
-        </div>
+        © The University of Queensland 
       </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        md={10}
+        xs={12}
+      >
+        Enquiries: 
+        <a
+          data-testid="footer-enquiries-link"
+          href="tel:+61733651111"
+          key="leftColumn-line2-1"
+          title="UQ Enquiries phone number"
+        >
+          +61 7 3365 1111
+        </a>
+          |  
+        <a
+          data-testid="footer-contacts-link"
+          href="http://uq.edu.au/contacts"
+          key="leftColumn-line2-3"
+        >
+          Contact directory
+        </a>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        md={10}
+        xs={12}
+      >
+        <abbr
+          key="leftColumn-line3-0"
+          title="Australian Business Number"
+        >
+          ABN
+        </abbr>
+         
+        63 942 912 684 
+          |  
+        <abbr
+          key="leftColumn-line3-4"
+          title="Commonwealth Register of Institutions and Courses for Overseas Students"
+        >
+          CRICOS
+        </abbr>
+         
+        <a
+          data-testid="footer-cricos-link"
+          href="https://www.uq.edu.au/about/cricos-link"
+          key="leftColumn-line3-6"
+          title="Provider number"
+        >
+          00025B
+        </a>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+    >
       <WithStyles(ForwardRef(Grid))
         item={true}
         md={2}
@@ -84,7 +94,7 @@ exports[`Component MinimalFooter should render 1`] = `
           key="rightColumn-line2-1"
           title="UQ Emergency phone number"
         >
-          3365 3333
+          3365 3333
         </a>
       </WithStyles(ForwardRef(Grid))>
     </WithStyles(ForwardRef(Grid))>
@@ -93,23 +103,21 @@ exports[`Component MinimalFooter should render 1`] = `
     item={true}
     xs={12}
   >
-    <div>
-      <a
-        data-testid="footer-terms-link"
-        href="https://www.uq.edu.au/terms-of-use/"
-        key="bottomBlock-line1-0"
-      >
-        Privacy & Terms of use
-      </a>
-        |  
-      <a
-        data-testid="footer-feedback-link"
-        href="https://support.my.uq.edu.au/app/library/feedback"
-        key="bottomBlock-line1-2"
-      >
-        Feedback
-      </a>
-    </div>
+    <a
+      data-testid="footer-terms-link"
+      href="https://www.uq.edu.au/terms-of-use/"
+      key="bottomBlock-line1-0"
+    >
+      Privacy & Terms of use
+    </a>
+      |  
+    <a
+      data-testid="footer-feedback-link"
+      href="https://support.my.uq.edu.au/app/library/feedback"
+      key="bottomBlock-line1-2"
+    >
+      Feedback
+    </a>
   </WithStyles(ForwardRef(Grid))>
 </WithStyles(ForwardRef(Grid))>
 `;
