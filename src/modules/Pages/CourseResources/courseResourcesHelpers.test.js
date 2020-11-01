@@ -1,4 +1,4 @@
-import { _pluralise, _courseLink } from './courseResourcesHelpers';
+import { _pluralise, _courseLink, a11yProps, reverseA11yProps } from './courseResourcesHelpers';
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {
@@ -12,5 +12,12 @@ describe('filterProps helper', () => {
         expect(_courseLink('', 'https://www.example.com/something?stub=')).toBe(
             'https://www.example.com/something?stub=',
         );
+    });
+
+    it('should create a11ylinks that are interdependant', () => {
+        const a11yProps1 = a11yProps(1, 'top');
+        const a11yReverseProps1 = reverseA11yProps(1, 'top');
+        expect(a11yProps1.id).toEqual(a11yReverseProps1['aria-labelledby']);
+        expect(a11yProps1['aria-controls']).toEqual(a11yReverseProps1.id);
     });
 });
