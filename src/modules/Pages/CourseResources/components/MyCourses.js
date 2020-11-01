@@ -6,10 +6,10 @@ import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { TabPanel } from './TabPanel';
-import { NonHeaderAppBar } from './NonHeaderAppBar';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -48,7 +48,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
         <Fragment>
             {!!account.classes && account.classes.length > 0 ? (
                 <Fragment>
-                    <NonHeaderAppBar position="static" className={classes.myCoursesTabBar}>
+                    <AppBar position="static" className={classes.myCoursesTabBar} component="div">
                         <Tabs
                             onChange={handleCourseTabChange}
                             scrollButtons="auto"
@@ -67,7 +67,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
                                 );
                             })}
                         </Tabs>
-                    </NonHeaderAppBar>
+                    </AppBar>
                     {account.classes.map((item, index) => {
                         return (
                             <TabPanel
