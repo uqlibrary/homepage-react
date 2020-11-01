@@ -12,13 +12,13 @@ import { PastExamPapers } from './PastExamPapers';
 import { SearchCourseResources } from './SearchCourseResources';
 import { SubjectLinks } from './SubjectLinks';
 import { TabPanel } from './TabPanel';
-import { NonHeaderAppBar } from './NonHeaderAppBar';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import { makeStyles } from '@material-ui/styles';
 
+import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -386,17 +386,18 @@ export const CourseResources = ({
                 <StandardCard noPadding noHeader>
                     <Grid container className={classes.panelLayout} spacing={1}>
                         <Grid item xs={12} data-testid="course-resources">
-                            <NonHeaderAppBar
+                            <AppBar
                                 data-testid="course-resource-top-menu"
                                 id="course-resource-top-menu"
                                 position="static"
+                                component="div"
                             >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
                                     <Tab value="top0" label={locale.myCourses.title} {...a11yProps('0')} />
                                     <Tab value="top1" label={locale.search.title} {...a11yProps('1')} />
                                     <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('2')} />
                                 </Tabs>
-                            </NonHeaderAppBar>
+                            </AppBar>
 
                             <TabPanel
                                 value={topmenu}
