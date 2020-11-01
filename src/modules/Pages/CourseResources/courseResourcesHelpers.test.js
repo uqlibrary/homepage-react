@@ -2,9 +2,12 @@ import { _pluralise, _courseLink, a11yProps, reverseA11yProps } from './courseRe
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {
+        expect(_pluralise('paper', 0)).toBe('papers');
         expect(_pluralise('paper', 1)).toBe('paper');
         expect(_pluralise('paper', 2)).toBe('papers');
         expect(_pluralise('paper', 1234)).toBe('papers');
+        expect(_pluralise('paper', 'A')).toBe('papers');
+        expect(_pluralise('paper', -8)).toBe('papers');
     });
 
     it('should create course links properly', () => {
