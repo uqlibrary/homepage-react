@@ -59,6 +59,15 @@ export const CourseResources = ({
     const { account } = useAccountContext();
     const classes = useStyles();
 
+    /**
+     * The page consists of 3 sections:
+     * - the user's enrolled courses (aka subjects),
+     * - search area and
+     * - some help links
+     * If the user is enrolled in courses then we load that section: top0
+     * Otherwise we load the search section: top1
+     * These sections are displayed as 3 tabs across the top
+     */
     const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);
