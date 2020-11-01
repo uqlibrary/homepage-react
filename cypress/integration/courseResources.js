@@ -151,9 +151,9 @@ context('Course Resources', () => {
             .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.blackboard.linkOutPattern));
     }
 
-    function a_user_can_use_the_search_bar_to_load_a_subject() {
-        const learningResource = FREN1010LearningResources[0] || {};
-        const frenchSearchSuggestion = learningResourceSearchSuggestions
+    function a_user_can_use_the_search_bar_to_load_a_subject(learningResources, searchSuggestions) {
+        const learningResource = learningResources[0] || {};
+        const frenchSearchSuggestion = searchSuggestions
             .filter(obj => {
                 return obj.name === 'FREN1010';
             })
@@ -281,7 +281,7 @@ context('Course Resources', () => {
 
         the_user_lands_on_the_Search_tab();
 
-        a_user_can_use_the_search_bar_to_load_a_subject();
+        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010LearningResources, learningResourceSearchSuggestions);
 
         the_user_clicks_on_the_My_Courses_tab();
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
