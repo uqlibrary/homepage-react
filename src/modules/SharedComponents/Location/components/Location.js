@@ -1,45 +1,11 @@
 import React from 'react';
-// import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
 import IconButton from '@material-ui/core/IconButton';
 import RoomIcon from '@material-ui/icons/Room';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-
-// const useStyles = makeStyles(
-//     theme => ({
-//         chatStatus: {
-//             position: 'absolute',
-//             bottom: theme.spacing(2),
-//             right: theme.spacing(2),
-//             backgroundColor: 'rgba(0,0,0,0.75)',
-//             color: theme.palette.white.main,
-//             textTransform: 'uppercase',
-//             paddingTop: 8,
-//             paddingBottom: 8,
-//             paddingLeft: 16,
-//             paddingRight: 16,
-//             // width: 340,
-//             borderRadius: 4,
-//         },
-//         chatAction: {
-//             position: 'absolute',
-//             bottom: theme.spacing(2),
-//             right: theme.spacing(2),
-//         },
-//         chatIcon: {
-//             color: theme.palette.white.main,
-//         },
-//         badgeOnline: {
-//             backgroundColor: theme.palette.success.main,
-//         },
-//         badgeOffline: {
-//             backgroundColor: theme.palette.error.main,
-//         },
-//     }),
-//     { withTheme: true },
-// );
+import { locale } from './locale';
 
 export const Location = ({ handleLocationChange, currentLocation }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
@@ -54,7 +20,7 @@ export const Location = ({ handleLocationChange, currentLocation }) => {
         <React.Fragment>
             <Tooltip
                 id="auth-button"
-                title={`Current location is ${currentLocation} - Click to change`}
+                title={locale.tooltip.replace('[currentLocation]', currentLocation || locale.noLocationSet)}
                 placement="top"
                 TransitionProps={{ timeout: 300 }}
             >

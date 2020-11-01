@@ -95,9 +95,9 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
         }
     }, [spotlightsLoading, dispatch]);
 
-    // Below is for location cookie and setting
+    // Location cookie and setting
     const [cookies, setCookie] = useCookies(['location']);
-    const [location, setLocation] = React.useState(cookies.location || 'St Lucia');
+    const [location, setLocation] = React.useState(cookies.location || null);
     if (!cookies.location) {
         setCookie('location', location);
     }
