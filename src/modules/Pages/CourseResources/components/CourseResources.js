@@ -68,7 +68,9 @@ export const CourseResources = ({
      * Otherwise we load the search section: top1
      * These sections are displayed as 3 tabs across the top
      */
-    const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
+    const [topmenu, setCurrentTopTab] = useState(
+        !!account.current_classes && account.current_classes.length ? 'top0' : 'top1',
+    );
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);
     };
@@ -185,7 +187,7 @@ export const CourseResources = ({
 
     const addReadingListToCurrentList = React.useCallback(
         subjectNumber => {
-            const currentClasses = account.classes || null;
+            const currentClasses = account.current_classes || null;
             const filteredReadingLists =
                 !!learningResourcesList && learningResourcesList.length > 0
                     ? filterReadingLists(learningResourcesList, subjectNumber, currentClasses)
@@ -267,10 +269,10 @@ export const CourseResources = ({
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
         const firstEnrolledClassNumber =
-            (!!account.classes &&
-                account.classes.length > 0 &&
-                !!account.classes[0] &&
-                account.classes[0].classnumber) ||
+            (!!account.current_classes &&
+                account.current_classes.length > 0 &&
+                !!account.current_classes[0] &&
+                account.current_classes[0].classnumber) ||
             null;
         if (firstEnrolledClassNumber !== null) {
             !!firstEnrolledClassNumber && actions.loadLearningResources(firstEnrolledClassNumber);
@@ -333,7 +335,7 @@ export const CourseResources = ({
                 <ReadingLists
                     // actions={actions}
                     classnumber={subject.classnumber}
-                    currentClasses={account.classes}
+                    currentClasses={account.current_classes}
                     filterReadingLists={filterReadingLists}
                     readingList={currentReadingLists[[subject.classnumber]]}
                     readingListLoading={readingListLoading}
@@ -360,34 +362,6 @@ export const CourseResources = ({
             </Grid>
         );
     };
-
-    /*
-    let classes = account.classes || null;
-
-    // dev hack while we wait for api update (needs more fields)
-    if (classes === null) {
-        classes = [
-            {
-                SUBJECT: 'FREN',
-                subjectLevel: '1010',
-                classnumber: 'FREN1010',
-                classname: 'Introductory French 1',
-            },
-            {
-                SUBJECT: 'HIST',
-                subjectLevel: '1201',
-                classnumber: 'HIST1201',
-                classname: 'The Australian  Experience',
-            },
-            {
-                SUBJECT: 'PHIL',
-                subjectLevel: '1002',
-                classnumber: 'PHIL1002',
-                classname: 'Introduction to Philosophy: What is Philosophy?',
-            },
-        ];
-    }
-    */
 
     return (
         <StandardPage title={locale.title}>

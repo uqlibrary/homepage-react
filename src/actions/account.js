@@ -1,12 +1,12 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
+    ALERT_API,
+    AUTHOR_DETAILS_API,
+    CHAT_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
-    AUTHOR_DETAILS_API,
     SPOTLIGHTS_API,
-    CHAT_API,
-    ALERT_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';

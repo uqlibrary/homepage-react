@@ -46,7 +46,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
         <Fragment>
-            {!!account.classes && account.classes.length > 0 ? (
+            {!!account.current_classes && account.current_classes.length > 0 ? (
                 <Fragment>
                     <AppBar position="static" className={classes.myCoursesTabBar} component="div">
                         <Tabs
@@ -55,7 +55,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
                             value={coursemenu}
                             variant="scrollable"
                         >
-                            {account.classes.map((item, index) => {
+                            {account.current_classes.map((item, index) => {
                                 return (
                                     <Tab
                                         {...a11yProps(index, 'classtab')}
@@ -68,7 +68,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
                             })}
                         </Tabs>
                     </AppBar>
-                    {account.classes.map((item, index) => {
+                    {account.current_classes.map((item, index) => {
                         return (
                             <TabPanel
                                 className={classes.courseTabs}
