@@ -51,8 +51,8 @@ export const ReadingLists = ({
             : [];
 
     const _trimNotes = value => {
-        if (value && value.length > this.notesTrimLength) {
-            let _trimmed = value.substring(0, this.notesTrimLength);
+        if (value && value.length > locale.notesTrimLength) {
+            let _trimmed = value.substring(0, locale.notesTrimLength);
             // trim on word boundary
             _trimmed = _trimmed.substring(0, _trimmed.lastIndexOf(' '));
             return _trimmed + '...';
@@ -148,7 +148,7 @@ export const ReadingLists = ({
 
                         {(!!readingListError || !!learningResourcesListError) && (
                             <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                <Typography>Reading lists currently unavailable</Typography>
+                                <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
                             </Grid>
                         )}
 
@@ -157,7 +157,7 @@ export const ReadingLists = ({
                             filteredReadingLists.length === 1 &&
                             (!learningResourcesList || learningResourcesList.length === 0) && (
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                    <Typography>No reading lists for this course</Typography>
+                                    <Typography>{locale.myCourses.readingLists.none}</Typography>
                                 </Grid>
                             )}
 

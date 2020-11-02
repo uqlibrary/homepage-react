@@ -50,7 +50,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                             </Grid>
                         )}
 
-                        {!!guideListError && <Typography>{locale.myCourses.guides.unavailableMessage}</Typography>}
+                        {!!guideListError && <Typography>{locale.myCourses.guides.unavailable}</Typography>}
 
                         {!guideListError && (!guideList || guideList.length === 0) && (
                             <Grid item xs={12} data-testid="no-guides" className={classes.courseResourceLineItem}>
