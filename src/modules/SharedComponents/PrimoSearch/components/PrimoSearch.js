@@ -121,7 +121,7 @@ export const PrimoSearch = ({
                 document.getElementById('primo-search-autocomplete').focus();
             }
         },
-        [actions, searchType],
+        [actions, searchType, displayType],
     );
 
     return (
