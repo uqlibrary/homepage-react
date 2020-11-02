@@ -61,6 +61,8 @@ export default {
         },
         readingLists: {
             title: 'Reading lists',
+            none: 'No reading lists for this course',
+            unavailable: 'Reading lists currently unavailable',
             multiple: {
                 title: 'More than one reading list found for [classnumber]. Please select a list:',
                 linkLabel: 'Search other reading lists',
@@ -72,8 +74,8 @@ export default {
         },
         examPapers: {
             title: 'Past exam papers',
-            unavailable: 'Exam papers list currently unavailable',
             none: 'No Past Exam Papers for this course',
+            unavailable: 'Exam papers list currently unavailable',
             morePastExams: '[numberExcessExams] more past [examNumber]',
             footer: {
                 linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',
@@ -83,7 +85,7 @@ export default {
         guides: {
             title: 'Library guides',
             none: 'No Library guides for this course',
-            unavailableMessage: 'Library guides list currently unavailable',
+            unavailable: 'Library guides list currently unavailable',
             footer: {
                 linkOut: 'https://guides.library.uq.edu.au',
                 linkLabel: 'All library guides',
