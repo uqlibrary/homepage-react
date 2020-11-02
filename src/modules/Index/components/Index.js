@@ -402,7 +402,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             >
                                 <div
                                     style={{
-                                        height: 210,
+                                        height: 200,
                                         overflowX: 'hidden',
                                         overflowY: 'auto',
                                         marginRight: -16,
