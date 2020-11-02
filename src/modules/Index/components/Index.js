@@ -21,6 +21,14 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { default as locale } from './locale';
+import {
+    seeCourseResources,
+    seeComputerAvailability,
+    seeFeedback,
+    seeLibraryHours,
+    seeLibraryServices,
+    seeTraining,
+} from 'helpers/access';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -129,6 +137,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
         }
         return '#999';
     };
+
     return (
         <LiveAnnouncer>
             <LiveMessage message={''} aria-live="polite" />
@@ -472,119 +481,119 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             </Grid>
                         )}
 
-                        {/* Comp Avail */}
-                        <Grid item xs={12} md={4}>
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Computer availability
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={'Current location is St Lucia - Click to change'}
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <IconButton
-                                                    size={'small'}
-                                                    variant={'contained'}
-                                                    style={{ marginRight: -12, color: 'white' }}
-                                                    onClick={handleLocationClick}
-                                                >
-                                                    <RoomIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                            <Menu
-                                                id="simple-menu"
-                                                anchorEl={anchorEl}
-                                                keepMounted
-                                                open={Boolean(anchorEl)}
-                                                onClose={handleLocationClose}
-                                            >
-                                                <MenuItem disabled>Select a preferred location</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
-                                                <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
-                                            </Menu>
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <div
-                                    style={{
-                                        height: 275,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
-                                >
-                                    {locale.Computers.map((item, index) => {
-                                        const percent = parseInt((item.free / item.total) * 100, 10);
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                            >
-                                                <Grid item xs={5}>
-                                                    <a href={item.link} style={{ marginLeft: 8 }}>
-                                                        {item.title}
-                                                    </a>
-                                                </Grid>
-                                                <Grid item xs>
-                                                    {item.free} of {item.total} available
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        title={`${percent}% available = ${item.free} of ${item.total}`}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <Box position="relative" display="inline-flex">
-                                                            <CircularProgress
-                                                                size={20}
-                                                                variant="static"
-                                                                value={100}
-                                                                style={{ color: circleColor(percent) }}
-                                                            />
-                                                            <Box
-                                                                top={0}
-                                                                left={0}
-                                                                bottom={0}
-                                                                right={0}
-                                                                position="absolute"
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                justifyContent="center"
-                                                            >
-                                                                <CircularProgress
-                                                                    variant="static"
-                                                                    size={20}
-                                                                    value={100 - percent}
-                                                                    style={{ color: '#ececec' }}
-                                                                />
-                                                            </Box>
-                                                        </Box>
-                                                    </Tooltip>
-                                                </Grid>
+                        {seeComputerAvailability(account) && (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    accentHeader
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Computer availability
                                             </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
-                        </Grid>
+                                            <Grid item xs={'auto'}>
+                                                <Tooltip
+                                                    id="auth-button"
+                                                    title={'Current location is St Lucia - Click to change'}
+                                                    placement="top"
+                                                    TransitionProps={{ timeout: 300 }}
+                                                >
+                                                    <IconButton
+                                                        size={'small'}
+                                                        variant={'contained'}
+                                                        style={{ marginRight: -12, color: 'white' }}
+                                                        onClick={handleLocationClick}
+                                                    >
+                                                        <RoomIcon />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Menu
+                                                    id="simple-menu"
+                                                    anchorEl={anchorEl}
+                                                    keepMounted
+                                                    open={Boolean(anchorEl)}
+                                                    onClose={handleLocationClose}
+                                                >
+                                                    <MenuItem disabled>Select a preferred location</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
+                                                    <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
+                                                </Menu>
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                    fullHeight
+                                >
+                                    <div
+                                        style={{
+                                            height: 275,
+                                            overflowX: 'hidden',
+                                            overflowY: 'auto',
+                                            marginRight: -16,
+                                            marginTop: -16,
+                                            marginBottom: -24,
+                                            marginLeft: -16,
+                                            padding: 8,
+                                        }}
+                                    >
+                                        {locale.Computers.map((item, index) => {
+                                            const percent = parseInt((item.free / item.total) * 100, 10);
+                                            return (
+                                                <Grid
+                                                    container
+                                                    spacing={2}
+                                                    key={index}
+                                                    style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
+                                                >
+                                                    <Grid item xs={5}>
+                                                        <a href={item.link} style={{ marginLeft: 8 }}>
+                                                            {item.title}
+                                                        </a>
+                                                    </Grid>
+                                                    <Grid item xs>
+                                                        {item.free} of {item.total} available
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            title={`${percent}% available = ${item.free} of ${item.total}`}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
+                                                        >
+                                                            <Box position="relative" display="inline-flex">
+                                                                <CircularProgress
+                                                                    size={20}
+                                                                    variant="static"
+                                                                    value={100}
+                                                                    style={{ color: circleColor(percent) }}
+                                                                />
+                                                                <Box
+                                                                    top={0}
+                                                                    left={0}
+                                                                    bottom={0}
+                                                                    right={0}
+                                                                    position="absolute"
+                                                                    display="flex"
+                                                                    alignItems="center"
+                                                                    justifyContent="center"
+                                                                >
+                                                                    <CircularProgress
+                                                                        variant="static"
+                                                                        size={20}
+                                                                        value={100 - percent}
+                                                                        style={{ color: '#ececec' }}
+                                                                    />
+                                                                </Box>
+                                                            </Box>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </Grid>
+                                            );
+                                        })}
+                                    </div>
+                                </StandardCard>
+                            </Grid>
+                        )}
 
-                        {/* Library hours or training */}
-                        {!!account ? (
+                        {seeLibraryHours(account) && (
                             <Grid item xs={12} md={4}>
                                 <StandardCard
                                     accentHeader
@@ -685,7 +694,52 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     </div>
                                 </StandardCard>
                             </Grid>
-                        ) : (
+                        )}
+
+                        {!!seeCourseResources(account) && (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    fullHeight
+                                    accentHeader
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Course resources
+                                            </Grid>
+                                        </Grid>
+                                    }
+                                >
+                                    <Grid container spacing={1}>
+                                        <Grid item xs>
+                                            <TextField placeholder="Enter a course code to search" fullWidth />
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
+                                            <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
+                                                <SearchIcon />
+                                            </Button>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={1} style={{ marginTop: 12 }}>
+                                        <Grid item xs={12}>
+                                            <Typography color={'secondary'} variant={'h6'}>
+                                                Popular courses
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <a href="#">PH101</a> - Applied psychology
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <a href="#">PH102</a> - More applied psychology
+                                        </Grid>
+                                        <Grid item xs={12}>
+                                            <a href="#">PH103</a> - Even more applied psychology
+                                        </Grid>
+                                    </Grid>
+                                </StandardCard>
+                            </Grid>
+                        )}
+
+                        {seeTraining && (
                             <Grid item xs={12} md={4}>
                                 <StandardCard
                                     accentHeader
@@ -860,289 +914,73 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                 </StandardCard>
                             </Grid>
                         )}
-                        {/* Course resources*/}
-                        <Grid item xs={12} md={4}>
-                            <StandardCard
-                                fullHeight
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Course resources
-                                        </Grid>
-                                    </Grid>
-                                }
-                            >
-                                <Grid container spacing={1}>
-                                    <Grid item xs>
-                                        <TextField placeholder="Enter a course code to search" fullWidth />
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
-                                            <SearchIcon />
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} style={{ marginTop: 12 }}>
-                                    <Grid item xs={12}>
-                                        <Typography color={'secondary'} variant={'h6'}>
-                                            Popular courses
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH101</a> - Applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH102</a> - More applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH103</a> - Even more applied psychology
-                                    </Grid>
-                                </Grid>
-                            </StandardCard>
-                        </Grid>
 
-                        {/* Training */}
-                        {!!account && (
+                        {seeLibraryServices && (
                             <Grid item xs={12} md={4}>
                                 <StandardCard
+                                    fullHeight
                                     accentHeader
+                                    squareTop={false}
                                     title={
                                         <Grid container>
                                             <Grid item xs>
-                                                Training
-                                            </Grid>
-                                            <Grid item xs={'auto'}>
-                                                <Tooltip
-                                                    id="auth-button"
-                                                    title={'More training'}
-                                                    placement="top"
-                                                    TransitionProps={{ timeout: 300 }}
-                                                >
-                                                    <IconButton
-                                                        size={'small'}
-                                                        variant={'contained'}
-                                                        style={{ marginRight: 0, color: 'white' }}
-                                                        onClick={handleLocationClick}
-                                                    >
-                                                        <OpenInNewIcon />
-                                                    </IconButton>
-                                                </Tooltip>
-                                            </Grid>
-                                            <Grid item xs={'auto'}>
-                                                <Tooltip
-                                                    id="auth-button"
-                                                    title={'Current location is St Lucia - Click to change'}
-                                                    placement="top"
-                                                    TransitionProps={{ timeout: 300 }}
-                                                >
-                                                    <IconButton
-                                                        size={'small'}
-                                                        variant={'contained'}
-                                                        style={{ marginRight: -12, color: 'white' }}
-                                                        onClick={handleLocationClick}
-                                                    >
-                                                        <RoomIcon />
-                                                    </IconButton>
-                                                </Tooltip>
-                                                <Menu
-                                                    id="simple-menu"
-                                                    anchorEl={anchorEl}
-                                                    keepMounted
-                                                    open={Boolean(anchorEl)}
-                                                    onClose={handleLocationClose}
-                                                >
-                                                    <MenuItem disabled>Select a preferred location</MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>St Lucia</MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>Gatton</MenuItem>
-                                                    <MenuItem onClick={handleLocationClose}>Herston</MenuItem>
-                                                </Menu>
+                                                Library services
                                             </Grid>
                                         </Grid>
                                     }
                                     fullHeight
                                 >
-                                    <div
-                                        style={{
-                                            height: 275,
-                                            overflowX: 'hidden',
-                                            overflowY: 'auto',
-                                            marginRight: -16,
-                                            marginTop: -16,
-                                            marginBottom: -24,
-                                            marginLeft: -16,
-                                            padding: 8,
-                                        }}
-                                    >
-                                        {locale.Training.map((item, index) => {
+                                    <Grid container spacing={1}>
+                                        {locale.LibraryServices.links.map((item, index) => {
                                             return (
-                                                <Grid
-                                                    container
-                                                    spacing={2}
-                                                    key={index}
-                                                    style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                                    alignContent={'center'}
-                                                    alignItems={'center'}
-                                                >
-                                                    <Grid item xs={3}>
-                                                        <Grid
-                                                            container
-                                                            spacing={0}
-                                                            alignContent={'center'}
-                                                            alignItems={'center'}
-                                                            justify={'center'}
-                                                        >
-                                                            <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
-                                                                <div
-                                                                    style={{
-                                                                        fontFamily: 'DM Mono',
-                                                                        color: 'purple',
-                                                                        width: '2ch',
-                                                                        textTransform: 'uppercase',
-                                                                        overflow: 'hidden',
-                                                                        whiteSpace: 'nowrap',
-                                                                        margin: '0 auto',
-                                                                        fontWeight: 300,
-                                                                        fontSize: '1.2em',
-                                                                    }}
-                                                                >
-                                                                    {ordinal(item.dayDate)}
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid
-                                                                item
-                                                                xs={12}
-                                                                style={{
-                                                                    marginTop: -6,
-                                                                }}
-                                                                aria-label={item.day}
-                                                            >
-                                                                <div
-                                                                    style={{
-                                                                        fontFamily: 'DM Mono',
-                                                                        color: 'purple',
-                                                                        width: '3ch',
-                                                                        textTransform: 'uppercase',
-                                                                        overflow: 'hidden',
-                                                                        whiteSpace: 'nowrap',
-                                                                        margin: '0 auto',
-                                                                        fontWeight: 300,
-                                                                        fontSize: '1.1em',
-                                                                    }}
-                                                                >
-                                                                    {item.day}
-                                                                </div>
-                                                            </Grid>
-                                                            <Grid
-                                                                item
-                                                                xs={12}
-                                                                aria-label={item.monthDate}
-                                                                style={{ marginTop: -6 }}
-                                                            >
-                                                                <div
-                                                                    style={{
-                                                                        fontFamily: 'DM Mono',
-                                                                        color: 'purple',
-                                                                        width: '3ch',
-                                                                        textTransform: 'uppercase',
-                                                                        overflow: 'hidden',
-                                                                        whiteSpace: 'nowrap',
-                                                                        margin: '0 auto',
-                                                                        fontWeight: 300,
-                                                                        fontSize: '1.1em',
-                                                                    }}
-                                                                >
-                                                                    {item.monthDate}
-                                                                </div>
-                                                            </Grid>
-                                                        </Grid>
-                                                    </Grid>
-                                                    <Grid item xs>
-                                                        <a
-                                                            href={item.link}
-                                                            aria-label={`${item.date} ${item.time} ${item.format} - ${item.title}`}
-                                                        >
-                                                            {item.title}
-                                                        </a>
-                                                        <br />
-                                                        <span style={{ fontSize: '0.8rem', color: '#999' }}>
-                                                            {item.date} - {item.time}
-                                                            <br />
-                                                            {item.format}
-                                                        </span>
-                                                    </Grid>
+                                                <Grid item xs={12} sm={12} key={index}>
+                                                    <a href={item.url}>{item.title}</a>
                                                 </Grid>
                                             );
                                         })}
-                                    </div>
+                                    </Grid>
                                 </StandardCard>
                             </Grid>
                         )}
 
-                        {/* Library services */}
-                        <Grid item xs={12} md={4}>
-                            <StandardCard
-                                fullHeight
-                                accentHeader
-                                squareTop={false}
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Library services
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <Grid container spacing={1}>
-                                    {locale.LibraryServices.links.map((item, index) => {
-                                        return (
-                                            <Grid item xs={12} sm={12} key={index}>
-                                                <a href={item.url}>{item.title}</a>
+                        {seeFeedback && (
+                            <Grid item xs={12} md={4}>
+                                <StandardCard
+                                    customTitleBgColor={'rgb(100, 100, 100)'}
+                                    customTitleColor={'white'}
+                                    squareTop={false}
+                                    title={
+                                        <Grid container>
+                                            <Grid item xs>
+                                                Feedback
                                             </Grid>
-                                        );
-                                    })}
-                                </Grid>
-                            </StandardCard>
-                        </Grid>
-
-                        {/* Feedback */}
-                        <Grid item xs={12} md={4}>
-                            <StandardCard
-                                customTitleBgColor={'rgb(100, 100, 100)'}
-                                customTitleColor={'white'}
-                                squareTop={false}
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Feedback
                                         </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12}>
-                                        <Grid item xs={12} xl={6}>
-                                            <Grid container spacing={1}>
-                                                <Grid item xs={12}>
-                                                    <Typography variant={'h6'}>Contact options</Typography>
+                                    }
+                                    fullHeight
+                                >
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12}>
+                                            <Grid item xs={12} xl={6}>
+                                                <Grid container spacing={1}>
+                                                    <Grid item xs={12}>
+                                                        <Typography variant={'h6'}>Contact options</Typography>
+                                                    </Grid>
+                                                    <Grid item xs={12}>
+                                                        Phone: +61 7 3506 2615
+                                                    </Grid>
                                                 </Grid>
                                                 <Grid item xs={12}>
-                                                    Phone: +61 7 3506 2615
+                                                    Email: examsupport@library.uq.edu.au
                                                 </Grid>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                Email: examsupport@library.uq.edu.au
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                Library chat (opens in a new tab)
+                                                <Grid item xs={12}>
+                                                    Library chat (opens in a new tab)
+                                                </Grid>
                                             </Grid>
                                         </Grid>
                                     </Grid>
-                                </Grid>
-                            </StandardCard>
-                        </Grid>
+                                </StandardCard>
+                            </Grid>
+                        )}
                     </Grid>
                 </div>
             </StandardPage>
