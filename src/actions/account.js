@@ -37,6 +37,11 @@ export function loadCurrentAccount() {
                     }
                 })
                 .then(accountResponse => {
+                    // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
+                    accountResponse.current_classes = accountResponse.current_classes.map(item => {
+                        item.classnumber = `${item.SUBJECT}${item.CATALOG_NBR}`;
+                        return item;
+                    });
                     dispatch({
                         type: actions.CURRENT_ACCOUNT_LOADED,
                         payload: accountResponse,
