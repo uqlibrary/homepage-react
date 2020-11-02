@@ -391,9 +391,9 @@ export const CourseResources = ({
 
     return (
         <StandardPage title={locale.title}>
-            <div className="layout-card" style={{ margin: '16px auto' }}>
+            <div className="layout-card" style={{ margin: '0 auto 16px' }}>
                 <StandardCard noPadding noHeader>
-                    <Grid container className={classes.panelLayout} spacing={1}>
+                    <Grid container className={classes.panelLayout} spacing={1} style={{ padding: '24px 0' }}>
                         <Grid item xs={12} data-testid="course-resources">
                             <AppBar
                                 data-testid="course-resource-top-menu"
@@ -452,16 +452,16 @@ export const CourseResources = ({
 };
 
 CourseResources.propTypes = {
-    readingList: PropTypes.any,
-    readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
-    learningResourcesList: PropTypes.any,
-    learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.string,
+    actions: PropTypes.object,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.string,
-    actions: PropTypes.object,
+    learningResourcesList: PropTypes.any,
+    learningResourcesListLoading: PropTypes.bool,
+    learningResourcesListError: PropTypes.string,
+    readingList: PropTypes.any,
+    readingListLoading: PropTypes.bool,
+    readingListError: PropTypes.string,
 };
 
 export default React.memo(CourseResources);

@@ -24,4 +24,17 @@ context('ACCESSIBILITY', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
+
+    it('Responsive display', () => {
+        cy.visit('/courseresources?user=s1111111');
+        cy.injectAxe();
+        cy.viewport(414, 736);
+        cy.get('div[data-testid="course-resources"]').contains('My courses');
+        cy.log('Course Resources');
+        cy.checkA11y('div[data-testid="course-resources"]', {
+            reportName: 'Course Resources',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+    });
 });
