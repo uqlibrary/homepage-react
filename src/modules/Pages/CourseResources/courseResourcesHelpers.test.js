@@ -22,5 +22,11 @@ describe('filterProps helper', () => {
         const a11yReverseProps1 = reverseA11yProps(1, 'top');
         expect(a11yProps1.id).toEqual(a11yReverseProps1['aria-labelledby']);
         expect(a11yProps1['aria-controls']).toEqual(a11yReverseProps1.id);
+
+        const a11yProps2 = a11yProps(1);
+        expect(a11yProps2.id).toEqual('topmenu-1');
+
+        const a11yReverseProps2 = reverseA11yProps(1);
+        expect(a11yReverseProps2.id).toEqual('topmenu-panel-1');
     });
 });
