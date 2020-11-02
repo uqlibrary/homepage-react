@@ -7,20 +7,34 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { locale } from './locale';
 
-export const Location = ({ handleLocationChange, currentLocation }) => {
+export const Location = ({ handleLocationChange, currentLocation, idLabel }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
     const handleLocationClose = location => () => {
-        handleLocationChange(location);
+        if (location === 'not set') {
+            handleLocationChange(null);
+        } else {
+            handleLocationChange(location);
+        }
         setAnchorEl(null);
     };
+    const handleBlur = () => {
+        setAnchorEl(null);
+    };
+    let thisLocation = null;
+    if (currentLocation === null || currentLocation === 'null') {
+        thisLocation = locale.noLocationSet;
+    } else {
+        thisLocation = currentLocation;
+    }
+    const id = tag => `location-${idLabel}${tag ? '-' + tag : ''}`;
     return (
-        <React.Fragment>
+        <div id={id()} data-testid={id()}>
             <Tooltip
-                id="auth-button"
-                title={locale.tooltip.replace('[currentLocation]', currentLocation || locale.noLocationSet)}
+                id={id('tooltip')}
+                title={locale.tooltip.replace('[currentLocation]', thisLocation)}
                 placement="top"
                 TransitionProps={{ timeout: 300 }}
             >
@@ -29,31 +43,45 @@ export const Location = ({ handleLocationChange, currentLocation }) => {
                     variant={'contained'}
                     style={{ marginRight: -12, color: 'white' }}
                     onClick={handleLocationClick}
+                    id={id('button')}
+                    data-testid={id('button')}
                 >
                     <RoomIcon />
                 </IconButton>
             </Tooltip>
-            <Menu id="simple-menu" anchorEl={anchorEl} open={Boolean(anchorEl)}>
-                <MenuItem disabled>Select a preferred location</MenuItem>
-                <MenuItem onClick={handleLocationClose('St Lucia')} disabled={currentLocation === 'St Lucia'}>
-                    St Lucia
-                </MenuItem>
-                <MenuItem onClick={handleLocationClose('Gatton')} disabled={currentLocation === 'Gatton'}>
-                    Gatton
-                </MenuItem>
-                <MenuItem onClick={handleLocationClose('Herston')} disabled={currentLocation === 'Herston'}>
-                    Herston
-                </MenuItem>
+            <Menu
+                id={id('menu')}
+                data-testid={id('menu')}
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onBlur={handleBlur}
+            >
+                <MenuItem disabled>{locale.menuTitle}</MenuItem>
+                {locale.locations.map((item, index) => (
+                    <MenuItem
+                        key={index}
+                        onClick={handleLocationClose(item.value)}
+                        disabled={thisLocation === item.value}
+                        data-testid={id(`option-${index}`)}
+                        id={id(`option-${index}`)}
+                    >
+                        {(thisLocation === item.location || thisLocation === item.value) && <RoomIcon />}
+                        {item.location}
+                    </MenuItem>
+                ))}
             </Menu>
-        </React.Fragment>
+        </div>
     );
 };
 
 Location.propTypes = {
     handleLocationChange: PropTypes.func,
     currentLocation: PropTypes.string,
+    idLabel: PropTypes.string,
 };
 
-Location.defaultProps = {};
+Location.defaultProps = {
+    idLabel: '',
+};
 
 export default Location;

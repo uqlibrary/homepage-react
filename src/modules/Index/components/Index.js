@@ -106,9 +106,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             setCookie('location', location);
         }
     }, [location, cookies.location, setCookie]);
-
     const handleLocationChange = location => {
-        console.log('Setting Index location state to ', location);
         if (location !== cookies.location) {
             setLocation(location);
         }
@@ -395,6 +393,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <Location
                                                 handleLocationChange={handleLocationChange}
                                                 currentLocation={location}
+                                                idLabel="libraryHours"
                                             />
                                         </Grid>
                                     </Grid>
@@ -475,6 +474,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         <Location
                                             handleLocationChange={handleLocationChange}
                                             currentLocation={location}
+                                            idLabel="computerAvailability"
                                         />
                                     </Grid>
                                 </Grid>
@@ -569,6 +569,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <Location
                                                 handleLocationChange={handleLocationChange}
                                                 currentLocation={location}
+                                                idLabel="libraryHours"
                                             />
                                         </Grid>
                                     </Grid>
@@ -663,6 +664,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <Location
                                                 handleLocationChange={handleLocationChange}
                                                 currentLocation={location}
+                                                idLabel="training"
                                             />
                                         </Grid>
                                     </Grid>
@@ -857,6 +859,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             <Location
                                                 handleLocationChange={handleLocationChange}
                                                 currentLocation={location}
+                                                idLabel="training"
                                             />
                                         </Grid>
                                     </Grid>
