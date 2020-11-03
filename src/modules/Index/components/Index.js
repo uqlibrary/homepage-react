@@ -156,7 +156,13 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         {/* Personalisation panel or hours */}
                         {!!account ? (
                             <Hidden smDown>
-                                <Grid item xs={12} md={4} style={{ paddingLeft: 16, paddingTop: 28 }}>
+                                <Grid
+                                    item
+                                    xs={12}
+                                    md={4}
+                                    style={{ paddingLeft: 16, paddingTop: 28 }}
+                                    data-testid="personal-panel"
+                                >
                                     <Grid
                                         container
                                         spacing={1}
@@ -383,7 +389,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                 <StandardCard
                                     accentHeader
                                     title={
-                                        <Grid container>
+                                        <Grid container data-testid="library-hours-panel-noaccount">
                                             <Grid item xs>
                                                 Library hours
                                             </Grid>
@@ -482,7 +488,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         )}
 
                         {seeComputerAvailability(account) && (
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                                 <StandardCard
                                     accentHeader
                                     title={
@@ -594,7 +600,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         )}
 
                         {seeLibraryHours(account) && (
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={4} data-testid="library-hours-panel">
                                 <StandardCard
                                     accentHeader
                                     title={
@@ -697,7 +703,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         )}
 
                         {!!seeCourseResources(account) && (
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={4} data-testid="course-resources-panel">
                                 <StandardCard
                                     fullHeight
                                     accentHeader
@@ -740,7 +746,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         )}
 
                         {seeTraining && (
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={4} data-testid="training-panel">
                                 <StandardCard
                                     accentHeader
                                     title={
@@ -916,10 +922,10 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         )}
 
                         {seeLibraryServices && (
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={4} data-testid="library-services-panel">
                                 <StandardCard
-                                    fullHeight
                                     accentHeader
+                                    fullHeight
                                     squareTop={false}
                                     title={
                                         <Grid container>
@@ -928,7 +934,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             </Grid>
                                         </Grid>
                                     }
-                                    fullHeight
                                 >
                                     <Grid container spacing={1}>
                                         {locale.LibraryServices.links.map((item, index) => {
@@ -944,7 +949,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         )}
 
                         {seeFeedback && (
-                            <Grid item xs={12} md={4}>
+                            <Grid item xs={12} md={4} data-testid="feedback-panel">
                                 <StandardCard
                                     customTitleBgColor={'rgb(100, 100, 100)'}
                                     customTitleColor={'white'}
