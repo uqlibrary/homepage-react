@@ -37,9 +37,8 @@ export const SearchCourseResources = ({
     const classes = useStyles();
 
     const subjectTabLabel = 'searchtab';
-    const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
+    const [searchTab, setCurrentSearchTab] = useState();
     const handleSearchTabChange = (event, newSubjectTabId) => {
-        !!event.target.innerText && loadNewSubject(event.target.innerText);
         setCurrentSearchTab(newSubjectTabId);
     };
 
@@ -55,7 +54,7 @@ export const SearchCourseResources = ({
                                     key={`classtab-${subjectCode}`}
                                     label={subjectCode}
                                     value={`${subjectTabLabel}-${index}`} // must match 'index' in TabPanel
-                                    {...a11yProps(index, 'searchtab')}
+                                    {...a11yProps(index, subjectTabLabel)}
                                 />
                             );
                         })}
@@ -103,6 +102,8 @@ export const SearchCourseResources = ({
             loadNewSubject(searchKeyword);
         }
         updateSearchList(listSearchedSubjects.concat(searchKeyword));
+        const tabId = `${subjectTabLabel}-${listSearchedSubjects.length}`;
+        setCurrentSearchTab(tabId);
     };
 
     return (
