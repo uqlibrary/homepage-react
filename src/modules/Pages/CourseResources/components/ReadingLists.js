@@ -21,9 +21,6 @@ const useStyles = makeStyles(
                 alignItems: 'center',
             },
         },
-        panelLayout: {
-            padding: '12px 30px',
-        },
         studyLinks: {
             borderBottom: '1px solid #e8e8e8',
             minHeight: '10rem',
@@ -63,43 +60,42 @@ export const ReadingLists = ({
 
     // PHIL1002 is currently an example of multiple reading lists
     const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
-        const chooseListPrompt = !!classnumber
-            ? locale.myCourses.readingLists.multiple.title.replace('[classnumber]', classnumber)
-            : '';
+        const chooseListPrompt = classnumber =>
+            locale.myCourses.readingLists.multiple.title.replace('[classnumber]', classnumber);
         return (
-            <Fragment>
-                <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt}</Typography>
-                <Grid container>
-                    {readingListSummaries.map((list, index) => {
-                        return (
-                            <Grid
-                                item
-                                xs={12}
-                                data-testid={`multiple-reading-lists-${index}`}
-                                key={`multiple-reading-lists-${index}`}
-                                className={classes.courseResourceLineItem}
-                            >
-                                <a
-                                    aria-label={`Reading list for ${list.title} ${list.period}`}
-                                    href={list.url}
-                                    key={`reading-list-link-${index}`}
-                                >
-                                    {list.title}, {list.period}
-                                </a>
-                            </Grid>
-                        );
-                    })}
-                    <Grid item xs={12} className={classes.courseResourceLineItem}>
-                        <a
-                            data-testid="multiple-reading-list-search-link"
-                            href={locale.myCourses.readingLists.multiple.linkOut}
+            <Grid container style={{ paddingBottom: 12 }}>
+                {!!classnumber && (
+                    <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt(classnumber)}</Typography>
+                )}
+                {readingListSummaries.map((list, index) => {
+                    return (
+                        <Grid
+                            item
+                            xs={12}
+                            data-testid={`multiple-reading-lists-${index}`}
+                            key={`multiple-reading-lists-${index}`}
+                            className={classes.courseResourceLineItem}
                         >
-                            <SpacedArrowForwardIcon />
-                            {locale.myCourses.readingLists.multiple.linkLabel}
-                        </a>
-                    </Grid>
+                            <a
+                                aria-label={`Reading list for ${list.title} ${list.period}`}
+                                href={list.url}
+                                key={`reading-list-link-${index}`}
+                            >
+                                {list.title}, {list.period}
+                            </a>
+                        </Grid>
+                    );
+                })}
+                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                    <a
+                        data-testid="multiple-reading-list-search-link"
+                        href={locale.myCourses.readingLists.multiple.linkOut}
+                    >
+                        <SpacedArrowForwardIcon />
+                        {locale.myCourses.readingLists.multiple.linkLabel}
+                    </a>
                 </Grid>
-            </Fragment>
+            </Grid>
         );
     };
 
@@ -161,9 +157,11 @@ export const ReadingLists = ({
                                 </Grid>
                             )}
 
-                        {!!filteredReadingLists &&
-                            filteredReadingLists.length > 1 &&
-                            renderMultipleReadingListReference(filteredReadingLists, classnumber || '')}
+                        {!!filteredReadingLists && filteredReadingLists.length > 1 && (
+                            <Grid item>
+                                {renderMultipleReadingListReference(filteredReadingLists, classnumber || '')}
+                            </Grid>
+                        )}
 
                         {!!filteredReadingLists &&
                             filteredReadingLists.length === 1 &&

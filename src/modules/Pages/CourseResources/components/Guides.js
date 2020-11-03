@@ -29,7 +29,6 @@ const useStyles = makeStyles(
 export const Guides = ({ guideList, guideListLoading, guideListError }) => {
     const classes = useStyles();
 
-    console.log('guideList = ', guideList);
     return (
         <Grid container spacing={3} className={'guides'}>
             <Grid item xs={12}>
