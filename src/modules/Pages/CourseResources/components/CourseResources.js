@@ -25,7 +25,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(
-    () => ({
+    theme => ({
         courseResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
@@ -39,6 +39,11 @@ const useStyles = makeStyles(
         },
         studyLinks: {
             minHeight: '10rem',
+        },
+        desktopGap: {
+            [theme.breakpoints.up('md')]: {
+                paddingLeft: 16,
+            },
         },
     }),
     { withTheme: true },
@@ -345,20 +350,26 @@ export const CourseResources = ({
                     learningResourcesListError={learningResourcesListError}
                 />
 
-                <PastExamPapers
-                    subject={subject}
-                    learningResourcesList={currentLearningResourcesList[subject.classnumber]}
-                    learningResourcesListLoading={learningResourcesListLoading}
-                    learningResourcesListError={learningResourcesListError}
-                />
-
-                <Guides
-                    guideList={currentGuidesList[subject.classnumber]}
-                    guideListLoading={guideListLoading}
-                    guideListError={guideListError}
-                />
-
-                <SubjectLinks subject={subject} />
+                <Grid container>
+                    <Grid item xs={12} md={4}>
+                        <PastExamPapers
+                            subject={subject}
+                            learningResourcesList={currentLearningResourcesList[subject.classnumber]}
+                            learningResourcesListLoading={learningResourcesListLoading}
+                            learningResourcesListError={learningResourcesListError}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.desktopGap}>
+                        <Guides
+                            guideList={currentGuidesList[subject.classnumber]}
+                            guideListLoading={guideListLoading}
+                            guideListError={guideListError}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.desktopGap}>
+                        <SubjectLinks subject={subject} />
+                    </Grid>
+                </Grid>
             </Grid>
         );
     };
