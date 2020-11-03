@@ -47,7 +47,7 @@ const isCommunityHonorary = account => !!account && ['HON'].includes(account.use
 // to be drawn from espace
 const hasPublications = false;
 
-// define which home page items and mylibrary panel items each user type can see
+// define which home page panel items and mylibrary popup items each user type can see
 
 export const seeCourseResources = account => !!(isUndergraduate(account) || isRHD(account) || isLibraryStaff(account));
 

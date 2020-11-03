@@ -315,6 +315,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                             <IconButton
                                 onClick={handleClick2}
                                 classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
+                                data-testid="mylibrary-button"
                             >
                                 <AppsIcon className={classes.icon} />
                                 <div style={{ color: 'white', fontSize: 12 }}>My Library</div>
@@ -329,7 +330,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                         >
                             <Grid container spacing={0} style={{ maxWidth: 400 }}>
                                 {seeLoans(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-borrowing-link">
                                         <MenuItem onClick={handleClose}>
                                             <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Borrowing
@@ -337,7 +338,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeComputerAvailability(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-computer-availability-link">
                                         <MenuItem onClick={handleClose}>
                                             <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Computers
@@ -345,7 +346,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeCourseResources(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-course-resources-link">
                                         <MenuItem onClick={_navigateToCourseResources}>
                                             <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Course resources
@@ -353,7 +354,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeDocumentDelivery(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-document-delivery-link">
                                         <MenuItem onClick={handleClose}>
                                             <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Document delivery
@@ -361,7 +362,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeLibraryHours(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-library-hours-link">
                                         <MenuItem onClick={handleClose}>
                                             <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Hours
@@ -369,7 +370,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeMasquerade(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-masquerade-link">
                                         <MenuItem onClick={_navigateToMasquerade}>
                                             <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Masquerade
@@ -377,7 +378,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seePrintBalance(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-print-balance-link">
                                         <MenuItem onClick={handleClose}>
                                             <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Printing balance
@@ -385,7 +386,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seePublicationMetrics(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-publication-metrics-link">
                                         <MenuItem onClick={handleClose}>
                                             <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Publication metrics
@@ -393,7 +394,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeRoomBookings(account) && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-room-bookings-link">
                                         <MenuItem onClick={handleClose}>
                                             <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Room bookings
@@ -401,7 +402,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeSavedItems && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-saved-items-link">
                                         <MenuItem onClick={handleClose}>
                                             <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Saved items
@@ -409,7 +410,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeSavedSearches && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-saved-searches-link">
                                         <MenuItem onClick={handleClose}>
                                             <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Saved searches
@@ -417,7 +418,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                     </Grid>
                                 )}
                                 {seeFeedback && (
-                                    <Grid item xs={6}>
+                                    <Grid item xs={6} data-testid="mylibrary-feedback-link">
                                         <MenuItem onClick={handleClose}>
                                             <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Feedback
