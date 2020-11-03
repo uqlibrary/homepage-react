@@ -150,10 +150,7 @@ export function ConnectFooter(props) {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container spacing={1}>
-                    <Hidden mdUp>
-                        <Grid item xs />
-                    </Hidden>
+                <Grid container spacing={1} style={{ justifyContent: 'center' }}>
                     {locale.connectFooter.buttonSocial.map((item, index) => (
                         <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
                             <Tooltip
@@ -178,7 +175,6 @@ export function ConnectFooter(props) {
                             </Tooltip>
                         </Grid>
                     ))}
-                    <Grid item xs />
                 </Grid>
                 <Grid className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((linkProperties, index) => {
