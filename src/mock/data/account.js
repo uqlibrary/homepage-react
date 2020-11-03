@@ -101,7 +101,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
-            "STRM": "6720",
+            "STRM": "7060",
         },
         {
             "ACAD_CAREER": "UGRD",
@@ -111,7 +111,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
-            "STRM": "6720",
+            "STRM": "7060",
         },
         {
             "ACAD_CAREER": "UGRD",
@@ -121,7 +121,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
-            "STRM": "6720",
+            "STRM": "7060",
         }
         ],
         "current_classes": [{
@@ -132,9 +132,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
-            "STRM": "6720",
-            "classnumber": "FREN1010",
-            "semester": "Semester 2 2020",
+            "STRM": "7060",
         },
         {
             "ACAD_CAREER": "UGRD",
@@ -144,9 +142,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
-            "STRM": "6720",
-            "classnumber": "HIST1201",
-            "semester": "Semester 2 2020",
+            "STRM": "7060",
         },
         {
             "ACAD_CAREER": "UGRD",
@@ -156,9 +152,7 @@ export const accounts = {
             "CAMPUS": "STLUC",
             "INSTRUCTION_MODE": "IN",
             "ACAD_GROUP": "SCI",
-            "STRM": "6720",
-            "classnumber": "PHIL1002",
-            "semester": "Semester 2 2020",
+            "STRM": "7060",
         }
         ],
         "expiryDate": "31-03-18",

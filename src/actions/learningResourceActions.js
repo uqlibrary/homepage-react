@@ -43,9 +43,13 @@ export function loadGuides(keyword) {
             .then(response => response.json())
             .then(data => {
                 console.log('fetched GUIDES_API');
+                const updatedData = data.map(subject => {
+                    subject.coursecode = keyword;
+                    return subject;
+                });
                 dispatch({
                     type: actions.GUIDES_LOADED,
-                    payload: data,
+                    payload: updatedData,
                 });
             })
             .catch(error => {
