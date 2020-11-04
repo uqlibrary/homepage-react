@@ -65,11 +65,14 @@ export function loadCurrentAccount() {
                     }
                 })
                 .then(accountResponse => {
-                    accountResponse.current_classes = accountResponse.current_classes.map(subject => {
-                        subject.classnumber = getClassNumberFromPieces(subject);
-                        subject.semester = getSemesterStringByTermNumber(subject.STRM);
-                        return subject;
-                    });
+                    accountResponse.current_classes =
+                        !!accountResponse.current_classes && accountResponse.current_classes.length > 0
+                            ? accountResponse.current_classes.map(subject => {
+                                  subject.classnumber = getClassNumberFromPieces(subject);
+                                  subject.semester = getSemesterStringByTermNumber(subject.STRM);
+                                  return subject;
+                              })
+                            : accountResponse.current_classes;
                     dispatch({
                         type: actions.CURRENT_ACCOUNT_LOADED,
                         payload: accountResponse,
