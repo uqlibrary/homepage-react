@@ -402,11 +402,21 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                     <Grid item xs>
                         <Grid container spacing={2}>
                             <Grid item xs={'auto'} className={classes.searchTypes}>
-                                <UQRadio onChange={handleSearchTypeChange} value={'1'} checked={searchType === '1'} />
+                                <UQRadio
+                                    disabled={!expandHeader}
+                                    onChange={handleSearchTypeChange}
+                                    value={'1'}
+                                    checked={searchType === '1'}
+                                />
                                 Search all UQ websites
                             </Grid>
                             <Grid item xs={'auto'} className={classes.searchTypes}>
-                                <UQRadio onChange={handleSearchTypeChange} value={'2'} checked={searchType === '2'} />
+                                <UQRadio
+                                    disabled={!expandHeader}
+                                    onChange={handleSearchTypeChange}
+                                    value={'2'}
+                                    checked={searchType === '2'}
+                                />
                                 Search this site (library.uq.edu.au)
                             </Grid>
                             <Grid item xs />
@@ -416,10 +426,15 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
 
                 <Grid container className={classes.searchInputBox} alignItems={'center'}>
                     <Grid item xs>
-                        <Input fullWidth disableUnderline placeholder={'Enter your search terms'} />
+                        <Input
+                            fullWidth
+                            disableUnderline
+                            placeholder={'Enter your search terms'}
+                            disabled={!expandHeader}
+                        />
                     </Grid>
                     <Grid item xs={'auto'}>
-                        <IconButton size={'small'}>
+                        <IconButton size={'small'} disabled={!expandHeader}>
                             <SearchIcon />
                         </IconButton>
                     </Grid>
