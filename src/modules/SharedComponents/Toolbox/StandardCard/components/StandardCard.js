@@ -31,7 +31,6 @@ export const styles = theme => ({
         padding: '12px 24px',
     },
     fullHeight: {
-        border: '10px solid red',
         height: '100%',
     },
 });

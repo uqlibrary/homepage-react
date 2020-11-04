@@ -2,6 +2,8 @@
 
 exports[`Component Masquerade Should render form as expected 1`] = `
 <StandardPage
+  goBackFunc={[Function]}
+  goBackTooltip="Return to the Library Homepage"
   title="Masquerade"
 >
   <div
@@ -9,34 +11,23 @@ exports[`Component Masquerade Should render form as expected 1`] = `
   >
     <StandardCard
       noHeader={true}
-      noPadding={true}
     >
       <WithStyles(ForwardRef(Grid))
-        alignItems="flex-end"
         container={true}
         spacing={1}
-        style={
-          Object {
-            "paddingBottom": 12,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 12,
-          }
-        }
       >
         <WithStyles(ForwardRef(Grid))
           id="masquerade"
           item={true}
-          md="auto"
           xs={12}
         >
           <WithStyles(ForwardRef(Typography))>
-            <p>
+            <span>
               <strong>
                 WARNING!!
               </strong>
                When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
-            </p>
+            </span>
           </WithStyles(ForwardRef(Typography))>
           <WithStyles(ForwardRef(Grid))
             alignItems="flex-end"
@@ -89,6 +80,8 @@ exports[`Component Masquerade Should render form as expected 1`] = `
 
 exports[`Component Masquerade Should render readonly description 1`] = `
 <StandardPage
+  goBackFunc={[Function]}
+  goBackTooltip="Return to the Library Homepage"
   title="Masquerade"
 >
   <div
@@ -96,34 +89,23 @@ exports[`Component Masquerade Should render readonly description 1`] = `
   >
     <StandardCard
       noHeader={true}
-      noPadding={true}
     >
       <WithStyles(ForwardRef(Grid))
-        alignItems="flex-end"
         container={true}
         spacing={1}
-        style={
-          Object {
-            "paddingBottom": 12,
-            "paddingLeft": 30,
-            "paddingRight": 30,
-            "paddingTop": 12,
-          }
-        }
       >
         <WithStyles(ForwardRef(Grid))
           id="masquerade"
           item={true}
-          md="auto"
           xs={12}
         >
           <WithStyles(ForwardRef(Typography))>
-            <p>
+            <span>
               <strong>
                 NOTE:
               </strong>
                As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
-            </p>
+            </span>
           </WithStyles(ForwardRef(Typography))>
           <WithStyles(ForwardRef(Grid))
             alignItems="flex-end"
