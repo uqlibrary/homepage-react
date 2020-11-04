@@ -36,6 +36,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Megamenu from './Megamenu';
 import Header from './Header';
 import ChatStatus from './ChatStatus';
+import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
 
 const styles = theme => ({
     appBG: {
@@ -49,6 +50,7 @@ const styles = theme => ({
         },
     },
     layoutFill: {
+        position: 'relative',
         display: 'flex',
         flexFlow: 'column',
         margin: 0,
@@ -73,6 +75,15 @@ const styles = theme => ({
         whiteSpace: 'nowrap',
         overflow: 'hidden',
         textOverflow: 'ellipsis',
+    },
+    connectFooter: {
+        marginTop: 50,
+        backgroundColor: theme.hexToRGBA(theme.palette.secondary.main, 0.15),
+    },
+    minimalFooter: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
     },
 });
 
@@ -229,6 +240,13 @@ export class AppClass extends PureComponent {
         return (
             <Grid container className={classes.layoutFill}>
                 <ChatStatus status={this.props.chatStatus} />
+                <HelpDrawer />
+                <ConfirmDialogBox
+                    hideCancelButton
+                    onRef={this.setSessionExpiredConfirmation}
+                    onAction={this.props.actions.logout}
+                    locale={locale.global.sessionExpiredConfirmation}
+                />
                 <div className="content-header" role="region" aria-label="Site header">
                     <Header
                         account={this.props.account}
@@ -271,31 +289,41 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    <ConfirmDialogBox
-                        hideCancelButton
-                        onRef={this.setSessionExpiredConfirmation}
-                        onAction={this.props.actions.logout}
-                        locale={locale.global.sessionExpiredConfirmation}
-                    />
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
-
                     {!isAuthorLoading && (
-                        <AccountContext.Provider
-                            value={{
-                                account: { ...this.props.account, ...this.props.author, ...this.props.authorDetails },
-                            }}
-                        >
-                            <React.Suspense fallback={<ContentLoader message="Loading content" />}>
-                                <Switch>
-                                    {routesConfig.map((route, index) => (
-                                        <Route key={`route_${index}`} {...route} />
-                                    ))}
-                                </Switch>
-                            </React.Suspense>
-                        </AccountContext.Provider>
+                        <div style={{ flexGrow: 1, marginTop: 16 }}>
+                            <AccountContext.Provider
+                                value={{
+                                    account: {
+                                        ...this.props.account,
+                                        ...this.props.author,
+                                        ...this.props.authorDetails,
+                                    },
+                                }}
+                            >
+                                <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                    <Switch>
+                                        {routesConfig.map((route, index) => (
+                                            <Route key={`route_${index}`} {...route} />
+                                        ))}
+                                    </Switch>
+                                </React.Suspense>
+                            </AccountContext.Provider>
+                        </div>
+                    )}
+                    {!this.props.accountLoading && !isAuthorLoading && (
+                        <div style={{ alignSelf: 'flex-end' }}>
+                            <Grid container spacing={0}>
+                                <Grid item xs={12} className={classes.connectFooter}>
+                                    <ConnectFooter history={this.props.history} />
+                                </Grid>
+                                <Grid item xs={12} className={classes.minimalFooter}>
+                                    <MinimalFooter />
+                                </Grid>
+                            </Grid>
+                        </div>
                     )}
                 </div>
-                <HelpDrawer />
             </Grid>
         );
     }

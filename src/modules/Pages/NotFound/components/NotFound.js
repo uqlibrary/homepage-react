@@ -18,7 +18,13 @@ export const NotFound = () => {
 
     // if known page and is logged in (page must require admin to land here)
     if (isValidRoute && account) {
-        return <StandardPage {...locale.permissionDenied} />;
+        return (
+            <StandardPage
+                goBackFunc={() => history.back()}
+                standardPageId="permission-denied"
+                {...locale.permissionDenied}
+            />
+        );
     }
 
     // if known page and is NOT logged in (page must require logged in to land here)
@@ -32,16 +38,16 @@ export const NotFound = () => {
             // istanbul ignore next
             window.location.assign(`${AUTH_URL_LOGIN}?url=${window.btoa(window.location.href)}`);
         }
-        return <StandardPage {...locale.authenticationRequired} />;
+        return <StandardPage standardPageId="authentication-required" {...locale.authenticationRequired} />;
     }
 
     // if not known page and is logged in
     if (!!account.id && !isValidRoute) {
-        return <StandardPage {...locale.notFound} />;
+        return <StandardPage standardPageId="not-found" {...locale.notFound} />;
     }
 
     // should never happen? - account did not load properly?
-    return <StandardPage {...locale.accountError} />;
+    return <StandardPage standardPageId="not-found" {...locale.accountError} />;
 };
 
 export default React.memo(NotFound);
