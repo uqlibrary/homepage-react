@@ -206,4 +206,10 @@ export default {
         },
         defaultAuthorDataPlaceholder: 'Missing',
     },
+    campuses: {
+        STLUC: 'St Lucia',
+        GATTN: 'Gatton',
+        IPSWC: 'Ipswich',
+        HERST: 'Herston',
+    },
 };
