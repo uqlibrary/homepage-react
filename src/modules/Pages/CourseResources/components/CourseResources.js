@@ -34,9 +34,6 @@ const useStyles = makeStyles(
                 alignItems: 'center',
             },
         },
-        panelLayout: {
-            padding: '12px',
-        },
         studyLinks: {
             minHeight: '10rem',
         },
@@ -378,7 +375,7 @@ export const CourseResources = ({
         <StandardPage title={locale.title}>
             <div className="layout-card" style={{ margin: '0 auto 16px' }}>
                 <StandardCard noPadding noHeader customBackgroundColor="#F7F7F7" style={{ boxShadow: '0 0 black' }}>
-                    <Grid container className={classes.panelLayout}>
+                    <Grid container>
                         <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
                             <AppBar
                                 data-testid="course-resource-top-menu"
