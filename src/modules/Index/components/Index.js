@@ -144,7 +144,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
     };
     return (
         <StandardPage>
-            <div className="layout-card" style={{ marginTop: 24, marginBottom: 50 }}>
+            <div className="layout-card">
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12}>
@@ -519,7 +519,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                     <Box position="relative" display="inline-flex">
                                                         <CircularProgress
                                                             size={20}
-                                                            thickness={6}
+                                                            thickness={10}
                                                             variant="static"
                                                             value={percent}
                                                             style={{ color: circleColor(percent) }}
@@ -537,7 +537,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                                             <CircularProgress
                                                                 variant="static"
                                                                 size={20}
-                                                                thickness={6}
+                                                                thickness={10}
                                                                 value={percent - 100}
                                                                 style={{
                                                                     color: circleColor(percent),

@@ -18,7 +18,13 @@ export const NotFound = () => {
 
     // if known page and is logged in (page must require admin to land here)
     if (isValidRoute && account) {
-        return <StandardPage standardPageId="permission-denied" {...locale.permissionDenied} />;
+        return (
+            <StandardPage
+                goBackFunc={() => history.back()}
+                standardPageId="permission-denied"
+                {...locale.permissionDenied}
+            />
+        );
     }
 
     // if known page and is NOT logged in (page must require logged in to land here)
