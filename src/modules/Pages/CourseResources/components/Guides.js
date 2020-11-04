@@ -59,7 +59,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 
                         {!!guideList &&
                             guideList.length > 0 &&
-                            guideList.map((guide, index) => {
+                            guideList.slice(0, locale.visibleItemsCount.libGuides).map((guide, index) => {
                                 return (
                                     <Grid
                                         item

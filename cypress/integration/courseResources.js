@@ -8,6 +8,7 @@ import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGui
 import { default as HIST1201LearningResources } from '../../src/mock/data/records/learningResources_HIST1201';
 import { default as HIST1201ReadingList1 } from '../../src/mock/data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
 import { default as PHIL1002LearningResources } from '../../src/mock/data/records/learningResources_PHIL1002';
+import { default as PHIL1002Guide } from '../../src/mock/data/records/libraryGuides_PHIL1002';
 import { default as learningResourceSearchSuggestions } from '../../src/mock/data/records/learningResourceSearchSuggestions';
 
 context('Course Resources', () => {
@@ -127,6 +128,26 @@ context('Course Resources', () => {
         cy.get('div[data-testid=no-guides]').contains(locale.myCourses.guides.none);
     }
 
+    function a_subject_with_many_guides_loads_correctly(guidesList) {
+        cy.get('div[data-testid=standard-card-library-guides] h3').contains(`${locale.myCourses.guides.title}`);
+
+        const numGuides = guidesList.length - 1;
+        const numGuidesVisible =
+            numGuides > locale.visibleItemsCount.libGuides ? locale.visibleItemsCount.libGuides : numGuides;
+        guidesList.map((guide, index) => {
+            const guideTitle = guide.title || 'mock data is missing';
+            const guideLink = guide.url || 'mock data is missing';
+            console.log('index = ', index);
+            if (index >= numGuidesVisible) {
+                cy.get('div[data-testid=standard-card-library-guides-content]').should('not.have.value', guideTitle);
+            } else {
+                cy.get('div[data-testid=standard-card-library-guides-content] a')
+                    .contains(guideTitle)
+                    .should('have.attr', 'href', guideLink);
+            }
+        });
+    }
+
     function a_subject_with_one_guide_loads_correctly(guides) {
         const guide = guides[0] || {};
         const guideTitle = guide.title || 'mock data is missing';
@@ -220,14 +241,14 @@ context('Course Resources', () => {
      * Show a user with 3 classes can see all the variations correctly
      * The mock data has been selected to cover the display options:
      *
-     *          |  reading lists                    | exams         | guides       |
-     * ---------+-----------------------------------+---------------+--------------+
-     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide  |
-     * ---------+-----------------------------------+---------------+--------------+
-     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides |
-     * ---------+-----------------------------------+---------------+--------------+
-     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | -            |
-     * ---------+-----------------------------------+---------------+--------------+
+     *          |  reading lists                    | exams         | guides         |
+     * ---------+-----------------------------------+---------------+----------------+
+     * FREN1010 | has 1 list with exactly 2 entries | has > 2 exams | has 1 guide    |
+     * ---------+-----------------------------------+---------------+----------------+
+     * HIST1201 | has 1 list with > 2 entries       | has 1 exams   | has 0 guides   |
+     * ---------+-----------------------------------+---------------+----------------+
+     * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
+     * ---------+-----------------------------------+---------------+----------------+
      */
     it('User with classes', () => {
         cy.visit('/courseresources?user=s1111111');
@@ -265,6 +286,8 @@ context('Course Resources', () => {
         a_subject_with_multiple_reading_lists_loads_correctly(PHIL1002LearningResources);
 
         a_subject_with_no_exams_loads_correctly();
+
+        a_subject_with_many_guides_loads_correctly(PHIL1002Guide);
 
         // next tab
         the_user_clicks_on_the_Search_tab();
