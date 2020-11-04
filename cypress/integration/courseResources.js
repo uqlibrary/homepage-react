@@ -137,7 +137,6 @@ context('Course Resources', () => {
         guidesList.map((guide, index) => {
             const guideTitle = guide.title || 'mock data is missing';
             const guideLink = guide.url || 'mock data is missing';
-            console.log('index = ', index);
             if (index >= numGuidesVisible) {
                 cy.get('div[data-testid=standard-card-library-guides-content]').should('not.have.value', guideTitle);
             } else {

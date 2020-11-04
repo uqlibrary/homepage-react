@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
+import global from 'locale/global';
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
@@ -103,12 +104,7 @@ export const CourseResources = ({
     // may need state of 'listMyCourses' which then shows the mycourses tab?
 
     const getCampusByCode = code => {
-        const campuses = {
-            STLUC: 'St Lucia',
-            GATTN: 'Gatton',
-            IPSWC: 'Ipswich',
-            HERST: 'Herston',
-        };
+        const campuses = global.campuses;
         if (campuses.hasOwnProperty(code)) {
             return campuses[code];
         }
