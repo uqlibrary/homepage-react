@@ -95,15 +95,20 @@ export const SearchCourseResources = ({
     };
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
+        let tabId;
         setKeywordPresets(getPresetData(searchKeyword, suggestions));
 
         setDisplayType('searchresults');
-        if (!listSearchedSubjects.searchKeyword) {
+        if (!listSearchedSubjects.includes(searchKeyword)) {
             loadNewSubject(searchKeyword);
+            updateSearchList(listSearchedSubjects.concat(searchKeyword));
+
+            tabId = listSearchedSubjects.length;
+        } else {
+            tabId = listSearchedSubjects.indexOf(searchKeyword);
         }
-        updateSearchList(listSearchedSubjects.concat(searchKeyword));
-        const tabId = `${subjectTabLabel}-${listSearchedSubjects.length}`;
-        setCurrentSearchTab(tabId);
+
+        setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
     };
 
     return (
