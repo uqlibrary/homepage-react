@@ -61,12 +61,14 @@ export default {
         },
         readingLists: {
             title: 'Reading lists',
-            none: 'No reading lists for this course',
-            unavailable: 'Reading lists currently unavailable',
-            multiple: {
-                title: 'More than one reading list found for [classnumber]. Please select a list:',
-                linkLabel: 'Search other reading lists',
-                linkOut: 'http://lr.library.uq.edu.au/index.html',
+            error: {
+                none: 'No reading lists for this course',
+                unavailable: 'Reading lists currently unavailable',
+                multiple: 'More than one reading list found for [classnumber]. Please select a list:',
+                footer: {
+                    linkLabel: 'Search other reading lists',
+                    linkOut: 'http://lr.library.uq.edu.au/index.html',
+                },
             },
             footer: {
                 linkLabel: '[numberExcessReadingLists] more [readingListNumber]',

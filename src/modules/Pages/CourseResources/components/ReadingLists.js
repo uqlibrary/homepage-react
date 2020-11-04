@@ -61,7 +61,7 @@ export const ReadingLists = ({
     // PHIL1002 is currently an example of multiple reading lists
     const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
         const chooseListPrompt = classnumber =>
-            locale.myCourses.readingLists.multiple.title.replace('[classnumber]', classnumber);
+            locale.myCourses.readingLists.multiple.replace('[classnumber]', classnumber);
         return (
             <Grid container style={{ paddingBottom: 12 }}>
                 {!!classnumber && (
@@ -89,10 +89,10 @@ export const ReadingLists = ({
                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                     <a
                         data-testid="multiple-reading-list-search-link"
-                        href={locale.myCourses.readingLists.multiple.linkOut}
+                        href={locale.myCourses.readingLists.error.footer.linkOut}
                     >
                         <SpacedArrowForwardIcon />
-                        {locale.myCourses.readingLists.multiple.linkLabel}
+                        {locale.myCourses.readingLists.error.footer.linkLabel}
                     </a>
                 </Grid>
             </Grid>
@@ -143,19 +143,41 @@ export const ReadingLists = ({
                         )}
 
                         {(!!readingListError || !!learningResourcesListError) && (
-                            <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
-                            </Grid>
+                            <Fragment>
+                                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                    <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
+                                </Grid>
+                                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                    <a
+                                        data-testid="multiple-reading-list-search-link"
+                                        href={locale.myCourses.readingLists.error.footer.linkOut}
+                                    >
+                                        <SpacedArrowForwardIcon />
+                                        {locale.myCourses.readingLists.error.footer.linkLabel}
+                                    </a>
+                                </Grid>
+                            </Fragment>
                         )}
 
-                        {(!readingListError || !learningResourcesListError) &&
-                            !!filteredReadingLists &&
-                            filteredReadingLists.length === 1 &&
-                            (!learningResourcesList || learningResourcesList.length === 0) && (
+                        {(!filteredReadingLists ||
+                            filteredReadingLists.length === 0 ||
+                            !learningResourcesList ||
+                            learningResourcesList.length === 0) && (
+                            <Fragment>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                    <Typography>{locale.myCourses.readingLists.none}</Typography>
+                                    <Typography>{locale.myCourses.readingLists.error.none}</Typography>
                                 </Grid>
-                            )}
+                                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                    <a
+                                        data-testid="multiple-reading-list-search-link"
+                                        href={locale.myCourses.readingLists.error.footer.linkOut}
+                                    >
+                                        <SpacedArrowForwardIcon />
+                                        {locale.myCourses.readingLists.error.footer.linkLabel}
+                                    </a>
+                                </Grid>
+                            </Fragment>
+                        )}
 
                         {!!filteredReadingLists && filteredReadingLists.length > 1 && (
                             <Grid item>

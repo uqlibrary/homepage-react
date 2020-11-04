@@ -75,14 +75,18 @@ export const PastExamPapers = ({
                                 />
                             </Grid>
                         )}
-                        {!!examList && examList.length === 0 && (
-                            <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                <Typography>{locale.myCourses.examPapers.none}</Typography>
-                                <a href={_courseLink('', locale.myCourses.examPapers.footer.linkOutPattern)}>
-                                    <SpacedArrowForwardIcon />
-                                    {locale.myCourses.examPapers.footer.linkLabel}
-                                </a>
-                            </Grid>
+                        {(!examList || examList.length === 0) && (
+                            <React.Fragment>
+                                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                    <Typography>{locale.myCourses.examPapers.none}</Typography>
+                                </Grid>
+                                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                    <a href={_courseLink('', locale.myCourses.examPapers.footer.linkOutPattern)}>
+                                        <SpacedArrowForwardIcon />
+                                        {locale.myCourses.examPapers.footer.linkLabel}
+                                    </a>
+                                </Grid>
+                            </React.Fragment>
                         )}
                         {!!examList &&
                             examList.length > 0 &&
