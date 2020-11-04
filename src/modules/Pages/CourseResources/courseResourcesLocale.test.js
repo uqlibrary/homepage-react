@@ -44,11 +44,11 @@ describe('courseResourcesLocale', () => {
         isAString(locale.myCourses.none.title);
         expect(locale.myCourses.none.description.length).not.toBe(0);
         isAString(locale.myCourses.readingLists.title);
-        isAString(locale.myCourses.readingLists.none);
-        isAString(locale.myCourses.readingLists.unavailable);
-        isAString(locale.myCourses.readingLists.multiple.title);
-        isAString(locale.myCourses.readingLists.multiple.linkLabel);
-        isAValidLink(locale.myCourses.readingLists.multiple.linkOut);
+        isAString(locale.myCourses.readingLists.error.none);
+        isAString(locale.myCourses.readingLists.error.unavailable);
+        isAString(locale.myCourses.readingLists.error.multiple);
+        isAString(locale.myCourses.readingLists.error.footer.linkLabel);
+        isAValidLink(locale.myCourses.readingLists.error.footer.linkOut);
         isAString(locale.myCourses.readingLists.footer.linkLabel);
 
         isAString(locale.myCourses.examPapers.title);

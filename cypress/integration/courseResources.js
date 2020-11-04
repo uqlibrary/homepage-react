@@ -74,11 +74,11 @@ context('Course Resources', () => {
         const courseCode = learningResource.title || 'mock data is missing';
 
         cy.get('div[data-testid=standard-card-reading-lists--content]').contains(
-            locale.myCourses.readingLists.multiple.title.replace('[classnumber]', courseCode),
+            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', courseCode),
         );
         cy.get('a[data-testid=multiple-reading-list-search-link]')
-            .contains(locale.myCourses.readingLists.multiple.linkLabel)
-            .should('have.attr', 'href', locale.myCourses.readingLists.multiple.linkOut);
+            .contains(locale.myCourses.readingLists.error.footer.linkLabel)
+            .should('have.attr', 'href', locale.myCourses.readingLists.error.footer.linkOut);
     }
 
     function a_subject_with_no_exams_loads_correctly() {
