@@ -61,7 +61,7 @@ export const ReadingLists = ({
     // PHIL1002 is currently an example of multiple reading lists
     const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
         const chooseListPrompt = classnumber =>
-            locale.myCourses.readingLists.multiple.replace('[classnumber]', classnumber);
+            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', classnumber);
         return (
             <Grid container style={{ paddingBottom: 12 }}>
                 {!!classnumber && (
