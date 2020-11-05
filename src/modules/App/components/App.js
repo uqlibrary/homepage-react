@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
-import Hidden from '@material-ui/core/Hidden';
 
 browserUpdate({
     required: {
@@ -33,11 +32,10 @@ import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import Megamenu from './Megamenu';
 import UQHeader from './UQHeader';
-// import Header from './Header';
 import ChatStatus from './ChatStatus';
 import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
+import UQSiteHeader from './UQSiteHeader';
 
 const styles = theme => ({
     appBG: {
@@ -178,12 +176,6 @@ export class AppClass extends PureComponent {
         });
     };
 
-    toggleMenu = () => {
-        this.setState({
-            menuOpen: !this.state.menuOpen,
-        });
-    };
-
     redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
@@ -216,7 +208,7 @@ export class AppClass extends PureComponent {
             );
         }
 
-        // const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
+        const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
         const isAuthorLoading = this.props.accountLoading || this.props.accountAuthorLoading;
         const isHdrStudent =
             !isAuthorLoading &&
@@ -224,13 +216,6 @@ export class AppClass extends PureComponent {
             this.props.account.class &&
             this.props.account.class.indexOf('IS_CURRENT') >= 0 &&
             this.props.account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
-        const menuItems = routes.getMenuConfig(
-            this.props.account,
-            this.props.author,
-            this.props.authorDetails,
-            isHdrStudent && !false,
-            false,
-        );
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
@@ -249,46 +234,20 @@ export class AppClass extends PureComponent {
                     locale={locale.global.sessionExpiredConfirmation}
                 />
                 <div className="content-header" role="region" aria-label="Site header">
-                    {/* <Header*/}
-                    {/*    account={this.props.account}*/}
-                    {/*    history={this.props.history}*/}
-                    {/*    isAuthorizedUser={isAuthorizedUser}*/}
-                    {/*    toggleMenu={this.toggleMenu}*/}
-                    {/* />*/}
                     <UQHeader />
                 </div>
+                <div role="region" aria-label="UQ Library Alerts">
+                    <AppAlertContainer />
+                </div>
+                <UQSiteHeader
+                    isAuthorizedUser={isAuthorizedUser}
+                    isHdrStudent={isHdrStudent}
+                    account={this.props.account}
+                    author={this.props.author}
+                    authorDetails={this.props.authorDetails}
+                    history={this.props.history}
+                />
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
-                    <div role="region" aria-label="Main site navigation">
-                        <Hidden lgUp>
-                            <Megamenu
-                                hasHomePageItem
-                                hasCloseItem
-                                history={this.props.history}
-                                // locale={{
-                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                //     skipNavTitle: locale.global.skipNav.title,
-                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                // }}
-                                menuItems={menuItems}
-                                menuOpen={this.state.menuOpen}
-                                toggleMenu={this.toggleMenu}
-                            />
-                        </Hidden>
-                        <Hidden mdDown>
-                            <Megamenu
-                                menuItems={menuItems}
-                                history={this.props.history}
-                                // locale={{
-                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                //     skipNavTitle: locale.global.skipNav.title,
-                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                // }}
-                            />
-                        </Hidden>
-                    </div>
-                    <div role="region" aria-label="UQ Library Alerts">
-                        <AppAlertContainer />
-                    </div>
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
                     {!isAuthorLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>

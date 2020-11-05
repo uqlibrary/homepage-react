@@ -110,7 +110,7 @@ export const UQHeader = ({}) => {
                                             name="as_sitesearch"
                                             value=""
                                             className="form-radio"
-                                            checked
+                                            defaultChecked
                                         />
                                         <label htmlFor="edit-as_sitesearch-off" className="option">
                                             Search all UQ websites

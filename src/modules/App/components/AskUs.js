@@ -4,7 +4,6 @@ import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import Tooltip from '@material-ui/core/Tooltip';
 import Grid from '@material-ui/core/Grid';
 import { locale } from './locale';
 
@@ -15,11 +14,10 @@ const useStyles = makeStyles(
             flexDirection: 'column',
         },
         headerIconButton: {
-            marginTop: -12,
-            color: theme.palette.white.main,
+            color: theme.palette.primary.main,
         },
         headerButtonTitle: {
-            color: theme.palette.white.main,
+            color: theme.palette.primary.main,
             fontSize: 12,
         },
         menu: {
@@ -49,15 +47,13 @@ export const AskUs = ({}) => {
     };
     return (
         <React.Fragment>
-            <Tooltip id="contact-button" title={'Ask us'} placement="bottom" TransitionProps={{ timeout: 300 }}>
-                <IconButton
-                    onClick={handleClick}
-                    classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
-                >
-                    <QuestionAnswer className={classes.icon} />
-                    <div className={classes.headerButtonTitle}>{locale.askUs.title}</div>
-                </IconButton>
-            </Tooltip>
+            <IconButton
+                onClick={handleClick}
+                classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
+            >
+                <QuestionAnswer className={classes.icon} />
+                <div className={classes.headerButtonTitle}>{locale.askUs.title}</div>
+            </IconButton>
             <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
                 <Grid container spacing={0} className={classes.menu}>
                     {locale.askUs.links.map((item, index) => (

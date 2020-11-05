@@ -66,7 +66,6 @@ const styles = theme => {
         },
         megamenu: {
             backgroundColor: theme.palette.white.main,
-            boxShadow: 'rgba(0, 0, 0, 0.2) 0px 2px 2px 0px',
             margin: 0,
             maxWidth: 'initial',
             padding: 0,
@@ -436,7 +435,7 @@ export function Megamenu(props) {
                 data-testid={menuLocale.responsiveClose.dataTestid}
                 key={menuLocale.responsiveClose.dataTestid}
                 id={menuLocale.responsiveClose.dataTestid}
-                onClick={() => toggleMenu()}
+                onClick={() => toggleMenu}
             >
                 <ListItemText
                     classes={{

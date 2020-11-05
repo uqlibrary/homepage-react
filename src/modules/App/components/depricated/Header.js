@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
-const logo = require('../../../../public/images/uq-lockup-landscape--reversed.svg');
+const logo = require('../../../../../public/images/uq-lockup-landscape--reversed.svg');
 import locale from 'locale/global';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 import { pathConfig } from 'config/routes';
@@ -30,7 +30,7 @@ import RoomServiceIcon from '@material-ui/icons/RoomService';
 import YoutubeSearchedForIcon from '@material-ui/icons/YoutubeSearchedFor';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FeedbackIcon from '@material-ui/icons/Feedback';
-import { AskUs } from './AskUs';
+import { AskUs } from '../AskUs';
 
 const useStyles = makeStyles(
     theme => ({
@@ -211,7 +211,6 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                             >
                                 <IconButton
                                     aria-label={locale.global.mainNavButton.aria}
-                                    // style={{ marginLeft: '-12px', marginRight: '12px' }}
                                     onClick={toggleMenu}
                                     id={'main-menu-button'}
                                 >
