@@ -27,37 +27,30 @@ const useStyles = makeStyles(
 export const SubjectLinks = ({ subject }) => {
     const classes = useStyles();
     return (
-        <Grid container spacing={3} className={'CourseLinks'}>
-            <Grid item xs={12}>
-                <StandardCard title={locale.myCourses.links.title}>
-                    <Grid container>
-                        <Grid item xs={12} className={classes.courseResourceLineItem}>
-                            <a
-                                // on-click="linkClicked"
-                                data-testid={`ecp-${subject.classnumber}`}
-                                href={_courseLink(subject.classnumber, locale.myCourses.links.ecp.linkOutPattern)}
-                            >
-                                <SpacedArrowForwardIcon />
-                                {locale.myCourses.links.ecp.title}
-                            </a>
-                        </Grid>
-                        <Grid item xs={12} className={classes.courseResourceLineItem}>
-                            <a
-                                // on-click="linkClicked"
-                                data-testid={`blackboard-${subject.classnumber}`}
-                                href={_courseLink(
-                                    subject.classnumber,
-                                    locale.myCourses.links.blackboard.linkOutPattern,
-                                )}
-                            >
-                                <SpacedArrowForwardIcon />
-                                {locale.myCourses.links.blackboard.title}
-                            </a>
-                        </Grid>
-                    </Grid>
-                </StandardCard>
+        <StandardCard fullHeight title={locale.myCourses.links.title} className={'CourseLinks'}>
+            <Grid container>
+                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                    <a
+                        // on-click="linkClicked"
+                        data-testid={`ecp-${subject.classnumber}`}
+                        href={_courseLink(subject.classnumber, locale.myCourses.links.ecp.linkOutPattern)}
+                    >
+                        <SpacedArrowForwardIcon />
+                        {locale.myCourses.links.ecp.title}
+                    </a>
+                </Grid>
+                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                    <a
+                        // on-click="linkClicked"
+                        data-testid={`blackboard-${subject.classnumber}`}
+                        href={_courseLink(subject.classnumber, locale.myCourses.links.blackboard.linkOutPattern)}
+                    >
+                        <SpacedArrowForwardIcon />
+                        {locale.myCourses.links.blackboard.title}
+                    </a>
+                </Grid>
             </Grid>
-        </Grid>
+        </StandardCard>
     );
 };
 
