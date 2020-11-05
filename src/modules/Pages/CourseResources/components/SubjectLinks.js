@@ -27,8 +27,8 @@ const useStyles = makeStyles(
 export const SubjectLinks = ({ subject }) => {
     const classes = useStyles();
     return (
-        <StandardCard fullHeight title={locale.myCourses.links.title} className={'CourseLinks'}>
-            <Grid container>
+        <StandardCard fullHeight title={locale.myCourses.links.title}>
+            <Grid container className={'CourseLinks'}>
                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                     <a
                         // on-click="linkClicked"

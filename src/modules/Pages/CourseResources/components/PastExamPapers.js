@@ -55,7 +55,7 @@ export const PastExamPapers = ({
     }`;
 
     return (
-        <StandardCard fullHeight className={'exams'} title={examPaperTitle}>
+        <StandardCard fullHeight title={examPaperTitle}>
             <Grid container>
                 {!!learningResourcesListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
                 {!learningResourcesListError && learningResourcesListLoading && (

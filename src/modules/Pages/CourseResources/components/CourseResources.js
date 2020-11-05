@@ -344,7 +344,7 @@ export const CourseResources = ({
                 />
 
                 <Grid container>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={4} className={'exams'}>
                         <PastExamPapers
                             subject={subject}
                             learningResourcesList={currentLearningResourcesList[subject.classnumber]}
