@@ -30,8 +30,8 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
     const classes = useStyles();
 
     return (
-        <StandardCard className={'guides'} fullHeight title={locale.myCourses.guides.title}>
-            <Grid container>
+        <StandardCard fullHeight title={locale.myCourses.guides.title}>
+            <Grid container className={'guides'}>
                 {guideListLoading && (
                     <Grid
                         item
