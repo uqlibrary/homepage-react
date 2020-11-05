@@ -34,7 +34,8 @@ import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import Megamenu from './Megamenu';
-import Header from './Header';
+import UQHeader from './UQHeader';
+// import Header from './Header';
 import ChatStatus from './ChatStatus';
 import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
 
@@ -215,7 +216,7 @@ export class AppClass extends PureComponent {
             );
         }
 
-        const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
+        // const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
         const isAuthorLoading = this.props.accountLoading || this.props.accountAuthorLoading;
         const isHdrStudent =
             !isAuthorLoading &&
@@ -248,12 +249,13 @@ export class AppClass extends PureComponent {
                     locale={locale.global.sessionExpiredConfirmation}
                 />
                 <div className="content-header" role="region" aria-label="Site header">
-                    <Header
-                        account={this.props.account}
-                        history={this.props.history}
-                        isAuthorizedUser={isAuthorizedUser}
-                        toggleMenu={this.toggleMenu}
-                    />
+                    {/* <Header*/}
+                    {/*    account={this.props.account}*/}
+                    {/*    history={this.props.history}*/}
+                    {/*    isAuthorizedUser={isAuthorizedUser}*/}
+                    {/*    toggleMenu={this.toggleMenu}*/}
+                    {/* />*/}
+                    <UQHeader />
                 </div>
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
                     <div role="region" aria-label="Main site navigation">

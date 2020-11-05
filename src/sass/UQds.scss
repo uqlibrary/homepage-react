@@ -1,0 +1,1191 @@
+//@import '../../UQds/core/src/scss/global';
+//@use '../../UQds/grid/src/scss/global' as grid;
+@use 'global' as *;
+
+@forward '../../UQds/core/src/scss/_partials/spacing-constants';
+@forward '../../UQds/core/src/scss/_partials/text-constants';
+@use '../../UQds/core/src/scss/_partials/text-constants' as *;
+@forward '../../UQds/core/src/scss/_partials/colour-constants';
+@forward '../../UQds/core/src/scss/_partials/space';
+@forward '../../UQds/core/src/scss/_partials/media-constants';
+
+
+/* Breakpoints */
+
+// Firstly the trivial 0 size (of course), then:
+$screen-xs: 26rem !default; // ~416px (DEPRECATED)
+$screen-sm: 34rem !default; // ~544px (DEPRECATED)
+
+// Considered to be the "tablet" sizes in discussion
+$screen-md: 37.5rem !default; // ~600px
+$screen-lg: 64rem !default; // ~1024px (DEPRECATED)
+
+// Considered to be the "desktop" size in discussion
+$screen-xl: 75rem !default; // ~1200px
+
+/* Media query strings */
+
+// x-small (DEPRECATED)
+$screen-xs-up: "(min-width: #{$screen-xs})" !default;
+$screen-xs-down: "(max-width: #{$screen-xs - 0.0625rem})" !default;
+$screen-xs-sm: "(min-width: #{$screen-xs}) and (max-width: #{$screen-sm - 0.0625rem})" !default;
+
+// small (DEPRECATED)
+$screen-sm-up: "(min-width: #{$screen-sm})" !default;
+$screen-sm-down: "(max-width: #{$screen-sm - 0.0625rem})" !default;
+$screen-sm-md: "(min-width: #{$screen-sm}) and (max-width: #{$screen-md - 0.0625rem})" !default;
+
+// medium
+$screen-md-up: "(min-width: #{$screen-md})" !default;
+$screen-md-down: "(max-width: #{$screen-md - 0.0625rem})" !default;
+$screen-md-lg: "(min-width: #{$screen-md}) and (max-width: #{$screen-lg - 0.0625rem})" !default;
+
+// large (DEPRECATED)
+$screen-lg-up: "(min-width: #{$screen-lg})" !default;
+$screen-lg-down: "(max-width: #{$screen-lg - 0.0625rem})" !default;
+$screen-lg-xl: "(min-width: #{$screen-lg}) and (max-width: #{$screen-xl - 0.0625rem})" !default;
+
+// x-large
+$screen-xl-up: "(min-width: #{$screen-xl})" !default;
+$screen-xl-down: "(max-width: #{$screen-xl - 0.0625rem})" !default;
+
+// Space is calculated as multiples of eight
+// Baseline is default of device or broswer, typically 16px
+
+/* Multiples of 8
+
+1 (0.0625rem)
+2 (0.125rem)
+8 (0.5rem)
+16 (1rem)
+24 (1.5rem)
+32 (2rem)
+40 (2.5rem)
+48 (3rem)
+56 (35rem)
+64 (4rem)
+72 (4.5rem)
+80 (5rem)
+88 (5.5rem)
+96 (6rem)
+104 (6.5rem)
+112 (7rem)
+120 (7.5rem)
+128 (8rem)
+136 (8.5rem)
+144 (9rem)
+152 (9.5rem)
+160 (10rem)
+168 (10.5rem)
+176 (11rem)
+184 (11.5rem)
+192 (12rem)
+200 (12.5rem)
+208 (13rem)
+216 (13.5rem)
+224 (14rem)
+232 (14.5rem)
+240 (15rem)
+248 (15.5rem)
+256 (16rem)
+
+*/
+
+// spacing variables
+
+$space-auto: auto; /* auto */
+$space-none: 0; /* zero - no spacing */
+
+/* 1px (0.0625rem) */
+/* 2px (0.125rem) */
+
+$space-xs: 0.25rem; /* 4px */
+$space-sm: 0.5rem; /* 8px */
+
+$space: 1rem; /* 16px */ /* Default */
+
+$space-md: 1.5rem; /* 24px */
+$space-lg: 2rem; /* 32px */
+$space-xl: 2.5rem; /* 40px */
+$space-xxl: 3rem; /* 48px */
+$space-xxxl: 3.5rem; /* 56px */
+$space-xxxxl: 4rem; /* 64px */
+$space-ul: 4.5rem; /* 72px */
+$space-uul: 5rem; /* 80px */
+$space-uuul: 5.5rem; /* 88px */
+$space-uuuul: 10rem; /* 160px */
+
+
+
+/* Conceptual spacing options - use with caution as these may change. */
+
+
+/* compressed - half the original value */
+
+$space-compressed-xs: 0.125rem ; /* 2px (4px) */
+$space-compressed-sm: 0.25rem ; /* 4px (8px) */
+
+$space-compressed: 0.5rem ; /* 8px (16px) */
+
+$space-compressed-md: 0.75rem; /* 12px (24px) */
+$space-compressed-lg: 1rem; /* 16px (32px) */
+$space-compressed-xl: 1.25rem; /* 20px (40px) */
+$space-compressed-xxl: 1.5rem; /* 24px (48px) */
+$space-compressed-xxxl: 1.75rem; /* 28px (56px) */
+$space-compressed-xxxxl: 2rem; /* 32px (64px) */
+$space-compressed-ul: 2.25rem; /* 36px (72px) */
+$space-compressed-uul: 2.5rem; /* 40px (80px) */
+$space-compressed-uuul: 2.75rem; /* 44px (88px) */
+$space-compressed-uuuul: 5rem; /* 80px (160px) */
+
+/* stretched - 1.5 times the original value */
+
+$space-stretched-xs: 0.375rem; /* 6px (4px) */
+$space-stretched-sm: 0.75rem; /* 12px (8px) */
+
+$space-stretched: 1.5rem; /* 24px (16px) */
+
+$space-stretched-md: 2.25rem; /* 36px (24px) */
+$space-stretched-lg: 3rem; /* 48px (32px) */
+$space-stretched-xl: 3.75rem; /* 60px (40px) */
+$space-stretched-xxl: 4.5rem; /* 72px (48px) */
+$space-stretched-xxxl: 5.25rem; /* 84px (56px) */
+$space-stretched-xxxxl: 6rem; /* 96px (64px) */
+$space-stretched-ul: 6.75rem; /* 108px (72px) */
+$space-stretched-uul:  7.5rem; /* 120px (80px) */
+$space-stretched-uuul: 8.25rem; /* 132px (88px) */
+$space-stretched-uuuul: 15rem; /* 80px (160px) */
+
+/* FS: typography. */
+$font-family: "Roboto", Helvetica, Arial, sans-serif;
+$font-family-title: "Montserrat", Helvetica, Arial, sans-serif;
+$font-family-accent: "Merriweather", Georgia, serif;
+
+/* FS: font sizes. */
+$font-size-xxxxl: 2.5rem; /* 40px - H1 */
+$font-size-xxxl: 2rem; /* 32px - H2 */
+$font-size-xxl: 1.5rem; /* 24px - H3 */
+$font-size-xl: 1.25rem; /* 20px - H4 */
+$font-size-l: 1.125rem; /* 18px - H5 */
+$font-size-m: 1rem; /* 16px - Body, H6 */
+$font-size-s: 0.875rem; /* 14px - Sub */
+$font-size-xs: 0.75rem; /* 12px - Small */
+
+/* FS: line heights. */
+$line-height: 1.5;
+$line-height-h: 1.4;
+$line-height-ui: 1;
+
+/* FS font weights. */
+$font-weight-thin: 300;
+$font-weight-normal: 400;
+$font-weight-bold: 500;
+$font-weight-medium: $font-weight-bold;
+
+$roboto:  'Roboto', "Helvetica Neue", Helvetica, Arial, sans-serif;
+$merriweather:  'Merriweather', Georgia, serif;
+$montserrat: 'Montserrat', sans-serif;
+$courier: "Courier New", "DejaVu Sans Mono", monospace, sans-serif;
+
+// Now create some variables using the font stacks we want on this site.
+$font-body: $roboto;
+$font-monospace: $courier;
+
+// Font Awesome settings
+//@forward "font-awesome/scss/variables";
+//$fa-font-size-base: $font-size-m;
+//$fa-css-prefix: icon;
+
+// UQ icons settings
+//@forward "../fonts/uq-icons/scss/variables";
+$uq-font-size-base: $font-size-m;
+$uq-css-prefix: icon;
+
+// Only base colours should be listed in this file. Mixed and modified colour should be done at the associated component or supporting file.
+// UQ brand colours
+
+// UQ Primary palette
+$uq-purple: #51247A; // rgb(81, 36, 122)
+$uq-black: #000; // rgb(0, 0, 0)
+$uq-white: #fff; // rgb(255, 255, 255)
+// UQ Secondary palette
+$uq-purple-light: #962A8B; // rgb(150, 42, 139)
+$uq-neutral: #D7D1CC; // rgb(215, 209, 204), Consolidated - DDD, D7D1CC, DBDBDB
+$uq-darkgrey: #999490; // rgb(153, 148, 144)
+$uq-gold: #BB9D65; // rgb(187, 157, 101)
+$uq-red: #E62645; // rgb(230, 38, 69)
+$uq-orange: #EB602B; // rgb(235, 96, 43)
+$uq-yellow: #FBB800; // rgb(251, 184, 0)
+$uq-blue: #4085C6; // rgb(64, 133, 198)
+$uq-aqua: #00A2C7; // rgb(0, 162, 199)
+$uq-green: #2EA836; // rgb(46, 168, 54)
+// UQ Purple gradient
+$uq-purple-gradient: linear-gradient(90deg, $uq-purple 0%, 87%, $uq-purple-light 100%);
+// UQ Secondary - Neutral Tints
+$uq-neutral-light20: #f7f6f5; // rgb(247, 246, 245), rgba(215, 209, 204, 0.2), Consolidated - F9F9F9, FCFCFC, F5F5F5, F2F2F2, F3F3F3, F7F6F5, F8F8F9, F1F1F1, F0F0F0
+$uq-neutral-light40: #efedeb; // rgb(239, 237, 235), rgba(215, 209, 204, 0.4), Consolidated - EEE, EFEFEF, EDEDED
+$uq-neutral-light60: #e7e3e0; // rgb(231, 227, 224), rgba(215, 209, 204, 0.6), Consolidated - E9E9E9, E1E1E1, E3DBE8
+$uq-neutral-light80: #dfdad6; // rgb(223, 218, 214), rgba(215, 209, 204, 0.8)
+// UQ Secondary - Neutral Shades
+$uq-neutral-dark20: #aca7a3; // Consolidated - BBB, BDB0A5, CCC, C3C3C5
+$uq-neutral-dark40: #817d7a; // Consolidated - 7F7F7F, 747474, 767676, 777, 808080, 868686, 949494
+$uq-neutral-dark60: #565452; // Consolidated - 555, 676767, 666, 6F6F6F, 444, 494949, 333
+$uq-neutral-dark80: #2b2a29; // Consolidated - 181818, 2B2A29, 222, 2B2B2B
+// UQ Secondary - Darkgrey Tints
+$uq-darkgrey-light20: #ebeae9; // rgb(235, 234, 233), rgba(153, 148, 144, 0.2)
+$uq-darkgrey-light40: #d6d4d3; // rgb(214, 212, 211), rgba(153, 148, 144, 0.4)
+$uq-darkgrey-light60: #c2bfbc; // rgb(194, 191, 188), rgba(153, 148, 144, 0.6)
+$uq-darkgrey-light80: #ada9a6; // rgb(173, 169, 166), rgba(153, 148, 144, 0.8)
+// UQ Secondary - Red Shades
+$uq-red-dark20: #be1b38; // Consolidated - B80017, D6492A, F04124, F00000, D8481F
+$uq-red-dark40: #9b1129; // Consolidated - CF2A0E
+
+// Link Blue
+$link: #2377cb;
+$link-hover: #005ea5;
+// Links
+$link-color: #2377cb;
+$link-active-color: #005ea5;
+$link-hover-color: #005ea5;
+
+// Default text, Content
+$text: $uq-neutral-dark80; //#2b2b2b;
+
+// External link icon
+$external-link-icon-color: $uq-neutral-dark20; //bbb;
+// Alerts
+$alert: $uq-red-dark20; //B80017;
+$info-color: #d4f0ff !default; //#D4F0FF !default;
+$success-color: #d5eeca !default; //#D5EECA!default;
+$warning-color: #ffe0ad !default; //#FFE0AD!default;
+$danger-color: #ffacac !default; //#F4ACAC!default;
+
+// Vertical lists
+$vertical-list-border: $uq-neutral-light40; //EDEDED;
+// Vertical Menu
+$vertical-menu-link-border: $uq-neutral-light20; //f5f5f5;
+$vertical-menu-link-active: $uq-black;
+$vertical-menu-shaded-bg-color: $uq-neutral-light20; //f6f6f6;
+// Administration
+$primary-tabs-bg: $uq-neutral-light40; //eee;
+// Messages
+$messages-status-bg: #eef5fb;
+$messages-status-border-color: #8ebae7;
+$messages-status-color: $uq-black;
+$messages-warning-bg: #fff9ee;
+$messages-warning-border-color: #ffd179;
+$messages-warning-color: $uq-black;
+$messages-error-bg: $uq-red-dark20; //#d8481f;
+$messages-error-border-color: $uq-red-dark20; //#d8481f;
+$messages-error-color: $uq-white;
+$messages-error-link-color: $uq-white;
+// Progress Bar
+$progress-bar-bg: $uq-neutral; //ddd;
+$progress-bar-fill-bg: $uq-neutral-dark60; //444;
+$progress-bar-border-color: $uq-neutral-dark40; //949494;
+$progress-bar-color: $uq-white;
+// Progression
+$progression-text: $uq-white;
+$progression-border: $progression-text;
+$progression-label: $uq-neutral-dark80; //222;
+$progression-step-bg: $uq-darkgrey;
+$progression-bar-bg: $uq-neutral;
+$progression-completed: $uq-green;
+// Sections
+$section-shaded-bg: $uq-neutral-light20; //f5f5f5;
+$section-summary-color: $uq-neutral-dark40; //767676;
+$section-footer-color: $uq-neutral-dark40; //767676;
+// Palettes
+$light-palette-color: $uq-neutral-light20; //f0f0f0;
+$light-palette-border-color: rgba($uq-white, .4);
+$light-palette-link-color: $uq-white;
+$light-palette-bg: $uq-white;
+$dark-palette-color: $uq-neutral-dark80; //222;
+$dark-palette-border-color: rgba($uq-black, .1);
+$dark-palette-link-color: lighten($uq-purple, 10%);
+$dark-palette-bg: $uq-neutral-dark60; //333;
+// Tints
+$dark-tint-bg: $uq-neutral-dark60; //494949;
+// Hero banner
+$hero-banner-bg: $uq-neutral-dark60; //494949;
+// Menu Block two column
+$menu-block-two-column-link-color: $link-color;
+$menu-block-two-column-inactive-link-color: $uq-neutral-dark80; //222;
+$menu-block-two-column-border-color: $uq-neutral-light40; //eee;
+// Page
+$page-header-bg: $uq-neutral-light20; //f2f2f2;
+$page-header-white-bg: $uq-white;
+$page-header-white-border-color: $uq-neutral-light40; //eee;
+// Tabs
+$tabs-shaded-bg: $uq-neutral-light20; //f5f5f5;
+$tabs-underlined-border-color: $uq-neutral-light60; //e3dbe8;
+// Article
+$article-title-color: $uq-neutral-dark60; //555;
+$article-border-color: $uq-neutral-light40; //eee;
+$article-tag-bg: $uq-neutral-light20; //f3f3f3;
+$article-tag-color: $uq-neutral-dark60; //666;
+// Icons
+$icon-light-grey-color: $uq-neutral; //ddd;
+// Catalogue
+$catalogue-index-bg: $uq-neutral-light20; //f7f6f5;
+$catalogue-index-color: $uq-neutral-dark60; //555;
+$catalogue-meta-color: $uq-neutral-light40; //eee;
+// Citation (eSpace)
+$citation-color: $uq-neutral-dark40; //868686;
+// Tags
+$tags-link-bg: $uq-neutral-light20; //f5f5f5;
+// Action items
+$action-item-bg: $uq-neutral-light20;
+$action-item-icon-bg: $uq-neutral; //dbdbdb;
+// Team
+$team-teaser-action-links: $uq-neutral-dark60; //666;
+// Asset
+$asset-border-color: $uq-neutral-dark20; //ccc;
+// Overview brand device connector
+$brand-device-connector: $uq-neutral-light60; //E1E1E1;
+// Compendium
+$compendium-border-color: $uq-neutral-dark20; //ccc;
+$compendium-title-border-color: $uq-neutral; //ddd;
+// Logo
+$logo-color: $uq-white;
+// Content column block
+$content-column-block-pane-bg: #2468c6;
+$content-column-block-pane-odd-bg: #22487e;
+// Divider
+$divider-border-color: $uq-neutral-light40; //ededed;
+// Compact
+$compact-content-color: $uq-neutral-dark40; //767676;
+
+//
+// Mixins
+//
+@mixin hide-text {
+  // http://www.zeldman.com/2012/03/01/replacing-the-9999px-hack-new-image-replacement/
+  text-indent: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+// Background images used for full-width cover.
+@mixin background-cover($image-path: false, $background-top: center, $background-left: center) {
+  // https://css-tricks.com/perfect-full-page-background-image
+  @if ($image-path) {
+    background-image: url($image-path);
+  }
+  background-position: $background-top $background-left;
+  background-repeat: no-repeat;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+// Box shadow
+@mixin box-shadow($top, $left, $blur, $color, $inset: false) {
+  @if $inset {
+    -webkit-box-shadow: inset $top $left $blur $color;
+    -moz-box-shadow: inset $top $left $blur $color;
+    box-shadow: inset $top $left $blur $color;
+  }
+  @else {
+    -webkit-box-shadow: $top $left $blur $color;
+    -moz-box-shadow: $top $left $blur $color;
+    box-shadow: $top $left $blur $color;
+  }
+}
+
+// Auto-detect external links based on path and add external icon.
+@mixin external-auto-detect {
+  &[href^="http://"],
+  &[href^="https://"],
+  &[rel^="external"] {
+    @extend %external;
+  }
+}
+
+//
+// Tints
+// Provide an overlay over backgrounds to darken, lighten an image to provide
+// better visual contrast for content.
+// Can be used as extensions on components that accommodate overlaid content.
+%tint {
+  position: relative;
+  overflow: hidden;
+}
+
+%tint-overlay {
+  content: '';
+  height: 100%;
+  left: 0;
+  opacity: .5;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+%tint-content {
+  position: relative;
+  z-index: 2;
+}
+
+// Dark tint layer provides a black tint
+%dark-tint {
+  @extend %tint;
+  background-color: $dark-tint-bg;
+  &::before {
+    @extend %tint-overlay;
+    background: $uq-black;
+  }
+}
+
+// Light tint layer provides a white tint
+%light-tint {
+  @extend %tint;
+  &::before {
+    @extend %tint-overlay;
+    background: $uq-white;
+  }
+}
+
+// Palettes are colour groups to change all the colours within that wrapper to a specific set.
+//
+// Components that set their own element colours may need palette @extend added to them to override specificity. e.g.
+// &.light-palette {
+//   a {
+//     @extend %light-palette;
+//   }
+// }
+//
+
+// Light
+%light-palette {
+  border-color: $light-palette-border-color;
+  color: $light-palette-color;
+
+  a {
+    color: $light-palette-link-color;
+    font-weight: 400;
+
+    &:hover {
+      color: darken($light-palette-link-color,10%);
+    }
+  }
+}
+
+%light-palette-bg {
+  background-color: $light-palette-bg;
+}
+
+// Dark
+%dark-palette {
+  border-color: $dark-palette-border-color;
+  color: $dark-palette-color;
+
+  a {
+    color: $dark-palette-link-color;
+
+    &:hover {
+      color: darken($dark-palette-link-color,10%);
+    }
+  }
+}
+
+%dark-palette-bg {
+  background-color: $dark-palette-bg;
+}
+
+// Grid schema
+// name: (columns, gutter, margin)
+$schema: (
+        "base": (6, $space, $space-md),
+        "md": (8, $space-md, $space-xxxxl),
+        "xl": (12, $space-lg, 9.375rem)
+) !default;
+
+$schema-base: map-get($map: $schema, $key: "base") !default;
+$schema-md: map-get($map: $schema, $key: "md") !default;
+$schema-xl: map-get($map: $schema, $key: "xl") !default;
+
+$shadow-column-count: 24 !default;
+$max-container-width: 71.25rem !default;
+
+/**
+ * Layout containment (breakpoint driven)
+ */
+@mixin layout-containment {
+  margin-left: nth($schema-base, 3) - nth($schema-base, 2) / 2;
+  margin-right: nth($schema-base, 3) - nth($schema-base, 2) / 2;
+
+  // TODO: if we can perform the following checks on the parent element width
+  // instead of the viewport width, we can achieve a more friendlier to use
+  // implementation of the layout system (albeit less strict). Also, it means
+  // that the columns get enumerated based on available space when rows are
+  // nested.
+
+  // Ease into larger margin
+  @media (min-width: #{$screen-md + (2 * nth($schema-base, 3)) - (2 * nth($schema-md, 3))}) {
+    margin-left: $space-auto;
+    margin-right: $space-auto;
+    max-width: $screen-md - (2 * nth($schema-md, 3)) + nth($schema-base, 2);
+  }
+
+  @media #{$screen-md-up} {
+    margin-left: nth($schema-md, 3) - nth($schema-md, 2) / 2;
+    margin-right: nth($schema-md, 3) - nth($schema-md, 2) / 2;
+    max-width: none;
+  }
+
+  // Ease into larger margin
+  @media (min-width: #{$screen-xl + (2 * nth($schema-md, 3)) - (2 * nth($schema-xl, 3))}) {
+    margin-left: $space-auto;
+    margin-right: $space-auto;
+    max-width: $screen-xl - 2 * nth($schema-xl, 3) + nth($schema-md, 2);
+  }
+
+  @media (min-width: #{$screen-xl}) {
+    margin-left: nth($schema-xl, 3) - nth($schema-xl, 2) / 2;
+    margin-right: nth($schema-xl, 3) - nth($schema-xl, 2) / 2;
+    max-width: none;
+  }
+
+  // Terminal
+  @media (min-width: #{$max-container-width + (2 * nth($schema-xl, 3))}) {
+    margin-left: $space-auto;
+    margin-right: $space-auto;
+    max-width: $max-container-width + nth($schema-xl, 2);
+  }
+}
+
+/**
+ * Full-width container
+ */
+@mixin layout-full-width {
+  margin-left: -(nth($schema-base, 2) / 2);
+  margin-right: -(nth($schema-base, 2) / 2);
+  max-width: none;
+
+  @media #{$screen-md-up} {
+    margin-left: -(nth($schema-md, 2) / 2);
+    margin-right: -(nth($schema-md, 2) / 2);
+  }
+
+  @media #{$screen-xl-up} {
+    margin-left: -(nth($schema-xl, 2) / 2);
+    margin-right: -(nth($schema-xl, 2) / 2);
+  }
+}
+
+/*
+ * Convert fraction to percentage
+ */
+@function _grid-fraction-to-percent(
+  $columns,
+  $column-count: nth($schema-base, 1)) {
+
+  @return percentage($columns / $column-count);
+}
+
+/* Padding to make up gaps/gutters (horizonal) */
+@mixin grid-col-padding {
+  padding-left: nth($schema-base, 2) / 2;
+  padding-right: nth($schema-base, 2) / 2;
+
+  @media #{$screen-md-up} {
+    padding-left: nth($schema-md, 2) / 2;
+    padding-right: nth($schema-md, 2) / 2;
+  }
+
+  @media #{$screen-xl-up} {
+    padding-left: nth($schema-xl, 2) / 2;
+    padding-right: nth($schema-xl, 2) / 2;
+  }
+}
+
+/**
+ * Map columns to another base
+ */
+@function calc-true-colspan($span, $column-count, $shadow-column-count) {
+  @return round(($shadow-column-count / $column-count) * $span);
+}
+
+/**
+ * Col span classes
+ */
+@mixin grid-col-span-classes(
+  $column-count: nth($schema-base, 1),
+  $breakpoint-name: null,
+  $shadow-column-count: $shadow-column-count) {
+
+  $col-span-mod-prefix: "";
+
+  @if ($breakpoint-name) {
+    $col-span-mod-prefix: "#{$breakpoint-name}-"
+  }
+
+  .uq-grid__col--#{$col-span-mod-prefix} {
+    @for $span from 1 through $column-count {
+      &#{$span} {
+        @include grid-col-width($span, $column-count);
+      }
+    }
+  }
+
+  @supports (display: grid) {
+    .uq-grid__col--#{$col-span-mod-prefix} {
+      @for $span from 1 through $column-count {
+        &#{$span} {
+          grid-column: auto / span calc-true-colspan($span, $column-count, $shadow-column-count);
+          width: auto; // required to enable a flexbox fallback
+        }
+      }
+    }
+  }
+}
+
+
+/**
+ * Generate grid classes (CSS Grid implementation)
+ */
+@mixin grid-row(
+  $column-count: nth($schema-base, 1),
+  $breakpoint-name: null,
+  $shadow-column-count: $shadow-column-count) {
+
+  // Flex fallback implemenation
+  @include _grid-row--flex($column-count, $breakpoint-name);
+
+  // Start CSS Grid implementation
+  @supports (display: grid) {
+    .uq-grid {
+      display: grid;
+      grid-template-columns: repeat($shadow-column-count, 1fr);
+      // Using the CSS Grid gap/grid-gap property is causing overflow problems
+      // with small screens and nested grids. We are using padding to implement
+      // horizontal gutters instead.
+      grid-gap: nth($schema-base, 2) 0;
+      margin-top: 0; // required to enable a flexbox fallback
+      margin-bottom: 0; // required to enable a flexbox fallback
+
+      @media #{$screen-md-up} {
+        grid-row-gap: nth($schema-md, 2);
+        margin-top: 0; // required to enable a flexbox fallback
+        margin-bottom: 0; // required to enable a flexbox fallback
+      }
+
+      @media #{$screen-xl-up} {
+        grid-row-gap: nth($schema-xl, 2);
+        margin-top: 0; // required to enable a flexbox fallback
+        margin-bottom: 0; // required to enable a flexbox fallback
+      }
+
+      &__col {
+        // @include grid-col-padding;
+        padding-top: 0; // required to enable a flexbox fallback
+        padding-bottom: 0; // required to enable a flexbox fallback
+
+        @media #{$screen-md-up} {
+          padding-top: 0; // required to enable a flexbox fallback
+          padding-bottom: 0; // required to enable a flexbox fallback
+        }
+        @media #{$screen-xl-up} {
+          padding-top: 0; // required to enable a flexbox fallback
+          padding-bottom: 0; // required to enable a flexbox fallback
+        }
+      }
+    }
+  }
+
+  .uq-grid {
+    @content;
+  }
+
+  @include grid-col-span-classes($column-count, $breakpoint-name, $shadow-column-count);
+}
+
+/**
+ * Row helpers for flex
+ */
+@mixin grid-row-flex-base {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: stretch;
+  align-content: flex-start;
+}
+
+/**
+ * Generate Flex fallback grid classes
+ */
+@mixin _grid-row--flex(
+  $column-count: nth($schema-base, 1),
+  $breakpoint-name: null) {
+
+  $col-span-mod-prefix: "";
+
+  @if ($breakpoint-name) {
+    $col-span-mod-prefix: "#{$breakpoint-name}-"
+  }
+
+  .uq-grid {
+    @include grid-row-flex-base;
+    @include _grid-row-v-margins;
+
+    @content;
+
+    &__col {
+      /*
+        TODO: implement row gap (at the moment we can't test—using @supports—for
+        partial support i.e. we can't test for `gap` property support in flex
+        layouts even though it's specified)
+      */
+      @include grid-col-padding;
+      @include _grid-col-v-padding;
+      flex: none;
+    }
+  }
+}
+
+/**
+ * Column helpers for flex
+ */
+@mixin grid-col-width(
+  $columns,
+  $column-count: nth($schema-base, 1)) {
+  width: _grid-fraction-to-percent($columns, $column-count)
+}
+
+@mixin grid-col-offset(
+  $columns,
+  $column-count: nth($schema-base, 1)) {
+  margin-left: _grid-fraction-to-percent($columns, $column-count);
+}
+
+/* Padding to make up gaps/gutters (vertical) */
+@mixin _grid-col-v-padding {
+  padding-top: nth($schema-base, 2) / 2;
+  padding-bottom: nth($schema-base, 2) / 2;
+
+  @media #{$screen-md-up} {
+    padding-top: nth($schema-md, 2) / 2;
+    padding-bottom: nth($schema-md, 2) / 2;
+  }
+
+  @media #{$screen-xl-up} {
+    padding-top: nth($schema-xl, 2) / 2;
+    padding-bottom: nth($schema-xl, 2) / 2;
+  }
+}
+
+/* Margins to normalise the gaps/gutter offset (vertical) */
+@mixin _grid-row-v-margins {
+  margin-top: -(nth($schema-base, 2) / 2);
+  margin-bottom: -(nth($schema-base, 2) / 2);
+
+  @media #{$screen-md-up} {
+    margin-top: -(nth($schema-md, 2) / 2);
+    margin-bottom: -(nth($schema-md, 2) / 2);
+  }
+
+  @media #{$screen-xl-up} {
+    margin-top: -(nth($schema-xl, 2) / 2);
+    margin-bottom: -(nth($schema-xl, 2) / 2);
+  }
+}
+
+
+//
+// Global UQ site header
+//
+.uq-header {
+  background: $uq-purple;
+  background: $uq-purple-gradient;
+  box-sizing: border-box;
+  font-family: $font-body;
+  font-weight: $font-weight-thin;
+  line-height: $line-height;
+
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
+
+  &__container {
+    @include layout-containment;
+    @include grid-col-padding;
+    position: relative;
+
+    .nav-global {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: $space;
+      padding-bottom: $space;
+
+      @media #{$screen-xl-up} {
+        padding-top: $space-md;
+        padding-bottom: $space-md;
+      }
+    }
+
+    .menu-global {
+      ul {
+        list-style-type: none;
+        margin-bottom: $space-none;
+        margin-top: $space-none;
+        padding-left: $space-none;
+
+        @media #{$screen-lg-up} {
+          padding-left: $space-lg;
+          white-space: nowrap;
+        }
+
+        li {
+          display: none;
+
+          @media #{$screen-lg-up} {
+            display: inline;
+            margin-left: $space-md;
+            word-wrap: break-word;
+
+            &:first-of-type {
+              margin-left: $space-none;
+            }
+          }
+        }
+
+        li.menu-global__search-toggle {
+          display: inline;
+          .search-toggle__button {
+            margin: $space-none;
+            padding: $space-none $space-xs;
+            border: 0;
+            width: 1.5rem;
+            height: 1.5rem;
+            background-color: transparent;
+            text-indent: -100vw;
+            overflow: hidden;
+            position: relative;
+            &:hover {
+              cursor: pointer;
+            }
+            &::before {
+              content: "";
+              position: absolute;
+              display: block;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-size: 100%;
+              background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cg fill='none' stroke='%23000' stroke-width='.75'%3E%3Cpath d='M6.57 11.145a4.573 4.573 0 10.003-9.146 4.573 4.573 0 00-.003 9.146zm0 0'/%3E%3Cpath d='M9.715 10l4.57 4.285' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+              filter: invert(100%) sepia(0) saturate(1%) hue-rotate(122deg) brightness(111%) contrast(102%);
+            }
+
+            &--icon-close {
+              &::before {
+                background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cpath d='M1.715 14.285l12.57-12.57m0 12.57L1.715 1.715' stroke='%23000' stroke-width='.75' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+              }
+            }
+
+            &:focus {
+              outline: none;
+            }
+          }
+        }
+
+        a {
+          color: $uq-white;
+          font-size: $font-size-s;
+          font-weight: $font-weight-thin;
+          text-decoration: none;
+          &:hover,
+          &:focus {
+            text-decoration: underline;
+          }
+        }
+      }
+    }
+
+    .nav-search {
+      height: 0;
+      overflow: hidden;
+      transition: height .25s, padding-top .25s, padding-bottom .25s;
+
+      &--open {
+        height: auto;
+        padding-top: $space-sm;
+        padding-bottom: $space-sm;
+      }
+
+      &__form {
+        margin: $space-none;
+      }
+
+      &__wrapper {
+        border: none;
+        margin: $space-none $space-none $space-sm $space-none;
+        padding: $space-none;
+      }
+
+      &__title {
+        color: $uq-white;
+        font-family: $merriweather;
+        font-size: $font-size-m;
+        font-style: italic;
+        font-weight: $font-weight-normal;
+
+        @media #{$screen-xl-up} {
+          font-size: $font-size-xl;
+        }
+      }
+
+      &__scope {
+        color: $uq-white;
+        font-size: $font-size-xs;
+
+        &__radio-wrapper {
+          font-size: $font-size-m;
+          margin: $space-none $space-none $space-sm $space-none;
+
+          @media #{$screen-lg-up} {
+            display: inline-block;
+            margin: $space-none;
+          }
+        }
+
+        .form-item {
+          margin-top: $space-sm;
+          padding-top: $space-xs;
+
+          input {
+            display: inline-block;
+            float: none;
+            clear: none;
+            margin: $space-xs $space-xs $space-none $space-xs;
+            padding: $space-none;
+          }
+
+          label {
+            color: $uq-white;
+            display: inline;
+            font-size: $font-size-s;
+            font-weight: $font-weight-normal;
+            margin: $space-none;
+            padding: $space-none;
+            max-width: none;
+          }
+
+          @media #{$screen-lg-up} {
+            display: inline-block;
+            margin-top: $space-none;
+            padding-left: $space;
+            padding-top: $space-none;
+          }
+        }
+
+        @media #{$screen-lg-up} {
+          display: inline;
+          font-size: $font-size-s;
+          margin-left: $space;
+        }
+      }
+
+      .search-query {
+        &__wrapper {
+          position: relative;
+          display: inline-block;
+          max-width: 100%;
+          min-width: 100%;
+          border-radius: 2px;
+          background-color: $uq-white;
+          background-position: 1rem;
+          margin-bottom: $space;
+
+          @media #{$screen-xl-up} {
+            margin-bottom: $space-md;
+          }
+        }
+
+        &__input {
+          background: transparent;
+          margin: $space-none;
+          width: 100%;
+          padding: .75rem 1rem;
+          border: 1px solid #e2e2e2;
+          border-radius: 2px;
+          box-shadow: none;
+          font-family: sans-serif;
+          font-size: $font-size-m;
+          line-height: 1;
+          color: $uq-neutral-dark80; //#181818
+          height: auto;
+          outline: none;
+
+          &:focus {
+            border-color: $link;
+            outline: none;
+          }
+        }
+
+        &__button {
+          background-clip: padding-box;
+          background-color: $uq-white;
+          border-radius: 5px;
+          border: 2px solid transparent;
+          color: $uq-purple;
+          display: inline-block;
+          font-size: $font-size-m;
+          height: 2.75rem;
+          line-height: $line-height;
+          margin-bottom: $space-none;
+          margin-right: $space-none;
+          overflow: hidden;
+          position: absolute;
+          right: 0;
+          text-decoration: none;
+          text-indent: 0;
+          top: calc(50% - 1.375rem);
+          transition: color .2s, background-color .2s, border-color .2s;
+          width: 2.75rem;
+
+          &:hover {
+            background-color: $uq-white;
+            border-color: rgb(73, 32, 108); // needs a variable in core
+            color: rgb(73, 32, 108); // needs a variable in core
+          }
+
+          &::before {
+            content: "";
+            position: absolute;
+            display: block;
+            width: 1.5rem;
+            height: 1.5rem;
+            top: .5rem;
+            left: .5rem;
+            background-size: 100%;
+            background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3E%3Cg fill='none' stroke='%23000' stroke-width='.75'%3E%3Cpath d='M6.57 11.145a4.573 4.573 0 10.003-9.146 4.573 4.573 0 00-.003 9.146zm0 0'/%3E%3Cpath d='M9.715 10l4.57 4.285' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/g%3E%3C/svg%3E");
+            -webkit-filter: invert(20%) sepia(34%) saturate(1979%) hue-rotate(239deg) brightness(97%) contrast(107%);
+            filter: invert(20%) sepia(34%) saturate(1979%) hue-rotate(239deg) brightness(97%) contrast(107%);
+          }
+        }
+
+        &__submit {
+          color: transparent;
+          position: relative;
+          display: block;
+          width: 100%;
+          height: 100%;
+          margin: $space-none;
+          border: 0;
+          background-color: transparent;
+          z-index: 3;
+          cursor: pointer;
+          outline-offset: -2px;
+          font-size: $font-size-m;
+        }
+
+      }
+
+      .menu-global {
+        -webkit-column-count: 3;
+        -moz-column-count: 3;
+        column-count: 3;
+        margin-bottom: $space;
+
+        @media #{$screen-lg-up} {
+          display: none;
+        }
+
+        ul {
+          li {
+            display: block;
+            margin-left: $space-none;
+            a {
+              display: block;
+              padding: $space-sm;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &__secondary {
+    background-color: $uq-white;
+    padding-top: $space-md;
+    padding-bottom: $space-sm;
+
+    &--no-menu {
+      padding-bottom: $space-md;
+    }
+  }
+
+  &__site-title {
+    margin: $space-none;
+    font-size: $font-size-xl;
+    font-weight: 500;
+    color: $uq-purple;
+
+    &:hover {
+      color: $uq-purple;
+      text-decoration: none;
+    }
+  }
+
+  //
+  // Logo
+  //
+
+  .logo img {
+    display: block;
+  }
+
+  .logo--large {
+    display: none;
+
+    img {
+      height: 2.625rem;
+      width: 17.875rem;
+    }
+
+    @media #{$screen-xl-up} {
+      display: block;
+    }
+  }
+
+  .logo--small {
+    img {
+      height: 2.625rem;
+      width: 10rem;
+    }
+
+    @media #{$screen-xl-up} {
+      display: none;
+    }
+  }
+
+
+
+
+  // Visibility utility classes
+  .hidden {
+    display: none;
+  }
+
+  .visually-hidden {
+    position: absolute!important;
+    overflow: hidden;
+    clip: rect(1px,1px,1px,1px);
+    width: 1px;
+    height: 1px;
+    word-wrap: normal;
+    margin: $space-none;
+    padding: $space-none;
+  }
+
+  // JS helpers:
+  &__mq--desktop {
+    font-family: "#{$screen-lg-up}";
+  }
+}

@@ -14,6 +14,9 @@
 //pure.react.carousel styles
 @import '~pure-react-carousel/dist/react-carousel.es.css';
 
+// UQ Design System styles
+@import 'UQds';
+
 button.carousel__back-button, button.carousel__next-button, button.carousel__play-button {
   appearance: none;
   color: white;
