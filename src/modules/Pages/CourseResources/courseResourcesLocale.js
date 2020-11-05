@@ -44,7 +44,7 @@ export default {
         // max number of items of each type we should display
         readingLists: 2,
         examPapers: 2,
-        libGuides: 2,
+        libGuides: 3,
     },
     notesTrimLength: 90,
     myCourses: {
