@@ -75,9 +75,13 @@ export function loadReadingLists(keyword) {
             .then(response => response.json())
             .then(data => {
                 console.log('fetched READING_LIST_API for ', keyword);
+                const updatedData = data.map(subject => {
+                    subject.talisId = keyword;
+                    return subject;
+                });
                 dispatch({
                     type: actions.READING_LIST_LOADED,
-                    payload: data,
+                    payload: updatedData,
                 });
             })
             .catch(error => {
