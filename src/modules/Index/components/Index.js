@@ -150,6 +150,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
         }
         return '#999';
     };
+
     return (
         <StandardPage>
             <div className="layout-card">
@@ -172,9 +173,10 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                     spacing={1}
                                     style={{ borderLeft: '1px solid #CCCCCC', paddingLeft: 6, height: '100%' }}
                                     justify={'flex-end'}
+                                    data-testid="personal-panel"
                                 >
                                     {account && account.id && (
-                                        <Grid item xs={12} style={{ marginTop: -16 }} data-testid="personal-panel">
+                                        <Grid item xs={12} style={{ marginTop: -16 }}>
                                             <Typography
                                                 variant={'h5'}
                                                 component={'h5'}
@@ -469,7 +471,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                     )}
 
-                    {/* Comp Avail */}
                     {seeComputerAvailability(account) && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                             <StandardCard
@@ -565,7 +566,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                     )}
 
-                    {/* Library hours or training */}
                     {seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <StandardCard
@@ -646,7 +646,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                             </StandardCard>
                         </Grid>
                     )}
-                    {/* Course resources*/}
+
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
                             <StandardCard
@@ -690,7 +690,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                     )}
 
-                    {/* Training */}
                     {seeTraining && (
                         <Grid item xs={12} md={4} data-testid="training-panel">
                             <StandardCard
@@ -844,7 +843,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                     )}
 
-                    {/* Library services */}
                     {seeLibraryServices && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
                             <StandardCard
@@ -873,7 +871,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                         </Grid>
                     )}
 
-                    {/* Feedback */}
                     {seeFeedback && (
                         <Grid item xs={12} md={4} data-testid="feedback-panel">
                             <StandardCard
