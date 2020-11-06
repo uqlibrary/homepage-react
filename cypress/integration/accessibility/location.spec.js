@@ -4,7 +4,7 @@ context('ACCESSIBILITY', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div#content-container').contains('Search');
+        cy.get('button[data-testid="location-computerAvailability-button"]').should('be.visible');
         cy.getCookie('location').should('exist');
 
 

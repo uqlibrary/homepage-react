@@ -3,7 +3,7 @@ context('Location component', () => {
         cy.clearCookies();
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.get('div#content-container').contains('Search');
+        cy.get('button[data-testid="location-computerAvailability-button"]').should('be.visible');
         cy.log('Should write a null cookie value for location on load if one doesnt exist');
         cy.getCookie('location').should('exist');
 
@@ -15,7 +15,7 @@ context('Location component', () => {
         cy.clearCookies();
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.get('div#content-container').contains('Search');
+        cy.get('button[data-testid="location-computerAvailability-button"]').should('be.visible');
         cy.getCookie('location').should('exist');
 
         cy.log('Should set the cookie to St Lucia');
