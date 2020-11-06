@@ -1,6 +1,22 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
+
+import {
+    seeComputerAvailability,
+    seeCourseResources,
+    seeDocumentDelivery,
+    seeFeedback,
+    seeLibraryHours,
+    seeLoans,
+    seeMasquerade,
+    seePrintBalance,
+    seePublicationMetrics,
+    seeRoomBookings,
+    seeSavedItems,
+    seeSavedSearches,
+} from 'helpers/access';
+
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Megamenu from './Megamenu';
@@ -102,16 +118,6 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
         history.push(pathConfig.admin.masquerade);
         handleClose();
     };
-    const MasqueradeLink = () => {
-        return !!account && !!account.canMasquerade ? (
-            <Grid item xs={6}>
-                <MenuItem onClick={_navigateToMasquerade}>
-                    <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
-                    Masquerade
-                </MenuItem>
-            </Grid>
-        ) : null;
-    };
     const redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
@@ -131,6 +137,7 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                     <IconButton
                         onClick={handleClick}
                         classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
+                        data-testid="mylibrary-button"
                     >
                         <AppsIcon color={'primary'} />
                         <div>My Library</div>
@@ -143,73 +150,102 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                         onClose={handleClose}
                     >
                         <Grid container spacing={0} style={{ maxWidth: 400 }}>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Borrowing
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Computers
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={_navigateToCourseResources}>
-                                    <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Course resources
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Document delivery
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Hours
-                                </MenuItem>
-                            </Grid>
-                            <MasqueradeLink />
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Printing balance
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Publication metrics
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Room bookings
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Saved items
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Saved searches
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Feedback
-                                </MenuItem>
-                            </Grid>
+                            {seeLoans(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-borrowing-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Borrowing
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeComputerAvailability(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-computer-availability-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Computers
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeCourseResources(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-course-resources-link">
+                                    <MenuItem onClick={_navigateToCourseResources}>
+                                        <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Course resources
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeDocumentDelivery(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-document-delivery-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Document delivery
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeLibraryHours(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-library-hours-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Hours
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeMasquerade(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-masquerade-link">
+                                    <MenuItem onClick={_navigateToMasquerade}>
+                                        <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Masquerade
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seePrintBalance(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-print-balance-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Printing balance
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seePublicationMetrics(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-publication-metrics-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Publication metrics
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeRoomBookings(account) && (
+                                <Grid item xs={6} data-testid="mylibrary-room-bookings-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Room bookings
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeSavedItems && (
+                                <Grid item xs={6} data-testid="mylibrary-saved-items-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Saved items
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeSavedSearches && (
+                                <Grid item xs={6} data-testid="mylibrary-saved-searches-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Saved searches
+                                    </MenuItem>
+                                </Grid>
+                            )}
+                            {seeFeedback && (
+                                <Grid item xs={6} data-testid="mylibrary-feedback-link">
+                                    <MenuItem onClick={handleClose}>
+                                        <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Feedback
+                                    </MenuItem>
+                                </Grid>
+                            )}
                         </Grid>
                     </Menu>
                 </Grid>
