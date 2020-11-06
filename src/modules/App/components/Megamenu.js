@@ -98,6 +98,7 @@ const styles = theme => {
                 overflowY: 'auto',
                 paddingLeft: '1rem',
                 position: 'absolute',
+                left: 0,
                 width: '100%',
                 zIndex: 1000,
             },
@@ -161,11 +162,33 @@ const styles = theme => {
                 paddingTop: '0',
             },
         },
+        menuItemContainer: {
+            [theme.breakpoints.down('sm')]: {
+                '& div': {
+                    margin: 0,
+                    padding: 0,
+                },
+                '& > div > div:first-child > span': {
+                    // top level of menu under hamburger
+                    border: 'thin solid #e2e2e2',
+                    padding: '1rem 1.5rem',
+                },
+                '& div > div:first-child div > span': {
+                    // primaryText of submenu items
+                    borderBottom: 'thin solid #e2e2e2',
+                    padding: '0.75rem 1.5rem 0.75rem 2.5rem',
+                },
+                '& svg': {
+                    border: 'thin solid #e2e2e2',
+                    padding: '1rem 2rem 1rem 1rem',
+                },
+            },
+        },
     };
 };
 
 export function Megamenu(props) {
-    const { classes, docked, menuOpen, menuItems, toggleMenu, history, ...rest } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu, history, isMobile, ...rest } = props;
 
     // from https://usehooks.com/useOnClickOutside/
     function useOnClickOutside(ref, handler) {
@@ -340,7 +363,7 @@ export function Megamenu(props) {
                                         secondary: classes.ListItemTextSecondary,
                                     }}
                                     primary={submenuItem.primaryText}
-                                    secondary={submenuItem.secondaryText}
+                                    secondary={!isMobile && submenuItem.secondaryText}
                                 />
                             </ListItem>
                         );
@@ -378,8 +401,9 @@ export function Megamenu(props) {
 
     const renderSingleMenu = (menuItem, index) => {
         const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
+        const iconSize = isMobile ? 'default' : 'small';
         return (
-            <span className="menu-item-container" key={`menucontainer-item-${index}`} id={menuItem.id}>
+            <div className={classes.menuItemContainer} key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
                     className="submenuheader"
@@ -396,11 +420,11 @@ export function Megamenu(props) {
                         primary={menuItem.primaryText}
                         secondary={menuItem.secondaryText}
                     />
-                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess fontSize="small" color="disabled" />}
-                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore fontSize="small" color="disabled" />}
+                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="disabled" />}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="disabled" />}
                 </ListItem>
                 {hasChildren && renderSubMenu(menuItem, index, classes)}
-            </span>
+            </div>
         );
     };
 
@@ -473,6 +497,7 @@ Megamenu.propTypes = {
     logoLink: PropTypes.string,
     menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
+    isMobile: PropTypes.bool,
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
@@ -483,6 +508,7 @@ Megamenu.defaultProps = {
     hasCloseItem: false,
     hasHomePageItem: false,
     menuOpen: true,
+    isMobile: false,
 };
 
 export function isSame(prevProps, nextProps) {

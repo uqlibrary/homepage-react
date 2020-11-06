@@ -25,6 +25,7 @@ import locale from '../../../locale/global';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
+import CloseIcon from '@material-ui/icons/Close';
 import AppsIcon from '@material-ui/icons/Apps';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -265,6 +266,7 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                 <Grid item xs={'auto'} className={classes.utility} id="mobile-megamenu">
                     <Hidden mdUp>
                         <Grid item xs={'auto'} id="mobile-menu">
+                            {/* hamburger button */}
                             <Tooltip title={locale.global.mainNavButton.tooltip}>
                                 <IconButton
                                     aria-label={locale.global.mainNavButton.aria}
@@ -272,17 +274,16 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                                     id={'main-menu-button'}
                                     classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
                                 >
-                                    <MenuIcon color={'primary'} />
+                                    {menuOpen ? <CloseIcon color={'primary'} /> : <MenuIcon color={'primary'} />}
                                     <div>Menu</div>
                                 </IconButton>
                             </Tooltip>
                             <Megamenu
-                                hasHomePageItem
-                                hasCloseItem
                                 history={history}
                                 menuItems={menuItems}
                                 menuOpen={menuOpen}
                                 toggleMenu={toggleMenu}
+                                isMobile
                             />
                         </Grid>
                     </Hidden>
