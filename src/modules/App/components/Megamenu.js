@@ -76,11 +76,17 @@ const styles = theme => {
             paddingTop: 0,
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
-                flexGrow: 1,
-                maxWidth: '1200px',
-                margin: '0 auto',
-                paddingBottom: 0,
+                margin: 0,
                 paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 32,
+                '& > span > div': {
+                    paddingRight: 12,
+                    paddingLeft: 0,
+                },
+                '& > span > div > div': {
+                    paddingLeft: 6,
+                },
                 // remove the flash to grey when we mouse over a top menu
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
@@ -98,6 +104,7 @@ const styles = theme => {
         },
         ListItemTextPrimary: {
             whiteSpace: 'nowrap',
+            fontWeight: 400,
         },
         ListItemTextSecondary: {
             ...theme.typography.caption,
@@ -211,7 +218,6 @@ export function Megamenu(props) {
 
             // set the menu label to match background colour
             setBackGroundColourOfMenuHeader(key, newOpen && key === changingId ? '#f2f2f2' : '#fff');
-            setBackGroundColourOfMenuHeader(key, !newOpen || key !== changingId ? '#fff' : '#f2f2f2');
         });
         setSubMenuOpen(newValues);
     };
@@ -390,8 +396,8 @@ export function Megamenu(props) {
                         primary={menuItem.primaryText}
                         secondary={menuItem.secondaryText}
                     />
-                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
-                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
+                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess fontSize="small" color="disabled" />}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore fontSize="small" color="disabled" />}
                 </ListItem>
                 {hasChildren && renderSubMenu(menuItem, index, classes)}
             </span>

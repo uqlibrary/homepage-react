@@ -123,7 +123,6 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
     };
-    console.log(isAuthorizedUser);
     return (
         <div className={classes.siteHeader}>
             <Grid container spacing={2} className={classes.siteHeaderTop}>
