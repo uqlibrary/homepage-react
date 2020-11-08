@@ -99,7 +99,7 @@ const styles = theme => {
                 paddingLeft: '1rem',
                 position: 'absolute',
                 left: 0,
-                width: '100%',
+                width: 'calc(100% - 16px)',
                 zIndex: 1000,
             },
         },
@@ -118,7 +118,7 @@ const styles = theme => {
             zIndex: 1000,
             position: 'absolute',
             [theme.breakpoints.down('md')]: {
-                width: '96%',
+                width: 'calc(100% - 4rem - 16px)',
             },
         },
         shiftLeft: {
@@ -180,7 +180,7 @@ const styles = theme => {
                 },
                 '& svg': {
                     border: 'thin solid #e2e2e2',
-                    padding: '1rem 2rem 1rem 1rem',
+                    padding: '1rem',
                 },
             },
         },
