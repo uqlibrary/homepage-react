@@ -233,21 +233,21 @@ export class AppClass extends PureComponent {
                     onAction={this.props.actions.logout}
                     locale={locale.global.sessionExpiredConfirmation}
                 />
-                <div className="content-header" role="region" aria-label="Site header">
-                    <UQHeader />
-                </div>
-                <div role="region" aria-label="UQ Library Alerts">
-                    <AppAlertContainer />
-                </div>
-                <UQSiteHeader
-                    isAuthorizedUser={isAuthorizedUser}
-                    isHdrStudent={isHdrStudent}
-                    account={this.props.account}
-                    author={this.props.author}
-                    authorDetails={this.props.authorDetails}
-                    history={this.props.history}
-                />
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
+                    <div className="content-header" role="region" aria-label="Site header">
+                        <UQHeader />
+                    </div>
+                    <UQSiteHeader
+                        isAuthorizedUser={isAuthorizedUser}
+                        isHdrStudent={isHdrStudent}
+                        account={this.props.account}
+                        author={this.props.author}
+                        authorDetails={this.props.authorDetails}
+                        history={this.props.history}
+                    />
+                    <div role="region" aria-label="UQ Library Alerts">
+                        <AppAlertContainer />
+                    </div>
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
                     {!isAuthorLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>

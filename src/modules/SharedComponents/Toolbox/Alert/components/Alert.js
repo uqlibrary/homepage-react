@@ -26,14 +26,16 @@ const useStyles = makeStyles(
         },
         wrapper: {
             [theme.breakpoints.up('xs')]: {
-                maxWidth: 1175,
+                maxWidth: 1200,
                 marginLeft: 'auto',
                 marginRight: 'auto',
+                paddingRight: 16,
             },
             [theme.breakpoints.down('xs')]: {
                 maxWidth: '100%',
                 marginLeft: 'auto',
                 marginRight: 'auto',
+                paddingRight: 0,
             },
         },
         '@keyframes wiggle': {
