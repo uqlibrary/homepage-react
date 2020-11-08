@@ -79,7 +79,7 @@ const styles = theme => {
                 margin: 0,
                 paddingTop: 0,
                 paddingBottom: 0,
-                paddingLeft: 32,
+                paddingLeft: 16,
                 '& > span > div': {
                     paddingRight: 12,
                     paddingLeft: 0,
@@ -90,6 +90,13 @@ const styles = theme => {
                 // remove the flash to grey when we mouse over a top menu
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
+                },
+                '& > div:first-child': {
+                    marginLeft: 8,
+                },
+                '& > div > div': {
+                    paddingLeft: 8,
+                    paddingRight: 8,
                 },
             },
             [theme.breakpoints.down('md')]: {
@@ -163,7 +170,12 @@ const styles = theme => {
             },
         },
         menuItemContainer: {
-            [theme.breakpoints.down('sm')]: {
+            [theme.breakpoints.up('lg')]: {
+                '& > div': {
+                    paddingLeft: 0,
+                },
+            },
+            [theme.breakpoints.down('md')]: {
                 '& div': {
                     margin: 0,
                     padding: 0,
