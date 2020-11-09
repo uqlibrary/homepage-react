@@ -92,7 +92,7 @@ const styles = theme => {
                     backgroundColor: 'initial',
                 },
                 '& > div:first-child': {
-                    marginLeft: 8,
+                    marginLeft: 28,
                 },
                 '& > div > div': {
                     paddingLeft: 8,
