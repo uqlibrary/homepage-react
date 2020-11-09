@@ -49,8 +49,12 @@ const hasPublications = false;
 
 // define which home page panel items and mylibrary popup items each user type can see
 
+// "ptypes": for each function from uqlibrary-api/data/applicatons.json
+// UG, STAFF, 33, HON, REMUG, CWPG, REMCWPG, 17, LIBRARYSTAFFB, RHD, REMRHD
 export const seeCourseResources = account => !!(isUndergraduate(account) || isRHD(account) || isLibraryStaff(account));
 
+// UG, REMUG, CWPG, REMCWPG, RHD, REMRHD, PROXY, 17, LIBRARYSTAFFB, ASSOCIATE, 14, ALUMNI, HOSP, 13, 10, 12
+// , FRYVISITOR, SCHOOL, AURION, ICTE, COMMU
 export const seeComputerAvailability = account =>
     isUndergraduateLocal(account) ||
     isRHDLocal(account) ||
@@ -60,9 +64,9 @@ export const seeComputerAvailability = account =>
     isLibraryStaff(account);
 
 export const seeLibraryHours = account =>
-    isUndergraduateLocal(account) ||
+    isUndergraduate(account) ||
     isUndergraduateLOTE(account) ||
-    isRHDLocal(account) ||
+    isRHD(account) ||
     isStaff(account) ||
     isCommunityPaid(account) ||
     isCommunityAlumni(account) ||
@@ -72,16 +76,20 @@ export const seeLibraryHours = account =>
 
 export const seeMasquerade = account => !!account && !!account.canMasquerade;
 
+// UG, REMUG, CWPG, REMCWPG, RHD, REMRHD, 17, LIBRARYSTAFFB
 export const seeRoomBookings = account =>
     isUndergraduateLocal(account) || isRHDLocal(account) || isLibraryStaff(account);
 
+// UG, REMUG, CWPG, REMCWPG, RHD, REMRHD, STAFF, 33, HON, PROXY, 17, LIBRARYSTAFFB, ASSOCIATE, 14, ALUMNI, HOSP
+// , 13, 10, 12, FRYVISITOR, SCHOOL, AURION, ICTE, COMMU
 export const seeLoans = account =>
-    isUndergraduateLocal(account) ||
+    isUndergraduate(account) ||
     isUndergraduateLOTE(account) ||
-    isRHDLocal(account) ||
+    isRHD(account) ||
     isCommunityAlumni(account) ||
     isStaff(account);
 
+// UG, RHD, STAFF, 33, HON, CWPG, 17, LIBRARYSTAFFB, REMCWPG, REMRHD, REMUG
 export const seePrintBalance = account =>
     isUndergraduateLocal(account) ||
     isUndergraduateLOTE(account) ||
@@ -98,11 +106,16 @@ export const seePrintBalance = account =>
 export const seeSavedItems = true;
 export const seeSavedSearches = true;
 
+// UG, RHD, STAFF, 33, HON, HOSP, CWPG, AURION, 17, LIBRARYSTAFFB, REMCWPG, REMRHD, ASSOCIATE, REMUG
 export const seeDocumentDelivery = account =>
     isUndergraduateLocal(account) || isRHDLocal(account) || isStaff(account) || isCommunityHospital(account);
 
+// RHD, REMRHD, STAFF, 33, HON, 17, LIBRARYSTAFFB
 export const seePublicationMetrics = account =>
-    isResearchStudent(account) || isStaff(account) || (isUndergraduate(account) && hasPublications);
+    isResearchStudent(account) ||
+    isStaff(account) ||
+    isCommunityHonorary(account) ||
+    (isUndergraduate(account) && hasPublications);
 
 export const seeTraining = true;
 
