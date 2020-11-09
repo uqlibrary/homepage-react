@@ -41,7 +41,7 @@ const useStyles = makeStyles(
             marginRight: 'auto',
             paddingTop: '1.5rem',
             paddingBottom: '0.5rem',
-            paddingLeft: 44,
+            paddingLeft: 46,
             paddingRight: 44,
             marginTop: 0,
             marginBottom: 0,
@@ -129,92 +129,94 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                     </a>
                 </Grid>
                 <Grid item xs />
-                <Grid item xs={'auto'} className={classes.utility} id="my-library">
-                    <IconButton
-                        onClick={handleClick}
-                        classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
-                    >
-                        <AppsIcon color={'primary'} />
-                        <div>My Library</div>
-                    </IconButton>
-                    <Menu
-                        id="simple-menu2"
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        <Grid container spacing={0} style={{ maxWidth: 400 }}>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Borrowing
-                                </MenuItem>
+                {!!account && (
+                    <Grid item xs={'auto'} className={classes.utility} id="my-library">
+                        <IconButton
+                            onClick={handleClick}
+                            classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
+                        >
+                            <AppsIcon color={'primary'} />
+                            <div>My Library</div>
+                        </IconButton>
+                        <Menu
+                            id="simple-menu2"
+                            anchorEl={anchorEl}
+                            keepMounted
+                            open={Boolean(anchorEl)}
+                            onClose={handleClose}
+                        >
+                            <Grid container spacing={0} style={{ maxWidth: 400 }}>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Borrowing
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Computers
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={_navigateToCourseResources}>
+                                        <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Course resources
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Document delivery
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Hours
+                                    </MenuItem>
+                                </Grid>
+                                <MasqueradeLink />
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Printing balance
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Publication metrics
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Room bookings
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Saved items
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Saved searches
+                                    </MenuItem>
+                                </Grid>
+                                <Grid item xs={6}>
+                                    <MenuItem onClick={handleClose}>
+                                        <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
+                                        Feedback
+                                    </MenuItem>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Computers
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={_navigateToCourseResources}>
-                                    <SchoolIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Course resources
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Document delivery
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Hours
-                                </MenuItem>
-                            </Grid>
-                            <MasqueradeLink />
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Printing balance
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Publication metrics
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Room bookings
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Saved items
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Saved searches
-                                </MenuItem>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <MenuItem onClick={handleClose}>
-                                    <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                    Feedback
-                                </MenuItem>
-                            </Grid>
-                        </Grid>
-                    </Menu>
-                </Grid>
+                        </Menu>
+                    </Grid>
+                )}
                 <Grid item xs={'auto'} className={classes.utility} id="ask-us">
                     <AskUs />
                 </Grid>
