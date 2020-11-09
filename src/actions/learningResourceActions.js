@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 // import { get } from 'repositories/generic';
-import { LEARNING_RESOURCES_API, GUIDES_API, READING_LIST_API } from '../repositories/routes';
+import { LEARNING_RESOURCES_API, GUIDES_API, EXAMS_API, READING_LIST_API } from '../repositories/routes';
 
 // import { get } from 'repositories/generic';
 /**
@@ -64,6 +64,34 @@ export function loadGuides(keyword) {
 export function clearGuides() {
     return dispatch => {
         dispatch({ type: actions.GUIDES_CLEAR });
+    };
+}
+
+export function loadExams(keyword) {
+    console.log('will load Exams for ', keyword);
+    return dispatch => {
+        dispatch({ type: actions.EXAMS_LOADING });
+        return fetch(EXAMS_API({ keyword }).apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log('fetched EXAMS_API: ', data);
+                dispatch({
+                    type: actions.EXAMS_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.EXAMS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearExams() {
+    return dispatch => {
+        dispatch({ type: actions.EXAMS_CLEAR });
     };
 }
 

@@ -302,17 +302,11 @@ export const UNLOCK_RECORD_API = ({ pid }) => ({
     apiUrl: `records/${pid}/unlock`,
 });
 
-// coursePrefix
-export const LEARNING_RESOURCES_API = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/learning_resources/' + keyword,
-});
+export const LEARNING_RESOURCES_API = ({ keyword }) => ({ apiUrl: 'learning_resources/' + keyword });
 
-// coursePrefix
-export const GUIDES_API = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/library_guides/' + keyword,
-});
+export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
+
+export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
 // talisId
-export const READING_LIST_API = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/course_reading_list/' + keyword,
-});
+export const READING_LIST_API = ({ keyword }) => ({ apiUrl: 'course_reading_list/' + keyword });

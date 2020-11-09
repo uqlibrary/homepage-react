@@ -49,6 +49,9 @@ const useStyles = makeStyles(
 
 export const CourseResources = ({
     actions,
+    examList,
+    examListLoading,
+    examListError,
     guideList,
     guideListLoading,
     guideListError,
@@ -84,6 +87,9 @@ export const CourseResources = ({
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
 
+    // store a list of the Exams that have been loaded, by subject
+    const [currentExamsList, updateExamsList] = useState([]);
+
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
 
@@ -94,6 +100,10 @@ export const CourseResources = ({
 
         if (!currentGuidesList[classnumber]) {
             !!classnumber && actions.loadGuides(classnumber);
+        }
+
+        if (!currentExamsList[classnumber]) {
+            !!classnumber && actions.loadExams(classnumber);
         }
     };
 
@@ -264,6 +274,22 @@ export const CourseResources = ({
         updateGuidesSubjectList();
     }, [updateGuidesSubjectList]);
 
+    const updateExamsSubjectList = React.useCallback(() => {
+        if (!!examList && examList.length > 0 && examList[0].coursecode) {
+            const subjectNumber = examList[0].coursecode;
+            // if (subjectNumber !== false && currentExamsList.subjectNumber === undefined) {
+            if (subjectNumber !== false && currentExamsList[subjectNumber] === undefined) {
+                const newExamsList = {};
+                newExamsList[subjectNumber] = examList;
+                updateExamsList(currentExamsList => Object.assign({}, ...currentExamsList, ...newExamsList));
+            }
+        }
+    }, [examList, currentExamsList]);
+
+    React.useEffect(() => {
+        updateExamsSubjectList();
+    }, [updateExamsSubjectList]);
+
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
         const firstEnrolledClassNumber =
@@ -276,6 +302,8 @@ export const CourseResources = ({
             !!firstEnrolledClassNumber && actions.loadLearningResources(firstEnrolledClassNumber);
 
             !!firstEnrolledClassNumber && actions.loadGuides(firstEnrolledClassNumber);
+
+            !!firstEnrolledClassNumber && actions.loadExams(firstEnrolledClassNumber);
         }
     }, [account, actions]);
 
@@ -347,9 +375,9 @@ export const CourseResources = ({
                     <Grid item xs={12} md={4} className={'exams'}>
                         <PastExamPapers
                             subject={subject}
-                            learningResourcesList={currentLearningResourcesList[subject.classnumber]}
-                            learningResourcesListLoading={learningResourcesListLoading}
-                            learningResourcesListError={learningResourcesListError}
+                            examList={currentExamsList[subject.classnumber]}
+                            examListLoading={examListLoading}
+                            examListError={examListError}
                         />
                     </Grid>
                     <Grid item xs={12} md={4} className={classes.desktopGap}>
@@ -431,6 +459,9 @@ export const CourseResources = ({
 
 CourseResources.propTypes = {
     actions: PropTypes.object,
+    examList: PropTypes.any,
+    examListLoading: PropTypes.bool,
+    examListError: PropTypes.string,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.string,
