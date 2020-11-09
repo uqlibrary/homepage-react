@@ -169,6 +169,9 @@ const styles = theme => {
                 paddingTop: '0',
             },
         },
+        currentPage: {
+            borderBottom: '2px solid #51247a',
+        },
         menuItemContainer: {
             [theme.breakpoints.up('lg')]: {
                 '& > div': {
@@ -418,7 +421,10 @@ export function Megamenu(props) {
             <div className={classes.menuItemContainer} key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
-                    className="submenuheader"
+                    className={classNames(
+                        menuItem.linkTo === window.location.href ? classes.currentPage : '',
+                        'submenuheader',
+                    )}
                     data-testid={`submenus-item-${index}`}
                     key={`submenus-item-${index}`}
                     id={`submenus-item-${index}`}
