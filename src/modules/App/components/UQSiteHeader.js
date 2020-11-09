@@ -58,12 +58,15 @@ const useStyles = makeStyles(
         },
         title: {
             color: theme.palette.primary.main,
-            fontSize: 20,
+            fontSize: '1.25rem',
             fontWeight: 500,
+            '&:hover': {
+                textDecoration: 'none !important',
+            },
         },
         utility: {
-            marginTop: -8,
-            marginBottom: -8,
+            marginTop: -16,
+            marginBottom: -16,
             marginLeft: -24,
             marginRight: 8,
         },
