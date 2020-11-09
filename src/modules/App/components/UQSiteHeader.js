@@ -264,7 +264,7 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                     />
                 </Grid>
                 <Grid item xs={'auto'} className={classes.utility} id="mobile-megamenu">
-                    <Hidden mdUp>
+                    <Hidden lgUp>
                         <Grid item xs={'auto'} id="mobile-menu">
                             {/* hamburger button */}
                             <Tooltip title={locale.global.mainNavButton.tooltip}>
@@ -297,7 +297,7 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                 className={classes.siteHeaderBottom}
                 justify={'flex-start'}
             >
-                <Hidden smDown>
+                <Hidden mdDown>
                     <Grid item xs={12} id="desktop-megamenu">
                         <Megamenu menuItems={menuItems} history={history} />
                     </Grid>

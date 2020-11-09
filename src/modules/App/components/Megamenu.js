@@ -164,7 +164,7 @@ const styles = theme => {
             paddingBottom: 0,
             minHeight: '51px',
             verticalAlign: 'top',
-            [theme.breakpoints.down('lg')]: {
+            [theme.breakpoints.down('md')]: {
                 paddingLeft: '2rem',
                 paddingTop: '0',
             },
