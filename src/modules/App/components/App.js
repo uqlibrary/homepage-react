@@ -271,7 +271,7 @@ export class AppClass extends PureComponent {
                         </div>
                     )}
                     {!this.props.accountLoading && !isAuthorLoading && (
-                        <div style={{ alignSelf: 'flex-end' }}>
+                        <div>
                             <Grid container spacing={0}>
                                 <Grid item xs={12} className={classes.connectFooter}>
                                     <ConnectFooter history={this.props.history} />

@@ -17,7 +17,7 @@ const styles = theme => ({
         lineHeight: '25px',
         margin: '0 auto 0 auto',
         maxWidth: '1200px',
-        padding: 20,
+        padding: '20px 0',
         position: 'relative',
         '& a': {
             color: theme.palette.secondary.dark,
@@ -73,6 +73,9 @@ const styles = theme => ({
             },
         },
         textAlign: 'right',
+    },
+    givingBlock: {
+        marginRight: 10,
     },
     givingButtonClass: {
         color: theme.palette.white.main + '!important',
@@ -193,7 +196,7 @@ export function ConnectFooter(props) {
                 <Grid container spacing={2}>
                     {locale.connectFooter.givingLinks.map((item, index) => {
                         return (
-                            <Grid item xs={12} md={8} key={`givingLinks-${index}`}>
+                            <Grid item xs={12} md={8} key={`givingLinks-${index}`} className={classes.givingBlock}>
                                 <Button
                                     fullWidth
                                     children={item.label}
