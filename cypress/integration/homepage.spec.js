@@ -16,6 +16,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
@@ -43,6 +44,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
@@ -71,6 +73,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="library-hours-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-course-resources-link"]').contains('Course resources');
         cy.get('div[data-testid="mylibrary-saved-items-link"]').contains('Saved items');
@@ -99,6 +102,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-document-delivery-link"]').contains('Document delivery');
@@ -126,6 +130,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
@@ -152,11 +157,10 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
-        cy.get('button[data-testid="mylibrary-button"]').click();
-        cy.get('div[data-testid="mylibrary-saved-items-link"]').contains('Saved items');
-        cy.get('div[data-testid="mylibrary-saved-searches-link"]').contains('Saved searches');
-        cy.get('div[data-testid="mylibrary-feedback-link"]').contains('Feedback');
-
+        cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
+        cy.get('div[data-testid="mylibrary-saved-items-link"]').should('not.exist');
+        cy.get('div[data-testid="mylibrary-saved-searches-link"]').should('not.exist');
+        cy.get('div[data-testid="mylibrary-feedback-link"]').should('not.exist');
         cy.get('div[data-testid="mylibrary-borrowing-link"]').should('not.exist');
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').should('not.exist');
         cy.get('div[data-testid="mylibrary-course-resources-link"]').should('not.exist');
@@ -179,6 +183,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
@@ -207,6 +212,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-document-delivery-link"]').contains('Document delivery');
@@ -235,6 +241,7 @@ context('Homepage', () => {
 
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
         cy.get('div[data-testid="mylibrary-library-hours-link"]').contains('Hours');
@@ -263,6 +270,7 @@ context('Homepage', () => {
 
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-borrowing-link"]').contains('Borrowing');
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
@@ -291,6 +299,7 @@ context('Homepage', () => {
 
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-computer-availability-link"]').contains('Computers');
         cy.get('div[data-testid="mylibrary-document-delivery-link"]').contains('Document delivery');
@@ -319,6 +328,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-library-hours-link"]').contains('Hours');
         cy.get('div[data-testid="mylibrary-print-balance-link"]').contains('Printing balance');
@@ -347,6 +357,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-library-hours-link"]').contains('Hours');
         cy.get('div[data-testid="mylibrary-print-balance-link"]').contains('Printing balance');
@@ -375,6 +386,7 @@ context('Homepage', () => {
         cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
         cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
 
+        cy.get('button[data-testid="mylibrary-button"]').should('exist');
         cy.get('button[data-testid="mylibrary-button"]').click();
         cy.get('div[data-testid="mylibrary-library-hours-link"]').contains('Hours');
         cy.get('div[data-testid="mylibrary-print-balance-link"]').contains('Printing balance');
