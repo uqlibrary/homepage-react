@@ -83,7 +83,7 @@ export const UQHeader = ({}) => {
                             </li>
                             <li className="menu-global__search-toggle">
                                 <button className="search-toggle__button" onClick={handleToggle}>
-                                    Search
+                                    Toggle search
                                 </button>
                             </li>
                         </ul>
