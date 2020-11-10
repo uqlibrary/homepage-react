@@ -152,7 +152,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} />
+                        <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
 
                     {/* Personalisation panel or hours */}
