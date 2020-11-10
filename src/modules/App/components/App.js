@@ -225,7 +225,6 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <ChatStatus status={this.props.chatStatus} />
                 <HelpDrawer />
                 <ConfirmDialogBox
                     hideCancelButton
@@ -248,6 +247,7 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
+                    <ChatStatus status={this.props.chatStatus} />
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
                     {!isAuthorLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>
