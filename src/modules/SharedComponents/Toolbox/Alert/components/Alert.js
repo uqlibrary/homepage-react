@@ -23,19 +23,23 @@ const useStyles = makeStyles(
     theme => ({
         common: {
             borderRadius: 0,
+            padding: '8px 37px',
         },
         wrapper: {
+            border: '1px dashed red',
             [theme.breakpoints.up('xs')]: {
                 maxWidth: 1200,
                 marginLeft: 'auto',
                 marginRight: 'auto',
-                paddingRight: 16,
+                paddingRight: 0,
+                paddingLeft: 0,
             },
             [theme.breakpoints.down('xs')]: {
                 maxWidth: '100%',
                 marginLeft: 'auto',
                 marginRight: 'auto',
                 paddingRight: 0,
+                paddingLeft: 0,
             },
         },
         '@keyframes wiggle': {
@@ -54,6 +58,7 @@ const useStyles = makeStyles(
                 fontSize: 28,
                 marginRight: 12,
                 marginBottom: -6,
+                marginLeft: -6,
             },
             '& .spinner': {
                 margin: '8px 24px 0 6px',
@@ -66,6 +71,7 @@ const useStyles = makeStyles(
             verticalAlign: 'middle',
         },
         actionButton: {
+            marginRight: -4,
             '& .action': {
                 [theme.breakpoints.up('xs')]: {
                     marginTop: 6,
@@ -76,8 +82,8 @@ const useStyles = makeStyles(
             },
         },
         dismissButton: {
-            margin: -24,
-            marginRight: -18,
+            marginLeft: -8,
+            marginRight: -19,
             marginTop: -12,
             marginBottom: -12,
         },
@@ -348,14 +354,14 @@ export const Alert = ({
     } else {
         return (
             <div
-                style={{ padding: 12 }}
+                style={{ border: '1px dashed cyan' }}
                 className={classNames(classes[!!customIcon ? customType : type], classes.common)}
                 data-testid={alertId}
                 id={alertId}
             >
                 <Grid
                     container
-                    spacing={3}
+                    spacing={1}
                     justify="center"
                     alignItems="center"
                     alignContent="center"
