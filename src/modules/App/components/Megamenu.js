@@ -76,14 +76,27 @@ const styles = theme => {
             paddingTop: 0,
             [theme.breakpoints.up('lg')]: {
                 display: 'flex',
-                flexGrow: 1,
-                maxWidth: '1200px',
-                margin: '0 auto',
-                paddingBottom: 0,
+                margin: 0,
                 paddingTop: 0,
+                paddingBottom: 0,
+                paddingLeft: 16,
+                '& > span > div': {
+                    paddingRight: 12,
+                    paddingLeft: 0,
+                },
+                '& > span > div > div': {
+                    paddingLeft: 6,
+                },
                 // remove the flash to grey when we mouse over a top menu
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
+                },
+                '& > div:first-child': {
+                    marginLeft: 28,
+                },
+                '& > div > div': {
+                    paddingLeft: 8,
+                    paddingRight: 8,
                 },
             },
             [theme.breakpoints.down('md')]: {
@@ -92,12 +105,14 @@ const styles = theme => {
                 overflowY: 'auto',
                 paddingLeft: '1rem',
                 position: 'absolute',
-                width: '100%',
+                left: 0,
+                width: 'calc(100% - 16px)',
                 zIndex: 1000,
             },
         },
         ListItemTextPrimary: {
             whiteSpace: 'nowrap',
+            fontWeight: 400,
         },
         ListItemTextSecondary: {
             ...theme.typography.caption,
@@ -110,7 +125,7 @@ const styles = theme => {
             zIndex: 1000,
             position: 'absolute',
             [theme.breakpoints.down('md')]: {
-                width: '96%',
+                width: 'calc(100% - 4rem - 16px)',
             },
         },
         shiftLeft: {
@@ -149,16 +164,46 @@ const styles = theme => {
             paddingBottom: 0,
             minHeight: '51px',
             verticalAlign: 'top',
-            [theme.breakpoints.down('lg')]: {
+            [theme.breakpoints.down('md')]: {
                 paddingLeft: '2rem',
                 paddingTop: '0',
+            },
+        },
+        currentPage: {
+            borderBottom: '2px solid #51247a',
+        },
+        menuItemContainer: {
+            [theme.breakpoints.up('lg')]: {
+                '& > div': {
+                    paddingLeft: 0,
+                },
+            },
+            [theme.breakpoints.down('md')]: {
+                '& div': {
+                    margin: 0,
+                    padding: 0,
+                },
+                '& > div > div:first-child > span': {
+                    // top level of menu under hamburger
+                    border: 'thin solid #e2e2e2',
+                    padding: '1rem 1.5rem',
+                },
+                '& div > div:first-child div > span': {
+                    // primaryText of submenu items
+                    borderBottom: 'thin solid #e2e2e2',
+                    padding: '0.75rem 1.5rem 0.75rem 2.5rem',
+                },
+                '& svg': {
+                    border: 'thin solid #e2e2e2',
+                    padding: '1rem',
+                },
             },
         },
     };
 };
 
 export function Megamenu(props) {
-    const { classes, docked, menuOpen, menuItems, toggleMenu, history } = props;
+    const { classes, docked, menuOpen, menuItems, toggleMenu, history, isMobile, ...rest } = props;
 
     // from https://usehooks.com/useOnClickOutside/
     function useOnClickOutside(ref, handler) {
@@ -211,7 +256,6 @@ export function Megamenu(props) {
 
             // set the menu label to match background colour
             setBackGroundColourOfMenuHeader(key, newOpen && key === changingId ? '#f2f2f2' : '#fff');
-            setBackGroundColourOfMenuHeader(key, !newOpen || key !== changingId ? '#fff' : '#f2f2f2');
         });
         setSubMenuOpen(newValues);
     };
@@ -334,7 +378,7 @@ export function Megamenu(props) {
                                         secondary: classes.ListItemTextSecondary,
                                     }}
                                     primary={submenuItem.primaryText}
-                                    secondary={submenuItem.secondaryText}
+                                    secondary={!isMobile && submenuItem.secondaryText}
                                 />
                             </ListItem>
                         );
@@ -372,11 +416,15 @@ export function Megamenu(props) {
 
     const renderSingleMenu = (menuItem, index) => {
         const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
+        const iconSize = isMobile ? 'default' : 'small';
         return (
-            <span className="menu-item-container" key={`menucontainer-item-${index}`} id={menuItem.id}>
+            <div className={classes.menuItemContainer} key={`menucontainer-item-${index}`} id={menuItem.id}>
                 <ListItem
                     button
-                    className="submenuheader"
+                    className={classNames(
+                        menuItem.linkTo === window.location.href ? classes.currentPage : '',
+                        'submenuheader',
+                    )}
                     data-testid={`submenus-item-${index}`}
                     key={`submenus-item-${index}`}
                     id={`submenus-item-${index}`}
@@ -390,11 +438,11 @@ export function Megamenu(props) {
                         primary={menuItem.primaryText}
                         secondary={menuItem.secondaryText}
                     />
-                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess />}
-                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore />}
+                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="disabled" />}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="disabled" />}
                 </ListItem>
                 {hasChildren && renderSubMenu(menuItem, index, classes)}
-            </span>
+            </div>
         );
     };
 
@@ -448,7 +496,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className={classes.megamenu}>
+        <div className={classes.megamenu} id={rest.id || 'megamenu'}>
             <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
                 {props.hasHomePageItem && renderHomePageItem()}
                 {menuItems.map((menuItem, index) => {
@@ -467,6 +515,7 @@ Megamenu.propTypes = {
     logoLink: PropTypes.string,
     menuItems: PropTypes.array.isRequired,
     menuOpen: PropTypes.bool,
+    isMobile: PropTypes.bool,
     docked: PropTypes.bool,
     toggleMenu: PropTypes.func,
     history: PropTypes.object.isRequired,
@@ -477,6 +526,7 @@ Megamenu.defaultProps = {
     hasCloseItem: false,
     hasHomePageItem: false,
     menuOpen: true,
+    isMobile: false,
 };
 
 export function isSame(prevProps, nextProps) {

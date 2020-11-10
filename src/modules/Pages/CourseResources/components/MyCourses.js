@@ -2,7 +2,8 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import locale from '../courseresourceslocale';
+import locale from '../courseResourcesLocale';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { TabPanel } from './TabPanel';
 
@@ -12,9 +13,28 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { makeStyles } from '@material-ui/styles';
 
-export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) => {
+const useStyles = makeStyles(
+    theme => ({
+        myCoursesTabBar: {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.secondary.dark,
+        },
+        noclasses: {
+            marginBottom: '1rem',
+            marginTop: '1rem',
+        },
+        courseTabs: {
+            margin: 0,
+        },
+    }),
+    { withTheme: true },
+);
+
+export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
     const { account } = useAccountContext();
+    const classes = useStyles();
 
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
@@ -23,24 +43,24 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
         setCurrentMenuTab(subjectTabId);
     };
 
+    // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
         <Fragment>
-            {!!account.classes && account.classes.length > 0 ? (
+            {!!account.current_classes && account.current_classes.length > 0 ? (
                 <Fragment>
-                    <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                    <AppBar position="static" className={classes.myCoursesTabBar} component="div">
                         <Tabs
                             onChange={handleCourseTabChange}
                             scrollButtons="auto"
                             value={coursemenu}
                             variant="scrollable"
                         >
-                            {account.classes.map((item, index) => {
+                            {account.current_classes.map((item, index) => {
                                 return (
                                     <Tab
                                         {...a11yProps(index, 'classtab')}
                                         data-testid={`classtab-${index}`}
                                         key={`classtab-${index}`}
-                                        id={`classtab-${index}`}
                                         label={item.classnumber}
                                         value={`${courseTabLabel}-${index}`} // must match 'index' in TabPanel
                                     />
@@ -48,15 +68,17 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
                             })}
                         </Tabs>
                     </AppBar>
-                    {account.classes.map((item, index) => {
+                    {account.current_classes.map((item, index) => {
                         return (
                             <TabPanel
+                                className={classes.courseTabs}
                                 data-testid={`classpanel-${index}`}
                                 index={`${courseTabLabel}-${index}`} // must match 'value' in Tab
+                                label="classpanel"
                                 key={`classpanel-${index}`}
                                 tabId="coursemenu"
                                 value={coursemenu}
-                                style={{ margin: 0 }}
+                                {...reverseA11yProps(index, 'classtab')}
                             >
                                 {renderSubjectTabBody(item)}
                             </TabPanel>
@@ -64,24 +86,25 @@ export const MyCourses = ({ a11yProps, loadNewSubject, renderSubjectTabBody }) =
                     })}
                 </Fragment>
             ) : (
-                <StandardCard
-                    className="noreadingLists"
-                    style={{ width: '100%', marginBottom: '1rem', marginTop: '1rem' }}
-                    title={locale.myCourses.none.title}
-                >
-                    <Grid container>
-                        <Grid item xs={12}>
-                            {locale.myCourses.none.description}
-                        </Grid>
+                <Grid container spacing={3} data-testid="no-classes" className={'noreadingLists'}>
+                    <Grid item xs={12}>
+                        <StandardCard className={classes.noclasses} title={locale.myCourses.none.title}>
+                            <Grid container>
+                                <Grid item xs={12}>
+                                    {locale.myCourses.none.description}
+                                </Grid>
+                            </Grid>
+                        </StandardCard>
                     </Grid>
-                </StandardCard>
+                </Grid>
             )}
         </Fragment>
     );
 };
 
 MyCourses.propTypes = {
-    a11yProps: PropTypes.func,
     loadNewSubject: PropTypes.func,
     renderSubjectTabBody: PropTypes.func,
 };
+
+export default MyCourses;

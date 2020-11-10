@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import locale from '../courseresourceslocale';
+import global from 'locale/global';
+import locale from '../courseResourcesLocale';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { Guides } from './Guides';
-import { LearningResources } from './LearningResources';
+import { ReadingLists } from './ReadingLists';
 import { MyCourses } from './MyCourses';
 import { PastExamPapers } from './PastExamPapers';
 import { SearchCourseResources } from './SearchCourseResources';
@@ -15,20 +17,35 @@ import { TabPanel } from './TabPanel';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+import { makeStyles } from '@material-ui/styles';
+
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import Typography from '@material-ui/core/Typography';
 
-function a11yProps(index, classname = null) {
-    const label = classname || index;
-    return {
-        id: `${label}-${index}`,
-        'aria-controls': `${label}panel-${index}`,
-    };
-}
+const useStyles = makeStyles(
+    theme => ({
+        courseResourceLineItem: {
+            borderTop: '1px solid #e8e8e8',
+            padding: '15px 0',
+            '& a': {
+                display: 'flex',
+                alignItems: 'center',
+            },
+        },
+        studyLinks: {
+            minHeight: '10rem',
+        },
+        desktopGap: {
+            [theme.breakpoints.up('md')]: {
+                paddingLeft: 16,
+            },
+        },
+    }),
+    { withTheme: true },
+);
 
 export const CourseResources = ({
     actions,
@@ -43,14 +60,31 @@ export const CourseResources = ({
     readingListError,
 }) => {
     const { account } = useAccountContext();
+    const classes = useStyles();
 
-    const [topmenu, setCurrentTopTab] = useState(!!account.classes && account.classes.length ? 'top0' : 'top1');
+    /**
+     * The page consists of 3 sections:
+     * - the user's enrolled courses (aka subjects),
+     * - search area and
+     * - some help links
+     * If the user is enrolled in courses then we load that section: top0
+     * Otherwise we load the search section: top1
+     * These sections are displayed as 3 tabs across the top
+     */
+    const [topmenu, setCurrentTopTab] = useState(
+        !!account.current_classes && account.current_classes.length ? 'top0' : 'top1',
+    );
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);
     };
 
+    // store a list of the Learning Resources that have been loaded, by subject
     const [currentLearningResourcesList, updateLearningResourcesList] = useState([]);
+
+    // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
+
+    // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
 
     const loadNewSubject = classnumber => {
@@ -70,12 +104,7 @@ export const CourseResources = ({
     // may need state of 'listMyCourses' which then shows the mycourses tab?
 
     const getCampusByCode = code => {
-        const campuses = {
-            STLUC: 'St Lucia',
-            GATTN: 'Gatton',
-            IPSWC: 'Ipswich',
-            HERST: 'Herston',
-        };
+        const campuses = global.campuses;
         if (campuses.hasOwnProperty(code)) {
             return campuses[code];
         }
@@ -83,42 +112,59 @@ export const CourseResources = ({
         return null;
     };
 
-    const filterReadingLists = (learningResourcesList, classnumber, classes) => {
-        const readingLists =
-            (!!learningResourcesList &&
-                learningResourcesList.length > 0 &&
-                !!learningResourcesList[0] &&
-                learningResourcesList[0].reading_lists) ||
-            [];
+    const filterReadingLists = React.useCallback(
+        (learningResourcesList, classnumber, classes) => {
+            const readingLists =
+                (!!learningResourcesList &&
+                    learningResourcesList.length > 0 &&
+                    !!learningResourcesList[0] &&
+                    learningResourcesList[0].reading_lists) ||
+                [];
 
-        if (!readingLists || readingLists.length === 0) {
-            return [];
-        }
+            if (!readingLists || readingLists.length === 0) {
+                return [];
+            }
 
-        if (readingLists.length === 1) {
-            return readingLists;
-        }
+            if (readingLists.length === 1) {
+                return readingLists;
+            }
 
-        // do better
-        const enrolment = classes.filter(aClass => aClass.classnumber === classnumber)[0];
+            const extractDetailsOfEnrolmentFromCurrentClassList = (classes, classnumber) => {
+                const subjectTemplate = {
+                    semester: null,
+                    CAMPUS: null,
+                    INSTRUCTION_MODE: null,
+                };
+                const subjectlist =
+                    !!classes && classes.filter(aClass => !!aClass && aClass.classnumber === classnumber);
+                const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+                return {
+                    semester: thisSubject.semester || subjectTemplate.semester,
+                    CAMPUS: thisSubject.CAMPUS || subjectTemplate.CAMPUS,
+                    INSTRUCTION_MODE: thisSubject.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+                };
+            };
 
-        if (displayType === 'searchresults') {
-            const semesterString = keywordPresets.period;
-            const campus = keywordPresets.campus;
-            return readingLists.filter(item => {
-                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
-            });
-        } else {
-            const semesterString = enrolment.semester;
-            const campus = getCampusByCode(enrolment.CAMPUS);
-            return readingLists.filter(item => {
-                return (
-                    item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || enrolment.INSTRUCTION_MODE === 'EX')
-                );
-            });
-        }
-    };
+            if (displayType === 'searchresults') {
+                const semesterString = keywordPresets.period;
+                const campus = keywordPresets.campus;
+                return readingLists.filter(item => {
+                    return item.period === semesterString && item.campus.indexOf(campus) !== -1;
+                });
+            } else {
+                const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classes, classnumber);
+                const semesterString = subjectEnrolment.semester;
+                const campus = getCampusByCode(subjectEnrolment.CAMPUS);
+                return readingLists.filter(item => {
+                    return (
+                        item.period === semesterString &&
+                        (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
+                    );
+                });
+            }
+        },
+        [displayType, keywordPresets],
+    );
 
     // get the long Talis string, like 2109F2EC-AB0B-482F-4D30-1DD3531E46BE fromm the Talis url
     const getReadingListId = readingList => {
@@ -133,86 +179,98 @@ export const CourseResources = ({
         return id;
     };
 
-    const requestReadingListLoad = (learningResources, subjectNumber, currentClasses) => {
-        const filteredReadingLists =
-            !!learningResources && learningResources.length > 0
-                ? filterReadingLists(learningResources, subjectNumber, currentClasses)
-                : [];
-        if (filteredReadingLists.length === 1) {
-            const talisId = getReadingListId(filteredReadingLists[0]);
-            if (!!talisId && currentReadingLists.talisId === undefined) {
-                actions.loadReadingLists(talisId);
-            }
-        }
-    };
+    const isReadingListKnown = React.useCallback(talisId => !!talisId && currentReadingLists[talisId] === undefined, [
+        currentReadingLists,
+    ]);
 
-    const updateLearningResourceSubjectList = React.useCallback((learningResourcesList, currentClasses) => {
+    const addReadingListToCurrentList = React.useCallback(
+        subjectNumber => {
+            const currentClasses = account.current_classes || null;
+            const filteredReadingLists =
+                !!learningResourcesList && learningResourcesList.length > 0
+                    ? filterReadingLists(learningResourcesList, subjectNumber, currentClasses)
+                    : [];
+            if (filteredReadingLists.length === 1) {
+                const talisId = getReadingListId(filteredReadingLists[0]);
+                if (isReadingListKnown(talisId)) {
+                    actions.loadReadingLists(talisId);
+                }
+            }
+        },
+        [learningResourcesList, account, actions, filterReadingLists, isReadingListKnown],
+    );
+
+    const addLearningResourceToCurrentList = React.useCallback(() => {
         if (!!learningResourcesList && learningResourcesList.length > 0 && learningResourcesList[0].title) {
             const subjectNumber = learningResourcesList[0].title;
-            if (currentLearningResourcesList.subjectNumber === undefined) {
+            // if (subjectNumber !== false && currentLearningResourcesList.subjectNumber === undefined) {
+            if (subjectNumber !== false && currentLearningResourcesList[subjectNumber] === undefined) {
                 const newLearningResourcesList = {};
                 newLearningResourcesList[subjectNumber] = learningResourcesList;
                 updateLearningResourcesList(currentLearningResourcesList =>
                     Object.assign({}, ...currentLearningResourcesList, ...newLearningResourcesList),
                 );
-
-                requestReadingListLoad(learningResourcesList, subjectNumber, currentClasses);
+                addReadingListToCurrentList(subjectNumber);
             }
         }
-    });
-
-    const getSubjectNumberbyTalisid = talisId => {
-        let subjectNumber = false;
-        Object.values(currentLearningResourcesList).map(item => {
-            const readingList = !!item[0].reading_lists && item[0].reading_lists.length > 0 && item[0].reading_lists[0];
-            if (talisId === getReadingListId(readingList)) {
-                subjectNumber = item[0].title;
-            }
-        });
-        return subjectNumber;
-    };
+    }, [learningResourcesList, currentLearningResourcesList, addReadingListToCurrentList]);
 
     React.useEffect(() => {
-        updateLearningResourceSubjectList(learningResourcesList, account.classes);
-    }, [learningResourcesList]);
+        // per https://wanago.io/2019/11/18/useeffect-hook-in-react-custom-hooks/
+        addLearningResourceToCurrentList();
+    }, [addLearningResourceToCurrentList]);
 
-    const updateListOfReadingLists = React.useCallback(readingList => {
+    // store the reading list for this subject in currentReadingLists by subject
+    const updateListOfReadingLists = React.useCallback(() => {
+        const getSubjectNumberbyTalisid = talisId => {
+            let subjectNumber = false;
+            Object.values(currentLearningResourcesList).map(item => {
+                const readingList =
+                    !!item[0].reading_lists && item[0].reading_lists.length > 0 && item[0].reading_lists[0];
+                if (talisId === getReadingListId(readingList)) {
+                    subjectNumber = item[0].title;
+                }
+            });
+            return subjectNumber;
+        };
+
         if (!!readingList && readingList.length > 0 && !!readingList[0].talisId) {
             const subject = getSubjectNumberbyTalisid(readingList[0].talisId);
-            if (currentReadingLists.subject === undefined) {
+            if (subject !== false && currentReadingLists[subject] === undefined) {
                 const newReadingList = {};
                 newReadingList[subject] = readingList;
                 updateReadingLists(currentReadingLists => Object.assign({}, ...currentReadingLists, ...newReadingList));
             }
         }
-    });
+    }, [readingList, currentReadingLists, currentLearningResourcesList]);
 
     React.useEffect(() => {
-        updateListOfReadingLists(readingList);
-    }, [readingList]);
+        updateListOfReadingLists();
+    }, [updateListOfReadingLists]);
 
-    const updateGuidesSubjectList = React.useCallback(guideList => {
+    const updateGuidesSubjectList = React.useCallback(() => {
         if (!!guideList && guideList.length > 0 && guideList[0].coursecode) {
             const subjectNumber = guideList[0].coursecode;
-            if (currentGuidesList.subjectNumber === undefined) {
+            // if (subjectNumber !== false && currentGuidesList.subjectNumber === undefined) {
+            if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;
                 updateGuidesList(currentGuidesList => Object.assign({}, ...currentGuidesList, ...newGuidesList));
             }
         }
-    });
+    }, [guideList, currentGuidesList]);
 
     React.useEffect(() => {
-        updateGuidesSubjectList(guideList);
-    }, [guideList]);
+        updateGuidesSubjectList();
+    }, [updateGuidesSubjectList]);
 
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
         const firstEnrolledClassNumber =
-            (!!account.classes &&
-                account.classes.length > 0 &&
-                !!account.classes[0] &&
-                account.classes[0].classnumber) ||
+            (!!account.current_classes &&
+                account.current_classes.length > 0 &&
+                !!account.current_classes[0] &&
+                account.current_classes[0].classnumber) ||
             null;
         if (firstEnrolledClassNumber !== null) {
             !!firstEnrolledClassNumber && actions.loadLearningResources(firstEnrolledClassNumber);
@@ -222,39 +280,37 @@ export const CourseResources = ({
     }, [account, actions]);
 
     const renderStudyHelpLinks = (
-        <StandardCard
-            className="noreadingLists"
-            style={{ width: '100%', marginBottom: '1rem', marginTop: '1rem' }}
-            title={locale.studyHelp.title}
-        >
-            <Grid container>
-                <Grid item xs={12}>
-                    {!!locale.studyHelp.links &&
-                        locale.studyHelp.links.length > 0 &&
-                        locale.studyHelp.links.map((item, index) => {
-                            return item.linkTo && item.linkLabel ? (
-                                <Grid
-                                    item
-                                    key={`studylink-${index}`}
-                                    xs={12}
-                                    style={{ borderTop: '1px solid #e8e8e8', padding: '15px 0' }}
-                                >
-                                    <a
-                                        // on-tap="linkClicked"
-                                        id={item.id || null}
-                                        href={item.linkTo}
+        <Grid container alignContent={'space-between'} className={classes.studyLinks}>
+            <Grid item xs={12}>
+                <StandardCard title={locale.studyHelp.title}>
+                    <Grid container spacing={2}>
+                        {!!locale.studyHelp.links &&
+                            locale.studyHelp.links.length > 0 &&
+                            locale.studyHelp.links.map((item, index) => {
+                                return item.linkTo && item.linkLabel ? (
+                                    <Grid
+                                        item
+                                        className={classes.courseResourceLineItem}
+                                        key={`studylink-${index}`}
+                                        xs={12}
                                     >
-                                        {!!item.icon && item.icon}
-                                        {item.linkLabel}
-                                    </a>
-                                </Grid>
-                            ) : (
-                                <Typography>{locale.studyHelp.unavailable}</Typography>
-                            );
-                        })}
-                </Grid>
+                                        <a
+                                            // on-tap="linkClicked"
+                                            id={item.id || null}
+                                            href={item.linkTo}
+                                        >
+                                            {!!item.icon && item.icon}
+                                            {item.linkLabel}
+                                        </a>
+                                    </Grid>
+                                ) : (
+                                    <Typography>{locale.studyHelp.unavailable}</Typography>
+                                );
+                            })}
+                    </Grid>
+                </StandardCard>
             </Grid>
-        </StandardCard>
+        </Grid>
     );
 
     const renderSubjectTabBody = subject => {
@@ -268,16 +324,16 @@ export const CourseResources = ({
 
         return (
             <Grid container>
-                <Grid item xs={12} style={{ textAlign: 'center' }}>
-                    <Typography color={'primary'} variant={'h5'} component={'span'} style={{ fontSize: '1.33rem' }}>
+                <Grid item xs={12}>
+                    <Typography color={'primary'} component={'h3'} variant={'h5'} style={{ textAlign: 'center' }}>
                         {subject.classnumber} - {courseTitle}
                     </Typography>
                 </Grid>
 
-                <LearningResources
+                <ReadingLists
                     // actions={actions}
                     classnumber={subject.classnumber}
-                    currentClasses={account.classes}
+                    currentClasses={account.current_classes}
                     filterReadingLists={filterReadingLists}
                     readingList={currentReadingLists[[subject.classnumber]]}
                     readingListLoading={readingListLoading}
@@ -287,83 +343,67 @@ export const CourseResources = ({
                     learningResourcesListError={learningResourcesListError}
                 />
 
-                <PastExamPapers
-                    subject={subject}
-                    learningResourcesList={learningResourcesList}
-                    learningResourcesListLoading={learningResourcesListLoading}
-                    learningResourcesListError={learningResourcesListError}
-                />
-
-                <Guides
-                    guideList={currentGuidesList[subject.classnumber]}
-                    guideListLoading={guideListLoading}
-                    guideListError={guideListError}
-                />
-
-                <SubjectLinks subject={subject} />
+                <Grid container>
+                    <Grid item xs={12} md={4} className={'exams'}>
+                        <PastExamPapers
+                            subject={subject}
+                            learningResourcesList={currentLearningResourcesList[subject.classnumber]}
+                            learningResourcesListLoading={learningResourcesListLoading}
+                            learningResourcesListError={learningResourcesListError}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.desktopGap}>
+                        <Guides
+                            guideList={currentGuidesList[subject.classnumber]}
+                            guideListLoading={guideListLoading}
+                            guideListError={guideListError}
+                        />
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.desktopGap}>
+                        <SubjectLinks subject={subject} />
+                    </Grid>
+                </Grid>
             </Grid>
         );
     };
 
-    /*
-    let classes = account.classes || null;
-
-    // dev hack while we wait for api update (needs more fields)
-    if (classes === null) {
-        classes = [
-            {
-                SUBJECT: 'FREN',
-                subjectLevel: '1010',
-                classnumber: 'FREN1010',
-                classname: 'Introductory French 1',
-            },
-            {
-                SUBJECT: 'HIST',
-                subjectLevel: '1201',
-                classnumber: 'HIST1201',
-                classname: 'The Australian  Experience',
-            },
-            {
-                SUBJECT: 'PHIL',
-                subjectLevel: '1002',
-                classnumber: 'PHIL1002',
-                classname: 'Introduction to Philosophy: What is Philosophy?',
-            },
-        ];
-    }
-    */
-
     return (
-        <StandardPage>
-            <div className="layout-card" style={{ margin: '-8px auto 16px' }}>
-                <StandardCard noPadding noHeader>
-                    <Grid
-                        container
-                        spacing={1}
-                        style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
-                    >
-                        <Grid item xs={12} md={'auto'} id="courseresources">
-                            <InputLabel id="courseresources-label">Course Resources</InputLabel>
-                        </Grid>
-                        <Grid item xs={12} id="courseresource-search">
-                            <AppBar position="static">
+        <StandardPage title={locale.title}>
+            <div className="layout-card" style={{ margin: '0 auto 16px' }}>
+                <StandardCard noPadding noHeader customBackgroundColor="#F7F7F7" style={{ boxShadow: '0 0 black' }}>
+                    <Grid container>
+                        <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
+                            <AppBar
+                                data-testid="course-resource-top-menu"
+                                id="course-resource-top-menu"
+                                position="static"
+                                component="div"
+                            >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="top0" label={locale.myCourses.tabLabel} {...a11yProps('top0')} />
-                                    <Tab value="top1" label={locale.search.tabLabel} {...a11yProps('top1')} />
-                                    <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('top2')} />
+                                    <Tab value="top0" label={locale.myCourses.title} {...a11yProps('0')} />
+                                    <Tab value="top1" label={locale.search.title} {...a11yProps('1')} />
+                                    <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('2')} />
                                 </Tabs>
                             </AppBar>
 
-                            <TabPanel value={topmenu} index="top0" tabId="topmenu">
+                            <TabPanel
+                                value={topmenu}
+                                index="top0" // must match 'value' in Tabs
+                                label="topmenu"
+                                {...reverseA11yProps('0')}
+                            >
                                 <MyCourses
-                                    a11yProps={a11yProps}
                                     loadNewSubject={loadNewSubject}
                                     renderSubjectTabBody={renderSubjectTabBody}
                                 />
                             </TabPanel>
-                            <TabPanel value={topmenu} index="top1" tabId="topmenu">
+                            <TabPanel
+                                value={topmenu}
+                                index="top1" // must match 'value' in Tabs
+                                label="topmenu"
+                                {...reverseA11yProps('1')}
+                            >
                                 <SearchCourseResources
-                                    a11yProps={a11yProps}
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
                                     renderSubjectTabBody={renderSubjectTabBody}
@@ -372,14 +412,14 @@ export const CourseResources = ({
                                     updateSearchList={updateSearchList}
                                 />
                             </TabPanel>
-                            <TabPanel value={topmenu} index="top2" tabId="topmenu">
-                                <Grid
-                                    alignContent={'space-between'}
-                                    container
-                                    style={{ minHeight: '10rem', borderBottom: '1px solid #e8e8e8' }}
-                                >
-                                    {renderStudyHelpLinks}
-                                </Grid>
+                            <TabPanel
+                                value={topmenu}
+                                index="top2"
+                                tabId="topmenu"
+                                label="topmenu"
+                                {...reverseA11yProps('2')}
+                            >
+                                {renderStudyHelpLinks}
                             </TabPanel>
                         </Grid>
                     </Grid>
@@ -390,16 +430,16 @@ export const CourseResources = ({
 };
 
 CourseResources.propTypes = {
-    readingList: PropTypes.any,
-    readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
-    learningResourcesList: PropTypes.any,
-    learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.string,
+    actions: PropTypes.object,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.string,
-    actions: PropTypes.object,
+    learningResourcesList: PropTypes.any,
+    learningResourcesListLoading: PropTypes.bool,
+    learningResourcesListError: PropTypes.string,
+    readingList: PropTypes.any,
+    readingListLoading: PropTypes.bool,
+    readingListError: PropTypes.string,
 };
 
 export default React.memo(CourseResources);

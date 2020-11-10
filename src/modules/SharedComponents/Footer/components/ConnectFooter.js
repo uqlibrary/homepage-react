@@ -17,7 +17,7 @@ const styles = theme => ({
         lineHeight: '25px',
         margin: '0 auto 0 auto',
         maxWidth: '1200px',
-        padding: 20,
+        padding: '20px 0',
         position: 'relative',
         '& a': {
             color: theme.palette.secondary.dark,
@@ -73,6 +73,9 @@ const styles = theme => ({
             },
         },
         textAlign: 'right',
+    },
+    givingBlock: {
+        marginRight: 10,
     },
     givingButtonClass: {
         color: theme.palette.white.main + '!important',
@@ -150,10 +153,7 @@ export function ConnectFooter(props) {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container spacing={1}>
-                    <Hidden mdUp>
-                        <Grid item xs />
-                    </Hidden>
+                <Grid container spacing={1} style={{ justifyContent: 'center' }}>
                     {locale.connectFooter.buttonSocial.map((item, index) => (
                         <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
                             <Tooltip
@@ -178,7 +178,6 @@ export function ConnectFooter(props) {
                             </Tooltip>
                         </Grid>
                     ))}
-                    <Grid item xs />
                 </Grid>
                 <Grid className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((linkProperties, index) => {
@@ -197,7 +196,7 @@ export function ConnectFooter(props) {
                 <Grid container spacing={2}>
                     {locale.connectFooter.givingLinks.map((item, index) => {
                         return (
-                            <Grid item xs={12} md={8} key={`givingLinks-${index}`}>
+                            <Grid item xs={12} md={8} key={`givingLinks-${index}`} className={classes.givingBlock}>
                                 <Button
                                     fullWidth
                                     children={item.label}

@@ -13,7 +13,7 @@ const styles = theme => ({
         lineHeight: '20px',
         margin: '0 auto',
         maxWidth: '1200px',
-        padding: '20px',
+        padding: '20px 0',
         textDecoration: 'none',
         '& div': {
             [theme.breakpoints.down('sm')]: {

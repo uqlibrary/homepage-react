@@ -2,14 +2,14 @@ export default [{
         name: 'FREN1010',
         url: 'http:\/\/lr.library.uq.edu.au\/lists\/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F',
         type: 'learning_resource',
-        course_title: 'Introductory French 1',
+        course_title: 'Introductory French 1 (has search results)',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
         name: 'HIST1201',
         url: 'http:\/\/lr.library.uq.edu.au\/lists\/2109F2EC-AB0B-482F-4D30-1DD3531E46BE',
         type: 'learning_resource',
-        course_title: 'The Australian Experience',
+        course_title: 'The Australian Experience (has search results)',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
