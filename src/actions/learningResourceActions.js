@@ -1,5 +1,5 @@
 import * as actions from './actionTypes';
-// import { get } from 'repositories/generic';
+import { get } from 'repositories/generic';
 import { LEARNING_RESOURCES_API, GUIDES_API, EXAMS_API, READING_LIST_API } from '../repositories/routes';
 
 // import { get } from 'repositories/generic';
@@ -11,10 +11,9 @@ export function loadLearningResources(keyword) {
     console.log('will load loadLearningResources for ', keyword);
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCES_LOADING });
-        return fetch(LEARNING_RESOURCES_API({ keyword }).apiUrl)
-            .then(response => response.json())
+        return get(LEARNING_RESOURCES_API({ keyword }))
             .then(data => {
-                console.log('fetched LEARNING_RESOURCES_API');
+                console.log('fetched LEARNING_RESOURCES_API: ', data);
                 dispatch({
                     type: actions.LEARNING_RESOURCES_LOADED,
                     payload: data,
@@ -39,10 +38,9 @@ export function loadGuides(keyword) {
     console.log('will load loadGuides for ', keyword);
     return dispatch => {
         dispatch({ type: actions.GUIDES_LOADING });
-        return fetch(GUIDES_API({ keyword }).apiUrl)
-            .then(response => response.json())
+        return get(GUIDES_API({ keyword }))
             .then(data => {
-                console.log('fetched GUIDES_API');
+                console.log('fetched GUIDES_API: ', data);
                 const updatedData = data.map(subject => {
                     subject.coursecode = keyword;
                     return subject;
@@ -71,8 +69,7 @@ export function loadExams(keyword) {
     console.log('will load Exams for ', keyword);
     return dispatch => {
         dispatch({ type: actions.EXAMS_LOADING });
-        return fetch(EXAMS_API({ keyword }).apiUrl)
-            .then(response => response.json())
+        return get(EXAMS_API({ keyword }))
             .then(data => {
                 console.log('fetched EXAMS_API: ', data);
                 dispatch({
@@ -99,8 +96,7 @@ export function loadReadingLists(keyword) {
     console.log('will load loadReadingLists for ', keyword);
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
-        return fetch(READING_LIST_API({ keyword }).apiUrl)
-            .then(response => response.json())
+        return get(READING_LIST_API({ keyword }))
             .then(data => {
                 console.log('fetched READING_LIST_API for ', keyword);
                 const updatedData = data.map(subject => {

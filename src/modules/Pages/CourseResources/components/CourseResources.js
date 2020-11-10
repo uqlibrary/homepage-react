@@ -275,9 +275,8 @@ export const CourseResources = ({
     }, [updateGuidesSubjectList]);
 
     const updateExamsSubjectList = React.useCallback(() => {
-        if (!!examList && examList.length > 0 && examList[0].coursecode) {
-            const subjectNumber = examList[0].coursecode;
-            // if (subjectNumber !== false && currentExamsList.subjectNumber === undefined) {
+        if (!!examList && !!examList.coursecode) {
+            const subjectNumber = examList.coursecode;
             if (subjectNumber !== false && currentExamsList[subjectNumber] === undefined) {
                 const newExamsList = {};
                 newExamsList[subjectNumber] = examList;

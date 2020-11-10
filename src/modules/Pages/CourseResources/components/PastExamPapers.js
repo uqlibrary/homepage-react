@@ -33,10 +33,8 @@ export const PastExamPapers = ({ subject, examList, examListLoading, examListErr
         return url.substring(url.lastIndexOf('.') + 1);
     };
 
-    const listOfExams =
-        !!examList && !!examList.length > 0 && !!examList[0].list && examList[0].list.length > 0
-            ? examList[0].list
-            : null;
+    const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : null;
+
     const numberExcessExams =
         !!listOfExams && listOfExams.length > locale.visibleItemsCount.examPapers
             ? listOfExams.length - locale.visibleItemsCount.examPapers
@@ -52,12 +50,14 @@ export const PastExamPapers = ({ subject, examList, examListLoading, examListErr
         <StandardCard fullHeight title={examPaperTitle}>
             <Grid container>
                 {!!examListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
-                {!examListError && examListLoading && (
+
+                {!examListError && !!examListLoading && (
                     <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
                         <CircularProgress color="primary" size={20} data-testid="loading-exampaper-suggestions" />
                     </Grid>
                 )}
-                {(!listOfExams || listOfExams.length === 0) && (
+
+                {!examListError && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <Typography>{locale.myCourses.examPapers.none}</Typography>
