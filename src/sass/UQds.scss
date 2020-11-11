@@ -1,15 +1,3 @@
-//@import '../../UQds/core/src/scss/global';
-//@use '../../UQds/grid/src/scss/global' as grid;
-@use 'global' as *;
-
-@forward '../../UQds/core/src/scss/_partials/spacing-constants';
-@forward '../../UQds/core/src/scss/_partials/text-constants';
-@use '../../UQds/core/src/scss/_partials/text-constants' as *;
-@forward '../../UQds/core/src/scss/_partials/colour-constants';
-@forward '../../UQds/core/src/scss/_partials/space';
-@forward '../../UQds/core/src/scss/_partials/media-constants';
-
-
 /* Breakpoints */
 
 // Firstly the trivial 0 size (of course), then:
