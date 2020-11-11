@@ -1,26 +1,28 @@
 /**
- * UG: undergraduate (on campus) - sample users: vanilla, s1111111
- * REMUG: remote undergraduate - sample users: s3333333
- * ICTE: Institute of Continuing and TESOL Education
+
+ * (matching ptype in breackets at start)
+ * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
+ * (31) REMUG: remote undergraduate - sample users: s3333333
+ * (5) ICTE: Institute of Continuing and TESOL Education
  *       Students learning english - sample users: uqstaff, uqresearcher, uqpkopit
- * CWPG: post graduate by course work (on campus) - sample users: s2222222
- * REMCWPG:  remote post graduate by course work
- * RHD: research & higher degree (on campus) (post grad by thesis)
- * REMRHD: remote research & higher degree (used to be REMHDR)
- * LIBRARYSTAFFB: Library staff - sample users: uqmasquerade, digiteamMember
- * STAFF: UQ academic and research staff (inc. general staff) - sample users: uqstaff, uqresearcher, uqpkopit
- * COMMU: extra-mural users - Community users (annual fee) - sample users: emcommunity
- * ALUMNI: extra-mural users - former students (both first year out (free) and later (fee) - sample users: emalumni
- * HOSP: extra-mural users - hospital staff - sample users: emhospital
- * ASSOCIATE: extra-mural users - staff employed by UQ controlled entities e.g. JKTech - sample users: emassociate
- * FRYVISITOR: extra-mural users - special membership of Fryer Library - sample users: emfryer
- * HON: extra-mural users - Honorary (inc. Adjunct and Indstury Fellow)
- * VET: VET students - Vocational Education and Training
+ * (11) CWPG: post graduate by course work (on campus) - sample users: s2222222
+ * (21) REMCWPG:  remote post graduate by course work
+ * (2) RHD: research & higher degree (on campus) (post grad by thesis)
+ * (22) REMRHD: remote research & higher degree (used to be REMHDR)
+ * (18) LIBRARYSTAFFB: Library staff - sample users: uqmasquerade, digiteamMember
+ * (3) STAFF: UQ academic and research staff (inc. general staff) - sample users: uqstaff, uqresearcher, uqpkopit
+ * (8) COMMU: extra-mural users - Community users (annual fee) - sample users: emcommunity
+ * (4) ALUMNI: extra-mural users - former students (both first year out (free) and later (fee) - sample users: emalumni
+ * (9) HOSP: extra-mural users - hospital staff - sample users: emhospital
+ * (25) ASSOCIATE: extra-mural users - staff employed by UQ controlled entities e.g. JKTech - sample users: emassociate
+ * (27) FRYVISITOR: extra-mural users - special membership of Fryer Library - sample users: emfryer
+ * (34) HON: extra-mural users - Honorary (inc. Adjunct and Indstury Fellow)
+ * (32) VET: VET students - Vocational Education and Training
  *
  * other types:
- * ATH
- * AURION (Staff Awaiting Aurion)
- * PROXY - Academic Proxy
+ * (?) ATH
+ * (15) AURION (Staff Awaiting Aurion)
+ * (32) PROXY - Academic Proxy
  */
 const isUndergraduateLocal = account => !!account && ['UG'].includes(account.user_group);
 const isUndergraduate = account =>
@@ -34,6 +36,7 @@ const isResearchStudent = account =>
     !!((!!account && ['RHD', 'REMRHD'].includes(account.user_group)) || isRHDLocal(account));
 
 const isLibraryStaff = account => !!account && ['LIBRARYSTAFFB'].includes(account.user_group);
+const isStaffAurion = account => !!account && ['AURION'].includes(account.user_group);
 const isNonLibraryStaff = account => !!account && ['STAFF'].includes(account.user_group);
 const isStaff = account => isNonLibraryStaff(account) || isLibraryStaff(account);
 
@@ -82,12 +85,30 @@ export const seeRoomBookings = account =>
 
 // UG, REMUG, CWPG, REMCWPG, RHD, REMRHD, STAFF, 33, HON, PROXY, 17, LIBRARYSTAFFB, ASSOCIATE, 14, ALUMNI, HOSP
 // , 13, 10, 12, FRYVISITOR, SCHOOL, AURION, ICTE, COMMU
-export const seeLoans = account =>
+export const seeBorrowing = account =>
     isUndergraduate(account) ||
     isUndergraduateLOTE(account) ||
     isRHD(account) ||
     isCommunityAlumni(account) ||
     isStaff(account);
+
+export const seeLoans = account => seeBorrowing(account);
+
+// 1, 31, 11, 21, 2, 22, 3, 33, 34, 32, 17, 18, 25, 14, 4, 9, 7, 15, 8
+
+// UG, 31, CWPG, REMCWPG, RHD, REMRHD, STAFF, 33, HON, VET, 17, LIBRARYSTAFFB, ASSOCIATE
+// , 14, ALUMNI, HOSP, 7, AURION, COMMU
+export const seeHolds = account =>
+    isUndergraduateLocal(account) ||
+    isResearchStudent()(account) ||
+    isUndergraduateVET(account) ||
+    isStaff(account) ||
+    isStaffAurion(account) ||
+    isCommunityAssociate(account) ||
+    isCommunityAlumni(account) ||
+    isCommunityHospital(account) ||
+    isCommunityHonorary(account) ||
+    isCommunityPaid(account);
 
 // UG, RHD, STAFF, 33, HON, CWPG, 17, LIBRARYSTAFFB, REMCWPG, REMRHD, REMUG
 export const seePrintBalance = account =>
