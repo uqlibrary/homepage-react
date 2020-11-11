@@ -9,6 +9,19 @@ exports[`Component MinimalFooter should render 1`] = `
     item={true}
     xs={12}
   >
+    UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated. — 
+    <a
+      data-testid="footer-reconciliation-link"
+      href="https://about.uq.edu.au/reconciliation"
+      key="reconciliation-0"
+    >
+      Reconciliation statement
+    </a>
+  </WithStyles(ForwardRef(Grid))>
+  <WithStyles(ForwardRef(Grid))
+    item={true}
+    xs={12}
+  >
     <WithStyles(ForwardRef(Grid))
       container={true}
     >
@@ -112,9 +125,25 @@ exports[`Component MinimalFooter should render 1`] = `
     </a>
       |  
     <a
+      data-testid="footer-rights-link"
+      href="https://www.uq.edu.au/rti/"
+      key="bottomBlock-line1-2"
+    >
+      Right to Information
+    </a>
+      |  
+    <a
+      data-testid="footer-accessibility-link"
+      href="https://uq.edu.au/accessibility/"
+      key="bottomBlock-line1-4"
+    >
+      Accessibility
+    </a>
+      |  
+    <a
       data-testid="footer-feedback-link"
       href="https://support.my.uq.edu.au/app/library/feedback"
-      key="bottomBlock-line1-2"
+      key="bottomBlock-line1-6"
     >
       Feedback
     </a>

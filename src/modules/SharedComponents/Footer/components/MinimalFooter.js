@@ -19,7 +19,6 @@ const styles = theme => ({
             [theme.breakpoints.down('sm')]: {
                 textAlign: 'center',
             },
-            fontSize: '14px',
         },
         '& li': {
             listStyle: 'none',
@@ -29,7 +28,7 @@ const styles = theme => ({
             listStyle: 'none',
         },
         '& h3': {
-            fontSize: '17px',
+            fontSize: 17,
             fontWeight: '500',
             color: theme.palette.white.main,
             margin: 0,
@@ -43,12 +42,14 @@ const styles = theme => ({
         borderTop: '1px solid rgba(255,255,255,0.3)',
         marginTop: '1rem',
         paddingTop: '1rem',
+        fontSize: 14,
     },
     footerContent: {
         paddingBottom: '4px',
     },
     footerLegalDetails: {
         textAlign: 'right',
+        fontSize: 14,
         [theme.breakpoints.down('sm')]: {
             borderTop: '1px solid rgba(255,255,255,0.3)',
             marginTop: '1rem',
@@ -60,9 +61,25 @@ const styles = theme => ({
         },
     },
     fullWidth: {
+        fontSize: 14,
         [theme.breakpoints.up('md')]: {
             display: 'flex',
             justifyContent: 'space-between',
+        },
+    },
+    acknowledgement: {
+        // per uq-footer__acknowledgement
+        borderBottom: '1px solid rgba(255,255,255,.3)',
+        color: '#d4c8de',
+        fontFamily: 'Merriweather,Georgia,serif',
+        fontSize: '1rem',
+        fontStyle: 'italic',
+        fontWeight: 400,
+        lineHeight: 1.5,
+        margin: '0 0 2rem',
+        padding: '0 0 2rem',
+        [theme.breakpoints.up('md')]: {
+            fontSize: '1.125rem',
         },
     },
 });
@@ -111,8 +128,17 @@ export function MinimalFooter(props) {
         return <Fragment />;
     }
 
+    const reconciliationStatementText =
+        !!locale.minimalFooter &&
+        !!locale.minimalFooter.reconciliation &&
+        !!locale.minimalFooter.reconciliation.statement &&
+        locale.minimalFooter.reconciliation.statement;
     return (
         <Grid container className={classes.minimalFooter} data-testid="minimal-footer">
+            <Grid item xs={12} className={classes.acknowledgement}>
+                {reconciliationStatementText}
+                {renderItem(locale.minimalFooter.reconciliation.link, 0, 'reconciliation')}
+            </Grid>
             <Grid item xs={12} className={classes.fullWidth}>
                 <Grid container>
                     <Grid item xs={12} md={10} className={classes.footerContent}>

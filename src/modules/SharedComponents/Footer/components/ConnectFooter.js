@@ -29,8 +29,10 @@ const styles = theme => ({
         },
     },
     navigation: {
+        marginTop: '-4px',
         '& ul': {
             padding: 0,
+            margin: 0,
             [theme.breakpoints.down('sm')]: {
                 textAlign: 'center',
             },
@@ -41,6 +43,10 @@ const styles = theme => ({
             padding: 0,
             [theme.breakpoints.down('sm')]: {
                 display: 'inline-block',
+            },
+            [theme.breakpoints.up('md')]: {
+                fontSize: 14,
+                lineHeight: 1.7,
             },
         },
     },
@@ -86,6 +92,7 @@ const styles = theme => ({
         padding: '1rem',
     },
     contacts: {
+        marginTop: '-4px',
         '& div': {
             '& div': {
                 [theme.breakpoints.down('sm')]: {

@@ -70,6 +70,17 @@ export default {
         ],
     },
     minimalFooter: {
+        reconciliation: {
+            // space on the end leaves a gap!
+            statement:
+                'UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated. — ',
+            link: {
+                type: 'link',
+                dataTestid: 'footer-reconciliation-link',
+                linkLabel: 'Reconciliation statement',
+                linkTo: 'https://about.uq.edu.au/reconciliation',
+            },
+        },
         leftColumn: {
             line1: [
                 {
@@ -161,6 +172,24 @@ export default {
                     dataTestid: 'footer-terms-link',
                     linkLabel: 'Privacy & Terms of use',
                     linkTo: 'https://www.uq.edu.au/terms-of-use/',
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    type: 'link',
+                    dataTestid: 'footer-rights-link',
+                    linkLabel: 'Right to Information',
+                    linkTo: 'https://www.uq.edu.au/rti/',
+                },
+                {
+                    type: 'divider',
+                },
+                {
+                    type: 'link',
+                    dataTestid: 'footer-accessibility-link',
+                    linkLabel: 'Accessibility',
+                    linkTo: 'https://uq.edu.au/accessibility/',
                 },
                 {
                     type: 'divider',
