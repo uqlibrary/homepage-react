@@ -6,7 +6,7 @@ exports[`Component MinimalFooter should render 1`] = `
   data-gtm-category="Footer"
 >
   <div
-    className="layout-card uq-footer__container"
+    className="uq-footer__container"
   >
     <div
       className="uq-footer__acknowledgement"

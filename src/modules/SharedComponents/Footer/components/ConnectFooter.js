@@ -16,7 +16,10 @@ const styles = theme => ({
         fontWeight: '300',
         lineHeight: '25px',
         margin: '0 auto 0 auto',
-        maxWidth: '1200px',
+        maxWidth: '90%',
+        [theme.breakpoints.up('lg')]: {
+            maxWidth: '1200px',
+        },
         padding: '20px 0',
         position: 'relative',
         '& a': {

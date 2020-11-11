@@ -1349,4 +1349,9 @@ $max-container-width: 71.25rem !default;
   &--full-width {
     padding: $space-none $space;
   }
+
+  &__container {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
 }
