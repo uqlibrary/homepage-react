@@ -11,7 +11,7 @@ context('ACCESSIBILITY', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
 
-        cy.get('[data-testid=minimal-footer]').should('contain', '3365 1111');
+        cy.get('[data-testid=minimal-footer]').should('contain', '3365 3333');
         cy.log('Minimal Footer');
         cy.checkA11y('[data-testid=minimal-footer]', {
             reportName: 'Minimal Footer',
