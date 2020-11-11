@@ -17,7 +17,7 @@ const styles = () => {
 export function MinimalFooter(props) {
     const { classes } = props;
     return (
-        <footer className="uq-footer" data-gtm-category="Footer">
+        <div className="uq-footer" data-gtm-category="Footer" data-testid="minimal-footer">
             <div className={classNames(classes.layout, 'uq-footer__container')}>
                 <div className="uq-footer__acknowledgement">
                     UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated.
@@ -112,7 +112,7 @@ export function MinimalFooter(props) {
                     </div>
                 </div>
             </div>
-        </footer>
+        </div>
     );
 }
 

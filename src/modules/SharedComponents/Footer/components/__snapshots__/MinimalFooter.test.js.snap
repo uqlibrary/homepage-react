@@ -1,9 +1,10 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component MinimalFooter should render 1`] = `
-<footer
+<div
   className="uq-footer"
   data-gtm-category="Footer"
+  data-testid="minimal-footer"
 >
   <div
     className="uq-footer__container"
@@ -173,5 +174,5 @@ exports[`Component MinimalFooter should render 1`] = `
       </div>
     </div>
   </div>
-</footer>
+</div>
 `;
