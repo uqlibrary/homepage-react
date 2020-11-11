@@ -1,4 +1,4 @@
-export default [{
+export default {
     "coursecode": "FREN1010",
     "title": "Introductory French 1",
     "list": [{
@@ -34,4 +34,4 @@ export default [{
         "period": "Semester 2 2016",
         "course": "FREN1010"
     }]
-}];
+};

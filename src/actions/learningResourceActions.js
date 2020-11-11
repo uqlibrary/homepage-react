@@ -51,6 +51,7 @@ export function loadGuides(keyword) {
                 });
             })
             .catch(error => {
+                console.log('guides error: ', error);
                 dispatch({
                     type: actions.GUIDES_FAILED,
                     payload: error.message,

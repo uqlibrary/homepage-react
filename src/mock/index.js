@@ -268,18 +268,24 @@ fetchMock.mock(
     learningResourceSearchSuggestions
 );
 
-fetchMock.mock('learning_resources/FREN1010', learningResources_FREN1010);
-fetchMock.mock('learning_resources/HIST1201', learningResources_HIST1201);
-fetchMock.mock('learning_resources/PHIL1002', learningResources_PHIL1002);
+mock.onGet('learning_resources/FREN1010').reply(() => { return [200, learningResources_FREN1010] });
+mock.onGet('learning_resources/HIST1201').reply(() => { return [200, learningResources_HIST1201] });
+mock.onGet('learning_resources/PHIL1002').reply(() => { return [200, learningResources_PHIL1002] });
 
-fetchMock.mock('course_resources/FREN1010/exams', exams_FREN1010);
-fetchMock.mock('course_resources/HIST1201/exams', exams_HIST1201);
-fetchMock.mock('course_resources/PHIL1002/exams', exams_PHIL1002);
+mock.onGet('course_resources/FREN1010/exams').reply(() => { return [200, exams_FREN1010] });
+mock.onGet('course_resources/HIST1201/exams').reply(() => { return [200, exams_HIST1201] });
+mock.onGet('course_resources/PHIL1002/exams').reply(() => { return [200, exams_PHIL1002] });
 
-fetchMock.mock('library_guides/FREN1010', libraryGuides_FREN1010);
-fetchMock.mock('library_guides/HIST1201', libraryGuides_HIST1201);
-fetchMock.mock('library_guides/PHIL1002', libraryGuides_PHIL1002);
+mock.onGet('library_guides/FREN1010').reply(() => { return [200, libraryGuides_FREN1010] });
+mock.onGet('library_guides/HIST1201').reply(() => { return [200, libraryGuides_HIST1201] });
+mock.onGet('library_guides/PHIL1002').reply(() => { return [200, libraryGuides_PHIL1002] });
 
-// fetchMock.mock('course_reading_list/FE54098F-2CB3-267D-50F8-4B2895FE94B9', courseReadingList_FE54098F);
-fetchMock.mock('course_reading_list/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F', courseReadingList_6888AB68);
-fetchMock.mock('course_reading_list/2109F2EC-AB0B-482F-4D30-1DD3531E46BE', courseReadingList_2109F2EC);
+// mock.onGet('course_reading_list/FE54098F-2CB3-267D-50F8-4B2895FE94B9').reply(() => {
+//  return [200, courseReadingList_FE54098F]
+// });
+mock.onGet('course_reading_list/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F').reply(() => {
+    return [200, courseReadingList_6888AB68]
+});
+mock.onGet('course_reading_list/2109F2EC-AB0B-482F-4D30-1DD3531E46BE').reply(() => {
+    return [200, courseReadingList_2109F2EC]
+});

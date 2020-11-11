@@ -1,4 +1,4 @@
-export default [{
+export default {
     "coursecode": "HIST1201",
     "title": "The Australian Experience",
     "list": [{
@@ -6,4 +6,4 @@ export default [{
         "period": "Semester 1 2016",
         "course": "HIST1201"
     }]
-}]
+}
