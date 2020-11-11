@@ -1,15 +1,3 @@
-//@import '../../UQds/core/src/scss/global';
-//@use '../../UQds/grid/src/scss/global' as grid;
-@use 'global' as *;
-
-@forward '../../UQds/core/src/scss/_partials/spacing-constants';
-@forward '../../UQds/core/src/scss/_partials/text-constants';
-@use '../../UQds/core/src/scss/_partials/text-constants' as *;
-@forward '../../UQds/core/src/scss/_partials/colour-constants';
-@forward '../../UQds/core/src/scss/_partials/space';
-@forward '../../UQds/core/src/scss/_partials/media-constants';
-
-
 /* Breakpoints */
 
 // Firstly the trivial 0 size (of course), then:
@@ -239,6 +227,10 @@ $uq-darkgrey-light80: #ada9a6; // rgb(173, 169, 166), rgba(153, 148, 144, 0.8)
 // UQ Secondary - Red Shades
 $uq-red-dark20: #be1b38; // Consolidated - B80017, D6492A, F04124, F00000, D8481F
 $uq-red-dark40: #9b1129; // Consolidated - CF2A0E
+
+$site-footer-color: mix($uq-white, $uq-purple, 75%);
+$site-footer-link-color: $uq-white;
+$site-footer-font-size: .875rem;
 
 // Link Blue
 $link: #2377cb;
@@ -1187,5 +1179,174 @@ $max-container-width: 71.25rem !default;
   // JS helpers:
   &__mq--desktop {
     font-family: "#{$screen-lg-up}";
+  }
+}
+
+.uq-footer {
+  background: $uq-purple-gradient;
+  box-sizing: border-box;
+  color: $site-footer-color;
+  font-family: $font-body;
+  font-size: $site-footer-font-size;
+  font-weight: $font-weight-thin;
+  line-height: $line-height;
+
+  *, *:before, *:after {
+    box-sizing: border-box;
+  }
+
+  a {
+    color: $site-footer-link-color;
+    font-weight: 500;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  abbr[title] {
+    text-decoration: none;
+    border-bottom: 1px dotted;
+  }
+
+  &__acknowledgement {
+    border-bottom: 1px solid rgba($uq-white, 0.3);
+    color: $site-footer-color;
+    font-family: $merriweather;
+    font-size: $font-size-m;
+    font-style: italic;
+    font-weight: $font-weight-normal;
+    line-height: $line-height;
+    margin: $space-none $space-none $space-lg;
+    padding: $space-none $space-none $space-lg;
+
+    @media #{$screen-md-up} {
+      font-size: $font-size-l;
+    }
+
+    &__link {
+      font-family: $font-body;
+      font-style: normal;
+    }
+  }
+
+  &__container {
+    padding-top: $space-xxl;
+    padding-bottom: $space-xxl;
+  }
+
+  &__row {
+    display: grid;
+    grid: auto-flow / 1fr;
+    gap: 2rem 3rem;
+    justify-items: stretch;
+    justify-content: stretch;
+    align-items: start;
+    align-content: stretch;
+
+    @media #{$screen-md-up} {
+      grid: auto-flow / 2fr 1fr;
+    }
+
+    @media #{$screen-lg-up} {
+      grid: auto-flow / 3fr 1fr;
+    }
+  }
+
+  &__column {
+    justify-self: start;
+    align-self: start;
+  }
+
+  &__aside {
+    display: inline-block;
+    margin: $space-none;
+  }
+
+  &__sub-title {
+    color: $site-footer-link-color;
+    font-size: 1.125em;
+  }
+
+  &__footer {
+    margin: $space-lg $space-none $space-none $space-none;
+    overflow: hidden;
+
+    .uq-footer__row {
+      grid: auto-flow / 1fr;
+
+      @media #{$screen-lg-up} {
+        grid: auto-flow / 3fr 1fr;
+      }
+    }
+  }
+
+  &__footer-menu {
+    &__list {
+      display: flex;
+      flex-wrap: wrap;
+      list-style-type: none;
+      margin: $space-none;
+      padding: $space-none;
+
+      li {
+        margin-bottom: $space-xs;
+
+        &:after {
+          content: " | ";
+          padding: $space-none $space-xs;
+          text-align: center;
+        }
+
+        &:last-of-type {
+          &:after {
+            content: none;
+            padding-right: $space-none;
+          }
+        }
+      }
+    }
+  }
+
+  &__social-media {
+    font-size: 1.5rem;
+
+    &__list {
+      list-style: none;
+      margin-top: 0;
+      margin-bottom: $space;
+      margin-left: -($space-md);
+      margin-right: 0;
+      overflow: hidden;
+      padding: 0;
+
+      > li {
+        display: block;
+        float: left;
+        margin-left: $space-md;
+
+        > * {
+          display: block;
+        }
+      }
+    }
+
+    &__item + .uq-footer__social-media__item::before {
+      content: " ";
+      display: inline-block;
+      margin: $space-none $space-sm $space-none $space-none;
+    }
+
+    &__link {
+      &:hover {
+        color: $site-footer-color;
+        transition: all ease .5s;
+      }
+    }
+  }
+
+  &--full-width {
+    padding: $space-none $space;
   }
 }

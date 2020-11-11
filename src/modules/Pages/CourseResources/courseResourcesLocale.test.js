@@ -1,24 +1,7 @@
 import { default as locale } from './courseResourcesLocale';
+import { isAString, isAValidLink, isPositiveInteger } from 'modules/testhelpers';
 
 describe('courseResourcesLocale', () => {
-    function isAString(text) {
-        expect(typeof text).toEqual('string');
-        expect(text.length).not.toBe(0);
-    }
-
-    function isAValidLink(link) {
-        isAString(link);
-        expect(link.indexOf('http') === 0).toBe(true);
-    }
-
-    const isAWholeNumber = value => value - Math.floor(value) === 0;
-
-    function isPositiveInteger(value) {
-        expect(typeof value).toEqual('number');
-        expect(isAWholeNumber(value)).toBe(true);
-        expect(value > 0).toBe(true);
-    }
-
     it('should have a valid locale', () => {
         // because the locale is meant to be maintained by the user, we check the file is valid
         isAString(locale.title);
