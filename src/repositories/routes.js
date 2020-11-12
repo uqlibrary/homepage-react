@@ -110,6 +110,12 @@ export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
 // Chat availability API
 export const CHAT_API = () => ({ apiUrl: 'chat_status', options: { params: { ts: `${new Date().getTime()}` } } });
 
+// Library hours
+export const LIB_HOURS_API = () => ({
+    apiUrl: 'library_hours/day',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // Alerts API
 export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });
 

@@ -101,7 +101,15 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, history, isAuthorizedUser }) => {
+export const UQSiteHeader = ({
+    isHdrStudent,
+    account,
+    author,
+    authorDetails,
+    history,
+    isAuthorizedUser,
+    chatStatus,
+}) => {
     const classes = useStyles();
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(!menuOpen);
@@ -255,7 +263,7 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
                     </Grid>
                 )}
                 <Grid item xs={'auto'} className={classes.utility} id="ask-us">
-                    <AskUs />
+                    <AskUs chatStatus={chatStatus} />
                 </Grid>
                 <Grid item xs={'auto'} className={classes.utility} id="auth-button">
                     <AuthButton
@@ -315,6 +323,7 @@ export const UQSiteHeader = ({ isHdrStudent, account, author, authorDetails, his
 UQSiteHeader.propTypes = {
     isHdrStudent: PropTypes.bool,
     isAuthorizedUser: PropTypes.bool,
+    chatStatus: PropTypes.bool,
     account: PropTypes.object,
     author: PropTypes.object,
     authorDetails: PropTypes.object,

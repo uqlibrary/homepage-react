@@ -93,7 +93,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Index = ({ account, spotlights, spotlightsLoading }) => {
+export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHoursLoading }) => {
+    console.log(libHoursLoading, libHours);
     const classes = useStyles();
     const dispatch = useDispatch();
     // Load spotlights if they havent been already
@@ -921,6 +922,8 @@ Index.propTypes = {
     spotlights: PropTypes.any,
     spotlightsError: PropTypes.any,
     spotlightsLoading: PropTypes.bool,
+    libHours: PropTypes.object,
+    libHoursLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

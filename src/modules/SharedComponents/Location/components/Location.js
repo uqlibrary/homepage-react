@@ -5,9 +5,23 @@ import IconButton from '@material-ui/core/IconButton';
 import RoomIcon from '@material-ui/icons/Room';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import { makeStyles } from '@material-ui/styles';
 import { locale } from './locale';
 
+const useStyles = makeStyles(theme => ({
+    selectedItem: {
+        color: theme.palette.primary.main,
+        opacity: '1 !important',
+        fontWeight: 'bold',
+    },
+    iconButton: {
+        marginRight: -12,
+        color: theme.palette.white.main,
+    },
+}));
+
 export const Location = ({ handleLocationChange, currentLocation, idLabel }) => {
+    const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
@@ -41,7 +55,7 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
                 <IconButton
                     size={'small'}
                     variant={'contained'}
-                    style={{ marginRight: -12, color: 'white' }}
+                    className={classes.iconButton}
                     onClick={handleLocationClick}
                     id={id('button')}
                     data-testid={id('button')}
@@ -62,6 +76,7 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
                         key={index}
                         onClick={handleLocationClose(item.value)}
                         disabled={thisLocation === item.value}
+                        className={thisLocation === item.value && classes.selectedItem}
                         data-testid={id(`option-${index}`)}
                         id={id(`option-${index}`)}
                     >

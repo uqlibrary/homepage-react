@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import Menu from '@material-ui/core/Menu';
@@ -27,7 +28,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AskUs = ({}) => {
+export const AskUs = ({ chatStatus }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
@@ -37,7 +38,6 @@ export const AskUs = ({}) => {
         setAnchorEl(null);
     };
     const handleLink = link => () => {
-        console.log(link);
         if (link.includes('chat')) {
             window.open(link, 'chat', 'toolbar=no, location=no, status=no, width=400, height=400');
         } else {
@@ -58,7 +58,7 @@ export const AskUs = ({}) => {
                 <Grid container spacing={0} className={classes.menu}>
                     {locale.askUs.links.map((item, index) => (
                         <Grid item xs={6} key={index}>
-                            <MenuItem onClick={handleLink(item.url)}>
+                            <MenuItem onClick={handleLink(item.url)} disabled={item.title === 'Chat' && !chatStatus}>
                                 {item.icon}
                                 {item.title}
                             </MenuItem>
@@ -76,3 +76,11 @@ export const AskUs = ({}) => {
         </React.Fragment>
     );
 };
+
+AskUs.propTypes = {
+    chatStatus: PropTypes.bool,
+};
+
+AskUs.defaultProps = {};
+
+export default AskUs;

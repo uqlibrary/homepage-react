@@ -48,11 +48,7 @@ export default class Masquerade extends PureComponent {
 
     render() {
         return (
-            <StandardPage
-                title={txt.title}
-                goBackFunc={() => history.back()}
-                goBackTooltip="Return to the Library Homepage"
-            >
+            <StandardPage title={txt.title} goBackFunc={() => history.back()} goBackTooltip="Go back">
                 <div className="layout-card">
                     <StandardCard noHeader>
                         <Grid container spacing={1}>
