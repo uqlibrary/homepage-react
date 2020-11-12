@@ -401,6 +401,18 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                             Library hours
                                         </Grid>
                                         <Grid item xs={'auto'}>
+                                            <Tooltip
+                                                title="Book a room"
+                                                placement="top"
+                                                TransitionProps={{ timeout: 300 }}
+                                                style={{ color: 'white' }}
+                                            >
+                                                <IconButton size={'small'} variant={'contained'}>
+                                                    <MeetingRoomIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
                                             <Location
                                                 handleLocationChange={handleLocationChange}
                                                 currentLocation={location}
@@ -577,6 +589,18 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                             Library hours
                                         </Grid>
                                         <Grid item xs={'auto'}>
+                                            <Tooltip
+                                                title="Book a room"
+                                                placement="top"
+                                                TransitionProps={{ timeout: 300 }}
+                                                style={{ color: 'white' }}
+                                            >
+                                                <IconButton size={'small'} variant={'contained'}>
+                                                    <MeetingRoomIcon />
+                                                </IconButton>
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid item xs={'auto'}>
                                             <Location
                                                 handleLocationChange={handleLocationChange}
                                                 currentLocation={location}
@@ -674,7 +698,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                 <Grid container spacing={1} style={{ marginTop: 12 }}>
                                     <Grid item xs={12}>
                                         <Typography color={'secondary'} variant={'h6'}>
-                                            Popular courses
+                                            Your courses
                                         </Typography>
                                     </Grid>
                                     <Grid item xs={12}>
