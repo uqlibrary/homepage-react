@@ -146,32 +146,6 @@ context('Homepage', () => {
         cy.get('div[data-testid="mylibrary-feedback-link"]').contains('Feedback');
     });
 
-    it('Renders an expired, or logged out home page correctly', () => {
-        cy.visit('/?user=uqexpired');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="library-hours-panel-noaccount"]').contains('Library hours');
-        cy.get('div[data-testid="training-panel"]').contains('Training');
-        cy.get('div[data-testid="library-services-panel"]').contains('Library services');
-        cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
-
-        cy.get('div[data-testid="computer-availability-panel"]').should('not.exist');
-        cy.get('div[data-testid="course-resources-panel"]').should('not.exist');
-
-        cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-saved-items-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-saved-searches-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-feedback-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-borrowing-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-computer-availability-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-course-resources-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-document-delivery-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-library-hours-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-masquerade-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-print-balance-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-publication-metrics-link"]').should('not.exist');
-        cy.get('div[data-testid="mylibrary-room-bookings-link"]').should('not.exist');
-    });
-
     it('Renders a Library non-admin staff member home page correctly', () => {
         cy.visit('/?user=uqstaffnonpriv');
         cy.viewport(1300, 1000);
