@@ -109,6 +109,8 @@ export const UQSiteHeader = ({
     history,
     isAuthorizedUser,
     chatStatus,
+    libHours,
+    libHoursLoading,
 }) => {
     const classes = useStyles();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -263,7 +265,7 @@ export const UQSiteHeader = ({
                     </Grid>
                 )}
                 <Grid item xs={'auto'} className={classes.utility} id="ask-us">
-                    <AskUs chatStatus={chatStatus} />
+                    <AskUs chatStatus={chatStatus} libHours={libHours} libHoursLoading={libHoursLoading} />
                 </Grid>
                 <Grid item xs={'auto'} className={classes.utility} id="auth-button">
                     <AuthButton
@@ -328,6 +330,8 @@ UQSiteHeader.propTypes = {
     author: PropTypes.object,
     authorDetails: PropTypes.object,
     history: PropTypes.object,
+    libHours: PropTypes.object,
+    libHoursLoading: PropTypes.bool,
 };
 
 UQSiteHeader.defaultProps = {};

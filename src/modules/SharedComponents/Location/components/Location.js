@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import RoomIcon from '@material-ui/icons/Room';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
@@ -15,8 +15,18 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 'bold',
     },
     iconButton: {
-        marginRight: -12,
-        color: theme.palette.white.main,
+        marginTop: -4,
+        marginLeft: -3,
+        color: theme.palette.secondary.main,
+        textTransform: 'none',
+    },
+    icon: {
+        marginLeft: 14,
+        marginBottom: -2,
+        marginRight: 5,
+        marginTop: -2,
+        height: 12,
+        width: 12,
     },
 }));
 
@@ -49,19 +59,20 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
-                placement="top"
+                placement="bottom"
                 TransitionProps={{ timeout: 300 }}
             >
-                <IconButton
+                <Button
                     size={'small'}
-                    variant={'contained'}
+                    variant={'text'}
                     className={classes.iconButton}
                     onClick={handleLocationClick}
                     id={id('button')}
                     data-testid={id('button')}
                 >
-                    <RoomIcon />
-                </IconButton>
+                    <RoomIcon className={classes.icon} />{' '}
+                    {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
+                </Button>
             </Tooltip>
             <Menu
                 id={id('menu')}
@@ -76,7 +87,7 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
                         key={index}
                         onClick={handleLocationClose(item.value)}
                         disabled={thisLocation === item.value}
-                        className={thisLocation === item.value && classes.selectedItem}
+                        className={thisLocation === item.value ? classes.selectedItem : ''}
                         data-testid={id(`option-${index}`)}
                         id={id(`option-${index}`)}
                     >

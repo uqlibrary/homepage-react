@@ -37,8 +37,9 @@ import Spotlights from './Spotlights';
 const moment = require('moment');
 import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
-import { Location } from 'modules/SharedComponents/Location';
+import Hours from './Hours';
 import { useCookies } from 'react-cookie';
+import { Location } from '../../SharedComponents/Location';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -94,7 +95,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHoursLoading }) => {
-    console.log(libHoursLoading, libHours);
     const classes = useStyles();
     const dispatch = useDispatch();
     // Load spotlights if they havent been already
@@ -104,7 +104,6 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
         }
     }, [spotlightsLoading, dispatch]);
 
-    // Location cookie and setting
     const [cookies, setCookie] = useCookies(['location']);
     const [location, setLocation] = React.useState(cookies.location || null);
     if (!cookies.location) {
@@ -116,9 +115,9 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
         }
     }, [location, cookies.location, setCookie]);
     const handleLocationChange = location => {
-        if (location !== cookies.location) {
-            setLocation(location);
-        }
+        console.log('location changed', location);
+        setLocation(location);
+        setCookie('location', location);
     };
 
     // Papercut settings
@@ -151,7 +150,6 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
         }
         return '#999';
     };
-
     return (
         <StandardPage>
             <div className="layout-card">
@@ -188,30 +186,40 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                                 <br />
                                                 {(account && account.firstName) || ''}
                                             </Typography>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={`Your UQ username is ${account && account.id}`}
-                                                placement="right"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <Typography
-                                                    component={'span'}
-                                                    color={'secondary'}
-                                                    style={{ fontSize: 12 }}
-                                                >
-                                                    <AccountBoxIcon
-                                                        fontSize={'small'}
-                                                        style={{
-                                                            marginLeft: 16,
-                                                            marginBottom: -2,
-                                                            marginRight: 6,
-                                                            height: 12,
-                                                            width: 12,
-                                                        }}
+                                            <Grid container spacing={0}>
+                                                <Grid item xs={12}>
+                                                    <Tooltip
+                                                        id="auth-button"
+                                                        title={`Your UQ username is ${account && account.id}`}
+                                                        placement="top"
+                                                        TransitionProps={{ timeout: 300 }}
+                                                    >
+                                                        <Typography
+                                                            component={'span'}
+                                                            color={'secondary'}
+                                                            style={{ fontSize: 12 }}
+                                                        >
+                                                            <AccountBoxIcon
+                                                                fontSize={'small'}
+                                                                style={{
+                                                                    marginLeft: 16,
+                                                                    marginBottom: -2,
+                                                                    marginRight: 6,
+                                                                    height: 12,
+                                                                    width: 12,
+                                                                }}
+                                                            />
+                                                            {(account && account.id) || ''}
+                                                        </Typography>
+                                                    </Tooltip>
+                                                </Grid>
+                                                <Grid item xs={12}>
+                                                    <Location
+                                                        handleLocationChange={handleLocationChange}
+                                                        currentLocation={cookies.location}
                                                     />
-                                                    {(account && account.id) || ''}
-                                                </Typography>
-                                            </Tooltip>
+                                                </Grid>
+                                            </Grid>
                                         </Grid>
                                     )}
                                     <Grid
@@ -365,9 +373,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                                 }}
                                             >
                                                 <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Manage room bookings
-                                                    </Typography>
+                                                    <Typography style={{ color: '#316799' }}>Book a room</Typography>
                                                 </Grid>
                                                 <Grid item xs={'auto'}>
                                                     <Tooltip
@@ -393,117 +399,13 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container data-testid="library-hours-panel-noaccount">
-                                        <Grid item xs>
-                                            Library hours
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                title="Book a room"
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                                style={{ color: 'white' }}
-                                            >
-                                                <IconButton size={'small'} variant={'contained'}>
-                                                    <MeetingRoomIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Location
-                                                handleLocationChange={handleLocationChange}
-                                                currentLocation={location}
-                                                idLabel="libraryHours"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <div
-                                    style={{
-                                        height: 200,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
-                                >
-                                    {locale.Hours.map((item, index) => {
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                            >
-                                                <Grid item xs={5}>
-                                                    {!!item.iconInfo ? (
-                                                        <Tooltip
-                                                            title={item.iconInfo || null}
-                                                            placement="right"
-                                                            TransitionProps={{ timeout: 300 }}
-                                                        >
-                                                            <a href={item.link} style={{ marginLeft: 8 }}>
-                                                                {item.title}
-                                                            </a>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <a href={item.link} style={{ marginLeft: 8 }}>
-                                                            {item.title}
-                                                        </a>
-                                                    )}
-                                                </Grid>
-                                                <Grid item xs>
-                                                    {item.hours}
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    {!!item.iconInfo ? (
-                                                        <Tooltip
-                                                            title={item.iconInfo}
-                                                            placement="left"
-                                                            TransitionProps={{ timeout: 300 }}
-                                                        >
-                                                            {item.icon}
-                                                        </Tooltip>
-                                                    ) : (
-                                                        item.icon
-                                                    )}
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} />
                         </Grid>
                     )}
 
                     {seeComputerAvailability(account) && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Computer availability
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Location
-                                                handleLocationChange={handleLocationChange}
-                                                currentLocation={location}
-                                                idLabel="computerAvailability"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
+                            <StandardCard accentHeader title="Computer availability">
                                 <div
                                     style={{
                                         height: 275,
@@ -581,94 +483,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
 
                     {seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Library hours
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                title="Book a room"
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                                style={{ color: 'white' }}
-                                            >
-                                                <IconButton size={'small'} variant={'contained'}>
-                                                    <MeetingRoomIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Location
-                                                handleLocationChange={handleLocationChange}
-                                                currentLocation={location}
-                                                idLabel="libraryHours"
-                                            />
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <div
-                                    style={{
-                                        height: 275,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
-                                >
-                                    {locale.Hours.map((item, index) => {
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                            >
-                                                <Grid item xs={5}>
-                                                    {!!item.iconInfo ? (
-                                                        <Tooltip
-                                                            title={item.iconInfo || null}
-                                                            placement="right"
-                                                            TransitionProps={{ timeout: 300 }}
-                                                        >
-                                                            <a href={item.link} style={{ marginLeft: 8 }}>
-                                                                {item.title}
-                                                            </a>
-                                                        </Tooltip>
-                                                    ) : (
-                                                        <a href={item.link} style={{ marginLeft: 8 }}>
-                                                            {item.title}
-                                                        </a>
-                                                    )}
-                                                </Grid>
-                                                <Grid item xs>
-                                                    {item.hours}
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    {!!item.iconInfo ? (
-                                                        <Tooltip
-                                                            title={item.iconInfo}
-                                                            placement="left"
-                                                            TransitionProps={{ timeout: 300 }}
-                                                        >
-                                                            {item.icon}
-                                                        </Tooltip>
-                                                    ) : (
-                                                        item.icon
-                                                    )}
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} />
                         </Grid>
                     )}
 
@@ -739,13 +554,6 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                                     <OpenInNewIcon />
                                                 </IconButton>
                                             </Tooltip>
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Location
-                                                handleLocationChange={handleLocationChange}
-                                                currentLocation={location}
-                                                idLabel="training"
-                                            />
                                         </Grid>
                                     </Grid>
                                 }

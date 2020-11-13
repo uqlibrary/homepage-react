@@ -24,11 +24,14 @@ const useStyles = makeStyles(
         menu: {
             maxWidth: 350,
         },
+        hours: {
+            fontSize: 12,
+        },
     }),
     { withTheme: true },
 );
 
-export const AskUs = ({ chatStatus }) => {
+export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
@@ -45,6 +48,22 @@ export const AskUs = ({ chatStatus }) => {
         }
         setAnchorEl(null);
     };
+    const cleanHours = hours => {
+        let askusHours = null;
+        if (!!hours && hours.locations.length > 1 && !libHoursLoading) {
+            askusHours = hours.locations.map(item => {
+                if (item.abbr === 'AskUs') {
+                    return {
+                        chat: item.departments[0].rendered,
+                        phone: item.departments[1].rendered,
+                    };
+                }
+                return null;
+            });
+        }
+        return askusHours ? askusHours.filter(item => item !== null)[0] : null;
+    };
+    const askUsHours = cleanHours(libHours);
     return (
         <React.Fragment>
             <IconButton
@@ -61,6 +80,16 @@ export const AskUs = ({ chatStatus }) => {
                             <MenuItem onClick={handleLink(item.url)} disabled={item.title === 'Chat' && !chatStatus}>
                                 {item.icon}
                                 {item.title}
+                                {item.title === 'Chat' && !!askUsHours ? (
+                                    <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.chat}</div>
+                                ) : (
+                                    ''
+                                )}
+                                {item.title === 'Phone' && !!askUsHours ? (
+                                    <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.phone}</div>
+                                ) : (
+                                    ''
+                                )}
                             </MenuItem>
                         </Grid>
                     ))}
@@ -79,6 +108,8 @@ export const AskUs = ({ chatStatus }) => {
 
 AskUs.propTypes = {
     chatStatus: PropTypes.bool,
+    libHours: PropTypes.object,
+    libHoursLoading: PropTypes.bool,
 };
 
 AskUs.defaultProps = {};
