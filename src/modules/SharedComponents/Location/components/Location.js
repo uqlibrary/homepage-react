@@ -21,12 +21,24 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'none',
     },
     icon: {
-        marginLeft: 14,
+        marginLeft: 13,
         marginBottom: -2,
         marginRight: 5,
         marginTop: -2,
-        height: 12,
-        width: 12,
+        height: 14,
+        width: 14,
+    },
+    '@keyframes wiggle': {
+        from: { transform: 'rotate(-14deg)', transformOrigin: '50% 100%' },
+        to: { transform: 'rotate(7deg)', transformOrigin: '50% 100%' },
+    },
+    wiggler: {
+        color: theme.palette.primary.main,
+        animationName: '$wiggle',
+        animationDuration: '0.3s',
+        animationIterationCount: 30,
+        animationDirection: 'alternate',
+        animationTimingFunction: 'ease-in-out',
     },
 }));
 
@@ -70,7 +82,10 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
                     id={id('button')}
                     data-testid={id('button')}
                 >
-                    <RoomIcon className={classes.icon} />{' '}
+                    <RoomIcon
+                        className={`${classes.icon} ${currentLocation === null ||
+                            (currentLocation === 'null' && classes.wiggler)}`}
+                    />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
                 </Button>
             </Tooltip>
