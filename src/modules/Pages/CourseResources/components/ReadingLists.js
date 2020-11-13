@@ -30,22 +30,66 @@ const useStyles = makeStyles(
 );
 
 export const ReadingLists = ({
-    classnumber,
     currentClasses,
-    filterReadingLists,
-    learningResourcesList, // has sub element reading_lists (summary)
-    learningResourcesListLoading,
-    learningResourcesListError,
-    readingList, // list of books. chapters, etc
+    getCampusByCode,
+    keywordPresets,
+    readingList,
     readingListLoading,
     readingListError,
+    tabType,
 }) => {
     const classes = useStyles();
 
-    const filteredReadingLists =
-        !!learningResourcesList && learningResourcesList.length > 0
-            ? filterReadingLists(learningResourcesList, classnumber, currentClasses)
-            : [];
+    const filterReadingLists = React.useCallback(
+        (readingLists, classes) => {
+            if (!readingLists || readingLists.length === 0) {
+                return [];
+            }
+
+            if (readingLists.reading_lists.length === 1) {
+                return readingLists;
+            }
+
+            const classnumber = readingLists.coursecode;
+
+            const extractDetailsOfEnrolmentFromCurrentClassList = (classes, classnumber) => {
+                const subjectTemplate = {
+                    semester: null,
+                    CAMPUS: null,
+                    INSTRUCTION_MODE: null,
+                };
+                const subjectlist =
+                    !!classes && classes.filter(aClass => !!aClass && aClass.classnumber === classnumber);
+                const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+                return {
+                    semester: thisSubject.semester || subjectTemplate.semester,
+                    CAMPUS: thisSubject.CAMPUS || subjectTemplate.CAMPUS,
+                    INSTRUCTION_MODE: thisSubject.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+                };
+            };
+
+            if (tabType === 'searchresults') {
+                const semesterString = keywordPresets.period;
+                const campus = keywordPresets.campus;
+                return readingLists.reading_lists.filter(item => {
+                    return item.period === semesterString && item.campus.indexOf(campus) !== -1;
+                });
+            } else {
+                const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classes, classnumber);
+                const semesterString = subjectEnrolment.semester;
+                const campus = getCampusByCode(subjectEnrolment.CAMPUS);
+                return readingLists.reading_lists.filter(item => {
+                    return (
+                        item.period === semesterString &&
+                        (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
+                    );
+                });
+            }
+        },
+        [tabType, keywordPresets],
+    );
+
+    const filteredReadingLists = filterReadingLists(readingList, currentClasses);
 
     const _trimNotes = value => {
         if (value && value.length > locale.notesTrimLength) {
@@ -59,15 +103,17 @@ export const ReadingLists = ({
     };
 
     // PHIL1002 is currently an example of multiple reading lists
-    const renderMultipleReadingListReference = (readingListSummaries, classnumber) => {
-        const chooseListPrompt = classnumber =>
-            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', classnumber);
+    // with the new api of calling for reading list by course code , campus and semester,
+    // we should theoretically only ever have one reading list. but handle multiple anyway...
+    const renderMultipleReadingListReference = (readingLists, coursecode) => {
+        const chooseListPrompt = coursecode =>
+            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', coursecode);
         return (
             <Grid container style={{ paddingBottom: 12 }}>
-                {!!classnumber && (
-                    <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt(classnumber)}</Typography>
+                {!!coursecode && (
+                    <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt(coursecode)}</Typography>
                 )}
-                {readingListSummaries.map((list, index) => {
+                {readingLists.map((list, index) => {
                     return (
                         <Grid
                             item
@@ -81,7 +127,7 @@ export const ReadingLists = ({
                                 href={list.url}
                                 key={`reading-list-link-${index}`}
                             >
-                                {list.title}, {list.period}
+                                {coursecode} {list.campus}, {list.period}
                             </a>
                         </Grid>
                     );
@@ -99,14 +145,6 @@ export const ReadingLists = ({
         );
     };
 
-    const talisReadingListLink =
-        (!!learningResourcesList &&
-            learningResourcesList.length === 1 &&
-            !!learningResourcesList[0].reading_lists &&
-            learningResourcesList[0].reading_lists.length > 0 &&
-            learningResourcesList[0].reading_lists[0].url) ||
-        null;
-
     const numberExcessReadingLists =
         filteredReadingLists.length === 1 && !!readingList && readingList.length > locale.visibleItemsCount.readingLists
             ? readingList.length - locale.visibleItemsCount.readingLists
@@ -114,16 +152,27 @@ export const ReadingLists = ({
 
     const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
 
+    const singleReadingList =
+        !!filteredReadingLists &&
+        !!filteredReadingLists.reading_lists &&
+        filteredReadingLists.reading_lists.length === 1
+            ? filteredReadingLists.reading_lists.pop()
+            : null;
+
     const readingListTitle = `${locale.myCourses.readingLists.title} ${
-        !!readingList && readingList.length > 0 ? `(${readingList.length})` : ''
+        !!singleReadingList && !!singleReadingList.list && singleReadingList.list.length > 0
+            ? `(${singleReadingList.list.length})`
+            : ''
     }`;
+
+    console.log('readinglist = ', readingList);
 
     return (
         <Grid container spacing={3} className={'readingLists'}>
             <Grid item xs={12}>
                 <StandardCard style={{ marginBottom: '1rem', marginTop: '1rem' }} title={readingListTitle}>
                     <Grid container>
-                        {(!!readingListLoading || !!learningResourcesListLoading) && (
+                        {!!readingListLoading && (
                             <Grid
                                 item
                                 xs={'auto'}
@@ -142,7 +191,7 @@ export const ReadingLists = ({
                             </Grid>
                         )}
 
-                        {(!!readingListError || !!learningResourcesListError) && (
+                        {!!readingListError && (
                             <Fragment>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                                     <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
@@ -159,10 +208,7 @@ export const ReadingLists = ({
                             </Fragment>
                         )}
 
-                        {(!filteredReadingLists ||
-                            filteredReadingLists.length === 0 ||
-                            !learningResourcesList ||
-                            learningResourcesList.length === 0) && (
+                        {!filteredReadingLists && (
                             <Fragment>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                                     <Typography>{locale.myCourses.readingLists.error.none}</Typography>
@@ -181,16 +227,13 @@ export const ReadingLists = ({
 
                         {!!filteredReadingLists && filteredReadingLists.length > 1 && (
                             <Grid item>
-                                {renderMultipleReadingListReference(filteredReadingLists, classnumber || '')}
+                                {renderMultipleReadingListReference(filteredReadingLists, readingList.coursecode || '')}
                             </Grid>
                         )}
 
-                        {!!filteredReadingLists &&
-                            filteredReadingLists.length === 1 &&
-                            !!readingList &&
-                            readingList.length > 0 &&
-                            readingList
-                                // remove the exam links (they are shown below)
+                        {!!singleReadingList &&
+                            singleReadingList.list
+                                // remove the exam links (they are shown in the exams section below)
                                 // TODO
                                 // MATH4106 is an example with only an exam. check this works prperly
                                 // ie the count matches the number displayed
@@ -239,7 +282,7 @@ export const ReadingLists = ({
                                     );
                                 })}
                         {/* eg MATH4091 has 12 reading lists */}
-                        {!!talisReadingListLink && !!numberExcessReadingLists && (
+                        {!!numberExcessReadingLists && !!readingList && !!readingList.url && (
                             <Grid
                                 item
                                 xs={12}
@@ -248,7 +291,7 @@ export const ReadingLists = ({
                             >
                                 <a
                                     // on-click="linkClicked"
-                                    href={talisReadingListLink}
+                                    href={readingList.url}
                                 >
                                     <SpacedArrowForwardIcon />
                                     {locale.myCourses.readingLists.footer.linkLabel
@@ -265,15 +308,13 @@ export const ReadingLists = ({
 };
 
 ReadingLists.propTypes = {
-    classnumber: PropTypes.any,
     currentClasses: PropTypes.any,
-    filterReadingLists: PropTypes.any,
-    learningResourcesList: PropTypes.any,
-    learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.string,
+    getCampusByCode: PropTypes.any,
+    keywordPresets: PropTypes.any,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
     readingListError: PropTypes.string,
+    tabType: PropTypes.string,
 };
 
 export default React.memo(ReadingLists);

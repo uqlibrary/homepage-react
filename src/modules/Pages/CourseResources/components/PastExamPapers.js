@@ -26,8 +26,10 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PastExamPapers = ({ subject, examList, examListLoading, examListError }) => {
+export const PastExamPapers = ({ examList, examListLoading, examListError }) => {
     const classes = useStyles();
+
+    const subject = !!examList && examList.coursecode;
 
     const _extractExtension = url => {
         return url.substring(url.lastIndexOf('.') + 1);
@@ -92,7 +94,7 @@ export const PastExamPapers = ({ subject, examList, examListLoading, examListErr
                     <Grid item xs={12} data-testid="exam-more-link" className={classes.courseResourceLineItem}>
                         <a
                             // on-click="linkClicked"
-                            href={_courseLink(subject.classnumber, locale.myCourses.examPapers.footer.linkOutPattern)}
+                            href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}
                         >
                             <SpacedArrowForwardIcon />
                             {locale.myCourses.examPapers.morePastExams
@@ -110,7 +112,6 @@ PastExamPapers.propTypes = {
     examList: PropTypes.any,
     examListError: PropTypes.string,
     examListLoading: PropTypes.bool,
-    subject: PropTypes.any,
 };
 
 export default React.memo(PastExamPapers);

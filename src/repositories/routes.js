@@ -308,5 +308,6 @@ export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keywor
 
 export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
-// talisId
-export const READING_LIST_API = ({ keyword }) => ({ apiUrl: 'course_reading_list/' + keyword });
+export const READING_LIST_API = ({ coursecode, campus, semester }) => ({
+    apiUrl: `course_resources/${coursecode}/${campus}/${semester}/reading_list`,
+});

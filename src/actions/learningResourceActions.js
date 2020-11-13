@@ -93,23 +93,37 @@ export function clearExams() {
     };
 }
 
-export function loadReadingLists(keyword) {
-    console.log('will load loadReadingLists for ', keyword);
+export function loadReadingLists(coursecode, campus, semester) {
+    console.log(
+        'will load loadReadingLists for ',
+        coursecode,
+        ': ',
+        campus,
+        ': ',
+        semester,
+        ' via',
+        READING_LIST_API({ coursecode, campus, semester }),
+    );
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
-        return get(READING_LIST_API({ keyword }))
+        return get(READING_LIST_API({ coursecode, campus, semester }))
             .then(data => {
-                console.log('fetched READING_LIST_API for ', keyword);
-                const updatedData = data.map(subject => {
-                    subject.talisId = keyword;
-                    return subject;
-                });
+                console.log('fetched READING_LIST_API for ', coursecode, ': ', data);
+                const updatedData = data;
+                // make the returned value more sensibly named
+                updatedData.coursecode = data.title;
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: updatedData,
                 });
             })
             .catch(error => {
+                console.log(
+                    'error for READING_LIST_API ',
+                    READING_LIST_API({ coursecode, campus, semester }),
+                    ': ',
+                    error,
+                );
                 dispatch({
                     type: actions.READING_LIST_FAILED,
                     payload: error.message,
