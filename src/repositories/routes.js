@@ -302,8 +302,6 @@ export const UNLOCK_RECORD_API = ({ pid }) => ({
     apiUrl: `records/${pid}/unlock`,
 });
 
-export const LEARNING_RESOURCES_API = ({ keyword }) => ({ apiUrl: 'learning_resources/' + keyword });
-
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
 export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });

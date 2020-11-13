@@ -1,38 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { LEARNING_RESOURCES_API, GUIDES_API, EXAMS_API, READING_LIST_API } from '../repositories/routes';
-
-// import { get } from 'repositories/generic';
-/**
- * Loads the learning resources
- * @returns {function(*)}
- */
-export function loadLearningResources(keyword) {
-    console.log('will load loadLearningResources for ', keyword);
-    return dispatch => {
-        dispatch({ type: actions.LEARNING_RESOURCES_LOADING });
-        return get(LEARNING_RESOURCES_API({ keyword }))
-            .then(data => {
-                console.log('fetched LEARNING_RESOURCES_API: ', data);
-                dispatch({
-                    type: actions.LEARNING_RESOURCES_LOADED,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.LEARNING_RESOURCES_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
-export function clearLearningResources() {
-    return dispatch => {
-        dispatch({ type: actions.LEARNING_RESOURCES_CLEAR });
-    };
-}
+import { GUIDES_API, EXAMS_API, READING_LIST_API } from '../repositories/routes';
 
 export function loadGuides(keyword) {
     console.log('will load loadGuides for ', keyword);
