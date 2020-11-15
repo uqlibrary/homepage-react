@@ -62,16 +62,7 @@ export function clearExams() {
 }
 
 export function loadReadingLists(coursecode, campus, semester) {
-    console.log(
-        'will load loadReadingLists for ',
-        coursecode,
-        ': ',
-        campus,
-        ': ',
-        semester,
-        ' via',
-        READING_LIST_API({ coursecode, campus, semester }),
-    );
+    console.log('will load loadReadingLists for ', READING_LIST_API({ coursecode, campus, semester }));
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
         return get(READING_LIST_API({ coursecode, campus, semester }))
