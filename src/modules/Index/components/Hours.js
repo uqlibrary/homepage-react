@@ -13,7 +13,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
-        height: 300,
         overflowX: 'hidden',
         overflowY: 'auto',
         marginRight: 0,
@@ -60,7 +59,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Hours = ({ libHours, libHoursLoading }) => {
+const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
@@ -128,10 +127,6 @@ const Hours = ({ libHours, libHoursLoading }) => {
                                     classes={{ badge: classes.badge }}
                                     color="primary"
                                     badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
-                                    // anchorOrigin={{
-                                    //     vertical: 'top',
-                                    //     horizontal: 'right',
-                                    // }}
                                 >
                                     <RoomIcon />
                                 </Badge>
@@ -154,7 +149,7 @@ const Hours = ({ libHours, libHoursLoading }) => {
                     Service desk
                 </Grid>
             </Grid>
-            <div className={classes.scrollArea}>
+            <div className={classes.scrollArea} style={{ height: height }}>
                 {!!sortedHours &&
                     sortedHours.length > 1 &&
                     sortedHours.map((item, index) => {
