@@ -35,7 +35,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
         return url.substring(url.lastIndexOf('.') + 1);
     };
 
-    const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : null;
+    const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : false;
 
     const numberExcessExams =
         !!listOfExams && listOfExams.length > locale.visibleItemsCount.examPapers
@@ -59,7 +59,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
                     </Grid>
                 )}
 
-                {!examListError && (!listOfExams || listOfExams.length === 0) && (
+                {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <Typography>{locale.myCourses.examPapers.none}</Typography>

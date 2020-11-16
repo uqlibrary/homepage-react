@@ -32,7 +32,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
     return (
         <StandardCard fullHeight title={locale.myCourses.guides.title}>
             <Grid container className={'guides'}>
-                {guideListLoading && (
+                {!!guideListLoading && (
                     <Grid
                         item
                         xs={12}
@@ -49,13 +49,15 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 
                 {!!guideListError && <Typography>{locale.myCourses.guides.unavailable}</Typography>}
 
-                {!guideListError && (!guideList || guideList.length === 0) && (
+                {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
                     <Grid item xs={12} data-testid="no-guides" className={classes.courseResourceLineItem}>
                         <Typography>{locale.myCourses.guides.none}</Typography>
                     </Grid>
                 )}
 
-                {!!guideList &&
+                {!guideListError &&
+                    !guideListLoading &&
+                    !!guideList &&
                     guideList.length > 0 &&
                     guideList.slice(0, locale.visibleItemsCount.libGuides).map((guide, index) => {
                         return (

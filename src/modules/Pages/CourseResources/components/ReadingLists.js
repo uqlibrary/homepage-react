@@ -150,28 +150,33 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                             </Fragment>
                         )}
 
-                        {!readingList && (
-                            <Fragment>
-                                <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                    <Typography>{locale.myCourses.readingLists.error.none}</Typography>
-                                </Grid>
-                                <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                    <a
-                                        data-testid="multiple-reading-list-search-link"
-                                        href={locale.myCourses.readingLists.error.footer.linkOut}
-                                    >
-                                        <SpacedArrowForwardIcon />
-                                        {locale.myCourses.readingLists.error.footer.linkLabel}
-                                    </a>
-                                </Grid>
-                            </Fragment>
-                        )}
+                        {!readingListError &&
+                            !readingListLoading &&
+                            (!readingList ||
+                                (!!readingList.reading_lists && readingList.reading_lists.length === 0)) && (
+                                <Fragment>
+                                    <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                        <Typography>{locale.myCourses.readingLists.error.none}</Typography>
+                                    </Grid>
+                                    <Grid item xs={12} className={classes.courseResourceLineItem}>
+                                        <a
+                                            data-testid="multiple-reading-list-search-link"
+                                            href={locale.myCourses.readingLists.error.footer.linkOut}
+                                        >
+                                            <SpacedArrowForwardIcon />
+                                            {locale.myCourses.readingLists.error.footer.linkLabel}
+                                        </a>
+                                    </Grid>
+                                </Fragment>
+                            )}
 
-                        {!!readingList && readingList.length > 1 && (
+                        {!readingListError && !readingListLoading && !!readingList && readingList.length > 1 && (
                             <Grid item>{renderMultipleReadingListReference(readingList)}</Grid>
                         )}
 
-                        {!!readingList &&
+                        {!readingListError &&
+                            !readingListLoading &&
+                            !!readingList &&
                             !!readingList.reading_lists &&
                             readingList.reading_lists.length === 1 &&
                             !!readingList.reading_lists[0] &&
@@ -221,7 +226,9 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                     );
                                 })}
                         {/* eg MATH4091 has 12 reading list items */}
-                        {!!numberExcessReadingLists &&
+                        {!readingListError &&
+                            !readingListLoading &&
+                            !!numberExcessReadingLists &&
                             !!readingList &&
                             !!readingList.reading_lists &&
                             readingList.reading_lists.length === 1 &&
