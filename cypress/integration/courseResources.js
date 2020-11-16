@@ -41,37 +41,52 @@ context('Course Resources', () => {
             .click();
     }
 
-    function a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(courseReadingList) {
-        const firstReadingList =
+    function readingListLength(courseReadingList) {
+        return (
             (!!courseReadingList.reading_lists &&
                 courseReadingList.reading_lists.length > 0 &&
                 !!courseReadingList.reading_lists[0] &&
                 !!courseReadingList.reading_lists[0].list &&
-                courseReadingList.reading_lists[0].list.length > 0 &&
-                courseReadingList.reading_lists[0].list[0]) ||
-            {};
-        const readingListTitle = firstReadingList.title || 'mock data is missing';
-        const firstReadingListLink = firstReadingList.itemLink || 'mock data is missing';
+                courseReadingList.reading_lists[0].list.length) ||
+            0
+        );
+    }
+
+    function firstReadingListItems(courseReadingList) {
+        return readingListLength(courseReadingList) > 0 ? courseReadingList.reading_lists[0].list[0] : [];
+    }
+
+    function a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(courseReadingList) {
+        const readingList = firstReadingListItems(courseReadingList);
+        const firstReadingListTitle = readingList.title || 'mock data is missing';
+        const firstReadingListLink = readingList.itemLink || 'mock data is missing';
+
+        console.log('readingList = ', readingList);
+        console.log(`${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`);
 
         cy.get('.readingLists h3').contains(
-            `${locale.myCourses.readingLists.title} (${courseReadingList.reading_lists[0].list.length})`,
+            `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`,
         );
         cy.get('.readingLists a')
-            .contains(readingListTitle)
+            .contains(firstReadingListTitle)
             .should('have.attr', 'href', firstReadingListLink);
     }
 
     function a_subject_with_one_reading_list_of_more_than_the_max_displayable_items_loads_correctly(courseReadingList) {
-        const readingList = (!!courseReadingList.reading_lists && courseReadingList.reading_lists[0]) || {};
+        const readingList =
+            !!courseReadingList.reading_lists &&
+            courseReadingList.reading_lists.length > 0 &&
+            courseReadingList.reading_lists[0];
+        const readingListLink = readingList.url || 'mock data is missing';
 
         cy.get('.readingLists h3').contains(
-            `${locale.myCourses.readingLists.title} (${courseReadingList.reading_lists.length})`,
+            `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`,
         );
 
-        const numberExcessReadingLists = courseReadingList.reading_lists.length - 2;
+        const numberExcessReadingLists = readingListLength(courseReadingList) - locale.visibleItemsCount.readingLists;
         cy.get('div[data-testid=reading-list-more-link] a')
             .contains(`${numberExcessReadingLists} more items`)
-            .should('have.attr', 'href', readingList.url);
+            .should('have.attr', 'href', readingListLink);
     }
 
     function a_subject_with_multiple_reading_lists_loads_correctly(courseReadingList) {
@@ -105,11 +120,11 @@ context('Course Resources', () => {
         const examPeriod = examPaper.period || 'mock data is missing';
         const examPaperLink = examPaper.url || 'mock data is missing';
 
-        cy.get('.exams h3').contains(`${locale.myCourses.examPapers.title} (${examPapers.length})`);
+        cy.get('.exams h3').contains(`${locale.myCourses.examPapers.title} (${examPapers.list.length})`);
         cy.get('.exams a')
             .contains(`${examPeriod} (${examPaperLink.slice(-3)})`)
             .should('have.attr', 'href', examPaperLink);
-        const numberExcessExams = examPapers.length - 2;
+        const numberExcessExams = examPapers.list.length - locale.visibleItemsCount.examPapers;
         cy.get('div[data-testid=exam-more-link] a')
             .contains(
                 locale.myCourses.examPapers.morePastExams
@@ -218,7 +233,7 @@ context('Course Resources', () => {
     }
 
     function click_on_a_subject_tab(panelNumber, courseReadingList) {
-        const courseCode = courseReadingList.coursecode || 'mock data is missing';
+        const courseCode = courseReadingList.title || 'mock data is missing';
         const title = courseReadingList.course_title || 'mock data is missing';
         cy.get(`button#classtab-${panelNumber}`)
             .contains(courseCode)
@@ -266,10 +281,7 @@ context('Course Resources', () => {
         // next tab
         the_user_clicks_on_the_second_subject_tab(HIST1201ReadingList);
 
-        a_subject_with_one_reading_list_of_more_than_the_max_displayable_items_loads_correctly(
-            HIST1201ReadingList,
-            HIST1201ReadingList,
-        );
+        a_subject_with_one_reading_list_of_more_than_the_max_displayable_items_loads_correctly(HIST1201ReadingList);
 
         a_subject_with_one_exam_loads_correctly();
 

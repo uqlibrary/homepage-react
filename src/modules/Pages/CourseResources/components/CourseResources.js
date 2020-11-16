@@ -121,69 +121,69 @@ export const CourseResources = ({
     const [listSearchedSubjects, updateSearchList] = useState([]);
     // may need state of 'listMyCourses' which then shows the mycourses tab?
 
-    const extractDetailsOfEnrolmentFromCurrentClassList = classnumber => {
-        const currentClasses = account.current_classes;
-
-        const subjectTemplate = {
-            semester: null,
-            CAMPUS: null,
-            INSTRUCTION_MODE: null,
-        };
-
-        const subjectlist =
-            !!currentClasses && currentClasses.filter(aClass => !!aClass && aClass.classnumber === classnumber);
-        const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
-        return {
-            semester: thisSubject?.semester || subjectTemplate.semester,
-            CAMPUS: thisSubject?.CAMPUS || subjectTemplate.CAMPUS,
-            INSTRUCTION_MODE: thisSubject?.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
-        };
-    };
-
-    const filterReadingLists = readingLists => {
-        if (!readingLists || readingLists.length === 0) {
-            return [];
-        }
-
-        if (readingLists.reading_lists.length === 1) {
-            return readingLists;
-        }
-
-        const classnumber = readingLists.coursecode;
-        !!readingLists &&
-            !!readingLists.reading_lists &&
-            readingLists.reading_lists.length > 0 &&
-            readingLists.reading_lists.map(item => {
-                item.coursecode = classnumber;
-            });
-
-        if (tabType === 'searchresults') {
-            const semesterString = keywordPresets.period;
-            const campus = keywordPresets.campus;
-            return readingLists.reading_lists.filter(item => {
-                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
-            });
-        } else {
-            const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classnumber);
-            const semesterString = subjectEnrolment.semester;
-            const campus = getCampusByCode(subjectEnrolment.CAMPUS);
-            return readingLists.reading_lists.filter(item => {
-                return (
-                    item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
-                );
-            });
-        }
-    };
-
     // store the reading list for this subject in currentReadingLists by subject
     const updateListOfReadingLists = React.useCallback(() => {
+        const extractDetailsOfEnrolmentFromCurrentClassList = classnumber => {
+            const currentClasses = account.current_classes;
+
+            const subjectTemplate = {
+                semester: null,
+                CAMPUS: null,
+                INSTRUCTION_MODE: null,
+            };
+
+            const subjectlist =
+                !!currentClasses && currentClasses.filter(aClass => !!aClass && aClass.classnumber === classnumber);
+            const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+            return {
+                semester: thisSubject?.semester || subjectTemplate.semester,
+                CAMPUS: thisSubject?.CAMPUS || subjectTemplate.CAMPUS,
+                INSTRUCTION_MODE: thisSubject?.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+            };
+        };
+
+        const filterReadingLists = readingLists => {
+            if (!readingLists || readingLists.length === 0) {
+                return [];
+            }
+
+            if (readingLists.reading_lists.length === 1) {
+                return readingLists;
+            }
+
+            const classnumber = readingLists.coursecode;
+            !!readingLists &&
+                !!readingLists.reading_lists &&
+                readingLists.reading_lists.length > 0 &&
+                readingLists.reading_lists.map(item => {
+                    item.coursecode = classnumber;
+                });
+
+            if (tabType === 'searchresults') {
+                const semesterString = keywordPresets.period;
+                const campus = keywordPresets.campus;
+                return readingLists.reading_lists.filter(item => {
+                    return item.period === semesterString && item.campus.indexOf(campus) !== -1;
+                });
+            } else {
+                const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(classnumber);
+                const semesterString = subjectEnrolment.semester;
+                const campus = getCampusByCode(subjectEnrolment.CAMPUS);
+                return readingLists.reading_lists.filter(item => {
+                    return (
+                        item.period === semesterString &&
+                        (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
+                    );
+                });
+            }
+        };
+
         if (!!readingList && !!readingList.coursecode && currentReadingLists[readingList.coursecode] === undefined) {
             const newReadingList = {};
             newReadingList[readingList.coursecode] = filterReadingLists(readingList);
             updateReadingLists(currentReadingLists => Object.assign({}, ...currentReadingLists, ...newReadingList));
         }
-    }, [readingList, currentReadingLists, filterReadingLists]);
+    }, [readingList, currentReadingLists, account, keywordPresets, tabType]);
 
     React.useEffect(() => {
         // per https://wanago.io/2019/11/18/useeffect-hook-in-react-custom-hooks/

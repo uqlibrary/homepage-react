@@ -178,12 +178,6 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                             !!readingList.reading_lists[0].list &&
                             !!readingList.reading_lists[0].list.length > 0 &&
                             readingList.reading_lists[0].list
-                                // remove the exam links (they are shown in the exams section below)
-                                // TODO
-                                // MATH4106 is an example with only an exam. check this works prperly
-                                // ie the count matches the number displayed
-                                // we may have to instead sort it so exam is last? Ugh :(
-                                .filter(item => item.url !== 'https://www.library.uq.edu.au/exams/search.html')
                                 // we only show a small number - theres a link to viewall on Talis if there are more
                                 .slice(0, locale.visibleItemsCount.readingLists)
                                 .map((list, index) => {
