@@ -182,6 +182,7 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
 Hours.propTypes = {
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    height: PropTypes.number,
 };
 
 Hours.defaultProps = {};
