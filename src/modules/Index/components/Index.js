@@ -405,7 +405,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
 
                     {seeComputerAvailability(account) && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                            <StandardCard accentHeader title="Computer availability">
+                            <StandardCard accentHeader title="Computer availability" fullHeight>
                                 <div
                                     style={{
                                         height: 275,

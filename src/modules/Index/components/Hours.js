@@ -20,7 +20,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Hours = ({ libHours, libHoursLoading }) => {
-    console.log(libHours);
     const classes = useStyles();
     if (!!libHoursLoading) {
         return null;
@@ -70,9 +69,7 @@ const Hours = ({ libHours, libHoursLoading }) => {
                                 {/* Study space Hours */}
                                 {item.departments.length > 1 &&
                                     item.departments.map((item, index) => {
-                                        console.log('departments:', item);
                                         if (item.name === 'Study space') {
-                                            console.log('STUDY SPACE!');
                                             return (
                                                 <Grid item xs={4} key={index} style={{ fontSize: 14 }}>
                                                     {item.rendered.replace(' - ', '-') || ''}
@@ -86,7 +83,6 @@ const Hours = ({ libHours, libHoursLoading }) => {
                                 {item.departments.length > 1 &&
                                     item.departments.map((item, index) => {
                                         if (item.name === 'Service') {
-                                            console.log('SERVICE!');
                                             return (
                                                 <Grid item xs={4} key={index} style={{ fontSize: 14 }}>
                                                     {item.rendered || ''}
