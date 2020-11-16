@@ -14,8 +14,9 @@ import exams_PHIL1002 from './data/records/examListPHIL1002';
 import libraryGuides_FREN1010 from './data/records/libraryGuides_FREN1010';
 import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
-import courseReadingList_6888AB68 from './data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
-import courseReadingList_2109F2EC from './data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
+import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN1010';
+import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
+import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
 import { libHours } from './data/account';
 
