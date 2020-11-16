@@ -6,6 +6,7 @@ import {
     CHAT_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
+    LIB_HOURS_API,
     SPOTLIGHTS_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
@@ -140,6 +141,29 @@ export function loadSpotlights() {
             .catch(error => {
                 dispatch({
                     type: actions.SPOTLIGHTS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the library hours data
+ * @returns {function(*)}
+ */
+export function loadLibHours() {
+    return dispatch => {
+        dispatch({ type: actions.LIB_HOURS_LOADING });
+        return get(LIB_HOURS_API())
+            .then(hoursResponse => {
+                dispatch({
+                    type: actions.LIB_HOURS_LOADED,
+                    payload: hoursResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.LIB_HOURS_FAILED,
                     payload: error.message,
                 });
             });

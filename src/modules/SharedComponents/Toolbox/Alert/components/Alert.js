@@ -26,7 +26,6 @@ const useStyles = makeStyles(
             padding: '8px 37px',
         },
         wrapper: {
-            border: '1px dashed red',
             [theme.breakpoints.up('xs')]: {
                 maxWidth: 1200,
                 marginLeft: 'auto',
@@ -354,7 +353,6 @@ export const Alert = ({
     } else {
         return (
             <div
-                style={{ border: '1px dashed cyan' }}
                 className={classNames(classes[!!customIcon ? customType : type], classes.common)}
                 data-testid={alertId}
                 id={alertId}

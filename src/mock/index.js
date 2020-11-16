@@ -8,19 +8,16 @@ import * as mockData from './data';
 import { spotlights } from './data/spotlights';
 import fetchMock from 'fetch-mock';
 
-// import learningResources_FREN1010 from './data/records/learningResources_FREN1010';
-// import learningResources_HIST1201 from './data/records/learningResources_HIST1201';
-// import learningResources_PHIL1002 from './data/records/learningResources_PHIL1002';
 import exams_FREN1010 from './data/records/examListFREN1010';
 import exams_HIST1201 from './data/records/examListHIST1201';
 import exams_PHIL1002 from './data/records/examListPHIL1002';
 import libraryGuides_FREN1010 from './data/records/libraryGuides_FREN1010';
 import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
-import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN1010';
-import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
+import courseReadingList_6888AB68 from './data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
+import courseReadingList_2109F2EC from './data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
+import { libHours } from './data/account';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -81,6 +78,13 @@ mock.onGet(routes.CHAT_API().apiUrl)
         // mock chat status
         return [200, { online: true }];
         // return [200, { online: false }];
+    });
+
+mock.onGet(routes.LIB_HOURS_API().apiUrl)
+    .reply(() => {
+        console.log('Library Hours API hit');
+        // mock library hours
+        return [200, libHours];
     });
 
 mock.onGet(routes.ALERT_API().apiUrl)
@@ -280,9 +284,6 @@ mock.onGet('library_guides/FREN1010').reply(() => { return [200, libraryGuides_F
 mock.onGet('library_guides/HIST1201').reply(() => { return [200, libraryGuides_HIST1201] });
 mock.onGet('library_guides/PHIL1002').reply(() => { return [200, libraryGuides_PHIL1002] });
 
-// mock.onGet('course_reading_list/FE54098F-2CB3-267D-50F8-4B2895FE94B9').reply(() => {
-//  return [200, courseReadingList_FE54098F]
-// });
 mock.onGet('course_resources/FREN1010/St Lucia/Semester 2 2020/reading_list').reply(() => {
     return [200, courseReadingList_FREN1010]
 });

@@ -102,6 +102,8 @@ export class AppClass extends PureComponent {
         chatStatus: PropTypes.any,
         alertStatus: PropTypes.any,
         alertStatusLoading: PropTypes.any,
+        libHours: PropTypes.object,
+        libHoursLoading: PropTypes.bool,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -143,6 +145,7 @@ export class AppClass extends PureComponent {
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
         this.props.actions.loadChatStatus();
+        this.props.actions.loadLibHours();
         this.props.actions.loadAlerts();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
@@ -243,6 +246,9 @@ export class AppClass extends PureComponent {
                         author={this.props.author}
                         authorDetails={this.props.authorDetails}
                         history={this.props.history}
+                        chatStatus={this.props.chatStatus.online}
+                        libHours={this.props.libHours}
+                        libHoursloading={this.props.libHoursLoading}
                     />
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
