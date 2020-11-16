@@ -4,6 +4,7 @@ import { primoSearch as searchLocale } from '../../src/modules/SharedComponents/
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';
+import { default as FREN1010Exam } from '../../src/mock/data/records/examListFREN1010';
 import { default as HIST1201ReadingList } from '../../src/mock/data/records/courseReadingList_HIST1201';
 import { default as PHIL1002ReadingList } from '../../src/mock/data/records/courseReadingList_PHIL1002';
 import { default as PHIL1002Guide } from '../../src/mock/data/records/libraryGuides_PHIL1002';
@@ -41,22 +42,26 @@ context('Course Resources', () => {
     }
 
     function a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(courseReadingList) {
-        const readingListTitle = courseReadingList.course_title || 'mock data is missing';
-        const readingListLink =
+        const firstReadingList =
             (!!courseReadingList.reading_lists &&
                 courseReadingList.reading_lists.length > 0 &&
-                courseReadingList.reading_lists[0].url) ||
-            'mock data is missing';
+                !!courseReadingList.reading_lists[0] &&
+                !!courseReadingList.reading_lists[0].list &&
+                courseReadingList.reading_lists[0].list.length > 0 &&
+                courseReadingList.reading_lists[0].list[0]) ||
+            {};
+        const readingListTitle = firstReadingList.title || 'mock data is missing';
+        const firstReadingListLink = firstReadingList.itemLink || 'mock data is missing';
 
-        cy.get('.readingLists h3').contains(`${locale.myCourses.readingLists.title} (${courseReadingList.length})`);
+        cy.get('.readingLists h3').contains(
+            `${locale.myCourses.readingLists.title} (${courseReadingList.reading_lists[0].list.length})`,
+        );
         cy.get('.readingLists a')
             .contains(readingListTitle)
-            .should('have.attr', 'href', readingListLink);
+            .should('have.attr', 'href', firstReadingListLink);
     }
 
-    function a_subject_with_one_reading_list_of_more_than_the_max_displayable_items_loads_correctly(
-        courseReadingList,
-    ) {
+    function a_subject_with_one_reading_list_of_more_than_the_max_displayable_items_loads_correctly(courseReadingList) {
         const readingList = (!!courseReadingList.reading_lists && courseReadingList.reading_lists[0]) || {};
 
         cy.get('.readingLists h3').contains(
@@ -96,7 +101,7 @@ context('Course Resources', () => {
     function a_subject_with_many_exams_loads_correctly(examPapers) {
         const courseCode = examPapers.coursecode || 'mock data is missing';
 
-        const examPaper = !!examPapers.list && examPapers.list[0] || {};
+        const examPaper = (!!examPapers.list && examPapers.list.length > 0 && examPapers.list[0]) || {};
         const examPeriod = examPaper.period || 'mock data is missing';
         const examPaperLink = examPaper.url || 'mock data is missing';
 
@@ -250,7 +255,7 @@ context('Course Resources', () => {
 
         a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(FREN1010ReadingList);
 
-        a_subject_with_many_exams_loads_correctly(FREN1010ReadingList);
+        a_subject_with_many_exams_loads_correctly(FREN1010Exam);
 
         a_subject_with_one_guide_loads_correctly(FREN1010Guide);
 

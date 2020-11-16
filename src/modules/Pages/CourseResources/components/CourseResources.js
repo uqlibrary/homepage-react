@@ -78,9 +78,6 @@ export const CourseResources = ({
         setCurrentTopTab(topMenuTabId);
     };
 
-    // store a list of the Learning Resources that have been loaded, by subject
-    // const [currentLearningResourcesList, updateLearningResourcesList] = useState([]);
-
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
 
@@ -99,7 +96,7 @@ export const CourseResources = ({
         return null;
     };
 
-    const loadNewSubject = classnumber => {
+    const loadNewSubject = (classnumber, campus = null, semester = null) => {
         if (!currentGuidesList[classnumber]) {
             !!classnumber && actions.loadGuides(classnumber);
         }
@@ -112,8 +109,8 @@ export const CourseResources = ({
             !!classnumber &&
                 actions.loadReadingLists(
                     classnumber,
-                    getCampusByCode(account.current_classes[0].CAMPUS),
-                    account.current_classes[0].semester,
+                    campus || getCampusByCode(account.current_classes[0].CAMPUS),
+                    semester || account.current_classes[0].semester,
                 );
         }
     };
@@ -137,9 +134,9 @@ export const CourseResources = ({
             !!currentClasses && currentClasses.filter(aClass => !!aClass && aClass.classnumber === classnumber);
         const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
         return {
-            semester: thisSubject.semester || subjectTemplate.semester,
-            CAMPUS: thisSubject.CAMPUS || subjectTemplate.CAMPUS,
-            INSTRUCTION_MODE: thisSubject.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+            semester: thisSubject?.semester || subjectTemplate.semester,
+            CAMPUS: thisSubject?.CAMPUS || subjectTemplate.CAMPUS,
+            INSTRUCTION_MODE: thisSubject?.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
         };
     };
 

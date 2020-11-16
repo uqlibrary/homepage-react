@@ -101,7 +101,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
 
     const numberExcessReadingLists =
         singleReadingListLength(readingList) > locale.visibleItemsCount.readingLists
-            ? singleReadingListLength(readingList).length - locale.visibleItemsCount.readingLists
+            ? singleReadingListLength(readingList) - locale.visibleItemsCount.readingLists
             : 0;
 
     const singleReadingListLengthTitle = readingList =>
@@ -226,25 +226,32 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                         </Grid>
                                     );
                                 })}
-                        {/* eg MATH4091 has 12 reading lists */}
-                        {!!numberExcessReadingLists && !!readingList && !!readingList.url && (
-                            <Grid
-                                item
-                                xs={12}
-                                className={classes.courseResourceLineItem}
-                                data-testid="reading-list-more-link"
-                            >
-                                <a
-                                    // on-click="linkClicked"
-                                    href={readingList.url}
+                        {/* eg MATH4091 has 12 reading list items */}
+                        {!!numberExcessReadingLists &&
+                            !!readingList &&
+                            !!readingList.reading_lists &&
+                            readingList.reading_lists.length === 1 &&
+                            !!readingList.reading_lists[0].url && (
+                                <Grid
+                                    item
+                                    xs={12}
+                                    className={classes.courseResourceLineItem}
+                                    data-testid="reading-list-more-link"
                                 >
-                                    <SpacedArrowForwardIcon />
-                                    {locale.myCourses.readingLists.footer.linkLabel
-                                        .replace('[numberExcessReadingLists]', numberExcessReadingLists)
-                                        .replace('[readingListNumber]', _pluralise('item', numberExcessReadingLists))}
-                                </a>
-                            </Grid>
-                        )}
+                                    <a
+                                        // on-click="linkClicked"
+                                        href={readingList.reading_lists[0].url}
+                                    >
+                                        <SpacedArrowForwardIcon />
+                                        {locale.myCourses.readingLists.footer.linkLabel
+                                            .replace('[numberExcessReadingLists]', numberExcessReadingLists)
+                                            .replace(
+                                                '[readingListNumber]',
+                                                _pluralise('item', numberExcessReadingLists),
+                                            )}
+                                    </a>
+                                </Grid>
+                            )}
                     </Grid>
                 </StandardCard>
             </Grid>

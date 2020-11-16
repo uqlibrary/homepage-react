@@ -37,7 +37,7 @@ export const SearchCourseResources = ({
     const classes = useStyles();
 
     const subjectTabLabel = 'searchtab';
-    const [searchTab, setCurrentSearchTab] = useState();
+    const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
     const handleSearchTabChange = (event, newSubjectTabId) => {
         setCurrentSearchTab(newSubjectTabId);
     };
@@ -99,8 +99,11 @@ export const SearchCourseResources = ({
         setKeywordPresets(getPresetData(searchKeyword, suggestions));
 
         setDisplayType('searchresults');
+        const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
+        const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
+        const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
         if (!listSearchedSubjects.includes(searchKeyword)) {
-            loadNewSubject(searchKeyword);
+            loadNewSubject(searchKeyword, campus, semester);
             updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
             tabId = listSearchedSubjects.length;
