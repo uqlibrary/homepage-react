@@ -26,44 +26,40 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PastExamPapers = ({
-    subject,
-    learningResourcesList,
-    learningResourcesListLoading,
-    learningResourcesListError,
-}) => {
+export const PastExamPapers = ({ examList, examListLoading, examListError }) => {
     const classes = useStyles();
+
+    const subject = !!examList && examList.coursecode;
 
     const _extractExtension = url => {
         return url.substring(url.lastIndexOf('.') + 1);
     };
 
-    const examList =
-        !!learningResourcesList && learningResourcesList.length === 1 ? learningResourcesList[0].exam_papers : null;
+    const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : false;
+
     const numberExcessExams =
-        !!learningResourcesList &&
-        learningResourcesList.length > 0 &&
-        !!learningResourcesList[0] &&
-        learningResourcesList[0].exam_papers.length > locale.visibleItemsCount.examPapers
-            ? learningResourcesList[0].exam_papers.length - locale.visibleItemsCount.examPapers
+        !!listOfExams && listOfExams.length > locale.visibleItemsCount.examPapers
+            ? listOfExams.length - locale.visibleItemsCount.examPapers
             : 0;
 
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
     const examPaperTitle = `${locale.myCourses.examPapers.title} ${
-        !!examList && examList.length > 0 ? `(${examList.length})` : ''
+        !!listOfExams && listOfExams.length > 0 ? `(${listOfExams.length})` : ''
     }`;
 
     return (
         <StandardCard fullHeight title={examPaperTitle}>
             <Grid container>
-                {!!learningResourcesListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
-                {!learningResourcesListError && learningResourcesListLoading && (
+                {!!examListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
+
+                {!examListError && !!examListLoading && (
                     <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
                         <CircularProgress color="primary" size={20} data-testid="loading-exampaper-suggestions" />
                     </Grid>
                 )}
-                {(!examList || examList.length === 0) && (
+
+                {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <Typography>{locale.myCourses.examPapers.none}</Typography>
@@ -76,9 +72,9 @@ export const PastExamPapers = ({
                         </Grid>
                     </React.Fragment>
                 )}
-                {!!examList &&
-                    examList.length > 0 &&
-                    examList.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
+                {!!listOfExams &&
+                    listOfExams.length > 0 &&
+                    listOfExams.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
                         return (
                             <Grid item xs={12} key={`examPapers-${index}`} className={classes.courseResourceLineItem}>
                                 <a
@@ -94,11 +90,11 @@ export const PastExamPapers = ({
                             </Grid>
                         );
                     })}
-                {!!examList && examList.length > 0 && !!numberExcessExams && (
+                {!!listOfExams && listOfExams.length > 0 && !!numberExcessExams && (
                     <Grid item xs={12} data-testid="exam-more-link" className={classes.courseResourceLineItem}>
                         <a
                             // on-click="linkClicked"
-                            href={_courseLink(subject.classnumber, locale.myCourses.examPapers.footer.linkOutPattern)}
+                            href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}
                         >
                             <SpacedArrowForwardIcon />
                             {locale.myCourses.examPapers.morePastExams
@@ -113,10 +109,9 @@ export const PastExamPapers = ({
 };
 
 PastExamPapers.propTypes = {
-    learningResourcesList: PropTypes.any,
-    learningResourcesListError: PropTypes.string,
-    learningResourcesListLoading: PropTypes.bool,
-    subject: PropTypes.any,
+    examList: PropTypes.any,
+    examListError: PropTypes.string,
+    examListLoading: PropTypes.bool,
 };
 
 export default React.memo(PastExamPapers);

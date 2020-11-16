@@ -1,48 +1,14 @@
 import * as actions from './actionTypes';
-// import { get } from 'repositories/generic';
-import { LEARNING_RESOURCES_API, GUIDES_API, READING_LIST_API } from '../repositories/routes';
-
-// import { get } from 'repositories/generic';
-/**
- * Loads the learning resources
- * @returns {function(*)}
- */
-export function loadLearningResources(keyword) {
-    console.log('will load loadLearningResources for ', keyword);
-    return dispatch => {
-        dispatch({ type: actions.LEARNING_RESOURCES_LOADING });
-        return fetch(LEARNING_RESOURCES_API({ keyword }).apiUrl)
-            .then(response => response.json())
-            .then(data => {
-                console.log('fetched LEARNING_RESOURCES_API');
-                dispatch({
-                    type: actions.LEARNING_RESOURCES_LOADED,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.LEARNING_RESOURCES_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
-export function clearLearningResources() {
-    return dispatch => {
-        dispatch({ type: actions.LEARNING_RESOURCES_CLEAR });
-    };
-}
+import { get } from 'repositories/generic';
+import { GUIDES_API, EXAMS_API, READING_LIST_API } from '../repositories/routes';
 
 export function loadGuides(keyword) {
     console.log('will load loadGuides for ', keyword);
     return dispatch => {
         dispatch({ type: actions.GUIDES_LOADING });
-        return fetch(GUIDES_API({ keyword }).apiUrl)
-            .then(response => response.json())
+        return get(GUIDES_API({ keyword }))
             .then(data => {
-                console.log('fetched GUIDES_API');
+                console.log('fetched GUIDES_API: ', data);
                 const updatedData = data.map(subject => {
                     subject.coursecode = keyword;
                     return subject;
@@ -53,6 +19,7 @@ export function loadGuides(keyword) {
                 });
             })
             .catch(error => {
+                console.log('guides error: ', error);
                 dispatch({
                     type: actions.GUIDES_FAILED,
                     payload: error.message,
@@ -67,24 +34,55 @@ export function clearGuides() {
     };
 }
 
-export function loadReadingLists(keyword) {
-    console.log('will load loadReadingLists for ', keyword);
+export function loadExams(keyword) {
+    console.log('will load Exams for ', keyword);
+    return dispatch => {
+        dispatch({ type: actions.EXAMS_LOADING });
+        return get(EXAMS_API({ keyword }))
+            .then(data => {
+                console.log('fetched EXAMS_API: ', data);
+                dispatch({
+                    type: actions.EXAMS_LOADED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.EXAMS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearExams() {
+    return dispatch => {
+        dispatch({ type: actions.EXAMS_CLEAR });
+    };
+}
+
+export function loadReadingLists(coursecode, campus, semester) {
+    console.log('will load loadReadingLists for ', READING_LIST_API({ coursecode, campus, semester }));
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
-        return fetch(READING_LIST_API({ keyword }).apiUrl)
-            .then(response => response.json())
+        return get(READING_LIST_API({ coursecode, campus, semester }))
             .then(data => {
-                console.log('fetched READING_LIST_API for ', keyword);
-                const updatedData = data.map(subject => {
-                    subject.talisId = keyword;
-                    return subject;
-                });
+                console.log('fetched READING_LIST_API for ', coursecode, ': ', data);
+                const updatedData = data;
+                // make the returned value more sensibly named
+                updatedData.coursecode = data.title;
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: updatedData,
                 });
             })
             .catch(error => {
+                console.log(
+                    'error for READING_LIST_API ',
+                    READING_LIST_API({ coursecode, campus, semester }),
+                    ': ',
+                    error,
+                );
                 dispatch({
                     type: actions.READING_LIST_FAILED,
                     payload: error.message,
