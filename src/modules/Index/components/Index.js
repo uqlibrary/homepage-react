@@ -1,12 +1,8 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
-import { useLocation } from 'react-router';
-import { getCampusByCode } from 'helpers/general';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
@@ -41,8 +37,7 @@ import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
 import { Location } from 'modules/SharedComponents/Location';
 import { useCookies } from 'react-cookie';
-import { Link } from 'react-router-dom';
-import fullPath from 'config/routes';
+import CourseResources from './CourseResources';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -100,7 +95,6 @@ const useStyles = makeStyles(theme => ({
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const pageLocation = useLocation();
 
     // Load spotlights if they havent been already
     useEffect(() => {
@@ -155,17 +149,6 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             return 'green';
         }
         return '#999';
-    };
-
-    const _navigateToCourseResourceSpecificTab = (item, includeFullPath = false) => {
-        const campus = getCampusByCode(item.CAMPUS);
-        const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-        const prefix = `${includeFullPath ? fullPath : ''}/courseresources`;
-        const landingUrl =
-            !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-                ? `${prefix}${pageLocation.search}&${courseResourceParams}` // eg include ?user=s111111
-                : `${prefix}?${courseResourceParams}`;
-        return landingUrl;
     };
 
     return (
@@ -666,48 +649,7 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <StandardCard
-                                fullHeight
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Course resources
-                                        </Grid>
-                                    </Grid>
-                                }
-                            >
-                                <Grid container spacing={1}>
-                                    <Grid item xs>
-                                        <TextField placeholder="Enter a course code to search" fullWidth />
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
-                                            <SearchIcon />
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                                {!!account.current_classes && account.current_classes.length > 0 && (
-                                    <Grid container spacing={1} style={{ marginTop: 12 }}>
-                                        <Grid item xs={12}>
-                                            <Typography color={'secondary'} variant={'h6'}>
-                                                Your courses
-                                            </Typography>
-                                        </Grid>
-                                        {account.current_classes.map((item, index) => {
-                                            return (
-                                                <Grid item xs={12} key={`hcr-${index}`}>
-                                                    <Link to={_navigateToCourseResourceSpecificTab(item)}>
-                                                        {item.classnumber}
-                                                    </Link>
-                                                    {' - '}
-                                                    {item.DESCR}
-                                                </Grid>
-                                            );
-                                        })}
-                                    </Grid>
-                                )}
-                            </StandardCard>
+                            <CourseResources account={account} />
                         </Grid>
                     )}
 
