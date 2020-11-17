@@ -366,7 +366,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={145} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={140} />
                         </Grid>
                     )}
 
