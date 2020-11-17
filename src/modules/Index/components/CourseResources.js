@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router';
 
 import { getCampusByCode } from 'helpers/general';
-import fullPath from 'config/routes';
+import { fullPath } from 'config/routes';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -51,22 +51,40 @@ const CourseResources = ({ account }) => {
                 </Grid>
             </Grid>
             {!!account && !!account.current_classes && account.current_classes.length > 0 && (
-                <Grid container spacing={1} style={{ marginTop: 12 }}>
-                    <Grid item xs={12}>
-                        <Typography color={'secondary'} variant={'h6'}>
-                            Your courses
-                        </Typography>
+                <div
+                    style={{
+                        height: 275,
+                        overflowX: 'hidden',
+                        overflowY: 'auto',
+                        marginRight: -16,
+                        marginTop: 4,
+                        marginBottom: -24,
+                        marginLeft: -16,
+                        padding: '0 8px 8px 8px',
+                    }}
+                >
+                    <Grid container spacing={1} style={{ marginTop: 12 }}>
+                        <Grid item xs={12}>
+                            <Typography color={'secondary'} variant={'h6'}>
+                                Your courses
+                            </Typography>
+                        </Grid>
+                        {account.current_classes.map((item, index) => {
+                            return (
+                                <Grid
+                                    item
+                                    xs={12}
+                                    key={`hcr-${index}`}
+                                    style={{ textIndent: '-5rem', marginLeft: '5rem' }}
+                                >
+                                    <Link to={_navigateToCourseResourceSpecificTab(item)}>{item.classnumber}</Link>
+                                    {' - '}
+                                    {item.DESCR}
+                                </Grid>
+                            );
+                        })}
                     </Grid>
-                    {account.current_classes.map((item, index) => {
-                        return (
-                            <Grid item xs={12} key={`hcr-${index}`}>
-                                <Link to={_navigateToCourseResourceSpecificTab(item)}>{item.classnumber}</Link>
-                                {' - '}
-                                {item.DESCR}
-                            </Grid>
-                        );
-                    })}
-                </Grid>
+                </div>
             )}
         </StandardCard>
     );
