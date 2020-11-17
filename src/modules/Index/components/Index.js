@@ -366,7 +366,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={180} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={145} />
                         </Grid>
                     )}
 
@@ -450,7 +450,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
 
                     {seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={300} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={250} />
                         </Grid>
                     )}
 
