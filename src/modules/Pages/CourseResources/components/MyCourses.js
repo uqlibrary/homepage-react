@@ -4,6 +4,7 @@ import { useAccountContext } from 'context';
 
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import { getCampusByCode } from 'helpers/general';
 
 import { TabPanel } from './TabPanel';
 
@@ -32,7 +33,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
+export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCourse }) => {
     const { account } = useAccountContext();
     const classes = useStyles();
 
@@ -42,6 +43,24 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
         !!event.target.innerText && loadNewSubject(event.target.innerText);
         setCurrentMenuTab(subjectTabId);
     };
+
+    React.useEffect(() => {
+        let preselectedSubjectTab = null;
+        if (!!preselectedCourse.coursecode) {
+            account.current_classes.map((item, index) => {
+                if (
+                    item.classnumber === preselectedCourse.coursecode &&
+                    getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
+                    item.semester === preselectedCourse.semester
+                ) {
+                    preselectedSubjectTab = `${courseTabLabel}-${index}`;
+                }
+            });
+            if (preselectedSubjectTab !== null) {
+                setCurrentMenuTab(preselectedSubjectTab);
+            }
+        }
+    }, [preselectedCourse, account]);
 
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
@@ -105,6 +124,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
 MyCourses.propTypes = {
     loadNewSubject: PropTypes.func,
     renderSubjectTabBody: PropTypes.func,
+    preselectedCourse: PropTypes.any,
 };
 
 export default MyCourses;

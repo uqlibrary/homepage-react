@@ -1,10 +1,14 @@
+// the user can be linked from the homepage
+// eg http://localhost:2020/courseresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020
+
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
+import { useLocation } from 'react-router';
 
-import global from 'locale/global';
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import { getCampusByCode } from 'helpers/general';
 
 import { Guides } from './Guides';
 import { ReadingLists } from './ReadingLists';
@@ -61,6 +65,21 @@ export const CourseResources = ({
 }) => {
     const { account } = useAccountContext();
     const classes = useStyles();
+    const location = useLocation();
+
+    const getQueryParams = qs => {
+        const qs1 = qs.split('+').join(' ');
+        const re = /[?&]?([^=]+)=([^&]*)/g;
+        const params = {};
+
+        let tokens;
+        // eslint-disable-next-line no-cond-assign
+        while ((tokens = re.exec(qs1))) {
+            params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+        }
+
+        return params;
+    };
 
     /**
      * The page consists of 3 sections:
@@ -87,39 +106,44 @@ export const CourseResources = ({
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
 
-    const getCampusByCode = code => {
-        const campuses = global.campuses;
-        if (campuses.hasOwnProperty(code)) {
-            return campuses[code];
-        }
+    const loadNewSubject = React.useCallback(
+        (classnumber, campus = null, semester = null) => {
+            console.log('loadNewSubject: currentReadingLists = ', currentReadingLists);
+            if (!currentGuidesList[classnumber]) {
+                !!classnumber && actions.loadGuides(classnumber);
+            }
 
-        return null;
-    };
+            if (!currentExamsList[classnumber]) {
+                !!classnumber && actions.loadExams(classnumber);
+            }
 
-    const loadNewSubject = (classnumber, campus = null, semester = null) => {
-        if (!currentGuidesList[classnumber]) {
-            !!classnumber && actions.loadGuides(classnumber);
-        }
+            if (!currentReadingLists[classnumber]) {
+                !!classnumber &&
+                    actions.loadReadingLists(
+                        classnumber,
+                        campus || getCampusByCode(account.current_classes[0].CAMPUS),
+                        semester || account.current_classes[0].semester,
+                    );
+            }
+        },
+        [currentGuidesList, currentExamsList, currentReadingLists, account, actions],
+    );
 
-        if (!currentExamsList[classnumber]) {
-            !!classnumber && actions.loadExams(classnumber);
+    const params = getQueryParams(location.search);
+    React.useEffect(() => {
+        if (!!params.coursecode && !!params.campus && !!params.semester) {
+            console.log('getQueryParams: currentReadingLists = ', currentReadingLists);
+            if (!currentReadingLists[params.coursecode]) {
+                console.log('new params: loading ', params.coursecode);
+                loadNewSubject(params.coursecode, params.campus, params.semester);
+            }
         }
-
-        if (!currentReadingLists[classnumber]) {
-            !!classnumber &&
-                actions.loadReadingLists(
-                    classnumber,
-                    campus || getCampusByCode(account.current_classes[0].CAMPUS),
-                    semester || account.current_classes[0].semester,
-                );
-        }
-    };
+    }, [params, currentReadingLists, loadNewSubject]);
 
     const [tabType, setDisplayType] = useState('mycourses');
     const [keywordPresets, setKeywordPresets] = useState({});
 
     const [listSearchedSubjects, updateSearchList] = useState([]);
-    // may need state of 'listMyCourses' which then shows the mycourses tab?
 
     // store the reading list for this subject in currentReadingLists by subject
     const updateListOfReadingLists = React.useCallback(() => {
@@ -366,6 +390,7 @@ export const CourseResources = ({
                                 <MyCourses
                                     loadNewSubject={loadNewSubject}
                                     renderSubjectTabBody={renderSubjectTabBody}
+                                    preselectedCourse={params}
                                 />
                             </TabPanel>
                             <TabPanel

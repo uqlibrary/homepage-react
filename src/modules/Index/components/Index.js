@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
+import { useLocation } from 'react-router';
+import { getCampusByCode } from 'helpers/general';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import TextField from '@material-ui/core/TextField';
@@ -96,6 +98,8 @@ const useStyles = makeStyles(theme => ({
 export const Index = ({ account, spotlights, spotlightsLoading }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    const pageLocation = useLocation();
+
     // Load spotlights if they havent been already
     useEffect(() => {
         if (spotlightsLoading === null) {
@@ -670,22 +674,30 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                         </Button>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={1} style={{ marginTop: 12 }}>
-                                    <Grid item xs={12}>
-                                        <Typography color={'secondary'} variant={'h6'}>
-                                            Popular courses
-                                        </Typography>
+                                {!!account.current_classes && account.current_classes.length > 0 && (
+                                    <Grid container spacing={1} style={{ marginTop: 12 }}>
+                                        <Grid item xs={12}>
+                                            <Typography color={'secondary'} variant={'h6'}>
+                                                Your courses
+                                            </Typography>
+                                        </Grid>
+                                        {account.current_classes.map((item, index) => {
+                                            const campus = getCampusByCode(item.CAMPUS);
+                                            const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
+                                            const landingUrl =
+                                                !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+                                                    ? `${pageLocation.search}&${courseResourceParams}`
+                                                    : `?${courseResourceParams}`;
+                                            return (
+                                                <Grid item xs={12} key={`hcr-${index}`}>
+                                                    <a href={`/courseresources${landingUrl}`}>{item.classnumber}</a>
+                                                    {' - '}
+                                                    {item.DESCR}
+                                                </Grid>
+                                            );
+                                        })}
                                     </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH101</a> - Applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH102</a> - More applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH103</a> - Even more applied psychology
-                                    </Grid>
-                                </Grid>
+                                )}
                             </StandardCard>
                         </Grid>
                     )}

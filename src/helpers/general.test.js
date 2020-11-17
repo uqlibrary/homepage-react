@@ -1,4 +1,4 @@
-import { leftJoin, stripHtml } from './general';
+import { leftJoin, stripHtml, getCampusByCode } from './general';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -24,5 +24,13 @@ describe('general helpers', () => {
 
     it('should strip HTML from a string containing HTML', () => {
         expect(stripHtml('hello<br/> there')).toEqual('hello there');
+    });
+
+    it('should get the campus name correctly', () => {
+        expect(getCampusByCode('STLUC')).toEqual('St Lucia');
+    });
+
+    it('should get a missing campus name correctly', () => {
+        expect(getCampusByCode('XXXXXX')).toEqual(null);
     });
 });
