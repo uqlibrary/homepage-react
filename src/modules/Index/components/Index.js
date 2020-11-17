@@ -18,7 +18,6 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { default as locale } from './locale';
 import {
     seeCourseResources,
@@ -357,38 +356,6 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                                                 <MonetizationOnIcon />
                                                             </Button>
                                                         </Badge>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        {/* Room bookings */}
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>Book a room</Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your room bookings (1 today)'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <Button
-                                                            size={'small'}
-                                                            variant={'contained'}
-                                                            className={classes.ppButton}
-                                                        >
-                                                            <MeetingRoomIcon />
-                                                        </Button>
                                                     </Tooltip>
                                                 </Grid>
                                             </MenuItem>

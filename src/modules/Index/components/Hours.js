@@ -10,6 +10,8 @@ import Fade from '@material-ui/core/Fade';
 import Badge from '@material-ui/core/Badge';
 import CheckIcon from '@material-ui/icons/Check';
 import Tooltip from '@material-ui/core/Tooltip';
+import { hoursLocale } from './Hours.locale';
+import Button from '@material-ui/core/Button';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -57,6 +59,19 @@ const useStyles = makeStyles(theme => ({
         fontSize: 14,
         color: theme.palette.secondary.main,
     },
+    actionButtonsLeft: {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomRightRadius: 0,
+    },
+    actionButtonsRight: {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+        borderBottomLeftRadius: 0,
+    },
+    selectedCampus: {
+        fontWeight: 500,
+    },
 }));
 
 const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
@@ -67,25 +82,6 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
     if (!!libHoursLoading) {
         return null;
     }
-    const campusMap = {
-        'Arch Music': 'St Lucia',
-        AskUs: 'Online',
-        'Biol Sci': 'St Lucia',
-        Central: 'St Lucia',
-        DHEngSci: 'St Lucia',
-        'Duhig Study': 'St Lucia',
-        Fryer: 'St Lucia',
-        Gatton: 'Gatton',
-        Herston: 'Herston',
-        Law: 'St Lucia',
-        'Whitty Mater': 'Other',
-        PACE: 'Other',
-        Bundaberg: 'Other',
-        HerveyBay: 'Other',
-        Rockhampton: 'Other',
-        Toowoomba: 'Other',
-    };
-    const departmentsMap = ['Service', 'Study space'];
     const cleanedHours = libHours.locations.map(item => {
         const departments = item.departments.map(item => {
             return { name: item.name, hours: item.rendered };
@@ -93,7 +89,9 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
         if (item.abbr !== 'AskUs') {
             return {
                 name: item.abbr,
-                campus: campusMap[item.abbr],
+                url: item.url,
+                alt: item.name,
+                campus: hoursLocale.campusMap[item.abbr],
                 departments,
             };
         }
@@ -104,9 +102,10 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
         cookies.location,
         {
             keys: ['campus'],
-            threshold: 0,
+            threshold: matchSorter.rankings.NO_MATCH,
         },
     );
+    console.log(libHours);
     if (location !== cookies.location) {
         setShowIcon(true);
         setLocation(cookies.location);
@@ -114,19 +113,22 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
             setShowIcon(false);
         }, 5000);
     }
+    const navigateToUrl = url => {
+        window.location.href = url;
+    };
     return (
         <StandardCard
             accentHeader
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
                     <Grid item xs={'auto'}>
-                        Library Hours
+                        {hoursLocale.title}
                     </Grid>
                     <Grid item xs />
                     <Grid item xs={'auto'}>
                         <Fade in={showIcon} timeout={500}>
                             <Tooltip
-                                title={'Your preferred campus has been updated'}
+                                title={hoursLocale.locationTooltip}
                                 placement="bottom"
                                 TransitionProps={{ timeout: 300 }}
                             >
@@ -146,15 +148,13 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
             noPadding
         >
             <Grid container spacing={1} className={classes.listHeader}>
-                <Grid item xs={4}>
-                    Location
-                </Grid>
-                <Grid item xs={4}>
-                    Study space
-                </Grid>
-                <Grid item xs={4}>
-                    Ask Us desk
-                </Grid>
+                {hoursLocale.header.map((item, index) => {
+                    return (
+                        <Grid item xs={4} key={index}>
+                            {item}
+                        </Grid>
+                    );
+                })}
             </Grid>
             <div className={classes.scrollArea} style={{ height: height }}>
                 {!!sortedHours &&
@@ -163,13 +163,18 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
                         return (
                             <Grid container spacing={1} key={index} className={classes.row} alignItems={'flex-start'}>
                                 <Grid item xs={4}>
-                                    <a href={item.url} style={{ marginLeft: 8 }}>
+                                    <a
+                                        aria-label={item.name}
+                                        href={item.url}
+                                        style={{ marginLeft: 8 }}
+                                        className={(cookies.location === item.campus && classes.selectedCampus) || ''}
+                                    >
                                         {item.name}
                                     </a>
                                 </Grid>
                                 {item.departments.length > 0 &&
                                     item.departments.map((item, index) => {
-                                        if (departmentsMap.includes(item.name)) {
+                                        if (hoursLocale.departmentsMap.includes(item.name)) {
                                             return (
                                                 <Grid item xs key={index} style={{ fontSize: 14 }}>
                                                     {item.hours}
@@ -182,6 +187,34 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
                         );
                     })}
             </div>
+            <Grid container spacing={0}>
+                <Grid item xs>
+                    <Button
+                        classes={{ root: classes.actionButtonsLeft }}
+                        size="small"
+                        variant="contained"
+                        color={hoursLocale.actionButtons[0].color}
+                        disableElevation
+                        fullWidth
+                        onClick={() => navigateToUrl(hoursLocale.actionButtons[0].url)}
+                    >
+                        {hoursLocale.actionButtons[0].label}
+                    </Button>
+                </Grid>
+                <Grid item xs>
+                    <Button
+                        classes={{ root: classes.actionButtonsRight }}
+                        size="small"
+                        variant="contained"
+                        color={hoursLocale.actionButtons[1].color}
+                        disableElevation
+                        fullWidth
+                        onClick={() => navigateToUrl(hoursLocale.actionButtons[1].url)}
+                    >
+                        {hoursLocale.actionButtons[1].label}
+                    </Button>
+                </Grid>
+            </Grid>
         </StandardCard>
     );
 };
