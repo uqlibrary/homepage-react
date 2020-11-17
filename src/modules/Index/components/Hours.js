@@ -90,16 +90,23 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
         const departments = item.departments.map(item => {
             return { name: item.name, hours: item.rendered };
         });
-        return {
-            name: item.abbr,
-            campus: campusMap[item.abbr],
-            departments,
-        };
+        if (item.abbr !== 'AskUs') {
+            return {
+                name: item.abbr,
+                campus: campusMap[item.abbr],
+                departments,
+            };
+        }
+        return null;
     });
-    const sortedHours = matchSorter(cleanedHours, cookies.location, {
-        keys: ['campus'],
-        threshold: 0,
-    });
+    const sortedHours = matchSorter(
+        cleanedHours.filter(e => e !== null),
+        cookies.location,
+        {
+            keys: ['campus'],
+            threshold: 0,
+        },
+    );
     if (location !== cookies.location) {
         setShowIcon(true);
         setLocation(cookies.location);
@@ -146,7 +153,7 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
                     Study space
                 </Grid>
                 <Grid item xs={4}>
-                    Service desk
+                    Ask Us desk
                 </Grid>
             </Grid>
             <div className={classes.scrollArea} style={{ height: height }}>
