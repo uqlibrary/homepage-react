@@ -108,7 +108,6 @@ export const CourseResources = ({
 
     const loadNewSubject = React.useCallback(
         (classnumber, campus = null, semester = null) => {
-            console.log('loadNewSubject: currentReadingLists = ', currentReadingLists);
             if (!currentGuidesList[classnumber]) {
                 !!classnumber && actions.loadGuides(classnumber);
             }
@@ -132,7 +131,6 @@ export const CourseResources = ({
     const params = getQueryParams(location.search);
     React.useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
-            console.log('getQueryParams: currentReadingLists = ', currentReadingLists);
             if (!currentReadingLists[params.coursecode]) {
                 console.log('new params: loading ', params.coursecode);
                 loadNewSubject(params.coursecode, params.campus, params.semester);

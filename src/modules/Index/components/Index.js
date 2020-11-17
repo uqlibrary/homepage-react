@@ -41,6 +41,8 @@ import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
 import { Location } from 'modules/SharedComponents/Location';
 import { useCookies } from 'react-cookie';
+import { Link } from 'react-router-dom';
+import fullPath from 'config/routes';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -153,6 +155,17 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
             return 'green';
         }
         return '#999';
+    };
+
+    const _navigateToCourseResourceSpecificTab = (item, includeFullPath = false) => {
+        const campus = getCampusByCode(item.CAMPUS);
+        const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
+        const prefix = `${includeFullPath ? fullPath : ''}/courseresources`;
+        const landingUrl =
+            !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+                ? `${prefix}${pageLocation.search}&${courseResourceParams}` // eg include ?user=s111111
+                : `${prefix}?${courseResourceParams}`;
+        return landingUrl;
     };
 
     return (
@@ -682,15 +695,11 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
                                             </Typography>
                                         </Grid>
                                         {account.current_classes.map((item, index) => {
-                                            const campus = getCampusByCode(item.CAMPUS);
-                                            const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-                                            const landingUrl =
-                                                !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-                                                    ? `${pageLocation.search}&${courseResourceParams}`
-                                                    : `?${courseResourceParams}`;
                                             return (
                                                 <Grid item xs={12} key={`hcr-${index}`}>
-                                                    <a href={`/courseresources${landingUrl}`}>{item.classnumber}</a>
+                                                    <Link to={_navigateToCourseResourceSpecificTab(item)}>
+                                                        {item.classnumber}
+                                                    </Link>
                                                     {' - '}
                                                     {item.DESCR}
                                                 </Grid>

@@ -1,7 +1,7 @@
 import { locale } from 'locale';
 import { createHash } from 'crypto';
 
-export const fullPath = process.env.FULL_PATH || 'https://fez-staging.library.uq.edu.au';
+export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 export const pidRegExp = 'UQ:[a-z0-9]+';
 export const isFileUrl = route => new RegExp('\\/view\\/UQ:[a-z0-9]+\\/.*').test(route);
 
