@@ -1,19 +1,5 @@
 export const computersLocale = {
     title: 'Computer availability',
-    header: [
-        {
-            title: 'Building',
-            size: 8,
-        },
-        {
-            title: '',
-            size: true,
-        },
-        {
-            title: 'Availability',
-            size: 'auto',
-        },
-    ],
     locationTooltip: 'Your preferred campus has been updated',
     campusMap: {
         'Architecture &amp; Music Library': 'St Lucia',

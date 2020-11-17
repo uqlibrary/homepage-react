@@ -369,7 +369,7 @@ export const Index = ({
                             <Computers
                                 computerAvailability={computerAvailability}
                                 computerAvailabilityLoading={computerAvailabilityLoading}
-                                height={278}
+                                height={312}
                             />
                         </Grid>
                     )}

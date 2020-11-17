@@ -147,15 +147,6 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
             fullHeight
             noPadding
         >
-            <Grid container spacing={1} className={classes.listHeader}>
-                {computersLocale.header.map((item, index) => {
-                    return (
-                        <Grid item xs={item.size} key={index}>
-                            {item.title}
-                        </Grid>
-                    );
-                })}
-            </Grid>
             <div className={classes.scrollArea} style={{ height: height }}>
                 {!!sortedComputers &&
                     sortedComputers.length > 1 &&
@@ -175,7 +166,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
                                     </a>
                                 </Grid>
                                 <Grid item xs={'auto'} style={{ fontSize: 14 }}>
-                                    {buildingAvail} free of {buildingTotal}
+                                    {buildingAvail} of {buildingTotal} free
                                 </Grid>
                             </Grid>
                         );
