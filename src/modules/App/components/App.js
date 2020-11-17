@@ -100,8 +100,6 @@ export class AppClass extends PureComponent {
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
         chatStatus: PropTypes.any,
-        alertStatus: PropTypes.any,
-        alertStatusLoading: PropTypes.any,
         libHours: PropTypes.object,
         libHoursLoading: PropTypes.bool,
     };
@@ -144,9 +142,10 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadAlerts();
         this.props.actions.loadChatStatus();
         this.props.actions.loadLibHours();
-        this.props.actions.loadAlerts();
+        this.props.actions.loadCompAvail();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }

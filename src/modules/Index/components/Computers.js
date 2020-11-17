@@ -10,8 +10,7 @@ import Fade from '@material-ui/core/Fade';
 import Badge from '@material-ui/core/Badge';
 import CheckIcon from '@material-ui/icons/Check';
 import Tooltip from '@material-ui/core/Tooltip';
-import { hoursLocale } from './Hours.locale';
-import Button from '@material-ui/core/Button';
+import { computersLocale } from './Computers.locale';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -74,37 +73,42 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
+const Computers = ({ computerAvailability, computerAvailabilityLoading, height = 300 }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
     const [showIcon, setShowIcon] = React.useState(false);
-    if (!!libHoursLoading) {
+    if (!!computerAvailabilityLoading) {
         return null;
     }
-    const cleanedHours = libHours.locations.map(item => {
-        const departments = item.departments.map(item => {
-            return { name: item.name, hours: item.rendered };
-        });
-        if (item.abbr !== 'AskUs') {
-            return {
-                name: item.abbr,
-                url: item.url,
-                alt: item.name,
-                campus: hoursLocale.campusMap[item.abbr],
-                departments,
-            };
+    const cleanedAvailability = computerAvailability.map(item => {
+        const levels = Object.keys(item.availability);
+        const totalLevels = levels.length;
+        let levelsData = [];
+        if (totalLevels > 0) {
+            levelsData = levels.map(level => {
+                return {
+                    level: parseInt(level.replace('Level ', ''), 10),
+                    roomCode: parseInt(item.availability[level].roomCode, 10),
+                    available: item.availability[level].Available,
+                    occupied: item.availability[level].Occupied,
+                    total: item.availability[level].Available + item.availability[level].Occupied,
+                    floorplan: item.availability[level].floorplan,
+                };
+            });
         }
-        return null;
+        return {
+            library: item.library.replace('&amp;', '&'),
+            levels: levelsData,
+            buildingCode: parseInt(item.buildingCode, 10),
+            buildingNumber: parseInt(item.buildingNumber, 10),
+            campus: computersLocale.campusMap[item.library],
+        };
     });
-    const sortedHours = matchSorter(
-        cleanedHours.filter(e => e !== null),
-        cookies.location,
-        {
-            keys: ['campus'],
-            threshold: matchSorter.rankings.NO_MATCH,
-        },
-    );
+    const sortedComputers = matchSorter(cleanedAvailability, cookies.location, {
+        keys: ['campus'],
+        threshold: matchSorter.rankings.NO_MATCH,
+    });
     if (location !== cookies.location) {
         setShowIcon(true);
         setLocation(cookies.location);
@@ -112,22 +116,19 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
             setShowIcon(false);
         }, 5000);
     }
-    const navigateToUrl = url => {
-        window.location.href = url;
-    };
     return (
         <StandardCard
             accentHeader
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
                     <Grid item xs={'auto'}>
-                        {hoursLocale.title}
+                        {computersLocale.title}
                     </Grid>
                     <Grid item xs />
                     <Grid item xs={'auto'}>
                         <Fade in={showIcon} timeout={500}>
                             <Tooltip
-                                title={hoursLocale.locationTooltip}
+                                title={computersLocale.locationTooltip}
                                 placement="bottom"
                                 TransitionProps={{ timeout: 300 }}
                             >
@@ -147,83 +148,49 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
             noPadding
         >
             <Grid container spacing={1} className={classes.listHeader}>
-                {hoursLocale.header.map((item, index) => {
+                {computersLocale.header.map((item, index) => {
                     return (
-                        <Grid item xs={4} key={index}>
-                            {item}
+                        <Grid item xs={item.size} key={index}>
+                            {item.title}
                         </Grid>
                     );
                 })}
             </Grid>
             <div className={classes.scrollArea} style={{ height: height }}>
-                {!!sortedHours &&
-                    sortedHours.length > 1 &&
-                    sortedHours.map((item, index) => {
+                {!!sortedComputers &&
+                    sortedComputers.length > 1 &&
+                    sortedComputers.map((item, index) => {
+                        const add = (a, b) => a + b;
+                        const buildingAvail = item.levels.map(level => level.available).reduce(add);
+                        const buildingTotal = item.levels.map(level => level.occupied + level.available).reduce(add);
                         return (
                             <Grid container spacing={1} key={index} className={classes.row} alignItems={'flex-start'}>
-                                <Grid item xs={4}>
+                                <Grid item xs style={{ paddingLeft: 8 }}>
                                     <a
-                                        aria-label={item.name}
-                                        href={item.url}
-                                        style={{ marginLeft: 8 }}
+                                        aria-label={item.library}
+                                        href={'#'}
                                         className={(cookies.location === item.campus && classes.selectedCampus) || ''}
                                     >
-                                        {item.name}
+                                        {item.library}
                                     </a>
                                 </Grid>
-                                {item.departments.length > 0 &&
-                                    item.departments.map((item, index) => {
-                                        if (hoursLocale.departmentsMap.includes(item.name)) {
-                                            return (
-                                                <Grid item xs key={index} style={{ fontSize: 14 }}>
-                                                    {item.hours}
-                                                </Grid>
-                                            );
-                                        }
-                                        return null;
-                                    })}
+                                <Grid item xs={'auto'} style={{ fontSize: 14 }}>
+                                    {buildingAvail} free of {buildingTotal}
+                                </Grid>
                             </Grid>
                         );
                     })}
             </div>
-            <Grid container spacing={0}>
-                <Grid item xs>
-                    <Button
-                        classes={{ root: classes.actionButtonsLeft }}
-                        size="small"
-                        variant="contained"
-                        color={hoursLocale.actionButtons[0].color}
-                        disableElevation
-                        fullWidth
-                        onClick={() => navigateToUrl(hoursLocale.actionButtons[0].url)}
-                    >
-                        {hoursLocale.actionButtons[0].label}
-                    </Button>
-                </Grid>
-                <Grid item xs>
-                    <Button
-                        classes={{ root: classes.actionButtonsRight }}
-                        size="small"
-                        variant="contained"
-                        color={hoursLocale.actionButtons[1].color}
-                        disableElevation
-                        fullWidth
-                        onClick={() => navigateToUrl(hoursLocale.actionButtons[1].url)}
-                    >
-                        {hoursLocale.actionButtons[1].label}
-                    </Button>
-                </Grid>
-            </Grid>
         </StandardCard>
     );
 };
 
-Hours.propTypes = {
-    libHours: PropTypes.object,
-    libHoursLoading: PropTypes.bool,
+Computers.propTypes = {
+    computerAvailability: PropTypes.array,
+    computerAvailabilityLoading: PropTypes.bool,
     height: PropTypes.number,
 };
 
-Hours.defaultProps = {};
+Computers.defaultProps = {};
 
-export default Hours;
+export default Computers;

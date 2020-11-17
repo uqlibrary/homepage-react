@@ -144,6 +144,24 @@ const handlers = {
         libHours: null,
         libHoursLoading: false,
     }),
+
+    [actions.COMP_AVAIL_LOADING]: state => ({
+        ...state,
+        computerAvailability: null,
+        computerAvailabilityLoading: true,
+    }),
+
+    [actions.COMP_AVAIL_LOADED]: (state, action) => ({
+        ...state,
+        computerAvailability: action.payload,
+        computerAvailabilityLoading: false,
+    }),
+
+    [actions.COMP_AVAIL_FAILED]: state => ({
+        ...state,
+        computerAvailability: null,
+        computerAvailabilityLoading: false,
+    }),
 };
 
 export default function accountReducer(state = initialState, action) {

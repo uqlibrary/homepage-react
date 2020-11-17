@@ -8,6 +8,7 @@ import {
     CURRENT_AUTHOR_API,
     LIB_HOURS_API,
     SPOTLIGHTS_API,
+    COMP_AVAIL_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -164,6 +165,29 @@ export function loadLibHours() {
             .catch(error => {
                 dispatch({
                     type: actions.LIB_HOURS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the computer availability data
+ * @returns {function(*)}
+ */
+export function loadCompAvail() {
+    return dispatch => {
+        dispatch({ type: actions.COMP_AVAIL_LOADING });
+        return get(COMP_AVAIL_API())
+            .then(availResponse => {
+                dispatch({
+                    type: actions.COMP_AVAIL_LOADED,
+                    payload: availResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.COMP_AVAIL_FAILED,
                     payload: error.message,
                 });
             });

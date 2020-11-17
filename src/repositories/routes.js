@@ -116,6 +116,12 @@ export const LIB_HOURS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
+// Computer availability
+export const COMP_AVAIL_API = () => ({
+    apiUrl: 'computer_availability',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // Alerts API
 export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });
 

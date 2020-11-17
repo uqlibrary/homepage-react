@@ -100,7 +100,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 width: 200,
                                 marginLeft: -100,
                                 position: 'absolute',
-                                top: 250,
+                                bottom: 6,
                                 left: '50%',
                                 zIndex: 101,
                                 textAlign: 'center',
