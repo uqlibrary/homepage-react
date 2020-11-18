@@ -137,7 +137,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                         {!!readingListError && (
                             <Fragment>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                    <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
+                                    <Typography>{locale.myCourses.readingLists.error.unavailable}</Typography>
                                 </Grid>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                                     <a
