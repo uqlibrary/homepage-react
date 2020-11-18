@@ -268,27 +268,34 @@ fetchMock.mock(
     learningResourceSearchSuggestions
 );
 
-mock.onGet('learning_resources/FREN1010').reply(() => { return [200, learningResources_FREN1010] });
-mock.onGet('learning_resources/HIST1201').reply(() => { return [200, learningResources_HIST1201] });
-mock.onGet('learning_resources/PHIL1002').reply(() => { return [200, learningResources_PHIL1002] });
+mock
+    .onGet('learning_resources/FREN1010').reply(() => { return [200, learningResources_FREN1010] })
+    .onGet('learning_resources/HIST1201').reply(() => { return [200, learningResources_HIST1201] })
+    .onGet('learning_resources/PHIL1002').reply(() => { return [200, learningResources_PHIL1002] })
 
-mock.onGet('course_resources/FREN1010/exams').reply(() => { return [200, exams_FREN1010] });
-mock.onGet('course_resources/HIST1201/exams').reply(() => { return [200, exams_HIST1201] });
-mock.onGet('course_resources/PHIL1002/exams').reply(() => { return [200, exams_PHIL1002] });
+    .onGet('course_resources/FREN1010/exams').reply(() => { return [200, exams_FREN1010] })
+    .onGet('course_resources/HIST1201/exams').reply(() => { return [200, exams_HIST1201] })
+    .onGet('course_resources/PHIL1002/exams').reply(() => { return [200, exams_PHIL1002] })
 
-mock.onGet('library_guides/FREN1010').reply(() => { return [200, libraryGuides_FREN1010] });
-mock.onGet('library_guides/HIST1201').reply(() => { return [200, libraryGuides_HIST1201] });
-mock.onGet('library_guides/PHIL1002').reply(() => { return [200, libraryGuides_PHIL1002] });
+    .onGet('library_guides/FREN1010').reply(() => { return [200, libraryGuides_FREN1010] })
+    .onGet('library_guides/HIST1201').reply(() => { return [200, libraryGuides_HIST1201] })
+    .onGet('library_guides/PHIL1002').reply(() => { return [200, libraryGuides_PHIL1002] })
 
-// mock.onGet('course_reading_list/FE54098F-2CB3-267D-50F8-4B2895FE94B9').reply(() => {
-//  return [200, courseReadingList_FE54098F]
-// });
-mock.onGet('course_resources/FREN1010/St Lucia/Semester 2 2020/reading_list').reply(() => {
-    return [200, courseReadingList_FREN1010]
-});
-mock.onGet('course_resources/HIST1201/St Lucia/Semester 2 2020/reading_list').reply(() => {
-    return [200, courseReadingList_HIST1201]
-});
-mock.onGet('course_resources/PHIL1002/St Lucia/Semester 2 2020/reading_list').reply(() => {
-    return [200, courseReadingList_PHIL1002]
-});
+    .onGet('course_resources/FREN1010/St Lucia/Semester 2 2020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_FREN1010]
+    })
+    .onGet('course_resources/HIST1201/St Lucia/Semester 2 2020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_HIST1201]
+    })
+    .onGet('course_resources/PHIL1002/St Lucia/Semester 2 2020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_PHIL1002]
+    })
+    .onAny()
+    .reply(config => {
+        console.log('url not found...', config);
+        return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
+    });
+

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 import { TabPanel } from './TabPanel';
 
-import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
+import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
@@ -29,8 +29,8 @@ const useStyles = makeStyles(
 export const SearchCourseResources = ({
     loadNewSubject,
     renderSubjectTabBody,
-    setDisplayType,
-    setKeywordPresets,
+    // setDisplayType,
+    // setKeywordPresets,
     listSearchedSubjects,
     updateSearchList,
 }) => {
@@ -87,18 +87,20 @@ export const SearchCourseResources = ({
      * @param searchKeyword
      * @param suggestions
      */
-    const getPresetData = (searchKeyword, suggestions) => {
-        const filtered = suggestions.filter(item => {
-            return item.text === searchKeyword;
-        });
-        return (filtered.length > 0 && filtered[0].rest) || {};
-    };
+    // const getPresetData = (searchKeyword, suggestions) => {
+    //     const filtered = suggestions.filter(item => {
+    //         return item.text === searchKeyword;
+    //     });
+    //     return (filtered.length > 0 && filtered[0].rest) || {};
+    // };
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
+        console.log('searchKeyword = ', searchKeyword);
+        console.log('suggestions = ', suggestions);
         let tabId;
-        setKeywordPresets(getPresetData(searchKeyword, suggestions));
+        // setKeywordPresets(getPresetData(searchKeyword, suggestions));
 
-        setDisplayType('searchresults');
+        // setDisplayType('searchresults');
         const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
         const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
@@ -116,8 +118,13 @@ export const SearchCourseResources = ({
 
     return (
         <Grid item xs={12} id="courseresource-search">
-            <PrimoSearch displayType="courseresources" searchKeywordSelected={searchKeywordSelected} />
-            {listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
+            <CourseResourceSearch
+                displayType="full"
+                elementId="full-courseresource"
+                history={history}
+                searchKeywordSelected={searchKeywordSelected}
+            />
+            {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
         </Grid>
     );
 };
@@ -126,7 +133,7 @@ SearchCourseResources.propTypes = {
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
     renderSubjectTabBody: PropTypes.func,
-    setDisplayType: PropTypes.func,
-    setKeywordPresets: PropTypes.func,
+    // setDisplayType: PropTypes.func,
+    // setKeywordPresets: PropTypes.func,
     updateSearchList: PropTypes.func,
 };

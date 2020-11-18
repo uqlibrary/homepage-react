@@ -24,3 +24,16 @@ export const getCampusByCode = code => {
 
     return null;
 };
+
+// there have been cases where someone has put a book on the corner of a keyboard,
+// which sends thousands of requests to the server - block this
+export const isRepeatingString = searchString => {
+    if (searchString.length <= 3) {
+        return false;
+    }
+    const lastChar = searchString.charAt(searchString.length - 1);
+    const secondLastChar = searchString.charAt(searchString.length - 2);
+    const thirdLastChar = searchString.charAt(searchString.length - 3);
+
+    return lastChar === secondLastChar && lastChar === thirdLastChar;
+};

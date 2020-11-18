@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
-import { loadSpotlights } from 'actions';
+import { clearPrimoSuggestions, loadCourseReadingListsSuggestions, loadSpotlights } from 'actions';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -37,7 +37,7 @@ import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
 import { Location } from 'modules/SharedComponents/Location';
 import { useCookies } from 'react-cookie';
-import CourseResources from './CourseResources';
+import HomePageCourseResources from './HomePageCourseResources';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -92,7 +92,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Index = ({ account, spotlights, spotlightsLoading }) => {
+export const Index = ({
+    account,
+    spotlights,
+    spotlightsLoading,
+    suggestions,
+    suggestionsLoading,
+    suggestionsError,
+}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -649,7 +656,14 @@ export const Index = ({ account, spotlights, spotlightsLoading }) => {
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <CourseResources account={account} />
+                            <HomePageCourseResources
+                                account={account}
+                                clearPrimoSuggestions={clearPrimoSuggestions}
+                                loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
+                                suggestions={suggestions}
+                                suggestionsLoading={suggestionsLoading}
+                                suggestionsError={suggestionsError}
+                            />
                         </Grid>
                     )}
 
@@ -884,6 +898,9 @@ Index.propTypes = {
     spotlights: PropTypes.any,
     spotlightsError: PropTypes.any,
     spotlightsLoading: PropTypes.bool,
+    suggestions: PropTypes.any,
+    suggestionsLoading: PropTypes.bool,
+    suggestionsError: PropTypes.string,
 };
 
 Index.defaultProps = {};

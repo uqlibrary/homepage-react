@@ -7,25 +7,37 @@ import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
-import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
-const CourseResources = ({ account }) => {
+export const getUrlForCourseResourceSpecificTab = (
+    item,
+    pageLocation,
+    includeFullPath = false,
+    isAccurateCampus = false,
+) => {
+    const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
+    const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
+    const prefix = `${includeFullPath ? fullPath : ''}/courseresources`;
+    return !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+        ? `${prefix}${pageLocation.search}&${courseResourceParams}` // eg include ?user=s111111
+        : `${prefix}?${courseResourceParams}`;
+};
+
+export const HomePageCourseResources = ({
+    account,
+    // loadCourseReadingListsSuggestions,
+    // clearPrimoSuggestions,
+    // suggestions,
+    // suggestionsLoading,
+    // suggestionsError,
+}) => {
     const pageLocation = useLocation();
 
-    const _navigateToCourseResourceSpecificTab = (item, includeFullPath = false) => {
-        const campus = getCampusByCode(item.CAMPUS);
-        const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-        const prefix = `${includeFullPath ? fullPath : ''}/courseresources`;
-        const landingUrl =
-            !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-                ? `${prefix}${pageLocation.search}&${courseResourceParams}` // eg include ?user=s111111
-                : `${prefix}?${courseResourceParams}`;
-        return landingUrl;
+    const searchKeywordSelected = (searchKeyword, suggestions) => {
+        console.log('searchKeywordSelected: ', searchKeyword, ': ', suggestions);
     };
 
     return (
@@ -40,16 +52,13 @@ const CourseResources = ({ account }) => {
                 </Grid>
             }
         >
-            <Grid container spacing={1}>
-                <Grid item xs>
-                    <TextField placeholder="Enter a course code to search" fullWidth />
-                </Grid>
-                <Grid item xs={'auto'}>
-                    <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
-                        <SearchIcon />
-                    </Button>
-                </Grid>
-            </Grid>
+            <CourseResourceSearch
+                displayType="compact"
+                elementId="homepage-courseresource"
+                searchKeywordSelected={searchKeywordSelected}
+                history={history}
+            />
+
             {!!account && !!account.current_classes && account.current_classes.length > 0 && (
                 <div
                     style={{
@@ -63,7 +72,7 @@ const CourseResources = ({ account }) => {
                         padding: '0 8px 8px 8px',
                     }}
                 >
-                    <Grid container spacing={1} style={{ marginTop: 12 }}>
+                    <Grid container spacing={1} style={{ marginTop: 12, marginLeft: 4 }}>
                         <Grid item xs={12}>
                             <Typography color={'secondary'} variant={'h6'}>
                                 Your courses
@@ -75,9 +84,11 @@ const CourseResources = ({ account }) => {
                                     item
                                     xs={12}
                                     key={`hcr-${index}`}
-                                    style={{ textIndent: '-5rem', marginLeft: '5rem' }}
+                                    style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
                                 >
-                                    <Link to={_navigateToCourseResourceSpecificTab(item)}>{item.classnumber}</Link>
+                                    <Link to={getUrlForCourseResourceSpecificTab(item, pageLocation)}>
+                                        {item.classnumber}
+                                    </Link>
                                     {' - '}
                                     {item.DESCR}
                                 </Grid>
@@ -90,8 +101,14 @@ const CourseResources = ({ account }) => {
     );
 };
 
-CourseResources.propTypes = {
+HomePageCourseResources.propTypes = {
     account: PropTypes.object,
+    loadCourseReadingListsSuggestions: PropTypes.func,
+    clearPrimoSuggestions: PropTypes.func,
+    // searchKeywordSelected: PropTypes.any,
+    suggestions: PropTypes.any,
+    suggestionsLoading: PropTypes.bool,
+    suggestionsError: PropTypes.string,
 };
 
-export default CourseResources;
+export default HomePageCourseResources;

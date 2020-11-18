@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 
 import { PropTypes } from 'prop-types';
-import { primoSearch as defaultLocale } from './primoSearchLocale';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
@@ -12,14 +11,10 @@ import { getUrlForCourseResourceSpecificTab } from 'modules/Index/components/Hom
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import FormControl from '@material-ui/core/FormControl';
 import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
-import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
-import MenuItem from '@material-ui/core/MenuItem';
 import SearchIcon from '@material-ui/icons/Search';
-import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
 
@@ -68,14 +63,15 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({
+export const CourseResourceSearch = ({
     actions,
-    displayType, // default: 'all'; values: 'all', 'courseresources', 'homepagecourseresources'
-    // 'all' for full homepage search
-    // 'courseresources' for course resources page search
-    // 'homepagecourseresources' for course resource search in homepage panel
+    // displayType, // default: 'all'; values: 'all', 'courseresources', 'homepagecourseresources'
+    displayType, // default: 'full'; values: 'full', 'compact'
+    // 'full' for course resources page search
+    // 'compact' for course resource search in homepage panel
     elementId = 'primo-search',
-    locale,
+    // locale,
+    history,
     searchKeywordSelected,
     suggestions,
     suggestionsLoading,
@@ -84,18 +80,10 @@ export const PrimoSearch = ({
     const classes = useStyles();
     const pageLocation = useLocation();
 
-    const searchTypeCourseResources = 8;
-    const searchTypeAll = 0;
-    const [searchType, setSearchType] = useState(displayType === 'all' ? searchTypeAll : searchTypeCourseResources);
     const [searchKeyword, setSearchKeyword] = useState('');
-    const [selectedValue, setSelectedValue] = useState('');
+    // const [selectedValue, setSelectedValue] = useState('');
 
     const handleClearSuggestions = () => {
-        actions.clearPrimoSuggestions();
-    };
-
-    const handleSearchTypeChange = event => {
-        setSearchType(event.target.value);
         actions.clearPrimoSuggestions();
     };
 
@@ -104,120 +92,131 @@ export const PrimoSearch = ({
         console.log('handleSearchButton');
         console.log('displayType = ', displayType);
         console.log('suggestions = ', suggestions);
-        if (displayType === 'homepagecourseresources') {
-            console.log('in homepagecourseresources');
-            console.log('selectedValue = ', selectedValue);
+        if (displayType === 'compact') {
+            console.log('in compact courseresources');
+            // console.log('selectedValue = ', selectedValue);
             const course = {
                 classnumber: searchKeyword,
                 campus: '???',
                 semester: '???',
             };
             const url = getUrlForCourseResourceSpecificTab(course, pageLocation);
-            history.push(url);
+            console.log('would visit ', url);
+            // history.push(url);
+            console.log('history = ', history);
         } else if (displayType === 'courseresources') {
-            console.log('in courseresources');
+            console.log('in full');
             searchKeywordSelected(searchKeyword, suggestions);
-        } else if (!!searchKeyword) {
-            const link = locale.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
-            window.location.assign(link);
         }
     };
 
     // this is a hack, but I couldnt get getOptionLabel and renderOption
     // working on Autocomplete to return just the course code :(
-    const extractCourseCodeFromBeginningOfDescription = courseDescription => {
-        console.log('extractCourseCodeFromBeginningOfDescription: courseDescription = ', courseDescription);
-        return courseDescription.trim().split(' ')[0];
-    };
+    // const extractCourseCodeFromBeginningOfDescription = courseDescription => {
+    //     console.log('extractCourseCodeFromBeginningOfDescription: courseDescription = ', courseDescription);
+    //     return courseDescription;
+    //     // return courseDescription.trim().split(' ')[0];
+    // };
 
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
             console.log('handleSearchKeywordChange: ', newValue);
-            setSelectedValue(newValue);
-            const selectedValue = displayType.includes('courseresources')
-                ? extractCourseCodeFromBeginningOfDescription(newValue)
-                : newValue;
+            // setSelectedValue(newValue);
+            // const selectedValue = displayType.includes('courseresources')
+            //     ? extractCourseCodeFromBeginningOfDescription(newValue)
+            //     : newValue;
+            // const selectedValue = newValue;
 
-            setSearchKeyword(selectedValue);
-            if (selectedValue.length > 3 && !isRepeatingString(selectedValue)) {
-                if ([searchTypeAll, 1, 3, 4, 5].includes(searchType)) {
-                    actions.loadPrimoSuggestions(selectedValue);
-                } else if (searchType === 7) {
-                    actions.loadExamPaperSuggestions(selectedValue);
-                } else if (searchType === searchTypeCourseResources) {
-                    actions.loadCourseReadingListsSuggestions(selectedValue);
-                }
-                document.getElementById(`${elementId}-autocomplete`).focus();
+            setSearchKeyword(newValue);
+            if (newValue.length > 3 && !isRepeatingString(newValue)) {
+                actions.loadCourseReadingListsSuggestions(newValue);
+                // document.getElementById(`${elementId}-autocomplete`).focus();
             }
         },
-        [actions, searchType, displayType, elementId],
+        [actions],
+        // [actions, elementId],
+        // [actions, displayType, elementId],
     );
 
-    const courseResourceSubjectDisplay = option =>
-        `${option.text} (${option.rest.course_title}, ${option.rest.period})`;
+    const courseResourceSubjectDisplay = option => {
+        console.log('option = ', option);
+        return !!option && !!option.text ? `${option.text} (${option.rest.course_title}, ${option.rest.period})` : '';
+    };
+
+    const optionSelected = (option, value) => {
+        console.log('optionSelected');
+        if (displayType === 'compact') {
+            console.log('option = ', option);
+            // console.log('; searchKeyword = ', searchKeyword);
+            console.log('coursecode = ', option.text);
+            console.log('campus = ', option.rest.campus);
+            console.log('semester = ', option.rest.period);
+
+            if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
+                const course = {
+                    classnumber: option.text,
+                    campus: option.rest.campus,
+                    semester: option.rest.period,
+                };
+                const url = getUrlForCourseResourceSpecificTab(course, pageLocation, false, true);
+                // console.log('would visit ', url);
+                history.push(url);
+                // console.log('history = ', history);
+            }
+        } else {
+            console.log('option = ', option);
+            console.log('value = ', value);
+            // console.log('; searchKeyword = ', searchKeyword);
+            // console.log('coursecode = ', option.text);
+            // console.log('campus = ', option.rest.campus);
+            // console.log('semester = ', option.rest.period);
+            searchKeywordSelected(searchKeyword, suggestions);
+        }
+
+        return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());
+    };
 
     return (
         <StandardCard noPadding noHeader standardCardId={`${elementId}`}>
             <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
-                    {displayType === 'all' && (
-                        <Grid item xs={12} md={'auto'}>
-                            <FormControl style={{ width: '100%' }}>
-                                <InputLabel id={`${elementId}-select-label`} data-testid={`${elementId}-title`}>
-                                    {locale.typeSelect.label}
-                                </InputLabel>
-                                <Select
-                                    labelId={`${elementId}-select-label`}
-                                    id={`${elementId}-select`}
-                                    data-testid={`${elementId}-select`}
-                                    error={!!suggestionsError}
-                                    value={searchType}
-                                    className={classes.selectInput}
-                                    onChange={handleSearchTypeChange}
-                                    MenuProps={{
-                                        'data-testid': `${elementId}-select-list`,
-                                    }}
-                                >
-                                    {locale.typeSelect.items.map((item, index) => (
-                                        <MenuItem value={index} key={index} data-testid={`${elementId}-item-${index}`}>
-                                            {item.icon}&nbsp;{item.name}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </Grid>
-                    )}
                     <Grid item xs={12} sm>
                         <Autocomplete
                             debug // #dev
-                            value={searchKeyword}
-                            freeSolo={displayType === 'all'}
+                            // value={searchKeyword}
                             id={`${elementId}-autocomplete`}
-                            data-testid={`${elementId}-autocomplete`}
-                            disableClearable
-                            openOnFocus
-                            clearOnEscape
-                            options={
-                                (!!suggestions &&
-                                    suggestions
-                                        .filter(option => option.text !== searchKeyword)
-                                        .map(option => {
-                                            return !!option.rest ? courseResourceSubjectDisplay(option) : option.text;
-                                        })) ||
-                                []
-                            }
-                            onInputChange={handleSearchKeywordChange}
-                            ListboxProps={{
-                                'aria-labelledby': `${elementId}-select-label`,
-                                id: `${elementId}-autocomplete-listbox`,
-                                'data-testid': `${elementId}-autocomplete-listbox`,
-                                'aria-label': 'Suggestion list',
+                            // data-testid={`${elementId}-autocomplete`}
+                            // disableClearable
+                            // onChange={(event, value) => console.log(value)}
+                            // openOnFocus
+                            // clearOnEscape
+                            getOptionSelected={(option, value) => {
+                                return optionSelected(option, value);
                             }}
+                            options={(!!suggestions && suggestions) || []}
+                            // options={
+                            //     (!!suggestions &&
+                            //         suggestions
+                            //             .filter(option => option.text !== searchKeyword)
+                            //             .map(option => {
+                            //                 return !!option.rest ? courseResourceSubjectDisplay(option)
+                            //                 : option.text;
+                            //             })) ||
+                            //     []
+                            // }
+                            getOptionLabel={option => courseResourceSubjectDisplay(option)}
+                            onInputChange={handleSearchKeywordChange}
+                            // ListboxProps={{
+                            //     'aria-labelledby': `${elementId}-select-label`,
+                            //     id: `${elementId}-autocomplete-listbox`,
+                            //     'data-testid': `${elementId}-autocomplete-listbox`,
+                            //     'aria-label': 'Suggestion list',
+                            // }}
                             renderInput={params => {
                                 return (
                                     <TextField
                                         {...params}
-                                        placeholder={locale.typeSelect.items[searchType].placeholder}
+                                        placeholder="Enter a course code"
                                         error={!!suggestionsError}
                                         InputProps={{
                                             ...params.InputProps,
@@ -278,35 +277,16 @@ export const PrimoSearch = ({
                             <Grid item xs />
                         </Hidden>
                     )}
-                    {displayType === 'all' &&
-                        locale.links.map((item, index) => {
-                            if (item.display.includes(searchType)) {
-                                return (
-                                    <Grid
-                                        item
-                                        key={index}
-                                        xs={'auto'}
-                                        data-testid={`${elementId}-links-${index}`}
-                                        className={classes.searchUnderlinks}
-                                    >
-                                        <a href={item.link} rel="noreferrer">
-                                            {item.label}
-                                        </a>
-                                    </Grid>
-                                );
-                            } else {
-                                return null;
-                            }
-                        })}
                 </Grid>
             </form>
         </StandardCard>
     );
 };
 
-PrimoSearch.propTypes = {
+CourseResourceSearch.propTypes = {
     displayType: PropTypes.string,
     elementId: PropTypes.string,
+    history: PropTypes.any,
     locale: PropTypes.any,
     option: PropTypes.any,
     searchKeywordSelected: PropTypes.any,
@@ -316,9 +296,9 @@ PrimoSearch.propTypes = {
     actions: PropTypes.any,
 };
 
-PrimoSearch.defaultProps = {
+CourseResourceSearch.defaultProps = {
     displayType: 'all',
-    locale: defaultLocale,
+    // locale: defaultLocale,
 };
 
-export default PrimoSearch;
+export default CourseResourceSearch;

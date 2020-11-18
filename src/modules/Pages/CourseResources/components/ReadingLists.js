@@ -47,6 +47,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
     // we should theoretically only ever have one reading list
     // but handle multiple anyway...
     const renderMultipleReadingListReference = readingLists => {
+        console.log('renderMultipleReadingListReference');
         const coursecode = (!!readingLists && readingLists.length > 0 && readingLists[0].coursecode) || '';
         const chooseListPrompt = coursecode =>
             locale.myCourses.readingLists.error.multiple.replace('[classnumber]', coursecode);
@@ -170,9 +171,12 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                 </Fragment>
                             )}
 
-                        {!readingListError && !readingListLoading && !!readingList && readingList.length > 1 && (
-                            <Grid item>{renderMultipleReadingListReference(readingList)}</Grid>
-                        )}
+                        {!readingListError &&
+                            !readingListLoading &&
+                            !!readingList &&
+                            readingList.reading_lists.length > 1 && (
+                                <Grid item>{renderMultipleReadingListReference(readingList.reading_lists)}</Grid>
+                            )}
 
                         {!readingListError &&
                             !readingListLoading &&

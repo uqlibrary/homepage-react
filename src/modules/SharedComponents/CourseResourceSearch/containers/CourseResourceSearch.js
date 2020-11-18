@@ -2,12 +2,10 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
-import Index from '../components/Index';
+import CourseResourceSearch from '../components/CourseResourceSearch';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('accountReducer'),
-        ...state.get('homeReducer'),
         ...state.get('primoReducer'),
     };
 };
@@ -18,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let IndexContainer = connect(mapStateToProps, mapDispatchToProps)(Index);
-IndexContainer = withRouter(IndexContainer);
+let CourseResearchSearchContainer = connect(mapStateToProps, mapDispatchToProps)(CourseResourceSearch);
+CourseResearchSearchContainer = withRouter(CourseResearchSearchContainer);
 
-export default IndexContainer;
+export default CourseResearchSearchContainer;
