@@ -13,7 +13,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
 import { clearPrimoSuggestions, loadCourseReadingListsSuggestions, loadSpotlights } from 'actions';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from 'modules/Index/components/PrimoSearch/containers/PrimoSearch';
+import HomePageSearch from 'modules/Index/components/HomePageSearch/containers/HomePageSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
@@ -164,7 +164,7 @@ export const Index = ({
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12}>
-                        <PrimoSearch />
+                        <HomePageSearch />
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">

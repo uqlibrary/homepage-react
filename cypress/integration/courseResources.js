@@ -1,6 +1,6 @@
 /* eslint camelcase: 0 */
 import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
-import { primoSearch as searchLocale } from '../../src/modules/Index/components/PrimoSearch/components/primoSearchLocale';
+import { homePageSearch as searchLocale } from '../../src/modules/Index/components/HomePageSearch/components/homePageSearchLocale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';

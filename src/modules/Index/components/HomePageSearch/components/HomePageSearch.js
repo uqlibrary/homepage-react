@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { default as defaultLocale } from './primoSearchLocale';
+import { homePageSearch } from './homePageSearchLocale';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
@@ -66,7 +66,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
+export const HomePageSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -83,7 +83,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     const handleSearchButton = event => {
         event.preventDefault();
         if (!!searchKeyword) {
-            const link = locale.PrimoSearch.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
+            const link = locale.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
             window.location.assign(link);
         }
     };
@@ -111,9 +111,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
                         <FormControl style={{ width: '100%' }}>
-                            <InputLabel id="primo-search-select-label">
-                                {locale.PrimoSearch.typeSelect.label}
-                            </InputLabel>
+                            <InputLabel id="primo-search-select-label">{locale.typeSelect.label}</InputLabel>
                             <Select
                                 labelId="primo-search-select-label"
                                 id="primo-search-select"
@@ -126,7 +124,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                     'data-testid': 'primo-search-select-list',
                                 }}
                             >
-                                {locale.PrimoSearch.typeSelect.items.map((item, index) => (
+                                {locale.typeSelect.items.map((item, index) => (
                                     <MenuItem value={index} key={index} data-testid={`primo-search-item-${index}`}>
                                         {item.icon}&nbsp;{item.name}
                                     </MenuItem>
@@ -161,7 +159,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                                 return (
                                     <TextField
                                         {...params}
-                                        placeholder={locale.PrimoSearch.typeSelect.items[searchType].placeholder}
+                                        placeholder={locale.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{
                                             ...params.InputProps,
@@ -222,7 +220,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Grid item xs />
                         </Hidden>
                     )}
-                    {locale.PrimoSearch.links.map((item, index) => {
+                    {locale.links.map((item, index) => {
                         if (item.display.includes(searchType)) {
                             return (
                                 <Grid
@@ -247,7 +245,7 @@ export const PrimoSearch = ({ locale, suggestions, suggestionsLoading, suggestio
     );
 };
 
-PrimoSearch.propTypes = {
+HomePageSearch.propTypes = {
     locale: PropTypes.any,
     option: PropTypes.any,
     suggestions: PropTypes.any,
@@ -256,8 +254,8 @@ PrimoSearch.propTypes = {
     actions: PropTypes.any,
 };
 
-PrimoSearch.defaultProps = {
-    locale: defaultLocale,
+HomePageSearch.defaultProps = {
+    locale: homePageSearch,
 };
 
-export default PrimoSearch;
+export default HomePageSearch;

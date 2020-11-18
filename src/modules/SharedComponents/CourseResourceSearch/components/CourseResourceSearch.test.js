@@ -1,6 +1,6 @@
-import { isRepeatingString } from './PrimoSearch';
+import { isRepeatingString } from './HomePageSearch';
 
-describe('Component PrimoSearch', () => {
+describe('Component HomePageSearch', () => {
     it('should detect long repeating strings (book-on-keyboard problem)', () => {
         expect(isRepeatingString('PHIL1001')).toBe(false);
         expect(isRepeatingString('the quick brown dog jumped over the lazy dog')).toBe(false);

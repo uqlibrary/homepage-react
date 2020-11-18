@@ -2,10 +2,10 @@ import React from 'react';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 import InfoOutlined from '@material-ui/icons/InfoOutlined';
-import { primoSearch } from 'modules/Index/components/PrimoSearch/components/primoSearchLocale';
+import { homePageSearch } from 'modules/Index/components/HomePageSearch/components/homePageSearchLocale';
 
 export default {
-    PrimoSearch: primoSearch,
+    homePageSearch: homePageSearch,
     LibraryServices: {
         links: [
             {
