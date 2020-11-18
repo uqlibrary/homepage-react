@@ -47,7 +47,8 @@ export const SearchCourseResources = ({
             <Fragment>
                 <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
-                        {searchedSubjects.map((subjectCode, index) => {
+                        {searchedSubjects.map((subjectName, index) => {
+                            const subjectCode = subjectName.substr(0, subjectName.indexOf(' '));
                             return (
                                 <Tab
                                     data-testid={`classtab-${subjectCode}`}
