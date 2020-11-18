@@ -9,14 +9,14 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { getUrlForCourseResourceSpecificTab } from 'modules/Index/components/HomePageCourseResources';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
-import SearchIcon from '@material-ui/icons/Search';
+// import SearchIcon from '@material-ui/icons/Search';
 import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
+// import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(
     theme => ({
@@ -250,22 +250,22 @@ export const CourseResourceSearch = ({
                             <CircularProgress color="primary" size={20} id="loading-suggestions" />
                         </Grid>
                     )}
-                    <Grid item xs={12} md={'auto'}>
-                        <Tooltip title={'Perform your search'}>
-                            <Button
-                                fullWidth
-                                id={`${elementId}-submit`}
-                                data-testid={`${elementId}-submit`}
-                                size={'large'}
-                                variant="contained"
-                                color={'primary'}
-                                onClick={handleSearchButton}
-                                className={classes.searchButton}
-                            >
-                                <SearchIcon />
-                            </Button>
-                        </Tooltip>
-                    </Grid>
+                    {/* <Grid item xs={12} md={'auto'}>*/}
+                    {/*    <Tooltip title={'Perform your search'}>*/}
+                    {/*        <Button*/}
+                    {/*            fullWidth*/}
+                    {/*            id={`${elementId}-submit`}*/}
+                    {/*            data-testid={`${elementId}-submit`}*/}
+                    {/*            size={'large'}*/}
+                    {/*            variant="contained"*/}
+                    {/*            color={'primary'}*/}
+                    {/*            onClick={handleSearchButton}*/}
+                    {/*            className={classes.searchButton}*/}
+                    {/*        >*/}
+                    {/*            <SearchIcon />*/}
+                    {/*        </Button>*/}
+                    {/*    </Tooltip>*/}
+                    {/* </Grid>*/}
                 </Grid>
                 <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
                     {!!suggestionsError ? (
