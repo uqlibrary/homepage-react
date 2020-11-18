@@ -13,7 +13,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
 import { clearPrimoSuggestions, loadCourseReadingListsSuggestions, loadSpotlights } from 'actions';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
+import PrimoSearch from 'modules/Index/components/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
