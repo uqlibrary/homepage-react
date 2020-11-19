@@ -171,29 +171,16 @@ context('Course Resources', () => {
             .should('have.attr', 'href', guideLink);
     }
 
-    function the_user_sees_the_Study_Help_links() {
-        // cy.get('h3[data-testid=standard-card-study-help-header]').contains(locale.studyHelp.title);
-        expect(locale.studyHelp.links).to.be.an('array');
-        expect(locale.studyHelp.links.length).to.not.equals(0);
-        locale.studyHelp.links.map(link => {
-            cy.get(`a#${link.id}`)
-                .contains(link.linkLabel)
-                .should('have.attr', 'href', link.linkTo);
-        });
-    }
-
     function a_subject_loads_course_links_correctly(courseReadingList) {
         const courseCode = courseReadingList.title || 'mock data is missing';
 
-        cy.get('a[data-testid=ecp-FREN1010]')
-            .contains(locale.myCourses.links.ecp.title)
-            .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.ecp.linkOutPattern));
-
-        cy.get('a[data-testid=blackboard-FREN1010]')
-            .contains(locale.myCourses.links.blackboard.title)
-            .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.blackboard.linkOutPattern));
-
-        the_user_sees_the_Study_Help_links();
+        expect(locale.myCourses.courseLinks.links).to.be.an('array');
+        expect(locale.myCourses.courseLinks.links.length).to.not.equals(0);
+        locale.myCourses.courseLinks.links.map(item => {
+            cy.get(`a[data-testid=${item.id}-FREN1010]`)
+                .contains(item.linkLabel)
+                .should('have.attr', 'href', _courseLink(courseCode, item.linkOutPattern));
+        });
     }
 
     function a_user_can_use_the_search_bar_to_load_a_subject(courseReadingList, searchSuggestions) {

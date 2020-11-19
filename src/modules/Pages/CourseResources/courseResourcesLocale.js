@@ -10,24 +10,6 @@ export default {
     search: {
         title: 'Course search',
     },
-    studyHelp: {
-        title: 'Study Help',
-        unavailable: 'No resources right now',
-        links: [
-            {
-                icon: <InfoIcon style={{ marginRight: 6 }} />,
-                id: 'libraryTraining',
-                linkLabel: 'Library training',
-                linkTo: 'https://web.library.uq.edu.au/library-services/training',
-            },
-        ],
-        legalResearchEssentials: {
-            icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
-            id: 'legalResearchEssentials',
-            linkLabel: 'Legal Research Essentials',
-            linkTo: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
-        },
-    },
     notesTrimLength: 90,
     myCourses: {
         title: 'My courses',
@@ -90,15 +72,34 @@ export default {
             },
             visibleItemsCount: 3,
         },
-        links: {
+        courseLinks: {
             title: 'Course links',
-            blackboard: {
-                title: 'Learn.UQ (Blackboard)',
-                linkOutPattern: 'https://learn.uq.edu.au/[courseCode]',
-            },
-            ecp: {
-                title: 'Electronic Course Profile',
-                linkOutPattern: 'https://www.uq.edu.au/study/course.html?course_code=[courseCode]',
+            links: [
+                {
+                    icon: <SpacedArrowForwardIcon />,
+                    id: 'blackboard',
+                    linkLabel: 'Learn.UQ (Blackboard)',
+                    linkOutPattern: 'https://learn.uq.edu.au/[courseCode]',
+                },
+                {
+                    icon: <SpacedArrowForwardIcon />,
+                    id: 'ecp',
+                    linkLabel: 'Electronic Course Profile',
+                    linkOutPattern: 'https://www.uq.edu.au/study/course.html?course_code=[courseCode]',
+                },
+                {
+                    icon: <InfoIcon style={{ marginRight: 6 }} />,
+                    id: 'library-training',
+                    linkLabel: 'Library training',
+                    linkOutPattern: 'https://web.library.uq.edu.au/library-services/training',
+                },
+            ],
+            legalResearchEssentials: {
+                // displays with list above, but for LAWS subjects only
+                icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
+                id: 'legalResearchEssentials',
+                linkLabel: 'Legal Research Essentials',
+                linkOutPattern: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
             },
         },
     },

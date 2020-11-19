@@ -88,6 +88,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                                 >
                                     <a
                                         // on-tap="linkClicked"
+                                        data-testid={item.id || null}
                                         id={item.id || null}
                                         href={item.linkTo}
                                     >
