@@ -44,6 +44,7 @@ export const HomePageCourseResources = ({
         <StandardCard
             fullHeight
             accentHeader
+            noPadding
             title={
                 <Grid container>
                     <Grid item xs>
@@ -69,7 +70,7 @@ export const HomePageCourseResources = ({
                         marginTop: 4,
                         marginBottom: -24,
                         marginLeft: -16,
-                        padding: '0 8px 8px 8px',
+                        padding: '0 24px 8px',
                     }}
                 >
                     <Grid container spacing={1} style={{ marginTop: 12, marginLeft: 4 }}>

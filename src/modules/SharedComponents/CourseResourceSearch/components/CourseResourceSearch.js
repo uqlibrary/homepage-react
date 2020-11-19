@@ -5,7 +5,6 @@ import { PropTypes } from 'prop-types';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { getUrlForCourseResourceSpecificTab } from 'modules/Index/components/HomePageCourseResources';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -177,109 +176,103 @@ export const CourseResourceSearch = ({
     };
 
     return (
-        <StandardCard noPadding noHeader standardCardId={`${elementId}`}>
-            <form onSubmit={handleSearchButton}>
-                <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
-                    <Grid item xs={12} sm>
-                        <Autocomplete
-                            debug // #dev
-                            // value={searchKeyword}
-                            id={`${elementId}-autocomplete`}
-                            // data-testid={`${elementId}-autocomplete`}
-                            // disableClearable
-                            // onChange={(event, value) => console.log(value)}
-                            // openOnFocus
-                            // clearOnEscape
-                            getOptionSelected={(option, value) => {
-                                return optionSelected(option, value);
-                            }}
-                            options={(!!suggestions && suggestions) || []}
-                            // options={
-                            //     (!!suggestions &&
-                            //         suggestions
-                            //             .filter(option => option.text !== searchKeyword)
-                            //             .map(option => {
-                            //                 return !!option.rest ? courseResourceSubjectDisplay(option)
-                            //                 : option.text;
-                            //             })) ||
-                            //     []
-                            // }
-                            getOptionLabel={option => courseResourceSubjectDisplay(option)}
-                            onInputChange={handleSearchKeywordChange}
-                            // ListboxProps={{
-                            //     'aria-labelledby': `${elementId}-select-label`,
-                            //     id: `${elementId}-autocomplete-listbox`,
-                            //     'data-testid': `${elementId}-autocomplete-listbox`,
-                            //     'aria-label': 'Suggestion list',
-                            // }}
-                            renderInput={params => {
-                                return (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Enter a course code"
-                                        error={!!suggestionsError}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            type: 'search',
-                                            classes: {
-                                                input: classes.selectInput,
-                                            },
-                                        }}
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            'aria-label': 'Enter your search terms',
-                                            'data-testid': `${elementId}-autocomplete-input`,
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
-                    </Grid>
-                    <Grid item xs={'auto'} style={{ width: 90, marginLeft: -70, marginRight: -20, marginBottom: 6 }}>
-                        <VoiceToText
-                            sendHandler={handleSearchKeywordChange}
-                            clearSuggestions={handleClearSuggestions}
-                        />
-                    </Grid>
-                    {suggestionsLoading && (
-                        <Grid
-                            item
-                            xs={'auto'}
-                            style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
-                        >
-                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
-                        </Grid>
-                    )}
-                    {/* <Grid item xs={12} md={'auto'}>*/}
-                    {/*    <Tooltip title={'Perform your search'}>*/}
-                    {/*        <Button*/}
-                    {/*            fullWidth*/}
-                    {/*            id={`${elementId}-submit`}*/}
-                    {/*            data-testid={`${elementId}-submit`}*/}
-                    {/*            size={'large'}*/}
-                    {/*            variant="contained"*/}
-                    {/*            color={'primary'}*/}
-                    {/*            onClick={handleSearchButton}*/}
-                    {/*            className={classes.searchButton}*/}
-                    {/*        >*/}
-                    {/*            <SearchIcon />*/}
-                    {/*        </Button>*/}
-                    {/*    </Tooltip>*/}
-                    {/* </Grid>*/}
+        <form onSubmit={handleSearchButton}>
+            <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
+                <Grid item xs={12} sm>
+                    <Autocomplete
+                        // value={searchKeyword}
+                        id={`${elementId}-autocomplete`}
+                        // data-testid={`${elementId}-autocomplete`}
+                        // disableClearable
+                        // onChange={(event, value) => console.log(value)}
+                        // openOnFocus
+                        // clearOnEscape
+                        getOptionSelected={(option, value) => {
+                            return optionSelected(option, value);
+                        }}
+                        options={(!!suggestions && suggestions) || []}
+                        // options={
+                        //     (!!suggestions &&
+                        //         suggestions
+                        //             .filter(option => option.text !== searchKeyword)
+                        //             .map(option => {
+                        //                 return !!option.rest ? courseResourceSubjectDisplay(option)
+                        //                 : option.text;
+                        //             })) ||
+                        //     []
+                        // }
+                        getOptionLabel={option => courseResourceSubjectDisplay(option)}
+                        onInputChange={handleSearchKeywordChange}
+                        // ListboxProps={{
+                        //     'aria-labelledby': `${elementId}-select-label`,
+                        //     id: `${elementId}-autocomplete-listbox`,
+                        //     'data-testid': `${elementId}-autocomplete-listbox`,
+                        //     'aria-label': 'Suggestion list',
+                        // }}
+                        renderInput={params => {
+                            return (
+                                <TextField
+                                    {...params}
+                                    placeholder="Enter a course code"
+                                    error={!!suggestionsError}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                        classes: {
+                                            input: classes.selectInput,
+                                        },
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        'aria-label': 'Enter your search terms',
+                                        'data-testid': `${elementId}-autocomplete-input`,
+                                    }}
+                                />
+                            );
+                        }}
+                    />
                 </Grid>
-                <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
-                    {!!suggestionsError ? (
-                        <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
-                            <span>Autocomplete suggestions unavailable</span>
-                        </Grid>
-                    ) : (
-                        <Hidden smDown>
-                            <Grid item xs />
-                        </Hidden>
-                    )}
+                <Grid item xs={'auto'} style={{ width: 90, marginLeft: -70, marginRight: -20, marginBottom: 6 }}>
+                    <VoiceToText sendHandler={handleSearchKeywordChange} clearSuggestions={handleClearSuggestions} />
                 </Grid>
-            </form>
-        </StandardCard>
+                {suggestionsLoading && (
+                    <Grid
+                        item
+                        xs={'auto'}
+                        style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
+                    >
+                        <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                    </Grid>
+                )}
+                {/* <Grid item xs={12} md={'auto'}>*/}
+                {/*    <Tooltip title={'Perform your search'}>*/}
+                {/*        <Button*/}
+                {/*            fullWidth*/}
+                {/*            id={`${elementId}-submit`}*/}
+                {/*            data-testid={`${elementId}-submit`}*/}
+                {/*            size={'large'}*/}
+                {/*            variant="contained"*/}
+                {/*            color={'primary'}*/}
+                {/*            onClick={handleSearchButton}*/}
+                {/*            className={classes.searchButton}*/}
+                {/*        >*/}
+                {/*            <SearchIcon />*/}
+                {/*        </Button>*/}
+                {/*    </Tooltip>*/}
+                {/* </Grid>*/}
+            </Grid>
+            <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
+                {!!suggestionsError ? (
+                    <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
+                        <span>Autocomplete suggestions unavailable</span>
+                    </Grid>
+                ) : (
+                    <Hidden smDown>
+                        <Grid item xs />
+                    </Hidden>
+                )}
+            </Grid>
+        </form>
     );
 };
 

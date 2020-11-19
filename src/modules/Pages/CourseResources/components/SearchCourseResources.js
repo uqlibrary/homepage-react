@@ -2,15 +2,16 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { TabPanel } from './TabPanel';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { makeStyles } from '@material-ui/styles';
-import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const useStyles = makeStyles(
     theme => ({
@@ -118,15 +119,17 @@ export const SearchCourseResources = ({
     };
 
     return (
-        <Grid item xs={12} id="courseresource-search">
-            <CourseResourceSearch
-                displayType="full"
-                elementId="full-courseresource"
-                history={history}
-                searchKeywordSelected={searchKeywordSelected}
-            />
-            {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
-        </Grid>
+        <StandardCard noPadding noHeader standardCardId="full-courseresource">
+            <Grid item xs={12} id="courseresource-search">
+                <CourseResourceSearch
+                    displayType="full"
+                    elementId="full-courseresource"
+                    history={history}
+                    searchKeywordSelected={searchKeywordSelected}
+                />
+                {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
+            </Grid>
+        </StandardCard>
     );
 };
 
