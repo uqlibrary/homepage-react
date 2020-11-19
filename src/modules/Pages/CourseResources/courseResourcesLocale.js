@@ -27,18 +27,18 @@ export default {
                 linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
             },
             {
-                icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
-                id: 'legalResearchEssentials',
-                linkLabel: 'Legal Research Essentials',
-                linkTo: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
-            },
-            {
                 icon: <InfoIcon style={{ marginRight: 6 }} />,
                 id: 'libraryTraining',
                 linkLabel: 'Library training',
                 linkTo: 'https://web.library.uq.edu.au/library-services/training',
             },
         ],
+        legalResearchEssentials: {
+            icon: <CourtHouseIcon style={{ marginRight: 6 }} />,
+            id: 'legalResearchEssentials',
+            linkLabel: 'Legal Research Essentials',
+            linkTo: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
+        },
     },
     visibleItemsCount: {
         // max number of items of each type we should display

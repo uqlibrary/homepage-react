@@ -225,40 +225,6 @@ export const CourseResources = ({
         }
     }, [account, actions]);
 
-    const renderStudyHelpLinks = (
-        <Grid container alignContent={'space-between'} className={classes.studyLinks}>
-            <Grid item xs={12}>
-                <StandardCard title={locale.studyHelp.title}>
-                    <Grid container spacing={2}>
-                        {!!locale.studyHelp.links &&
-                            locale.studyHelp.links.length > 0 &&
-                            locale.studyHelp.links.map((item, index) => {
-                                return item.linkTo && item.linkLabel ? (
-                                    <Grid
-                                        item
-                                        className={classes.courseResourceLineItem}
-                                        key={`studylink-${index}`}
-                                        xs={12}
-                                    >
-                                        <a
-                                            // on-tap="linkClicked"
-                                            id={item.id || null}
-                                            href={item.linkTo}
-                                        >
-                                            {!!item.icon && item.icon}
-                                            {item.linkLabel}
-                                        </a>
-                                    </Grid>
-                                ) : (
-                                    <Typography>{locale.studyHelp.unavailable}</Typography>
-                                );
-                            })}
-                    </Grid>
-                </StandardCard>
-            </Grid>
-        </Grid>
-    );
-
     const renderSubjectTabBody = subject => {
         const coursecode = subject.classnumber || null;
 
@@ -327,7 +293,6 @@ export const CourseResources = ({
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
                                     <Tab value="top0" label={locale.myCourses.title} {...a11yProps('0')} />
                                     <Tab value="top1" label={locale.search.title} {...a11yProps('1')} />
-                                    <Tab value="top2" label={locale.studyHelp.title} {...a11yProps('2')} />
                                 </Tabs>
                             </AppBar>
 
@@ -357,15 +322,6 @@ export const CourseResources = ({
                                     // setDisplayType={setDisplayType}
                                     updateSearchList={updateSearchList}
                                 />
-                            </TabPanel>
-                            <TabPanel
-                                value={topmenu}
-                                index="top2"
-                                tabId="topmenu"
-                                label="topmenu"
-                                {...reverseA11yProps('2')}
-                            >
-                                {renderStudyHelpLinks}
                             </TabPanel>
                         </Grid>
                     </Grid>

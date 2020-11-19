@@ -26,6 +26,8 @@ const useStyles = makeStyles(
 
 export const SubjectLinks = ({ subject }) => {
     const classes = useStyles();
+    subject.classnumber.startsWith('LAWS') && locale.studyHelp.links.push(locale.studyHelp.legalResearchEssentials);
+
     return (
         <StandardCard fullHeight title={locale.myCourses.links.title}>
             <Grid container className={'CourseLinks'}>
@@ -49,6 +51,30 @@ export const SubjectLinks = ({ subject }) => {
                         {locale.myCourses.links.blackboard.title}
                     </a>
                 </Grid>
+                {!!locale.studyHelp.links &&
+                    locale.studyHelp.links.length > 0 &&
+                    locale.studyHelp.links.map((item, index) => {
+                        return (
+                            item.linkTo &&
+                            item.linkLabel && (
+                                <Grid
+                                    item
+                                    className={classes.courseResourceLineItem}
+                                    key={`studylink-${index}`}
+                                    xs={12}
+                                >
+                                    <a
+                                        // on-tap="linkClicked"
+                                        id={item.id || null}
+                                        href={item.linkTo}
+                                    >
+                                        {!!item.icon && item.icon}
+                                        {item.linkLabel}
+                                    </a>
+                                </Grid>
+                            )
+                        );
+                    })}
             </Grid>
         </StandardCard>
     );
