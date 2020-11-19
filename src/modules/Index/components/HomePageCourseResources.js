@@ -26,14 +26,7 @@ export const getUrlForCourseResourceSpecificTab = (
         : `${prefix}?${courseResourceParams}`;
 };
 
-export const HomePageCourseResources = ({
-    account,
-    // loadCourseReadingListsSuggestions,
-    // clearPrimoSuggestions,
-    // suggestions,
-    // suggestionsLoading,
-    // suggestionsError,
-}) => {
+export const HomePageCourseResources = ({ account }) => {
     const pageLocation = useLocation();
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
@@ -70,7 +63,7 @@ export const HomePageCourseResources = ({
                         marginTop: 4,
                         marginBottom: -24,
                         marginLeft: -16,
-                        padding: '0 24px 8px',
+                        padding: '0 30px 8px',
                     }}
                 >
                     <Grid container spacing={1} style={{ marginTop: 12, marginLeft: 4 }}>
@@ -104,12 +97,6 @@ export const HomePageCourseResources = ({
 
 HomePageCourseResources.propTypes = {
     account: PropTypes.object,
-    loadCourseReadingListsSuggestions: PropTypes.func,
-    clearPrimoSuggestions: PropTypes.func,
-    // searchKeywordSelected: PropTypes.any,
-    suggestions: PropTypes.any,
-    suggestionsLoading: PropTypes.bool,
-    suggestionsError: PropTypes.string,
 };
 
 export default HomePageCourseResources;
