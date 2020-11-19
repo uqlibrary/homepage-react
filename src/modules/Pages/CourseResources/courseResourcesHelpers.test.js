@@ -1,4 +1,4 @@
-import { _pluralise, _courseLink, a11yProps, reverseA11yProps } from './courseResourcesHelpers';
+import { _pluralise, _courseLink, a11yProps, reverseA11yProps, extractSubjectCodeFromName } from './courseResourcesHelpers';
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {
@@ -28,5 +28,9 @@ describe('filterProps helper', () => {
 
         const a11yReverseProps2 = reverseA11yProps(1);
         expect(a11yReverseProps2.id).toEqual('topmenu-panel-1');
+    });
+
+    it('should extract a subject code from a subject name', () => {
+        expect(extractSubjectCodeFromName('CRIM1019 - Introduction to Criminal Justice')).toEqual('CRIM1019');
     });
 });

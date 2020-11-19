@@ -44,23 +44,27 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
         setCurrentMenuTab(subjectTabId);
     };
 
-    React.useEffect(() => {
+    const loadSelectedSubject = React.useCallback(preselectedCourse => {
         let preselectedSubjectTab = null;
-        if (!!preselectedCourse.coursecode) {
-            account.current_classes.map((item, index) => {
-                if (
-                    item.classnumber === preselectedCourse.coursecode &&
-                    getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
-                    item.semester === preselectedCourse.semester
-                ) {
-                    preselectedSubjectTab = `${courseTabLabel}-${index}`;
-                }
-            });
-            if (preselectedSubjectTab !== null) {
-                setCurrentMenuTab(preselectedSubjectTab);
+        account.current_classes.map((item, index) => {
+            if (
+                item.classnumber === preselectedCourse.coursecode &&
+                getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
+                item.semester === preselectedCourse.semester
+            ) {
+                preselectedSubjectTab = `${courseTabLabel}-${index}`;
             }
+        });
+        if (preselectedSubjectTab !== null) {
+            setCurrentMenuTab(preselectedSubjectTab);
         }
-    }, [preselectedCourse, account]);
+    });
+
+    React.useEffect(() => {
+        if (!!preselectedCourse.coursecode) {
+            loadSelectedSubject(preselectedCourse);
+        }
+    }, [preselectedCourse]); // run once on load
 
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (

@@ -9,7 +9,7 @@ export function loadGuides(keyword) {
         dispatch({ type: actions.GUIDES_LOADING });
         return get(GUIDES_API({ keyword }))
             .then(data => {
-                console.log('fetched GUIDES_API: ', data);
+                console.log('fetched GUIDES_API for ', keyword, ': ', data);
                 const updatedData = data.map(subject => {
                     subject.coursecode = keyword;
                     return subject;
@@ -122,6 +122,11 @@ export function loadReadingLists(coursecode, campus, semester, account) {
             });
         }
     };
+
+    if (coursecode.length !== 8 && coursecode.length !== 9) {
+        // coursecodes have a length of 8 eg FREN1101, with a small number of weird outliers with 9
+        return false;
+    }
 
     console.log('will load loadReadingLists for ', READING_LIST_API({ coursecode, campus, semester }));
     return dispatch => {

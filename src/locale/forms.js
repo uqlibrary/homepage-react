@@ -116,7 +116,7 @@ export default {
                 title: 'Error',
                 message: message =>
                     `Error has occurred during request and request cannot be processed. ${message}` +
-                    'Please contact eSpace administrators or try again later.',
+                    'Please contact webmaster@library.uq.edu.au or try again later.',
                 incompleteData:
                     'The selected source has incomplete data. You will need to ADD A MISSING ' +
                     'RECORD and enter the information manually.',
@@ -240,7 +240,7 @@ export default {
                 type: 'error_outline',
                 title: 'Error',
                 message: message =>
-                    `Error has occurred during request and request cannot be processed. ${message} Please contact eSpace administrators or try again later.`,
+                    `Error has occurred during request and request cannot be processed. ${message} Please contact webmaster@library.uq.edu.au or try again later.`,
             },
             progressAlert: {
                 type: 'info_outline',
@@ -281,7 +281,7 @@ export default {
                 type: 'error_outline',
                 title: 'Error',
                 message: message =>
-                    `Error has occurred during request and request cannot be processed. ${message} Please contact eSpace administrators or try again later.`,
+                    `Error has occurred during request and request cannot be processed. ${message} Please contact webmaster@library.uq.edu.au or try again later.`,
             },
             progressAlert: {
                 type: 'info_outline',

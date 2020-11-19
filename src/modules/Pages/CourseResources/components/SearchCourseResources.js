@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { TabPanel } from './TabPanel';
-import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
@@ -49,7 +49,7 @@ export const SearchCourseResources = ({
                 <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
                         {searchedSubjects.map((subjectName, index) => {
-                            const subjectCode = subjectName.substr(0, subjectName.indexOf(' '));
+                            const subjectCode = extractSubjectCodeFromName(subjectName);
                             return (
                                 <Tab
                                     data-testid={`classtab-${subjectCode}`}
@@ -97,12 +97,8 @@ export const SearchCourseResources = ({
     // };
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
-        console.log('searchKeyword = ', searchKeyword);
-        console.log('suggestions = ', suggestions);
         let tabId;
-        // setKeywordPresets(getPresetData(searchKeyword, suggestions));
 
-        // setDisplayType('searchresults');
         const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
         const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';

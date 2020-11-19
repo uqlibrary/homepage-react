@@ -117,11 +117,13 @@ export const CourseResources = ({
             }
 
             if (!currentReadingLists[classnumber]) {
+                const firstClass =
+                    !!account.current_classes && account.current_classes.length > 0 && account.current_classes[0];
                 !!classnumber &&
                     actions.loadReadingLists(
                         classnumber,
-                        campus || getCampusByCode(account.current_classes[0].CAMPUS),
-                        semester || account.current_classes[0].semester,
+                        campus || (!!firstClass.CAMPUS && getCampusByCode(firstClass.CAMPUS)) || '',
+                        semester || (!!firstClass.semester && firstClass.semester) || '',
                         account,
                     );
             }

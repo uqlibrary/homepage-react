@@ -13,6 +13,7 @@ import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
+import { extractSubjectCodeFromName } from 'modules/Pages/CourseResources/courseResourcesHelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -113,7 +114,7 @@ export const CourseResourceSearch = ({
                 history.push(url);
             }
         } else {
-            searchKeywordSelected(searchKeyword, suggestions);
+            searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
         }
 
         return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());

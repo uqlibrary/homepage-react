@@ -26,3 +26,5 @@ export const reverseA11yProps = (index, classname = null) => {
         'aria-labelledby': a11yId(label, index),
     };
 };
+
+export const extractSubjectCodeFromName = subjectName => subjectName.trim().split(' ')[0];

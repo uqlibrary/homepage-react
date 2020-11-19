@@ -89,13 +89,13 @@ export default {
             422: {
                 message:
                     'Error has occurred during request and request cannot be processed. Please contact ' +
-                    'eSpace administrators or try again later.',
+                    'webmaster@library.uq.edu.au or try again later.',
                 status: 500,
             },
             500: {
                 message:
                     'Error has occurred during request and request cannot be processed. Please contact ' +
-                    'eSpace administrators or try again later.',
+                    'webmaster@library.uq.edu.au or try again later.',
                 status: 500,
             },
             generic:
