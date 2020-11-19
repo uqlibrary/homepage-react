@@ -3,6 +3,7 @@ import React, { Fragment } from 'react';
 import DocumentIcon from '@material-ui/icons/Description';
 import InfoIcon from '@material-ui/icons/ErrorOutline';
 import CourtHouseIcon from '@material-ui/icons/AccountBalance';
+import { SpacedArrowForwardIcon } from './components/SpacedArrowForwardIcon';
 
 export default {
     title: 'Course Resources',
@@ -13,12 +14,6 @@ export default {
         title: 'Study Help',
         unavailable: 'No resources right now',
         links: [
-            {
-                icon: <DocumentIcon style={{ marginRight: 6 }} />,
-                id: 'referencingGuides',
-                linkLabel: 'Referencing guides',
-                linkTo: 'https://guides.library.uq.edu.au/referencing',
-            },
             {
                 icon: <InfoIcon style={{ marginRight: 6 }} />,
                 id: 'libraryTraining',
@@ -82,8 +77,20 @@ export default {
             none: 'No Library guides for this course',
             unavailable: 'Library guides list currently unavailable',
             footer: {
-                linkOut: 'https://guides.library.uq.edu.au',
-                linkLabel: 'All library guides',
+                links: [
+                    {
+                        icon: <DocumentIcon style={{ marginRight: 6 }} />,
+                        id: 'referencingGuides',
+                        linkLabel: 'Referencing guides',
+                        linkTo: 'https://guides.library.uq.edu.au/referencing',
+                    },
+                    {
+                        icon: <SpacedArrowForwardIcon />,
+                        id: 'all-guides',
+                        linkLabel: 'All library guides',
+                        linkTo: 'https://guides.library.uq.edu.au',
+                    },
+                ],
             },
         },
         links: {
