@@ -124,6 +124,8 @@ export const CourseResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
+                        debug
+                        data-testid={`${elementId}-autocomplete`}
                         id={`${elementId}-autocomplete`}
                         getOptionSelected={(option, value) => {
                             return optionSelected(option, value);

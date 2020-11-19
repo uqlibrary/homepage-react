@@ -35,12 +35,6 @@ context('Course Resources', () => {
             .click();
     }
 
-    function the_user_clicks_on_the_Study_Help_tab() {
-        cy.get('button#topmenu-2')
-            .contains(locale.studyHelp.title)
-            .click();
-    }
-
     function readingListLength(courseReadingList) {
         return (
             (!!courseReadingList.reading_lists &&
@@ -174,6 +168,17 @@ context('Course Resources', () => {
             .should('have.attr', 'href', guideLink);
     }
 
+    function the_user_sees_the_Study_Help_links() {
+        // cy.get('h3[data-testid=standard-card-study-help-header]').contains(locale.studyHelp.title);
+        expect(locale.studyHelp.links).to.be.an('array');
+        expect(locale.studyHelp.links.length).to.not.equals(0);
+        locale.studyHelp.links.map(link => {
+            cy.get(`a#${link.id}`)
+                .contains(link.linkLabel)
+                .should('have.attr', 'href', link.linkTo);
+        });
+    }
+
     function a_subject_loads_course_links_correctly(courseReadingList) {
         const courseCode = courseReadingList.title || 'mock data is missing';
 
@@ -184,6 +189,8 @@ context('Course Resources', () => {
         cy.get('a[data-testid=blackboard-FREN1010]')
             .contains(locale.myCourses.links.blackboard.title)
             .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.links.blackboard.linkOutPattern));
+
+        the_user_sees_the_Study_Help_links();
     }
 
     function a_user_can_use_the_search_bar_to_load_a_subject(courseReadingList, searchSuggestions) {
@@ -193,14 +200,14 @@ context('Course Resources', () => {
             })
             .pop();
 
-        cy.get('div[data-testid=primo-search-autocomplete] input')
+        cy.get('div[data-testid=full-courseresource-autocomplete] input')
             .should('exist')
             .type('FREN');
-        cy.get('[data-testid="primo-search-autocomplete"]').click();
-        cy.get('li#primo-search-autocomplete-option-0')
+        cy.get('[data-testid="full-courseresource-autocomplete"]').click();
+        cy.get('li#full-courseresource-autocomplete-option-0')
             .contains(`${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.period}`)
             .click();
-        cy.get('button[data-testid=primo-search-submit]').click();
+        // cy.get('button[data-testid=full-courseresource-submit]').click();
         cy.get('div[data-testid=classpanel-0] h3').contains(courseReadingList.course_title);
     }
 
@@ -214,22 +221,11 @@ context('Course Resources', () => {
                 return obj.name === 'Course reading lists';
             })
             .pop();
-        cy.get('div[data-testid=primo-search-autocomplete] input').should(
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
             'have.attr',
             'placeholder',
             courseResourceSearchParams.placeholder,
         );
-    }
-
-    function the_user_sees_the_Study_Help_links() {
-        cy.get('h3[data-testid=standard-card-study-help-header]').contains(locale.studyHelp.title);
-        expect(locale.studyHelp.links).to.be.an('array');
-        expect(locale.studyHelp.links.length).to.not.equals(0);
-        locale.studyHelp.links.map(link => {
-            cy.get(`a#${link.id}`)
-                .contains(link.linkLabel)
-                .should('have.attr', 'href', link.linkTo);
-        });
     }
 
     function click_on_a_subject_tab(panelNumber, courseReadingList) {
@@ -301,10 +297,6 @@ context('Course Resources', () => {
         // next tab
         the_user_clicks_on_the_Search_tab();
         the_user_sees_the_search_form();
-
-        // next tab
-        the_user_clicks_on_the_Study_Help_tab();
-        the_user_sees_the_Study_Help_links();
     });
 
     it('User without classes', () => {
