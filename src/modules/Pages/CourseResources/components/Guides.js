@@ -57,7 +57,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                     !guideListLoading &&
                     !!guideList &&
                     guideList.length > 0 &&
-                    guideList.slice(0, locale.visibleItemsCount.libGuides).map((guide, index) => {
+                    guideList.slice(0, locale.myCourses.guides.visibleItemsCount).map((guide, index) => {
                         return (
                             <Grid item xs={12} className={classes.courseResourceLineItem} key={`guides-${index}`}>
                                 <a

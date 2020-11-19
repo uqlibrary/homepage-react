@@ -77,7 +77,8 @@ context('Course Resources', () => {
             `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`,
         );
 
-        const numberExcessReadingLists = readingListLength(courseReadingList) - locale.visibleItemsCount.readingLists;
+        const numberExcessReadingLists =
+            readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
         cy.get('div[data-testid=reading-list-more-link] a')
             .contains(`${numberExcessReadingLists} more items`)
             .should('have.attr', 'href', readingListLink);
@@ -118,7 +119,7 @@ context('Course Resources', () => {
         cy.get('.exams a')
             .contains(`${examPeriod} (${examPaperLink.slice(-3)})`)
             .should('have.attr', 'href', examPaperLink);
-        const numberExcessExams = examPapers.list.length - locale.visibleItemsCount.examPapers;
+        const numberExcessExams = examPapers.list.length - locale.myCourses.examPapers.visibleItemsCount;
         cy.get('div[data-testid=exam-more-link] a')
             .contains(
                 locale.myCourses.examPapers.morePastExams
@@ -143,7 +144,9 @@ context('Course Resources', () => {
 
         const numGuides = guidesList.length - 1;
         const numGuidesVisible =
-            numGuides > locale.visibleItemsCount.libGuides ? locale.visibleItemsCount.libGuides : numGuides;
+            numGuides > locale.myCourses.guides.visibleItemsCount
+                ? locale.myCourses.guides.visibleItemsCount
+                : numGuides;
         guidesList.map((guide, index) => {
             const guideTitle = guide.title || 'mock data is missing';
             const guideLink = guide.url || 'mock data is missing';

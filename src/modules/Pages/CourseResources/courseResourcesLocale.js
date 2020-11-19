@@ -28,12 +28,6 @@ export default {
             linkTo: 'https://web.library.uq.edu.au/library-services/training/legal-research-essentials',
         },
     },
-    visibleItemsCount: {
-        // max number of items of each type we should display
-        readingLists: 2,
-        examPapers: 2,
-        libGuides: 3,
-    },
     notesTrimLength: 90,
     myCourses: {
         title: 'My courses',
@@ -61,6 +55,7 @@ export default {
             footer: {
                 linkLabel: '[numberExcessReadingLists] more [readingListNumber]',
             },
+            visibleItemsCount: 2,
         },
         examPapers: {
             title: 'Past exam papers',
@@ -71,6 +66,7 @@ export default {
                 linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',
                 linkLabel: 'Search for other exam papers',
             },
+            visibleItemsCount: 2,
         },
         guides: {
             title: 'Library guides',
@@ -92,6 +88,7 @@ export default {
                     },
                 ],
             },
+            visibleItemsCount: 3,
         },
         links: {
             title: 'Course links',

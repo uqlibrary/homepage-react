@@ -38,8 +38,8 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
     const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : false;
 
     const numberExcessExams =
-        !!listOfExams && listOfExams.length > locale.visibleItemsCount.examPapers
-            ? listOfExams.length - locale.visibleItemsCount.examPapers
+        !!listOfExams && listOfExams.length > locale.myCourses.examPapers.visibleItemsCount
+            ? listOfExams.length - locale.myCourses.examPapers.visibleItemsCount
             : 0;
 
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
@@ -74,7 +74,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
                 )}
                 {!!listOfExams &&
                     listOfExams.length > 0 &&
-                    listOfExams.slice(0, locale.visibleItemsCount.examPapers).map((paper, index) => {
+                    listOfExams.slice(0, locale.myCourses.examPapers.visibleItemsCount).map((paper, index) => {
                         return (
                             <Grid item xs={12} key={`examPapers-${index}`} className={classes.courseResourceLineItem}>
                                 <a

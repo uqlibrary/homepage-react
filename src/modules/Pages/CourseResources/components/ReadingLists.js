@@ -101,8 +101,8 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
     };
 
     const numberExcessReadingLists =
-        singleReadingListLength(readingList) > locale.visibleItemsCount.readingLists
-            ? singleReadingListLength(readingList) - locale.visibleItemsCount.readingLists
+        singleReadingListLength(readingList) > locale.myCourses.readingLists.visibleItemsCount
+            ? singleReadingListLength(readingList) - locale.myCourses.readingLists.visibleItemsCount
             : 0;
 
     const singleReadingListLengthTitle = readingList =>
@@ -188,7 +188,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                             !!readingList.reading_lists[0].list.length > 0 &&
                             readingList.reading_lists[0].list
                                 // we only show a small number - theres a link to viewall on Talis if there are more
-                                .slice(0, locale.visibleItemsCount.readingLists)
+                                .slice(0, locale.myCourses.readingLists.visibleItemsCount)
                                 .map((list, index) => {
                                     return (
                                         <Grid
