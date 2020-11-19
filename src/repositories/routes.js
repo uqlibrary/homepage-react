@@ -307,5 +307,5 @@ export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keywor
 export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
 export const READING_LIST_API = ({ coursecode, campus, semester }) => ({
-    apiUrl: encodeURIComponent(`course_resources/${coursecode}/${campus}/${semester}/reading_list`),
+    apiUrl: `course_resources/${coursecode}/${encodeURIComponent(campus)}/${encodeURIComponent(semester)}/reading_list`,
 });
