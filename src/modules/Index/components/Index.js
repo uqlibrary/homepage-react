@@ -13,7 +13,7 @@ import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
 import { clearPrimoSuggestions, loadCourseReadingListsSuggestions, loadSpotlights } from 'actions';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import HomePageSearch from 'modules/Index/components/HomePageSearch/containers/HomePageSearch';
+import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
@@ -37,7 +37,7 @@ import { makeStyles } from '@material-ui/styles';
 import Badge from '@material-ui/core/Badge';
 import { Location } from 'modules/SharedComponents/Location';
 import { useCookies } from 'react-cookie';
-import HomePageCourseResources from './HomePageCourseResources';
+import CourseResourcesPanel from './CourseResourcesPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -164,7 +164,7 @@ export const Index = ({
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12}>
-                        <HomePageSearch />
+                        <SearchPanel />
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
@@ -656,7 +656,7 @@ export const Index = ({
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <HomePageCourseResources
+                            <CourseResourcesPanel
                                 account={account}
                                 clearPrimoSuggestions={clearPrimoSuggestions}
                                 loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}

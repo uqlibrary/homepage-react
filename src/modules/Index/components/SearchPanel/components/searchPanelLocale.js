@@ -12,7 +12,7 @@ import StorageIcon from '@material-ui/icons/Storage';
 
 const primoPrefix = '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0';
 
-export const homePageSearch = {
+export const searchPanelLocale = {
     typeSelect: {
         label: 'Search',
         items: [

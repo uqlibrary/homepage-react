@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { homePageSearch } from './homePageSearchLocale';
+import { searchPanelLocale } from './searchPanelLocale';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
@@ -66,7 +66,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const HomePageSearch = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
+export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestionsError, actions }) => {
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState('');
@@ -245,7 +245,7 @@ export const HomePageSearch = ({ locale, suggestions, suggestionsLoading, sugges
     );
 };
 
-HomePageSearch.propTypes = {
+SearchPanel.propTypes = {
     locale: PropTypes.any,
     option: PropTypes.any,
     suggestions: PropTypes.any,
@@ -254,8 +254,8 @@ HomePageSearch.propTypes = {
     actions: PropTypes.any,
 };
 
-HomePageSearch.defaultProps = {
-    locale: homePageSearch,
+SearchPanel.defaultProps = {
+    locale: searchPanelLocale,
 };
 
-export default HomePageSearch;
+export default SearchPanel;

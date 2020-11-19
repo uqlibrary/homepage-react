@@ -130,12 +130,10 @@ export function loadReadingLists(coursecode, campus, semester, account) {
             .then(data => {
                 console.log('fetched READING_LIST_API for ', coursecode, ': ', data);
                 const updatedData = data;
-                // make the returned value more sensibly named
+                // make the returned value a more sensibly named variable
                 updatedData.coursecode = data.title;
                 // filter out any wrong reading lists
                 updatedData.reading_lists = filterReadingLists(updatedData.reading_lists, coursecode, campus, semester);
-                console.log('after: updatedData = ', updatedData);
-                console.log('after: updatedData.reading_lists = ', updatedData.reading_lists);
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: updatedData,

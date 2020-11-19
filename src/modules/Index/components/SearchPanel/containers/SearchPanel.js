@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
-import HomePageSearch from '../components/HomePageSearch';
+import SearchPanel from '../components/SearchPanel';
 
 const mapStateToProps = state => {
     return {
@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let HomePageSearchContainer = connect(mapStateToProps, mapDispatchToProps)(HomePageSearch);
-HomePageSearchContainer = withRouter(HomePageSearchContainer);
+let SearchPanelContainer = connect(mapStateToProps, mapDispatchToProps)(SearchPanel);
+SearchPanelContainer = withRouter(SearchPanelContainer);
 
-export default HomePageSearchContainer;
+export default SearchPanelContainer;

@@ -5,7 +5,7 @@ import { PropTypes } from 'prop-types';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
-import { getUrlForCourseResourceSpecificTab } from 'modules/Index/components/HomePageCourseResources';
+import { getUrlForCourseResourceSpecificTab } from 'modules/Index/components/CourseResourcesPanel';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -80,25 +80,8 @@ export const CourseResourceSearch = ({
         actions.clearPrimoSuggestions();
     };
 
-    const handleSearchButton = event => {
+    const handleSubmit = event => {
         event.preventDefault();
-        console.log('handleSearchButton');
-        console.log('displayType = ', displayType);
-        console.log('suggestions = ', suggestions);
-        if (displayType === 'compact') {
-            console.log('in compact courseresources');
-            const course = {
-                classnumber: searchKeyword,
-                campus: '???',
-                semester: '???',
-            };
-            const url = getUrlForCourseResourceSpecificTab(course, pageLocation);
-            console.log('would visit ', url);
-            console.log('history = ', history);
-        } else if (displayType === 'courseresources') {
-            console.log('in full');
-            searchKeywordSelected(searchKeyword, suggestions);
-        }
     };
 
     const handleSearchKeywordChange = React.useCallback(
@@ -113,12 +96,12 @@ export const CourseResourceSearch = ({
     );
 
     const courseResourceSubjectDisplay = option => {
-        console.log('option = ', option);
         return !!option && !!option.text ? `${option.text} (${option.rest.course_title}, ${option.rest.period})` : '';
     };
 
     const optionSelected = option => {
-        console.log('optionSelected');
+        // in the compact view on the homepage, they are sent to the course resources page for that course
+        // in the full view they are already on the Course Resource page and the tab loads
         if (displayType === 'compact') {
             if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
                 const course = {
@@ -137,7 +120,7 @@ export const CourseResourceSearch = ({
     };
 
     return (
-        <form onSubmit={handleSearchButton}>
+        <form onSubmit={handleSubmit}>
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete

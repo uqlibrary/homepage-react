@@ -26,7 +26,7 @@ export const getUrlForCourseResourceSpecificTab = (
         : `${prefix}?${courseResourceParams}`;
 };
 
-export const HomePageCourseResources = ({ account }) => {
+export const CourseResourcesPanel = ({ account }) => {
     const pageLocation = useLocation();
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
@@ -95,8 +95,8 @@ export const HomePageCourseResources = ({ account }) => {
     );
 };
 
-HomePageCourseResources.propTypes = {
+CourseResourcesPanel.propTypes = {
     account: PropTypes.object,
 };
 
-export default HomePageCourseResources;
+export default CourseResourcesPanel;
