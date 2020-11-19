@@ -108,17 +108,17 @@ export const CourseResources = ({
 
     const loadNewSubject = React.useCallback(
         (classnumber, campus = null, semester = null) => {
-            if (!currentGuidesList[classnumber]) {
+            const firstClass =
+                (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
+            if (!currentGuidesList[classnumber] && !!firstClass) {
                 !!classnumber && actions.loadGuides(classnumber);
             }
 
-            if (!currentExamsList[classnumber]) {
+            if (!currentExamsList[classnumber] && !!firstClass) {
                 !!classnumber && actions.loadExams(classnumber);
             }
 
-            if (!currentReadingLists[classnumber]) {
-                const firstClass =
-                    !!account.current_classes && account.current_classes.length > 0 && account.current_classes[0];
+            if (!currentReadingLists[classnumber] && !!firstClass) {
                 !!classnumber &&
                     actions.loadReadingLists(
                         classnumber,
@@ -140,13 +140,6 @@ export const CourseResources = ({
             }
         }
     }, [params, currentReadingLists, loadNewSubject]);
-
-    // const [tabType, setDisplayType] = useState('mycourses');
-    // const defaultPreset = {
-    //     period: '',
-    //     campus: '',
-    // };
-    // const [keywordPresets, setKeywordPresets] = useState(defaultPreset);
 
     const [listSearchedSubjects, updateSearchList] = useState([]);
 
@@ -211,21 +204,21 @@ export const CourseResources = ({
                 !!account.current_classes[0] &&
                 account.current_classes[0].classnumber) ||
             null;
-        if (firstEnrolledClassNumber !== null) {
-            // loadNewSubject(firstEnrolledClassNumber);
-            !!firstEnrolledClassNumber && actions.loadGuides(firstEnrolledClassNumber);
-
-            !!firstEnrolledClassNumber && actions.loadExams(firstEnrolledClassNumber);
-
-            !!firstEnrolledClassNumber &&
-                actions.loadReadingLists(
-                    firstEnrolledClassNumber,
-                    getCampusByCode(account.current_classes[0].CAMPUS),
-                    account.current_classes[0].semester,
-                    account,
-                );
-        }
-    }, [account, actions]);
+        loadNewSubject(firstEnrolledClassNumber);
+        // if (firstEnrolledClassNumber !== null) {
+        //     !!firstEnrolledClassNumber && actions.loadGuides(firstEnrolledClassNumber);
+        //
+        //     !!firstEnrolledClassNumber && actions.loadExams(firstEnrolledClassNumber);
+        //
+        //     !!firstEnrolledClassNumber &&
+        //         actions.loadReadingLists(
+        //             firstEnrolledClassNumber,
+        //             getCampusByCode(account.current_classes[0].CAMPUS),
+        //             account.current_classes[0].semester,
+        //             account,
+        //         );
+        // }
+    }, [account, loadNewSubject]);
 
     const renderSubjectTabBody = subject => {
         const coursecode = subject.classnumber || null;

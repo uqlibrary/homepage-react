@@ -11,12 +11,14 @@ const handlers = {
         ...initialState,
         ...state,
         readingListLoading: true,
+        readingListError: false,
     }),
     [actions.READING_LIST_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         readingListLoading: false,
         readingList: action.payload,
+        readingListError: false,
     }),
     [actions.READING_LIST_FAILED]: (state, action) => ({
         ...initialState,
