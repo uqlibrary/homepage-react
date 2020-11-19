@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
 
-import JigsawIcon from '@material-ui/icons/Extension';
 import DocumentIcon from '@material-ui/icons/Description';
 import InfoIcon from '@material-ui/icons/ErrorOutline';
 import CourtHouseIcon from '@material-ui/icons/AccountBalance';
@@ -19,12 +18,6 @@ export default {
                 id: 'referencingGuides',
                 linkLabel: 'Referencing guides',
                 linkTo: 'https://guides.library.uq.edu.au/referencing',
-            },
-            {
-                icon: <JigsawIcon style={{ marginRight: 6 }} />,
-                id: 'digitalessentials',
-                linkLabel: 'Digital Essentials',
-                linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
             },
             {
                 icon: <InfoIcon style={{ marginRight: 6 }} />,
