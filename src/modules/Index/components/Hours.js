@@ -97,14 +97,19 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
         }
         return null;
     });
-    const sortedHours = matchSorter(
-        cleanedHours.filter(e => e !== null),
-        cookies.location,
-        {
-            keys: ['campus'],
-            threshold: matchSorter.rankings.NO_MATCH,
-        },
-    );
+    const alphaHours = cleanedHours
+        .filter(e => e !== null)
+        .sort((a, b) => {
+            const textA = a.name.toUpperCase();
+            const textB = b.name.toUpperCase();
+            // eslint-disable-next-line no-nested-ternary
+            const result = textA < textB ? -1 : textA > textB ? 1 : 0;
+            return result;
+        });
+    const sortedHours = matchSorter(alphaHours, cookies.location, {
+        keys: ['campus'],
+        threshold: matchSorter.rankings.NO_MATCH,
+    });
     if (location !== cookies.location) {
         setShowIcon(true);
         setLocation(cookies.location);

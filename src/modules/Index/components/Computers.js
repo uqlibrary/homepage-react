@@ -10,6 +10,12 @@ import Fade from '@material-ui/core/Fade';
 import Badge from '@material-ui/core/Badge';
 import CheckIcon from '@material-ui/icons/Check';
 import Tooltip from '@material-ui/core/Tooltip';
+import Button from '@material-ui/core/Button';
+import Collapse from '@material-ui/core/Collapse';
+import Dialog from '@material-ui/core/Dialog';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import { computersLocale } from './Computers.locale';
 
 const useStyles = makeStyles(theme => ({
@@ -47,26 +53,16 @@ const useStyles = makeStyles(theme => ({
         width: 10,
         color: theme.palette.white.main,
     },
-    listHeader: {
-        backgroundColor: '#EEE',
-        width: '100%',
-        margin: 0,
-        paddingLeft: 8,
-        paddingRight: 24,
-        paddingTop: 4,
-        paddingBottom: 4,
-        fontSize: 14,
-        color: theme.palette.secondary.main,
+    linkButton: {
+        padding: 0,
+        minWidth: 0,
     },
-    actionButtonsLeft: {
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomRightRadius: 0,
-    },
-    actionButtonsRight: {
-        borderTopLeftRadius: 0,
-        borderTopRightRadius: 0,
-        borderBottomLeftRadius: 0,
+    linkButtonLabel: {
+        textTransform: 'capitalize',
+        textAlign: 'left',
+        fontSize: 16,
+        color: '#3872a8', // theme.palette.accent.dark,
+        fontWeight: 300,
     },
     selectedCampus: {
         fontWeight: 500,
@@ -78,6 +74,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
     const [showIcon, setShowIcon] = React.useState(false);
+    const [collapse, setCollapse] = React.useState({});
+    const [mapSrc, setMapSrc] = React.useState(null);
     if (!!computerAvailabilityLoading) {
         return null;
     }
@@ -86,16 +84,18 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
         const totalLevels = levels.length;
         let levelsData = [];
         if (totalLevels > 0) {
-            levelsData = levels.map(level => {
-                return {
-                    level: parseInt(level.replace('Level ', ''), 10),
-                    roomCode: parseInt(item.availability[level].roomCode, 10),
-                    available: item.availability[level].Available,
-                    occupied: item.availability[level].Occupied,
-                    total: item.availability[level].Available + item.availability[level].Occupied,
-                    floorplan: item.availability[level].floorplan,
-                };
-            });
+            levelsData = levels
+                .map(level => {
+                    return {
+                        level: parseInt(level.replace('Level ', ''), 10),
+                        roomCode: parseInt(item.availability[level].roomCode, 10),
+                        available: item.availability[level].Available,
+                        occupied: item.availability[level].Occupied,
+                        total: item.availability[level].Available + item.availability[level].Occupied,
+                        floorplan: item.availability[level].floorplan,
+                    };
+                })
+                .sort((a, b) => a.level - b.level);
         }
         return {
             library: item.library.replace('&amp;', '&'),
@@ -105,7 +105,16 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
             campus: computersLocale.campusMap[item.library],
         };
     });
-    const sortedComputers = matchSorter(cleanedAvailability, cookies.location, {
+    const alphaAvailability = cleanedAvailability
+        .filter(e => e !== null)
+        .sort((a, b) => {
+            const textA = a.library.toUpperCase();
+            const textB = b.library.toUpperCase();
+            // eslint-disable-next-line no-nested-ternary
+            const result = textA < textB ? -1 : textA > textB ? 1 : 0;
+            return result;
+        });
+    const sortedComputers = matchSorter(alphaAvailability, cookies.location, {
         keys: ['campus'],
         threshold: matchSorter.rankings.NO_MATCH,
     });
@@ -116,6 +125,74 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
             setShowIcon(false);
         }, 5000);
     }
+    const handleCollapse = index => {
+        if (collapse[index]) {
+            setCollapse({ [index]: false });
+        } else {
+            setCollapse({ [index]: true });
+        }
+    };
+    const closeMap = () => {
+        setMapSrc(null);
+    };
+    const openMap = (library, building, room, level) => {
+        setMapSrc({ library, building, room, level });
+    };
+    const MapPopup = ({}) => {
+        if (!!mapSrc) {
+            return (
+                <Dialog
+                    onClose={() => closeMap()}
+                    aria-label="UQ Library map"
+                    open={!!mapSrc}
+                    maxWidth={'lg'}
+                    PaperProps={{
+                        style: {
+                            backgroundColor: 'transparent',
+                            width: '66%',
+                            height: '66%',
+                        },
+                    }}
+                >
+                    <Grid
+                        container
+                        spacing={0}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            backgroundColor: '#000020',
+                            padding: 20,
+                            overflow: 'hidden',
+                        }}
+                    >
+                        <Grid item xs>
+                            <Typography variant={'h5'} style={{ color: 'white', marginTop: -6 }}>
+                                {mapSrc.library} - Level {mapSrc.level}
+                            </Typography>
+                        </Grid>
+                        <Grid item xs={'auto'}>
+                            <IconButton onClick={() => closeMap()} style={{ color: 'white', marginTop: -16 }}>
+                                <CloseIcon fontSize="small" />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={12} style={{ height: '100%', padding: '32px 0' }}>
+                            <iframe
+                                src={`https://www.library.uq.edu.au/uqlsm/map.php?building=${mapSrc.building}&room=${mapSrc.room}&embed=true`}
+                                style={{
+                                    width: '90%',
+                                    height: '90%',
+                                    margin: '0 5% 10% 5%',
+                                    overflow: 'hidden',
+                                    border: 'none',
+                                }}
+                            />
+                        </Grid>
+                    </Grid>
+                </Dialog>
+            );
+        }
+        return null;
+    };
     return (
         <StandardCard
             accentHeader
@@ -147,6 +224,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
             fullHeight
             noPadding
         >
+            <MapPopup />
             <div className={classes.scrollArea} style={{ height: height }}>
                 {!!sortedComputers &&
                     sortedComputers.length > 1 &&
@@ -155,20 +233,72 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
                         const buildingAvail = item.levels.map(level => level.available).reduce(add);
                         const buildingTotal = item.levels.map(level => level.occupied + level.available).reduce(add);
                         return (
-                            <Grid container spacing={1} key={index} className={classes.row} alignItems={'flex-start'}>
-                                <Grid item xs style={{ paddingLeft: 8 }}>
-                                    <a
-                                        aria-label={item.library}
-                                        href={'#'}
-                                        className={(cookies.location === item.campus && classes.selectedCampus) || ''}
-                                    >
-                                        {item.library}
-                                    </a>
+                            <React.Fragment key={index}>
+                                <Grid
+                                    container
+                                    spacing={1}
+                                    className={classes.row}
+                                    justify="center"
+                                    alignItems="center"
+                                >
+                                    <Grid item xs style={{ paddingLeft: 8 }}>
+                                        <Button
+                                            onClick={() => handleCollapse(index)}
+                                            classes={{
+                                                root: classes.linkButton,
+                                                label: `${classes.linkButtonLabel} ${
+                                                    cookies.location === item.campus ? classes.selectedCampus : ''
+                                                }`,
+                                            }}
+                                            aria-label={`${item.library} - ${buildingAvail} of ${buildingTotal} free. Click to review each level`}
+                                        >
+                                            {item.library}
+                                        </Button>
+                                    </Grid>
+                                    <Grid item xs={'auto'} style={{ fontSize: 14 }}>
+                                        {buildingAvail} of {buildingTotal} free
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={'auto'} style={{ fontSize: 14 }}>
-                                    {buildingAvail} of {buildingTotal} free
-                                </Grid>
-                            </Grid>
+                                {item.levels.length > 0 &&
+                                    item.levels.map((level, levelIndex) => (
+                                        <Collapse in={collapse[index]} timeout="auto" unmountOnExit key={levelIndex}>
+                                            <Grid
+                                                container
+                                                spacing={1}
+                                                className={classes.row}
+                                                justify="center"
+                                                alignItems="center"
+                                            >
+                                                <Grid item xs style={{ paddingLeft: 32 }}>
+                                                    <Button
+                                                        onClick={() =>
+                                                            openMap(
+                                                                item.library,
+                                                                item.buildingCode,
+                                                                level.roomCode,
+                                                                level.level,
+                                                            )
+                                                        }
+                                                        classes={{
+                                                            root: classes.linkButton,
+                                                            label: `${classes.linkButtonLabel} ${
+                                                                cookies.location === item.campus
+                                                                    ? classes.selectedCampus
+                                                                    : ''
+                                                            }`,
+                                                        }}
+                                                    >
+                                                        Level {level.level}
+                                                    </Button>
+                                                </Grid>
+                                                <Grid xs item />
+                                                <Grid item xs={'auto'} style={{ fontSize: 14 }}>
+                                                    {level.available} of {level.available + level.occupied} available
+                                                </Grid>
+                                            </Grid>
+                                        </Collapse>
+                                    ))}
+                            </React.Fragment>
                         );
                     })}
             </div>

@@ -19,6 +19,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: -3,
         color: theme.palette.secondary.main,
         textTransform: 'none',
+        fontSize: 14,
     },
     icon: {
         marginLeft: 13,

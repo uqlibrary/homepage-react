@@ -190,7 +190,7 @@ export const Index = ({
                                                         <Typography
                                                             component={'span'}
                                                             color={'secondary'}
-                                                            style={{ fontSize: 12 }}
+                                                            style={{ fontSize: 14 }}
                                                         >
                                                             <AccountBoxIcon
                                                                 fontSize={'small'}
