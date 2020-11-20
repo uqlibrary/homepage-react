@@ -152,7 +152,7 @@ export const Index = ({
                         <PrimoSearch />
                     </Grid>
                     {/* Spotlights */}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
+                    <Grid item xs={12} lg={8} id="spotlights" data-testid="spotlights">
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
 
@@ -360,7 +360,7 @@ export const Index = ({
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={140} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={235} />
                         </Grid>
                     )}
 
@@ -369,14 +369,14 @@ export const Index = ({
                             <Computers
                                 computerAvailability={computerAvailability}
                                 computerAvailabilityLoading={computerAvailabilityLoading}
-                                height={312}
+                                height={350}
                             />
                         </Grid>
                     )}
 
                     {seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={250} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={350} />
                         </Grid>
                     )}
 

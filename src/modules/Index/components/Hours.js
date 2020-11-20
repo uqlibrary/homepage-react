@@ -23,6 +23,7 @@ const useStyles = makeStyles(theme => ({
         marginLeft: 0,
         padding: 8,
         color: theme.palette.secondary.dark,
+        height: '100%',
     },
     row: {
         borderBottom: '1px solid #EEE',
@@ -72,9 +73,25 @@ const useStyles = makeStyles(theme => ({
     selectedCampus: {
         fontWeight: 500,
     },
+    flexWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
+    flexHeader: {
+        height: 'auto',
+    },
+    flexContent: {
+        flexGrow: 1,
+        overflowY: 'scroll',
+        overflowX: 'hidden',
+    },
+    flexFooter: {
+        height: 'auto',
+    },
 }));
 
-const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
+const Hours = ({ libHours, libHoursLoading, height = 250 }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
@@ -151,74 +168,91 @@ const Hours = ({ libHours, libHoursLoading, height = 300 }) => {
             fullHeight
             noPadding
         >
-            <Grid container spacing={1} className={classes.listHeader}>
-                {hoursLocale.header.map((item, index) => {
-                    return (
-                        <Grid item xs={4} key={index}>
-                            {item}
-                        </Grid>
-                    );
-                })}
-            </Grid>
-            <div className={classes.scrollArea} style={{ height: height }}>
-                {!!sortedHours &&
-                    sortedHours.length > 1 &&
-                    sortedHours.map((item, index) => {
-                        return (
-                            <Grid container spacing={1} key={index} className={classes.row} alignItems={'flex-start'}>
-                                <Grid item xs={4}>
-                                    <a
-                                        aria-label={item.name}
-                                        href={item.url}
-                                        style={{ marginLeft: 8 }}
-                                        className={(cookies.location === item.campus && classes.selectedCampus) || ''}
-                                    >
-                                        {item.name}
-                                    </a>
+            <div className={classes.flexWrapper} style={{ height: height }}>
+                <div className={classes.flexHeader}>
+                    {/* Header */}
+                    <Grid container spacing={1} className={classes.listHeader}>
+                        {hoursLocale.header.map((item, index) => {
+                            return (
+                                <Grid item xs={4} key={index}>
+                                    {item}
                                 </Grid>
-                                {item.departments.length > 0 &&
-                                    item.departments.map((item, index) => {
-                                        if (hoursLocale.departmentsMap.includes(item.name)) {
-                                            return (
-                                                <Grid item xs key={index} style={{ fontSize: 14 }}>
-                                                    {item.hours}
-                                                </Grid>
-                                            );
-                                        }
-                                        return null;
-                                    })}
-                            </Grid>
-                        );
-                    })}
+                            );
+                        })}
+                    </Grid>
+                </div>
+                <div className={classes.flexContent}>
+                    {/* Scrollable area */}
+                    {!!sortedHours &&
+                        sortedHours.length > 1 &&
+                        sortedHours.map((item, index) => {
+                            return (
+                                <Grid
+                                    container
+                                    spacing={1}
+                                    key={index}
+                                    className={classes.row}
+                                    alignItems={'flex-start'}
+                                >
+                                    <Grid item xs={4}>
+                                        <a
+                                            aria-label={item.name}
+                                            href={item.url}
+                                            style={{ marginLeft: 8 }}
+                                            className={
+                                                (cookies.location === item.campus && classes.selectedCampus) || ''
+                                            }
+                                        >
+                                            {item.name}
+                                        </a>
+                                    </Grid>
+                                    {item.departments.length > 0 &&
+                                        item.departments.map((item, index) => {
+                                            if (hoursLocale.departmentsMap.includes(item.name)) {
+                                                return (
+                                                    <Grid item xs key={index} style={{ fontSize: 14 }}>
+                                                        {item.hours}
+                                                    </Grid>
+                                                );
+                                            }
+                                            return null;
+                                        })}
+                                </Grid>
+                            );
+                        })}
+                </div>
+                <div className={classes.flexFooter}>
+                    {/* Buttons */}
+                    <Grid container spacing={0}>
+                        <Grid item xs>
+                            <Button
+                                classes={{ root: classes.actionButtonsLeft }}
+                                size="small"
+                                variant="contained"
+                                color={hoursLocale.actionButtons[0].color}
+                                disableElevation
+                                fullWidth
+                                onClick={() => navigateToUrl(hoursLocale.actionButtons[0].url)}
+                            >
+                                {hoursLocale.actionButtons[0].label}
+                            </Button>
+                        </Grid>
+                        <Grid item xs>
+                            <Button
+                                classes={{ root: classes.actionButtonsRight }}
+                                size="small"
+                                variant="contained"
+                                color={hoursLocale.actionButtons[1].color}
+                                disableElevation
+                                fullWidth
+                                onClick={() => navigateToUrl(hoursLocale.actionButtons[1].url)}
+                            >
+                                {hoursLocale.actionButtons[1].label}
+                            </Button>
+                        </Grid>
+                    </Grid>
+                </div>
             </div>
-            <Grid container spacing={0}>
-                <Grid item xs>
-                    <Button
-                        classes={{ root: classes.actionButtonsLeft }}
-                        size="small"
-                        variant="contained"
-                        color={hoursLocale.actionButtons[0].color}
-                        disableElevation
-                        fullWidth
-                        onClick={() => navigateToUrl(hoursLocale.actionButtons[0].url)}
-                    >
-                        {hoursLocale.actionButtons[0].label}
-                    </Button>
-                </Grid>
-                <Grid item xs>
-                    <Button
-                        classes={{ root: classes.actionButtonsRight }}
-                        size="small"
-                        variant="contained"
-                        color={hoursLocale.actionButtons[1].color}
-                        disableElevation
-                        fullWidth
-                        onClick={() => navigateToUrl(hoursLocale.actionButtons[1].url)}
-                    >
-                        {hoursLocale.actionButtons[1].label}
-                    </Button>
-                </Grid>
-            </Grid>
         </StandardCard>
     );
 };

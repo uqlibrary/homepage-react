@@ -56,6 +56,8 @@ const useStyles = makeStyles(theme => ({
     linkButton: {
         padding: 0,
         minWidth: 0,
+        marginTop: -2,
+        marginBottom: -2,
     },
     linkButtonLabel: {
         textTransform: 'capitalize',
@@ -66,6 +68,22 @@ const useStyles = makeStyles(theme => ({
     },
     selectedCampus: {
         fontWeight: 500,
+    },
+    flexWrapper: {
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+    },
+    flexHeader: {
+        height: 'auto',
+    },
+    flexContent: {
+        flexGrow: 1,
+        overflowY: 'scroll',
+        overflowX: 'hidden',
+    },
+    flexFooter: {
+        height: 'auto',
     },
 }));
 
@@ -225,7 +243,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
             noPadding
         >
             <MapPopup />
-            <div className={classes.scrollArea} style={{ height: height }}>
+            <div className={classes.flexContent} style={{ height: height }}>
                 {!!sortedComputers &&
                     sortedComputers.length > 1 &&
                     sortedComputers.map((item, index) => {
@@ -241,7 +259,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
                                     justify="center"
                                     alignItems="center"
                                 >
-                                    <Grid item xs style={{ paddingLeft: 8 }}>
+                                    <Grid item xs style={{ paddingLeft: 16 }}>
                                         <Button
                                             onClick={() => handleCollapse(index)}
                                             classes={{
@@ -255,7 +273,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, height =
                                             {item.library}
                                         </Button>
                                     </Grid>
-                                    <Grid item xs={'auto'} style={{ fontSize: 14 }}>
+                                    <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
                                         {buildingAvail} of {buildingTotal} free
                                     </Grid>
                                 </Grid>
