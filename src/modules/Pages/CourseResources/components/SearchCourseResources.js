@@ -146,7 +146,6 @@ export const SearchCourseResources = ({
                 <CourseResourceSearch
                     displayType="full"
                     elementId="full-courseresource"
-                    history={history}
                     searchKeywordSelected={searchKeywordSelected}
                 />
                 {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}

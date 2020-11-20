@@ -659,6 +659,7 @@ export const Index = ({
                             <CourseResourcesPanel
                                 account={account}
                                 clearPrimoSuggestions={clearPrimoSuggestions}
+                                history={history}
                                 loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
                                 suggestions={suggestions}
                                 suggestionsLoading={suggestionsLoading}

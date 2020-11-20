@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { useLocation } from 'react-router';
+// import { useLocation } from 'react-router';
 
 import { PropTypes } from 'prop-types';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
-
-import { getUrlForCourseResourceSpecificTab } from 'modules/Index/components/CourseResourcesPanel';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -66,14 +64,12 @@ export const CourseResourceSearch = ({
     // 'full' for course resources page search
     // 'compact' for course resource search in homepage panel
     elementId = 'primo-search',
-    history,
     searchKeywordSelected,
     suggestions,
     suggestionsLoading,
     suggestionsError,
 }) => {
     const classes = useStyles();
-    const pageLocation = useLocation();
 
     const [searchKeyword, setSearchKeyword] = useState('');
 
@@ -100,29 +96,11 @@ export const CourseResourceSearch = ({
         return !!option && !!option.text ? `${option.text} (${option.rest.course_title}, ${option.rest.period})` : '';
     };
 
-    const [searchUrl, setSearchUrl] = useState('');
-
-    const loadSearchResult = React.useCallback(() => {
-        searchUrl !== '' && history.push(searchUrl);
-    });
-
-    React.useEffect(() => {
-        loadSearchResult();
-    }, [searchUrl, loadSearchResult]);
-
     const optionSelected = option => {
         // in the compact view on the homepage, they are sent to the course resources page for that course
         // in the full view they are already on the Course Resource page and the tab loads
         if (displayType === 'compact') {
-            if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
-                const course = {
-                    classnumber: option.text,
-                    campus: option.rest.campus,
-                    semester: option.rest.period,
-                };
-                setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
-                // history.push(url);
-            }
+            searchKeywordSelected(option, searchKeyword);
         } else {
             searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
         }

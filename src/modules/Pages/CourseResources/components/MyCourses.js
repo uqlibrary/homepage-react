@@ -44,21 +44,24 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
         setCurrentMenuTab(subjectTabId);
     };
 
-    const focusOnSelectedSubjectTab = React.useCallback(preselectedCourse => {
-        let preselectedSubjectTab = null;
-        account.current_classes.map((item, index) => {
-            if (
-                item.classnumber === preselectedCourse.coursecode &&
-                getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
-                item.semester === preselectedCourse.semester
-            ) {
-                preselectedSubjectTab = `${courseTabLabel}-${index}`;
+    const focusOnSelectedSubjectTab = React.useCallback(
+        preselectedCourse => {
+            let preselectedSubjectTab = null;
+            account.current_classes.map((item, index) => {
+                if (
+                    item.classnumber === preselectedCourse.coursecode &&
+                    getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
+                    item.semester === preselectedCourse.semester
+                ) {
+                    preselectedSubjectTab = `${courseTabLabel}-${index}`;
+                }
+            });
+            if (preselectedSubjectTab !== null) {
+                setCurrentMenuTab(preselectedSubjectTab);
             }
-        });
-        if (preselectedSubjectTab !== null) {
-            setCurrentMenuTab(preselectedSubjectTab);
-        }
-    });
+        },
+        [account],
+    );
 
     React.useEffect(() => {
         if (!!preselectedCourse.coursecode) {

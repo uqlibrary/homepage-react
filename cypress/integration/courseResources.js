@@ -8,6 +8,9 @@ import { default as FREN1010Exam } from '../../src/mock/data/records/examListFRE
 import { default as HIST1201ReadingList } from '../../src/mock/data/records/courseReadingList_HIST1201';
 import { default as PHIL1002ReadingList } from '../../src/mock/data/records/courseReadingList_PHIL1002';
 import { default as PHIL1002Guide } from '../../src/mock/data/records/libraryGuides_PHIL1002';
+import { default as ACCT1101ReadingList } from '../../src/mock/data/records/courseReadingList_ACCT1101';
+import { default as ACCT1101Guide } from '../../src/mock/data/records/libraryGuides_ACCT1101';
+import { default as ACCT1101Exam } from '../../src/mock/data/records/examListACCT1101';
 import { default as learningResourceSearchSuggestions } from '../../src/mock/data/records/learningResourceSearchSuggestions';
 
 context('Course Resources', () => {
@@ -129,10 +132,16 @@ context('Course Resources', () => {
             .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.examPapers.footer.linkOutPattern));
     }
 
-    function a_subject_page_should_have_a_link_to_Library_Guides_homepage() {
-        cy.get('a[data-testid=all-guides]')
-            .contains(locale.myCourses.guides.footer.linkLabel)
-            .should('have.attr', 'href', locale.myCourses.guides.footer.linkOut);
+    function a_subject_page_should_have_correct_Library_Guides_footer_links() {
+        locale.myCourses.guides.footer.links.map(link => {
+            const guideId = link.id || 'mock-data-is-missing';
+            const guideTitle = link.linkLabel || 'mock data is missing';
+            const guideLink = link.linkTo || 'mock data is missing';
+
+            cy.get(`a[data-testid=${guideId}]`)
+                .contains(guideTitle)
+                .should('have.attr', 'href', guideLink);
+        });
     }
 
     function a_subject_with_zero_guides_loads_correctly() {
@@ -177,16 +186,17 @@ context('Course Resources', () => {
         expect(locale.myCourses.courseLinks.links).to.be.an('array');
         expect(locale.myCourses.courseLinks.links.length).to.not.equals(0);
         locale.myCourses.courseLinks.links.map(item => {
-            cy.get(`a[data-testid=${item.id}-FREN1010]`)
+            cy.get(`a[data-testid=${item.id}-${courseCode}]`)
                 .contains(item.linkLabel)
                 .should('have.attr', 'href', _courseLink(courseCode, item.linkOutPattern));
         });
     }
 
     function a_user_can_use_the_search_bar_to_load_a_subject(courseReadingList, searchSuggestions) {
+        const courseCode = courseReadingList.title || 'mock data is missing';
         const frenchSearchSuggestion = searchSuggestions
             .filter(obj => {
-                return obj.name === 'FREN1010';
+                return obj.name === courseCode;
             })
             .pop();
 
@@ -235,6 +245,20 @@ context('Course Resources', () => {
         click_on_a_subject_tab(2, courseReadingList);
     }
 
+    function FREN1010_loads_properly_for_s111111_user() {
+        the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
+
+        a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(FREN1010ReadingList);
+
+        a_subject_with_many_exams_loads_correctly(FREN1010Exam);
+
+        a_subject_with_one_guide_loads_correctly(FREN1010Guide);
+
+        a_subject_page_should_have_correct_Library_Guides_footer_links();
+
+        a_subject_loads_course_links_correctly(FREN1010ReadingList);
+    }
+
     /**
      * Show a user with 3 classes can see all the variations correctly
      * The mock data has been selected to cover the display options:
@@ -252,17 +276,7 @@ context('Course Resources', () => {
         cy.visit('/courseresources?user=s1111111');
         cy.viewport(1300, 1000);
 
-        the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
-
-        a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(FREN1010ReadingList);
-
-        a_subject_with_many_exams_loads_correctly(FREN1010Exam);
-
-        a_subject_with_one_guide_loads_correctly(FREN1010Guide);
-
-        a_subject_page_should_have_a_link_to_Library_Guides_homepage();
-
-        a_subject_loads_course_links_correctly(FREN1010ReadingList);
+        FREN1010_loads_properly_for_s111111_user();
 
         // next tab
         the_user_clicks_on_the_second_subject_tab(HIST1201ReadingList);
@@ -273,7 +287,7 @@ context('Course Resources', () => {
 
         a_subject_with_zero_guides_loads_correctly();
 
-        a_subject_page_should_have_a_link_to_Library_Guides_homepage();
+        a_subject_page_should_have_correct_Library_Guides_footer_links();
 
         // next tab
         the_user_clicks_on_the_third_subject_tab(PHIL1002ReadingList);
@@ -299,5 +313,31 @@ context('Course Resources', () => {
 
         the_user_clicks_on_the_My_Courses_tab();
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
+    });
+
+    it('A user who clicks on a homepage own course gets the correct details', () => {
+        cy.visit('/courseresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020');
+        cy.viewport(1300, 1000);
+
+        the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
+
+        FREN1010_loads_properly_for_s111111_user();
+    });
+
+    it('A user who searches for a course on a homepage own course gets the correct details', () => {
+        cy.visit('/courseresources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020');
+        cy.viewport(1300, 1000);
+
+        the_user_lands_on_the_Search_tab();
+
+        a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(ACCT1101ReadingList);
+
+        a_subject_with_many_exams_loads_correctly(ACCT1101Exam);
+
+        a_subject_with_one_guide_loads_correctly(ACCT1101Guide);
+
+        a_subject_page_should_have_correct_Library_Guides_footer_links();
+
+        a_subject_loads_course_links_correctly(ACCT1101ReadingList);
     });
 });

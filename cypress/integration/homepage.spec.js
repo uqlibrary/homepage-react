@@ -402,4 +402,28 @@ context('Homepage', () => {
         cy.get('div[data-testid="mylibrary-publication-metrics-link"]').should('not.exist');
         cy.get('div[data-testid="mylibrary-room-bookings-link"]').should('not.exist');
     });
+
+    it('the Course resources panel links correctly', () => {
+        cy.visit('/?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        // tbd
+        // the user sees 3 subjects
+        // the users clicks the first one (FREN1010)
+        // the user lands on the correct page
+    });
+
+    it('the Course resources panel searches correctly', () => {
+        cy.visit('/?user=s2222222');
+        cy.viewport(1300, 1000);
+
+        // tbd
+        // the user sees NO subjects
+        // the user sees a search field
+        // user enters ACCT
+        // user sees N entries
+        // user clicks on #1, ACCT1101
+        // user lands on appropriate course resources page
+        // (contents tested in Course Resource test)
+    });
 });

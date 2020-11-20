@@ -26,11 +26,27 @@ export const getUrlForCourseResourceSpecificTab = (
         : `${prefix}?${courseResourceParams}`;
 };
 
-export const CourseResourcesPanel = ({ account }) => {
+export const CourseResourcesPanel = ({ account, history }) => {
     const pageLocation = useLocation();
 
-    const searchKeywordSelected = (searchKeyword, suggestions) => {
-        console.log('searchKeywordSelected: ', searchKeyword, ': ', suggestions);
+    const [searchUrl, setSearchUrl] = React.useState('');
+    const loadSearchResult = React.useCallback(searchUrl => {
+        searchUrl !== '' && history.push(searchUrl);
+    });
+    React.useEffect(() => {
+        loadSearchResult(searchUrl);
+    }, [searchUrl, loadSearchResult]);
+
+    const searchKeywordSelected = (option, searchKeyword) => {
+        if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
+            const course = {
+                classnumber: option.text,
+                campus: option.rest.campus,
+                semester: option.rest.period,
+            };
+            setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
+            // history.push(url);
+        }
     };
 
     return (
@@ -50,7 +66,6 @@ export const CourseResourcesPanel = ({ account }) => {
                 displayType="compact"
                 elementId="homepage-courseresource"
                 searchKeywordSelected={searchKeywordSelected}
-                history={history}
             />
 
             {!!account && !!account.current_classes && account.current_classes.length > 0 && (
@@ -97,6 +112,7 @@ export const CourseResourcesPanel = ({ account }) => {
 
 CourseResourcesPanel.propTypes = {
     account: PropTypes.object,
+    history: PropTypes.object,
 };
 
 export default CourseResourcesPanel;
