@@ -47,7 +47,6 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
     // we should theoretically only ever have one reading list
     // but handle multiple anyway...
     const renderMultipleReadingListReference = readingLists => {
-        console.log('renderMultipleReadingListReference');
         const coursecode = (!!readingLists && readingLists.length > 0 && readingLists[0].coursecode) || '';
         const chooseListPrompt = coursecode =>
             locale.myCourses.readingLists.error.multiple.replace('[classnumber]', coursecode);
@@ -267,7 +266,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
 ReadingLists.propTypes = {
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
+    readingListError: PropTypes.any,
 };
 
 export default React.memo(ReadingLists);

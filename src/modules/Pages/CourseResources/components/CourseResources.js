@@ -81,22 +81,6 @@ export const CourseResources = ({
         return params;
     };
 
-    /**
-     * The page consists of 3 sections:
-     * - the user's enrolled courses (aka subjects),
-     * - search area and
-     * - some help links
-     * If the user is enrolled in courses then we load that section: top0
-     * Otherwise we load the search section: top1
-     * These sections are displayed as 3 tabs across the top
-     */
-    const [topmenu, setCurrentTopTab] = useState(
-        !!account.current_classes && account.current_classes.length ? 'top0' : 'top1',
-    );
-    const handleTopTabChange = (event, topMenuTabId) => {
-        setCurrentTopTab(topMenuTabId);
-    };
-
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
 
@@ -110,15 +94,15 @@ export const CourseResources = ({
         (classnumber, campus = null, semester = null) => {
             const firstClass =
                 (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
-            if (!currentGuidesList[classnumber] && !!firstClass) {
+            if (!currentGuidesList[classnumber]) {
                 !!classnumber && actions.loadGuides(classnumber);
             }
 
-            if (!currentExamsList[classnumber] && !!firstClass) {
+            if (!currentExamsList[classnumber]) {
                 !!classnumber && actions.loadExams(classnumber);
             }
 
-            if (!currentReadingLists[classnumber] && !!firstClass) {
+            if (!currentReadingLists[classnumber]) {
                 !!classnumber &&
                     actions.loadReadingLists(
                         classnumber,
@@ -135,13 +119,51 @@ export const CourseResources = ({
     React.useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
             if (!currentReadingLists[params.coursecode]) {
-                console.log('new params: loading ', params.coursecode);
                 loadNewSubject(params.coursecode, params.campus, params.semester);
             }
         }
     }, [params, currentReadingLists, loadNewSubject]);
 
-    const [listSearchedSubjects, updateSearchList] = useState([]);
+    const getInitialTopTabState = () => {
+        let initialTopTabState = 'top1';
+        // if has account and no search param supplied, show My Course tab
+        if (!!account.current_classes && account.current_classes.length && (!params || !params.coursecode)) {
+            initialTopTabState = 'top0';
+        }
+        // if has account and param supplied and param in account list, show My Course tab
+        !!account.current_classes &&
+            account.current_classes.length &&
+            !!params &&
+            account.current_classes.map(item => {
+                if (
+                    item.classnumber === (params.coursecode || '') &&
+                    getCampusByCode(item.CAMPUS) === (params.campus || '') &&
+                    item.semester === (params.semester || '')
+                ) {
+                    initialTopTabState = 'top0';
+                }
+            });
+        return initialTopTabState;
+    };
+    /**
+     * The page consists of 2 sections:
+     * - the user's enrolled courses (aka subjects), and
+     * - search area
+     * If the user is enrolled in courses then we load that section: top0
+     * Otherwise we load the search section: top1
+     * These sections are displayed as 2 tabs across the top
+     */
+    const [topmenu, setCurrentTopTab] = useState(getInitialTopTabState);
+    const handleTopTabChange = (event, topMenuTabId) => {
+        setCurrentTopTab(topMenuTabId);
+    };
+
+    const [listSearchedSubjects, addToSearchList] = useState([]);
+    const updateSearchList = newSearchKey => {
+        if (!currentReadingLists[newSearchKey]) {
+            addToSearchList(newSearchKey);
+        }
+    };
 
     // store the reading list for this subject in currentReadingLists by subject
     const updateListOfReadingLists = React.useCallback(() => {
@@ -316,6 +338,7 @@ export const CourseResources = ({
                                     // setKeywordPresets={setKeywordPresets}
                                     // setDisplayType={setDisplayType}
                                     updateSearchList={updateSearchList}
+                                    preselectedCourse={params}
                                 />
                             </TabPanel>
                         </Grid>
@@ -330,16 +353,16 @@ CourseResources.propTypes = {
     actions: PropTypes.object,
     examList: PropTypes.any,
     examListLoading: PropTypes.bool,
-    examListError: PropTypes.string,
+    examListError: PropTypes.any,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
-    guideListError: PropTypes.string,
+    guideListError: PropTypes.any,
     learningResourcesList: PropTypes.any,
     learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.string,
+    learningResourcesListError: PropTypes.any,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
+    readingListError: PropTypes.any,
 };
 
 export default React.memo(CourseResources);

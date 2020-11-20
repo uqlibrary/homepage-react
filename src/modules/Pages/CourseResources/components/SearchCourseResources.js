@@ -29,9 +29,8 @@ const useStyles = makeStyles(
 
 export const SearchCourseResources = ({
     loadNewSubject,
+    preselectedCourse,
     renderSubjectTabBody,
-    // setDisplayType,
-    // setKeywordPresets,
     listSearchedSubjects,
     updateSearchList,
 }) => {
@@ -42,6 +41,33 @@ export const SearchCourseResources = ({
     const handleSearchTabChange = (event, newSubjectTabId) => {
         setCurrentSearchTab(newSubjectTabId);
     };
+    // console.log('listSearchedSubjects = ', listSearchedSubjects);
+
+    const focusOnSelectedSubjectTab = React.useCallback(
+        preselectedCourse => {
+            let tabId = null;
+            const searchKeyword = preselectedCourse.coursecode || '';
+            const campus = preselectedCourse.campus || '';
+            const semester = preselectedCourse.semester || '';
+            if (!listSearchedSubjects.includes(searchKeyword)) {
+                loadNewSubject(searchKeyword, campus, semester);
+                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+
+                tabId = listSearchedSubjects.length;
+            } else {
+                tabId = listSearchedSubjects.indexOf(searchKeyword);
+            }
+
+            setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
+        },
+        [listSearchedSubjects, loadNewSubject, updateSearchList],
+    );
+
+    React.useEffect(() => {
+        if (!!preselectedCourse.coursecode) {
+            focusOnSelectedSubjectTab(preselectedCourse);
+        }
+    }, [preselectedCourse, focusOnSelectedSubjectTab]); // run once on load
 
     const renderSearchResults = searchedSubjects => {
         return (
@@ -132,6 +158,7 @@ export const SearchCourseResources = ({
 SearchCourseResources.propTypes = {
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
+    preselectedCourse: PropTypes.any,
     renderSubjectTabBody: PropTypes.func,
     // setDisplayType: PropTypes.func,
     // setKeywordPresets: PropTypes.func,

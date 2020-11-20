@@ -100,6 +100,16 @@ export const CourseResourceSearch = ({
         return !!option && !!option.text ? `${option.text} (${option.rest.course_title}, ${option.rest.period})` : '';
     };
 
+    const [searchUrl, setSearchUrl] = useState('');
+
+    const loadSearchResult = React.useCallback(() => {
+        searchUrl !== '' && history.push(searchUrl);
+    });
+
+    React.useEffect(() => {
+        loadSearchResult();
+    }, [searchUrl, loadSearchResult]);
+
     const optionSelected = option => {
         // in the compact view on the homepage, they are sent to the course resources page for that course
         // in the full view they are already on the Course Resource page and the tab loads
@@ -110,8 +120,8 @@ export const CourseResourceSearch = ({
                     campus: option.rest.campus,
                     semester: option.rest.period,
                 };
-                const url = getUrlForCourseResourceSpecificTab(course, pageLocation, false, true);
-                history.push(url);
+                setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
+                // history.push(url);
             }
         } else {
             searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);

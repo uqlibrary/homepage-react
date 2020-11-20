@@ -110,7 +110,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
 
 PastExamPapers.propTypes = {
     examList: PropTypes.any,
-    examListError: PropTypes.string,
+    examListError: PropTypes.any,
     examListLoading: PropTypes.bool,
 };
 

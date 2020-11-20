@@ -44,7 +44,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
         setCurrentMenuTab(subjectTabId);
     };
 
-    const loadSelectedSubject = React.useCallback(preselectedCourse => {
+    const focusOnSelectedSubjectTab = React.useCallback(preselectedCourse => {
         let preselectedSubjectTab = null;
         account.current_classes.map((item, index) => {
             if (
@@ -62,7 +62,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
 
     React.useEffect(() => {
         if (!!preselectedCourse.coursecode) {
-            loadSelectedSubject(preselectedCourse);
+            focusOnSelectedSubjectTab(preselectedCourse);
         }
     }, [preselectedCourse]); // run once on load
 

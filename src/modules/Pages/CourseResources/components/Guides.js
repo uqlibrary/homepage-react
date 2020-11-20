@@ -107,13 +107,13 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 Guides.propTypes = {
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
+    readingListError: PropTypes.any,
     learningResourcesList: PropTypes.any,
     learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.string,
+    learningResourcesListError: PropTypes.any,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
-    guideListError: PropTypes.string,
+    guideListError: PropTypes.any,
     actions: PropTypes.object,
 };
 
