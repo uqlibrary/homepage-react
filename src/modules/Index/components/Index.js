@@ -18,7 +18,6 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 import { default as locale } from './locale';
 import {
     seeCourseResources,
@@ -28,8 +27,6 @@ import {
     seeLibraryServices,
     seeTraining,
 } from 'helpers/access';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import Box from '@material-ui/core/Box';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -40,6 +37,7 @@ import Badge from '@material-ui/core/Badge';
 import Hours from './Hours';
 import { useCookies } from 'react-cookie';
 import { Location } from '../../SharedComponents/Location';
+import { default as Computers } from './Computers';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -94,7 +92,15 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHoursLoading }) => {
+export const Index = ({
+    account,
+    spotlights,
+    spotlightsLoading,
+    libHours,
+    libHoursLoading,
+    computerAvailability,
+    computerAvailabilityLoading,
+}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     // Load spotlights if they havent been already
@@ -115,7 +121,6 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
         }
     }, [location, cookies.location, setCookie]);
     const handleLocationChange = location => {
-        console.log('location changed', location);
         setLocation(location);
         setCookie('location', location);
     };
@@ -138,18 +143,6 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
             return <span>Good evening</span>;
         }
     };
-    const circleColor = value => {
-        if (value < 25) {
-            return 'red';
-        } else if (value > 25 && value < 50) {
-            return 'orange';
-        } else if (value > 50 && value < 75) {
-            return '#36926a';
-        } else if (value > 75) {
-            return 'green';
-        }
-        return '#999';
-    };
     return (
         <StandardPage>
             <div className="layout-card">
@@ -159,7 +152,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                         <PrimoSearch />
                     </Grid>
                     {/* Spotlights */}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
+                    <Grid item xs={12} lg={8} id="spotlights" data-testid="spotlights">
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
 
@@ -197,7 +190,7 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                                         <Typography
                                                             component={'span'}
                                                             color={'secondary'}
-                                                            style={{ fontSize: 12 }}
+                                                            style={{ fontSize: 14 }}
                                                         >
                                                             <AccountBoxIcon
                                                                 fontSize={'small'}
@@ -361,129 +354,29 @@ export const Index = ({ account, spotlights, spotlightsLoading, libHours, libHou
                                                 </Grid>
                                             </MenuItem>
                                         </Grid>
-                                        {/* Room bookings */}
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>Book a room</Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your room bookings (1 today)'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <Button
-                                                            size={'small'}
-                                                            variant={'contained'}
-                                                            className={classes.ppButton}
-                                                        >
-                                                            <MeetingRoomIcon />
-                                                        </Button>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={235} />
                         </Grid>
                     )}
 
                     {seeComputerAvailability(account) && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                            <StandardCard accentHeader title="Computer availability" fullHeight>
-                                <div
-                                    style={{
-                                        height: 275,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
-                                >
-                                    {locale.Computers.map((item, index) => {
-                                        const percent = parseInt((item.free / item.total) * 100, 10);
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                            >
-                                                <Grid item xs={5}>
-                                                    <a href={item.link} style={{ marginLeft: 8 }}>
-                                                        {item.title}
-                                                    </a>
-                                                </Grid>
-                                                <Grid item xs>
-                                                    {item.free} of {item.total} available
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        title={`${percent}% available = ${item.free} of ${item.total}`}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
-                                                    >
-                                                        <Box position="relative" display="inline-flex">
-                                                            <CircularProgress
-                                                                size={20}
-                                                                thickness={10}
-                                                                variant="static"
-                                                                value={percent}
-                                                                style={{ color: circleColor(percent) }}
-                                                            />
-                                                            <Box
-                                                                top={0}
-                                                                left={0}
-                                                                bottom={0}
-                                                                right={0}
-                                                                position="absolute"
-                                                                display="flex"
-                                                                alignItems="center"
-                                                                justifyContent="center"
-                                                            >
-                                                                <CircularProgress
-                                                                    variant="static"
-                                                                    size={20}
-                                                                    thickness={10}
-                                                                    value={percent - 100}
-                                                                    style={{
-                                                                        color: circleColor(percent),
-                                                                        opacity: 0.2,
-                                                                    }}
-                                                                />
-                                                            </Box>
-                                                        </Box>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
+                            <Computers
+                                computerAvailability={computerAvailability}
+                                computerAvailabilityLoading={computerAvailabilityLoading}
+                                height={350}
+                            />
                         </Grid>
                     )}
 
                     {seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={350} />
                         </Grid>
                     )}
 
@@ -756,6 +649,8 @@ Index.propTypes = {
     spotlightsLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    computerAvailability: PropTypes.array,
+    computerAvailabilityLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

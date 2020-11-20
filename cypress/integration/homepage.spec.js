@@ -9,8 +9,8 @@ context('Homepage', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('John');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="course-resources-panel"]').contains('Course resources');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
@@ -37,8 +37,8 @@ context('Homepage', () => {
         cy.visit('/?user=s2222222');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Jane');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="course-resources-panel"]').contains('Course resources');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
@@ -94,7 +94,7 @@ context('Homepage', () => {
         cy.visit('/?user=uqresearcher');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('John');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -123,8 +123,8 @@ context('Homepage', () => {
         cy.visit('/?user=digiteamMember');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Caroline');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="course-resources-panel"]').contains('Course resources');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
@@ -150,8 +150,8 @@ context('Homepage', () => {
         cy.visit('/?user=uqstaffnonpriv');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('UQ');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="course-resources-panel"]').contains('Course resources');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
@@ -178,7 +178,7 @@ context('Homepage', () => {
         cy.visit('/?user=uqpkopit');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Peter');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -207,8 +207,8 @@ context('Homepage', () => {
         cy.visit('/?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Community');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -236,8 +236,8 @@ context('Homepage', () => {
         cy.visit('/?user=emalumni');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Alumni');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -265,8 +265,8 @@ context('Homepage', () => {
         cy.visit('/?user=emhospital');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Hospital');
-        cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="computer-availability-panel"]').contains('Computer availability');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -294,7 +294,7 @@ context('Homepage', () => {
         cy.visit('/?user=emassociate');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Associate');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -323,7 +323,7 @@ context('Homepage', () => {
         cy.visit('/?user=emfryer');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Fryer');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');
@@ -352,7 +352,7 @@ context('Homepage', () => {
         cy.visit('/?user=emhonorary');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personal-panel"]').contains('Honorary');
-        cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
+        // cy.get('div[data-testid="library-hours-panel"]').contains('Library hours');
         cy.get('div[data-testid="training-panel"]').contains('Training');
         cy.get('div[data-testid="library-services-panel"]').contains('Library services');
         cy.get('div[data-testid="feedback-panel"]').contains('Feedback');

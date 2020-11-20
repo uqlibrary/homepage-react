@@ -18,7 +18,7 @@ import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN101
 import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import { libHours } from './data/account';
+import { libHours, computerAvailability } from './data/account';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -91,7 +91,7 @@ mock.onGet(routes.LIB_HOURS_API().apiUrl)
 mock.onGet(routes.ALERT_API().apiUrl)
     .reply(() => {
         console.log('Alert status API hit');
-        // mock chat status
+        // mock alerts status
         return [200,
             [
                 {
@@ -104,6 +104,13 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 },
             ],
         ];
+    });
+
+mock.onGet(routes.COMP_AVAIL_API.apiUrl)
+    .reply(() => {
+        console.log('Computer availability API hit');
+        // mock computer availability
+        return [200, computerAvailability];
     });
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {

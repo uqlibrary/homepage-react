@@ -86,8 +86,8 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             style={{
                                 width: 36,
                                 position: 'absolute',
-                                bottom: 0,
-                                left: 4,
+                                top: 4,
+                                left: 32,
                                 zIndex: 101,
                             }}
                         >
@@ -100,7 +100,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 width: 200,
                                 marginLeft: -100,
                                 position: 'absolute',
-                                top: 250,
+                                top: 0,
                                 left: '50%',
                                 zIndex: 101,
                                 textAlign: 'center',
