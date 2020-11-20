@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router';
+import { withRouter } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
@@ -32,7 +33,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(searchUrl => {
         searchUrl !== '' && history.push(searchUrl);
-    });
+    }, []);
     React.useEffect(() => {
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
@@ -115,4 +116,4 @@ CourseResourcesPanel.propTypes = {
     history: PropTypes.object,
 };
 
-export default CourseResourcesPanel;
+export default withRouter(CourseResourcesPanel);

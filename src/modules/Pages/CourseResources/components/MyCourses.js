@@ -44,23 +44,28 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
         setCurrentMenuTab(subjectTabId);
     };
 
+    const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
         preselectedCourse => {
-            let preselectedSubjectTab = null;
-            account.current_classes.map((item, index) => {
-                if (
-                    item.classnumber === preselectedCourse.coursecode &&
-                    getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
-                    item.semester === preselectedCourse.semester
-                ) {
-                    preselectedSubjectTab = `${courseTabLabel}-${index}`;
+            if (!initialLoadComplete) {
+                let preselectedSubjectTab = null;
+                account.current_classes.map((item, index) => {
+                    if (
+                        item.classnumber === preselectedCourse.coursecode &&
+                        getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
+                        item.semester === preselectedCourse.semester
+                    ) {
+                        preselectedSubjectTab = `${courseTabLabel}-${index}`;
+                    }
+                });
+                if (preselectedSubjectTab !== null) {
+                    console.log('focusOnSelectedSubjectTab: will set subject tab to ', preselectedSubjectTab);
+                    setCurrentMenuTab(preselectedSubjectTab);
                 }
-            });
-            if (preselectedSubjectTab !== null) {
-                setCurrentMenuTab(preselectedSubjectTab);
             }
+            setInitialLoadComplete(true);
         },
-        [account],
+        [account, initialLoadComplete],
     );
 
     React.useEffect(() => {
