@@ -43,24 +43,29 @@ export const SearchCourseResources = ({
     };
     // console.log('listSearchedSubjects = ', listSearchedSubjects);
 
+    const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
         preselectedCourse => {
-            let tabId = null;
-            const searchKeyword = preselectedCourse.coursecode || '';
-            const campus = preselectedCourse.campus || '';
-            const semester = preselectedCourse.semester || '';
-            if (!listSearchedSubjects.includes(searchKeyword)) {
-                loadNewSubject(searchKeyword, campus, semester);
-                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+            if (!initialLoadComplete) {
+                console.log('focusOnSelectedSubjectTab');
+                let tabId = null;
+                const searchKeyword = preselectedCourse.coursecode || '';
+                const campus = preselectedCourse.campus || '';
+                const semester = preselectedCourse.semester || '';
+                if (!listSearchedSubjects.includes(searchKeyword)) {
+                    loadNewSubject(searchKeyword, campus, semester);
+                    updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
-                tabId = listSearchedSubjects.length;
-            } else {
-                tabId = listSearchedSubjects.indexOf(searchKeyword);
+                    tabId = listSearchedSubjects.length;
+                } else {
+                    tabId = listSearchedSubjects.indexOf(searchKeyword);
+                }
+
+                setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
             }
-
-            setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
+            setInitialLoadComplete(true);
         },
-        [listSearchedSubjects, loadNewSubject, updateSearchList],
+        [listSearchedSubjects, initialLoadComplete, loadNewSubject, updateSearchList],
     );
 
     React.useEffect(() => {
@@ -123,12 +128,14 @@ export const SearchCourseResources = ({
     // };
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
+        console.log('searchKeywordSelected: searchKeyword = ', searchKeyword, '; suggestions = ', suggestions);
         let tabId;
 
         const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
         const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
         if (!listSearchedSubjects.includes(searchKeyword)) {
+            console.log('searchKeywordSelected');
             loadNewSubject(searchKeyword, campus, semester);
             updateSearchList(listSearchedSubjects.concat(searchKeyword));
 

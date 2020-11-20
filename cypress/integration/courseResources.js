@@ -315,7 +315,7 @@ context('Course Resources', () => {
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
     });
 
-    it('A user who clicks on a homepage own course gets the correct details', () => {
+    it('A user who has arrived by clicking on the homepage own course gets the correct details', () => {
         cy.visit('/courseresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020');
         cy.viewport(1300, 1000);
 
@@ -324,7 +324,7 @@ context('Course Resources', () => {
         FREN1010_loads_properly_for_s111111_user();
     });
 
-    it('A user who searches for a course on a homepage own course gets the correct details', () => {
+    it('A user who has arrived by searching for a course on the homepage gets the correct details', () => {
         cy.visit('/courseresources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020');
         cy.viewport(1300, 1000);
 
@@ -339,5 +339,29 @@ context('Course Resources', () => {
         a_subject_page_should_have_correct_Library_Guides_footer_links();
 
         a_subject_loads_course_links_correctly(ACCT1101ReadingList);
+    });
+
+    it('the Course resources panel links correctly', () => {
+        cy.visit('/?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        // tbd
+        // the user sees 3 subjects
+        // the users clicks the first one (FREN1010)
+        // the user lands on the correct page
+    });
+
+    it('the Course resources panel searches correctly', () => {
+        cy.visit('/?user=s2222222');
+        cy.viewport(1300, 1000);
+
+        // tbd
+        // the user sees NO subjects
+        // the user sees a search field
+        // user enters ACCT
+        // user sees N entries
+        // user clicks on #1, ACCT1101
+        // user lands on appropriate course resources page
+        // (contents tested in Course Resource test)
     });
 });

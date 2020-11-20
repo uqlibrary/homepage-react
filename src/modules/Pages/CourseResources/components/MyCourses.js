@@ -40,6 +40,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
+        console.log('handleCourseTabChange');
         !!event.target.innerText && loadNewSubject(event.target.innerText);
         setCurrentMenuTab(subjectTabId);
     };
@@ -72,7 +73,7 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
         if (!!preselectedCourse.coursecode) {
             focusOnSelectedSubjectTab(preselectedCourse);
         }
-    }, [preselectedCourse]); // run once on load
+    }, [preselectedCourse, focusOnSelectedSubjectTab]); // run once on load
 
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (

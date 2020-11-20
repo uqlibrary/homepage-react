@@ -33,6 +33,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(searchUrl => {
         searchUrl !== '' && history.push(searchUrl);
+        // url !== '' && window.location.assign(url);
     }, []);
     React.useEffect(() => {
         loadSearchResult(searchUrl);
@@ -46,7 +47,6 @@ export const CourseResourcesPanel = ({ account, history }) => {
                 semester: option.rest.period,
             };
             setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
-            // history.push(url);
         }
     };
 

@@ -8,7 +8,7 @@ import { useLocation } from 'react-router';
 
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
-import { getCampusByCode } from 'helpers/general';
+import { getCampusByCode, isRepeatingString } from 'helpers/general';
 
 import { Guides } from './Guides';
 import { ReadingLists } from './ReadingLists';
@@ -92,6 +92,7 @@ export const CourseResources = ({
 
     const loadNewSubject = React.useCallback(
         (classnumber, campus = null, semester = null) => {
+            console.log('loadNewSub: classnumber = ', classnumber, ';  campus = ', campus, ';  semester = ', semester);
             const firstClass =
                 (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
             if (!currentGuidesList[classnumber]) {
@@ -119,6 +120,7 @@ export const CourseResources = ({
     React.useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
             if (!currentReadingLists[params.coursecode]) {
+                console.log('main');
                 loadNewSubject(params.coursecode, params.campus, params.semester);
             }
         }
@@ -226,6 +228,7 @@ export const CourseResources = ({
                 !!account.current_classes[0] &&
                 account.current_classes[0].classnumber) ||
             null;
+        console.log('one');
         loadNewSubject(firstEnrolledClassNumber);
         // if (firstEnrolledClassNumber !== null) {
         //     !!firstEnrolledClassNumber && actions.loadGuides(firstEnrolledClassNumber);

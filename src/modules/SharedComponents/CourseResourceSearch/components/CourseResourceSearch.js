@@ -83,6 +83,7 @@ export const CourseResourceSearch = ({
 
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
+            console.log('handleSearchKeywordChange" newValue = ', newValue);
             setSearchKeyword(newValue);
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
                 actions.loadCourseReadingListsSuggestions(newValue);
@@ -97,6 +98,7 @@ export const CourseResourceSearch = ({
     };
 
     const optionSelected = option => {
+        console.log('optionSelected" option = ', option);
         // in the compact view on the homepage, they are sent to the course resources page for that course
         // in the full view they are already on the Course Resource page and the tab loads
         if (displayType === 'compact') {
@@ -122,7 +124,10 @@ export const CourseResourceSearch = ({
                         }}
                         options={(!!suggestions && suggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
+                        onChange={console.log('value has changed')}
+                        onClose={(event, reason) => console.log('close reason = ', reason, ': event =  ', event)}
                         onInputChange={handleSearchKeywordChange}
+                        noOptionsText="Enter a course code to choose a course"
                         renderInput={params => {
                             return (
                                 <TextField
