@@ -102,7 +102,7 @@ export class AppClass extends PureComponent {
         chatStatus: PropTypes.any,
         libHours: PropTypes.object,
         libHoursLoading: PropTypes.bool,
-        trainingEvents: PropTypes.object,
+        trainingEvents: PropTypes.array,
         trainingEventsLoading: PropTypes.bool,
     };
     static childContextTypes = {
@@ -149,8 +149,6 @@ export class AppClass extends PureComponent {
         this.props.actions.loadLibHours();
         this.props.actions.loadCompAvail();
         this.props.actions.loadTrainingEvents();
-        this.handleResize(this.state.mediaQuery);
-        this.state.mediaQuery.addListener(this.handleResize);
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -170,17 +168,6 @@ export class AppClass extends PureComponent {
             actionButtonLabel: 'UQ Library COVID-19 Updates',
         });
     }
-
-    componentWillUnmount() {
-        this.state.mediaQuery.removeListener(this.handleResize);
-    }
-
-    handleResize = mediaQuery => {
-        this.setState({
-            docked: mediaQuery.matches,
-        });
-    };
-
     redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
@@ -228,7 +215,7 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        console.log(this.props.trainingEvents);
+        console.log(this.props.trainingEventsLoading, this.props.trainingEvents);
         return (
             <Grid container className={classes.layoutFill}>
                 <HelpDrawer />
