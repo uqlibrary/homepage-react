@@ -23,8 +23,11 @@ import {
     seeCourseResources,
     seeComputerAvailability,
     seeFeedback,
+    seeFines,
     seeLibraryHours,
     seeLibraryServices,
+    seeLoans,
+    seePrintBalance,
     seeTraining,
 } from 'helpers/access';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
@@ -220,140 +223,161 @@ export const Index = ({
                                         xs={12}
                                         style={{ marginBottom: -12, alignSelf: 'flex-end', marginLeft: -24 }}
                                     >
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                                onClick={handlePapercutClick}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '30px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Manage your print balance ($12.50)
-                                                    </Typography>
-                                                </Grid>
-                                                <Menu
-                                                    id="simple-menu"
-                                                    anchorEl={anchorPapercutEl}
-                                                    keepMounted
-                                                    open={Boolean(anchorPapercutEl)}
-                                                    onClose={handlePapercutClose}
-                                                    onBlur={handlePapercutClose}
+                                        {seePrintBalance(account) && (
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                    onClick={handlePapercutClick}
                                                 >
-                                                    <MenuItem disabled>Manage your PaperCut account</MenuItem>
-                                                    <MenuItem onClick={handlePapercutClose}>
-                                                        Log in and manage your print balance
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handlePapercutClose}>
-                                                        Top up your print balance - $5
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handlePapercutClose}>
-                                                        Top up your print balance - $10
-                                                    </MenuItem>
-                                                    <MenuItem onClick={handlePapercutClose}>
-                                                        Top up your print balance - $20
-                                                    </MenuItem>
-                                                </Menu>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your print balance'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
+                                                    <Grid
+                                                        item
+                                                        data-testid="print-balance-personalisation"
+                                                        xs
+                                                        style={{ lineHeight: '30px' }}
                                                     >
-                                                        <Button
-                                                            size={'small'}
-                                                            variant={'contained'}
-                                                            className={classes.ppButton}
-                                                        >
-                                                            <PrintIcon />
-                                                        </Button>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Manage your library loans (2 overdue)
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Manage your item loans (6 current | 2 overdue)'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Manage your print balance ($12.50)
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Menu
+                                                        id="simple-menu"
+                                                        anchorEl={anchorPapercutEl}
+                                                        keepMounted
+                                                        open={Boolean(anchorPapercutEl)}
+                                                        onClose={handlePapercutClose}
+                                                        onBlur={handlePapercutClose}
                                                     >
-                                                        <Badge
-                                                            badgeContent={2}
-                                                            color="error"
-                                                            classes={{ badge: classes.ppBadgeWarning }}
+                                                        <MenuItem disabled>Manage your PaperCut account</MenuItem>
+                                                        <MenuItem onClick={handlePapercutClose}>
+                                                            Log in and manage your print balance
+                                                        </MenuItem>
+                                                        <MenuItem onClick={handlePapercutClose}>
+                                                            Top up your print balance - $5
+                                                        </MenuItem>
+                                                        <MenuItem onClick={handlePapercutClose}>
+                                                            Top up your print balance - $10
+                                                        </MenuItem>
+                                                        <MenuItem onClick={handlePapercutClose}>
+                                                            Top up your print balance - $20
+                                                        </MenuItem>
+                                                    </Menu>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Manage your print balance'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
                                                         >
                                                             <Button
                                                                 size={'small'}
                                                                 variant={'contained'}
                                                                 className={classes.ppButton}
                                                             >
-                                                                <MenuBookIcon />
+                                                                <PrintIcon />
                                                             </Button>
-                                                        </Badge>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
-                                        <Grid container spacing={0}>
-                                            <MenuItem
-                                                style={{
-                                                    width: '100%',
-                                                    marginBottom: -3,
-                                                    marginTop: -3,
-                                                    paddingTop: 3,
-                                                    paddingBottom: 3,
-                                                }}
-                                            >
-                                                <Grid item xs style={{ lineHeight: '24px' }}>
-                                                    <Typography style={{ color: '#316799' }}>
-                                                        Pay overdue fines (1 outstanding)
-                                                    </Typography>
-                                                </Grid>
-                                                <Grid item xs={'auto'}>
-                                                    <Tooltip
-                                                        id="auth-button"
-                                                        title={'Pay your overdue fines | 1 outstanding'}
-                                                        placement="left"
-                                                        TransitionProps={{ timeout: 300 }}
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
+                                        )}
+                                        {seeLoans(account) && (
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                >
+                                                    <Grid
+                                                        item
+                                                        data-testid="loans-personalisation"
+                                                        xs
+                                                        style={{ lineHeight: '24px' }}
                                                     >
-                                                        <Badge
-                                                            badgeContent={1}
-                                                            color="error"
-                                                            classes={{ badge: classes.ppBadgeError }}
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Manage your library loans (2 overdue)
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Manage your item loans (6 current | 2 overdue)'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
                                                         >
-                                                            <Button
-                                                                size={'small'}
-                                                                variant={'contained'}
-                                                                className={classes.ppButton}
+                                                            <Badge
+                                                                badgeContent={2}
+                                                                color="error"
+                                                                classes={{ badge: classes.ppBadgeWarning }}
                                                             >
-                                                                <MonetizationOnIcon />
-                                                            </Button>
-                                                        </Badge>
-                                                    </Tooltip>
-                                                </Grid>
-                                            </MenuItem>
-                                        </Grid>
+                                                                <Button
+                                                                    size={'small'}
+                                                                    variant={'contained'}
+                                                                    className={classes.ppButton}
+                                                                >
+                                                                    <MenuBookIcon />
+                                                                </Button>
+                                                            </Badge>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
+                                        )}
+                                        {seeFines(account) && (
+                                            <Grid container spacing={0}>
+                                                <MenuItem
+                                                    style={{
+                                                        width: '100%',
+                                                        marginBottom: -3,
+                                                        marginTop: -3,
+                                                        paddingTop: 3,
+                                                        paddingBottom: 3,
+                                                    }}
+                                                >
+                                                    <Grid
+                                                        item
+                                                        xs
+                                                        style={{ lineHeight: '24px' }}
+                                                        data-testid="fines-personalisation"
+                                                    >
+                                                        <Typography style={{ color: '#316799' }}>
+                                                            Pay overdue fines (1 outstanding)
+                                                        </Typography>
+                                                    </Grid>
+                                                    <Grid item xs={'auto'}>
+                                                        <Tooltip
+                                                            id="auth-button"
+                                                            title={'Pay your overdue fines | 1 outstanding'}
+                                                            placement="left"
+                                                            TransitionProps={{ timeout: 300 }}
+                                                        >
+                                                            <Badge
+                                                                badgeContent={1}
+                                                                color="error"
+                                                                classes={{ badge: classes.ppBadgeError }}
+                                                            >
+                                                                <Button
+                                                                    size={'small'}
+                                                                    variant={'contained'}
+                                                                    className={classes.ppButton}
+                                                                >
+                                                                    <MonetizationOnIcon />
+                                                                </Button>
+                                                            </Badge>
+                                                        </Tooltip>
+                                                    </Grid>
+                                                </MenuItem>
+                                            </Grid>
+                                        )}
                                     </Grid>
                                 </Grid>
                             </Grid>
