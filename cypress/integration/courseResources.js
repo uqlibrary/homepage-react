@@ -318,4 +318,17 @@ context('Course Resources', () => {
         the_user_clicks_on_the_My_Courses_tab();
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
     });
+
+    it('the non-loggedin user cannot access Course Resources', () => {
+        cy.visit('/courseresources?user=public');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authorised users only.');
+    });
+
+
+    it('the loggedin user without course resource privs cannot access Course Resources', () => {
+        cy.visit('/courseresources?user=emcommunity');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authorised users only.');
+    });
 });
