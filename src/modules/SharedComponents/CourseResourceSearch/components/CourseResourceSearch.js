@@ -99,7 +99,7 @@ export const CourseResourceSearch = ({
 
     const optionSelected = option => {
         console.log('optionSelected" option = ', option);
-        // in the compact view on the homepage, they are sent to the course resources page for that course
+        // in the compact view on the homepage, the content loads in a popup
         // in the full view they are already on the Course Resource page and the tab loads
         if (displayType === 'compact') {
             searchKeywordSelected(option, searchKeyword);
@@ -151,7 +151,7 @@ export const CourseResourceSearch = ({
                         }}
                     />
                 </Grid>
-                <Grid item xs={'auto'} style={{ width: 90, marginLeft: -70, marginRight: -20, marginBottom: 6 }}>
+                <Grid item xs={'auto'} style={{ width: 90, marginRight: -20, marginBottom: 6 }}>
                     <VoiceToText sendHandler={handleSearchKeywordChange} clearSuggestions={handleClearSuggestions} />
                 </Grid>
                 {suggestionsLoading && (
