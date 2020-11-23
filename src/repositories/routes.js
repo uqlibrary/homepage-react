@@ -86,6 +86,12 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 // Spotlights API
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Training API
+export const TRAINING_API = () => ({
+    apiUrl: 'training_events',
+    options: { params: { take: 10, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
+});
+
 // Primo Suggestions API
 export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
     return {

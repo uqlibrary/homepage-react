@@ -102,6 +102,8 @@ export class AppClass extends PureComponent {
         chatStatus: PropTypes.any,
         libHours: PropTypes.object,
         libHoursLoading: PropTypes.bool,
+        trainingEvents: PropTypes.object,
+        trainingEventsLoading: PropTypes.bool,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -146,6 +148,7 @@ export class AppClass extends PureComponent {
         this.props.actions.loadChatStatus();
         this.props.actions.loadLibHours();
         this.props.actions.loadCompAvail();
+        this.props.actions.loadTrainingEvents();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -225,6 +228,7 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
+        console.log(this.props.trainingEvents);
         return (
             <Grid container className={classes.layoutFill}>
                 <HelpDrawer />

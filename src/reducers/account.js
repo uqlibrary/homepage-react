@@ -144,7 +144,7 @@ const handlers = {
         libHours: null,
         libHoursLoading: false,
     }),
-
+    // Computer availability
     [actions.COMP_AVAIL_LOADING]: state => ({
         ...state,
         computerAvailability: null,
@@ -161,6 +161,24 @@ const handlers = {
         ...state,
         computerAvailability: null,
         computerAvailabilityLoading: false,
+    }),
+    // Training
+    [actions.TRAINING_LOADING]: state => ({
+        ...state,
+        trainingEvents: null,
+        trainingEventsLoading: true,
+    }),
+
+    [actions.TRAINING_LOADED]: (state, action) => ({
+        ...state,
+        trainingEvents: action.payload,
+        trainingEventsLoading: false,
+    }),
+
+    [actions.TRAINING_FAILED]: state => ({
+        ...state,
+        trainingEvents: null,
+        trainingEventsLoading: false,
     }),
 };
 
