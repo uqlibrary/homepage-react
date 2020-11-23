@@ -44,7 +44,7 @@ export default {
         // max number of items of each type we should display
         readingLists: 2,
         examPapers: 2,
-        libGuides: 2,
+        libGuides: 3,
     },
     notesTrimLength: 90,
     myCourses: {
@@ -61,10 +61,14 @@ export default {
         },
         readingLists: {
             title: 'Reading lists',
-            multiple: {
-                title: 'More than one reading list found for [classnumber]. Please select a list:',
-                linkLabel: 'Search other reading lists',
-                linkOut: 'http://lr.library.uq.edu.au/index.html',
+            error: {
+                none: 'No reading lists for this course',
+                unavailable: 'Reading lists currently unavailable',
+                multiple: 'More than one reading list found for [classnumber]. Please select a list:',
+                footer: {
+                    linkLabel: 'Search other reading lists',
+                    linkOut: 'http://lr.library.uq.edu.au/index.html',
+                },
             },
             footer: {
                 linkLabel: '[numberExcessReadingLists] more [readingListNumber]',
@@ -72,8 +76,8 @@ export default {
         },
         examPapers: {
             title: 'Past exam papers',
-            unavailable: 'Exam papers list currently unavailable',
             none: 'No Past Exam Papers for this course',
+            unavailable: 'Exam papers list currently unavailable',
             morePastExams: '[numberExcessExams] more past [examNumber]',
             footer: {
                 linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',
@@ -83,7 +87,7 @@ export default {
         guides: {
             title: 'Library guides',
             none: 'No Library guides for this course',
-            unavailableMessage: 'Library guides list currently unavailable',
+            unavailable: 'Library guides list currently unavailable',
             footer: {
                 linkOut: 'https://guides.library.uq.edu.au',
                 linkLabel: 'All library guides',

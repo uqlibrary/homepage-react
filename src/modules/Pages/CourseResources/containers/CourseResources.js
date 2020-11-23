@@ -7,6 +7,7 @@ import * as actions from 'actions';
 export const mapStateToProps = state => {
     return {
         ...state.get('readingListReducer'),
+        ...state.get('examReducer'),
         ...state.get('guidesReducer'),
         ...state.get('learningResourceReducer'),
     };

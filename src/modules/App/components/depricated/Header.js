@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
-
 import { AuthButton } from 'modules/SharedComponents/Toolbox/AuthButton';
 import {
     seeComputerAvailability,
@@ -18,11 +17,9 @@ import {
 } from 'helpers/access';
 
 const logo = require('../../../../public/images/uq-lockup-landscape--reversed.svg');
-
 import locale from 'locale/global';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 import { pathConfig } from 'config/routes';
-
 import Grid from '@material-ui/core/Grid';
 import { makeStyles, withStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
@@ -32,16 +29,10 @@ import Radio from '@material-ui/core/Radio';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Hidden from '@material-ui/core/Hidden';
-
 import { default as MenuIcon } from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import CloseIcon from '@material-ui/icons/Close';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import MailIcon from '@material-ui/icons/Mail';
-import ChatIcon from '@material-ui/icons/Chat';
-import PhoneIcon from '@material-ui/icons/Phone';
-import DescriptionIcon from '@material-ui/icons/Description';
 import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import AppsIcon from '@material-ui/icons/Apps';
 import ComputerIcon from '@material-ui/icons/Computer';
@@ -54,6 +45,7 @@ import RoomServiceIcon from '@material-ui/icons/RoomService';
 import YoutubeSearchedForIcon from '@material-ui/icons/YoutubeSearchedFor';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import FeedbackIcon from '@material-ui/icons/Feedback';
+import { AskUs } from '../AskUs';
 
 const useStyles = makeStyles(
     theme => ({
@@ -163,7 +155,6 @@ const useStyles = makeStyles(
 export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
     const classes = useStyles();
     const [expandHeader, setExpandHeader] = useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorEl2, setAnchorEl2] = React.useState(null);
     const [searchType, setSearchType] = useState('1');
     const toggleHeader = () => {
@@ -180,14 +171,6 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
 
     const handleClose2 = () => {
         setAnchorEl2(null);
-    };
-
-    const handleClick = event => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
     };
 
     const _navigateToCourseResources = () => {
@@ -232,7 +215,6 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                             >
                                 <IconButton
                                     aria-label={locale.global.mainNavButton.aria}
-                                    // style={{ marginLeft: '-12px', marginRight: '12px' }}
                                     onClick={toggleMenu}
                                     id={'main-menu-button'}
                                 >
@@ -331,7 +313,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                             <Grid container spacing={0} style={{ maxWidth: 400 }}>
                                 {seeBorrowing(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-borrowing-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Borrowing
                                         </MenuItem>
@@ -339,7 +321,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeComputerAvailability(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-computer-availability-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <ComputerIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Computers
                                         </MenuItem>
@@ -355,7 +337,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeDocumentDelivery(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-document-delivery-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <MoveToInboxIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Document delivery
                                         </MenuItem>
@@ -363,7 +345,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeLibraryHours(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-library-hours-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Hours
                                         </MenuItem>
@@ -379,7 +361,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seePrintBalance(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-print-balance-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <PrintIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Printing balance
                                         </MenuItem>
@@ -387,7 +369,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seePublicationMetrics(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-publication-metrics-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <AssessmentIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Publication metrics
                                         </MenuItem>
@@ -395,7 +377,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeRoomBookings(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-room-bookings-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <RoomServiceIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Room bookings
                                         </MenuItem>
@@ -403,7 +385,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeSavedItems && (
                                     <Grid item xs={6} data-testid="mylibrary-saved-items-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Saved items
                                         </MenuItem>
@@ -411,7 +393,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeSavedSearches && (
                                     <Grid item xs={6} data-testid="mylibrary-saved-searches-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Saved searches
                                         </MenuItem>
@@ -419,7 +401,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                 )}
                                 {seeFeedback && (
                                     <Grid item xs={6} data-testid="mylibrary-feedback-link">
-                                        <MenuItem onClick={handleClose}>
+                                        <MenuItem onClick={handleClose2}>
                                             <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />
                                             Feedback
                                         </MenuItem>
@@ -430,73 +412,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                     </Grid>
                     {/* Ask us */}
                     <Grid item xs={'auto'}>
-                        <Tooltip
-                            id="contact-button"
-                            title={'Ask us'}
-                            placement="bottom"
-                            TransitionProps={{ timeout: 300 }}
-                        >
-                            <IconButton
-                                onClick={handleClick}
-                                classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
-                            >
-                                <QuestionAnswer className={classes.icon} />
-                                <div style={{ color: 'white', fontSize: 12 }}>Ask us</div>
-                            </IconButton>
-                        </Tooltip>
-                        <Menu
-                            id="simple-menu"
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <Grid container spacing={0} style={{ maxWidth: 350 }}>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        FAQ
-                                    </MenuItem>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <ChatIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Chat
-                                    </MenuItem>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <MailIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Email us
-                                    </MenuItem>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <PhoneIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Phone us
-                                    </MenuItem>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <DescriptionIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Contact form
-                                    </MenuItem>
-                                </Grid>
-                                <Grid item xs={6}>
-                                    <MenuItem onClick={handleClose}>
-                                        <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6 }} />
-                                        Exam support
-                                    </MenuItem>
-                                </Grid>
-                                <Grid item xs={12}>
-                                    <MenuItem onClick={handleClose}>
-                                        <span style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                                            More ways to contact us
-                                        </span>
-                                    </MenuItem>
-                                </Grid>
-                            </Grid>
-                        </Menu>
+                        <AskUs />
                     </Grid>
                     <Grid item xs={'auto'}>
                         <AuthButton
@@ -519,11 +435,21 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                     <Grid item xs>
                         <Grid container spacing={2}>
                             <Grid item xs={'auto'} className={classes.searchTypes}>
-                                <UQRadio onChange={handleSearchTypeChange} value={'1'} checked={searchType === '1'} />
+                                <UQRadio
+                                    disabled={!expandHeader}
+                                    onChange={handleSearchTypeChange}
+                                    value={'1'}
+                                    checked={searchType === '1'}
+                                />
                                 Search all UQ websites
                             </Grid>
                             <Grid item xs={'auto'} className={classes.searchTypes}>
-                                <UQRadio onChange={handleSearchTypeChange} value={'2'} checked={searchType === '2'} />
+                                <UQRadio
+                                    disabled={!expandHeader}
+                                    onChange={handleSearchTypeChange}
+                                    value={'2'}
+                                    checked={searchType === '2'}
+                                />
                                 Search this site (library.uq.edu.au)
                             </Grid>
                             <Grid item xs />
@@ -533,10 +459,15 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
 
                 <Grid container className={classes.searchInputBox} alignItems={'center'}>
                     <Grid item xs>
-                        <Input fullWidth disableUnderline placeholder={'Enter your search terms'} />
+                        <Input
+                            fullWidth
+                            disableUnderline
+                            placeholder={'Enter your search terms'}
+                            disabled={!expandHeader}
+                        />
                     </Grid>
                     <Grid item xs={'auto'}>
-                        <IconButton size={'small'}>
+                        <IconButton size={'small'} disabled={!expandHeader}>
                             <SearchIcon />
                         </IconButton>
                     </Grid>

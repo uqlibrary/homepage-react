@@ -110,6 +110,18 @@ export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
 // Chat availability API
 export const CHAT_API = () => ({ apiUrl: 'chat_status', options: { params: { ts: `${new Date().getTime()}` } } });
 
+// Library hours
+export const LIB_HOURS_API = () => ({
+    apiUrl: 'library_hours/day',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Computer availability
+export const COMP_AVAIL_API = () => ({
+    apiUrl: 'computer_availability',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // Alerts API
 export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });
 
@@ -302,17 +314,10 @@ export const UNLOCK_RECORD_API = ({ pid }) => ({
     apiUrl: `records/${pid}/unlock`,
 });
 
-// coursePrefix
-export const LEARNING_RESOURCES_API = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/learning_resources/' + keyword,
-});
+export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
-// coursePrefix
-export const GUIDES_API = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/library_guides/' + keyword,
-});
+export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
-// talisId
-export const READING_LIST_API = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/course_reading_list/' + keyword,
+export const READING_LIST_API = ({ coursecode, campus, semester }) => ({
+    apiUrl: `course_resources/${coursecode}/${campus}/${semester}/reading_list`,
 });

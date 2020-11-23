@@ -1,7 +1,7 @@
 export { accounts, authorsSearch, currentAuthor, authorDetails, uqrdav10, uqagrinb } from './account';
 export {
     courseReadingList,
-    learningResourceData,
+    examList,
     libraryGuide,
 } from './records';
 

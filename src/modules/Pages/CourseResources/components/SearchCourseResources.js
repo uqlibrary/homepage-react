@@ -38,9 +38,8 @@ export const SearchCourseResources = ({
 
     const subjectTabLabel = 'searchtab';
     const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
-    const handleSearchTabChange = (event, subjectTabId) => {
-        !!event.target.innerText && loadNewSubject(event.target.innerText);
-        setCurrentSearchTab(subjectTabId);
+    const handleSearchTabChange = (event, newSubjectTabId) => {
+        setCurrentSearchTab(newSubjectTabId);
     };
 
     const renderSearchResults = searchedSubjects => {
@@ -48,35 +47,34 @@ export const SearchCourseResources = ({
             <Fragment>
                 <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
-                        {searchedSubjects.map((item, index) => {
+                        {searchedSubjects.map((subjectCode, index) => {
                             return (
                                 <Tab
-                                    data-testid={`classtab-${index}`}
-                                    key={`classtab-${index}`}
-                                    label={item}
+                                    data-testid={`classtab-${subjectCode}`}
+                                    key={`classtab-${subjectCode}`}
+                                    label={subjectCode}
                                     value={`${subjectTabLabel}-${index}`} // must match 'index' in TabPanel
-                                    {...a11yProps(index, 'searchtab')}
+                                    {...a11yProps(index, subjectTabLabel)}
                                 />
                             );
                         })}
                     </Tabs>
                 </AppBar>
-                {searchedSubjects.map((item, index) => {
+                {searchedSubjects.map((subjectCode, index) => {
                     const subject = {};
-                    subject.classnumber = item;
+                    subject.classnumber = subjectCode;
                     return (
                         <TabPanel
                             data-testid={`classpanel-${index}`}
                             index={`${subjectTabLabel}-${index}`} // must match 'value' in Tabs
                             label="classpanel"
                             key={`classpanel-${index}`}
-                            tabId="searchTab"
+                            tabId={searchTab}
                             value={searchTab}
                             className={classes.tabPanel}
                             {...reverseA11yProps(index, 'searchtab')}
                         >
                             {renderSubjectTabBody(subject)}
-                            {/* {item}*/}
                         </TabPanel>
                     );
                 })}
@@ -97,13 +95,23 @@ export const SearchCourseResources = ({
     };
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
+        let tabId;
         setKeywordPresets(getPresetData(searchKeyword, suggestions));
 
         setDisplayType('searchresults');
-        if (!listSearchedSubjects.searchKeyword) {
-            loadNewSubject(searchKeyword);
+        const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
+        const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
+        const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
+        if (!listSearchedSubjects.includes(searchKeyword)) {
+            loadNewSubject(searchKeyword, campus, semester);
+            updateSearchList(listSearchedSubjects.concat(searchKeyword));
+
+            tabId = listSearchedSubjects.length;
+        } else {
+            tabId = listSearchedSubjects.indexOf(searchKeyword);
         }
-        updateSearchList(listSearchedSubjects.concat(searchKeyword));
+
+        setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
     };
 
     return (

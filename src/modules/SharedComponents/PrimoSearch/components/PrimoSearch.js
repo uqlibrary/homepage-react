@@ -65,6 +65,17 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
+export const isRepeatingString = searchString => {
+    if (searchString.length <= 3) {
+        return false;
+    }
+    const lastChar = searchString.charAt(searchString.length - 1);
+    const secondLastChar = searchString.charAt(searchString.length - 2);
+    const thirdLastChar = searchString.charAt(searchString.length - 3);
+
+    return lastChar === secondLastChar && lastChar === thirdLastChar;
+};
+
 export const PrimoSearch = ({
     actions,
     displayType,
@@ -110,7 +121,9 @@ export const PrimoSearch = ({
                 displayType === 'courseresources' ? extractCourseCodeFromBeginningOfDescription(newValue) : newValue;
 
             setSearchKeyword(selectedValue);
-            if (selectedValue.length > 3) {
+            // there have been cases where someone has put a book on the corner of a keyboard,
+            // which sends thousands of requests to the server - block this
+            if (selectedValue.length > 3 && !isRepeatingString(selectedValue)) {
                 if ([searchTypeAll, 1, 3, 4, 5].includes(searchType)) {
                     actions.loadPrimoSuggestions(selectedValue);
                 } else if (searchType === 7) {

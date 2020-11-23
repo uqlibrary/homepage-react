@@ -6,10 +6,10 @@ import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 
 import { TabPanel } from './TabPanel';
-import { NonHeaderAppBar } from './NonHeaderAppBar';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
@@ -46,16 +46,16 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
         <Fragment>
-            {!!account.classes && account.classes.length > 0 ? (
+            {!!account.current_classes && account.current_classes.length > 0 ? (
                 <Fragment>
-                    <NonHeaderAppBar position="static" className={classes.myCoursesTabBar}>
+                    <AppBar position="static" className={classes.myCoursesTabBar} component="div">
                         <Tabs
                             onChange={handleCourseTabChange}
                             scrollButtons="auto"
                             value={coursemenu}
                             variant="scrollable"
                         >
-                            {account.classes.map((item, index) => {
+                            {account.current_classes.map((item, index) => {
                                 return (
                                     <Tab
                                         {...a11yProps(index, 'classtab')}
@@ -67,8 +67,8 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
                                 );
                             })}
                         </Tabs>
-                    </NonHeaderAppBar>
-                    {account.classes.map((item, index) => {
+                    </AppBar>
+                    {account.current_classes.map((item, index) => {
                         return (
                             <TabPanel
                                 className={classes.courseTabs}

@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import txt from './masqueradeLocale';
-
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -49,16 +48,11 @@ export default class Masquerade extends PureComponent {
 
     render() {
         return (
-            <StandardPage title={txt.title}>
+            <StandardPage title={txt.title} goBackFunc={() => history.back()} goBackTooltip="Go back">
                 <div className="layout-card">
-                    <StandardCard noPadding noHeader>
-                        <Grid
-                            alignItems={'flex-end'}
-                            container
-                            spacing={1}
-                            style={{ paddingTop: 12, paddingRight: 30, paddingBottom: 12, paddingLeft: 30 }}
-                        >
-                            <Grid item xs={12} md={'auto'} id="masquerade">
+                    <StandardCard noHeader>
+                        <Grid container spacing={1}>
+                            <Grid item xs={12} id="masquerade">
                                 <Typography>
                                     {this.userCapabilityStatement(this.props.account.canMasqueradeType)}
                                 </Typography>

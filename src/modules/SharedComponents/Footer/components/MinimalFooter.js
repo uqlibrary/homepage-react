@@ -1,153 +1,118 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import ReactHtmlParser from 'react-html-parser';
-
-import { default as locale } from '../footerLocale.js';
-
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
-    minimalFooter: {
-        lineHeight: '20px',
-        margin: '0 auto',
-        maxWidth: '1200px',
-        padding: '20px',
-        textDecoration: 'none',
-        '& div': {
-            [theme.breakpoints.down('sm')]: {
-                textAlign: 'center',
-            },
-            fontSize: '14px',
+const styles = () => {
+    return {
+        layout: {
+            maxWidth: 1200,
+            margin: '12px auto',
+            width: '90%',
         },
-        '& li': {
-            listStyle: 'none',
-            padding: '0 0 4px 0',
-        },
-        '& ul': {
-            listStyle: 'none',
-        },
-        '& h3': {
-            fontSize: '17px',
-            fontWeight: '500',
-            color: theme.palette.white.main,
-            margin: 0,
-        },
-        '& a': {
-            color: theme.palette.white.main,
-            fontWeight: 'bold',
-        },
-    },
-    siteFooter: {
-        borderTop: '1px solid rgba(255,255,255,0.3)',
-        marginTop: '1rem',
-        paddingTop: '1rem',
-    },
-    footerContent: {
-        paddingBottom: '4px',
-    },
-    footerLegalDetails: {
-        textAlign: 'right',
-        [theme.breakpoints.down('sm')]: {
-            borderTop: '1px solid rgba(255,255,255,0.3)',
-            marginTop: '1rem',
-            paddingTop: '1rem',
-        },
-        [theme.breakpoints.up('md')]: {
-            marginLeft: 'auto',
-            minWidth: '10rem',
-        },
-    },
-    fullWidth: {
-        [theme.breakpoints.up('md')]: {
-            display: 'flex',
-            justifyContent: 'space-between',
-        },
-    },
-});
+    };
+};
 
+// from https://github.com/uq-its-ss/design-system/blob/master/packages/storybook-html/src/components/footer/footer.html
 export function MinimalFooter(props) {
     const { classes } = props;
-
-    function renderItem(item, index, key) {
-        if (item.type === 'link') {
-            return (
-                <a
-                    href={item.linkTo}
-                    key={`${key}-${index}`}
-                    rel={!!item.target && item.target === '_blank' ? 'noopener noreferrer' : undefined}
-                    target={!!item.target ? item.target : undefined}
-                    title={!!item.linkMouseOver ? item.linkMouseOver : undefined}
-                    data-testid={item.dataTestid}
-                >
-                    {item.linkLabel}
-                </a>
-            );
-        }
-        if (item.type === 'header') {
-            return (
-                <Typography variant={'h3'} key={`${key}-${index}`}>
-                    {item.text}
-                </Typography>
-            );
-        }
-        if (item.type === 'abbr') {
-            return (
-                <abbr title={item.abbrMouseoverText} key={`${key}-${index}`}>
-                    {item.abbrDisplay}
-                </abbr>
-            );
-        }
-        if (item.type === 'space') {
-            return ' ';
-        }
-        if (item.type === 'text') {
-            return item.text;
-        }
-        if (item.type === 'divider') {
-            return ReactHtmlParser('&nbsp; | &nbsp;');
-        }
-        return <Fragment />;
-    }
-
     return (
-        <Grid container className={classes.minimalFooter} data-testid="minimal-footer">
-            <Grid item xs={12} className={classes.fullWidth}>
-                <Grid container>
-                    <Grid item xs={12} md={10} className={classes.footerContent}>
-                        {locale.minimalFooter.leftColumn.line1.map((item, index) => {
-                            return renderItem(item, index, 'leftColumn-line1');
-                        })}
-                    </Grid>
-                    <Grid item xs={12} md={10} className={classes.footerContent}>
-                        {locale.minimalFooter.leftColumn.line2.map((item, index) => {
-                            return renderItem(item, index, 'leftColumn-line2');
-                        })}
-                    </Grid>
-                    <Grid item xs={12} md={10} className={classes.footerContent}>
-                        {locale.minimalFooter.leftColumn.line3.map((item, index) => {
-                            return renderItem(item, index, 'leftColumn-line3');
-                        })}
-                    </Grid>
-                </Grid>
-                <Grid container>
-                    <Grid item xs={12} md={2} className={classes.footerLegalDetails}>
-                        {locale.minimalFooter.rightColumn.line1.map((item, index) => {
-                            return renderItem(item, index, 'rightColumn-line1');
-                        })}
-                        {locale.minimalFooter.rightColumn.line2.map((item, index) => {
-                            return renderItem(item, index, 'rightColumn-line2');
-                        })}
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid item xs={12} className={classes.siteFooter}>
-                {locale.minimalFooter.bottomBlock.line1.map((item, index) => {
-                    return renderItem(item, index, 'bottomBlock-line1');
-                })}
-            </Grid>
-        </Grid>
+        <div className="uq-footer" data-gtm-category="Footer" data-testid="minimal-footer">
+            <div className={classNames(classes.layout, 'uq-footer__container')}>
+                <div className="uq-footer__acknowledgement">
+                    UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated.
+                    —{' '}
+                    <a href="https://about.uq.edu.au/reconciliation" className="uq-footer__acknowledgement__link">
+                        Reconciliation statement
+                    </a>
+                </div>
+                <div className="uq-footer__row">
+                    <div className="uq-footer__column">
+                        <div className="uq-footer__copyright">© The University of Queensland</div>
+                        <div className="uq-footer__contact">
+                            Enquiries:{' '}
+                            <a href="tel:+61733651111" className="uq-footer__link footer__enquiries-phone">
+                                <span itemProp="telephone">+61 7 3365 1111</span>
+                            </a>{' '}
+                            &nbsp; | &nbsp;{' '}
+                            <a href="https://uq.edu.au/contacts" className="uq-footer__link footer__contacts-link">
+                                Contact directory
+                            </a>
+                        </div>
+                        <div className="uq-footer__meta">
+                            <abbr title="Australian Business Number">ABN</abbr>: 63 942 912 684 &nbsp; | &nbsp;
+                            <abbr title="Commonwealth Register of Institutions and Courses for Overseas Students">
+                                CRICOS
+                            </abbr>{' '}
+                            Provider No:{' '}
+                            <a
+                                className="uq-footer__link cricos__link"
+                                href="https://www.uq.edu.au/about/cricos-link"
+                                rel="external"
+                            >
+                                00025B
+                            </a>
+                        </div>
+                    </div>
+                    <div className="uq-footer__column">
+                        <div className="uq-footer__emergency-contact uq-footer__aside">
+                            <strong className="uq-footer__sub-title">Emergency</strong>
+                            <br /> Phone:{' '}
+                            <a href="tel:+61733653333" className="uq-footer__link footer__emergency-phone">
+                                3365 3333
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div className="uq-footer__footer">
+                    <div className="uq-footer__row">
+                        <div className="uq-footer__column">
+                            <div className="uq-footer__footer-menu">
+                                <ul className="uq-footer__footer-menu__list">
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://www.uq.edu.au/terms-of-use/"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Privacy &amp; Terms of use
+                                        </a>
+                                    </li>
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://www.uq.edu.au/rti/"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Right to Information
+                                        </a>
+                                    </li>
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://uq.edu.au/accessibility/"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Accessibility
+                                        </a>
+                                    </li>
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://its.uq.edu.au/feedback?r=https://uq.edu.au"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Feedback
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="uq-footer__column" />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
