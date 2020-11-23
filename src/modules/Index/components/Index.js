@@ -19,14 +19,7 @@ import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSe
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { default as locale } from './locale';
-import {
-    seeCourseResources,
-    seeComputerAvailability,
-    seeFeedback,
-    seeLibraryHours,
-    seeLibraryServices,
-    seeTraining,
-} from 'helpers/access';
+import { seeCourseResources, seeFeedback, seeLibraryServices, seeTraining } from 'helpers/access';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
@@ -360,23 +353,21 @@ export const Index = ({
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={235} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
-                    {seeComputerAvailability(account) && (
-                        <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                            <Computers
-                                computerAvailability={computerAvailability}
-                                computerAvailabilityLoading={computerAvailabilityLoading}
-                                height={350}
-                            />
-                        </Grid>
-                    )}
+                    <Grid item xs={12} md={4} data-testid="computer-availability-panel">
+                        <Computers
+                            computerAvailability={computerAvailability}
+                            computerAvailabilityLoading={computerAvailabilityLoading}
+                            height={classes.computersAvailHeight}
+                        />
+                    </Grid>
 
-                    {seeLibraryHours(account) && (
+                    {!!account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={350} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 

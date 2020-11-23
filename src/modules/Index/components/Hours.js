@@ -83,15 +83,42 @@ const useStyles = makeStyles(theme => ({
     },
     flexContent: {
         flexGrow: 1,
-        overflowY: 'scroll',
+        overflowY: 'auto',
         overflowX: 'hidden',
+        [theme.breakpoints.down('sm')]: {
+            overflowX: 'hidden',
+            overflowY: 'hidden',
+        },
     },
     flexFooter: {
         height: 'auto',
     },
+    componentHeight: {
+        [theme.breakpoints.down('sm')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: 300,
+        },
+        [theme.breakpoints.up('lg')]: {
+            height: 300,
+        },
+    },
+
+    componentHeightPublic: {
+        [theme.breakpoints.down('sm')]: {
+            height: '100%',
+        },
+        [theme.breakpoints.up('md')]: {
+            height: 300,
+        },
+        [theme.breakpoints.up('lg')]: {
+            height: 232,
+        },
+    },
 }));
 
-const Hours = ({ libHours, libHoursLoading, height = 250 }) => {
+const Hours = ({ libHours, libHoursLoading, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
@@ -168,7 +195,11 @@ const Hours = ({ libHours, libHoursLoading, height = 250 }) => {
             fullHeight
             noPadding
         >
-            <div className={classes.flexWrapper} style={{ height: height }}>
+            <div
+                className={`${classes.flexWrapper} ${
+                    !account ? classes.componentHeightPublic : classes.componentHeight
+                }`}
+            >
                 <div className={classes.flexHeader}>
                     {/* Header */}
                     <Grid container spacing={1} className={classes.listHeader}>
@@ -259,8 +290,8 @@ const Hours = ({ libHours, libHoursLoading, height = 250 }) => {
 
 Hours.propTypes = {
     libHours: PropTypes.object,
+    account: PropTypes.object,
     libHoursLoading: PropTypes.bool,
-    height: PropTypes.number,
 };
 
 Hours.defaultProps = {};

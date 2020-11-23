@@ -1,6 +1,6 @@
 export const accounts = {
     // staff, no espace data
-    public: {},
+    public: null,
     vanilla: {
         "id": "uqvanill",
         "class": ["IS_CURRENT"],

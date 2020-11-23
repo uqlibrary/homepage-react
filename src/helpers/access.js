@@ -53,11 +53,14 @@ export const seeCourseResources = account => !!(isUndergraduate(account) || isRH
 
 export const seeComputerAvailability = account =>
     isUndergraduateLocal(account) ||
+    isUndergraduateLOTE(account) ||
     isRHDLocal(account) ||
+    isStaff(account) ||
     isCommunityPaid(account) ||
     isCommunityAlumni(account) ||
     isCommunityHospital(account) ||
-    isLibraryStaff(account);
+    isCommunityAssociate(account) ||
+    isCommunityFryer(account);
 
 export const seeLibraryHours = account =>
     isUndergraduateLocal(account) ||
