@@ -215,7 +215,6 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        console.log(this.props.trainingEventsLoading, this.props.trainingEvents);
         return (
             <Grid container className={classes.layoutFill}>
                 <HelpDrawer />

@@ -202,7 +202,7 @@ export function loadCompAvail() {
 export function loadTrainingEvents() {
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
-        return get(TRAINING_API())
+        return get(TRAINING_API(10))
             .then(availResponse => {
                 dispatch({
                     type: actions.TRAINING_LOADED,

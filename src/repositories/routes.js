@@ -87,9 +87,9 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
 // Training API
-export const TRAINING_API = () => ({
+export const TRAINING_API = (numEvents = 6) => ({
     apiUrl: 'training_events',
-    options: { params: { take: 10, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
+    options: { params: { take: numEvents, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
 });
 
 // Primo Suggestions API
