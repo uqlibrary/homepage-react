@@ -8,7 +8,7 @@ import { useLocation } from 'react-router';
 
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
-import { getCampusByCode, isRepeatingString } from 'helpers/general';
+import { getCampusByCode } from 'helpers/general';
 
 import { Guides } from './Guides';
 import { ReadingLists } from './ReadingLists';
