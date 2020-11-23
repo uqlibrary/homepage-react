@@ -156,7 +156,7 @@ export const accounts = {
         "blocked": false,
         "user_group": "RHD",
     },
-    // Student with no author account
+    // Student with no author account, remote
     s3333333: {
         "id": "s3333333",
         "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
@@ -350,7 +350,7 @@ export const accounts = {
         "tokenBased": false,
         "canMasquerade": false,
         "blocked": false,
-        "user_group": "FRYVISITOR",
+        "user_group": "HON",
     },
     // upos
     // admins
