@@ -228,11 +228,10 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
             accentHeader
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
-                    <Grid item xs={'auto'}>
+                    <Grid item xs={11} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {computersLocale.title}
                     </Grid>
-                    <Grid item xs />
-                    <Grid item xs={'auto'}>
+                    <Grid item xs={1}>
                         {showIcon && (
                             <Fade in={showIcon} timeout={500}>
                                 <Tooltip
@@ -253,7 +252,6 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                     </Grid>
                 </Grid>
             }
-            fullHeight
             noPadding
         >
             <MapPopup />

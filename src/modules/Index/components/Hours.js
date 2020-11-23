@@ -192,7 +192,6 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                     </Grid>
                 </Grid>
             }
-            fullHeight
             noPadding
         >
             <div
