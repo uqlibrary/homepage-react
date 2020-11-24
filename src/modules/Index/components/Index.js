@@ -18,7 +18,7 @@ import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSe
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { default as locale } from './locale';
-import { seeCourseResources, seeFeedback, seeLibraryServices, seeTraining } from 'helpers/access';
+import { seeCourseResources, seeLibraryServices, seeTraining } from 'helpers/access';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Spotlights from './Spotlights';
 const moment = require('moment');
@@ -448,44 +448,44 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeFeedback && (
-                        <Grid item xs={12} md={4} data-testid="feedback-panel">
-                            <StandardCard
-                                customTitleBgColor={'rgb(100, 100, 100)'}
-                                customTitleColor={'white'}
-                                squareTop={false}
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Feedback
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <Grid container spacing={1}>
-                                    <Grid item xs={12}>
-                                        <Grid item xs={12} xl={6}>
-                                            <Grid container spacing={1}>
-                                                <Grid item xs={12}>
-                                                    <Typography variant={'h6'}>Contact options</Typography>
-                                                </Grid>
-                                                <Grid item xs={12}>
-                                                    Phone: +61 7 3506 2615
-                                                </Grid>
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                Email: examsupport@library.uq.edu.au
-                                            </Grid>
-                                            <Grid item xs={12}>
-                                                Library chat (opens in a new tab)
-                                            </Grid>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
-                            </StandardCard>
-                        </Grid>
-                    )}
+                    {/* {seeFeedback && (*/}
+                    {/*    <Grid item xs={12} md={4} data-testid="feedback-panel">*/}
+                    {/*        <StandardCard*/}
+                    {/*            customTitleBgColor={'rgb(100, 100, 100)'}*/}
+                    {/*            customTitleColor={'white'}*/}
+                    {/*            squareTop={false}*/}
+                    {/*            title={*/}
+                    {/*                <Grid container>*/}
+                    {/*                    <Grid item xs>*/}
+                    {/*                        Feedback*/}
+                    {/*                    </Grid>*/}
+                    {/*                </Grid>*/}
+                    {/*            }*/}
+                    {/*            fullHeight*/}
+                    {/*        >*/}
+                    {/*            <Grid container spacing={1}>*/}
+                    {/*                <Grid item xs={12}>*/}
+                    {/*                    <Grid item xs={12} xl={6}>*/}
+                    {/*                        <Grid container spacing={1}>*/}
+                    {/*                            <Grid item xs={12}>*/}
+                    {/*                                <Typography variant={'h6'}>Contact options</Typography>*/}
+                    {/*                            </Grid>*/}
+                    {/*                            <Grid item xs={12}>*/}
+                    {/*                                Phone: +61 7 3506 2615*/}
+                    {/*                            </Grid>*/}
+                    {/*                        </Grid>*/}
+                    {/*                        <Grid item xs={12}>*/}
+                    {/*                            Email: examsupport@library.uq.edu.au*/}
+                    {/*                        </Grid>*/}
+                    {/*                        <Grid item xs={12}>*/}
+                    {/*                            Library chat (opens in a new tab)*/}
+                    {/*                        </Grid>*/}
+                    {/*                    </Grid>*/}
+                    {/*                </Grid>*/}
+                    {/*            </Grid>*/}
+                    {/*        </StandardCard>*/}
+                    {/*    </Grid>*/}
+                    {/* )}*/}
                 </Grid>
             </div>
         </StandardPage>
