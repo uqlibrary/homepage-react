@@ -364,4 +364,17 @@ context('Course Resources', () => {
         // user lands on appropriate course resources page
         // (contents tested in Course Resource test)
     });
+
+    it('the non-loggedin user cannot access Course Resources', () => {
+        cy.visit('/courseresources?user=public');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authorised users only.');
+    });
+
+
+    it('the loggedin user without course resource privs cannot access Course Resources', () => {
+        cy.visit('/courseresources?user=emcommunity');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authorised users only.');
+    });
 });

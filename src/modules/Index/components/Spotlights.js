@@ -16,7 +16,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 const defaultSlide = require('../../../../public/images/Welcome_Spotlight.jpg');
 
-const Spotlights = ({ spotlights, spotlightsLoading }) => {
+const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
     const totalSlides = spotlights && spotlights.length;
     const slides =
         spotlights && spotlights.length > 0
@@ -37,7 +37,7 @@ const Spotlights = ({ spotlights, spotlightsLoading }) => {
                 data-testid="spotlights"
                 style={{ height: '100%', position: 'relative' }}
                 role="region"
-                aria-label="Spotlights carousel"
+                aria-label="UQ Spotlights carousel"
             >
                 <CarouselProvider
                     visibleSlides={1}
@@ -45,7 +45,7 @@ const Spotlights = ({ spotlights, spotlightsLoading }) => {
                     step={1}
                     naturalSlideWidth={1967}
                     naturalSlideHeight={721}
-                    isPlaying
+                    isPlaying={!account}
                     interval={10000}
                     style={{ height: '100%' }}
                 >
@@ -86,8 +86,8 @@ const Spotlights = ({ spotlights, spotlightsLoading }) => {
                             style={{
                                 width: 36,
                                 position: 'absolute',
-                                bottom: 0,
-                                left: 4,
+                                top: 4,
+                                left: 32,
                                 zIndex: 101,
                             }}
                         >
@@ -100,7 +100,7 @@ const Spotlights = ({ spotlights, spotlightsLoading }) => {
                                 width: 200,
                                 marginLeft: -100,
                                 position: 'absolute',
-                                top: 250,
+                                top: 0,
                                 left: '50%',
                                 zIndex: 101,
                                 textAlign: 'center',
@@ -142,6 +142,7 @@ Spotlights.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.bool,
     defaultSlide: PropTypes.string,
+    account: PropTypes.object,
 };
 
 Spotlights.defaultProps = {

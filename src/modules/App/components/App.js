@@ -100,8 +100,8 @@ export class AppClass extends PureComponent {
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
         chatStatus: PropTypes.any,
-        alertStatus: PropTypes.any,
-        alertStatusLoading: PropTypes.any,
+        libHours: PropTypes.object,
+        libHoursLoading: PropTypes.bool,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -142,8 +142,10 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
-        this.props.actions.loadChatStatus();
         this.props.actions.loadAlerts();
+        this.props.actions.loadChatStatus();
+        this.props.actions.loadLibHours();
+        this.props.actions.loadCompAvail();
         this.handleResize(this.state.mediaQuery);
         this.state.mediaQuery.addListener(this.handleResize);
     }
@@ -225,7 +227,6 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <ChatStatus status={this.props.chatStatus} />
                 <HelpDrawer />
                 <ConfirmDialogBox
                     hideCancelButton
@@ -244,10 +245,14 @@ export class AppClass extends PureComponent {
                         author={this.props.author}
                         authorDetails={this.props.authorDetails}
                         history={this.props.history}
+                        chatStatus={this.props.chatStatus.online}
+                        libHours={this.props.libHours}
+                        libHoursloading={this.props.libHoursLoading}
                     />
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
+                    <ChatStatus status={this.props.chatStatus} />
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
                     {!isAuthorLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>

@@ -7,7 +7,7 @@ import {
     seeDocumentDelivery,
     seeFeedback,
     seeLibraryHours,
-    seeLoans,
+    seeBorrowing,
     seeMasquerade,
     seePrintBalance,
     seePublicationMetrics,
@@ -311,7 +311,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                             onClose={handleClose2}
                         >
                             <Grid container spacing={0} style={{ maxWidth: 400 }}>
-                                {seeLoans(account) && (
+                                {seeBorrowing(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-borrowing-link">
                                         <MenuItem onClick={handleClose2}>
                                             <ImportContactsIcon color={'secondary'} style={{ marginRight: 6 }} />

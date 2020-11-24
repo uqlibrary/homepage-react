@@ -21,12 +21,12 @@ export const locale = {
                 icon: <ChatIcon color={'secondary'} style={{ marginRight: 6 }} />,
             },
             {
-                title: 'Email us',
+                title: 'Email',
                 url: 'mailto:askus@library.uq.edu.au',
                 icon: <MailIcon color={'secondary'} style={{ marginRight: 6 }} />,
             },
             {
-                title: 'Phone us',
+                title: 'Phone',
                 url: 'https://web.library.uq.edu.au/contact-us',
                 icon: <PhoneIcon color={'secondary'} style={{ marginRight: 6 }} />,
             },

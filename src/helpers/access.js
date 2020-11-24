@@ -1,108 +1,165 @@
 /**
- * UG: undergraduate (on campus) - sample users: vanilla, s1111111
- * REMUG: remote undergraduate - sample users: s3333333
- * ICTE: Institute of Continuing and TESOL Education
+
+ * (matching ptype in breackets at start)
+ * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
+ * (31) REMUG: remote undergraduate - sample users: s3333333
+ * (5) ICTE: Institute of Continuing and TESOL Education
  *       Students learning english - sample users: uqstaff, uqresearcher, uqpkopit
- * CWPG: post graduate by course work (on campus) - sample users: s2222222
- * REMCWPG:  remote post graduate by course work
- * RHD: research & higher degree (on campus) (post grad by thesis)
- * REMRHD: remote research & higher degree (used to be REMHDR)
- * LIBRARYSTAFFB: Library staff - sample users: uqmasquerade, digiteamMember
- * STAFF: UQ academic and research staff (inc. general staff) - sample users: uqstaff, uqresearcher, uqpkopit
- * COMMU: extra-mural users - Community users (annual fee) - sample users: emcommunity
- * ALUMNI: extra-mural users - former students (both first year out (free) and later (fee) - sample users: emalumni
- * HOSP: extra-mural users - hospital staff - sample users: emhospital
- * ASSOCIATE: extra-mural users - staff employed by UQ controlled entities e.g. JKTech - sample users: emassociate
- * FRYVISITOR: extra-mural users - special membership of Fryer Library - sample users: emfryer
- * HON: extra-mural users - Honorary (inc. Adjunct and Indstury Fellow)
- * VET: VET students - Vocational Education and Training
+ * (11) CWPG: post graduate by course work (on campus) - sample users: s2222222
+ * (21) REMCWPG:  remote post graduate by course work
+ * (2) RHD: research & higher degree (on campus) (post grad by thesis)
+ * (22) REMRHD: remote research & higher degree (used to be REMHDR)
+ * (18) LIBRARYSTAFFB: Library staff - sample users: uqmasquerade, digiteamMember
+ * (3) STAFF: UQ academic and research staff (inc. general staff) - sample users: uqstaff, uqresearcher, uqpkopit
+ * (8) COMMU: extra-mural users - Community users (annual fee) - sample users: emcommunity
+ * (4) ALUMNI: extra-mural users - former students (both first year out (free) and later (fee) - sample users: emalumni
+ * (9) HOSP: extra-mural users - hospital staff - sample users: emhospital
+ * (25) ASSOCIATE: extra-mural users - staff employed by UQ controlled entities e.g. JKTech - sample users: emassociate
+ * (27) FRYVISITOR: extra-mural users - special membership of Fryer Library - sample users: emfryer
+ * (34) HON: extra-mural users - Honorary (inc. Adjunct and Indstury Fellow)
+ * (32) VET: VET students - Vocational Education and Training
  *
  * other types:
- * ATH
- * AURION (Staff Awaiting Aurion)
- * PROXY - Academic Proxy
+ * (?) ATH
+ * (15) AURION (Staff Awaiting Aurion)
+ * (32) PROXY - Academic Proxy
  */
-const isUndergraduateLocal = account => !!account && ['UG'].includes(account.user_group);
-const isUndergraduate = account =>
-    isUndergraduateLocal(account) || (!!account && ['REMUG'].includes(account.user_group));
-const isUndergraduateLOTE = account => !!account && ['ICTE'].includes(account.user_group);
-const isUndergraduateVET = account => !!account && ['VET'].includes(account.user_group);
+const UNDERGRADUATE_GENERAL = 'UG';
+const UNDERGRADUATE_REMOTE = 'REMUG';
+const UNDERGRADUATE_TESOL = 'ICTE';
+const UNDERGRADUATE_VOCATIONAL = 'VET';
 
-const isRHDLocal = account => !!account && ['CWPG', 'RHD'].includes(account.user_group);
-const isRHD = account => !!((!!account && ['REMCWPG', 'REMRHD'].includes(account.user_group)) || isRHDLocal(account));
-const isResearchStudent = account =>
-    !!((!!account && ['RHD', 'REMRHD'].includes(account.user_group)) || isRHDLocal(account));
+const POSTGRAD_COURSEWORK = 'CWPG';
+const POSTGRAD_COURSEWORK_REMOTE = 'REMCWPG';
+const POSTGRAD_RESEARCH_REMOTE = 'REMRHD';
+const POSTGRAD_RESEARCH = 'RHD';
 
-const isLibraryStaff = account => !!account && ['LIBRARYSTAFFB'].includes(account.user_group);
-const isNonLibraryStaff = account => !!account && ['STAFF'].includes(account.user_group);
-const isStaff = account => isNonLibraryStaff(account) || isLibraryStaff(account);
+const LIBRARY_STAFF = 'LIBRARYSTAFFB';
+const OTHER_STAFF = 'STAFF';
+const STAFF_AWAITING_AURION = 'AURION';
 
-const isCommunityPaid = account => !!account && ['COMMU'].includes(account.user_group);
-const isCommunityAlumni = account => !!account && ['ALUMNI'].includes(account.user_group);
-const isCommunityHospital = account => !!account && ['HOSP'].includes(account.user_group);
-const isCommunityAssociate = account => !!account && ['ASSOCIATE'].includes(account.user_group);
-const isCommunityFryer = account => !!account && ['FRYVISITOR'].includes(account.user_group);
-const isCommunityHonorary = account => !!account && ['HON'].includes(account.user_group);
-
-// to be drawn from espace
-const hasPublications = false;
+const EXTRAMURAL_COMMUNITY_PAID = 'COMMU';
+const EXTRAMURAL_ALUMNI = 'ALUMNI';
+const EXTRAMURAL_HOSPITAL = 'HOSP';
+const EXTRAMURAL_ASSOCIATE = 'ASSOCIATE';
+const EXTRAMURAL_FRYER = 'FRYVISITOR';
+const EXTRAMURAL_HONORARY = 'HON';
+const EXTRAMURAL_PROXY = 'PROXY';
 
 // define which home page panel items and mylibrary popup items each user type can see
 
-export const seeCourseResources = account => !!(isUndergraduate(account) || isRHD(account) || isLibraryStaff(account));
+export const seeCourseResources = account => {
+    console.log('account = ', account.user_group);
+    return (
+        !!account &&
+        [
+            UNDERGRADUATE_GENERAL,
+            UNDERGRADUATE_REMOTE,
+            OTHER_STAFF,
+            LIBRARY_STAFF,
+            POSTGRAD_COURSEWORK,
+            POSTGRAD_COURSEWORK_REMOTE,
+            EXTRAMURAL_HONORARY,
+        ].includes(account.user_group)
+    );
+};
 
 export const seeComputerAvailability = account =>
-    isUndergraduateLocal(account) ||
-    isRHDLocal(account) ||
-    isCommunityPaid(account) ||
-    isCommunityAlumni(account) ||
-    isCommunityHospital(account) ||
-    isLibraryStaff(account);
+    !!account &&
+    [
+        UNDERGRADUATE_GENERAL,
+        UNDERGRADUATE_REMOTE,
+        UNDERGRADUATE_TESOL,
+        UNDERGRADUATE_VOCATIONAL,
+        POSTGRAD_COURSEWORK,
+        POSTGRAD_COURSEWORK_REMOTE,
+        LIBRARY_STAFF,
+        STAFF_AWAITING_AURION,
+        EXTRAMURAL_COMMUNITY_PAID,
+        EXTRAMURAL_ALUMNI,
+        EXTRAMURAL_HOSPITAL,
+        EXTRAMURAL_ASSOCIATE,
+        EXTRAMURAL_FRYER,
+        EXTRAMURAL_HONORARY,
+        EXTRAMURAL_PROXY,
+    ].includes(account.user_group);
 
-export const seeLibraryHours = account =>
-    isUndergraduateLocal(account) ||
-    isUndergraduateLOTE(account) ||
-    isRHDLocal(account) ||
-    isStaff(account) ||
-    isCommunityPaid(account) ||
-    isCommunityAlumni(account) ||
-    isCommunityHospital(account) ||
-    isCommunityAssociate(account) ||
-    isCommunityFryer(account);
+export const seeLibraryHours = account => !!account || true;
 
 export const seeMasquerade = account => !!account && !!account.canMasquerade;
 
 export const seeRoomBookings = account =>
-    isUndergraduateLocal(account) || isRHDLocal(account) || isLibraryStaff(account);
+    !!account &&
+    [
+        LIBRARY_STAFF,
+        UNDERGRADUATE_GENERAL,
+        UNDERGRADUATE_REMOTE,
+        POSTGRAD_COURSEWORK,
+        POSTGRAD_COURSEWORK_REMOTE,
+        POSTGRAD_RESEARCH,
+        POSTGRAD_RESEARCH_REMOTE,
+    ].includes(account.user_group);
 
-export const seeLoans = account =>
-    isUndergraduateLocal(account) ||
-    isUndergraduateLOTE(account) ||
-    isRHDLocal(account) ||
-    isCommunityAlumni(account) ||
-    isStaff(account);
+export const seeLoans = account => !!account;
+
+export const seeFines = account =>
+    !!account &&
+    [
+        UNDERGRADUATE_GENERAL,
+        UNDERGRADUATE_REMOTE,
+        UNDERGRADUATE_TESOL,
+        UNDERGRADUATE_VOCATIONAL,
+        POSTGRAD_COURSEWORK,
+        POSTGRAD_COURSEWORK_REMOTE,
+        POSTGRAD_RESEARCH,
+        POSTGRAD_RESEARCH_REMOTE,
+        EXTRAMURAL_COMMUNITY_PAID,
+        EXTRAMURAL_ALUMNI,
+        EXTRAMURAL_HOSPITAL,
+        EXTRAMURAL_ASSOCIATE,
+        EXTRAMURAL_FRYER,
+        EXTRAMURAL_PROXY,
+        EXTRAMURAL_HONORARY,
+    ].includes(account.user_group);
 
 export const seePrintBalance = account =>
-    isUndergraduateLocal(account) ||
-    isUndergraduateLOTE(account) ||
-    isUndergraduateVET(account) ||
-    isRHDLocal(account) ||
-    isCommunityPaid(account) ||
-    isCommunityAlumni(account) ||
-    isCommunityHospital(account) ||
-    isCommunityAssociate(account) ||
-    isCommunityFryer(account) ||
-    isCommunityHonorary(account) ||
-    isLibraryStaff(account);
+    !!account &&
+    [
+        UNDERGRADUATE_GENERAL,
+        UNDERGRADUATE_REMOTE,
+        POSTGRAD_COURSEWORK,
+        POSTGRAD_COURSEWORK_REMOTE,
+        EXTRAMURAL_HOSPITAL,
+        EXTRAMURAL_HONORARY,
+        OTHER_STAFF,
+        LIBRARY_STAFF,
+    ].includes(account.user_group);
 
 export const seeSavedItems = true;
 export const seeSavedSearches = true;
 
 export const seeDocumentDelivery = account =>
-    isUndergraduateLocal(account) || isRHDLocal(account) || isStaff(account) || isCommunityHospital(account);
+    !!account &&
+    [
+        UNDERGRADUATE_GENERAL,
+        UNDERGRADUATE_REMOTE,
+        POSTGRAD_COURSEWORK,
+        POSTGRAD_COURSEWORK_REMOTE,
+        POSTGRAD_RESEARCH,
+        POSTGRAD_RESEARCH_REMOTE,
+        EXTRAMURAL_ASSOCIATE,
+        EXTRAMURAL_HOSPITAL,
+        EXTRAMURAL_HONORARY,
+        OTHER_STAFF,
+        LIBRARY_STAFF,
+        STAFF_AWAITING_AURION,
+    ].includes(account.user_group);
 
 export const seePublicationMetrics = account =>
-    isResearchStudent(account) || isStaff(account) || (isUndergraduate(account) && hasPublications);
+    !!account &&
+    [POSTGRAD_RESEARCH, POSTGRAD_RESEARCH_REMOTE, EXTRAMURAL_HONORARY, OTHER_STAFF, LIBRARY_STAFF].includes(
+        account.user_group,
+    );
 
 export const seeTraining = true;
 

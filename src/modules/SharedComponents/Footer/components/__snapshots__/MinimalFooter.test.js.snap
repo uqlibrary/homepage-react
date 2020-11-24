@@ -1,123 +1,178 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component MinimalFooter should render 1`] = `
-<WithStyles(ForwardRef(Grid))
-  container={true}
+<div
+  className="uq-footer"
+  data-gtm-category="Footer"
   data-testid="minimal-footer"
 >
-  <WithStyles(ForwardRef(Grid))
-    item={true}
-    xs={12}
+  <div
+    className="uq-footer__container"
   >
-    <WithStyles(ForwardRef(Grid))
-      container={true}
+    <div
+      className="uq-footer__acknowledgement"
     >
-      <WithStyles(ForwardRef(Grid))
-        item={true}
-        md={10}
-        xs={12}
+      UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated. —
+       
+      <a
+        className="uq-footer__acknowledgement__link"
+        href="https://about.uq.edu.au/reconciliation"
       >
-        © The University of Queensland 
-      </WithStyles(ForwardRef(Grid))>
-      <WithStyles(ForwardRef(Grid))
-        item={true}
-        md={10}
-        xs={12}
-      >
-        Enquiries: 
-        <a
-          data-testid="footer-enquiries-link"
-          href="tel:+61733651111"
-          key="leftColumn-line2-1"
-          title="UQ Enquiries phone number"
-        >
-          +61 7 3365 1111
-        </a>
-          |  
-        <a
-          data-testid="footer-contacts-link"
-          href="http://uq.edu.au/contacts"
-          key="leftColumn-line2-3"
-        >
-          Contact directory
-        </a>
-      </WithStyles(ForwardRef(Grid))>
-      <WithStyles(ForwardRef(Grid))
-        item={true}
-        md={10}
-        xs={12}
-      >
-        <abbr
-          key="leftColumn-line3-0"
-          title="Australian Business Number"
-        >
-          ABN
-        </abbr>
-         
-        63 942 912 684 
-          |  
-        <abbr
-          key="leftColumn-line3-4"
-          title="Commonwealth Register of Institutions and Courses for Overseas Students"
-        >
-          CRICOS
-        </abbr>
-         
-        <a
-          data-testid="footer-cricos-link"
-          href="https://www.uq.edu.au/about/cricos-link"
-          key="leftColumn-line3-6"
-          title="Provider number"
-        >
-          00025B
-        </a>
-      </WithStyles(ForwardRef(Grid))>
-    </WithStyles(ForwardRef(Grid))>
-    <WithStyles(ForwardRef(Grid))
-      container={true}
+        Reconciliation statement
+      </a>
+    </div>
+    <div
+      className="uq-footer__row"
     >
-      <WithStyles(ForwardRef(Grid))
-        item={true}
-        md={2}
-        xs={12}
+      <div
+        className="uq-footer__column"
       >
-        <WithStyles(ForwardRef(Typography))
-          key="rightColumn-line1-0"
-          variant="h3"
+        <div
+          className="uq-footer__copyright"
         >
-          Emergency
-        </WithStyles(ForwardRef(Typography))>
-        Phone: 
-        <a
-          data-testid="footer-emergency-link"
-          href="tel:+61733653333"
-          key="rightColumn-line2-1"
-          title="UQ Emergency phone number"
+          © The University of Queensland
+        </div>
+        <div
+          className="uq-footer__contact"
         >
-          3365 3333
-        </a>
-      </WithStyles(ForwardRef(Grid))>
-    </WithStyles(ForwardRef(Grid))>
-  </WithStyles(ForwardRef(Grid))>
-  <WithStyles(ForwardRef(Grid))
-    item={true}
-    xs={12}
-  >
-    <a
-      data-testid="footer-terms-link"
-      href="https://www.uq.edu.au/terms-of-use/"
-      key="bottomBlock-line1-0"
+          Enquiries:
+           
+          <a
+            className="uq-footer__link footer__enquiries-phone"
+            href="tel:+61733651111"
+          >
+            <span
+              itemProp="telephone"
+            >
+              +61 7 3365 1111
+            </span>
+          </a>
+           
+            |  
+           
+          <a
+            className="uq-footer__link footer__contacts-link"
+            href="https://uq.edu.au/contacts"
+          >
+            Contact directory
+          </a>
+        </div>
+        <div
+          className="uq-footer__meta"
+        >
+          <abbr
+            title="Australian Business Number"
+          >
+            ABN
+          </abbr>
+          : 63 942 912 684   |  
+          <abbr
+            title="Commonwealth Register of Institutions and Courses for Overseas Students"
+          >
+            CRICOS
+          </abbr>
+           
+          Provider No:
+           
+          <a
+            className="uq-footer__link cricos__link"
+            href="https://www.uq.edu.au/about/cricos-link"
+            rel="external"
+          >
+            00025B
+          </a>
+        </div>
+      </div>
+      <div
+        className="uq-footer__column"
+      >
+        <div
+          className="uq-footer__emergency-contact uq-footer__aside"
+        >
+          <strong
+            className="uq-footer__sub-title"
+          >
+            Emergency
+          </strong>
+          <br />
+           Phone:
+           
+          <a
+            className="uq-footer__link footer__emergency-phone"
+            href="tel:+61733653333"
+          >
+            3365 3333
+          </a>
+        </div>
+      </div>
+    </div>
+    <div
+      className="uq-footer__footer"
     >
-      Privacy & Terms of use
-    </a>
-      |  
-    <a
-      data-testid="footer-feedback-link"
-      href="https://support.my.uq.edu.au/app/library/feedback"
-      key="bottomBlock-line1-2"
-    >
-      Feedback
-    </a>
-  </WithStyles(ForwardRef(Grid))>
-</WithStyles(ForwardRef(Grid))>
+      <div
+        className="uq-footer__row"
+      >
+        <div
+          className="uq-footer__column"
+        >
+          <div
+            className="uq-footer__footer-menu"
+          >
+            <ul
+              className="uq-footer__footer-menu__list"
+            >
+              <li
+                className="uq-footer__footer-menu__item"
+              >
+                <a
+                  className="uq-footer__footer-menu__link"
+                  href="https://www.uq.edu.au/terms-of-use/"
+                  rel="external"
+                >
+                  Privacy & Terms of use
+                </a>
+              </li>
+              <li
+                className="uq-footer__footer-menu__item"
+              >
+                <a
+                  className="uq-footer__footer-menu__link"
+                  href="https://www.uq.edu.au/rti/"
+                  rel="external"
+                >
+                  Right to Information
+                </a>
+              </li>
+              <li
+                className="uq-footer__footer-menu__item"
+              >
+                <a
+                  className="uq-footer__footer-menu__link"
+                  href="https://uq.edu.au/accessibility/"
+                  rel="external"
+                >
+                  Accessibility
+                </a>
+              </li>
+              <li
+                className="uq-footer__footer-menu__item"
+              >
+                <a
+                  className="uq-footer__footer-menu__link"
+                  href="https://its.uq.edu.au/feedback?r=https://uq.edu.au"
+                  rel="external"
+                >
+                  Feedback
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div
+          className="uq-footer__column"
+        />
+      </div>
+    </div>
+  </div>
+</div>
 `;
