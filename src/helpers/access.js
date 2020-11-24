@@ -49,7 +49,6 @@ const EXTRAMURAL_PROXY = 'PROXY';
 // define which home page panel items and mylibrary popup items each user type can see
 
 export const seeCourseResources = account => {
-    console.log('account = ', account.user_group);
     return (
         !!account &&
         [

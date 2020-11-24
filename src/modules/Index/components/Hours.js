@@ -99,21 +99,24 @@ const Hours = ({ libHours, libHoursLoading, height = 250 }) => {
     if (!!libHoursLoading) {
         return null;
     }
-    const cleanedHours = libHours.locations.map(item => {
-        const departments = item.departments.map(item => {
-            return { name: item.name, hours: item.rendered };
-        });
-        if (item.abbr !== 'AskUs') {
-            return {
-                name: item.abbr,
-                url: item.url,
-                alt: item.name,
-                campus: hoursLocale.campusMap[item.abbr],
-                departments,
-            };
-        }
-        return null;
-    });
+    const cleanedHours =
+        (!!libHours &&
+            libHours.locations.map(item => {
+                const departments = item.departments.map(item => {
+                    return { name: item.name, hours: item.rendered };
+                });
+                if (item.abbr !== 'AskUs') {
+                    return {
+                        name: item.abbr,
+                        url: item.url,
+                        alt: item.name,
+                        campus: hoursLocale.campusMap[item.abbr],
+                        departments,
+                    };
+                }
+                return null;
+            })) ||
+        [];
     const alphaHours = cleanedHours
         .filter(e => e !== null)
         .sort((a, b) => {

@@ -401,7 +401,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeLibraryHours(account) && (
+                    {!!account && seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={350} />
                         </Grid>
