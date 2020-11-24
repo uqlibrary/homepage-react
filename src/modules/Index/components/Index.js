@@ -365,9 +365,11 @@ export const Index = ({
                         />
                     </Grid>
 
-                    <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                        <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
-                    </Grid>
+                    {!!account && (
+                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
+                        </Grid>
+                    )}
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">

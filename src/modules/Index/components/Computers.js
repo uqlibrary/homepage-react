@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
         marginBottom: -2,
     },
     linkButtonLabel: {
-        textTransform: 'capitalize',
+        textTransform: 'none',
         textAlign: 'left',
         fontSize: 16,
         lineHeight: 1.1,

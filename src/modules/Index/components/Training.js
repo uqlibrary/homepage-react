@@ -33,9 +33,10 @@ const useStyles = makeStyles(theme => ({
     linkButton: {
         padding: 4,
         minWidth: 0,
+        textTransform: 'none',
     },
     linkButtonLabel: {
-        textTransform: 'capitalize',
+        textTransform: 'none',
         textAlign: 'left',
         fontSize: 16,
         color: theme.palette.accent.main,
@@ -78,7 +79,6 @@ const useStyles = makeStyles(theme => ({
         marginTop: 0,
         fontSize: 14,
         fontWeight: 300,
-        textTransform: 'capitalize',
         textAlign: 'left',
     },
     actionButtons: {
