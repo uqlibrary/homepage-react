@@ -109,13 +109,6 @@ mock.onGet(routes.ALERT_API().apiUrl)
         ];
     });
 
-mock.onGet(routes.COMP_AVAIL_API.apiUrl)
-    .reply(() => {
-        console.log('Computer availability API hit');
-        // mock computer availability
-        return [200, computerAvailability];
-    });
-
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,
     response: {
@@ -284,10 +277,6 @@ fetchMock.mock(
 );
 
 mock
-    // .onGet('learning_resources/FREN1010').reply(() => { return [200, learningResources_FREN1010] })
-    // .onGet('learning_resources/HIST1201').reply(() => { return [200, learningResources_HIST1201] })
-    // .onGet('learning_resources/PHIL1002').reply(() => { return [200, learningResources_PHIL1002] })
-
     .onGet('course_resources/FREN1010/exams').reply(() => { return [200, exams_FREN1010] })
     .onGet('course_resources/HIST1201/exams').reply(() => { return [200, exams_HIST1201] })
     .onGet('course_resources/PHIL1002/exams').reply(() => { return [200, exams_PHIL1002] })
@@ -314,9 +303,14 @@ mock
     .reply(() => {
         return [200, courseReadingList_ACCT1101]
     })
+    .onGet(routes.COMP_AVAIL_API.apiUrl)
+    .reply(() => {
+        console.log('Computer availability API hit');
+        // mock computer availability
+        return [200, computerAvailability];
+    })
     .onAny()
     .reply(config => {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
-
