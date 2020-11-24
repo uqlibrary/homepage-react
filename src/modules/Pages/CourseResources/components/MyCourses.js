@@ -6,6 +6,7 @@ import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode } from 'helpers/general';
 
+import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -33,7 +34,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCourse }) => {
+export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, examList, guideList }) => {
     const { account } = useAccountContext();
     const classes = useStyles();
 
@@ -112,7 +113,12 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
                                 value={coursemenu}
                                 {...reverseA11yProps(index, 'classtab')}
                             >
-                                {renderSubjectTabBody(item)}
+                                <SubjectBody
+                                    subject={item}
+                                    readingList={readingList}
+                                    examList={examList}
+                                    guideList={guideList}
+                                />
                             </TabPanel>
                         );
                     })}
@@ -136,8 +142,10 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody, preselectedCou
 
 MyCourses.propTypes = {
     loadNewSubject: PropTypes.func,
-    renderSubjectTabBody: PropTypes.func,
     preselectedCourse: PropTypes.any,
+    readingList: PropTypes.object,
+    examList: PropTypes.object,
+    guideList: PropTypes.object,
 };
 
 export default MyCourses;

@@ -1,17 +1,18 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import { TabPanel } from './TabPanel';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
-
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
+import { SubjectBody } from './SubjectBody';
+import { TabPanel } from './TabPanel';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 const useStyles = makeStyles(
     theme => ({
@@ -30,9 +31,11 @@ const useStyles = makeStyles(
 export const SearchCourseResources = ({
     loadNewSubject,
     preselectedCourse,
-    renderSubjectTabBody,
     listSearchedSubjects,
     updateSearchList,
+    readingList,
+    examList,
+    guideList,
 }) => {
     const classes = useStyles();
 
@@ -41,7 +44,6 @@ export const SearchCourseResources = ({
     const handleSearchTabChange = (event, newSubjectTabId) => {
         setCurrentSearchTab(newSubjectTabId);
     };
-    // console.log('listSearchedSubjects = ', listSearchedSubjects);
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
@@ -107,7 +109,12 @@ export const SearchCourseResources = ({
                             className={classes.tabPanel}
                             {...reverseA11yProps(index, 'searchtab')}
                         >
-                            {renderSubjectTabBody(subject)}
+                            <SubjectBody
+                                subject={subject}
+                                readingList={readingList}
+                                examList={examList}
+                                guideList={guideList}
+                            />
                         </TabPanel>
                     );
                 })}
@@ -115,27 +122,13 @@ export const SearchCourseResources = ({
         );
     };
 
-    /**
-     * find the entry in the suggestions that matches the suggested keyword
-     * @param searchKeyword
-     * @param suggestions
-     */
-    // const getPresetData = (searchKeyword, suggestions) => {
-    //     const filtered = suggestions.filter(item => {
-    //         return item.text === searchKeyword;
-    //     });
-    //     return (filtered.length > 0 && filtered[0].rest) || {};
-    // };
-
     const searchKeywordSelected = (searchKeyword, suggestions) => {
-        console.log('searchKeywordSelected: searchKeyword = ', searchKeyword, '; suggestions = ', suggestions);
         let tabId;
 
         const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
         const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
         if (!listSearchedSubjects.includes(searchKeyword)) {
-            console.log('searchKeywordSelected');
             loadNewSubject(searchKeyword, campus, semester);
             updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
@@ -165,8 +158,8 @@ SearchCourseResources.propTypes = {
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
     preselectedCourse: PropTypes.any,
-    renderSubjectTabBody: PropTypes.func,
-    // setDisplayType: PropTypes.func,
-    // setKeywordPresets: PropTypes.func,
     updateSearchList: PropTypes.func,
+    readingList: PropTypes.object,
+    examList: PropTypes.object,
+    guideList: PropTypes.object,
 };

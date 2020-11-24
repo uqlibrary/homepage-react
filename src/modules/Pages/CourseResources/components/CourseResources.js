@@ -1,6 +1,3 @@
-// the user can be linked from the homepage
-// eg http://localhost:2020/courseresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020
-
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
@@ -8,48 +5,18 @@ import { useLocation } from 'react-router';
 
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
-import { getCampusByCode } from 'helpers/general';
-
-import { Guides } from './Guides';
-import { ReadingLists } from './ReadingLists';
+import { getCampusByCode, isRepeatingString } from 'helpers/general';
 import { MyCourses } from './MyCourses';
-import { PastExamPapers } from './PastExamPapers';
 import { SearchCourseResources } from './SearchCourseResources';
-import { SubjectLinks } from './SubjectLinks';
 import { TabPanel } from './TabPanel';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
-import { makeStyles } from '@material-ui/styles';
-
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
-import Typography from '@material-ui/core/Typography';
-
-const useStyles = makeStyles(
-    theme => ({
-        courseResourceLineItem: {
-            borderTop: '1px solid #e8e8e8',
-            padding: '15px 0',
-            '& a': {
-                display: 'flex',
-                alignItems: 'center',
-            },
-        },
-        studyLinks: {
-            minHeight: '10rem',
-        },
-        desktopGap: {
-            [theme.breakpoints.up('md')]: {
-                paddingLeft: 16,
-            },
-        },
-    }),
-    { withTheme: true },
-);
 
 export const CourseResources = ({
     actions,
@@ -64,7 +31,6 @@ export const CourseResources = ({
     readingListError,
 }) => {
     const { account } = useAccountContext();
-    const classes = useStyles();
     const location = useLocation();
 
     const getQueryParams = qs => {
@@ -93,24 +59,27 @@ export const CourseResources = ({
     const loadNewSubject = React.useCallback(
         (classnumber, campus = null, semester = null) => {
             console.log('loadNewSub: classnumber = ', classnumber, ';  campus = ', campus, ';  semester = ', semester);
+            if (!classnumber || classnumber.length <= 3 || isRepeatingString(classnumber)) {
+                return;
+            }
+
             const firstClass =
                 (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
             if (!currentGuidesList[classnumber]) {
-                !!classnumber && actions.loadGuides(classnumber);
+                actions.loadGuides(classnumber);
             }
 
             if (!currentExamsList[classnumber]) {
-                !!classnumber && actions.loadExams(classnumber);
+                !actions.loadExams(classnumber);
             }
 
             if (!currentReadingLists[classnumber]) {
-                !!classnumber &&
-                    actions.loadReadingLists(
-                        classnumber,
-                        campus || (!!firstClass.CAMPUS && getCampusByCode(firstClass.CAMPUS)) || '',
-                        semester || (!!firstClass.semester && firstClass.semester) || '',
-                        account,
-                    );
+                actions.loadReadingLists(
+                    classnumber,
+                    campus || (!!firstClass.CAMPUS && getCampusByCode(firstClass.CAMPUS)) || '',
+                    semester || (!!firstClass.semester && firstClass.semester) || '',
+                    account,
+                );
             }
         },
         [currentGuidesList, currentExamsList, currentReadingLists, account, actions],
@@ -162,9 +131,7 @@ export const CourseResources = ({
 
     const [listSearchedSubjects, addToSearchList] = useState([]);
     const updateSearchList = newSearchKey => {
-        if (!currentReadingLists[newSearchKey]) {
-            addToSearchList(newSearchKey);
-        }
+        addToSearchList(newSearchKey);
     };
 
     // store the reading list for this subject in currentReadingLists by subject
@@ -230,72 +197,24 @@ export const CourseResources = ({
             null;
         console.log('one');
         loadNewSubject(firstEnrolledClassNumber);
-        // if (firstEnrolledClassNumber !== null) {
-        //     !!firstEnrolledClassNumber && actions.loadGuides(firstEnrolledClassNumber);
-        //
-        //     !!firstEnrolledClassNumber && actions.loadExams(firstEnrolledClassNumber);
-        //
-        //     !!firstEnrolledClassNumber &&
-        //         actions.loadReadingLists(
-        //             firstEnrolledClassNumber,
-        //             getCampusByCode(account.current_classes[0].CAMPUS),
-        //             account.current_classes[0].semester,
-        //             account,
-        //         );
-        // }
     }, [account, loadNewSubject]);
 
-    const renderSubjectTabBody = subject => {
-        const coursecode = subject.classnumber || null;
+    const readingLists = {
+        list: currentReadingLists,
+        loading: readingListLoading,
+        error: readingListError,
+    };
 
-        const courseTitle =
-            // whichever one we get first (they should both have the same value)
-            (!!currentExamsList &&
-                !!currentExamsList[coursecode] &&
-                !!currentExamsList[coursecode].title &&
-                ` - ${currentExamsList[coursecode].title}`) ||
-            (!!currentReadingLists &&
-                !!currentReadingLists[coursecode] &&
-                !!currentReadingLists[coursecode].title &&
-                ` - ${currentReadingLists[coursecode].title}`) ||
-            null;
+    const examLists = {
+        list: currentExamsList,
+        loading: examListLoading,
+        error: examListError,
+    };
 
-        return (
-            <Grid container>
-                <Grid item xs={12}>
-                    <Typography color={'primary'} component={'h3'} variant={'h5'} style={{ textAlign: 'center' }}>
-                        {coursecode}
-                        {courseTitle}
-                    </Typography>
-                </Grid>
-
-                <ReadingLists
-                    readingList={currentReadingLists[[coursecode]]}
-                    readingListLoading={readingListLoading}
-                    readingListError={readingListError}
-                />
-
-                <Grid container>
-                    <Grid item xs={12} md={4} className={'exams'}>
-                        <PastExamPapers
-                            examList={currentExamsList[coursecode]}
-                            examListLoading={examListLoading}
-                            examListError={examListError}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={4} className={classes.desktopGap}>
-                        <Guides
-                            guideList={currentGuidesList[coursecode]}
-                            guideListLoading={guideListLoading}
-                            guideListError={guideListError}
-                        />
-                    </Grid>
-                    <Grid item xs={12} md={4} className={classes.desktopGap}>
-                        <SubjectLinks subject={subject} />
-                    </Grid>
-                </Grid>
-            </Grid>
-        );
+    const guideLists = {
+        list: currentGuidesList,
+        loading: guideListLoading,
+        error: guideListError,
     };
 
     return (
@@ -324,8 +243,10 @@ export const CourseResources = ({
                             >
                                 <MyCourses
                                     loadNewSubject={loadNewSubject}
-                                    renderSubjectTabBody={renderSubjectTabBody}
                                     preselectedCourse={params}
+                                    readingList={readingLists}
+                                    examList={examLists}
+                                    guideList={guideLists}
                                 />
                             </TabPanel>
                             <TabPanel
@@ -337,11 +258,11 @@ export const CourseResources = ({
                                 <SearchCourseResources
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
-                                    renderSubjectTabBody={renderSubjectTabBody}
-                                    // setKeywordPresets={setKeywordPresets}
-                                    // setDisplayType={setDisplayType}
                                     updateSearchList={updateSearchList}
                                     preselectedCourse={params}
+                                    readingList={readingLists}
+                                    examList={examLists}
+                                    guideList={guideLists}
                                 />
                             </TabPanel>
                         </Grid>
