@@ -164,6 +164,18 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
     const navigateToUrl = url => {
         window.location.href = url;
     };
+    const ariaLabelForLocation = item => {
+        const name = item.name;
+        const hours =
+            item.departments.length > 0 &&
+            item.departments.map(item => {
+                if (hoursLocale.departmentsMap.includes(item.name)) {
+                    return item.hours;
+                }
+                return null;
+            });
+        return `${name || ''}. Study space hours are ${hours[0]} and Ask Us hours are ${hours[1]}`;
+    };
     return (
         <StandardCard
             accentHeader
@@ -226,7 +238,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                                 >
                                     <Grid item xs={4}>
                                         <a
-                                            aria-label={item.name}
+                                            aria-label={ariaLabelForLocation(item)}
                                             href={item.url}
                                             style={{ marginLeft: 8 }}
                                             className={

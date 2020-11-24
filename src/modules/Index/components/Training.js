@@ -95,6 +95,7 @@ const useStyles = makeStyles(theme => ({
     detailTitle: {
         paddingTop: 12,
         paddingBottom: 8,
+        paddingRight: 16,
         lineHeight: 1.2,
     },
     detailSummary: {
