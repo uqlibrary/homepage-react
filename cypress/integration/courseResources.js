@@ -304,7 +304,7 @@ context('Course Resources', () => {
     });
 
     it('User without classes', () => {
-        cy.visit('/courseresources?user=s2222222');
+        cy.visit('/courseresources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();

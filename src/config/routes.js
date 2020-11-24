@@ -1,5 +1,6 @@
 import { locale } from 'locale';
 import { createHash } from 'crypto';
+import { seeCourseResources } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 export const pidRegExp = 'UQ:[a-z0-9]+';
@@ -55,7 +56,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const loggedinPages = [
+    const courseResoures = [
         {
             path: pathConfig.courseresources,
             component: components.CourseResources,
@@ -66,7 +67,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     return [
         ...publicPages,
-        ...(account ? loggedinPages : []),
+        ...(account && seeCourseResources(account) ? courseResoures : []),
         ...(account && account.canMasquerade
             ? [
                   {
