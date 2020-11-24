@@ -87,10 +87,10 @@ export const CourseResourceSearch = ({
             setSearchKeyword(newValue);
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
                 actions.loadCourseReadingListsSuggestions(newValue);
-                // document.getElementById(`${elementId}-autocomplete`).focus();
+                document.getElementById(`${elementId}-autocomplete`).focus();
             }
         },
-        [actions],
+        [actions, elementId],
     );
 
     const courseResourceSubjectDisplay = option => {
@@ -98,17 +98,36 @@ export const CourseResourceSearch = ({
     };
 
     const optionSelected = option => {
-        console.log('optionSelected" option = ', option);
-        // in the compact view on the homepage, the content loads in a popup
-        // in the full view they are already on the Course Resource page and the tab loads
+        console.log('optionSelected: option = ', option);
         if (displayType === 'compact') {
+            // user is on the homepage - will navigate to the Course Resources page
             searchKeywordSelected(option, searchKeyword);
         } else {
+            // user is on the full view, on the Course Resource page (tab will load)
             searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
         }
 
+        console.log('was: ', document.getElementById(`${elementId}-autocomplete`).value);
+        document.getElementById(`${elementId}-autocomplete`).value = '';
+        console.log('is: ', document.getElementById(`${elementId}-autocomplete`).value);
+
         return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());
     };
+
+    const handleChange = (event, newValue) => {
+        console.log('value has changed: event = ', event);
+        console.log('value has changed: newValue = ', newValue);
+    };
+
+    function handleClose(reason, event) {
+        console.log('close reason = ', reason, ': event =  ', event);
+        // setDialogValue({
+        //     title: '',
+        //     year: '',
+        // });
+
+        // toggleOpen(false);
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -116,18 +135,23 @@ export const CourseResourceSearch = ({
                 <Grid item xs={12} sm>
                     <Autocomplete
                         // debug
+                        autoSelect
                         data-testid={`${elementId}-autocomplete`}
+                        blurOnSelect="mouse"
                         clearOnEscape
+                        // clearOnBlur
                         id={`${elementId}-autocomplete`}
                         getOptionSelected={(option, value) => {
                             return optionSelected(option, value);
                         }}
                         options={(!!suggestions && suggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
-                        onChange={console.log('value has changed')}
-                        onClose={(event, reason) => console.log('close reason = ', reason, ': event =  ', event)}
+                        onChange={(event, newValue) => {
+                            handleChange(event, newValue);
+                        }}
+                        onClose={(event, reason) => handleClose(reason, event)}
                         onInputChange={handleSearchKeywordChange}
-                        noOptionsText="Enter a course code to choose a course"
+                        noOptionsText="Enter a course code to find a course"
                         renderInput={params => {
                             return (
                                 <TextField

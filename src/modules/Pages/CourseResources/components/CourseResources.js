@@ -59,7 +59,7 @@ export const CourseResources = ({
     const loadNewSubject = React.useCallback(
         (classnumber, campus = null, semester = null) => {
             console.log('loadNewSub: classnumber = ', classnumber, ';  campus = ', campus, ';  semester = ', semester);
-            if (!classnumber || classnumber.length <= 3 || isRepeatingString(classnumber)) {
+            if (!classnumber || classnumber.length < 8 || isRepeatingString(classnumber)) {
                 return;
             }
 
@@ -256,6 +256,7 @@ export const CourseResources = ({
                                 {...reverseA11yProps('1')}
                             >
                                 <SearchCourseResources
+                                    account={account}
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
                                     updateSearchList={updateSearchList}

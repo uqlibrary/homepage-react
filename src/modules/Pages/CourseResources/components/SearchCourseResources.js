@@ -29,6 +29,7 @@ const useStyles = makeStyles(
 );
 
 export const SearchCourseResources = ({
+    account,
     loadNewSubject,
     preselectedCourse,
     listSearchedSubjects,
@@ -45,16 +46,24 @@ export const SearchCourseResources = ({
         setCurrentSearchTab(newSubjectTabId);
     };
 
+    const shouldAddToSearchList = searchKeyword => {
+        if (searchKeyword.length < 8) {
+            return false;
+        }
+        return true;
+    };
+
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
         preselectedCourse => {
+            console.log('focusOnSelectedSubjectTab');
             if (!initialLoadComplete) {
                 console.log('focusOnSelectedSubjectTab');
                 let tabId = null;
                 const searchKeyword = preselectedCourse.coursecode || '';
                 const campus = preselectedCourse.campus || '';
                 const semester = preselectedCourse.semester || '';
-                if (!listSearchedSubjects.includes(searchKeyword)) {
+                if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
                     loadNewSubject(searchKeyword, campus, semester);
                     updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
@@ -70,18 +79,25 @@ export const SearchCourseResources = ({
         [listSearchedSubjects, initialLoadComplete, loadNewSubject, updateSearchList],
     );
 
+    const isACurrentClass = (courseCode, account) => {
+        return (
+            !!account && !!account.current_classes && account.current_classes.some(c => c.classnumber === courseCode)
+        );
+    };
+
     React.useEffect(() => {
-        if (!!preselectedCourse.coursecode) {
+        if (!!preselectedCourse.coursecode && !isACurrentClass(preselectedCourse.coursecode, account)) {
             focusOnSelectedSubjectTab(preselectedCourse);
         }
-    }, [preselectedCourse, focusOnSelectedSubjectTab]); // run once on load
+    }, [preselectedCourse, focusOnSelectedSubjectTab, account]); // run once on load
 
-    const renderSearchResults = searchedSubjects => {
+    const renderSearchResults = listSearchedSubjects => {
+        console.log('renderSearchResults: listSearchedSubjects = ', listSearchedSubjects);
         return (
             <Fragment>
                 <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
-                        {searchedSubjects.map((subjectName, index) => {
+                        {listSearchedSubjects.map((subjectName, index) => {
                             const subjectCode = extractSubjectCodeFromName(subjectName);
                             return (
                                 <Tab
@@ -95,7 +111,7 @@ export const SearchCourseResources = ({
                         })}
                     </Tabs>
                 </AppBar>
-                {searchedSubjects.map((subjectCode, index) => {
+                {listSearchedSubjects.map((subjectCode, index) => {
                     const subject = {};
                     subject.classnumber = subjectCode;
                     return (
@@ -107,7 +123,7 @@ export const SearchCourseResources = ({
                             tabId={searchTab}
                             value={searchTab}
                             className={classes.tabPanel}
-                            {...reverseA11yProps(index, 'searchtab')}
+                            {...reverseA11yProps(index, subjectTabLabel)}
                         >
                             <SubjectBody
                                 subject={subject}
@@ -125,10 +141,11 @@ export const SearchCourseResources = ({
     const searchKeywordSelected = (searchKeyword, suggestions) => {
         let tabId;
 
-        const thisSuggestion = suggestions.filter(course => (course.text || '') === searchKeyword).pop();
+        const thisSuggestion =
+            (!!suggestions && suggestions.filter(course => (course.text || '') === searchKeyword).pop()) || null;
         const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
-        if (!listSearchedSubjects.includes(searchKeyword)) {
+        if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
             loadNewSubject(searchKeyword, campus, semester);
             updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
@@ -155,6 +172,7 @@ export const SearchCourseResources = ({
 };
 
 SearchCourseResources.propTypes = {
+    account: PropTypes.object,
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
     preselectedCourse: PropTypes.any,
