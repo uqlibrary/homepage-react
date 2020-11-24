@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 // import { useLocation } from 'react-router';
 
 import { PropTypes } from 'prop-types';
-import { VoiceToText } from './voiceToText';
+import { VoiceToText } from 'modules/Index/components/SearchPanel/components/voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -176,7 +176,11 @@ export const CourseResourceSearch = ({
                     />
                 </Grid>
                 <Grid item xs={'auto'} style={{ width: 90, marginRight: -20, marginBottom: 6 }}>
-                    <VoiceToText sendHandler={handleSearchKeywordChange} clearSuggestions={handleClearSuggestions} />
+                    <VoiceToText
+                        sendHandler={handleSearchKeywordChange}
+                        clearSuggestions={handleClearSuggestions}
+                        elementId="course-resource"
+                    />
                 </Grid>
                 {suggestionsLoading && (
                     <Grid
