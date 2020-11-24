@@ -2,7 +2,7 @@ context('Homepage Search Panel', () => {
     it('Acts as expected', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.get('form[data-testid="primo-search"]').contains('Search');
+        cy.get('[data-testid="primo-search"]').contains('Search');
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-0"]')
             .parent()
@@ -44,7 +44,7 @@ context('Homepage Search Panel', () => {
 
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-0"]').click();
-        cy.get('button[data-testid="primo-search-voice-clear"]').click();
+        cy.get('button[data-testid="homepage-search-voice-clear"]').click();
         cy.get('input[data-testid="primo-search-autocomplete-input"]').type('beard', 100);
         cy.get('ul[data-testid="primo-search-autocomplete-listbox"]')
             .find('li')
@@ -53,7 +53,7 @@ context('Homepage Search Panel', () => {
 
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-7"]').click();
-        cy.get('button[data-testid="primo-search-voice-clear"]').click();
+        cy.get('button[data-testid="homepage-search-voice-clear"]').click();
         cy.get('input[data-testid="primo-search-autocomplete-input"]').type('acct', 100);
         cy.get('ul[data-testid="primo-search-autocomplete-listbox"]')
             .find('li')

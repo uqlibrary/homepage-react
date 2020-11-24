@@ -13,7 +13,7 @@ context('ACCESSIBILITY', () => {
     });
 
     it('User without classes', () => {
-        cy.visit('/courseresources?user=s2222222');
+        cy.visit('/courseresources?user=s3333333');
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="course-resources"]').contains('My courses');

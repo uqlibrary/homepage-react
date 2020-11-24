@@ -51,8 +51,6 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
             ` - ${readingList.list[coursecode].title}`) ||
         null;
 
-    console.log('examList = ', examList);
-
     return (
         <Grid container>
             <Grid item xs={12}>

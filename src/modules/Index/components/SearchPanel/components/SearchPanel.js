@@ -106,8 +106,8 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         [actions, searchType],
     );
     return (
-        <StandardCard noPadding noHeader>
-            <form onSubmit={handleSearchButton} id="primo-search" data-testid="primo-search">
+        <StandardCard noPadding noHeader standardCardId="primo-search">
+            <form onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
                         <FormControl style={{ width: '100%' }}>

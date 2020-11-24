@@ -41,7 +41,6 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
-        console.log('handleCourseTabChange');
         !!event.target.innerText && loadNewSubject(event.target.innerText);
         setCurrentMenuTab(subjectTabId);
     };
@@ -61,7 +60,6 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
                     }
                 });
                 if (preselectedSubjectTab !== null) {
-                    console.log('focusOnSelectedSubjectTab: will set subject tab to ', preselectedSubjectTab);
                     setCurrentMenuTab(preselectedSubjectTab);
                 }
             }

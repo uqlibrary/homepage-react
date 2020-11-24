@@ -58,7 +58,6 @@ export const CourseResources = ({
 
     const loadNewSubject = React.useCallback(
         (classnumber, campus = null, semester = null) => {
-            console.log('loadNewSub: classnumber = ', classnumber, ';  campus = ', campus, ';  semester = ', semester);
             if (!classnumber || classnumber.length < 8 || isRepeatingString(classnumber)) {
                 return;
             }
@@ -89,7 +88,6 @@ export const CourseResources = ({
     React.useEffect(() => {
         if (!!params.coursecode && !!params.campus && !!params.semester) {
             if (!currentReadingLists[params.coursecode]) {
-                console.log('main');
                 loadNewSubject(params.coursecode, params.campus, params.semester);
             }
         }
@@ -195,7 +193,6 @@ export const CourseResources = ({
                 !!account.current_classes[0] &&
                 account.current_classes[0].classnumber) ||
             null;
-        console.log('one');
         loadNewSubject(firstEnrolledClassNumber);
     }, [account, loadNewSubject]);
 

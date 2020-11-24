@@ -195,7 +195,7 @@ export const CourseResourceSearch = ({
             <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
                 {!!suggestionsError ? (
                     <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
-                        <span>Autocomplete suggestions unavailable</span>
+                        <span>Course Resource suggestions unavailable</span>
                     </Grid>
                 ) : (
                     <Hidden smDown>

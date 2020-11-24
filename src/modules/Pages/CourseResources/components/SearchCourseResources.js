@@ -47,18 +47,13 @@ export const SearchCourseResources = ({
     };
 
     const shouldAddToSearchList = searchKeyword => {
-        if (searchKeyword.length < 8) {
-            return false;
-        }
-        return true;
+        return searchKeyword.length >= 8;
     };
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
         preselectedCourse => {
-            console.log('focusOnSelectedSubjectTab');
             if (!initialLoadComplete) {
-                console.log('focusOnSelectedSubjectTab');
                 let tabId = null;
                 const searchKeyword = preselectedCourse.coursecode || '';
                 const campus = preselectedCourse.campus || '';
@@ -92,7 +87,6 @@ export const SearchCourseResources = ({
     }, [preselectedCourse, focusOnSelectedSubjectTab, account]); // run once on load
 
     const renderSearchResults = listSearchedSubjects => {
-        console.log('renderSearchResults: listSearchedSubjects = ', listSearchedSubjects);
         return (
             <Fragment>
                 <AppBar position="static" className={classes.subjectTabBar}>
