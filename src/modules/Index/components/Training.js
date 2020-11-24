@@ -3,8 +3,16 @@ import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from '../../SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import Fade from '@material-ui/core/Fade';
+import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import CloseIcon from '@material-ui/icons/Close';
+import EventIcon from '@material-ui/icons/Event';
+import EventAvailableIcon from '@material-ui/icons/EventAvailable';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { trainingLocale } from './Training.locale';
-// const ordinal = require('ordinal');
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -20,25 +28,25 @@ const useStyles = makeStyles(theme => ({
     },
     row: {
         borderBottom: '1px solid #EEE',
-        padding: '8px 0 0 0',
+        padding: 8,
     },
     linkButton: {
-        padding: 0,
+        padding: 4,
         minWidth: 0,
-        marginTop: -2,
-        marginBottom: -2,
     },
     linkButtonLabel: {
         textTransform: 'capitalize',
         textAlign: 'left',
         fontSize: 16,
-        color: '#3872a8', // theme.palette.accent.dark,
+        color: theme.palette.accent.main,
         fontWeight: 300,
+        lineHeight: 1.25,
     },
     flexWrapper: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
+        overflow: 'hidden',
     },
     flexHeader: {
         height: 'auto',
@@ -63,106 +71,202 @@ const useStyles = makeStyles(theme => ({
             height: 300,
         },
     },
-    dateMonth: {
-        fontFamily: 'DM Mono',
-        color: theme.palette.accent.main,
-        width: '3ch',
-        textTransform: 'uppercase',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        margin: '0 auto',
-        fontWeight: 300,
-        fontSize: '0.8em',
-        lineHeight: '0.95em',
-    },
-    dateDay: {
-        fontFamily: 'DM Mono',
-        color: theme.palette.accent.main,
-        width: '3ch',
-        textTransform: 'uppercase',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        margin: '0 auto',
-        fontWeight: 300,
-        fontSize: '0.8em',
-        lineHeight: '0.9em',
-    },
-    date: {
-        fontFamily: 'DM Mono',
-        color: theme.palette.accent.main,
-        width: '2ch',
-        textTransform: 'uppercase',
-        overflow: 'hidden',
-        whiteSpace: 'nowrap',
-        margin: '0 auto',
-        fontWeight: 300,
-        fontSize: '1.3em',
-        lineHeight: '0.95em',
-    },
     eventName: {
         fontWeight: 400,
     },
     eventSummary: {
+        marginTop: 0,
         fontSize: 14,
+        fontWeight: 300,
+        textTransform: 'capitalize',
+        textAlign: 'left',
+    },
+    actionButtons: {
+        borderTopLeftRadius: 0,
+        borderTopRightRadius: 0,
+    },
+    detailHeader: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+    },
+    detailIcon: {
+        color: theme.palette.white.main,
+    },
+    detailTitle: {
+        paddingTop: 12,
+        paddingBottom: 8,
+        lineHeight: 1.2,
+    },
+    detailSummary: {
+        padding: '16px 20px !important',
+    },
+    detailMeta: {
+        padding: '4px 20px !important',
     },
 }));
 
 const Training = ({ trainingEvents, trainingEventsLoading }) => {
     const classes = useStyles();
+    const [eventDetail, setEventDetail] = React.useState(null);
     if (!!trainingEventsLoading) {
         return null;
     }
+    const handleEventDetail = event => {
+        setEventDetail(event);
+    };
+    const handleCloseEventDetail = () => {
+        setEventDetail(null);
+    };
+    const openEvent = id => {
+        // https://studenthub.uq.edu.au/students/events/detail/2870806
+        window.location.href = `https://studenthub.uq.edu.au/students/events/detail/${id}`;
+    };
+    const openMoreTraining = () => {
+        window.location.href = 'https://web.library.uq.edu.au/library-services/training';
+    };
+    console.log(eventDetail);
     return (
         <StandardCard accentHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
-                <div className={classes.flexContent}>
-                    {trainingEvents &&
-                        trainingEvents.length > 0 &&
-                        trainingEvents.map((event, index) => {
-                            const day = moment(event.start).format('dddd');
-                            const date = moment(event.start).format('Do');
-                            const month = moment(event.start).format('MMMM');
-                            const time = moment(event.start).format('LT');
-                            return (
-                                <Grid
-                                    container
-                                    spacing={1}
-                                    justify="center"
-                                    alignItems="center"
-                                    className={classes.row}
-                                >
-                                    <Grid item key={index} xs={2} data-testid={`training-event-${index}`}>
-                                        <Grid
-                                            container
-                                            spacing={0}
-                                            direction="column"
-                                            justify="center"
-                                            alignItems="center"
-                                        >
-                                            <Grid item aria-label={day} className={classes.dateDay}>
-                                                {day}
-                                            </Grid>
-                                            <Grid item aria-label={date} className={classes.date}>
-                                                {date}
-                                            </Grid>
-                                            <Grid item aria-label={month} className={classes.dateMonth}>
-                                                <abbr title={month}>{month}</abbr>
-                                            </Grid>
+                <Fade direction="right" in={!eventDetail} mountOnEnter unmountOnExit>
+                    <div className={classes.flexContent}>
+                        {trainingEvents &&
+                            trainingEvents.length > 0 &&
+                            trainingEvents.map((event, index) => {
+                                const time = moment(event.start).calendar(null, {
+                                    nextWeek: 'dddd MMM Do [at] LT',
+                                    lastDay: '[Yesterday]',
+                                    lastWeek: '[Last] dddd',
+                                    sameElse: 'DD/MM/YYYY',
+                                });
+                                return (
+                                    <Grid container spacing={0} className={classes.row} key={index}>
+                                        <Grid item xs={12}>
+                                            <Button
+                                                onClick={() => handleEventDetail(event)}
+                                                classes={{ root: classes.linkButton }}
+                                                fullWidth
+                                            >
+                                                <Grid container spacing={0} direction="column">
+                                                    <Grid item className={classes.linkButtonLabel}>
+                                                        {event.name}
+                                                    </Grid>
+                                                    <Grid item className={classes.eventSummary}>
+                                                        {time} - {event.campus}
+                                                    </Grid>
+                                                </Grid>
+                                            </Button>
                                         </Grid>
                                     </Grid>
-                                    <Grid item xs={10}>
-                                        <Grid container spacing={0} direction="column">
-                                            <Grid item className={classes.eventName}>
-                                                {event.name}
-                                            </Grid>
-                                            <Grid item className={classes.eventSummary}>
-                                                {time} - {event.campus}
-                                            </Grid>
+                                );
+                            })}
+                    </div>
+                </Fade>
+                <Fade
+                    direction="left"
+                    in={!!eventDetail}
+                    mountOnEnter
+                    unmountOnExit
+                    style={{ transitionDelay: '200ms' }}
+                >
+                    {!!eventDetail ? (
+                        <div className={classes.flexContent}>
+                            <Grid container spacing={1} direction="column">
+                                <Grid item xs={12}>
+                                    <Grid container spacing={1} className={classes.detailHeader}>
+                                        <Grid item xs={'auto'}>
+                                            <IconButton onClick={() => handleCloseEventDetail()}>
+                                                <CloseIcon fontSize="small" className={classes.detailIcon} />
+                                            </IconButton>
+                                        </Grid>
+                                        <Grid item xs>
+                                            <Typography className={classes.detailTitle} variant={'h6'}>
+                                                {eventDetail.name}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={1}>
+                                        <Grid item xs={12} className={classes.detailSummary}>
+                                            <div dangerouslySetInnerHTML={{ __html: eventDetail.summary }} />
+                                        </Grid>
+                                        <Grid item xs={1} className={classes.detailMeta}>
+                                            <Tooltip title="Date" placement="right" TransitionProps={{ timeout: 300 }}>
+                                                <EventIcon />
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid item xs={10} className={classes.detailMeta}>
+                                            {moment(eventDetail.start).calendar(null, {
+                                                nextWeek: 'dddd MMM Do [at] LT',
+                                                lastDay: '[Yesterday]',
+                                                lastWeek: '[Last] dddd',
+                                                sameElse: 'DD/MM/YYYY',
+                                            })}
+                                        </Grid>
+                                        <Grid item xs={1} className={classes.detailMeta}>
+                                            <Tooltip
+                                                title="Location"
+                                                placement="right"
+                                                TransitionProps={{ timeout: 300 }}
+                                            >
+                                                <LocationOnIcon />
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid item xs={10} className={classes.detailMeta}>
+                                            {eventDetail.location || eventDetail.venue || eventDetail.offCampusVenue}
+                                        </Grid>
+                                        <Grid item xs={1} className={classes.detailMeta}>
+                                            <Tooltip
+                                                title="Location"
+                                                placement="right"
+                                                TransitionProps={{ timeout: 300 }}
+                                            >
+                                                <EventAvailableIcon />
+                                            </Tooltip>
+                                        </Grid>
+                                        <Grid item xs={10} className={classes.detailMeta}>
+                                            {eventDetail.bookingSettings.placesRemaining > 0
+                                                ? 'Places still available'
+                                                : 'Event is fully booked'}
                                         </Grid>
                                     </Grid>
                                 </Grid>
-                            );
-                        })}
+                            </Grid>
+                        </div>
+                    ) : (
+                        <div />
+                    )}
+                </Fade>
+                <div className={classes.flexFooter}>
+                    {/* Buttons */}
+                    <Grid container spacing={0}>
+                        <Grid item xs={12}>
+                            {!eventDetail ? (
+                                <Button
+                                    classes={{ root: classes.actionButtons }}
+                                    size="small"
+                                    variant="contained"
+                                    color="secondary"
+                                    disableElevation
+                                    fullWidth
+                                    onClick={() => openMoreTraining()}
+                                >
+                                    More training events
+                                </Button>
+                            ) : (
+                                <Button
+                                    classes={{ root: classes.actionButtons }}
+                                    size="small"
+                                    variant="contained"
+                                    color="primary"
+                                    disableElevation
+                                    fullWidth
+                                    onClick={() => openEvent(eventDetail.entityId)}
+                                >
+                                    Log in and book now
+                                </Button>
+                            )}
+                        </Grid>
+                    </Grid>
                 </div>
             </div>
         </StandardCard>

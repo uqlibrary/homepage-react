@@ -54,7 +54,7 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.white.main,
     },
     linkButton: {
-        padding: 0,
+        padding: 2,
         minWidth: 0,
         marginTop: -2,
         marginBottom: -2,
@@ -63,6 +63,7 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'capitalize',
         textAlign: 'left',
         fontSize: 16,
+        lineHeight: 1.1,
         color: '#3872a8', // theme.palette.accent.dark,
         fontWeight: 300,
     },
