@@ -3,8 +3,7 @@
  * (matching ptype in breackets at start)
  * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
  * (31) REMUG: remote undergraduate - sample users: s3333333
- * (5) ICTE: Institute of Continuing and TESOL Education
- *       Students learning english - sample users: uqstaff, uqresearcher, uqpkopit
+ * (5) ICTE: Institute of Continuing and TESOL Education - Students learning english
  * (11) CWPG: post graduate by course work (on campus) - sample users: s2222222
  * (21) REMCWPG:  remote post graduate by course work
  * (2) RHD: research & higher degree (on campus) (post grad by thesis)
@@ -49,7 +48,6 @@ const EXTRAMURAL_PROXY = 'PROXY';
 // define which home page panel items and mylibrary popup items each user type can see
 
 export const seeCourseResources = account => {
-    console.log('account = ', account.user_group);
     return (
         !!account &&
         [

@@ -11,11 +11,13 @@ const handlers = {
         ...initialState,
         ...state,
         examListLoading: true,
+        examListError: false,
     }),
     [actions.EXAMS_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         examListLoading: false,
+        examListError: false,
         examList: action.payload,
     }),
     [actions.EXAMS_FAILED]: (state, action) => ({

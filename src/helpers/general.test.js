@@ -1,4 +1,4 @@
-import { leftJoin, stripHtml } from './general';
+import { leftJoin, stripHtml, getCampusByCode, isRepeatingString } from './general';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -24,5 +24,22 @@ describe('general helpers', () => {
 
     it('should strip HTML from a string containing HTML', () => {
         expect(stripHtml('hello<br/> there')).toEqual('hello there');
+    });
+
+    it('should get the campus name correctly', () => {
+        expect(getCampusByCode('STLUC')).toEqual('St Lucia');
+    });
+
+    it('should get a missing campus name correctly', () => {
+        expect(getCampusByCode('XXXXXX')).toEqual(null);
+    });
+
+    it('should detect long repeating strings (book-on-keyboard problem)', () => {
+        expect(isRepeatingString('PHIL1001')).toBe(false);
+        expect(isRepeatingString('the quick brown dog jumped over the lazy dog')).toBe(false);
+        expect(isRepeatingString('sss')).toBe(false);
+
+        expect(isRepeatingString('``````````````````````````````````````````````````')).toBe(true);
+        expect(isRepeatingString('ssss')).toBe(true);
     });
 });

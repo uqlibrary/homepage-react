@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import Hidden from '@material-ui/core/Hidden';
@@ -12,9 +10,9 @@ import Typography from '@material-ui/core/Typography';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
-import { loadSpotlights } from 'actions';
+import { clearPrimoSuggestions, loadCourseReadingListsSuggestions, loadSpotlights } from 'actions';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
+import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { default as locale } from './locale';
@@ -39,6 +37,7 @@ import { useCookies } from 'react-cookie';
 import { Location } from '../../SharedComponents/Location';
 import { default as Computers } from './Computers';
 import { default as Training } from './Training';
+import CourseResourcesPanel from './CourseResourcesPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -101,11 +100,15 @@ export const Index = ({
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
+    suggestions,
+    suggestionsLoading,
+    suggestionsError,
     trainingEvents,
     trainingEventsLoading,
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+
     // Load spotlights if they havent been already
     useEffect(() => {
         if (spotlightsLoading === null) {
@@ -152,7 +155,7 @@ export const Index = ({
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12}>
-                        <PrimoSearch />
+                        <SearchPanel />
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={12} lg={8} id="spotlights" data-testid="spotlights">
@@ -383,7 +386,7 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     ) : (
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
@@ -406,44 +409,15 @@ export const Index = ({
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <StandardCard
-                                fullHeight
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Course resources
-                                        </Grid>
-                                    </Grid>
-                                }
-                            >
-                                <Grid container spacing={1}>
-                                    <Grid item xs>
-                                        <TextField placeholder="Enter a course code to search" fullWidth />
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
-                                            <SearchIcon />
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} style={{ marginTop: 12 }}>
-                                    <Grid item xs={12}>
-                                        <Typography color={'secondary'} variant={'h6'}>
-                                            Your courses
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH101</a> - Applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH102</a> - More applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH103</a> - Even more applied psychology
-                                    </Grid>
-                                </Grid>
-                            </StandardCard>
+                            <CourseResourcesPanel
+                                account={account}
+                                clearPrimoSuggestions={clearPrimoSuggestions}
+                                history={history}
+                                loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
+                                suggestions={suggestions}
+                                suggestionsLoading={suggestionsLoading}
+                                suggestionsError={suggestionsError}
+                            />
                         </Grid>
                     )}
 
@@ -534,6 +508,9 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
+    suggestions: PropTypes.any,
+    suggestionsLoading: PropTypes.bool,
+    suggestionsError: PropTypes.string,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
 };

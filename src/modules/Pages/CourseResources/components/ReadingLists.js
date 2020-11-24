@@ -100,8 +100,8 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
     };
 
     const numberExcessReadingLists =
-        singleReadingListLength(readingList) > locale.visibleItemsCount.readingLists
-            ? singleReadingListLength(readingList) - locale.visibleItemsCount.readingLists
+        singleReadingListLength(readingList) > locale.myCourses.readingLists.visibleItemsCount
+            ? singleReadingListLength(readingList) - locale.myCourses.readingLists.visibleItemsCount
             : 0;
 
     const singleReadingListLengthTitle = readingList =>
@@ -136,7 +136,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                         {!!readingListError && (
                             <Fragment>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
-                                    <Typography>{locale.myCourses.readingLists.unavailable}</Typography>
+                                    <Typography>{locale.myCourses.readingLists.error.unavailable}</Typography>
                                 </Grid>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                                     <a
@@ -170,9 +170,12 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                 </Fragment>
                             )}
 
-                        {!readingListError && !readingListLoading && !!readingList && readingList.length > 1 && (
-                            <Grid item>{renderMultipleReadingListReference(readingList)}</Grid>
-                        )}
+                        {!readingListError &&
+                            !readingListLoading &&
+                            !!readingList &&
+                            readingList.reading_lists.length > 1 && (
+                                <Grid item>{renderMultipleReadingListReference(readingList.reading_lists)}</Grid>
+                            )}
 
                         {!readingListError &&
                             !readingListLoading &&
@@ -184,7 +187,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                             !!readingList.reading_lists[0].list.length > 0 &&
                             readingList.reading_lists[0].list
                                 // we only show a small number - theres a link to viewall on Talis if there are more
-                                .slice(0, locale.visibleItemsCount.readingLists)
+                                .slice(0, locale.myCourses.readingLists.visibleItemsCount)
                                 .map((list, index) => {
                                     return (
                                         <Grid
@@ -263,7 +266,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
 ReadingLists.propTypes = {
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
+    readingListError: PropTypes.any,
 };
 
 export default React.memo(ReadingLists);

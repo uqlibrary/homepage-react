@@ -11,12 +11,15 @@ import fetchMock from 'fetch-mock';
 import exams_FREN1010 from './data/records/examListFREN1010';
 import exams_HIST1201 from './data/records/examListHIST1201';
 import exams_PHIL1002 from './data/records/examListPHIL1002';
+import exams_ACCT1101 from './data/records/examListACCT1101';
 import libraryGuides_FREN1010 from './data/records/libraryGuides_FREN1010';
 import libraryGuides_HIST1201 from './data/records/libraryGuides_HIST1201';
 import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
+import libraryGuides_ACCT1101 from './data/records/libraryGuides_ACCT1101';
 import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN1010';
 import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
+import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
 import { libHours, computerAvailability, training } from './data/account';
 
@@ -111,13 +114,6 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 },
             ],
         ];
-    });
-
-mock.onGet(routes.COMP_AVAIL_API.apiUrl)
-    .reply(() => {
-        console.log('Computer availability API hit');
-        // mock computer availability
-        return [200, computerAvailability];
     });
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
@@ -287,24 +283,41 @@ fetchMock.mock(
     learningResourceSearchSuggestions
 );
 
-mock.onGet('learning_resources/FREN1010').reply(() => { return [200, learningResources_FREN1010] });
-mock.onGet('learning_resources/HIST1201').reply(() => { return [200, learningResources_HIST1201] });
-mock.onGet('learning_resources/PHIL1002').reply(() => { return [200, learningResources_PHIL1002] });
+mock
+    .onGet('course_resources/FREN1010/exams').reply(() => { return [200, exams_FREN1010] })
+    .onGet('course_resources/HIST1201/exams').reply(() => { return [200, exams_HIST1201] })
+    .onGet('course_resources/PHIL1002/exams').reply(() => { return [200, exams_PHIL1002] })
+    .onGet('course_resources/ACCT1101/exams').reply(() => { return [200, exams_ACCT1101] })
 
-mock.onGet('course_resources/FREN1010/exams').reply(() => { return [200, exams_FREN1010] });
-mock.onGet('course_resources/HIST1201/exams').reply(() => { return [200, exams_HIST1201] });
-mock.onGet('course_resources/PHIL1002/exams').reply(() => { return [200, exams_PHIL1002] });
+    .onGet('library_guides/FREN1010').reply(() => { return [200, libraryGuides_FREN1010] })
+    .onGet('library_guides/HIST1201').reply(() => { return [200, libraryGuides_HIST1201] })
+    .onGet('library_guides/PHIL1002').reply(() => { return [200, libraryGuides_PHIL1002] })
+    .onGet('library_guides/ACCT1101').reply(() => { return [200, libraryGuides_ACCT1101] })
 
-mock.onGet('library_guides/FREN1010').reply(() => { return [200, libraryGuides_FREN1010] });
-mock.onGet('library_guides/HIST1201').reply(() => { return [200, libraryGuides_HIST1201] });
-mock.onGet('library_guides/PHIL1002').reply(() => { return [200, libraryGuides_PHIL1002] });
-
-mock.onGet('course_resources/FREN1010/St Lucia/Semester 2 2020/reading_list').reply(() => {
-    return [200, courseReadingList_FREN1010]
-});
-mock.onGet('course_resources/HIST1201/St Lucia/Semester 2 2020/reading_list').reply(() => {
-    return [200, courseReadingList_HIST1201]
-});
-mock.onGet('course_resources/PHIL1002/St Lucia/Semester 2 2020/reading_list').reply(() => {
-    return [200, courseReadingList_PHIL1002]
-});
+    .onGet('course_resources/FREN1010/St Lucia/Semester%25202%25202020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_FREN1010]
+    })
+    .onGet('course_resources/HIST1201/St Lucia/Semester%25202%25202020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_HIST1201]
+    })
+    .onGet('course_resources/PHIL1002/St Lucia/Semester%25202%25202020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_PHIL1002]
+    })
+    .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
+    .reply(() => {
+        return [200, courseReadingList_ACCT1101]
+    })
+    .onGet(routes.COMP_AVAIL_API.apiUrl)
+    .reply(() => {
+        console.log('Computer availability API hit');
+        // mock computer availability
+        return [200, computerAvailability];
+    })
+    .onAny()
+    .reply(config => {
+        console.log('url not mocked...', config);
+        return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
+    });

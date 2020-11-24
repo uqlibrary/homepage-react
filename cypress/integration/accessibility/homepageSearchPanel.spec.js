@@ -1,5 +1,5 @@
 context('ACCESSIBILITY', () => {
-    it('Primo Search', () => {
+    it('Homepage Search', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);

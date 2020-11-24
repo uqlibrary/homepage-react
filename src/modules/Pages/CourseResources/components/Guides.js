@@ -4,13 +4,11 @@ import PropTypes from 'prop-types';
 import locale from '../courseResourcesLocale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-
 import { makeStyles } from '@material-ui/styles';
-
-import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(
     () => ({
@@ -59,7 +57,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                     !guideListLoading &&
                     !!guideList &&
                     guideList.length > 0 &&
-                    guideList.slice(0, locale.visibleItemsCount.libGuides).map((guide, index) => {
+                    guideList.slice(0, locale.myCourses.guides.visibleItemsCount).map((guide, index) => {
                         return (
                             <Grid item xs={12} className={classes.courseResourceLineItem} key={`guides-${index}`}>
                                 <a
@@ -76,16 +74,31 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         );
                     })}
 
-                <Grid item xs={12} className={classes.courseResourceLineItem}>
-                    <a
-                        // on-tap="linkClicked"
-                        data-testid="all-guides"
-                        href={locale.myCourses.guides.footer.linkOut}
-                    >
-                        <SpacedArrowForwardIcon />
-                        {locale.myCourses.guides.footer.linkLabel}
-                    </a>
-                </Grid>
+                {!!locale.myCourses.guides.footer.links &&
+                    locale.myCourses.guides.footer.links.length > 0 &&
+                    locale.myCourses.guides.footer.links.map((item, index) => {
+                        return (
+                            item.linkTo &&
+                            item.linkLabel && (
+                                <Grid
+                                    item
+                                    className={classes.courseResourceLineItem}
+                                    key={`studylink-${index}`}
+                                    xs={12}
+                                >
+                                    <a
+                                        // on-tap="linkClicked"
+                                        data-testid={item.id || null}
+                                        id={item.id || null}
+                                        href={item.linkTo}
+                                    >
+                                        {!!item.icon && item.icon}
+                                        {item.linkLabel}
+                                    </a>
+                                </Grid>
+                            )
+                        );
+                    })}
             </Grid>
         </StandardCard>
     );
@@ -94,13 +107,13 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 Guides.propTypes = {
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.string,
+    readingListError: PropTypes.any,
     learningResourcesList: PropTypes.any,
     learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.string,
+    learningResourcesListError: PropTypes.any,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
-    guideListError: PropTypes.string,
+    guideListError: PropTypes.any,
     actions: PropTypes.object,
 };
 

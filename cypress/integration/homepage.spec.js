@@ -1,121 +1,13 @@
-const hasPanels = optionsTheUserShouldSee => {
-    const availableOptions = new Map();
-    availableOptions.set('computer-availability', 'Computer availability');
-    availableOptions.set('course-resources', 'Course resources');
-    availableOptions.set('feedback', 'Feedback');
-    availableOptions.set('library-hours', 'Library hours');
-    availableOptions.set('library-services', 'Library services');
-    availableOptions.set('training', 'Training');
-
-    // validate the input - all supplied entries should exist in the available options
-    optionsTheUserShouldSee.map(item => {
-        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
-            .be.true;
-    });
-
-    // eslint-disable-next-line guard-for-in
-    for (const [key, value] of availableOptions) {
-        expect(typeof key).to.equal('string');
-        expect(key.length).to.not.equals(0);
-        expect(typeof value).to.equal('string');
-        expect(value.length).to.not.equals(0);
-
-        const panelname = `${key}-panel`;
-        const elementId = `div[data-testid="${panelname}"]`;
-        if (!!optionsTheUserShouldSee.includes(key)) {
-            cy.log(`checking panel ${panelname} contains ${value}`);
-            cy.get(elementId).contains(value);
-        } else {
-            cy.log(`checking panel ${panelname} is missing`);
-            cy.get(elementId).should('not.exist');
-        }
-    }
-};
-
-const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
-    cy.get('button[data-testid="mylibrary-button"]').should('exist');
-    cy.get('button[data-testid="mylibrary-button"]').click();
-
-    const availableOptions = new Map();
-    availableOptions.set('borrowing', 'Borrowing');
-    availableOptions.set('computer-availability', 'Computer');
-    availableOptions.set('course-resources', 'Course resources');
-    availableOptions.set('document-delivery', 'Document delivery');
-    availableOptions.set('print-balance', 'Printing balance');
-    availableOptions.set('publication-metrics', 'Publication metrics');
-    availableOptions.set('room-bookings', 'Room bookings');
-    availableOptions.set('library-hours', 'Hours');
-    availableOptions.set('saved-items', 'Saved items');
-    availableOptions.set('saved-searches', 'Saved searches');
-    availableOptions.set('feedback', 'Feedback');
-    availableOptions.set('masquerade', 'Masquerade');
-
-    // validate the input - all supplied entries should exist in the available options
-    optionsTheUserShouldSee.map(item => {
-        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for mylibrary test: ${item}`)
-            .to.be.true;
-    });
-
-    for (const [key, value] of availableOptions) {
-        expect(typeof key).to.equal('string');
-        expect(key.length).to.not.equals(0);
-        expect(typeof value).to.equal('string');
-        expect(value.length).to.not.equals(0);
-
-        const linkName = `mylibrary-${key}-link`;
-        const elementId = `div[data-testid="${linkName}"]`;
-        if (!!optionsTheUserShouldSee.includes(key)) {
-            cy.log(`checking panel ${linkName} contains ${value}`);
-            cy.get(elementId).contains(value);
-        } else {
-            cy.log(`checking panel ${linkName} is missing`);
-            cy.get(elementId).should('not.exist');
-        }
-    }
-};
-
-const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
-    const availableOptions = new Map();
-    availableOptions.set('print-balance', 'Manage your print balance');
-    availableOptions.set('loans', 'Manage your library loans');
-    availableOptions.set('fines', 'Pay overdue fines');
-
-    // validate the input - all supplied entries should exist in the available options
-    optionsTheUserShouldSee.map(item => {
-        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
-            .be.true;
-    });
-
-    // eslint-disable-next-line guard-for-in
-    for (const [key, value] of availableOptions) {
-        expect(typeof key).to.equal('string');
-        expect(key.length).to.not.equals(0);
-        expect(typeof value).to.equal('string');
-        expect(value.length).to.not.equals(0);
-
-        const entryname = `${key}-personalisation`;
-        const elementId = `div[data-testid="${entryname}"]`;
-        if (!!optionsTheUserShouldSee.includes(key)) {
-            cy.log(`checking personalisation line ${entryname} contains ${value}`);
-            cy.get(elementId).contains(value);
-        } else {
-            cy.log(`checking personalisation line ${entryname} is missing`);
-            cy.get(elementId).should('not.exist');
-        }
-    }
-};
+import {
+    expectUserToDisplayCorrectFirstName,
+    hasMyLibraryButtonOptions,
+    hasPanels,
+    hasPersonalisedPanelOptions,
+} from '../support/access';
 
 context('Homepage', () => {
-    it('Renders something', () => {
-        cy.visit('/');
-        cy.viewport(1300, 1000);
-        cy.get('div#content-container').contains('Search');
-    });
-
     it('Renders an on-campus undergraduate home page correctly', () => {
-        cy.visit('/?user=s1111111');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('John');
+        expectUserToDisplayCorrectFirstName('s1111111', 'John');
 
         // this type of user will see the following panels:
         hasPanels([
@@ -146,10 +38,7 @@ context('Homepage', () => {
     });
 
     it('Renders an RHD home page correctly', () => {
-        cy.visit('/?user=s2222222');
-        cy.viewport(1300, 1000);
-
-        cy.get('div[data-testid="personal-panel"]').contains('Jane');
+        expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels(['feedback', 'library-hours', 'library-services', 'training']);
 
@@ -173,9 +62,7 @@ context('Homepage', () => {
     });
 
     it('Renders a remote undergraduate home page correctly', () => {
-        cy.visit('/?user=s3333333');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Juno');
+        expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
 
         hasPanels([
             'computer-availability',
@@ -203,9 +90,7 @@ context('Homepage', () => {
     });
 
     it('Renders a researcher home page correctly', () => {
-        cy.visit('/?user=uqresearcher');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('John');
+        expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
         hasPanels(['course-resources', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -225,9 +110,7 @@ context('Homepage', () => {
     });
 
     it('Renders a library staff administrator home page correctly', () => {
-        cy.visit('/?user=digiteamMember');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Caroline');
+        expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
 
         hasPanels([
             'computer-availability',
@@ -257,9 +140,7 @@ context('Homepage', () => {
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
-        cy.visit('/?user=uqstaffnonpriv');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('UQ');
+        expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
 
         hasPanels([
             'computer-availability',
@@ -288,9 +169,7 @@ context('Homepage', () => {
     });
 
     it('Renders a non-library staff member home page correctly', () => {
-        cy.visit('/?user=uqpkopit');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Peter');
+        expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
         hasPanels(['course-resources', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -310,9 +189,7 @@ context('Homepage', () => {
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
-        cy.visit('/?user=emcommunity');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Community');
+        expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
         hasPanels(['computer-availability', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -329,9 +206,7 @@ context('Homepage', () => {
     });
 
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
-        cy.visit('/?user=emalumni');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Alumni');
+        expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
 
         hasPanels(['computer-availability', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -348,9 +223,7 @@ context('Homepage', () => {
     });
 
     it('Renders a Hospital EM member home page correctly', () => {
-        cy.visit('/?user=emhospital');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Hospital');
+        expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
         hasPanels(['computer-availability', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -369,9 +242,7 @@ context('Homepage', () => {
     });
 
     it('Renders an Associate EM member home page correctly', () => {
-        cy.visit('/?user=emassociate');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Associate');
+        expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
 
         hasPanels(['computer-availability', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -389,9 +260,7 @@ context('Homepage', () => {
     });
 
     it('Renders a Fryer Library EM member home page correctly', () => {
-        cy.visit('/?user=emfryer');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Fryer');
+        expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
         hasPanels(['computer-availability', 'feedback', 'library-hours', 'library-services', 'training']);
 
@@ -404,16 +273,11 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions([
-            'fines',
-            'loans',
-        ]);
+        hasPersonalisedPanelOptions(['fines', 'loans']);
     });
 
     it('Renders an Honorary EM member home page correctly', () => {
-        cy.visit('/?user=emhonorary');
-        cy.viewport(1300, 1000);
-        cy.get('div[data-testid="personal-panel"]').contains('Honorary');
+        expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
 
         hasPanels([
             'computer-availability',
@@ -438,5 +302,16 @@ context('Homepage', () => {
         ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+    });
+
+    it('Renders a logged out user', () => {
+        cy.visit('/?user=public');
+        cy.viewport(1300, 1000);
+        cy.get('div#content-container').contains('Search');
+
+        hasPanels(['feedback', 'library-hours', 'library-services', 'training']);
+
+        // no mylibrary button
+        cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
     });
 });

@@ -324,6 +324,10 @@ export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keywor
 
 export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
-export const READING_LIST_API = ({ coursecode, campus, semester }) => ({
-    apiUrl: `course_resources/${coursecode}/${campus}/${semester}/reading_list`,
-});
+export const READING_LIST_API = ({ coursecode, campus, semester }) => {
+    // api requires this field to be double encoded, as it may include characters like '/'
+    const s = encodeURIComponent(encodeURIComponent(semester));
+    return {
+        apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list`,
+    };
+};
