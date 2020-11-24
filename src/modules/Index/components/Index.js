@@ -6,7 +6,6 @@ import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
 import SearchIcon from '@material-ui/icons/Search';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
@@ -30,8 +29,6 @@ import {
     seePrintBalance,
     seeTraining,
 } from 'helpers/access';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
-const ordinal = require('ordinal');
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Spotlights from './Spotlights';
 const moment = require('moment');
@@ -41,6 +38,7 @@ import Hours from './Hours';
 import { useCookies } from 'react-cookie';
 import { Location } from '../../SharedComponents/Location';
 import { default as Computers } from './Computers';
+import { default as Training } from './Training';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -103,6 +101,8 @@ export const Index = ({
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
+    trainingEvents,
+    trainingEventsLoading,
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
@@ -384,7 +384,7 @@ export const Index = ({
                         </Hidden>
                     ) : (
                         <Grid item xs={12} md={4}>
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={235} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
@@ -393,14 +393,14 @@ export const Index = ({
                             <Computers
                                 computerAvailability={computerAvailability}
                                 computerAvailabilityLoading={computerAvailabilityLoading}
-                                height={350}
+                                height={classes.computersAvailHeight}
                             />
                         </Grid>
                     )}
 
-                    {seeLibraryHours(account) && (
+                    {!!account && seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} height={350} />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
@@ -449,155 +449,15 @@ export const Index = ({
 
                     {seeTraining && (
                         <Grid item xs={12} md={4} data-testid="training-panel">
-                            <StandardCard
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Training
-                                        </Grid>
-                                        <Grid item xs={'auto'}>
-                                            <Tooltip
-                                                id="auth-button"
-                                                title={'More training'}
-                                                placement="top"
-                                                TransitionProps={{ timeout: 300 }}
-                                            >
-                                                <IconButton
-                                                    size={'small'}
-                                                    variant={'contained'}
-                                                    style={{ marginRight: 0, color: 'white' }}
-                                                >
-                                                    <OpenInNewIcon />
-                                                </IconButton>
-                                            </Tooltip>
-                                        </Grid>
-                                    </Grid>
-                                }
-                                fullHeight
-                            >
-                                <div
-                                    style={{
-                                        height: 275,
-                                        overflowX: 'hidden',
-                                        overflowY: 'auto',
-                                        marginRight: -16,
-                                        marginTop: -16,
-                                        marginBottom: -24,
-                                        marginLeft: -16,
-                                        padding: 8,
-                                    }}
-                                >
-                                    {locale.Training.map((item, index) => {
-                                        return (
-                                            <Grid
-                                                container
-                                                spacing={2}
-                                                key={index}
-                                                style={{ borderBottom: '1px solid #EEE', padding: '8px 0 0 0' }}
-                                                alignContent={'center'}
-                                                alignItems={'center'}
-                                            >
-                                                <Grid item xs={3}>
-                                                    <Grid
-                                                        container
-                                                        spacing={0}
-                                                        alignContent={'center'}
-                                                        alignItems={'center'}
-                                                        justify={'center'}
-                                                    >
-                                                        <Grid item xs={12} aria-label={ordinal(item.dayDate)}>
-                                                            <div
-                                                                style={{
-                                                                    fontFamily: 'DM Mono',
-                                                                    color: 'purple',
-                                                                    width: '2ch',
-                                                                    textTransform: 'uppercase',
-                                                                    overflow: 'hidden',
-                                                                    whiteSpace: 'nowrap',
-                                                                    margin: '0 auto',
-                                                                    fontWeight: 300,
-                                                                    fontSize: '1.2em',
-                                                                }}
-                                                            >
-                                                                {ordinal(item.dayDate)}
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            style={{
-                                                                marginTop: -6,
-                                                            }}
-                                                            aria-label={item.day}
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    fontFamily: 'DM Mono',
-                                                                    color: 'purple',
-                                                                    width: '3ch',
-                                                                    textTransform: 'uppercase',
-                                                                    overflow: 'hidden',
-                                                                    whiteSpace: 'nowrap',
-                                                                    margin: '0 auto',
-                                                                    fontWeight: 300,
-                                                                    fontSize: '1.1em',
-                                                                }}
-                                                            >
-                                                                {item.day}
-                                                            </div>
-                                                        </Grid>
-                                                        <Grid
-                                                            item
-                                                            xs={12}
-                                                            aria-label={item.monthDate}
-                                                            style={{ marginTop: -6 }}
-                                                        >
-                                                            <div
-                                                                style={{
-                                                                    fontFamily: 'DM Mono',
-                                                                    color: 'purple',
-                                                                    width: '3ch',
-                                                                    textTransform: 'uppercase',
-                                                                    overflow: 'hidden',
-                                                                    whiteSpace: 'nowrap',
-                                                                    margin: '0 auto',
-                                                                    fontWeight: 300,
-                                                                    fontSize: '1.1em',
-                                                                }}
-                                                            >
-                                                                {item.monthDate}
-                                                            </div>
-                                                        </Grid>
-                                                    </Grid>
-                                                </Grid>
-                                                <Grid item xs>
-                                                    <a
-                                                        href={item.link}
-                                                        aria-label={`${item.date} ${item.time} ${item.format} - ${item.title}`}
-                                                    >
-                                                        {item.title}
-                                                    </a>
-                                                    <br />
-                                                    <span style={{ fontSize: '0.8rem', color: '#999' }}>
-                                                        {item.date} - {item.time}
-                                                        <br />
-                                                        {item.format}
-                                                    </span>
-                                                </Grid>
-                                            </Grid>
-                                        );
-                                    })}
-                                </div>
-                            </StandardCard>
+                            <Training trainingEvents={trainingEvents} trainingEventsLoading={trainingEventsLoading} />
                         </Grid>
                     )}
 
                     {seeLibraryServices && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
                             <StandardCard
-                                fullHeight
                                 accentHeader
+                                fullHeight
                                 squareTop={false}
                                 title={
                                     <Grid container>
@@ -606,7 +466,6 @@ export const Index = ({
                                         </Grid>
                                     </Grid>
                                 }
-                                fullHeight
                             >
                                 <Grid container spacing={1}>
                                     {locale.LibraryServices.links.map((item, index) => {
@@ -675,6 +534,8 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
+    trainingEvents: PropTypes.array,
+    trainingEventsLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

@@ -9,6 +9,7 @@ import {
     LIB_HOURS_API,
     SPOTLIGHTS_API,
     COMP_AVAIL_API,
+    TRAINING_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -188,6 +189,29 @@ export function loadCompAvail() {
             .catch(error => {
                 dispatch({
                     type: actions.COMP_AVAIL_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the training events data
+ * @returns {function(*)}
+ */
+export function loadTrainingEvents() {
+    return dispatch => {
+        dispatch({ type: actions.TRAINING_LOADING });
+        return get(TRAINING_API(10))
+            .then(availResponse => {
+                dispatch({
+                    type: actions.TRAINING_LOADED,
+                    payload: availResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.TRAINING_FAILED,
                     payload: error.message,
                 });
             });

@@ -18,7 +18,7 @@ import courseReadingList_FREN1010 from './data/records/courseReadingList_FREN101
 import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST1201';
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import { libHours, computerAvailability } from './data/account';
+import { libHours, computerAvailability, training } from './data/account';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -79,6 +79,13 @@ mock.onGet(routes.CHAT_API().apiUrl)
         // mock chat status
         return [200, { online: true }];
         // return [200, { online: false }];
+    });
+
+mock.onGet(routes.TRAINING_API(10).apiUrl)
+    .reply(() => {
+        console.log('Training events API hit');
+        // mock training evemts
+        return [200, training];
     });
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl)

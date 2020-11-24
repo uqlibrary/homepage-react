@@ -102,6 +102,8 @@ export class AppClass extends PureComponent {
         chatStatus: PropTypes.any,
         libHours: PropTypes.object,
         libHoursLoading: PropTypes.bool,
+        trainingEvents: PropTypes.array,
+        trainingEventsLoading: PropTypes.bool,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -146,8 +148,7 @@ export class AppClass extends PureComponent {
         this.props.actions.loadChatStatus();
         this.props.actions.loadLibHours();
         this.props.actions.loadCompAvail();
-        this.handleResize(this.state.mediaQuery);
-        this.state.mediaQuery.addListener(this.handleResize);
+        this.props.actions.loadTrainingEvents();
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -167,17 +168,6 @@ export class AppClass extends PureComponent {
             actionButtonLabel: 'UQ Library COVID-19 Updates',
         });
     }
-
-    componentWillUnmount() {
-        this.state.mediaQuery.removeListener(this.handleResize);
-    }
-
-    handleResize = mediaQuery => {
-        this.setState({
-            docked: mediaQuery.matches,
-        });
-    };
-
     redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
