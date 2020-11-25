@@ -32,10 +32,12 @@ export const CourseResourcesPanel = ({ account, history }) => {
     const pageLocation = useLocation();
 
     const [searchUrl, setSearchUrl] = React.useState('');
-    const loadSearchResult = React.useCallback(searchUrl => {
-        searchUrl !== '' && history.push(searchUrl);
-        // url !== '' && window.location.assign(url);
-    }, []);
+    const loadSearchResult = React.useCallback(
+        searchUrl => {
+            searchUrl !== '' && history.push(searchUrl);
+        },
+        [history],
+    );
     React.useEffect(() => {
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);

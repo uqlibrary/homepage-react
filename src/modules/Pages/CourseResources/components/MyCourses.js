@@ -41,7 +41,17 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
-        !!event.target.innerText && loadNewSubject(event.target.innerText);
+        console.log('handleCourseTabChange');
+        if (!event.target.innerText) {
+            // we didnt get a course code?
+            return;
+        }
+        const coursecode = event.target.innerText;
+        const enrolledClass = (!!account && account.current_classes.find(c => c.classnumber === coursecode)) || null;
+        const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
+        const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
+        loadNewSubject(coursecode, campus, semester);
+
         setCurrentMenuTab(subjectTabId);
     };
 

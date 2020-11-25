@@ -83,8 +83,14 @@ export const CourseResourceSearch = ({
 
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
-            console.log('handleSearchKeywordChange" newValue = ', newValue);
+            console.log('handleSearchKeywordChange: newValue = ', newValue);
             setSearchKeyword(newValue);
+            if (newValue.includes(' ')) {
+                // Autocomplete is firing onInputChange with the full course name many times. Dont know why.
+                // Dont call the action for these subsequent calls
+                // (a valid course code will never have a space in it)
+                return;
+            }
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
                 console.log('CR: fetch search_suggestions?type=learning_resource');
                 actions.loadCourseReadingListsSuggestions(newValue);
@@ -99,18 +105,20 @@ export const CourseResourceSearch = ({
     };
 
     const optionSelected = option => {
-        console.log('optionSelected: option = ', option);
-        if (displayType === 'compact') {
-            // user is on the homepage - will navigate to the Course Resources page
-            searchKeywordSelected(option, searchKeyword);
-        } else {
-            // user is on the full view, on the Course Resource page (tab will load)
-            searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
+        if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
+            if (displayType === 'compact') {
+                // user is on the homepage - will navigate to the Course Resources page
+                searchKeywordSelected(option, searchKeyword);
+            } else {
+                // user is on the full view, on the Course Resource page (tab will load)
+                searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
+            }
+
+            document.getElementById(`${elementId}-autocomplete`).value = '';
+
+            return true;
         }
-
-        document.getElementById(`${elementId}-autocomplete`).value = '';
-
-        return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());
+        return false;
     };
 
     // const handleChange = (event, newValue) => {

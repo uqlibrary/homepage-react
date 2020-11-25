@@ -4,7 +4,7 @@ import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
 
 import locale from '../courseResourcesLocale';
-import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
 import { MyCourses } from './MyCourses';
 import { SearchCourseResources } from './SearchCourseResources';
@@ -62,23 +62,16 @@ export const CourseResources = ({
                 return;
             }
 
-            const firstClass =
-                (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
             if (!currentGuidesList[classnumber]) {
                 actions.loadGuides(classnumber);
             }
 
             if (!currentExamsList[classnumber]) {
-                !actions.loadExams(classnumber);
+                actions.loadExams(classnumber);
             }
 
             if (!currentReadingLists[classnumber]) {
-                actions.loadReadingLists(
-                    classnumber,
-                    campus || (!!firstClass.CAMPUS && getCampusByCode(firstClass.CAMPUS)) || '',
-                    semester || (!!firstClass.semester && firstClass.semester) || '',
-                    account,
-                );
+                actions.loadReadingLists(classnumber, campus, semester, account);
             }
         },
         [currentGuidesList, currentExamsList, currentReadingLists, account, actions],
@@ -186,14 +179,23 @@ export const CourseResources = ({
 
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
+        console.log('load first class for user with classes');
         const firstEnrolledClassNumber =
-            (!!account.current_classes &&
-                account.current_classes.length > 0 &&
-                !!account.current_classes[0] &&
-                account.current_classes[0].classnumber) ||
+            (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
+        const coursecode = extractSubjectCodeFromName(
+            (!!firstEnrolledClassNumber && account.current_classes[0].classnumber) || null,
+        );
+        const campus =
+            (!!firstEnrolledClassNumber &&
+                !!firstEnrolledClassNumber.CAMPUS &&
+                getCampusByCode(firstEnrolledClassNumber.CAMPUS)) ||
             null;
-        loadNewSubject(firstEnrolledClassNumber);
-    }, [account, loadNewSubject]);
+        const semester =
+            (!!firstEnrolledClassNumber && !!firstEnrolledClassNumber.semester && firstEnrolledClassNumber.semester) ||
+            null;
+
+        loadNewSubject(coursecode, campus, semester);
+    }, [account.current_classes, loadNewSubject]);
 
     const readingLists = {
         list: currentReadingLists,

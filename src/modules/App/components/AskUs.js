@@ -50,7 +50,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     };
     const cleanHours = hours => {
         let askusHours = null;
-        if (!!hours && hours.locations.length > 1 && !libHoursLoading) {
+        if (!!hours && !!hours.locations && hours.locations.length > 1 && !libHoursLoading) {
             askusHours = hours.locations.map(item => {
                 if (item.abbr === 'AskUs') {
                     return {

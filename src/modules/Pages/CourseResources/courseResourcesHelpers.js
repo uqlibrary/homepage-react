@@ -27,4 +27,4 @@ export const reverseA11yProps = (index, classname = null) => {
     };
 };
 
-export const extractSubjectCodeFromName = subjectName => subjectName.trim().split(' ')[0];
+export const extractSubjectCodeFromName = subjectName => (subjectName || '').trim().split(' ')[0];

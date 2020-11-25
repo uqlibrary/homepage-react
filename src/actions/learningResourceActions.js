@@ -127,7 +127,7 @@ export function loadReadingLists(coursecode, campus, semester, account) {
         return false;
     }
 
-    console.log('will load loadReadingLists for ', READING_LIST_API({ coursecode, campus, semester }));
+    console.log('will load loadReadingLists for ', READING_LIST_API({ coursecode, campus, semester }).apiUrl);
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
         return get(READING_LIST_API({ coursecode, campus, semester }))
