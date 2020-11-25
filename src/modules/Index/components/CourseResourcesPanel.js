@@ -42,7 +42,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
 
-    const searchKeywordSelected = (option, searchKeyword) => {
+    const searchKeywordSelectedHomepage = (option, searchKeyword) => {
         if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
             const course = {
                 classnumber: option.text,
@@ -70,7 +70,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
             <CourseResourceSearch
                 displayType="compact"
                 elementId="homepage-courseresource"
-                searchKeywordSelected={searchKeywordSelected}
+                searchKeywordSelected={searchKeywordSelectedHomepage}
             />
 
             {!!account && !!account.current_classes && account.current_classes.length > 0 && (

@@ -81,9 +81,9 @@ export const CourseResourceSearch = ({
         event.preventDefault();
     };
 
-    const handleSearchKeywordChange = React.useCallback(
+    const handleCRSearchKeywordChange = React.useCallback(
         (event, newValue) => {
-            console.log('handleSearchKeywordChange: newValue = ', newValue);
+            console.log('handleCRSearchKeywordChange: newValue = ', newValue);
             setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
                 // Autocomplete is firing onInputChange with the full course name many times. Dont know why.
@@ -104,7 +104,9 @@ export const CourseResourceSearch = ({
         return !!option && !!option.text ? `${option.text} (${option.rest.course_title}, ${option.rest.period})` : '';
     };
 
-    const optionSelected = option => {
+    const handleOptionSelected = option => {
+        console.log('handleOptionSelected: option = ', option);
+        console.log('handleOptionSelected: displayType = ', displayType);
         if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Course Resources page
@@ -149,7 +151,7 @@ export const CourseResourceSearch = ({
                         // clearOnBlur
                         id={`${elementId}-autocomplete`}
                         getOptionSelected={(option, value) => {
-                            return optionSelected(option, value);
+                            return handleOptionSelected(option, value);
                         }}
                         options={(!!suggestions && suggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
@@ -157,7 +159,7 @@ export const CourseResourceSearch = ({
                         //     handleChange(event, newValue);
                         // }}
                         // onClose={(event, reason) => handleClose(reason, event)}
-                        onInputChange={handleSearchKeywordChange}
+                        onInputChange={handleCRSearchKeywordChange}
                         noOptionsText={locale.noOptionsText}
                         renderInput={params => {
                             return (
@@ -184,7 +186,7 @@ export const CourseResourceSearch = ({
                 </Grid>
                 <Grid item xs={'auto'} style={{ width: 90, marginRight: -20, marginBottom: 6 }}>
                     <VoiceToText
-                        sendHandler={handleSearchKeywordChange}
+                        sendHandler={handleCRSearchKeywordChange}
                         clearSuggestions={handleClearSuggestions}
                         elementId="course-resource"
                     />
