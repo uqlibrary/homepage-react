@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import PrintIcon from '@material-ui/icons/Print';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import { useDispatch } from 'react-redux';
-import { loadSpotlights } from 'actions';
+import { loadSpotlights, loadPrintBalance, loadLoans } from 'actions';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -93,15 +93,25 @@ export const Index = ({
     computerAvailabilityLoading,
     trainingEvents,
     trainingEventsLoading,
+    printBalance,
+    printBalanceLoading,
+    loans,
+    loansLoading,
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    // Load spotlights if they havent been already
+    // Load homepage data requirements
     useEffect(() => {
         if (spotlightsLoading === null) {
             dispatch(loadSpotlights());
         }
-    }, [spotlightsLoading, dispatch]);
+        if (!!account && printBalanceLoading === null) {
+            dispatch(loadPrintBalance());
+        }
+        if (!!account && loansLoading === null) {
+            dispatch(loadLoans());
+        }
+    }, [printBalanceLoading, printBalance, spotlightsLoading, spotlights, dispatch, account, loans, loansLoading]);
 
     const [cookies, setCookie] = useCookies(['location']);
     const [location, setLocation] = React.useState(cookies.location || null);
@@ -447,45 +457,6 @@ export const Index = ({
                             </StandardCard>
                         </Grid>
                     )}
-
-                    {/* {seeFeedback && (*/}
-                    {/*    <Grid item xs={12} md={4} data-testid="feedback-panel">*/}
-                    {/*        <StandardCard*/}
-                    {/*            customTitleBgColor={'rgb(100, 100, 100)'}*/}
-                    {/*            customTitleColor={'white'}*/}
-                    {/*            squareTop={false}*/}
-                    {/*            title={*/}
-                    {/*                <Grid container>*/}
-                    {/*                    <Grid item xs>*/}
-                    {/*                        Feedback*/}
-                    {/*                    </Grid>*/}
-                    {/*                </Grid>*/}
-                    {/*            }*/}
-                    {/*            fullHeight*/}
-                    {/*        >*/}
-                    {/*            <Grid container spacing={1}>*/}
-                    {/*                <Grid item xs={12}>*/}
-                    {/*                    <Grid item xs={12} xl={6}>*/}
-                    {/*                        <Grid container spacing={1}>*/}
-                    {/*                            <Grid item xs={12}>*/}
-                    {/*                                <Typography variant={'h6'}>Contact options</Typography>*/}
-                    {/*                            </Grid>*/}
-                    {/*                            <Grid item xs={12}>*/}
-                    {/*                                Phone: +61 7 3506 2615*/}
-                    {/*                            </Grid>*/}
-                    {/*                        </Grid>*/}
-                    {/*                        <Grid item xs={12}>*/}
-                    {/*                            Email: examsupport@library.uq.edu.au*/}
-                    {/*                        </Grid>*/}
-                    {/*                        <Grid item xs={12}>*/}
-                    {/*                            Library chat (opens in a new tab)*/}
-                    {/*                        </Grid>*/}
-                    {/*                    </Grid>*/}
-                    {/*                </Grid>*/}
-                    {/*            </Grid>*/}
-                    {/*        </StandardCard>*/}
-                    {/*    </Grid>*/}
-                    {/* )}*/}
                 </Grid>
             </div>
         </StandardPage>
@@ -504,6 +475,10 @@ Index.propTypes = {
     computerAvailabilityLoading: PropTypes.bool,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
+    printBalance: PropTypes.object,
+    printBalanceLoading: PropTypes.bool,
+    loans: PropTypes.object,
+    loansLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};
