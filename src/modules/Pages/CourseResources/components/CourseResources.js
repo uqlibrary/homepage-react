@@ -156,7 +156,6 @@ export const CourseResources = ({
             currentGuidesList[guideList[0].coursecode] === undefined
         ) {
             const subjectNumber = guideList[0].coursecode;
-            // if (subjectNumber !== false && currentGuidesList.subjectNumber === undefined) {
             if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;

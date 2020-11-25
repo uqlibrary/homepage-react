@@ -86,6 +86,7 @@ export const CourseResourceSearch = ({
             console.log('handleSearchKeywordChange" newValue = ', newValue);
             setSearchKeyword(newValue);
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
+                console.log('CR: fetch search_suggestions?type=learning_resource');
                 actions.loadCourseReadingListsSuggestions(newValue);
                 document.getElementById(`${elementId}-autocomplete`).focus();
             }
@@ -132,7 +133,7 @@ export const CourseResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
-                        debug
+                        // debug
                         autoSelect
                         data-testid={`${elementId}-autocomplete`}
                         blurOnSelect="mouse"

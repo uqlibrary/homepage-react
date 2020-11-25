@@ -97,6 +97,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                 } else if (searchType === 7) {
                     actions.loadExamPaperSuggestions(newValue);
                 } else if (searchType === 8) {
+                    console.log('homepage: fetch search_suggestions?type=learning_resource');
                     actions.loadCourseReadingListsSuggestions(newValue);
                 }
                 console.log('focussing on the input');
