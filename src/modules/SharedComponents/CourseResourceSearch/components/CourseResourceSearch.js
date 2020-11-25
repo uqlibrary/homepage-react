@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { VoiceToText } from 'modules/Index/components/SearchPanel/components/voiceToText';
 import { isRepeatingString } from 'helpers/general';
+import { courseResourcesLocale as locale } from 'modules/Index/components/CourseResources.locale';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -107,34 +108,32 @@ export const CourseResourceSearch = ({
             searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
         }
 
-        console.log('was: ', document.getElementById(`${elementId}-autocomplete`).value);
         document.getElementById(`${elementId}-autocomplete`).value = '';
-        console.log('is: ', document.getElementById(`${elementId}-autocomplete`).value);
 
         return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());
     };
 
-    const handleChange = (event, newValue) => {
-        console.log('value has changed: event = ', event);
-        console.log('value has changed: newValue = ', newValue);
-    };
+    // const handleChange = (event, newValue) => {
+    //     console.log('value has changed: event = ', event);
+    //     console.log('value has changed: newValue = ', newValue);
+    // };
 
-    function handleClose(reason, event) {
-        console.log('close reason = ', reason, ': event =  ', event);
-        // setDialogValue({
-        //     title: '',
-        //     year: '',
-        // });
-
-        // toggleOpen(false);
-    }
+    // function handleClose(reason, event) {
+    //     console.log('close reason = ', reason, ': event =  ', event);
+    //     // setDialogValue({
+    //     //     title: '',
+    //     //     year: '',
+    //     // });
+    //
+    //     // toggleOpen(false);
+    // }
 
     return (
         <form onSubmit={handleSubmit}>
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
-                        // debug
+                        debug
                         autoSelect
                         data-testid={`${elementId}-autocomplete`}
                         blurOnSelect="mouse"
@@ -146,17 +145,17 @@ export const CourseResourceSearch = ({
                         }}
                         options={(!!suggestions && suggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
-                        onChange={(event, newValue) => {
-                            handleChange(event, newValue);
-                        }}
-                        onClose={(event, reason) => handleClose(reason, event)}
+                        // onChange={(event, newValue) => {
+                        //     handleChange(event, newValue);
+                        // }}
+                        // onClose={(event, reason) => handleClose(reason, event)}
                         onInputChange={handleSearchKeywordChange}
-                        noOptionsText="Enter a course code to find a course"
+                        noOptionsText={locale.noOptionsText}
                         renderInput={params => {
                             return (
                                 <TextField
                                     {...params}
-                                    placeholder="Enter a course code"
+                                    placeholder={locale.placeholder}
                                     error={!!suggestionsError}
                                     InputProps={{
                                         ...params.InputProps,
@@ -167,7 +166,7 @@ export const CourseResourceSearch = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        'aria-label': 'Enter your search terms',
+                                        'aria-label': `${locale.placeholder}`,
                                         'data-testid': `${elementId}-autocomplete-input`,
                                     }}
                                 />
@@ -195,7 +194,7 @@ export const CourseResourceSearch = ({
             <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
                 {!!suggestionsError ? (
                     <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
-                        <span>Course Resource suggestions unavailable</span>
+                        <span>{locale.unavailableText}</span>
                     </Grid>
                 ) : (
                     <Hidden smDown>

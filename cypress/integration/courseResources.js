@@ -1,6 +1,8 @@
 /* eslint camelcase: 0 */
 import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
+import { accounts } from '../../src/mock/data';
 import { searchPanelLocale as searchLocale } from '../../src/modules/Index/components/SearchPanel/components/searchPanelLocale';
+import { courseResourcesLocale } from '../../src/modules/Index/components/CourseResources.locale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';
@@ -344,25 +346,69 @@ context('Course Resources', () => {
     it('the Course resources panel links correctly', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
+        const currentClasses = accounts.s1111111.current_classes;
+        expect(currentClasses.length).to.be.above(1); // the course we are going to click on exists
 
-        // tbd
-        // the user sees 3 subjects
-        // the users clicks the first one (FREN1010)
+        cy.get('div[data-testid=course-resources-panel]').contains(courseResourcesLocale.title);
+        cy.get('div[data-testid=course-resources-panel] h4').contains(courseResourcesLocale.userCourseTitle);
+
+        const numberOfBlocks = currentClasses.length + 1; // n classes + 1 header
+        cy.get('div[data-testid=course-resources-panel] h4')
+            .parent()
+            .parent()
+            .children()
+            .should('have.length', numberOfBlocks);
+
+        // the users clicks the first one (HIST1201)
+        const secondClass = currentClasses[1];
+        const dropdownId = 'hcr-1';
+        cy.get(`div[data-testid=${dropdownId}] a`)
+            .contains(`${secondClass.SUBJECT}${secondClass.CATALOG_NBR}`)
+            .click();
         // the user lands on the correct page
+        cy.url().should(
+            'include',
+            'courseresources?user=s1111111&coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        const classPanelId = 'classpanel-1';
+        cy.get(`div[data-testid=${classPanelId}] h3`).contains(secondClass.SUBJECT);
     });
 
     it('the Course resources panel searches correctly', () => {
-        cy.visit('/?user=s2222222');
+        cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
+        cy.get('div[data-testid=course-resources-panel]').contains(courseResourcesLocale.title);
 
-        // tbd
-        // the user sees NO subjects
+        // the user sees NO subjects (the form has no sibling elements)
+        cy.get('div[data-testid=course-resources-panel] form')
+            .parent()
+            .children()
+            .should('have.length', 1);
         // the user sees a search field
+        cy.get('div[data-testid=course-resources-panel] form input').should(
+            'have.attr',
+            'placeholder',
+            courseResourcesLocale.placeholder,
+        );
         // user enters ACCT
-        // user sees N entries
+        cy.get('div[data-testid=course-resources-panel] form input').type('ACCT');
+        const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
+            item.name.startsWith('ACCT'),
+        );
+        cy.get('ul#homepage-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', learningResourceSearchSuggestionsWithACCT.length);
         // user clicks on #1, ACCT1101
+        cy.get('li#homepage-courseresource-autocomplete-option-0')
+            .contains('ACCT1101')
+            .click();
         // user lands on appropriate course resources page
-        // (contents tested in Course Resource test)
+        cy.url().should(
+            'include',
+            'courseresources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        const classPanelId = 'classpanel-0';
+        cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 
     it('the non-loggedin user cannot access Course Resources', () => {
@@ -370,7 +416,6 @@ context('Course Resources', () => {
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
-
 
     it('the loggedin user without course resource privs cannot access Course Resources', () => {
         cy.visit('/courseresources?user=emcommunity');

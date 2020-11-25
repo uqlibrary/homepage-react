@@ -6,6 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
+import { courseResourcesLocale as locale } from './CourseResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
@@ -55,10 +56,11 @@ export const CourseResourcesPanel = ({ account, history }) => {
             fullHeight
             accentHeader
             noPadding
+            standardCardId="course-resources-panel"
             title={
                 <Grid container>
                     <Grid item xs>
-                        Course resources
+                        {locale.title}
                     </Grid>
                 </Grid>
             }
@@ -82,10 +84,10 @@ export const CourseResourcesPanel = ({ account, history }) => {
                         padding: '0 30px 8px',
                     }}
                 >
-                    <Grid container spacing={1} style={{ marginTop: 12, marginLeft: 4 }}>
+                    <Grid container spacing={1} style={{ marginTop: 12, marginLeft: 4 }} data-testid="your-courses">
                         <Grid item xs={12}>
-                            <Typography color={'secondary'} variant={'h6'}>
-                                Your courses
+                            <Typography color={'secondary'} component={'h4'} variant={'h6'}>
+                                {locale.userCourseTitle}
                             </Typography>
                         </Grid>
                         {account.current_classes.map((item, index) => {
@@ -93,6 +95,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
                                 <Grid
                                     item
                                     xs={12}
+                                    data-testid={`hcr-${index}`}
                                     key={`hcr-${index}`}
                                     style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
                                 >

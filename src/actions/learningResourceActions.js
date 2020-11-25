@@ -85,7 +85,6 @@ export function loadReadingLists(coursecode, campus, semester, account) {
     };
 
     const filterReadingLists = (readingLists, coursecode, campus, semester) => {
-        console.log('filterReadingLists: readingLists = ', readingLists);
         if (!readingLists || readingLists.length === 0) {
             return [];
         }
