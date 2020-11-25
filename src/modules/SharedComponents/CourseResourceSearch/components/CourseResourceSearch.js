@@ -23,7 +23,6 @@ const useStyles = makeStyles(
             paddingLeft: 20,
         },
         selectInput: {
-            fontSize: 24,
             fontWeight: 300,
             color: theme.palette.primary.main,
             textOverflow: 'ellipsis !important',
