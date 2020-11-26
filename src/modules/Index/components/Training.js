@@ -134,10 +134,12 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                             trainingEvents.map((event, index) => {
                                 const time = moment(event.start)
                                     .calendar(null, {
+                                        sameDay: '[Today,] dddd D MMMM [at] h.mma',
+                                        nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
                                         nextWeek: 'dddd D MMMM [at] h.mma',
-                                        lastDay: '[Yesterday]',
-                                        lastWeek: '[Last] dddd',
-                                        sameElse: 'DD/MM/YYYY',
+                                        lastDay: '[Yesterday]  D MMMM [at] h.mma',
+                                        lastWeek: '[Last] dddd  D MMMM [at] h.mma',
+                                        sameElse: 'D MMMM [at] h.mma',
                                     })
                                     .replace('.00', '');
                                 return (
