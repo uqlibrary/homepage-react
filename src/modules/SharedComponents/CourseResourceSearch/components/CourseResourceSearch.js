@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 // import { useLocation } from 'react-router';
 
 import { PropTypes } from 'prop-types';
-import { VoiceToText } from 'modules/Index/components/SearchPanel/components/voiceToText';
 import { isRepeatingString, unescapeString } from 'helpers/general';
 import { courseResourcesLocale as locale } from 'modules/Index/components/CourseResources.locale';
 
@@ -74,10 +73,6 @@ export const CourseResourceSearch = ({
 
     const [searchKeyword, setSearchKeyword] = useState('');
 
-    const handleClearSuggestions = () => {
-        actions.clearPrimoSuggestions();
-    };
-
     const handleSubmit = event => {
         event.preventDefault();
     };
@@ -120,6 +115,9 @@ export const CourseResourceSearch = ({
             }
 
             document.getElementById(`${elementId}-autocomplete`).value = '';
+
+            // we dont want the previous list to pop up if they search again
+            actions.clearPrimoSuggestions();
 
             return true;
         }
@@ -185,13 +183,6 @@ export const CourseResourceSearch = ({
                                 />
                             );
                         }}
-                    />
-                </Grid>
-                <Grid item xs={'auto'} style={{ width: 90, marginRight: -20, marginBottom: 6 }}>
-                    <VoiceToText
-                        sendHandler={handleCRSearchKeywordChange}
-                        clearSuggestions={handleClearSuggestions}
-                        elementId="course-resource"
                     />
                 </Grid>
                 {suggestionsLoading && (
