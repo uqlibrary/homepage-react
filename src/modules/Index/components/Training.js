@@ -115,7 +115,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
     const handleEventDetail = event => {
         setEventDetail(event);
     };
-    const handleCloseEventDetail = () => {
+    const closeEvent = () => {
         setEventDetail(null);
     };
     const openEvent = id => {
@@ -178,7 +178,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                 <Grid item xs={12}>
                                     <Grid container spacing={1} className={classes.detailHeader}>
                                         <Grid item xs={'auto'}>
-                                            <IconButton onClick={() => handleCloseEventDetail()}>
+                                            <IconButton onClick={() => closeEvent()}>
                                                 <CloseIcon fontSize="small" className={classes.detailIcon} />
                                             </IconButton>
                                         </Grid>
