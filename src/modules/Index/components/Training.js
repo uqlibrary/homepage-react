@@ -119,7 +119,6 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
         setEventDetail(null);
     };
     const openEvent = id => {
-        // https://studenthub.uq.edu.au/students/events/detail/2870806
         window.location.href = `https://studenthub.uq.edu.au/students/events/detail/${id}`;
     };
     const openMoreTraining = () => {
@@ -134,7 +133,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                             trainingEvents.length > 0 &&
                             trainingEvents.map((event, index) => {
                                 const time = moment(event.start).calendar(null, {
-                                    nextWeek: 'dddd MMM Do [at] LT',
+                                    nextWeek: 'dddd MMMM D [at] LT',
                                     lastDay: '[Yesterday]',
                                     lastWeek: '[Last] dddd',
                                     sameElse: 'DD/MM/YYYY',
