@@ -77,9 +77,9 @@ export const CourseResourceSearch = ({
         event.preventDefault();
     };
 
-    const handleCRSearchKeywordChange = React.useCallback(
+    const handleCourseSelectionInDropdown = React.useCallback(
         (event, newValue) => {
-            console.log('handleCRSearchKeywordChange: newValue = ', newValue);
+            console.log('handleCourseSelectionInDropdown: newValue = ', newValue);
             setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
                 // Autocomplete is firing onInputChange with the full course name many times. Dont know why.
@@ -160,7 +160,7 @@ export const CourseResourceSearch = ({
                         //     handleChange(event, newValue);
                         // }}
                         // onClose={(event, reason) => handleClose(reason, event)}
-                        onInputChange={handleCRSearchKeywordChange}
+                        onInputChange={handleCourseSelectionInDropdown}
                         noOptionsText={locale.noOptionsText}
                         renderInput={params => {
                             return (
