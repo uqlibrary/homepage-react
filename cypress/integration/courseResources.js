@@ -194,7 +194,12 @@ context('Course Resources', () => {
         });
     }
 
-    function a_user_can_use_the_search_bar_to_load_a_subject(courseReadingList, searchSuggestions) {
+    function a_user_can_use_the_search_bar_to_load_a_subject(
+        courseReadingList,
+        searchSuggestions,
+        typeChar = 'FREN',
+        tabId = 0,
+    ) {
         const courseCode = courseReadingList.title || 'mock data is missing';
         const frenchSearchSuggestion = searchSuggestions
             .filter(obj => {
@@ -204,13 +209,13 @@ context('Course Resources', () => {
 
         cy.get('div[data-testid=full-courseresource-autocomplete] input')
             .should('exist')
-            .type('FREN');
+            .type(typeChar);
         cy.get('[data-testid="full-courseresource-autocomplete"]').click();
         cy.get('li#full-courseresource-autocomplete-option-0')
             .contains(`${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.period}`)
             .click();
         // cy.get('button[data-testid=full-courseresource-submit]').click();
-        cy.get('div[data-testid=classpanel-0] h3').contains(courseReadingList.course_title);
+        cy.get(`div[data-testid=classpanel-${tabId}] h3`).contains(courseReadingList.course_title);
     }
 
     function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
@@ -291,7 +296,7 @@ context('Course Resources', () => {
      * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
      * ---------+-----------------------------------+---------------+----------------+
      */
-    it('User with classes', () => {
+    it('User with classes sees their classes', () => {
         cy.visit('/courseresources?user=s1111111');
         cy.viewport(1300, 1000);
 
@@ -322,7 +327,7 @@ context('Course Resources', () => {
         the_user_sees_the_search_form();
     });
 
-    it('User without classes', () => {
+    it('User without classes sees the search field', () => {
         cy.visit('/courseresources?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -438,5 +443,33 @@ context('Course Resources', () => {
         cy.visit('/courseresources?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
+    });
+
+    it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
+        cy.visit('/courseresources?user=s3333333');
+        cy.viewport(1300, 1000);
+
+        the_user_lands_on_the_Search_tab();
+
+        a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
+
+        a_user_can_use_the_search_bar_to_load_a_subject(
+            HIST1201ReadingList,
+            learningResourceSearchSuggestions,
+            'HIST',
+            1,
+        );
+
+        a_user_can_use_the_search_bar_to_load_a_subject(
+            ACCT1101ReadingList,
+            learningResourceSearchSuggestions,
+            'ACCT',
+            2,
+        );
+
+        cy.get('[data-testid=classtab-FREN1010]')
+            .contains('FREN1010')
+            .click();
+        cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
     });
 });
