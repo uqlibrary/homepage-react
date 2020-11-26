@@ -15,7 +15,6 @@ import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { default as locale } from './locale';
 import {
     seeCourseResources,
     seeComputerAvailability,
@@ -26,6 +25,7 @@ import {
     seeLoans,
     seePrintBalance,
     seeTraining,
+    getUserServices,
 } from 'helpers/access';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import Spotlights from './Spotlights';
@@ -442,7 +442,7 @@ export const Index = ({
                                 }
                             >
                                 <Grid container spacing={1}>
-                                    {locale.LibraryServices.links.map((item, index) => {
+                                    {getUserServices(account).map((item, index) => {
                                         return (
                                             <Grid item xs={12} sm={12} key={index}>
                                                 <a href={item.url}>{item.title}</a>

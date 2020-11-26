@@ -1,3 +1,5 @@
+import { default as locale } from 'modules/Index/components/locale';
+
 /**
 
  * (matching ptype in breackets at start)
@@ -164,3 +166,46 @@ export const seeTraining = true;
 export const seeLibraryServices = true;
 
 export const seeFeedback = true;
+
+const userGroupServices = {
+    [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
+    [UNDERGRADUATE_TESOL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [UNDERGRADUATE_VOCATIONAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [POSTGRAD_COURSEWORK]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
+    [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
+    [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
+
+    [LIBRARY_STAFF]: [
+        'servicesforstudents',
+        'servicesforhdrs',
+        'servicesforcommunity',
+        'servicesforhospital',
+        'servicesforprofessional',
+        'servicesforresearchers',
+        'servicesforsecondary',
+        'servicesforteaching',
+        'servicesforalumni',
+        'servicesforexternal',
+    ],
+    [OTHER_STAFF]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
+    [STAFF_AWAITING_AURION]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
+
+    [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
+    [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
+    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital'],
+    [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
+    [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
+    [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
+    [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
+};
+
+export const getUserServices = account => {
+    const allLibraryServices = locale.LibraryServices.links || [];
+    if (!account || !account.user_group) {
+        return allLibraryServices.filter(i => i.title.startsWith('Services for'));
+    }
+    const userGroupService = userGroupServices[account.user_group];
+    return userGroupService.map(service => allLibraryServices.find(i => i.id === service));
+};
