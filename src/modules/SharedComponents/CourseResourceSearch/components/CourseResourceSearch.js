@@ -64,7 +64,8 @@ export const CourseResourceSearch = ({
     // 'full' for course resources page search
     // 'compact' for course resource search in homepage panel
     elementId = 'primo-search',
-    searchKeywordSelected,
+    loadCourseAndSelectTab,
+    navigateToCourseResourcePage,
     suggestions,
     suggestionsLoading,
     suggestionsError,
@@ -110,10 +111,10 @@ export const CourseResourceSearch = ({
         if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Course Resources page
-                searchKeywordSelected(option, searchKeyword);
+                navigateToCourseResourcePage(option, searchKeyword);
             } else {
                 // user is on the full view, on the Course Resource page (tab will load)
-                searchKeywordSelected(extractSubjectCodeFromName(searchKeyword), suggestions);
+                loadCourseAndSelectTab(extractSubjectCodeFromName(searchKeyword), suggestions);
             }
 
             document.getElementById(`${elementId}-autocomplete`).value = '';
@@ -222,7 +223,8 @@ CourseResourceSearch.propTypes = {
     history: PropTypes.any,
     locale: PropTypes.any,
     option: PropTypes.any,
-    searchKeywordSelected: PropTypes.any,
+    loadCourseAndSelectTab: PropTypes.any,
+    navigateToCourseResourcePage: PropTypes.any,
     suggestions: PropTypes.any,
     suggestionsLoading: PropTypes.bool,
     suggestionsError: PropTypes.string,

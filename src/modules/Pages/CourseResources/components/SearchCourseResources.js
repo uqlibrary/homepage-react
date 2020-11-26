@@ -132,7 +132,7 @@ export const SearchCourseResources = ({
         );
     };
 
-    const searchKeywordSelected = (searchKeyword, suggestions) => {
+    const loadCourseAndSelectTab = (searchKeyword, suggestions) => {
         let tabId;
 
         const thisSuggestion =
@@ -157,7 +157,7 @@ export const SearchCourseResources = ({
                 <CourseResourceSearch
                     displayType="full"
                     elementId="full-courseresource"
-                    searchKeywordSelected={searchKeywordSelected}
+                    loadCourseAndSelectTab={loadCourseAndSelectTab}
                 />
                 {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
             </Grid>
