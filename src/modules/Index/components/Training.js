@@ -132,12 +132,14 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                         {trainingEvents &&
                             trainingEvents.length > 0 &&
                             trainingEvents.map((event, index) => {
-                                const time = moment(event.start).calendar(null, {
-                                    nextWeek: 'dddd MMMM D [at] LT',
-                                    lastDay: '[Yesterday]',
-                                    lastWeek: '[Last] dddd',
-                                    sameElse: 'DD/MM/YYYY',
-                                });
+                                const time = moment(event.start)
+                                    .calendar(null, {
+                                        nextWeek: 'dddd D MMMM [at] h.mma',
+                                        lastDay: '[Yesterday]',
+                                        lastWeek: '[Last] dddd',
+                                        sameElse: 'DD/MM/YYYY',
+                                    })
+                                    .replace('.00', '');
                                 return (
                                     <Grid container spacing={0} className={classes.row} key={index}>
                                         <Grid item xs={12}>
