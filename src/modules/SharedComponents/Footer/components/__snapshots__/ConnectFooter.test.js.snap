@@ -151,15 +151,12 @@ exports[`Component Megamenu should render 1`] = `
     <WithStyles(ForwardRef(Grid))
       container={true}
       spacing={1}
+      style={
+        Object {
+          "justifyContent": "center",
+        }
+      }
     >
-      <Hidden
-        mdUp={true}
-      >
-        <WithStyles(ForwardRef(Grid))
-          item={true}
-          xs={true}
-        />
-      </Hidden>
       <WithStyles(ForwardRef(Grid))
         id="buttonSocial-0"
         item={true}
@@ -325,10 +322,6 @@ exports[`Component Megamenu should render 1`] = `
           </WithStyles(ForwardRef(Button))>
         </WithStyles(ForwardRef(Tooltip))>
       </WithStyles(ForwardRef(Grid))>
-      <WithStyles(ForwardRef(Grid))
-        item={true}
-        xs={true}
-      />
     </WithStyles(ForwardRef(Grid))>
     <WithStyles(ForwardRef(Grid))>
       <span

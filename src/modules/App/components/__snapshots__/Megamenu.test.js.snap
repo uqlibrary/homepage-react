@@ -1,14 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Component Megamenu should display mobile correctly 1`] = `
-<div>
+<div
+  id="megamenu"
+>
   <WithStyles(ForwardRef(List))
     component="nav"
     data-testid="main-menu"
     id="mainMenu"
   >
-    <span
-      className="menu-item-container"
+    <div
       key="menucontainer-item-0"
     >
       <WithStyles(ForwardRef(ListItem))
@@ -30,9 +31,8 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
           secondary="secondary text 0"
         />
       </WithStyles(ForwardRef(ListItem))>
-    </span>
-    <span
-      className="menu-item-container"
+    </div>
+    <div
       key="menucontainer-item-1"
     >
       <WithStyles(ForwardRef(ListItem))
@@ -54,7 +54,7 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
           secondary="secondary text 1"
         />
       </WithStyles(ForwardRef(ListItem))>
-    </span>
+    </div>
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"
@@ -69,14 +69,15 @@ exports[`Component Megamenu should render empty drawer 1`] = `
 `;
 
 exports[`Component Megamenu should render opened drawer with menus 1`] = `
-<div>
+<div
+  id="megamenu"
+>
   <WithStyles(ForwardRef(List))
     component="nav"
     data-testid="main-menu"
     id="mainMenu"
   >
-    <span
-      className="menu-item-container"
+    <div
       key="menucontainer-item-0"
     >
       <WithStyles(ForwardRef(ListItem))
@@ -98,9 +99,8 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
           secondary="secondary text 0"
         />
       </WithStyles(ForwardRef(ListItem))>
-    </span>
-    <span
-      className="menu-item-container"
+    </div>
+    <div
       key="menucontainer-item-1"
     >
       <WithStyles(ForwardRef(ListItem))
@@ -122,7 +122,7 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
           secondary="secondary text 1"
         />
       </WithStyles(ForwardRef(ListItem))>
-    </span>
+    </div>
   </WithStyles(ForwardRef(List))>
   <div
     id="afterMegamenu"

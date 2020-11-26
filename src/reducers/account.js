@@ -126,6 +126,60 @@ const handlers = {
         ...state,
         chatStatus: { online: false },
     }),
+
+    [actions.LIB_HOURS_LOADING]: state => ({
+        ...state,
+        libHours: null,
+        libHoursLoading: true,
+    }),
+
+    [actions.LIB_HOURS_LOADED]: (state, action) => ({
+        ...state,
+        libHours: action.payload,
+        libHoursLoading: false,
+    }),
+
+    [actions.LIB_HOURS_FAILED]: state => ({
+        ...state,
+        libHours: null,
+        libHoursLoading: false,
+    }),
+    // Computer availability
+    [actions.COMP_AVAIL_LOADING]: state => ({
+        ...state,
+        computerAvailability: null,
+        computerAvailabilityLoading: true,
+    }),
+
+    [actions.COMP_AVAIL_LOADED]: (state, action) => ({
+        ...state,
+        computerAvailability: action.payload,
+        computerAvailabilityLoading: false,
+    }),
+
+    [actions.COMP_AVAIL_FAILED]: state => ({
+        ...state,
+        computerAvailability: null,
+        computerAvailabilityLoading: false,
+    }),
+    // Training
+    [actions.TRAINING_LOADING]: state => ({
+        ...state,
+        trainingEvents: null,
+        trainingEventsLoading: true,
+    }),
+
+    [actions.TRAINING_LOADED]: (state, action) => ({
+        ...state,
+        trainingEvents: action.payload,
+        trainingEventsLoading: false,
+    }),
+
+    [actions.TRAINING_FAILED]: state => ({
+        ...state,
+        trainingEvents: null,
+        trainingEventsLoading: false,
+    }),
 };
 
 export default function accountReducer(state = initialState, action) {

@@ -1,27 +1,27 @@
 import React, { Fragment } from 'react';
 
-// find an appropriate icon from https://material-ui.com/components/material-icons/ to use
-import REPLACEMEIcon from '@material-ui/icons/AcUnit';
+import JigsawIcon from '@material-ui/icons/Extension';
+import DocumentIcon from '@material-ui/icons/Description';
 import InfoIcon from '@material-ui/icons/ErrorOutline';
 import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 
 export default {
     title: 'Course Resources',
     search: {
-        tabLabel: 'Course search',
+        title: 'Course search',
     },
     studyHelp: {
         title: 'Study Help',
         unavailable: 'No resources right now',
         links: [
             {
-                icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
+                icon: <DocumentIcon style={{ marginRight: 6 }} />,
                 id: 'referencingGuides',
                 linkLabel: 'Referencing guides',
                 linkTo: 'https://guides.library.uq.edu.au/referencing',
             },
             {
-                icon: <REPLACEMEIcon style={{ marginRight: 6 }} />,
+                icon: <JigsawIcon style={{ marginRight: 6 }} />,
                 id: 'digitalessentials',
                 linkLabel: 'Digital Essentials',
                 linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
@@ -44,11 +44,11 @@ export default {
         // max number of items of each type we should display
         readingLists: 2,
         examPapers: 2,
-        libGuides: 2,
+        libGuides: 3,
     },
     notesTrimLength: 90,
     myCourses: {
-        tabLabel: 'My courses',
+        title: 'My courses',
         none: {
             title: 'No listed courses',
             description: (
@@ -61,30 +61,48 @@ export default {
         },
         readingLists: {
             title: 'Reading lists',
-            multiple: {
-                title: 'More than one reading list found for [classnumber]. Please select a list:',
-                linkOut: 'Search other reading lists',
+            error: {
+                none: 'No reading lists for this course',
+                unavailable: 'Reading lists currently unavailable',
+                multiple: 'More than one reading list found for [classnumber]. Please select a list:',
+                footer: {
+                    linkLabel: 'Search other reading lists',
+                    linkOut: 'http://lr.library.uq.edu.au/index.html',
+                },
             },
-            linkOut: '[numberExcessReadingLists] more [readingListNumber]',
+            footer: {
+                linkLabel: '[numberExcessReadingLists] more [readingListNumber]',
+            },
         },
         examPapers: {
             title: 'Past exam papers',
-            searchUrl: 'https://www.library.uq.edu.au/exams/papers.php?stub=',
+            none: 'No Past Exam Papers for this course',
             unavailable: 'Exam papers list currently unavailable',
-            linkOut: 'Search for other exam papers',
             morePastExams: '[numberExcessExams] more past [examNumber]',
+            footer: {
+                linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',
+                linkLabel: 'Search for other exam papers',
+            },
         },
         guides: {
             title: 'Library guides',
-            unavailableMessage: 'No Library guides for this course',
-            linkOut: 'All library guides',
+            none: 'No Library guides for this course',
+            unavailable: 'Library guides list currently unavailable',
+            footer: {
+                linkOut: 'https://guides.library.uq.edu.au',
+                linkLabel: 'All library guides',
+            },
         },
         links: {
             title: 'Course links',
-            ecp: 'Electronic Course Profile',
-            blackboard: 'Learn.UQ (Blackboard)',
+            blackboard: {
+                title: 'Learn.UQ (Blackboard)',
+                linkOutPattern: 'https://learn.uq.edu.au/[courseCode]',
+            },
+            ecp: {
+                title: 'Electronic Course Profile',
+                linkOutPattern: 'https://www.uq.edu.au/study/course.html?course_code=[courseCode]',
+            },
         },
-        ecpLinkUrl: 'http://www.uq.edu.au/study/course.html?course_code=',
-        blackboardUrl: 'https://learn.uq.edu.au/',
     },
 };

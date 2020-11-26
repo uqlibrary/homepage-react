@@ -719,7 +719,7 @@ export const CURRENT_LICENCES = [
     {
         value: 453701,
         text: 'Permitted Re-use with Acknowledgement',
-        link: 'http://guides.library.uq.edu.au/deposit_your_data/terms_and_conditions',
+        link: 'https://guides.library.uq.edu.au/deposit_your_data/terms_and_conditions',
         description: [
             'I AGREE TO ACKNOWLEDGE any re-use of this dataset in any research outputs where reliance is made upon it, including conference papers and published research papers.',
             'The agreed form of acknowledgement is as a full citation as presented on the UQ eSpace record for this dataset.',
@@ -728,7 +728,7 @@ export const CURRENT_LICENCES = [
     {
         value: 454104,
         text: 'Permitted Re-Use with Commercial Use Restriction',
-        link: 'http://guides.library.uq.edu.au/deposit_your_data/terms_and_conditions',
+        link: 'https://guides.library.uq.edu.au/deposit_your_data/terms_and_conditions',
         description: [
             'I AGREE TO ACKNOWLEDGE any re-use of this dataset in any research outputs where reliance is made upon it, including conference papers and published research papers.',
             'I FURTHER AGREE TO A COMMERCIAL USE RESTRICTION on this dataset, or data included in it and to only and to only use this data in non-commercial endeavours.',
@@ -738,7 +738,7 @@ export const CURRENT_LICENCES = [
     {
         value: 454105,
         text: 'Permitted Re-Use with Share Alike Requirement',
-        link: 'http://guides.library.uq.edu.au/deposit_your_data/terms_and_conditions',
+        link: 'https://guides.library.uq.edu.au/deposit_your_data/terms_and_conditions',
         description: [
             'I AGREE TO ACKNOWLEDGE any re-use of this dataset in any research outputs where reliance is made upon it, including conference papers and published research papers.',
             'I FURTHER AGREE TO A SHARE ALIKE RESTRICTION on this dataset, or any data included in it, which means that I Agree that I remix, transform or build upon the data, I will contributions on the same Share Alike basis as the original.',

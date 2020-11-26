@@ -86,6 +86,24 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 // Spotlights API
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Training API
+export const TRAINING_API = (numEvents = 6) => ({
+    apiUrl: 'training_events',
+    options: { params: { take: numEvents, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
+});
+
+// Papercut balance API
+export const PRINTING_API = () => ({
+    apiUrl: 'papercut/balance',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Loans API
+export const LOANS_API = () => ({
+    apiUrl: 'account/loans',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // Primo Suggestions API
 export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
     return {
@@ -109,6 +127,18 @@ export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
 
 // Chat availability API
 export const CHAT_API = () => ({ apiUrl: 'chat_status', options: { params: { ts: `${new Date().getTime()}` } } });
+
+// Library hours
+export const LIB_HOURS_API = () => ({
+    apiUrl: 'library_hours/day',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Computer availability
+export const COMP_AVAIL_API = () => ({
+    apiUrl: 'computer_availability',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
 
 // Alerts API
 export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });

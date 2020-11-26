@@ -17,7 +17,7 @@ import libraryGuides_PHIL1002 from './data/records/libraryGuides_PHIL1002';
 import courseReadingList_6888AB68 from './data/records/courseReadingList_6888AB68-0681-FD77-A7D9-F7B3DEE7B29F';
 import courseReadingList_2109F2EC from './data/records/courseReadingList_2109F2EC-AB0B-482F-4D30-1DD3531E46BE';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-// import courseReadingList_FE54098F from './data/records/courseReadingList_FE54098F-2CB3-267D-50F8-4B2895FE94B9';
+import { libHours, computerAvailability, training, printBalance, loans } from './data/account';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -80,10 +80,38 @@ mock.onGet(routes.CHAT_API().apiUrl)
         // return [200, { online: false }];
     });
 
+mock.onGet(routes.TRAINING_API(10).apiUrl)
+    .reply(() => {
+        console.log('Training events API hit');
+        // mock training evemts
+        return [200, training];
+    });
+
+mock.onGet(routes.PRINTING_API().apiUrl)
+    .reply(() => {
+        console.log('Papercut API hit');
+        // mock print balance
+        return [200, printBalance];
+    });
+
+mock.onGet(routes.LOANS_API().apiUrl)
+    .reply(() => {
+        console.log('Loans API hit');
+        // mock print balance
+        return [200, loans];
+    });
+
+mock.onGet(routes.LIB_HOURS_API().apiUrl)
+    .reply(() => {
+        console.log('Library Hours API hit');
+        // mock library hours
+        return [200, libHours];
+    });
+
 mock.onGet(routes.ALERT_API().apiUrl)
     .reply(() => {
         console.log('Alert status API hit');
-        // mock chat status
+        // mock alerts status
         return [200,
             [
                 {
@@ -96,6 +124,13 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 },
             ],
         ];
+    });
+
+mock.onGet(routes.COMP_AVAIL_API.apiUrl)
+    .reply(() => {
+        console.log('Computer availability API hit');
+        // mock computer availability
+        return [200, computerAvailability];
     });
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {

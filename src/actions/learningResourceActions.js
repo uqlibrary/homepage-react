@@ -43,9 +43,13 @@ export function loadGuides(keyword) {
             .then(response => response.json())
             .then(data => {
                 console.log('fetched GUIDES_API');
+                const updatedData = data.map(subject => {
+                    subject.coursecode = keyword;
+                    return subject;
+                });
                 dispatch({
                     type: actions.GUIDES_LOADED,
-                    payload: data,
+                    payload: updatedData,
                 });
             })
             .catch(error => {
@@ -71,9 +75,13 @@ export function loadReadingLists(keyword) {
             .then(response => response.json())
             .then(data => {
                 console.log('fetched READING_LIST_API for ', keyword);
+                const updatedData = data.map(subject => {
+                    subject.talisId = keyword;
+                    return subject;
+                });
                 dispatch({
                     type: actions.READING_LIST_LOADED,
-                    payload: data,
+                    payload: updatedData,
                 });
             })
             .catch(error => {

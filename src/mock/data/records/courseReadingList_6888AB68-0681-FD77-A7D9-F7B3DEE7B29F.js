@@ -19,18 +19,6 @@ export default [{
     "importance": "Recommended",
 }, {
     "talisId": "6888AB68-0681-FD77-A7D9-F7B3DEE7B29F",
-    "referenceType": "Webpage",
-    "isbn": "",
-    "url": "https:\/\/www.library.uq.edu.au\/exams\/search.html",
-    "onlineResource": true,
-    "uri": "http:\/\/lr.library.uq.edu.au\/items\/F2B8A5DC-27C7-0BC4-3985-C44A61D3CD5A",
-    "title": "Past Central Exam Papers",
-    "itemLink": "http:\/\/lr.library.uq.edu.au\/items\/F2B8A5DC-27C7-0BC4-3985-C44A61D3CD5A.html",
-    "created": "2014-09-29T03:35:08+01:00",
-    "studentNote": "Follow the link and search for past exam papers by course code.",
-    "importance": "",
-}, {
-    "talisId": "6888AB68-0681-FD77-A7D9-F7B3DEE7B29F",
     "referenceType": "Book",
     "author": "Chahi, Fatiha; Denyer, Monique; Gloanec, Audrey; Ollivier, Christian; Garmendia, Agust\u00edn",
     "placePublished": "[Barcelona]",

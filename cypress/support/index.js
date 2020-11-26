@@ -22,8 +22,6 @@ import 'cypress-plugin-retries';
 import 'cypress-axe';
 
 // Custom
-import './adminEdit';
-import './ckeditor';
 import './commands';
 
 // Ignore uncaught exceptions
@@ -33,3 +31,10 @@ import './commands';
 Cypress.on('uncaught:exception', () => {
     return false;
 });
+
+export const A11YOptions = {
+    runOnly: {
+        type: 'tag',
+        values: ['wcag2a', 'wcag2aa', 'section508'],
+    },
+};

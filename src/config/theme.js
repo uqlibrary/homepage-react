@@ -7,7 +7,7 @@ export const mui1theme = createMuiTheme({
     palette: createPalette({
         primary: {
             light: '#962A8B',
-            main: '#51247A',
+            main: '#51247A', // uqpurple
             dark: '#3b1a59',
             gradient: {
                 horizontal: {
@@ -25,13 +25,13 @@ export const mui1theme = createMuiTheme({
             },
         },
         secondary: {
-            light: '#f2f2f2',
+            light: '#f1f1f1',
             main: '#595959',
             dark: '#333333',
         },
         accent: {
             light: '#54acff',
-            main: '#316799',
+            main: '#316799', // uqblue
             dark: '#2a557d',
         },
         white: {

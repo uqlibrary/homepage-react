@@ -16,8 +16,11 @@ const styles = theme => ({
         fontWeight: '300',
         lineHeight: '25px',
         margin: '0 auto 0 auto',
-        maxWidth: '1200px',
-        padding: 20,
+        maxWidth: '90%',
+        [theme.breakpoints.up('lg')]: {
+            maxWidth: '1200px',
+        },
+        padding: '20px 0',
         position: 'relative',
         '& a': {
             color: theme.palette.secondary.dark,
@@ -29,8 +32,10 @@ const styles = theme => ({
         },
     },
     navigation: {
+        marginTop: '-4px',
         '& ul': {
             padding: 0,
+            margin: 0,
             [theme.breakpoints.down('sm')]: {
                 textAlign: 'center',
             },
@@ -41,6 +46,10 @@ const styles = theme => ({
             padding: 0,
             [theme.breakpoints.down('sm')]: {
                 display: 'inline-block',
+            },
+            [theme.breakpoints.up('md')]: {
+                fontSize: 14,
+                lineHeight: 1.7,
             },
         },
     },
@@ -74,6 +83,9 @@ const styles = theme => ({
         },
         textAlign: 'right',
     },
+    givingBlock: {
+        marginRight: 10,
+    },
     givingButtonClass: {
         color: theme.palette.white.main + '!important',
         backgroundColor: theme.palette.accent.main,
@@ -83,6 +95,7 @@ const styles = theme => ({
         padding: '1rem',
     },
     contacts: {
+        marginTop: '-4px',
         '& div': {
             '& div': {
                 [theme.breakpoints.down('sm')]: {
@@ -150,10 +163,7 @@ export function ConnectFooter(props) {
                         </Typography>
                     </Grid>
                 </Grid>
-                <Grid container spacing={1}>
-                    <Hidden mdUp>
-                        <Grid item xs />
-                    </Hidden>
+                <Grid container spacing={1} style={{ justifyContent: 'center' }}>
                     {locale.connectFooter.buttonSocial.map((item, index) => (
                         <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
                             <Tooltip
@@ -178,7 +188,6 @@ export function ConnectFooter(props) {
                             </Tooltip>
                         </Grid>
                     ))}
-                    <Grid item xs />
                 </Grid>
                 <Grid className={classes.internal}>
                     {locale.connectFooter.internalLinks.map((linkProperties, index) => {
@@ -197,7 +206,7 @@ export function ConnectFooter(props) {
                 <Grid container spacing={2}>
                     {locale.connectFooter.givingLinks.map((item, index) => {
                         return (
-                            <Grid item xs={12} md={8} key={`givingLinks-${index}`}>
+                            <Grid item xs={12} md={8} key={`givingLinks-${index}`} className={classes.givingBlock}>
                                 <Button
                                     fullWidth
                                     children={item.label}

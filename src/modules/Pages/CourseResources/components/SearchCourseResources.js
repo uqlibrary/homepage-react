@@ -9,9 +9,24 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { makeStyles } from '@material-ui/styles';
+import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+
+const useStyles = makeStyles(
+    theme => ({
+        subjectTabBar: {
+            backgroundColor: theme.palette.white.main,
+            color: theme.palette.secondary.dark,
+            marginTop: '24px',
+        },
+        tabPanel: {
+            margin: 0,
+        },
+    }),
+    { withTheme: true },
+);
 
 export const SearchCourseResources = ({
-    a11yProps,
     loadNewSubject,
     renderSubjectTabBody,
     setDisplayType,
@@ -19,46 +34,47 @@ export const SearchCourseResources = ({
     listSearchedSubjects,
     updateSearchList,
 }) => {
+    const classes = useStyles();
+
     const subjectTabLabel = 'searchtab';
-    const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
-    const handleSearchTabChange = (event, subjectTabId) => {
-        !!event.target.innerText && loadNewSubject(event.target.innerText);
-        setCurrentSearchTab(subjectTabId);
+    const [searchTab, setCurrentSearchTab] = useState();
+    const handleSearchTabChange = (event, newSubjectTabId) => {
+        setCurrentSearchTab(newSubjectTabId);
     };
 
     const renderSearchResults = searchedSubjects => {
         return (
             <Fragment>
-                <AppBar position="static" style={{ backgroundColor: 'white', color: 'black' }}>
+                <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
-                        {searchedSubjects.map((item, index) => {
+                        {searchedSubjects.map((subjectCode, index) => {
                             return (
                                 <Tab
-                                    {...a11yProps(index, 'classtab')}
-                                    data-testid={`classtab-${index}`}
-                                    key={`classtab-${index}`}
-                                    id={`classtab-${index}`}
-                                    label={item}
+                                    data-testid={`classtab-${subjectCode}`}
+                                    key={`classtab-${subjectCode}`}
+                                    label={subjectCode}
                                     value={`${subjectTabLabel}-${index}`} // must match 'index' in TabPanel
+                                    {...a11yProps(index, subjectTabLabel)}
                                 />
                             );
                         })}
                     </Tabs>
                 </AppBar>
-                {searchedSubjects.map((item, index) => {
+                {searchedSubjects.map((subjectCode, index) => {
                     const subject = {};
-                    subject.classnumber = item;
+                    subject.classnumber = subjectCode;
                     return (
                         <TabPanel
                             data-testid={`classpanel-${index}`}
                             index={`${subjectTabLabel}-${index}`} // must match 'value' in Tabs
+                            label="classpanel"
                             key={`classpanel-${index}`}
-                            tabId="searchTab"
+                            tabId={searchTab}
                             value={searchTab}
-                            style={{ margin: 0 }}
+                            className={classes.tabPanel}
+                            {...reverseA11yProps(index, 'searchtab')}
                         >
                             {renderSubjectTabBody(subject)}
-                            {/* {item}*/}
                         </TabPanel>
                     );
                 })}
@@ -79,32 +95,31 @@ export const SearchCourseResources = ({
     };
 
     const searchKeywordSelected = (searchKeyword, suggestions) => {
+        let tabId;
         setKeywordPresets(getPresetData(searchKeyword, suggestions));
 
         setDisplayType('searchresults');
-        if (!listSearchedSubjects.searchKeyword) {
+        if (!listSearchedSubjects.includes(searchKeyword)) {
             loadNewSubject(searchKeyword);
-        }
-        updateSearchList(listSearchedSubjects.concat(searchKeyword));
-        // updateSearchList(listSearchedSubjects => Object.assign({}, ...listSearchedSubjects, ...newGuidesList));
-    };
+            updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
-    // React.useEffect(() => {
-    //     if (listSearchedSubjects.length > 0) {
-    //         console.log('listSearchedSubjects has changed: ', listSearchedSubjects);
-    //     }
-    // }, [listSearchedSubjects]);
+            tabId = listSearchedSubjects.length;
+        } else {
+            tabId = listSearchedSubjects.indexOf(searchKeyword);
+        }
+
+        setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
+    };
 
     return (
         <Grid item xs={12} id="courseresource-search">
             <PrimoSearch displayType="courseresources" searchKeywordSelected={searchKeywordSelected} />
-            {listSearchedSubjects.length > 0 && <Grid>{renderSearchResults(listSearchedSubjects)}</Grid>}
+            {listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
         </Grid>
     );
 };
 
 SearchCourseResources.propTypes = {
-    a11yProps: PropTypes.func,
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
     renderSubjectTabBody: PropTypes.func,

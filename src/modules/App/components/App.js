@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
-import Hidden from '@material-ui/core/Hidden';
 
 browserUpdate({
     required: {
@@ -33,9 +32,10 @@ import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
-import Megamenu from './Megamenu';
-import Header from './Header';
+import UQHeader from './UQHeader';
 import ChatStatus from './ChatStatus';
+import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
+import UQSiteHeader from './UQSiteHeader';
 
 const styles = theme => ({
     appBG: {
@@ -49,6 +49,7 @@ const styles = theme => ({
         },
     },
     layoutFill: {
+        position: 'relative',
         display: 'flex',
         flexFlow: 'column',
         margin: 0,
@@ -74,6 +75,15 @@ const styles = theme => ({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
+    connectFooter: {
+        marginTop: 50,
+        backgroundColor: theme.hexToRGBA(theme.palette.secondary.main, 0.15),
+    },
+    minimalFooter: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
+    },
 });
 
 export class AppClass extends PureComponent {
@@ -90,8 +100,10 @@ export class AppClass extends PureComponent {
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
         chatStatus: PropTypes.any,
-        alertStatus: PropTypes.any,
-        alertStatusLoading: PropTypes.any,
+        libHours: PropTypes.object,
+        libHoursLoading: PropTypes.bool,
+        trainingEvents: PropTypes.array,
+        trainingEventsLoading: PropTypes.bool,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -132,10 +144,11 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
-        this.props.actions.loadChatStatus();
         this.props.actions.loadAlerts();
-        this.handleResize(this.state.mediaQuery);
-        this.state.mediaQuery.addListener(this.handleResize);
+        this.props.actions.loadChatStatus();
+        this.props.actions.loadLibHours();
+        this.props.actions.loadCompAvail();
+        this.props.actions.loadTrainingEvents();
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -155,23 +168,6 @@ export class AppClass extends PureComponent {
             actionButtonLabel: 'UQ Library COVID-19 Updates',
         });
     }
-
-    componentWillUnmount() {
-        this.state.mediaQuery.removeListener(this.handleResize);
-    }
-
-    handleResize = mediaQuery => {
-        this.setState({
-            docked: mediaQuery.matches,
-        });
-    };
-
-    toggleMenu = () => {
-        this.setState({
-            menuOpen: !this.state.menuOpen,
-        });
-    };
-
     redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
@@ -212,13 +208,6 @@ export class AppClass extends PureComponent {
             this.props.account.class &&
             this.props.account.class.indexOf('IS_CURRENT') >= 0 &&
             this.props.account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
-        const menuItems = routes.getMenuConfig(
-            this.props.account,
-            this.props.author,
-            this.props.authorDetails,
-            isHdrStudent && !false,
-            false,
-        );
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
@@ -228,72 +217,67 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <ChatStatus status={this.props.chatStatus} />
-                <div className="content-header" role="region" aria-label="Site header">
-                    <Header
-                        account={this.props.account}
-                        history={this.props.history}
-                        isAuthorizedUser={isAuthorizedUser}
-                        toggleMenu={this.toggleMenu}
-                    />
-                </div>
+                <HelpDrawer />
+                <ConfirmDialogBox
+                    hideCancelButton
+                    onRef={this.setSessionExpiredConfirmation}
+                    onAction={this.props.actions.logout}
+                    locale={locale.global.sessionExpiredConfirmation}
+                />
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
-                    <div role="region" aria-label="Main site navigation">
-                        <Hidden lgUp>
-                            <Megamenu
-                                hasHomePageItem
-                                hasCloseItem
-                                history={this.props.history}
-                                // locale={{
-                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                //     skipNavTitle: locale.global.skipNav.title,
-                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                // }}
-                                menuItems={menuItems}
-                                menuOpen={this.state.menuOpen}
-                                toggleMenu={this.toggleMenu}
-                            />
-                        </Hidden>
-                        <Hidden mdDown>
-                            <Megamenu
-                                menuItems={menuItems}
-                                history={this.props.history}
-                                // locale={{
-                                //     skipNavAriaLabel: locale.global.skipNav.ariaLabel,
-                                //     skipNavTitle: locale.global.skipNav.title,
-                                //     closeMenuLabel: locale.global.mainNavButton.closeMenuLabel,
-                                // }}
-                            />
-                        </Hidden>
+                    <div className="content-header" role="region" aria-label="Site header">
+                        <UQHeader />
                     </div>
+                    <UQSiteHeader
+                        isAuthorizedUser={isAuthorizedUser}
+                        isHdrStudent={isHdrStudent}
+                        account={this.props.account}
+                        author={this.props.author}
+                        authorDetails={this.props.authorDetails}
+                        history={this.props.history}
+                        chatStatus={this.props.chatStatus.online}
+                        libHours={this.props.libHours}
+                        libHoursloading={this.props.libHoursLoading}
+                    />
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    <ConfirmDialogBox
-                        hideCancelButton
-                        onRef={this.setSessionExpiredConfirmation}
-                        onAction={this.props.actions.logout}
-                        locale={locale.global.sessionExpiredConfirmation}
-                    />
+                    <ChatStatus status={this.props.chatStatus} />
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
-
                     {!isAuthorLoading && (
-                        <AccountContext.Provider
-                            value={{
-                                account: { ...this.props.account, ...this.props.author, ...this.props.authorDetails },
-                            }}
-                        >
-                            <React.Suspense fallback={<ContentLoader message="Loading content" />}>
-                                <Switch>
-                                    {routesConfig.map((route, index) => (
-                                        <Route key={`route_${index}`} {...route} />
-                                    ))}
-                                </Switch>
-                            </React.Suspense>
-                        </AccountContext.Provider>
+                        <div style={{ flexGrow: 1, marginTop: 16 }}>
+                            <AccountContext.Provider
+                                value={{
+                                    account: {
+                                        ...this.props.account,
+                                        ...this.props.author,
+                                        ...this.props.authorDetails,
+                                    },
+                                }}
+                            >
+                                <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                    <Switch>
+                                        {routesConfig.map((route, index) => (
+                                            <Route key={`route_${index}`} {...route} />
+                                        ))}
+                                    </Switch>
+                                </React.Suspense>
+                            </AccountContext.Provider>
+                        </div>
+                    )}
+                    {!this.props.accountLoading && !isAuthorLoading && (
+                        <div>
+                            <Grid container spacing={0}>
+                                <Grid item xs={12} className={classes.connectFooter}>
+                                    <ConnectFooter history={this.props.history} />
+                                </Grid>
+                                <Grid item xs={12} className={classes.minimalFooter}>
+                                    <MinimalFooter />
+                                </Grid>
+                            </Grid>
+                        </div>
                     )}
                 </div>
-                <HelpDrawer />
             </Grid>
         );
     }
