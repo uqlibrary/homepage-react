@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { PropTypes } from 'prop-types';
 import { VoiceToText } from 'modules/Index/components/SearchPanel/components/voiceToText';
-import { isRepeatingString } from 'helpers/general';
+import { isRepeatingString, unescapeString } from 'helpers/general';
 import { courseResourcesLocale as locale } from 'modules/Index/components/CourseResources.locale';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -102,7 +102,9 @@ export const CourseResourceSearch = ({
     );
 
     const courseResourceSubjectDisplay = option => {
-        return !!option && !!option.text ? `${option.text} (${option.rest.course_title}, ${option.rest.period})` : '';
+        return !!option && !!option.text
+            ? `${option.text} (${unescapeString(option.rest.course_title)}, ${option.rest.period})`
+            : '';
     };
 
     const handleOptionSelected = option => {

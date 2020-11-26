@@ -9,6 +9,7 @@ import { SubjectLinks } from './SubjectLinks';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
+import { getCampusByCode, unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     theme => ({
@@ -36,27 +37,68 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
     const classes = useStyles();
 
     const coursecode = subject.classnumber || null;
-
-    const courseTitle =
-        // whichever one we get first (they should both have the same value)
-        (!!examList &&
-            !!examList.list &&
-            !!examList.list[coursecode] &&
-            !!examList.list[coursecode].title &&
-            ` - ${examList.list[coursecode].title}`) ||
-        (!!readingList &&
-            !!readingList.list &&
-            !!readingList.list[coursecode] &&
-            !!readingList.list[coursecode].title &&
-            ` - ${readingList.list[coursecode].title}`) ||
+    const firstReadingList =
+        !!readingList.list &&
+        !!readingList.list[coursecode] &&
+        !!readingList.list[coursecode].reading_lists &&
+        readingList.list[coursecode].reading_lists.length > 0 &&
+        !!readingList.list[coursecode].reading_lists[0] &&
+        readingList.list[coursecode].reading_lists[0];
+    const coursecampus = () =>
+        (subject.CAMPUS && getCampusByCode(subject.CAMPUS)) ||
+        (!!readingList && firstReadingList && !!firstReadingList.campus && firstReadingList.campus) ||
         null;
+    const courseSemester = () => {
+        const semester =
+            (!!subject.semester && subject.semester) ||
+            (!!readingList && firstReadingList && !!firstReadingList.period && firstReadingList.period) ||
+            null;
+        if (semester !== null) {
+            return ` - ${semester}`;
+        }
+        return '';
+    };
+
+    const courseTitle = () => {
+        // whichever one we get first (they should both have the same value)
+        const title =
+            (!!examList &&
+                !!examList.list &&
+                !!examList.list[coursecode] &&
+                !!examList.list[coursecode].title &&
+                ` - ${examList.list[coursecode].title}`) ||
+            (!!readingList &&
+                !!readingList.list &&
+                !!readingList.list[coursecode] &&
+                !!readingList.list[coursecode].title &&
+                ` - ${readingList.list[coursecode].title}`) ||
+            null;
+        // we have titles like "FREN3310 - French&gt;English Translation". This fixes them
+        return unescapeString(title);
+    };
 
     return (
         <Grid container>
             <Grid item xs={12}>
-                <Typography color={'primary'} component={'h3'} variant={'h5'} style={{ textAlign: 'center' }}>
+                <Typography
+                    color={'primary'}
+                    component={'h3'}
+                    variant={'h5'}
+                    data-testid="course-resource-subject-title"
+                    style={{ textAlign: 'center' }}
+                >
                     {coursecode}
-                    {courseTitle}
+                    {courseTitle()}
+                </Typography>
+                <Typography
+                    color={'primary'}
+                    component={'h4'}
+                    variant={'h6'}
+                    data-testid="course-resource-subject-locator"
+                    style={{ textAlign: 'center', fontWeight: 300 }}
+                >
+                    {coursecampus()}
+                    {courseSemester()}
                 </Typography>
             </Grid>
 

@@ -37,3 +37,22 @@ export const isRepeatingString = searchString => {
 
     return lastChar === secondLastChar && lastChar === thirdLastChar;
 };
+
+export const unescapeString = text => {
+    if (text === null) {
+        return '';
+    }
+    const getEntityMap = s => {
+        const entityMap = {
+            '&amp;': ' and ',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
+            '&#39;': "'",
+            '&#x2F;': '/',
+        };
+
+        return entityMap[s];
+    };
+    return text.replace(/&[#\w]+;/g, getEntityMap);
+};

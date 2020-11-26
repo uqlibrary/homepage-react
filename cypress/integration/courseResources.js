@@ -247,8 +247,25 @@ context('Course Resources', () => {
         click_on_a_subject_tab(2, courseReadingList);
     }
 
+    function the_title_block_displays_properly(courseReadingList) {
+        const listTitle = courseReadingList.course_title || 'mock data is missing1';
+        const coursecode = courseReadingList.title || 'mock data is missing2';
+        const readingList =
+            !!courseReadingList.reading_lists &&
+            courseReadingList.reading_lists.length > 0 &&
+            courseReadingList.reading_lists[0];
+        const semester = readingList.period || 'mock data is missing3';
+        const campus = readingList.campus || 'mock data is missing4';
+
+        cy.get('h3[data-testid=course-resource-subject-title]').contains(listTitle);
+        cy.get('h3[data-testid=course-resource-subject-title]').contains(coursecode);
+        cy.get('h4[data-testid=course-resource-subject-locator]').contains(`${campus} - ${semester}`);
+    }
+
     function FREN1010_loads_properly_for_s111111_user() {
         the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
+
+        the_title_block_displays_properly(FREN1010ReadingList);
 
         a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(FREN1010ReadingList);
 
