@@ -230,7 +230,7 @@ export const UQSiteHeader = ({
                                 )}
                                 {seeRoomBookings(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-room-bookings-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.rommBookings)}>
+                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.roomBookings)}>
                                             <RoomServiceIcon color={'secondary'} className={classes.icons} />
                                             Room bookings
                                         </MenuItem>
