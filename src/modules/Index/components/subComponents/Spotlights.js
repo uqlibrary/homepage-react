@@ -33,7 +33,6 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
     if (slides.length > 0 && !spotlightsLoading) {
         return (
             <div
-                id="spotlights"
                 data-testid="spotlights"
                 style={{ height: '100%', position: 'relative' }}
                 role="region"
