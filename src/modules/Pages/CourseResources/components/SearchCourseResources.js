@@ -22,6 +22,7 @@ const useStyles = makeStyles(
             marginTop: '24px',
         },
         tabPanel: {
+            backgroundColor: 'rgb(247, 247, 247)',
             margin: 0,
         },
     }),
@@ -152,7 +153,7 @@ export const SearchCourseResources = ({
     };
 
     return (
-        <StandardCard noPadding noHeader standardCardId="full-courseresource">
+        <StandardCard noPadding noHeader standardCardId="full-courseresource" style={{ boxShadow: 'none' }}>
             <Grid item xs={12} id="courseresource-search">
                 <CourseResourceSearch
                     displayType="full"
