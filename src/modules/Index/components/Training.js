@@ -125,7 +125,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
     const openMoreTraining = () => {
         window.location.href = 'https://web.library.uq.edu.au/library-services/training';
     };
-    console.log(eventDetail);
+    console.log('training: ', eventDetail);
     return (
         <StandardCard accentHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>

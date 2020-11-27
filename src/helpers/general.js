@@ -27,15 +27,18 @@ export const getCampusByCode = code => {
 
 // there have been cases where someone has put a book on the corner of a keyboard,
 // which sends thousands of requests to the server - block this
+// length has to be 4, because subjects like FREN3111 have 3 repeating numbers...
 export const isRepeatingString = searchString => {
-    if (searchString.length <= 3) {
+    if (searchString.length <= 4) {
         return false;
     }
     const lastChar = searchString.charAt(searchString.length - 1);
-    const secondLastChar = searchString.charAt(searchString.length - 2);
-    const thirdLastChar = searchString.charAt(searchString.length - 3);
+    const char2 = searchString.charAt(searchString.length - 2);
+    const char3 = searchString.charAt(searchString.length - 3);
+    const char4 = searchString.charAt(searchString.length - 4);
+    const char5 = searchString.charAt(searchString.length - 5);
 
-    return lastChar === secondLastChar && lastChar === thirdLastChar;
+    return lastChar === char2 && lastChar === char3 && lastChar === char4 && lastChar === char5;
 };
 
 export const unescapeString = text => {
