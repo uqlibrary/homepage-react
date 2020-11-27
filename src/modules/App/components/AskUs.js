@@ -24,8 +24,12 @@ const useStyles = makeStyles(
         menu: {
             maxWidth: 350,
         },
+        menuItem: {
+            width: '50%',
+        },
         hours: {
             fontSize: 12,
+            color: '#e6e6e6',
         },
     }),
     { withTheme: true },
@@ -75,30 +79,45 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 <QuestionAnswer className={classes.icon} />
                 <div className={classes.headerButtonTitle}>{locale.askUs.title}</div>
             </IconButton>
-            <Menu id="simple-menu" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-                <Grid container spacing={0} className={classes.menu}>
+            <Menu
+                anchorEl={anchorEl}
+                keepMounted
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                MenuListProps={{
+                    id: 'AskUs-menu',
+                    'data-testid': 'AskUs-menu',
+                }}
+            >
+                <Grid
+                    container
+                    spacing={0}
+                    className={classes.menu}
+                    id="AskUs-menu-items"
+                    data-testid="AskUs-menu-items"
+                >
                     {locale.askUs.links.map((item, index) => (
-                        <Grid item xs={6} key={index}>
-                            <MenuItem
-                                id={`AskUs-menuitem-${item.title}`}
-                                data-testid={`AskUs-menuitem-${item.title}`}
-                                onClick={handleLink(item.url)}
-                                disabled={item.title === 'Chat' && !chatStatus}
-                            >
-                                {item.icon}
-                                {item.title}
-                                {item.title === 'Chat' && !!askUsHours ? (
-                                    <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.chat}</div>
-                                ) : (
-                                    ''
-                                )}
-                                {item.title === 'Phone' && !!askUsHours ? (
-                                    <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.phone}</div>
-                                ) : (
-                                    ''
-                                )}
-                            </MenuItem>
-                        </Grid>
+                        <MenuItem
+                            className={classes.menuItem}
+                            id={`AskUs-menuitem-${item.title}`}
+                            data-testid={`AskUs-menuitem-${item.title}`}
+                            onClick={handleLink(item.url)}
+                            disabled={item.title === 'Chat' && !chatStatus}
+                            key={index}
+                        >
+                            {item.icon}
+                            {item.title}
+                            {item.title === 'Chat' && !!askUsHours ? (
+                                <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.chat}</div>
+                            ) : (
+                                ''
+                            )}
+                            {item.title === 'Phone' && !!askUsHours ? (
+                                <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.phone}</div>
+                            ) : (
+                                ''
+                            )}
+                        </MenuItem>
                     ))}
                     <Grid item xs={12}>
                         <MenuItem
