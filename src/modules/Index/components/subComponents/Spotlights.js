@@ -113,7 +113,11 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             zIndex: 99,
                         }}
                     >
-                        <Slider>
+                        <Slider
+                            trayProps={{
+                                'aria-label': 'UQ Spotlights slider',
+                            }}
+                        >
                             {slides.map((item, index) => {
                                 return (
                                     <Slide index={item.index} key={index}>

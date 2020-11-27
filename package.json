@@ -175,7 +175,7 @@
         "number-to-words": "^1.2.4",
         "ordinal": "^1.0.3",
         "prop-types": "^15.7.2",
-        "pure-react-carousel": "^1.27.5",
+        "pure-react-carousel": "^1.27.6",
         "raven-js": "^3.24.2",
         "react": "^16.8",
         "react-aria-live": "^2.0.5",

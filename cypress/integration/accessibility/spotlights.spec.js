@@ -9,13 +9,11 @@ context('ACCESSIBILITY', () => {
             .and($img => {
                 expect($img[0].naturalWidth).to.be.greaterThan(0);
             });
+        // TODO: Does not current pass
         // cy.checkA11y('div[data-testid="spotlights"]', {
         //     reportName: 'Spotlights',
         //     scopeName: 'As loaded',
         //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         // });
-        // cy.get(
-        //     '[alt="Academic Integrity Modules - Everything you need to know about academic integrity at UQ"]',
-        // ).should('be.visible');
     });
 });
