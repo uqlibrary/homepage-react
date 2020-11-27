@@ -177,8 +177,11 @@ export const UQSiteHeader = ({
                         >
                             <Grid container spacing={0} style={{ maxWidth: 400 }}>
                                 {seeLoans(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-borrowing-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.borrowing)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.borrowing)}
+                                            data-testid="mylibrary-borrowing-link"
+                                        >
                                             <ImportContactsIcon color={'secondary'} className={classes.icons} />
                                             Borrowing
                                         </MenuItem>

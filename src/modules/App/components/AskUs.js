@@ -5,7 +5,6 @@ import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import Grid from '@material-ui/core/Grid';
 import { locale } from './locale';
 
 const useStyles = makeStyles(
@@ -21,15 +20,21 @@ const useStyles = makeStyles(
             color: theme.palette.primary.main,
             fontSize: 12,
         },
-        menu: {
-            maxWidth: 350,
-        },
         menuItem: {
             width: '50%',
+            display: 'inline-block',
+            color: 'rbga(0,0,0,0.87)',
         },
         hours: {
             fontSize: 12,
-            color: '#e6e6e6',
+            color: 'rbga(0,0,0,0.87)',
+        },
+        lastLink: {
+            marginLeft: 'auto',
+            marginRight: 'auto',
+        },
+        menuPaper: {
+            width: 350,
         },
     }),
     { withTheme: true },
@@ -39,6 +44,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
+        console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
@@ -85,46 +91,48 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 MenuListProps={{
-                    id: 'askus-menu',
-                    'data-testid': 'askus-menu',
+                    id: 'askus-menulist',
+                    'data-testid': 'askus-menulist',
                 }}
+                transformOrigin={{
+                    vertical: 'center',
+                    horizontal: 'center',
+                }}
+                id="askus-menu"
+                data-testid="askus-menu"
+                className={classes.menu}
+                classes={{ paper: classes.menuPaper }}
             >
-                <Grid container spacing={0} className={classes.menu}>
-                    {locale.askUs.links.map((item, index) => (
-                        <MenuItem
-                            className={classes.menuItem}
-                            id={`askus-menuitem-${item.title}`}
-                            data-testid={`askus-menuitem-${item.title}`}
-                            onClick={handleLink(item.url)}
-                            disabled={item.title === 'Chat' && !chatStatus}
-                            key={index}
-                        >
-                            {item.icon}
-                            {item.title}
-                            {item.title === 'Chat' && !!askUsHours ? (
-                                <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.chat}</div>
-                            ) : (
-                                ''
-                            )}
-                            {item.title === 'Phone' && !!askUsHours ? (
-                                <div className={classes.hours}>&nbsp;&nbsp;{askUsHours.phone}</div>
-                            ) : (
-                                ''
-                            )}
-                        </MenuItem>
-                    ))}
-                    <Grid item xs={12}>
-                        <MenuItem
-                            onClick={handleLink(locale.askUs.lastLink.url)}
-                            id={`askus-menuitem-${locale.askUs.lastLink.title}`}
-                            data-testid={`askus-menuitem-${locale.askUs.lastLink.title}`}
-                        >
-                            <span style={{ marginLeft: 'auto', marginRight: 'auto' }}>
-                                {locale.askUs.lastLink.title}
-                            </span>
-                        </MenuItem>
-                    </Grid>
-                </Grid>
+                {locale.askUs.links.map((item, index) => (
+                    <MenuItem
+                        className={classes.menuItem}
+                        id={`askus-menuitem-${item.title}`}
+                        data-testid={`askus-menuitem-${item.title}`}
+                        onClick={handleLink(item.url)}
+                        disabled={item.title === 'Chat' && !chatStatus}
+                        key={index}
+                    >
+                        {item.icon}
+                        {item.title}
+                        {item.title === 'Chat' && !!askUsHours ? (
+                            <span className={classes.hours}>&nbsp;&nbsp;{askUsHours.chat}</span>
+                        ) : (
+                            ''
+                        )}
+                        {item.title === 'Phone' && !!askUsHours ? (
+                            <span className={classes.hours}>&nbsp;&nbsp;{askUsHours.phone}</span>
+                        ) : (
+                            ''
+                        )}
+                    </MenuItem>
+                ))}
+                <MenuItem
+                    onClick={handleLink(locale.askUs.lastLink.url)}
+                    id={`askus-menuitem-${locale.askUs.lastLink.title}`}
+                    data-testid={`askus-menuitem-${locale.askUs.lastLink.title}`}
+                >
+                    <span className={classes.lastLink}>{locale.askUs.lastLink.title}</span>
+                </MenuItem>
             </Menu>
         </React.Fragment>
     );
