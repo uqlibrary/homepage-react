@@ -68,5 +68,12 @@ export default [{
         course_title: 'Advanced Financial Accounting',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
+    }, {
+        "name": "FREN3111",
+        "url": "http:\/\/lr.library.uq.edu.au\/lists\/351A111E-CD11-2B60-52A2-767A7F167C6D",
+        "type": "learning_resource",
+        "course_title": "French Language and Culture 1: ex beginners",
+        "campus": "St Lucia",
+        "period": "Semester 1 2021",
     }
 ];
