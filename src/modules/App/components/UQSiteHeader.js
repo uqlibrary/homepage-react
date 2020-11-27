@@ -74,6 +74,8 @@ const useStyles = makeStyles(
             color: theme.palette.primary.main,
             fontSize: '1.25rem',
             fontWeight: 500,
+            textTransform: 'capitalize',
+            marginLeft: -10,
             '&:hover': {
                 textDecoration: 'none !important',
             },
@@ -289,7 +291,6 @@ export const UQSiteHeader = ({
                     <AskUs chatStatus={chatStatus} libHours={libHours} libHoursLoading={libHoursLoading} />
                 </Grid>
                 <Grid item xs={'auto'} className={classes.utility} id="auth" data-testid="auth">
-                    <AuthButton
                     <AuthButton
                         isAuthorizedUser={isAuthorizedUser}
                         onClick={redirectUserToLogin(isAuthorizedUser, true)}
