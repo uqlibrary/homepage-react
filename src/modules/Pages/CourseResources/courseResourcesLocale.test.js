@@ -64,5 +64,9 @@ describe('courseResourcesLocale', () => {
             isAString(link.linkLabel);
             isAValidLink(link.linkOutPattern);
         });
+
+        // Legal Research Essentials link is available to be added to the Course Links for LAWS subjects
+        expect(typeof locale.myCourses.courseLinks.legalResearchEssentials).toEqual('object');
+        expect(locale.myCourses.courseLinks.legalResearchEssentials.id).toEqual('legalResearchEssentials');
     });
 });

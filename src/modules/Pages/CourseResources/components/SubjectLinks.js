@@ -25,7 +25,10 @@ const useStyles = makeStyles(
 
 export const SubjectLinks = ({ subject }) => {
     const classes = useStyles();
-    subject.classnumber.startsWith('LAWS') &&
+
+    // on the first render, add Legal Research Essentials to the Course Links for LAWS subjects
+    !locale.myCourses.courseLinks.links.find(i => i.id === 'legalResearchEssentials') &&
+        subject.classnumber.startsWith('LAWS') &&
         locale.myCourses.courseLinks.links.push(locale.myCourses.courseLinks.legalResearchEssentials);
 
     return (
