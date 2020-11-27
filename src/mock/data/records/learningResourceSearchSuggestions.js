@@ -2,21 +2,21 @@ export default [{
         name: 'FREN1010',
         url: 'http:\/\/lr.library.uq.edu.au\/lists\/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F',
         type: 'learning_resource',
-        course_title: 'Introductory French 1 (has search results)',
+        course_title: 'has mock data - Introductory French 1',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
         name: 'HIST1201',
         url: 'http:\/\/lr.library.uq.edu.au\/lists\/2109F2EC-AB0B-482F-4D30-1DD3531E46BE',
         type: 'learning_resource',
-        course_title: 'The Australian Experience (has search results)',
+        course_title: 'has mock data - The Australian Experience',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
         name: 'ACCT1101',
         url: 'http://lr.library.uq.edu.au/lists/8DED5E86-60FD-8C20-29F3-0E960FEC791B',
         type: 'learning_resource',
-        course_title: 'Accounting for Decision Making',
+        course_title: 'has mock data - Accounting for Decision Making',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
@@ -68,5 +68,12 @@ export default [{
         course_title: 'Advanced Financial Accounting',
         campus: 'St Lucia',
         period: 'Semester 2 2020',
+    }, {
+        "name": "FREN3111",
+        "url": "http:\/\/lr.library.uq.edu.au\/lists\/351A111E-CD11-2B60-52A2-767A7F167C6D",
+        "type": "learning_resource",
+        "course_title": "French Language and Culture 1: ex beginners",
+        "campus": "St Lucia",
+        "period": "Semester 1 2021",
     }
 ];

@@ -4,7 +4,9 @@ import { useAccountContext } from 'context';
 
 import locale from '../courseResourcesLocale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import { getCampusByCode } from 'helpers/general';
 
+import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -32,16 +34,54 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
+export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, examList, guideList }) => {
     const { account } = useAccountContext();
     const classes = useStyles();
 
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
-        !!event.target.innerText && loadNewSubject(event.target.innerText);
+        if (!event.target.innerText) {
+            // we didnt get a course code?
+            return;
+        }
+        const coursecode = event.target.innerText;
+        const enrolledClass = (!!account && account.current_classes.find(c => c.classnumber === coursecode)) || null;
+        const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
+        const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
+        loadNewSubject(coursecode, campus, semester);
+
         setCurrentMenuTab(subjectTabId);
     };
+
+    const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+    const focusOnSelectedSubjectTab = React.useCallback(
+        preselectedCourse => {
+            if (!initialLoadComplete) {
+                let preselectedSubjectTab = null;
+                account.current_classes.map((item, index) => {
+                    if (
+                        item.classnumber === preselectedCourse.coursecode &&
+                        getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
+                        item.semester === preselectedCourse.semester
+                    ) {
+                        preselectedSubjectTab = `${courseTabLabel}-${index}`;
+                    }
+                });
+                if (preselectedSubjectTab !== null) {
+                    setCurrentMenuTab(preselectedSubjectTab);
+                }
+            }
+            setInitialLoadComplete(true);
+        },
+        [account, initialLoadComplete],
+    );
+
+    React.useEffect(() => {
+        if (!!preselectedCourse.coursecode) {
+            focusOnSelectedSubjectTab(preselectedCourse);
+        }
+    }, [preselectedCourse, focusOnSelectedSubjectTab]); // run once on load
 
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
@@ -80,7 +120,12 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
                                 value={coursemenu}
                                 {...reverseA11yProps(index, 'classtab')}
                             >
-                                {renderSubjectTabBody(item)}
+                                <SubjectBody
+                                    subject={item}
+                                    readingList={readingList}
+                                    examList={examList}
+                                    guideList={guideList}
+                                />
                             </TabPanel>
                         );
                     })}
@@ -104,7 +149,10 @@ export const MyCourses = ({ loadNewSubject, renderSubjectTabBody }) => {
 
 MyCourses.propTypes = {
     loadNewSubject: PropTypes.func,
-    renderSubjectTabBody: PropTypes.func,
+    preselectedCourse: PropTypes.any,
+    readingList: PropTypes.object,
+    examList: PropTypes.object,
+    guideList: PropTypes.object,
 };
 
 export default MyCourses;

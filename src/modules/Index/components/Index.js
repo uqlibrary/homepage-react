@@ -2,23 +2,36 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
-import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux';
-import { loadSpotlights, loadPrintBalance, loadLoans } from 'actions';
-import PrimoSearch from 'modules/SharedComponents/PrimoSearch/containers/PrimoSearch';
-import { default as locale } from './locale';
-import { seeCourseResources, seeLibraryServices, seeTraining } from 'helpers/access';
+import {
+    clearPrimoSuggestions,
+    loadCourseReadingListsSuggestions,
+    loadSpotlights,
+    loadPrintBalance,
+    loadLoans,
+} from 'actions';
+import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
+import {
+    seeCourseResources,
+    seeComputerAvailability,
+    // seeFeedback,
+    // seeFines,
+    seeLibraryHours,
+    seeLibraryServices,
+    // seeLoans,
+    // seePrintBalance,
+    seeTraining,
+    getUserServices,
+} from 'helpers/access';
 import Spotlights from './subComponents/Spotlights';
 import { makeStyles } from '@material-ui/styles';
 import Hours from './subComponents/Hours';
 import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
+import CourseResourcesPanel from './CourseResourcesPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -81,6 +94,9 @@ export const Index = ({
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
+    suggestions,
+    suggestionsLoading,
+    suggestionsError,
     trainingEvents,
     trainingEventsLoading,
     printBalance,
@@ -108,7 +124,7 @@ export const Index = ({
                 <Grid container spacing={6}>
                     {/* Search */}
                     <Grid item xs={12}>
-                        <PrimoSearch />
+                        <SearchPanel />
                     </Grid>
                     {/* Spotlights */}
                     <Grid item xs={12} lg={8} id="spotlights" data-testid="spotlights">
@@ -123,20 +139,22 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     ) : (
-                        <Grid item xs={12} md={4}>
+                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
-                    <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                        <Computers
-                            computerAvailability={computerAvailability}
-                            computerAvailabilityLoading={computerAvailabilityLoading}
-                            height={classes.computersAvailHeight}
-                        />
-                    </Grid>
+                    {seeComputerAvailability(account) && (
+                        <Grid item xs={12} md={4} data-testid="computer-availability-panel">
+                            <Computers
+                                computerAvailability={computerAvailability}
+                                computerAvailabilityLoading={computerAvailabilityLoading}
+                                height={classes.computersAvailHeight}
+                            />
+                        </Grid>
+                    )}
 
-                    {!!account && (
+                    {!!account && seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -144,44 +162,15 @@ export const Index = ({
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <StandardCard
-                                fullHeight
-                                accentHeader
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Course resources
-                                        </Grid>
-                                    </Grid>
-                                }
-                            >
-                                <Grid container spacing={1}>
-                                    <Grid item xs>
-                                        <TextField placeholder="Enter a course code to search" fullWidth />
-                                    </Grid>
-                                    <Grid item xs={'auto'}>
-                                        <Button size={'small'} style={{ width: 30, minWidth: 30 }}>
-                                            <SearchIcon />
-                                        </Button>
-                                    </Grid>
-                                </Grid>
-                                <Grid container spacing={1} style={{ marginTop: 12 }}>
-                                    <Grid item xs={12}>
-                                        <Typography color={'secondary'} variant={'h6'}>
-                                            Your courses
-                                        </Typography>
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH101</a> - Applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH102</a> - More applied psychology
-                                    </Grid>
-                                    <Grid item xs={12}>
-                                        <a href="#">PH103</a> - Even more applied psychology
-                                    </Grid>
-                                </Grid>
-                            </StandardCard>
+                            <CourseResourcesPanel
+                                account={account}
+                                clearPrimoSuggestions={clearPrimoSuggestions}
+                                history={history}
+                                loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
+                                suggestions={suggestions}
+                                suggestionsLoading={suggestionsLoading}
+                                suggestionsError={suggestionsError}
+                            />
                         </Grid>
                     )}
 
@@ -194,8 +183,8 @@ export const Index = ({
                     {seeLibraryServices && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
                             <StandardCard
-                                fullHeight
                                 accentHeader
+                                fullHeight
                                 squareTop={false}
                                 title={
                                     <Grid container>
@@ -204,10 +193,9 @@ export const Index = ({
                                         </Grid>
                                     </Grid>
                                 }
-                                fullHeight
                             >
                                 <Grid container spacing={1}>
-                                    {locale.LibraryServices.links.map((item, index) => {
+                                    {getUserServices(account).map((item, index) => {
                                         return (
                                             <Grid item xs={12} sm={12} key={index}>
                                                 <a href={item.url}>{item.title}</a>
@@ -234,6 +222,9 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
+    suggestions: PropTypes.any,
+    suggestionsLoading: PropTypes.bool,
+    suggestionsError: PropTypes.string,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
     printBalance: PropTypes.object,

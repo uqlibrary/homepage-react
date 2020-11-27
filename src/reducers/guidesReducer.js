@@ -11,11 +11,13 @@ const handlers = {
         ...initialState,
         ...state,
         guideListLoading: true,
+        guideListError: false,
     }),
     [actions.GUIDES_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         guideListLoading: false,
+        guideListError: false,
         guideList: action.payload,
     }),
     [actions.GUIDES_FAILED]: (state, action) => ({

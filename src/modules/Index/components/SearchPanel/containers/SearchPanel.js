@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
-import PrimoSearch from '../components/PrimoSearch';
+import SearchPanel from '../components/SearchPanel';
 
 const mapStateToProps = state => {
     return {
@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let PrimoSearchContainer = connect(mapStateToProps, mapDispatchToProps)(PrimoSearch);
-PrimoSearchContainer = withRouter(PrimoSearchContainer);
+let SearchPanelContainer = connect(mapStateToProps, mapDispatchToProps)(SearchPanel);
+SearchPanelContainer = withRouter(SearchPanelContainer);
 
-export default PrimoSearchContainer;
+export default SearchPanelContainer;

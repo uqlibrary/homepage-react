@@ -235,7 +235,7 @@ export class AppClass extends PureComponent {
                         author={this.props.author}
                         authorDetails={this.props.authorDetails}
                         history={this.props.history}
-                        chatStatus={this.props.chatStatus.online}
+                        chatStatus={!!this.props.chatStatus && this.props.chatStatus.online}
                         libHours={this.props.libHours}
                         libHoursloading={this.props.libHoursLoading}
                     />

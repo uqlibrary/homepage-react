@@ -1,18 +1,7 @@
-export default [{
-    "title": "FREN1010",
-    "course_title": "Introductory French 1",
-    "reading_lists": [{
-        "title": "FREN1010 St Lucia",
-        "campus": "St Lucia",
-        "url": "http:\/\/lr.library.uq.edu.au\/lists\/6888AB68-0681-FD77-A7D9-F7B3DEE7B29F",
-        "period": "Semester 2 2020"
-    }, {
-        "title": "FREN1010 St Lucia",
-        "campus": "St Lucia",
-        "url": "http:\/\/lr.library.uq.edu.au\/lists\/FE062983-3896-87E9-DD14-CF7F6ED0144F",
-        "period": "Semester 1 2020"
-    }],
-    "exam_papers": [{
+export default {
+    "coursecode": "FREN1010",
+    "title": "Introductory French 1",
+    "list": [{
         "url": "https:\/\/files.library.uq.edu.au\/exams\/2019\/Semester_Two_Final_Examinations_2019_FREN1010.pdf",
         "period": "Semester 2 2019",
         "course": "FREN1010"
@@ -45,4 +34,4 @@ export default [{
         "period": "Semester 2 2016",
         "course": "FREN1010"
     }]
-}];
+};

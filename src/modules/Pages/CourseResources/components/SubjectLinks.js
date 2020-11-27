@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import locale from '../courseResourcesLocale';
 import { _courseLink } from '../courseResourcesHelpers';
-import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -26,29 +25,40 @@ const useStyles = makeStyles(
 
 export const SubjectLinks = ({ subject }) => {
     const classes = useStyles();
+
+    // on the first render, add Legal Research Essentials to the Course Links for LAWS subjects
+    !locale.myCourses.courseLinks.links.find(i => i.id === 'legalResearchEssentials') &&
+        subject.classnumber.startsWith('LAWS') &&
+        locale.myCourses.courseLinks.links.push(locale.myCourses.courseLinks.legalResearchEssentials);
+
     return (
-        <StandardCard fullHeight title={locale.myCourses.links.title}>
+        <StandardCard fullHeight title={locale.myCourses.courseLinks.title}>
             <Grid container className={'CourseLinks'}>
-                <Grid item xs={12} className={classes.courseResourceLineItem}>
-                    <a
-                        // on-click="linkClicked"
-                        data-testid={`ecp-${subject.classnumber}`}
-                        href={_courseLink(subject.classnumber, locale.myCourses.links.ecp.linkOutPattern)}
-                    >
-                        <SpacedArrowForwardIcon />
-                        {locale.myCourses.links.ecp.title}
-                    </a>
-                </Grid>
-                <Grid item xs={12} className={classes.courseResourceLineItem}>
-                    <a
-                        // on-click="linkClicked"
-                        data-testid={`blackboard-${subject.classnumber}`}
-                        href={_courseLink(subject.classnumber, locale.myCourses.links.blackboard.linkOutPattern)}
-                    >
-                        <SpacedArrowForwardIcon />
-                        {locale.myCourses.links.blackboard.title}
-                    </a>
-                </Grid>
+                {!!locale.myCourses.courseLinks.links &&
+                    locale.myCourses.courseLinks.links.length > 0 &&
+                    locale.myCourses.courseLinks.links.map((item, index) => {
+                        return (
+                            item.linkOutPattern &&
+                            item.linkLabel && (
+                                <Grid
+                                    item
+                                    className={classes.courseResourceLineItem}
+                                    key={`studylink-${index}`}
+                                    xs={12}
+                                >
+                                    <a
+                                        // on-tap="linkClicked"
+                                        data-testid={`${item.id}-${subject.classnumber}`}
+                                        id={item.id || null}
+                                        href={_courseLink(subject.classnumber, item.linkOutPattern)}
+                                    >
+                                        {!!item.icon && item.icon}
+                                        {item.linkLabel}
+                                    </a>
+                                </Grid>
+                            )
+                        );
+                    })}
             </Grid>
         </StandardCard>
     );

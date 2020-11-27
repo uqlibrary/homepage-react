@@ -5,52 +5,68 @@ describe('courseResourcesLocale', () => {
     it('should have a valid locale', () => {
         // because the locale is meant to be maintained by the user, we check the file is valid
         isAString(locale.title);
+        expect(typeof locale.search).toEqual('object');
         isAString(locale.search.title);
 
-        isAString(locale.studyHelp.title);
-        isAString(locale.studyHelp.unavailable);
-        expect(typeof locale.studyHelp.links).toEqual('object');
-        expect(locale.studyHelp.links.length).not.toBe(0);
-        locale.studyHelp.links.map(link => {
+        isPositiveInteger(locale.notesTrimLength);
+
+        expect(typeof locale.myCourses).toEqual('object');
+        isAString(locale.myCourses.title);
+        expect(typeof locale.myCourses.none).toEqual('object');
+        isAString(locale.myCourses.none.title);
+        expect(locale.myCourses.none.description.length).not.toBe(0);
+
+        expect(typeof locale.myCourses.readingLists).toEqual('object');
+        isAString(locale.myCourses.readingLists.title);
+        expect(typeof locale.myCourses.readingLists.error).toEqual('object');
+        isAString(locale.myCourses.readingLists.error.none);
+        isAString(locale.myCourses.readingLists.error.unavailable);
+        isAString(locale.myCourses.readingLists.error.multiple);
+        expect(typeof locale.myCourses.readingLists.error.footer).toEqual('object');
+        isAString(locale.myCourses.readingLists.error.footer.linkLabel);
+        isAValidLink(locale.myCourses.readingLists.error.footer.linkOut);
+        expect(typeof locale.myCourses.readingLists.footer).toEqual('object');
+        isAString(locale.myCourses.readingLists.footer.linkLabel);
+        isPositiveInteger(locale.myCourses.readingLists.visibleItemsCount);
+
+        expect(typeof locale.myCourses.examPapers).toEqual('object');
+        isAString(locale.myCourses.examPapers.title);
+        isAString(locale.myCourses.examPapers.unavailable);
+        isAString(locale.myCourses.examPapers.none);
+        isAString(locale.myCourses.examPapers.morePastExams);
+        expect(typeof locale.myCourses.examPapers.footer).toEqual('object');
+        isAValidLink(locale.myCourses.examPapers.footer.linkOutPattern);
+        isAString(locale.myCourses.examPapers.footer.linkLabel);
+        isPositiveInteger(locale.myCourses.examPapers.visibleItemsCount);
+
+        expect(typeof locale.myCourses.guides).toEqual('object');
+        isAString(locale.myCourses.guides.title);
+        isAString(locale.myCourses.guides.none);
+        isAString(locale.myCourses.guides.unavailable);
+        expect(typeof locale.myCourses.guides.footer).toEqual('object');
+        expect(locale.myCourses.guides.footer.links.length).not.toBe(0);
+        locale.myCourses.guides.footer.links.map(link => {
             expect(typeof link).toEqual('object');
             expect(link.icon).not.toBe(null);
             isAString(link.id);
             isAString(link.linkLabel);
             isAValidLink(link.linkTo);
         });
-        isPositiveInteger(locale.visibleItemsCount.readingLists);
-        isPositiveInteger(locale.visibleItemsCount.examPapers);
-        isPositiveInteger(locale.visibleItemsCount.libGuides);
-        isPositiveInteger(locale.notesTrimLength);
+        isPositiveInteger(locale.myCourses.guides.visibleItemsCount);
 
-        isAString(locale.myCourses.title);
-        isAString(locale.myCourses.none.title);
-        expect(locale.myCourses.none.description.length).not.toBe(0);
-        isAString(locale.myCourses.readingLists.title);
-        isAString(locale.myCourses.readingLists.error.none);
-        isAString(locale.myCourses.readingLists.error.unavailable);
-        isAString(locale.myCourses.readingLists.error.multiple);
-        isAString(locale.myCourses.readingLists.error.footer.linkLabel);
-        isAValidLink(locale.myCourses.readingLists.error.footer.linkOut);
-        isAString(locale.myCourses.readingLists.footer.linkLabel);
+        expect(typeof locale.myCourses.courseLinks).toEqual('object');
+        isAString(locale.myCourses.courseLinks.title);
+        expect(locale.myCourses.courseLinks.links.length).not.toBe(0);
+        locale.myCourses.courseLinks.links.map(link => {
+            expect(typeof link).toEqual('object');
+            expect(link.icon).not.toBe(null);
+            isAString(link.id);
+            isAString(link.linkLabel);
+            isAValidLink(link.linkOutPattern);
+        });
 
-        isAString(locale.myCourses.examPapers.title);
-        isAString(locale.myCourses.examPapers.unavailable);
-        isAString(locale.myCourses.examPapers.none);
-        isAString(locale.myCourses.examPapers.morePastExams);
-        isAValidLink(locale.myCourses.examPapers.footer.linkOutPattern);
-        isAString(locale.myCourses.examPapers.footer.linkLabel);
-
-        isAString(locale.myCourses.guides.title);
-        isAString(locale.myCourses.guides.none);
-        isAString(locale.myCourses.guides.unavailable);
-        isAString(locale.myCourses.guides.footer.linkOut);
-        isAValidLink(locale.myCourses.guides.footer.linkOut);
-
-        isAString(locale.myCourses.links.title);
-        isAString(locale.myCourses.links.blackboard.title);
-        isAValidLink(locale.myCourses.links.blackboard.linkOutPattern);
-        isAString(locale.myCourses.links.ecp.title);
-        isAValidLink(locale.myCourses.links.ecp.linkOutPattern);
+        // Legal Research Essentials link is available to be added to the Course Links for LAWS subjects
+        expect(typeof locale.myCourses.courseLinks.legalResearchEssentials).toEqual('object');
+        expect(locale.myCourses.courseLinks.legalResearchEssentials.id).toEqual('legalResearchEssentials');
     });
 });
