@@ -77,9 +77,9 @@ export const CourseResourceSearch = ({
         event.preventDefault();
     };
 
-    const handleCourseSelectionInDropdown = React.useCallback(
+    const handleTypedKeywordChange = React.useCallback(
         (event, newValue) => {
-            console.log('handleCourseSelectionInDropdown: newValue = ', newValue);
+            console.log('handleTypedKeywordChange: newValue = ', newValue);
             setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
                 // Autocomplete is firing onInputChange with the full course name many times. Dont know why.
@@ -102,32 +102,31 @@ export const CourseResourceSearch = ({
             : '';
     };
 
-    const handleOptionSelected = option => {
-        console.log('handleOptionSelected: option = ', option);
-        console.log('handleOptionSelected: displayType = ', displayType);
-        if (!!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase())) {
+    const handleSelectionOfCourseInDropdown = option => {
+        console.log('handleSelectionOfCourseInDropdown: option = ', option);
+        return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());
+    };
+
+    const handleChange = (event, option) => {
+        console.log('handleChange: searchKeyword = ', searchKeyword.toUpperCase(), '; option = ', option);
+        if (!!option.text && option.text.toUpperCase().startsWith(searchKeyword.toUpperCase())) {
+            console.log('handleChange: found');
+            console.log('handleChange: newValue = ', option);
+            console.log('handleSelectionOfCourseInDropdown: displayType = ', displayType);
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Course Resources page
                 navigateToCourseResourcePage(option, searchKeyword);
             } else {
                 // user is on the full view, on the Course Resource page (tab will load)
-                loadCourseAndSelectTab(extractSubjectCodeFromName(searchKeyword), suggestions);
+                loadCourseAndSelectTab(extractSubjectCodeFromName(option.text), suggestions);
             }
 
             document.getElementById(`${elementId}-autocomplete`).value = '';
 
             // we dont want the previous list to pop up if they search again
             actions.clearPrimoSuggestions();
-
-            return true;
         }
-        return false;
     };
-
-    // const handleChange = (event, newValue) => {
-    //     console.log('value has changed: event = ', event);
-    //     console.log('value has changed: newValue = ', newValue);
-    // };
 
     // function handleClose(reason, event) {
     //     console.log('close reason = ', reason, ': event =  ', event);
@@ -152,15 +151,15 @@ export const CourseResourceSearch = ({
                         // clearOnBlur
                         id={`${elementId}-autocomplete`}
                         getOptionSelected={(option, value) => {
-                            return handleOptionSelected(option, value);
+                            return handleSelectionOfCourseInDropdown(option, value);
                         }}
                         options={(!!suggestions && suggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
-                        // onChange={(event, newValue) => {
-                        //     handleChange(event, newValue);
-                        // }}
+                        onChange={(event, newValue) => {
+                            handleChange(event, newValue);
+                        }}
                         // onClose={(event, reason) => handleClose(reason, event)}
-                        onInputChange={handleCourseSelectionInDropdown}
+                        onInputChange={handleTypedKeywordChange}
                         noOptionsText={locale.noOptionsText}
                         renderInput={params => {
                             return (
