@@ -41,7 +41,6 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
     const courseTabLabel = 'subjecttab';
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
-        console.log('handleCourseTabChange');
         if (!event.target.innerText) {
             // we didnt get a course code?
             return;

@@ -79,16 +79,14 @@ export const CourseResourceSearch = ({
 
     const handleTypedKeywordChange = React.useCallback(
         (event, newValue) => {
-            console.log('handleTypedKeywordChange: newValue = ', newValue);
             setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
-                // Autocomplete is firing onInputChange with the full course name many times. Dont know why.
-                // Dont call the action for these subsequent calls
+                // Autocomplete fires onInputChange when the full subject name loads into the input field
+                // Dont call the action for this subsequent call
                 // (a valid course code will never have a space in it)
                 return;
             }
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
-                console.log('CR: fetch search_suggestions?type=learning_resource');
                 actions.loadCourseReadingListsSuggestions(newValue);
                 document.getElementById(`${elementId}-autocomplete`).focus();
             }
@@ -102,22 +100,17 @@ export const CourseResourceSearch = ({
             : '';
     };
 
-    const handleSelectionOfCourseInDropdown = option => {
-        console.log('handleSelectionOfCourseInDropdown: option = ', option);
-        return !!option.text && searchKeyword.toUpperCase().startsWith(option.text.toUpperCase());
+    const getMatchingOption = option => {
+        return !!option && !!option.text && option.text.toUpperCase().startsWith(searchKeyword.toUpperCase());
     };
 
-    const handleChange = (event, option) => {
-        console.log('handleChange: searchKeyword = ', searchKeyword.toUpperCase(), '; option = ', option);
-        if (!!option.text && option.text.toUpperCase().startsWith(searchKeyword.toUpperCase())) {
-            console.log('handleChange: found');
-            console.log('handleChange: newValue = ', option);
-            console.log('handleSelectionOfCourseInDropdown: displayType = ', displayType);
+    const handleSelectionOfCourseInDropdown = (event, option) => {
+        if (getMatchingOption(option)) {
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Course Resources page
                 navigateToCourseResourcePage(option, searchKeyword);
             } else {
-                // user is on the full view, on the Course Resource page (tab will load)
+                // user is on the Course Resource page - tab will load
                 loadCourseAndSelectTab(extractSubjectCodeFromName(option.text), suggestions);
             }
 
@@ -127,16 +120,6 @@ export const CourseResourceSearch = ({
             actions.clearPrimoSuggestions();
         }
     };
-
-    // function handleClose(reason, event) {
-    //     console.log('close reason = ', reason, ': event =  ', event);
-    //     // setDialogValue({
-    //     //     title: '',
-    //     //     year: '',
-    //     // });
-    //
-    //     // toggleOpen(false);
-    // }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -151,14 +134,13 @@ export const CourseResourceSearch = ({
                         // clearOnBlur
                         id={`${elementId}-autocomplete`}
                         getOptionSelected={(option, value) => {
-                            return handleSelectionOfCourseInDropdown(option, value);
+                            return getMatchingOption(option, value);
                         }}
                         options={(!!suggestions && suggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
-                        onChange={(event, newValue) => {
-                            handleChange(event, newValue);
+                        onChange={(event, value) => {
+                            handleSelectionOfCourseInDropdown(event, value);
                         }}
-                        // onClose={(event, reason) => handleClose(reason, event)}
                         onInputChange={handleTypedKeywordChange}
                         noOptionsText={locale.noOptionsText}
                         renderInput={params => {

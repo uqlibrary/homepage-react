@@ -179,7 +179,6 @@ export const CourseResources = ({
 
     // load the data for the first class (it is automatically displayed if the user has classes). Should only run once
     React.useEffect(() => {
-        console.log('load first class for user with classes');
         const firstEnrolledClassNumber =
             (!!account.current_classes && account.current_classes.length > 0 && account.current_classes[0]) || null;
         const coursecode = extractSubjectCodeFromName(

@@ -133,8 +133,6 @@ export const SearchCourseResources = ({
     };
 
     const loadCourseAndSelectTab = (searchKeyword, suggestions) => {
-        console.log('loadCourseAndSelectTab: searchKeyword = ', searchKeyword);
-        console.log('loadCourseAndSelectTab: suggestions = ', suggestions);
         let tabId;
 
         const thisSuggestion =

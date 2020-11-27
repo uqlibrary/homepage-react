@@ -210,11 +210,10 @@ const webpackConfig = {
                     },
                 ],
             },
-            // sort out live bug, return after
-            // {
-            //     test: /\.js$/,
-            //     loader: WebpackStrip.loader('console.log'),
-            // },
+            {
+                test: /\.js$/,
+                loader: WebpackStrip.loader('console.log'),
+            },
         ],
     },
     resolve: {
