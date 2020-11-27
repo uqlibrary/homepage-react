@@ -49,7 +49,14 @@ export class Page extends Component {
     };
 
     render() {
-        const { classes, title, children, help, goBackFunc, goBackTooltip = 'Go back' } = this.props;
+        const {
+            classes,
+            title,
+            children,
+            help,
+            goBackFunc = () => window.back(),
+            goBackTooltip = 'Go back',
+        } = this.props;
         return (
             <div className={classes.wrapper}>
                 <Grid justify={'flex-start'} container spacing={1} data-testid="StandardPage" id="StandardPage">
@@ -64,12 +71,17 @@ export class Page extends Component {
                             >
                                 {!!goBackFunc && (
                                     <Tooltip
-                                        id="StandardPage-tooltip"
+                                        id="StandardPage-goback-tooltip"
+                                        data-testid="StandardPage-goback-tooltip"
                                         title={goBackTooltip}
-                                        // placement="left"
                                         TransitionProps={{ timeout: 300 }}
                                     >
-                                        <IconButton className={classes.arrowBack} onClick={goBackFunc}>
+                                        <IconButton
+                                            className={classes.arrowBack}
+                                            onClick={goBackFunc}
+                                            id="StandardPage-goback-button"
+                                            data-testid="StandardPage-goback-button"
+                                        >
                                             <ArrowBackIcon color="secondary" />
                                         </IconButton>
                                     </Tooltip>
