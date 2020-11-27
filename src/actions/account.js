@@ -10,6 +10,8 @@ import {
     SPOTLIGHTS_API,
     COMP_AVAIL_API,
     TRAINING_API,
+    PRINTING_API,
+    LOANS_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -166,6 +168,52 @@ export function loadLibHours() {
             .catch(error => {
                 dispatch({
                     type: actions.LIB_HOURS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the papercut print balance data
+ * @returns {function(*)}
+ */
+export function loadPrintBalance() {
+    return dispatch => {
+        dispatch({ type: actions.PRINT_BALANCE_LOADING });
+        return get(PRINTING_API())
+            .then(hoursResponse => {
+                dispatch({
+                    type: actions.PRINT_BALANCE_LOADED,
+                    payload: hoursResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.PRINT_BALANCE_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Loads the loans data
+ * @returns {function(*)}
+ */
+export function loadLoans() {
+    return dispatch => {
+        dispatch({ type: actions.LOANS_LOADING });
+        return get(LOANS_API())
+            .then(hoursResponse => {
+                dispatch({
+                    type: actions.LOANS_LOADED,
+                    payload: hoursResponse,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.LOANS_FAILED,
                     payload: error.message,
                 });
             });

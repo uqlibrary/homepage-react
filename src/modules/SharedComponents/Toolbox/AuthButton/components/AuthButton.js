@@ -25,24 +25,24 @@ const useStyles = makeStyles(
 export const AuthButton = ({ isAuthorizedUser, ariaLabel, onClick }) => {
     const classes = useStyles();
     return (
-        <div className="auth-button-wrapper">
-            <IconButton
-                aria-label={ariaLabel}
-                onClick={onClick}
-                className={isAuthorizedUser ? 'log-out-button' : 'log-in-button'}
-                classes={{
-                    root: classes.iconButtonRoot,
-                    label: classes.iconButtonLabel,
-                }}
-            >
-                {isAuthorizedUser ? (
-                    <Person id="logged-in-icon" className={classes.iconButton} />
-                ) : (
-                    <PersonOutline id="logged-out-icon" className={classes.iconButton} />
-                )}
-                <div>{!!isAuthorizedUser ? 'Log out' : 'Log in'}</div>
-            </IconButton>
-        </div>
+        <IconButton
+            id="auth-button"
+            data-testid="auth-button"
+            aria-label={ariaLabel}
+            onClick={onClick}
+            className={isAuthorizedUser ? 'log-out-button' : 'log-in-button'}
+            classes={{
+                root: classes.iconButtonRoot,
+                label: classes.iconButtonLabel,
+            }}
+        >
+            {isAuthorizedUser ? (
+                <Person id="logged-in-icon" className={classes.iconButton} />
+            ) : (
+                <PersonOutline id="logged-out-icon" className={classes.iconButton} />
+            )}
+            <div>{!!isAuthorizedUser ? 'Log out' : 'Log in'}</div>
+        </IconButton>
     );
 };
 

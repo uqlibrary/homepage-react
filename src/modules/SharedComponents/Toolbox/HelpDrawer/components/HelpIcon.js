@@ -26,10 +26,22 @@ export const HelpIcon = ({ title, text, buttonLabel, iconSize, tooltip, onClick,
     const setDrawerContent = () => {
         onClick(title, text, buttonLabel);
     };
-
+    const commonID = `HelpIcon-${title}`;
     return (
-        <Tooltip title={tooltip} placement="bottom-end" TransitionComponent={Fade}>
-            <IconButton id="help-icon" onClick={setDrawerContent} aria-label={tooltip}>
+        <Tooltip
+            title={tooltip}
+            placement="bottom-end"
+            TransitionComponent={Fade}
+            id={`${commonID}-tooltip`}
+            data-testid={`${commonID}-tooltip`}
+        >
+            <IconButton
+                id="help-icon"
+                onClick={setDrawerContent}
+                aria-label={tooltip}
+                id={`${commonID}-button`}
+                data-testid={`${commonID}-button`}
+            >
                 <IconComponent className={classes.helpIcon} size={iconSize} titleAccess={tooltip} />
             </IconButton>
         </Tooltip>

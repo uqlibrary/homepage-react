@@ -67,6 +67,8 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     return (
         <React.Fragment>
             <IconButton
+                id="AskUs-button"
+                data-testid="AskUs-button"
                 onClick={handleClick}
                 classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
             >
@@ -77,7 +79,12 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 <Grid container spacing={0} className={classes.menu}>
                     {locale.askUs.links.map((item, index) => (
                         <Grid item xs={6} key={index}>
-                            <MenuItem onClick={handleLink(item.url)} disabled={item.title === 'Chat' && !chatStatus}>
+                            <MenuItem
+                                id={`AskUs-menuitem-${item.title}`}
+                                data-testid={`AskUs-menuitem-${item.title}`}
+                                onClick={handleLink(item.url)}
+                                disabled={item.title === 'Chat' && !chatStatus}
+                            >
                                 {item.icon}
                                 {item.title}
                                 {item.title === 'Chat' && !!askUsHours ? (
@@ -94,7 +101,11 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                         </Grid>
                     ))}
                     <Grid item xs={12}>
-                        <MenuItem onClick={handleLink(locale.askUs.lastLink.url)}>
+                        <MenuItem
+                            onClick={handleLink(locale.askUs.lastLink.url)}
+                            id={`AskUs-menuitem-${locale.askUs.lastLink.title}`}
+                            data-testid={`AskUs-menuitem-${locale.askUs.lastLink.title}`}
+                        >
                             <span style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                                 {locale.askUs.lastLink.title}
                             </span>

@@ -24,68 +24,10 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
-Cypress.Commands.add('navToHomeFromMenu', locale => {
-    const baseUrl = Cypress.config('baseUrl');
-
-    // Navigate away to trigger 'Are you sure' dialogue about unsaved changes
-    cy.get('button#main-menu-button')
-        .should('not.be.empty')
-        .click();
-    cy.wait(1000);
-    cy.get('#menu-item-0').click();
-    // Say yes to 'Are you sure' if it does trigger
-    if (!!locale) {
-        cy.url().then($url => {
-            if ($url !== `${baseUrl}/`) {
-                cy.contains(locale.confirmationTitle)
-                    .closest('[role="dialog"]')
-                    .contains(locale.confirmButtonLabel)
-                    .click();
-            }
-        });
-    }
-});
-
 Cypress.Commands.add('killWindowUnloadHandler', () => {
     cy.window().then(win => {
         win.onbeforeunload = undefined;
     });
-});
-
-Cypress.Commands.add('clickAutoSuggestion', (fieldName, ordinal) => {
-    cy.get(`[data-testid=${fieldName}-options]`).should('exist');
-    cy.get(`#${fieldName}-option-${ordinal}`)
-        .as('menuItem')
-        .should('exist');
-    cy.wait(200);
-    cy.get('@menuItem').click();
-});
-
-Cypress.Commands.add('checkPartialDate', (id, { day, monthName, year }) => {
-    day && cy.get(`[data-testid=${id}-day-input]`).should('have.value', day);
-    monthName && cy.get(`[data-testid=${id}-month-select]`).should('have.text', monthName);
-    year && cy.get(`[data-testid=${id}-year-input]`).should('have.value', year);
-});
-
-Cypress.Commands.add('checkPartialDateFromRecordValue', (id, dateString) => {
-    const date = Cypress.moment(dateString);
-    cy.checkPartialDate(id, {
-        day: date.format('D'),
-        monthName: date.format('MMMM'),
-        year: date.format('YYYY'),
-    });
-});
-
-Cypress.Commands.add('setPartialDate', (id, { day, month, year }) => {
-    day && cy.get(`[data-testid=${id}-day-input]`).type(`{selectall}${day}`);
-    month &&
-        (() => {
-            cy.get(`[data-testid=${id}-month-select]`).click();
-            cy.get(`[data-testid=${id}-month-options]`)
-                .find(`li[role=option][data-value=${month - 1}]`)
-                .click();
-        })();
-    year && cy.get(`[data-testid=${id}-year-input]`).type(`{selectall}${year}`);
 });
 
 /**

@@ -14,7 +14,7 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-const defaultSlide = require('../../../../public/images/Welcome_Spotlight.jpg');
+const defaultSlide = require('../../../../../public/images/Welcome_Spotlight.jpg');
 
 const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
     const totalSlides = spotlights && spotlights.length;

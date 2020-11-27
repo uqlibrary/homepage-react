@@ -92,6 +92,18 @@ export const TRAINING_API = (numEvents = 6) => ({
     options: { params: { take: numEvents, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
 });
 
+// Papercut balance API
+export const PRINTING_API = () => ({
+    apiUrl: 'papercut/balance',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Loans API
+export const LOANS_API = () => ({
+    apiUrl: 'account/loans',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
 // Primo Suggestions API
 export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
     return {

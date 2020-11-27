@@ -21,7 +21,7 @@ import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST120
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import { libHours, computerAvailability, training } from './data/account';
+import { libHours, computerAvailability, training, printBalance, loans } from './data/account';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -89,6 +89,20 @@ mock.onGet(routes.TRAINING_API(10).apiUrl)
         console.log('Training events API hit');
         // mock training evemts
         return [200, training];
+    });
+
+mock.onGet(routes.PRINTING_API().apiUrl)
+    .reply(() => {
+        console.log('Papercut API hit');
+        // mock print balance
+        return [200, printBalance];
+    });
+
+mock.onGet(routes.LOANS_API().apiUrl)
+    .reply(() => {
+        console.log('Loans API hit');
+        // mock print balance
+        return [200, loans];
     });
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl)
