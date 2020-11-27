@@ -78,7 +78,6 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     }
 };
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
-    return;
     const availableOptions = new Map();
     availableOptions.set('print-balance', 'Manage your print balance');
     availableOptions.set('loans', 'Manage your library loans');
