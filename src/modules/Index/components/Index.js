@@ -2,26 +2,26 @@ import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import SearchIcon from '@material-ui/icons/Search';
-import Button from '@material-ui/core/Button';
 import Hidden from '@material-ui/core/Hidden';
-import Typography from '@material-ui/core/Typography';
 import { useDispatch } from 'react-redux';
-import { clearPrimoSuggestions, loadCourseReadingListsSuggestions, loadSpotlights } from 'actions';
+import {
+    clearPrimoSuggestions,
+    loadCourseReadingListsSuggestions,
+    loadSpotlights,
+    loadPrintBalance,
+    loadLoans,
+} from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
-import { loadSpotlights, loadPrintBalance, loadLoans } from 'actions';
-import { default as locale } from './locale';
 import {
     seeCourseResources,
     seeComputerAvailability,
-    seeFeedback,
-    seeFines,
+    // seeFeedback,
+    // seeFines,
     seeLibraryHours,
     seeLibraryServices,
-    seeLoans,
-    seePrintBalance,
+    // seeLoans,
+    // seePrintBalance,
     seeTraining,
     getUserServices,
 } from 'helpers/access';
@@ -31,6 +31,7 @@ import Hours from './subComponents/Hours';
 import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
+import CourseResourcesPanel from './CourseResourcesPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {

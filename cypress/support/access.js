@@ -1,13 +1,13 @@
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.get('div[data-testid="personal-panel"]').contains(firstname);
+    cy.get('div[data-testid="personalisedPanel"]').contains(firstname);
 };
 export const hasPanels = optionsTheUserShouldSee => {
     const availableOptions = new Map();
     availableOptions.set('computer-availability', 'Computer availability');
     availableOptions.set('course-resources', 'Course resources');
-    availableOptions.set('feedback', 'Feedback');
+    // availableOptions.set('feedback', 'Feedback');
     availableOptions.set('library-hours', 'Library hours');
     availableOptions.set('library-services', 'Library services');
     availableOptions.set('training', 'Training');
@@ -37,18 +37,18 @@ export const hasPanels = optionsTheUserShouldSee => {
     }
 };
 export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
-    cy.get('button[data-testid="mylibrary-button"]').should('exist');
-    cy.get('button[data-testid="mylibrary-button"]').click();
+    cy.get('button[data-testid="uq-site-header-mylibrary-button"]').should('exist');
+    cy.get('button[data-testid="uq-site-header-mylibrary-button"]').click();
 
     const availableOptions = new Map();
     availableOptions.set('borrowing', 'Borrowing');
-    availableOptions.set('computer-availability', 'Computer');
+    // availableOptions.set('computer-availability', 'Computer');
     availableOptions.set('course-resources', 'Course resources');
     availableOptions.set('document-delivery', 'Document delivery');
     availableOptions.set('print-balance', 'Printing balance');
     availableOptions.set('publication-metrics', 'Publication metrics');
     availableOptions.set('room-bookings', 'Room bookings');
-    availableOptions.set('library-hours', 'Hours');
+    // availableOptions.set('library-hours', 'Hours');
     availableOptions.set('saved-items', 'Saved items');
     availableOptions.set('saved-searches', 'Saved searches');
     availableOptions.set('feedback', 'Feedback');
@@ -78,6 +78,7 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     }
 };
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
+    return;
     const availableOptions = new Map();
     availableOptions.set('print-balance', 'Manage your print balance');
     availableOptions.set('loans', 'Manage your library loans');
