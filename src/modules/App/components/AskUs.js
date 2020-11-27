@@ -71,8 +71,8 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     return (
         <React.Fragment>
             <IconButton
-                id="AskUs-button"
-                data-testid="AskUs-button"
+                id="askus-button"
+                data-testid="askus-button"
                 onClick={handleClick}
                 classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
             >
@@ -85,22 +85,16 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 MenuListProps={{
-                    id: 'AskUs-menu',
-                    'data-testid': 'AskUs-menu',
+                    id: 'askus-menu',
+                    'data-testid': 'askus-menu',
                 }}
             >
-                <Grid
-                    container
-                    spacing={0}
-                    className={classes.menu}
-                    id="AskUs-menu-items"
-                    data-testid="AskUs-menu-items"
-                >
+                <Grid container spacing={0} className={classes.menu}>
                     {locale.askUs.links.map((item, index) => (
                         <MenuItem
                             className={classes.menuItem}
-                            id={`AskUs-menuitem-${item.title}`}
-                            data-testid={`AskUs-menuitem-${item.title}`}
+                            id={`askus-menuitem-${item.title}`}
+                            data-testid={`askus-menuitem-${item.title}`}
                             onClick={handleLink(item.url)}
                             disabled={item.title === 'Chat' && !chatStatus}
                             key={index}
@@ -122,8 +116,8 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                     <Grid item xs={12}>
                         <MenuItem
                             onClick={handleLink(locale.askUs.lastLink.url)}
-                            id={`AskUs-menuitem-${locale.askUs.lastLink.title}`}
-                            data-testid={`AskUs-menuitem-${locale.askUs.lastLink.title}`}
+                            id={`askus-menuitem-${locale.askUs.lastLink.title}`}
+                            data-testid={`askus-menuitem-${locale.askUs.lastLink.title}`}
                         >
                             <span style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                                 {locale.askUs.lastLink.title}

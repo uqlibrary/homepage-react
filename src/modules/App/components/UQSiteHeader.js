@@ -290,6 +290,7 @@ export const UQSiteHeader = ({
                 </Grid>
                 <Grid item xs={'auto'} className={classes.utility} id="auth" data-testid="auth">
                     <AuthButton
+                    <AuthButton
                         isAuthorizedUser={isAuthorizedUser}
                         onClick={redirectUserToLogin(isAuthorizedUser, true)}
                     />
