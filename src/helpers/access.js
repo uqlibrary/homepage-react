@@ -135,8 +135,8 @@ export const seePrintBalance = account =>
         LIBRARY_STAFF,
     ].includes(account.user_group);
 
-export const seeSavedItems = true;
-export const seeSavedSearches = true;
+export const seeSavedItems = account => !!account || true;
+export const seeSavedSearches = account => !!account || true;
 
 export const seeDocumentDelivery = account =>
     !!account &&
@@ -161,11 +161,11 @@ export const seePublicationMetrics = account =>
         account.user_group,
     );
 
-export const seeTraining = true;
+export const seeTraining = account => !!account || true;
 
-export const seeLibraryServices = true;
+export const seeLibraryServices = account => !!account || true;
 
-export const seeFeedback = true;
+export const seeFeedback = account => !!account || true;
 
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],

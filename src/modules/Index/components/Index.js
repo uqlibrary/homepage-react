@@ -174,13 +174,13 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeTraining && (
+                    {seeTraining(account) && (
                         <Grid item xs={12} md={4} data-testid="training-panel">
                             <Training trainingEvents={trainingEvents} trainingEventsLoading={trainingEventsLoading} />
                         </Grid>
                     )}
 
-                    {seeLibraryServices && (
+                    {seeLibraryServices(account) && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
                             <StandardCard
                                 accentHeader

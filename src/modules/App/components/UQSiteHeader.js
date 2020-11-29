@@ -253,7 +253,7 @@ export const UQSiteHeader = ({
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeSavedItems && (
+                                {seeSavedItems(account) && (
                                     <Grid item xs={6}>
                                         <MenuItem
                                             onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedItems)}
@@ -264,7 +264,7 @@ export const UQSiteHeader = ({
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeSavedSearches && (
+                                {seeSavedSearches(account) && (
                                     <Grid item xs={6}>
                                         <MenuItem
                                             onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedSearches)}
@@ -275,7 +275,7 @@ export const UQSiteHeader = ({
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeFeedback && (
+                                {seeFeedback(account) && (
                                     <Grid item xs={6}>
                                         <MenuItem
                                             onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.feedback)}
