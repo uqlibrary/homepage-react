@@ -33,7 +33,6 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
     if (slides.length > 0 && !spotlightsLoading) {
         return (
             <div
-                id="spotlights"
                 data-testid="spotlights"
                 style={{ height: '100%', position: 'relative' }}
                 role="region"
@@ -114,7 +113,11 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             zIndex: 99,
                         }}
                     >
-                        <Slider>
+                        <Slider
+                            trayProps={{
+                                'aria-label': 'UQ Spotlights slider',
+                            }}
+                        >
                             {slides.map((item, index) => {
                                 return (
                                     <Slide index={item.index} key={index}>

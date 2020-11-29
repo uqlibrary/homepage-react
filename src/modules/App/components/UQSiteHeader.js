@@ -74,6 +74,8 @@ const useStyles = makeStyles(
             color: theme.palette.primary.main,
             fontSize: '1.25rem',
             fontWeight: 500,
+            textTransform: 'capitalize',
+            marginLeft: -10,
             '&:hover': {
                 textDecoration: 'none !important',
             },
@@ -156,21 +158,15 @@ export const UQSiteHeader = ({
                 </Grid>
                 <Grid item xs />
                 {!!account && (
-                    <Grid
-                        item
-                        xs={'auto'}
-                        className={classes.utility}
-                        id="my-library-button"
-                        data-testid="my-library-button"
-                    >
+                    <Grid item xs={'auto'} className={classes.utility}>
                         <IconButton
                             onClick={handleClick}
                             classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
-                            id="uq-site-header-mylibrary-button"
-                            data-testid="uq-site-header-mylibrary-button"
+                            id="mylibrary-button"
+                            data-testid="mylibrary-button"
                         >
                             <AppsIcon color={'primary'} />
-                            <div>My Library</div>
+                            <div>{UQSiteHeaderLocale.MyLibraryLabel}</div>
                         </IconButton>
                         <Menu
                             id="mylibrary-menu"
@@ -181,73 +177,98 @@ export const UQSiteHeader = ({
                         >
                             <Grid container spacing={0} style={{ maxWidth: 400 }}>
                                 {seeLoans(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-borrowing-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.borrowing)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.borrowing)}
+                                            data-testid="mylibrary-borrowing-link"
+                                        >
                                             <ImportContactsIcon color={'secondary'} className={classes.icons} />
                                             Borrowing
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seeCourseResources(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-course-resources-link">
-                                        <MenuItem onClick={_navigateToCourseResources}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={_navigateToCourseResources}
+                                            data-testid="mylibrary-course-resources-link"
+                                        >
                                             <SchoolIcon color={'secondary'} className={classes.icons} />
                                             Course resources
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seeDocumentDelivery(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-document-delivery-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.docdel)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.docdel)}
+                                            data-testid="mylibrary-document-delivery-link"
+                                        >
                                             <MoveToInboxIcon color={'secondary'} className={classes.icons} />
                                             Document delivery
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seeMasquerade(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-masquerade-link">
-                                        <MenuItem onClick={_navigateToMasquerade}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={_navigateToMasquerade}
+                                            data-testid="mylibrary-masquerade-link"
+                                        >
                                             <SupervisorAccountIcon color={'secondary'} className={classes.icons} />
                                             Masquerade
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seePrintBalance(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-print-balance-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.papercut)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.papercut)}
+                                            data-testid="mylibrary-print-balance-link"
+                                        >
                                             <PrintIcon color={'secondary'} className={classes.icons} />
                                             Printing balance
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seePublicationMetrics(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-publication-metrics-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.pubMetrics)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.pubMetrics)}
+                                            data-testid="mylibrary-publication-metrics-link"
+                                        >
                                             <AssessmentIcon color={'secondary'} className={classes.icons} />
                                             Publication metrics
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seeRoomBookings(account) && (
-                                    <Grid item xs={6} data-testid="mylibrary-room-bookings-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.roomBookings)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.roomBookings)}
+                                            data-testid="mylibrary-room-bookings-link"
+                                        >
                                             <RoomServiceIcon color={'secondary'} className={classes.icons} />
                                             Room bookings
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seeSavedItems && (
-                                    <Grid item xs={6} data-testid="mylibrary-saved-items-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedItems)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedItems)}
+                                            data-testid="mylibrary-saved-items-link"
+                                        >
                                             <FavoriteIcon color={'secondary'} className={classes.icons} />
                                             Saved items
                                         </MenuItem>
                                     </Grid>
                                 )}
                                 {seeSavedSearches && (
-                                    <Grid item xs={6} data-testid="mylibrary-saved-searches-link">
+                                    <Grid item xs={6}>
                                         <MenuItem
                                             onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedSearches)}
+                                            data-testid="mylibrary-saved-searches-link"
                                         >
                                             <YoutubeSearchedForIcon color={'secondary'} className={classes.icons} />
                                             Saved searches
@@ -255,8 +276,11 @@ export const UQSiteHeader = ({
                                     </Grid>
                                 )}
                                 {seeFeedback && (
-                                    <Grid item xs={6} data-testid="mylibrary-feedback-link">
-                                        <MenuItem onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.feedback)}>
+                                    <Grid item xs={6}>
+                                        <MenuItem
+                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.feedback)}
+                                            data-testid="mylibrary-feedback-link"
+                                        >
                                             <FeedbackIcon color={'secondary'} className={classes.icons} />
                                             Feedback
                                         </MenuItem>

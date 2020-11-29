@@ -1,5 +1,6 @@
 export const UQSiteHeaderLocale = {
     title: 'Library',
+    MyLibraryLabel: 'My Library',
     links: {
         borrowing: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US',
         docdel: 'https://qu.relais-host.com/my/request.html?requestType=open',

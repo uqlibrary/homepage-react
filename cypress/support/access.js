@@ -37,8 +37,8 @@ export const hasPanels = optionsTheUserShouldSee => {
     }
 };
 export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
-    cy.get('button[data-testid="uq-site-header-mylibrary-button"]').should('exist');
-    cy.get('button[data-testid="uq-site-header-mylibrary-button"]').click();
+    cy.get('button[data-testid="mylibrary-button"]').should('exist');
+    cy.get('button[data-testid="mylibrary-button"]').click();
 
     const availableOptions = new Map();
     availableOptions.set('borrowing', 'Borrowing');
@@ -67,7 +67,7 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
         expect(value.length).to.not.equals(0);
 
         const linkName = `mylibrary-${key}-link`;
-        const elementId = `div[data-testid="${linkName}"]`;
+        const elementId = `li[data-testid="${linkName}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking panel ${linkName} contains ${value}`);
             cy.get(elementId).contains(value);
