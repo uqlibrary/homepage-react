@@ -89,13 +89,19 @@ export const CourseResources = ({
     const getInitialTopTabState = () => {
         let initialTopTabState = 'top1';
         // if has account and no search param supplied, show My Course tab
-        if (!!account.current_classes && account.current_classes.length && (!params || !params.coursecode)) {
+        if (
+            !!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
+            (!params || !params.coursecode)
+        ) {
             initialTopTabState = 'top0';
         }
         // if has account and param supplied and param in account list, show My Course tab
-        !!account.current_classes &&
-            account.current_classes.length &&
-            !!params &&
+        !!params &&
+            !!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
             account.current_classes.map(item => {
                 if (
                     item.classnumber === (params.coursecode || '') &&
