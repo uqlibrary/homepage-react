@@ -55,25 +55,27 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                 {!!coursecode && (
                     <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt(coursecode)}</Typography>
                 )}
-                {readingLists.map((list, index) => {
-                    return (
-                        <Grid
-                            item
-                            xs={12}
-                            data-testid={`multiple-reading-lists-${index}`}
-                            key={`multiple-reading-lists-${index}`}
-                            className={classes.courseResourceLineItem}
-                        >
-                            <a
-                                aria-label={`Reading list for ${list.title} ${list.period}`}
-                                href={list.url}
-                                key={`reading-list-link-${index}`}
+                {!!readingLists &&
+                    readingLists.length > 0 &&
+                    readingLists.map((list, index) => {
+                        return (
+                            <Grid
+                                item
+                                xs={12}
+                                data-testid={`multiple-reading-lists-${index}`}
+                                key={`multiple-reading-lists-${index}`}
+                                className={classes.courseResourceLineItem}
                             >
-                                {coursecode} {list.campus}, {list.period}
-                            </a>
-                        </Grid>
-                    );
-                })}
+                                <a
+                                    aria-label={`Reading list for ${list.title} ${list.period}`}
+                                    href={list.url}
+                                    key={`reading-list-link-${index}`}
+                                >
+                                    {coursecode} {list.campus}, {list.period}
+                                </a>
+                            </Grid>
+                        );
+                    })}
                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                     <a
                         data-testid="multiple-reading-list-search-link"

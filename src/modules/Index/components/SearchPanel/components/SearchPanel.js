@@ -221,25 +221,27 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Grid item xs />
                         </Hidden>
                     )}
-                    {locale.links.map((item, index) => {
-                        if (item.display.includes(searchType)) {
-                            return (
-                                <Grid
-                                    item
-                                    key={index}
-                                    xs={'auto'}
-                                    data-testid={`primo-search-links-${index}`}
-                                    className={classes.searchUnderlinks}
-                                >
-                                    <a href={item.link} rel="noreferrer">
-                                        {item.label}
-                                    </a>
-                                </Grid>
-                            );
-                        } else {
-                            return null;
-                        }
-                    })}
+                    {!!locale.links &&
+                        locale.links.length > 0 &&
+                        locale.links.map((item, index) => {
+                            if (item.display.includes(searchType)) {
+                                return (
+                                    <Grid
+                                        item
+                                        key={index}
+                                        xs={'auto'}
+                                        data-testid={`primo-search-links-${index}`}
+                                        className={classes.searchUnderlinks}
+                                    >
+                                        <a href={item.link} rel="noreferrer">
+                                            {item.label}
+                                        </a>
+                                    </Grid>
+                                );
+                            } else {
+                                return null;
+                            }
+                        })}
                 </Grid>
             </form>
         </StandardCard>

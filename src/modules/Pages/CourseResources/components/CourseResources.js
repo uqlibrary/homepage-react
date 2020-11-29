@@ -33,6 +33,15 @@ export const CourseResources = ({
     const { account } = useAccountContext();
     const location = useLocation();
 
+    /**
+     * The page consists of 2 sections:
+     * - the user's enrolled courses (aka subjects), and
+     * - search area
+     * If the user is enrolled in courses then we load that section: top0
+     * Otherwise we load the search section: top1
+     * These sections are displayed as 2 tabs across the top
+     */
+
     const getQueryParams = qs => {
         const qs1 = qs.split('+').join(' ');
         const re = /[?&]?([^=]+)=([^&]*)/g;
@@ -113,14 +122,6 @@ export const CourseResources = ({
             });
         return initialTopTabState;
     };
-    /**
-     * The page consists of 2 sections:
-     * - the user's enrolled courses (aka subjects), and
-     * - search area
-     * If the user is enrolled in courses then we load that section: top0
-     * Otherwise we load the search section: top1
-     * These sections are displayed as 2 tabs across the top
-     */
     const [topmenu, setCurrentTopTab] = useState(getInitialTopTabState);
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);

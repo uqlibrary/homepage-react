@@ -129,6 +129,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
     const cleanedHours =
         (!!libHours &&
             !!libHours.locations &&
+            libHours.locations > 0 &&
             libHours.locations.map(item => {
                 const departments = item.departments.map(item => {
                     return { name: item.name, hours: item.rendered };
@@ -151,8 +152,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
             // eslint-disable-next-line no-nested-ternary
-            const result = textA < textB ? -1 : textA > textB ? 1 : 0;
-            return result;
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
     const sortedHours = matchSorter(alphaHours, cookies.location, {
         keys: ['campus'],

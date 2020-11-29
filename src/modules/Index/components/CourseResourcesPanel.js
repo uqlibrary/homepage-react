@@ -34,19 +34,15 @@ export const CourseResourcesPanel = ({ account, history }) => {
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(
         searchUrl => {
-            console.log('pushing to history: ', searchUrl);
             searchUrl !== '' && history.push(searchUrl);
         },
         [history],
     );
     React.useEffect(() => {
-        console.log('change in searchurl found (now ', searchUrl, ')');
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
 
-    const navigateToCourseResourcePage = (option, searchKeyword) => {
-        console.log('navigateToCourseResourcePage: option = ', option);
-        console.log('navigateToCourseResourcePage: searchKeyword = ', searchKeyword);
+    const navigateToCourseResourcePage = option => {
         if (!option.text || !option.rest || !option.rest.campus || !option.rest.period) {
             return; // should never happen
         }
@@ -55,11 +51,6 @@ export const CourseResourcesPanel = ({ account, history }) => {
             campus: option.rest.campus,
             semester: option.rest.period,
         };
-        console.log('navigateToCourseResourcePage: course = ', course);
-        console.log(
-            'navigateToCourseResourcePage: new url = ',
-            getUrlForCourseResourceSpecificTab(course, pageLocation, false, true),
-        );
         setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
     };
 

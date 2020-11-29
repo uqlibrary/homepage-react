@@ -95,7 +95,7 @@ export const CourseResourceSearch = ({
     );
 
     const courseResourceSubjectDisplay = option => {
-        return !!option && !!option.text
+        return !!option && !!option.text && !!option.rest && !!option.rest.course_title && !!option.rest.period
             ? `${option.text} (${unescapeString(option.rest.course_title)}, ${option.rest.period})`
             : '';
     };
@@ -108,7 +108,7 @@ export const CourseResourceSearch = ({
         if (getMatchingOption(option)) {
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Course Resources page
-                navigateToCourseResourcePage(option, searchKeyword);
+                navigateToCourseResourcePage(option);
             } else {
                 // user is on the Course Resource page - tab will load
                 loadCourseAndSelectTab(extractSubjectCodeFromName(option.text), suggestions);
@@ -126,12 +126,10 @@ export const CourseResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
-                        // debug
                         autoSelect
                         data-testid={`${elementId}-autocomplete`}
                         blurOnSelect="mouse"
                         clearOnEscape
-                        // clearOnBlur
                         id={`${elementId}-autocomplete`}
                         getOptionSelected={(option, value) => {
                             return getMatchingOption(option, value);
@@ -166,7 +164,7 @@ export const CourseResourceSearch = ({
                         }}
                     />
                 </Grid>
-                {suggestionsLoading && (
+                {!!suggestionsLoading && (
                     <Grid
                         item
                         xs={'auto'}

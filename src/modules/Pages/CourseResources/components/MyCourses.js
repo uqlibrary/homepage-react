@@ -46,7 +46,11 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
             return;
         }
         const coursecode = event.target.innerText;
-        const enrolledClass = (!!account && account.current_classes.find(c => c.classnumber === coursecode)) || null;
+        const enrolledClass =
+            (!!account &&
+                !!account.current_classes &&
+                account.current_classes.find(c => c.classnumber === coursecode)) ||
+            null;
         const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
         const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
         loadNewSubject(coursecode, campus, semester);
