@@ -10,7 +10,7 @@ import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import PrintIcon from '@material-ui/icons/Print';
 import { Location } from '../../../SharedComponents/Location';
 const moment = require('moment');
-import { PPlocale } from './PersonalisedPanel.locale';
+import { ppLocale } from './PersonalisedPanel.locale';
 
 const useStyles = makeStyles(theme => ({
     flexWrapper: {
@@ -80,16 +80,16 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const PersonalisedPanel = ({ account, loans, printBalance, isNextToSpotlights }) => {
-    console.log(account, loans, printBalance, isNextToSpotlights);
+    console.log(loans);
     const classes = useStyles();
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
-            return PPlocale.morning;
+            return ppLocale.greetings.morning;
         } else if (time >= 12 && time < 18) {
-            return PPlocale.afternoon;
+            return ppLocale.greetings.afternoon;
         } else {
-            return PPlocale.evening;
+            return ppLocale.greetings.evening;
         }
     };
     if (!account) {
@@ -124,7 +124,7 @@ const PersonalisedPanel = ({ account, loans, printBalance, isNextToSpotlights })
                     <MenuItem onClick={handleClick} id={id('menu-button')} data-testid={id('menu-button')}>
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {PPlocale.items.papercut.label.replace('[balance]', printBalance.balance || '0.00')}
+                                {ppLocale.items.papercut.label.replace('[balance]', printBalance.balance || '0.00')}
                             </Grid>
                             <Grid item xs="auto">
                                 <PrintIcon className={classes.icon} />
