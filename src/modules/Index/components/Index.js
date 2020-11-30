@@ -16,12 +16,8 @@ import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchP
 import {
     seeCourseResources,
     seeComputerAvailability,
-    // seeFeedback,
-    // seeFines,
     seeLibraryHours,
     seeLibraryServices,
-    // seeLoans,
-    // seePrintBalance,
     seeTraining,
     getUserServices,
 } from 'helpers/access';

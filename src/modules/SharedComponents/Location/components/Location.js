@@ -6,6 +6,7 @@ import RoomIcon from '@material-ui/icons/Room';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { makeStyles } from '@material-ui/styles';
+import { useCookies } from 'react-cookie';
 import { locale } from './locale';
 
 const useStyles = makeStyles(theme => ({
@@ -43,9 +44,13 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const Location = ({ handleLocationChange, currentLocation, idLabel }) => {
+export const Location = ({ idLabel }) => {
     const classes = useStyles();
+    const [cookies, setCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const handleLocationChange = location => {
+        setCookie('location', location);
+    };
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -61,10 +66,10 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
         setAnchorEl(null);
     };
     let thisLocation = null;
-    if (currentLocation === null || currentLocation === 'null') {
+    if (cookies.location === null || cookies.location === 'null') {
         thisLocation = locale.noLocationSet;
     } else {
-        thisLocation = currentLocation;
+        thisLocation = cookies.location;
     }
     const id = tag => `location-${idLabel}${tag ? '-' + tag : ''}`;
     return (
@@ -72,7 +77,7 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
-                placement="bottom"
+                placement="left"
                 TransitionProps={{ timeout: 300 }}
             >
                 <Button
@@ -84,8 +89,8 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
                     data-testid={id('button')}
                 >
                     <RoomIcon
-                        className={`${classes.icon} ${currentLocation === null ||
-                            (currentLocation === 'null' && classes.wiggler)}`}
+                        className={`${classes.icon} ${cookies.location === null ||
+                            (cookies.location === 'null' && classes.wiggler)}`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
                 </Button>
@@ -117,8 +122,6 @@ export const Location = ({ handleLocationChange, currentLocation, idLabel }) => 
 };
 
 Location.propTypes = {
-    handleLocationChange: PropTypes.func,
-    currentLocation: PropTypes.string,
     idLabel: PropTypes.string,
 };
 

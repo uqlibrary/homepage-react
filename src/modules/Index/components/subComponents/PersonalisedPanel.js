@@ -1,9 +1,11 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-// import Grid from '@material-ui/core/Grid';
+import Tooltip from '@material-ui/core/Tooltip';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import { Location } from '../../../SharedComponents/Location';
 
 // import { useCookies } from 'react-cookie';
 const moment = require('moment');
@@ -74,10 +76,25 @@ const PersonalisedPanel = ({ account, loans, printBalance }) => {
                 </Typography>
             </div>
             <div className={classes.flexContent}>
-                <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
-                    <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
-                    {(account && account.id) || ''}
-                </Typography>
+                <Grid container spacing={0}>
+                    <Grid item xs="auto">
+                        <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
+                            <Tooltip
+                                title={`Your UQ username is ${(account && account.id) || 'unavailable'}`}
+                                placement="left"
+                                TransitionProps={{ timeout: 300 }}
+                            >
+                                <div>
+                                    <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
+                                    {(account && account.id) || ''}
+                                </div>
+                            </Tooltip>
+                        </Typography>
+                    </Grid>
+                    <Grid item xs="auto">
+                        <Location idLabel="personalised-panel" />
+                    </Grid>
+                </Grid>
             </div>
             <div className={classes.flexFooter}>Test</div>
         </div>
