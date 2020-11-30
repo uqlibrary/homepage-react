@@ -129,7 +129,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
     const cleanedHours =
         (!!libHours &&
             !!libHours.locations &&
-            libHours.locations > 0 &&
+            libHours.locations.length > 0 &&
             libHours.locations.map(item => {
                 const departments = item.departments.map(item => {
                     return { name: item.name, hours: item.rendered };
