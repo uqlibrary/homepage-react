@@ -5,16 +5,18 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@material-ui/core/Menu';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
+import PrintIcon from '@material-ui/icons/Print';
 import { Location } from '../../../SharedComponents/Location';
 const moment = require('moment');
+import { PPlocale } from './PersonalisedPanel.locale';
 
 const useStyles = makeStyles(theme => ({
     flexWrapper: {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        overflow: 'hidden',
         [theme.breakpoints.down('sm')]: {
             borderLeft: 'none',
             paddingLeft: 0,
@@ -22,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     },
     isNextToSpotlights: {
         borderLeft: '1px solid' + theme.palette.secondary.light,
-        paddingLeft: 32,
+        paddingLeft: 16,
     },
     flexHeader: {
         height: 'auto',
@@ -30,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     flexContent: {
         flexGrow: 1,
         overflowY: 'auto',
-        overflowX: 'visible',
+        overflowX: 'hidden',
         paddingTop: 12,
         [theme.breakpoints.down('sm')]: {
             overflowX: 'hidden',
@@ -40,10 +42,12 @@ const useStyles = makeStyles(theme => ({
     },
     flexFooter: {
         height: 'auto',
+        marginBottom: -16,
     },
     greeting: {
         fontSize: '2.25rem',
         lineHeight: 1,
+        marginLeft: 16,
     },
     uqidIcon: {
         marginBottom: -2,
@@ -53,6 +57,25 @@ const useStyles = makeStyles(theme => ({
     },
     menuItem: {
         marginLeft: -16,
+        marginRight: -16,
+    },
+    menuItemLabel: {
+        fontSize: 14,
+        lineHeight: 1.9,
+        color: theme.palette.accent.main,
+        '&:hover': {
+            textDecoration: 'underline',
+        },
+    },
+    iconButton: {
+        border: '1px dashed green',
+        padding: 0,
+        minWidth: 0,
+        backgroundColor: 'transparent',
+    },
+    icon: {
+        padding: 0,
+        color: theme.palette.primary.main, // 'rgba(0, 0, 0, 0.66)',
     },
 }));
 
@@ -62,17 +85,95 @@ const PersonalisedPanel = ({ account, loans, printBalance, isNextToSpotlights })
     const greeting = () => {
         const time = moment().format('H');
         if (time < 12) {
-            return <span>Good morning</span>;
+            return PPlocale.morning;
         } else if (time >= 12 && time < 18) {
-            return <span>Good afternoon</span>;
+            return PPlocale.afternoon;
         } else {
-            return <span>Good evening</span>;
+            return PPlocale.evening;
         }
     };
     if (!account) {
         return null;
     }
-    const id = tag => `pp-${tag ? '-' + tag : ''}`;
+    const id = tag => `papercut${tag ? '-' + tag : ''}`;
+
+    const PaperCut = () => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+        const handleClick = event => {
+            setAnchorEl(event.currentTarget);
+        };
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
+        const handleNagivationToUrl = url => {
+            if (!!url) {
+                window.location.href = url;
+            }
+            handleClose();
+        };
+        const topUpUrl = value =>
+            `https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=${account.id}&unitamountinctax=${value}&email=${printBalance.email}`;
+        return (
+            <Grid item xs={12} className={classes.menuItem}>
+                <Tooltip
+                    id={id('tooltip')}
+                    title={'Click to manage your print balance'}
+                    placement="left"
+                    TransitionProps={{ timeout: 300 }}
+                >
+                    <MenuItem onClick={handleClick} id={id('menu-button')} data-testid={id('menu-button')}>
+                        <Grid container spacing={0}>
+                            <Grid item xs className={classes.menuItemLabel}>
+                                {PPlocale.items.papercut.label.replace('[balance]', printBalance.balance || '0.00')}
+                            </Grid>
+                            <Grid item xs="auto">
+                                <PrintIcon className={classes.icon} />
+                            </Grid>
+                        </Grid>
+                    </MenuItem>
+                </Tooltip>
+                <Menu
+                    id={id('menu')}
+                    data-testid={id('menu')}
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    onBlur={handleClose}
+                >
+                    <MenuItem disabled>Manage your PaperCut account</MenuItem>
+                    <MenuItem
+                        id={id('item-button-0')}
+                        data-testid={id('item-button-0')}
+                        onClick={() => handleNagivationToUrl('https://lib-print.library.uq.edu.au:9192/user')}
+                    >
+                        Log in and manage your print balance
+                    </MenuItem>
+                    <MenuItem
+                        id={id('item-button-1')}
+                        data-testid={id('item-button-1')}
+                        onClick={() => handleNagivationToUrl(topUpUrl(5))}
+                    >
+                        Top up your print balance - $5
+                    </MenuItem>
+                    <MenuItem
+                        id={id('item-button-2')}
+                        data-testid={id('item-button-2')}
+                        onClick={() => handleNagivationToUrl(topUpUrl(10))}
+                    >
+                        Top up your print balance - $10
+                    </MenuItem>
+                    <MenuItem
+                        id={id('item-button-3')}
+                        data-testid={id('item-button-3')}
+                        onClick={() => handleNagivationToUrl(topUpUrl(20))}
+                    >
+                        Top up your print balance - $20
+                    </MenuItem>
+                </Menu>
+            </Grid>
+        );
+    };
     return (
         <div className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}>
             <div className={classes.flexHeader}>
@@ -82,13 +183,13 @@ const PersonalisedPanel = ({ account, loans, printBalance, isNextToSpotlights })
                 </Typography>
             </div>
             <div className={classes.flexContent}>
-                <Grid container spacing={0}>
+                <Grid container spacing={0} style={{ marginLeft: 16 }}>
                     {/* Username */}
                     <Grid item xs="auto">
                         <Tooltip
                             id={id('tooltip')}
                             title={`Your UQ username is ${(account && account.id) || 'unavailable'}`}
-                            placement="bottom"
+                            placement="left"
                             TransitionProps={{ timeout: 300 }}
                         >
                             <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
@@ -102,18 +203,11 @@ const PersonalisedPanel = ({ account, loans, printBalance, isNextToSpotlights })
                         <Location />
                     </Grid>
                 </Grid>
+            </div>
+            <div className={classes.flexFooter}>
                 {/* Content */}
-                <Grid container spacing={0}>
-                    <Grid item xs={12} className={classes.menuItem}>
-                        {/* Papercut */}
-                        <MenuItem onClick={null}>
-                            <Grid container spacing={1}>
-                                <Grid item xs>
-                                    Print Balance
-                                </Grid>
-                            </Grid>
-                        </MenuItem>
-                    </Grid>
+                <Grid container spacing={0} style={{ marginLeft: 16 }}>
+                    {!!printBalance && printBalance.balance && <PaperCut />}
                 </Grid>
             </div>
         </div>
