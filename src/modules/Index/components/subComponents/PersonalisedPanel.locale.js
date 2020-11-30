@@ -1,4 +1,4 @@
-export const PPlocale = {
+export const ppLocale = {
     greetings: {
         morning: 'Good morning',
         afternoon: 'Good afternoon',
