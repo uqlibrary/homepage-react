@@ -79,7 +79,7 @@ export default {
                     icon: <SpacedArrowForwardIcon />,
                     id: 'blackboard',
                     linkLabel: 'Learn.UQ (Blackboard)',
-                    linkOutPattern: 'https://learn.uq.edu.au/[courseCode]',
+                    linkOutPattern: 'https://learn.uq.edu.au/',
                 },
                 {
                     icon: <SpacedArrowForwardIcon />,
