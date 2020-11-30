@@ -2,7 +2,7 @@
 import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
 import { accounts } from '../../src/mock/data';
 import { searchPanelLocale as searchLocale } from '../../src/modules/Index/components/SearchPanel/components/searchPanelLocale';
-import { courseResourcesLocale } from 'modules/Index/components/subComponents/CourseResources.locale';
+import { courseResourcesLocale } from '../../src/modules/Index/components/subComponents/CourseResources.locale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';

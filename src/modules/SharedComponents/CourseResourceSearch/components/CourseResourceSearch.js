@@ -73,19 +73,33 @@ export const CourseResourceSearch = ({
 
     const [searchKeyword, setSearchKeyword] = useState('');
 
+    // control the displayed value (we dont want the subject hanging around in the input field after selection)
+    const [inputValue, setInputValue] = React.useState('');
+
     const handleSubmit = event => {
         event.preventDefault();
     };
 
     const handleTypedKeywordChange = React.useCallback(
         (event, newValue) => {
+            if (newValue === '') {
+                actions.clearPrimoSuggestions();
+            }
             setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
                 // Autocomplete fires onInputChange when the full subject name loads into the input field
-                // Dont call the action for this subsequent call
+                // Dont call the action for this subsequent call,
                 // (a valid course code will never have a space in it)
+                // Also clear what is typed & the old suggestions - its not helpful to have it there
+                setInputValue('');
+                actions.clearPrimoSuggestions();
+
                 return;
             }
+
+            // make sure what is displayed matches what we are using
+            setInputValue(newValue);
+
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
                 actions.loadCourseReadingListsSuggestions(newValue);
                 document.getElementById(`${elementId}-autocomplete`).focus();
@@ -139,6 +153,7 @@ export const CourseResourceSearch = ({
                         onChange={(event, value) => {
                             handleSelectionOfCourseInDropdown(event, value);
                         }}
+                        inputValue={inputValue}
                         onInputChange={handleTypedKeywordChange}
                         noOptionsText={locale.noOptionsText}
                         renderInput={params => {
