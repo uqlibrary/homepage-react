@@ -74,7 +74,7 @@ export const Location = ({ idLabel }) => {
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
-                placement="bottom"
+                placement="right"
                 TransitionProps={{ timeout: 300 }}
             >
                 <Button
