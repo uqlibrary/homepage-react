@@ -82,9 +82,6 @@ export const CourseResourceSearch = ({
 
     const handleTypedKeywordChange = React.useCallback(
         (event, newValue) => {
-            if (newValue === '') {
-                actions.clearPrimoSuggestions();
-            }
             setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
                 // Autocomplete fires onInputChange when the full subject name loads into the input field
@@ -100,7 +97,9 @@ export const CourseResourceSearch = ({
             // make sure what is displayed matches what we are using
             setInputValue(newValue);
 
-            if (newValue.length > 3 && !isRepeatingString(newValue)) {
+            if (newValue.length <= 3) {
+                actions.clearPrimoSuggestions();
+            } else if (!isRepeatingString(newValue)) {
                 actions.loadCourseReadingListsSuggestions(newValue);
                 document.getElementById(`${elementId}-autocomplete`).focus();
             }

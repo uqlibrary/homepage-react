@@ -198,6 +198,7 @@ context('Course Resources', () => {
         courseReadingList,
         searchSuggestions,
         typeChar = 'FREN',
+        numberOfMatchingSubject = 2, // autocomplete finds this many entries for typeChar
         tabId = 0,
     ) {
         const courseCode = courseReadingList.title || 'mock data is missing';
@@ -210,11 +211,38 @@ context('Course Resources', () => {
         cy.get('div[data-testid=full-courseresource-autocomplete] input')
             .should('exist')
             .type(typeChar);
-        cy.get('[data-testid="full-courseresource-autocomplete"]').click();
+
+        cy.get('ul#full-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', numberOfMatchingSubject);
+
+        cy.log('backspace one char');
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').type('{backspace}');
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
+            'have.value',
+            typeChar.substring(0, typeChar.length - 1),
+        );
+        // the backspace means we dont have enough char and the dropdown is emptied
+        cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
+
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').type('{backspace}');
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
+            'have.value',
+            typeChar.substring(0, typeChar.length - 2),
+        );
+
+        // re-enter the characters
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').type(typeChar.slice(-2));
+        // the drop down returns
+        cy.get('ul#full-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', numberOfMatchingSubject);
+
+        // click the first option
         cy.get('li#full-courseresource-autocomplete-option-0')
             .contains(`${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.period}`)
             .click();
-        // cy.get('button[data-testid=full-courseresource-submit]').click();
+        // the tab loads and we see the title of the correct course
         cy.get(`div[data-testid=classpanel-${tabId}] h3`).contains(courseReadingList.course_title);
     }
 
@@ -458,12 +486,14 @@ context('Course Resources', () => {
             learningResourceSearchSuggestions,
             'HIST',
             1,
+            1,
         );
 
         a_user_can_use_the_search_bar_to_load_a_subject(
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
+            8,
             2,
         );
 
