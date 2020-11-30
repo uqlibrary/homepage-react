@@ -126,16 +126,28 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
+                    {!!account && (
+                        <Hidden mdUp>
+                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
+                                <PersonalisedPanel account={account} loans={loans} printBalance={printBalance} />
+                            </Grid>
+                        </Hidden>
+                    )}
                     {/* Spotlights */}
-                    <Grid item xs={12} lg={8} id="spotlights" data-testid="spotlights">
+                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
 
                     {/* Personalisation panel or hours */}
                     {!!account ? (
                         <Hidden smDown>
-                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel account={account} loans={loans} printBalance={printBalance} />
+                            <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
+                                <PersonalisedPanel
+                                    account={account}
+                                    loans={loans}
+                                    printBalance={printBalance}
+                                    isNextToSpotlights
+                                />
                             </Grid>
                         </Hidden>
                     ) : (

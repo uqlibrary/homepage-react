@@ -1,11 +1,12 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-// import Grid from '@material-ui/core/Grid';
+import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import Tooltip from '@material-ui/core/Tooltip';
+import MenuItem from '@material-ui/core/MenuItem';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
-
-// import { useCookies } from 'react-cookie';
+import { Location } from '../../../SharedComponents/Location';
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -14,12 +15,14 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         height: '100%',
         overflow: 'hidden',
-        borderLeft: '1px solid' + theme.palette.secondary.light,
-        paddingLeft: 32,
         [theme.breakpoints.down('sm')]: {
             borderLeft: 'none',
             paddingLeft: 0,
         },
+    },
+    isNextToSpotlights: {
+        borderLeft: '1px solid' + theme.palette.secondary.light,
+        paddingLeft: 32,
     },
     flexHeader: {
         height: 'auto',
@@ -27,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     flexContent: {
         flexGrow: 1,
         overflowY: 'auto',
-        overflowX: 'hidden',
+        overflowX: 'visible',
         paddingTop: 12,
         [theme.breakpoints.down('sm')]: {
             overflowX: 'hidden',
@@ -48,9 +51,13 @@ const useStyles = makeStyles(theme => ({
         height: 12,
         width: 12,
     },
+    menuItem: {
+        marginLeft: -16,
+    },
 }));
 
-const PersonalisedPanel = ({ account, loans, printBalance }) => {
+const PersonalisedPanel = ({ account, loans, printBalance, isNextToSpotlights }) => {
+    console.log(account, loans, printBalance, isNextToSpotlights);
     const classes = useStyles();
     const greeting = () => {
         const time = moment().format('H');
@@ -62,24 +69,53 @@ const PersonalisedPanel = ({ account, loans, printBalance }) => {
             return <span>Good evening</span>;
         }
     };
-    console.log(account, loans, printBalance);
     if (!account) {
-        return <div />;
+        return null;
     }
+    const id = tag => `pp-${tag ? '-' + tag : ''}`;
     return (
-        <div className={classes.flexWrapper}>
+        <div className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}>
             <div className={classes.flexHeader}>
+                {/* Greeting */}
                 <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
                     {greeting()} {account.firstName || ''}
                 </Typography>
             </div>
             <div className={classes.flexContent}>
-                <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
-                    <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
-                    {(account && account.id) || ''}
-                </Typography>
+                <Grid container spacing={0}>
+                    {/* Username */}
+                    <Grid item xs="auto">
+                        <Tooltip
+                            id={id('tooltip')}
+                            title={`Your UQ username is ${(account && account.id) || 'unavailable'}`}
+                            placement="bottom"
+                            TransitionProps={{ timeout: 300 }}
+                        >
+                            <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
+                                <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
+                                {(account && account.id) || ''}
+                            </Typography>
+                        </Tooltip>
+                    </Grid>
+                    {/* Location */}
+                    <Grid item xs="auto">
+                        <Location />
+                    </Grid>
+                </Grid>
+                {/* Content */}
+                <Grid container spacing={0}>
+                    <Grid item xs={12} className={classes.menuItem}>
+                        {/* Papercut */}
+                        <MenuItem onClick={null}>
+                            <Grid container spacing={1}>
+                                <Grid item xs>
+                                    Print Balance
+                                </Grid>
+                            </Grid>
+                        </MenuItem>
+                    </Grid>
+                </Grid>
             </div>
-            <div className={classes.flexFooter}>Test</div>
         </div>
     );
 };
@@ -88,9 +124,12 @@ PersonalisedPanel.propTypes = {
     account: PropTypes.object,
     loans: PropTypes.object,
     printBalance: PropTypes.object,
+    isNextToSpotlights: PropTypes.bool,
 };
 
-PersonalisedPanel.defaultProps = {};
+PersonalisedPanel.defaultProps = {
+    isNextToSpotlights: false,
+};
 
 export default PersonalisedPanel;
 
