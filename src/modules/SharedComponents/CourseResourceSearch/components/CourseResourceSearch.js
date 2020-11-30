@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { PropTypes } from 'prop-types';
 import { isRepeatingString, unescapeString } from 'helpers/general';
-import { courseResourcesLocale as locale } from 'modules/Index/components/CourseResources.locale';
+import { courseResourcesLocale as locale } from 'modules/Index/components/subComponents/CourseResources.locale';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
