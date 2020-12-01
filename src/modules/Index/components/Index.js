@@ -88,6 +88,8 @@ const useStyles = makeStyles(theme => ({
 
 export const Index = ({
     account,
+    author,
+    authorDetails,
     spotlights,
     spotlightsLoading,
     libHours,
@@ -106,6 +108,7 @@ export const Index = ({
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
+    console.log('INDEX: ', account, author, authorDetails);
     // Load homepage data requirements
     useEffect(() => {
         if (spotlightsLoading === null) {
@@ -129,7 +132,13 @@ export const Index = ({
                     {!!account && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel account={account} loans={loans} printBalance={printBalance} />
+                                <PersonalisedPanel
+                                    account={account}
+                                    author={author}
+                                    authorDetails={authorDetails}
+                                    loans={loans}
+                                    printBalance={printBalance}
+                                />
                             </Grid>
                         </Hidden>
                     )}
@@ -226,6 +235,8 @@ export const Index = ({
 
 Index.propTypes = {
     account: PropTypes.object,
+    author: PropTypes.object,
+    authorDetails: PropTypes.object,
     actions: PropTypes.any,
     spotlights: PropTypes.any,
     spotlightsError: PropTypes.any,
