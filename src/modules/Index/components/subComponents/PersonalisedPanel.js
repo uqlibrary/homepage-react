@@ -253,7 +253,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.loans.label} {`(${loans.total_loans_count})`}
+                                {ppLocale.items.loans.label.replace('[loans]', loans.total_loans_count)}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
