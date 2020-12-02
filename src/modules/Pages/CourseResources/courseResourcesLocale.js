@@ -87,12 +87,6 @@ export default {
                     linkLabel: 'Electronic Course Profile',
                     linkOutPattern: 'https://www.uq.edu.au/study/course.html?course_code=[courseCode]',
                 },
-                {
-                    icon: <InfoIcon style={{ marginRight: 6 }} />,
-                    id: 'library-training',
-                    linkLabel: 'Library training',
-                    linkOutPattern: 'https://web.library.uq.edu.au/library-services/training',
-                },
             ],
             legalResearchEssentials: {
                 // displays with list above, but for LAWS subjects only
