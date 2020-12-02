@@ -2,7 +2,7 @@ import * as actions from './actionTypes';
 import {
     PRIMO_SUGGESTIONS_API_GENERIC,
     PRIMO_SUGGESTIONS_API_EXAMS,
-    PRIMO_SUGGESTIONS_API_PAST_COURSE,
+    SUGGESTIONS_API_PAST_COURSE,
 } from '../repositories/routes';
 // import { get } from 'repositories/generic';
 /**
@@ -66,16 +66,16 @@ export function loadExamPaperSuggestions(keyword) {
     };
 }
 
-export function loadCourseReadingListsSuggestions(keyword) {
-    console.log('loadCourseReadingListsSuggestions for ', keyword);
+export function loadHomepageCourseReadingListsSuggestions(keyword) {
+    console.log('loadHomepageCourseReadingListsSuggestions for ', keyword);
     return dispatch => {
-        console.log('loadCourseReadingListsSuggestions will dispatch ');
+        console.log('loadHomepageCourseReadingListsSuggestions will dispatch ');
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        console.log('will fetch ', PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl);
-        return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
+        console.log('will fetch ', SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl);
+        return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl, ' fetched ', data);
+                console.log(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl, ' fetched ', data);
                 const payload = data.map((item, index) => {
                     return {
                         text: item.name,
@@ -89,7 +89,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 });
             })
             .catch(error => {
-                console.log('loadCourseReadingListsSuggestions error ', error);
+                console.log('loadHomepageCourseReadingListsSuggestions error ', error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,

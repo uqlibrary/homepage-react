@@ -98,7 +98,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                     actions.loadExamPaperSuggestions(newValue);
                 } else if (searchType === 8) {
                     console.log('homepage: fetch search_suggestions?type=learning_resource');
-                    actions.loadCourseReadingListsSuggestions(newValue);
+                    actions.loadHomepageCourseReadingListsSuggestions(newValue);
                 }
                 console.log('focussing on the input');
                 document.getElementById('primo-search-autocomplete').focus();

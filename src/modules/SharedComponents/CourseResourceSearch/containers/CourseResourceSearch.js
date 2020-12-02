@@ -6,7 +6,7 @@ import CourseResourceSearch from '../components/CourseResourceSearch';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('primoReducer'),
+        ...state.get('courseResourceSuggestionsReducer'),
     };
 };
 

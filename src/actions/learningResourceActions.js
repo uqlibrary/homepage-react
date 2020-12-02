@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { GUIDES_API, EXAMS_API, READING_LIST_API } from '../repositories/routes';
+import { GUIDES_API, EXAMS_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
 import { getCampusByCode } from '../helpers/general';
 
 export function loadGuides(keyword) {
@@ -161,5 +161,43 @@ export function loadReadingLists(coursecode, campus, semester, account) {
 export function clearReadingLists() {
     return dispatch => {
         dispatch({ type: actions.READING_LIST_CLEAR });
+    };
+}
+
+export function loadCourseReadingListsSuggestions(keyword) {
+    console.log('loadCourseReadingListsSuggestions for ', keyword);
+    return dispatch => {
+        console.log('loadCourseReadingListsSuggestions will dispatch ');
+        dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADING });
+        console.log('will fetch ', SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl);
+        return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
+            .then(response => response.json())
+            .then(data => {
+                console.log(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl, ' fetched ', data);
+                const payload = data.map((item, index) => {
+                    return {
+                        text: item.name,
+                        index,
+                        rest: item,
+                    };
+                });
+                dispatch({
+                    type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADED,
+                    payload: payload,
+                });
+            })
+            .catch(error => {
+                console.log('loadCourseReadingListsSuggestions error ', error);
+                dispatch({
+                    type: actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+export function clearCourseResourceSuggestions() {
+    return dispatch => {
+        dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_CLEAR });
     };
 }

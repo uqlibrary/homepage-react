@@ -5,13 +5,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
-import {
-    clearPrimoSuggestions,
-    loadCourseReadingListsSuggestions,
-    loadSpotlights,
-    loadPrintBalance,
-    loadLoans,
-} from 'actions';
+import { loadSpotlights, loadPrintBalance, loadLoans } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import {
     seeCourseResources,
@@ -98,9 +92,6 @@ export const Index = ({
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
-    suggestions,
-    suggestionsLoading,
-    suggestionsError,
     trainingEvents,
     trainingEventsLoading,
     printBalance,
@@ -185,15 +176,7 @@ export const Index = ({
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <CourseResourcesPanel
-                                account={account}
-                                clearPrimoSuggestions={clearPrimoSuggestions}
-                                history={history}
-                                loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
-                                suggestions={suggestions}
-                                suggestionsLoading={suggestionsLoading}
-                                suggestionsError={suggestionsError}
-                            />
+                            <CourseResourcesPanel account={account} history={history} />
                         </Grid>
                     )}
 
@@ -253,9 +236,6 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
-    suggestions: PropTypes.any,
-    suggestionsLoading: PropTypes.bool,
-    suggestionsError: PropTypes.string,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
     printBalance: PropTypes.object,
