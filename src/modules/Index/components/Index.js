@@ -137,6 +137,7 @@ export const Index = ({
         spotlights,
         dispatch,
         account,
+        author,
         loans,
         loansLoading,
         possibleRecords,
