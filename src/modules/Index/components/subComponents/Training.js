@@ -114,8 +114,14 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
     }
     const handleEventDetail = event => {
         setEventDetail(event);
+        setTimeout(() => {
+            document.getElementById('training-event-detail-close-button').focus();
+        }, 300);
     };
-    const closeEvent = () => {
+    const closeEvent = entityId => {
+        setTimeout(() => {
+            document.getElementById(`training-event-detail-button-${entityId}`).focus();
+        }, 300);
         setEventDetail(null);
     };
     const openEvent = id => {
@@ -128,7 +134,12 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
         <StandardCard accentHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
                 <Fade direction="right" in={!eventDetail} mountOnEnter unmountOnExit>
-                    <div className={classes.flexContent}>
+                    <div
+                        className={classes.flexContent}
+                        role="region"
+                        aria-live="assertive"
+                        aria-label="UQ training Events list"
+                    >
                         {trainingEvents &&
                             trainingEvents.length > 0 &&
                             trainingEvents.map((event, index) => {
@@ -146,6 +157,8 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                     <Grid container spacing={0} className={classes.row} key={index}>
                                         <Grid item xs={12}>
                                             <Button
+                                                id={`training-event-detail-button-${event.entityId}`}
+                                                data-testid={`training-event-detail-button-${index}`}
                                                 onClick={() => handleEventDetail(event)}
                                                 classes={{ root: classes.linkButton }}
                                                 fullWidth
@@ -173,20 +186,27 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                     style={{ transitionDelay: '200ms' }}
                 >
                     {!!eventDetail ? (
-                        <div className={classes.flexContent}>
+                        <div
+                            className={classes.flexContent}
+                            role="region"
+                            aria-label={`UQ Library training event detail for ${eventDetail.name}`}
+                            autoFocus
+                        >
                             <Grid container spacing={1} direction="column">
                                 <Grid item xs={12}>
                                     <Grid container spacing={1} className={classes.detailHeader}>
                                         <Grid item xs={'auto'}>
                                             <IconButton
-                                                onClick={() => closeEvent()}
+                                                onClick={() => closeEvent(eventDetail.entityId)}
                                                 aria-label={trainingLocale.closeEvent}
+                                                id="training-event-detail-close-button"
+                                                data-testid="training-event-detail-close-button"
                                             >
                                                 <CloseIcon fontSize="small" className={classes.detailIcon} />
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs>
-                                            <Typography className={classes.detailTitle} variant={'h6'}>
+                                            <Typography className={classes.detailTitle} variant={'h4'}>
                                                 {eventDetail.name}
                                             </Typography>
                                         </Grid>
@@ -255,6 +275,8 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                     disableElevation
                                     fullWidth
                                     onClick={() => openMoreTraining()}
+                                    id="training-event-detail-more-training-button"
+                                    data-testid="training-event-detail-more-training-button"
                                 >
                                     More training events
                                 </Button>
@@ -267,6 +289,8 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                     disableElevation
                                     fullWidth
                                     onClick={() => openEvent(eventDetail.entityId)}
+                                    id="training-event-detail-training-login-button"
+                                    data-testid="training-event-detail-training-login-button"
                                 >
                                     Log in and book now
                                 </Button>

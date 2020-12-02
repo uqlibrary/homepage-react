@@ -10,10 +10,10 @@ context('ACCESSIBILITY', () => {
                 expect($img[0].naturalWidth).to.be.greaterThan(0);
             });
         // TODO: Does not current pass
-        // cy.checkA11y('div[data-testid="spotlights"]', {
-        //     reportName: 'Spotlights',
-        //     scopeName: 'As loaded',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y('div[data-testid="spotlights"]', {
+            reportName: 'Spotlights',
+            scopeName: 'As loaded',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
     });
 });

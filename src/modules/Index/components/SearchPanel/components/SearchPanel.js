@@ -138,7 +138,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         <Autocomplete
                             value={searchKeyword}
                             freeSolo
-                            autofocus
+                            autoFocus
                             id="primo-search-autocomplete"
                             data-testid="primo-search-autocomplete"
                             disableClearable
