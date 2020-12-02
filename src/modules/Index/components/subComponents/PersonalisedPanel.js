@@ -157,6 +157,7 @@ const PersonalisedPanel = ({
         return null;
     }
     const id = tag => `pp${tag ? '-' + tag : ''}`;
+    const isStaff = account.user_group === 'STAFF';
 
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
@@ -458,7 +459,6 @@ const PersonalisedPanel = ({
         );
     };
 
-    console.log(account.user_group);
     return (
         <div className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}>
             <div className={classes.flexHeader}>
@@ -489,9 +489,7 @@ const PersonalisedPanel = ({
             </div>
             <div className={classes.flexFooter}>
                 <Grid container spacing={0} style={{ marginLeft: 16 }}>
-                    {!!printBalance && printBalance.balance && !!account && account.user_group !== 'STAFF' && (
-                        <PaperCut />
-                    )}
+                    {!!printBalance && printBalance.balance && !isStaff && <PaperCut />}
                     {!!loans && <Loans />}
                     {!!loans && loans.total_fines_count > 0 && <Fines />}
                     {!!possibleRecords && <EspacePossible />}
