@@ -359,7 +359,6 @@ context('Homepage', () => {
         hasPanels([
             // 'feedback',
             'library-hours',
-            'library-services',
             'training',
         ]);
 
