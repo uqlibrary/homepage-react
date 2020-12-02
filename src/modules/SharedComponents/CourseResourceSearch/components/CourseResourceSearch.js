@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { isRepeatingString, unescapeString } from 'helpers/general';
 import { courseResourcesLocale as locale } from 'modules/Index/components/subComponents/CourseResources.locale';
+import { extractSubjectCodeFromName } from 'modules/Pages/CourseResources/courseResourcesHelpers';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -11,7 +12,6 @@ import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
-import { extractSubjectCodeFromName } from 'modules/Pages/CourseResources/courseResourcesHelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -170,9 +170,9 @@ export const CourseResourceSearch = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        'aria-label': `${locale.placeholder}`,
                                         'data-testid': `${elementId}-autocomplete-input`,
                                     }}
+                                    label={locale.placeholder}
                                 />
                             );
                         }}
