@@ -113,14 +113,10 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             zIndex: 99,
                         }}
                     >
-                        <Slider
-                            trayProps={{
-                                'aria-label': 'UQ Spotlights slider',
-                            }}
-                        >
+                        <Slider aria-label="UQ Spotlights slider" trayTag="div">
                             {slides.map((item, index) => {
                                 return (
-                                    <Slide index={item.index} key={index}>
+                                    <Slide tag="div" index={item.index} key={index}>
                                         <a href={item.link} aria-label={item.aria}>
                                             <Image
                                                 src={item.src}
