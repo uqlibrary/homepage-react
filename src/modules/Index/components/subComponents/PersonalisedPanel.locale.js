@@ -8,7 +8,7 @@ export const ppLocale = {
     unavailable: 'unavailable',
     items: {
         papercut: {
-            label: 'Manage your print balance ($[balance])',
+            label: 'Manage your print balance [balance]',
             tooltip: 'Click to manage your print balance',
             url: 'https://lib-print.library.uq.edu.au:9192/user',
             topup:

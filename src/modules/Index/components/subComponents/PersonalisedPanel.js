@@ -193,7 +193,7 @@ const PersonalisedPanel = ({
                             <Grid item xs className={classes.menuItemLabel}>
                                 {ppLocale.items.papercut.label.replace(
                                     '[balance]',
-                                    printBalance.balance !== '0.00' ? printBalance.balance : '',
+                                    printBalance.balance !== '0.00' ? `($${printBalance.balance})` : '',
                                 )}
                             </Grid>
                             <Grid item xs="auto">
@@ -270,7 +270,7 @@ const PersonalisedPanel = ({
                             <Grid item xs className={classes.menuItemLabel}>
                                 {ppLocale.items.loans.label.replace(
                                     '[loans]',
-                                    loans.total_loans_count !== '0.00' ? `(${loans.total_loans_count})` : '',
+                                    loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
                                 )}
                             </Grid>
                             <Grid item xs="auto">
