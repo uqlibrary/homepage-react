@@ -338,8 +338,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                             data-testid={`computers-library-${index}-level-${level.level}-button`}
                                                             aria-label={`${item.library} level ${level.level}. ${
                                                                 level.available
-                                                            } of ${level.available +
-                                                                level.occupied} computers available`}
+                                                            } of ${level.available + level.occupied} computers free`}
                                                             onClick={() =>
                                                                 openMap(
                                                                     item.library,
@@ -361,9 +360,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                         </Button>
                                                     </Grid>
                                                     <Grid xs item />
-                                                    <Grid item xs={'auto'} style={{ fontSize: 14 }}>
-                                                        {level.available} of {level.available + level.occupied}{' '}
-                                                        available
+                                                    <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
+                                                        {level.available} of {level.available + level.occupied} free
                                                     </Grid>
                                                 </Grid>
                                             </Collapse>
