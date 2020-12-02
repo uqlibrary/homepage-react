@@ -458,6 +458,7 @@ const PersonalisedPanel = ({
         );
     };
 
+    console.log(account.user_group);
     return (
         <div className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}>
             <div className={classes.flexHeader}>

@@ -138,6 +138,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         <Autocomplete
                             value={searchKeyword}
                             freeSolo
+                            autofocus
                             id="primo-search-autocomplete"
                             data-testid="primo-search-autocomplete"
                             disableClearable
@@ -161,6 +162,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 return (
                                     <TextField
                                         {...params}
+                                        autoFocus
                                         placeholder={locale.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{
