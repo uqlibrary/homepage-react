@@ -34,7 +34,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
         return (
             <div
                 data-testid="spotlights"
-                style={{ height: '100%', position: 'relative' }}
+                style={{ height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' }}
                 role="region"
                 aria-label="UQ Spotlights carousel"
             >

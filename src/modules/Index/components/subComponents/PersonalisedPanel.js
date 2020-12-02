@@ -9,12 +9,14 @@ import Menu from '@material-ui/core/Menu';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import LinkIcon from '@material-ui/icons/Link';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import Badge from '@material-ui/core/Badge';
 import PrintIcon from '@material-ui/icons/Print';
 import { Location } from '../../../SharedComponents/Location';
-const moment = require('moment');
 import { ppLocale } from './PersonalisedPanel.locale';
+const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     flexWrapper: {
@@ -46,7 +48,6 @@ const useStyles = makeStyles(theme => ({
     },
     flexFooter: {
         height: 'auto',
-        marginBottom: -16,
     },
     greeting: {
         fontSize: '2.25rem',
@@ -64,19 +65,22 @@ const useStyles = makeStyles(theme => ({
         marginRight: -16,
     },
     menuItemRoot: {
-        paddingTop: 2,
+        paddingTop: 1,
         paddingBottom: 1,
     },
     menuItemLabel: {
         fontSize: 14,
         lineHeight: 2,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap !important',
+        paddingRight: 6,
         color: theme.palette.accent.main,
         '&:hover': {
             textDecoration: 'underline',
         },
     },
     itemButton: {
-        border: '1px dashed green',
         padding: 1,
         minWidth: 0,
         backgroundColor: theme.palette.accent.main,
@@ -119,17 +123,22 @@ const useStyles = makeStyles(theme => ({
         minWidth: 12,
         height: 12,
         fontSize: 8,
-        backgroundColor: theme.palette.secondary.dark,
+        backgroundColor: theme.palette.primary.dark,
         left: -14,
         top: 3,
         padding: 1,
     },
 }));
 
-const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance, isNextToSpotlights }) => {
-    console.log('PP Account ', account);
-    console.log('PP Author ', author);
-    console.log('PP Author Details ', authorDetails);
+const PersonalisedPanel = ({
+    account,
+    author,
+    loans,
+    printBalance,
+    isNextToSpotlights,
+    possibleRecords,
+    incompleteNTRORecords,
+}) => {
     const classes = useStyles();
     const greeting = () => {
         const time = moment().format('H');
@@ -145,6 +154,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
         return null;
     }
     const id = tag => `pp${tag ? '-' + tag : ''}`;
+
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
         const id = tag => `pp-papercut${tag ? '-' + tag : ''}`;
@@ -168,6 +178,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
+                    data-testid={id('tooltip')}
                     title={ppLocale.items.papercut.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -241,6 +252,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
+                    data-testid={id('tooltip')}
                     title={ppLocale.items.loans.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -281,6 +293,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
+                    data-testid={id('tooltip')}
                     title={ppLocale.items.fines.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -312,32 +325,121 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             </Grid>
         );
     };
-    const RoomBookings = () => {
-        const id = tag => `pp-fines${tag ? '-' + tag : ''}`;
-        const navigateToRoomBooking = () => {
-            window.location.href = ppLocale.items.roomBookings.url;
+    const EspacePossible = () => {
+        const id = tag => `pp-espace-possible${tag ? '-' + tag : ''}`;
+        const navigateToeSpaceDashboard = () => {
+            window.location.href = ppLocale.items.eSpacePossible.url;
         };
         return (
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
-                    title={ppLocale.items.roomBookings.tooltip}
+                    data-testid={id('tooltip')}
+                    title={ppLocale.items.eSpacePossible.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
                     <MenuItem
                         classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToRoomBooking()}
+                        onClick={() => navigateToeSpaceDashboard()}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.roomBookings.label}
+                                {ppLocale.items.eSpacePossible.label.replace('[totalRecords]', possibleRecords)}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
-                                    <MeetingRoomIcon className={classes.icon} />
+                                    <Badge
+                                        badgeContent={possibleRecords}
+                                        color="primary"
+                                        classes={{ badge: classes.ppBadgeInfo }}
+                                    >
+                                        <AssignmentIndIcon className={classes.icon} />
+                                    </Badge>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </MenuItem>
+                </Tooltip>
+            </Grid>
+        );
+    };
+    const EspaceOrcid = () => {
+        const id = tag => `pp-espace-orcid${tag ? '-' + tag : ''}`;
+        const navigateToeSpaceDashboard = () => {
+            window.location.href = ppLocale.items.eSpaceOrcid.url;
+        };
+        return (
+            <Grid item xs={12} className={classes.menuItem}>
+                <Tooltip
+                    id={id('tooltip')}
+                    data-testid={id('tooltip')}
+                    title={ppLocale.items.eSpaceOrcid.tooltip}
+                    placement="left"
+                    TransitionProps={{ timeout: 300 }}
+                >
+                    <MenuItem
+                        classes={{ root: classes.menuItemRoot }}
+                        onClick={() => navigateToeSpaceDashboard()}
+                        id={id('menu-button')}
+                        data-testid={id('menu-button')}
+                    >
+                        <Grid container spacing={0}>
+                            <Grid item xs className={classes.menuItemLabel}>
+                                {ppLocale.items.eSpaceOrcid.label}
+                            </Grid>
+                            <Grid item xs="auto">
+                                <div className={classes.itemButton}>
+                                    <Badge
+                                        badgeContent={'!'}
+                                        color="primary"
+                                        classes={{ badge: classes.ppBadgeWarning }}
+                                    >
+                                        <LinkIcon className={classes.icon} />
+                                    </Badge>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </MenuItem>
+                </Tooltip>
+            </Grid>
+        );
+    };
+    const EspaceNTROs = () => {
+        const id = tag => `pp-espace-ntro${tag ? '-' + tag : ''}`;
+        const navigateToeSpaceDashboard = () => {
+            window.location.href = ppLocale.items.eSpaceNTRO.url;
+        };
+        return (
+            <Grid item xs={12} className={classes.menuItem}>
+                <Tooltip
+                    id={id('tooltip')}
+                    data-testid={id('tooltip')}
+                    title={ppLocale.items.eSpaceNTRO.tooltip}
+                    placement="left"
+                    TransitionProps={{ timeout: 300 }}
+                >
+                    <MenuItem
+                        classes={{ root: classes.menuItemRoot }}
+                        onClick={() => navigateToeSpaceDashboard()}
+                        id={id('menu-button')}
+                        data-testid={id('menu-button')}
+                    >
+                        <Grid container spacing={0}>
+                            <Grid item xs className={classes.menuItemLabel}>
+                                {ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
+                            </Grid>
+                            <Grid item xs="auto">
+                                <div className={classes.itemButton}>
+                                    <Badge
+                                        badgeContent={incompleteNTRORecords.total}
+                                        color="primary"
+                                        classes={{ badge: classes.ppBadgeWarning }}
+                                    >
+                                        <PostAddIcon className={classes.icon} />
+                                    </Badge>
                                 </div>
                             </Grid>
                         </Grid>
@@ -360,6 +462,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                         <Grid item xs="auto">
                             <Tooltip
                                 id={id('tooltip')}
+                                data-testid={id('tooltip')}
                                 title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
                                 placement="left"
                                 TransitionProps={{ timeout: 300 }}
@@ -379,7 +482,9 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                     {!!printBalance && printBalance.balance && <PaperCut />}
                     {!!loans && loans.total_loans_count > 0 && <Loans />}
                     {!!loans && loans.total_fines_count > 0 && <Fines />}
-                    <RoomBookings />
+                    {!!possibleRecords && <EspacePossible />}
+                    {!!author && !author.aut_orcid_id && <EspaceOrcid />}
+                    {!!author && !!incompleteNTRORecords && !!incompleteNTRORecords.total && <EspaceNTROs />}
                 </Grid>
             </div>
         </div>
@@ -389,9 +494,10 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
 PersonalisedPanel.propTypes = {
     account: PropTypes.object,
     author: PropTypes.object,
-    authorDetails: PropTypes.object,
     loans: PropTypes.object,
     printBalance: PropTypes.object,
+    incompleteNTRORecords: PropTypes.object,
+    possibleRecords: PropTypes.number,
     isNextToSpotlights: PropTypes.bool,
 };
 

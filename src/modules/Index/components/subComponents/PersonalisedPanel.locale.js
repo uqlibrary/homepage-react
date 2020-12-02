@@ -24,10 +24,20 @@ export const ppLocale = {
             tooltip: 'Click to manage your library fines',
             url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US',
         },
-        roomBookings: {
-            label: 'Manage your room bookings',
-            tooltip: 'Click to manage your room bookings',
-            url: 'https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb',
+        eSpacePossible: {
+            label: 'Possible records in eSpace to claim ([totalRecords])',
+            tooltip: 'Click to visit your eSpace dashboard',
+            url: 'https://espace.library.uq.edu.au/dashboard',
+        },
+        eSpaceOrcid: {
+            label: 'ORCID account not linked to eSpace',
+            tooltip: 'Click to visit eSpace to link/create your ORCID account',
+            url: 'https://espace.library.uq.edu.au/author-identifiers/orcid/link',
+        },
+        eSpaceNTRO: {
+            label: 'Incomplete NTRO records in eSpace ([total])',
+            tooltip: 'Click to visit eSpace to complete these NTRO records',
+            url: 'https://espace.library.uq.edu.au/records/incomplete',
         },
     },
 };

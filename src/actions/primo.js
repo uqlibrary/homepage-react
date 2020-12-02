@@ -67,15 +67,11 @@ export function loadExamPaperSuggestions(keyword) {
 }
 
 export function loadCourseReadingListsSuggestions(keyword) {
-    console.log('loadCourseReadingListsSuggestions for ', keyword);
     return dispatch => {
-        console.log('loadCourseReadingListsSuggestions will dispatch ');
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        console.log('will fetch ', PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl);
         return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl, ' fetched ', data);
                 const payload = data.map((item, index) => {
                     return {
                         text: item.name,
@@ -89,7 +85,6 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 });
             })
             .catch(error => {
-                console.log('loadCourseReadingListsSuggestions error ', error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,

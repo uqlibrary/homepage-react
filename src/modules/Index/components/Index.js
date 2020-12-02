@@ -11,6 +11,8 @@ import {
     loadSpotlights,
     loadPrintBalance,
     loadLoans,
+    searcheSpacePossiblePublications,
+    searcheSpaceIncompleteNTROPublications,
 } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import {
@@ -89,7 +91,6 @@ const useStyles = makeStyles(theme => ({
 export const Index = ({
     account,
     author,
-    authorDetails,
     spotlights,
     spotlightsLoading,
     libHours,
@@ -105,10 +106,13 @@ export const Index = ({
     printBalanceLoading,
     loans,
     loansLoading,
+    possibleRecords,
+    possibleRecordsLoading,
+    incompleteNTRO,
+    incompleteNTROLoading,
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    console.log('INDEX: ', account, author, authorDetails);
     // Load homepage data requirements
     useEffect(() => {
         if (spotlightsLoading === null) {
@@ -120,7 +124,26 @@ export const Index = ({
         if (!!account && loansLoading === null) {
             dispatch(loadLoans());
         }
-    }, [printBalanceLoading, printBalance, spotlightsLoading, spotlights, dispatch, account, loans, loansLoading]);
+        if (!possibleRecords && possibleRecordsLoading === null) {
+            dispatch(searcheSpacePossiblePublications());
+        }
+        if (!incompleteNTRO && incompleteNTROLoading === null) {
+            dispatch(searcheSpaceIncompleteNTROPublications());
+        }
+    }, [
+        printBalanceLoading,
+        printBalance,
+        spotlightsLoading,
+        spotlights,
+        dispatch,
+        account,
+        loans,
+        loansLoading,
+        possibleRecords,
+        possibleRecordsLoading,
+        incompleteNTRO,
+        incompleteNTROLoading,
+    ]);
     return (
         <StandardPage>
             <div className="layout-card">
@@ -135,9 +158,10 @@ export const Index = ({
                                 <PersonalisedPanel
                                     account={account}
                                     author={author}
-                                    authorDetails={authorDetails}
                                     loans={loans}
                                     printBalance={printBalance}
+                                    possibleRecords={possibleRecords && possibleRecords.total}
+                                    incompleteNTRORecords={incompleteNTRO}
                                 />
                             </Grid>
                         </Hidden>
@@ -153,8 +177,11 @@ export const Index = ({
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
                                     account={account}
+                                    author={author}
                                     loans={loans}
                                     printBalance={printBalance}
+                                    possibleRecords={possibleRecords && possibleRecords.total}
+                                    incompleteNTRORecords={incompleteNTRO}
                                     isNextToSpotlights
                                 />
                             </Grid>
@@ -236,7 +263,6 @@ export const Index = ({
 Index.propTypes = {
     account: PropTypes.object,
     author: PropTypes.object,
-    authorDetails: PropTypes.object,
     actions: PropTypes.any,
     spotlights: PropTypes.any,
     spotlightsError: PropTypes.any,
@@ -254,6 +280,10 @@ Index.propTypes = {
     printBalanceLoading: PropTypes.bool,
     loans: PropTypes.object,
     loansLoading: PropTypes.bool,
+    possibleRecords: PropTypes.object,
+    possibleRecordsLoading: PropTypes.bool,
+    incompleteNTRO: PropTypes.object,
+    incompleteNTROLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

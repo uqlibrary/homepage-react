@@ -1,6 +1,6 @@
 import { AppClass } from './App';
 import App from './App';
-import { accounts, authorDetails, currentAuthor } from 'mock/data';
+import { accounts, currentAuthor } from 'mock/data';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 import mui1theme from 'config';
 
@@ -351,7 +351,6 @@ describe('Application component', () => {
                 ...author,
                 aut_orcid_id: null,
             },
-            authorDetails: authorDetails.uqresearcher,
         });
         wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
         expect(toJson(wrapper)).toMatchSnapshot();
