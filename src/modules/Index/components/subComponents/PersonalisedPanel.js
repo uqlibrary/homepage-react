@@ -191,7 +191,10 @@ const PersonalisedPanel = ({
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.papercut.label.replace('[balance]', printBalance.balance || '0.00')}
+                                {ppLocale.items.papercut.label.replace(
+                                    '[balance]',
+                                    printBalance.balance !== '0.00' ? printBalance.balance : '',
+                                )}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
@@ -265,7 +268,10 @@ const PersonalisedPanel = ({
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.loans.label.replace('[loans]', `(${loans.total_loans_count})`)}
+                                {ppLocale.items.loans.label.replace(
+                                    '[loans]',
+                                    loans.total_loans_count !== '0.00' ? `(${loans.total_loans_count})` : '',
+                                )}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
