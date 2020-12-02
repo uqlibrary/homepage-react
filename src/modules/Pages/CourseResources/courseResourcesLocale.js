@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 
 import DocumentIcon from '@material-ui/icons/Description';
-import InfoIcon from '@material-ui/icons/ErrorOutline';
 import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 import { SpacedArrowForwardIcon } from './components/SpacedArrowForwardIcon';
 
