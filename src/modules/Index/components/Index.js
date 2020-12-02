@@ -124,10 +124,10 @@ export const Index = ({
         if (!!account && loansLoading === null) {
             dispatch(loadLoans());
         }
-        if (!possibleRecords && possibleRecordsLoading === null) {
+        if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
             dispatch(searcheSpacePossiblePublications());
         }
-        if (!incompleteNTRO && incompleteNTROLoading === null) {
+        if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [
