@@ -178,7 +178,10 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                 <Grid item xs={12}>
                                     <Grid container spacing={1} className={classes.detailHeader}>
                                         <Grid item xs={'auto'}>
-                                            <IconButton onClick={() => closeEvent()}>
+                                            <IconButton
+                                                onClick={() => closeEvent()}
+                                                aria-label={trainingLocale.closeEvent}
+                                            >
                                                 <CloseIcon fontSize="small" className={classes.detailIcon} />
                                             </IconButton>
                                         </Grid>

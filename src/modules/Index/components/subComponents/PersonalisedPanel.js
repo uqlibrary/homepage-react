@@ -488,7 +488,9 @@ const PersonalisedPanel = ({
             </div>
             <div className={classes.flexFooter}>
                 <Grid container spacing={0} style={{ marginLeft: 16 }}>
-                    {!!printBalance && printBalance.balance && <PaperCut />}
+                    {!!printBalance && printBalance.balance && !!account && account.user_group !== 'STAFF' && (
+                        <PaperCut />
+                    )}
                     {!!loans && <Loans />}
                     {!!loans && loans.total_fines_count > 0 && <Fines />}
                     {!!possibleRecords && <EspacePossible />}
