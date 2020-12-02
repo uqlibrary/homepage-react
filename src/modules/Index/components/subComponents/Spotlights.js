@@ -8,6 +8,7 @@ import {
     ButtonNext,
     ButtonPlay,
     DotGroup,
+    Dot,
     Image,
 } from 'pure-react-carousel';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -31,6 +32,23 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
               })
             : [];
     if (slides.length > 0 && !spotlightsLoading) {
+        const renderDots = dotprops => {
+            const totalSlides = dotprops.totalSlides;
+            const visibleSlides = dotprops.visibleSlides;
+            const slideGroups = Math.ceil(totalSlides / visibleSlides);
+            if (slideGroups <= 1) {
+                return null;
+            } else {
+                const dots = [];
+                for (let i = 0; i < totalSlides; i++) {
+                    dots.push(i);
+                }
+                return dots.map((_, index) => (
+                    <Dot slide={index} key={index} aria-label={`UQ Spotlights Slide ${index + 1} of ${totalSlides}`} />
+                ));
+            }
+        };
+
         return (
             <div
                 data-testid="spotlights"
@@ -59,7 +77,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 zIndex: 101,
                             }}
                         >
-                            <ButtonBack>
+                            <ButtonBack aria-label="Previous slide">
                                 <ChevronLeftIcon />
                             </ButtonBack>
                         </div>
@@ -75,7 +93,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 zIndex: 101,
                             }}
                         >
-                            <ButtonNext>
+                            <ButtonNext aria-label="Next slide">
                                 <ChevronRightIcon />
                             </ButtonNext>
                         </div>
@@ -90,7 +108,11 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 zIndex: 101,
                             }}
                         >
-                            <ButtonPlay childrenPlaying={<PauseIcon />} childrenPaused={<PlayArrowIcon />} />
+                            <ButtonPlay
+                                childrenPlaying={<PauseIcon />}
+                                childrenPaused={<PlayArrowIcon />}
+                                aria-label="UQ Spotlights Play/Pause slides"
+                            />
                         </div>
                     )}
                     {totalSlides > 1 && (
@@ -105,7 +127,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 textAlign: 'center',
                             }}
                         >
-                            <DotGroup />
+                            <DotGroup showAsSelectedForCurrentSlideOnly renderDots={renderDots} />
                         </div>
                     )}
                     <div
@@ -113,21 +135,14 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             zIndex: 99,
                         }}
                     >
-                        <Slider aria-label="UQ Spotlights slider" trayTag="div">
-                            {slides.map((item, index) => {
-                                return (
-                                    <Slide tag="div" index={item.index} key={index}>
-                                        <a href={item.link} aria-label={item.aria}>
-                                            <Image
-                                                src={item.src}
-                                                alt={item.alt}
-                                                style={{ width: '100%' }}
-                                                aria-label={item.aria}
-                                            />
-                                        </a>
-                                    </Slide>
-                                );
-                            })}
+                        <Slider aria-label="UQ Spotlights" trayTag="div">
+                            {slides.map((item, index) => (
+                                <Slide tag="div" index={index} key={index}>
+                                    <a href={item.link} aria-label={item.aria}>
+                                        <Image src={item.src} alt={item.alt} style={{ width: '100%' }} />
+                                    </a>
+                                </Slide>
+                            ))}
                         </Slider>
                     </div>
                 </CarouselProvider>
