@@ -346,6 +346,7 @@ context('Homepage', () => {
         hasPanels([
             'library-hours',
             'training',
+            'promo',
         ]);
 
         // no mylibrary button

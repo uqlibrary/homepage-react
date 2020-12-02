@@ -21,6 +21,7 @@ import {
     seeLibraryHours,
     seeLibraryServices,
     // seeLoans,
+    seeLoggedOut,
     // seePrintBalance,
     seeTraining,
     getUserServices,
@@ -32,6 +33,7 @@ import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
 import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
+import PromoPanel from './subComponents/PromoPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -225,6 +227,12 @@ export const Index = ({
                                     })}
                                 </Grid>
                             </StandardCard>
+                        </Grid>
+                    )}
+
+                    {seeLoggedOut(account) && (
+                        <Grid item xs={12} md={4}>
+                            <PromoPanel />
                         </Grid>
                     )}
                 </Grid>

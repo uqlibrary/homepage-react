@@ -11,6 +11,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     availableOptions.set('library-hours', 'Library hours');
     availableOptions.set('library-services', 'Library services');
     availableOptions.set('training', 'Training');
+    availableOptions.set('promo', 'n/a');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -28,8 +29,13 @@ export const hasPanels = optionsTheUserShouldSee => {
         const panelname = `${key}-panel`;
         const elementId = `div[data-testid="${panelname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
-            cy.log(`checking panel ${panelname} contains ${value}`);
-            cy.get(elementId).contains(value);
+            if (key === 'promo') {
+                // the promo panel is admin editable, so we cant just check the header. Just check it exists
+                cy.get(elementId).length > 0;
+            } else {
+                cy.log(`checking panel ${panelname} contains ${value}`);
+                cy.get(elementId).contains(value);
+            }
         } else {
             cy.log(`checking panel ${panelname} is missing`);
             cy.get(elementId).should('not.exist');

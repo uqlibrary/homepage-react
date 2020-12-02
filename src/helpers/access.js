@@ -167,6 +167,8 @@ export const seeLibraryServices = account => !!account;
 
 export const seeFeedback = account => !!account || true;
 
+export const seeLoggedOut = account => !account;
+
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
     [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
