@@ -25,17 +25,17 @@ export const ppLocale = {
             url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US',
         },
         eSpacePossible: {
-            label: 'Possible records in eSpace to claim ([totalRecords])',
+            label: 'Claim [totalRecords] possible eSpace records',
             tooltip: 'Click to visit your eSpace dashboard',
             url: 'https://espace.library.uq.edu.au/dashboard',
         },
         eSpaceOrcid: {
-            label: 'ORCID account not linked to eSpace',
+            label: 'Link ORCiD account to eSpace',
             tooltip: 'Click to visit eSpace to link/create your ORCID account',
             url: 'https://espace.library.uq.edu.au/author-identifiers/orcid/link',
         },
         eSpaceNTRO: {
-            label: 'Incomplete NTRO records in eSpace ([total])',
+            label: 'Complete [total] NTRO records in eSpace',
             tooltip: 'Click to visit eSpace to complete these NTRO records',
             url: 'https://espace.library.uq.edu.au/records/incomplete',
         },
