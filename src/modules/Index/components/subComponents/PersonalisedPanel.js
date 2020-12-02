@@ -465,11 +465,9 @@ const PersonalisedPanel = ({
                 <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
                     {greeting()} {account.firstName || ''}
                 </Typography>
-            </div>
-            <div className={classes.flexContent}>
-                <Grid container spacing={0} style={{ marginLeft: 16 }}>
+                <Grid container spacing={1} style={{ marginLeft: 16 }}>
                     {account && account.id && (
-                        <Grid item xs="auto">
+                        <Grid item xs={12} lg="auto">
                             <Tooltip
                                 id={id('tooltip')}
                                 data-testid={id('tooltip')}
@@ -484,9 +482,12 @@ const PersonalisedPanel = ({
                             </Tooltip>
                         </Grid>
                     )}
-                    <Location />
+                    <Grid item xs={12} lg>
+                        <Location />
+                    </Grid>
                 </Grid>
             </div>
+            <div className={classes.flexContent} />
             <div className={classes.flexFooter}>
                 <Grid container spacing={0} style={{ marginLeft: 16 }}>
                     {!!printBalance && printBalance.balance && !isStaff && <PaperCut />}

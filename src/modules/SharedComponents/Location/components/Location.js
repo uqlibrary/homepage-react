@@ -70,7 +70,7 @@ export const Location = ({ idLabel }) => {
     }
     const id = tag => `location-${idLabel}${tag ? '-' + tag : ''}`;
     return (
-        <div id={id()} data-testid={id()}>
+        <div id={id()} data-testid={id()} style={{ marginLeft: -16 }}>
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}

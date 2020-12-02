@@ -135,7 +135,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             zIndex: 99,
                         }}
                     >
-                        <Slider aria-label="UQ Spotlights" trayTag="div">
+                        <Slider trayTag="div" aria-label="UQ Spotlights" aria-live="off">
                             {slides.map((item, index) => (
                                 <Slide tag="div" index={index} key={index}>
                                     <a href={item.link} aria-label={item.aria}>
