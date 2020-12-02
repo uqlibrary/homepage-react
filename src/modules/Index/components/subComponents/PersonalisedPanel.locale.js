@@ -15,7 +15,7 @@ export const ppLocale = {
                 'https://payments.uq.edu.au/OneStopWeb/aspx/TranAdd.aspx?TRAN-TYPE=W361&username=[id]&unitamountinctax=[value]&email=[email]',
         },
         loans: {
-            label: 'Manage your library loans ([loans])',
+            label: 'Manage your library loans [loans]',
             tooltip: 'Click to manage your library loans',
             url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US',
         },

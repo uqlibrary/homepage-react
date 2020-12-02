@@ -265,7 +265,7 @@ const PersonalisedPanel = ({
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.loans.label.replace('[loans]', loans.total_loans_count)}
+                                {ppLocale.items.loans.label.replace('[loans]', `(${loans.total_loans_count})`)}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
@@ -480,7 +480,7 @@ const PersonalisedPanel = ({
             <div className={classes.flexFooter}>
                 <Grid container spacing={0} style={{ marginLeft: 16 }}>
                     {!!printBalance && printBalance.balance && <PaperCut />}
-                    {!!loans && loans.total_loans_count > 0 && <Loans />}
+                    {!!loans && <Loans />}
                     {!!loans && loans.total_fines_count > 0 && <Fines />}
                     {!!possibleRecords && <EspacePossible />}
                     {!!author && !author.aut_orcid_id && <EspaceOrcid />}

@@ -3,6 +3,8 @@ context('Homepage Search Panel', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.get('[data-testid="primo-search"]').contains('Search');
+        cy.wait(1000);
+        cy.get('div[data-testid="primo-search-select"]').contains('Library');
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-0"]')
             .parent()
@@ -50,7 +52,7 @@ context('Homepage Search Panel', () => {
         // main library search
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-0"]').click();
-        cy.get('button[data-testid="homepage-search-voice-clear"]').click();
+        cy.get('button[data-testid="primo-search-autocomplete-voice-clear"]').click();
         cy.get('input[data-testid="primo-search-autocomplete-input"]').type('beard', 100);
         cy.get('ul[data-testid="primo-search-autocomplete-listbox"]')
             .find('li')
@@ -60,7 +62,7 @@ context('Homepage Search Panel', () => {
         // exams
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-7"]').click();
-        cy.get('button[data-testid="homepage-search-voice-clear"]').click();
+        cy.get('button[data-testid="primo-search-autocomplete-voice-clear"]').click();
         cy.get('input[data-testid="primo-search-autocomplete-input"]').type('acct', 100);
         cy.get('ul[data-testid="primo-search-autocomplete-listbox"]')
             .find('li')

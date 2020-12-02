@@ -115,11 +115,13 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Select
                                 labelId="primo-search-select-label"
                                 id="primo-search-select"
-                                data-testid="primo-search-select"
                                 error={!!suggestionsError}
                                 value={searchType}
                                 className={classes.selectInput}
                                 onChange={handleSearchTypeChange}
+                                SelectDisplayProps={{
+                                    'data-testid': 'primo-search-select',
+                                }}
                                 MenuProps={{
                                     'data-testid': 'primo-search-select-list',
                                 }}
