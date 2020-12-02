@@ -13,7 +13,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -34,14 +33,13 @@ context('Homepage', () => {
         ]);
 
         // this type of user will see these lines in the Personalisation Panel
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels([
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -62,7 +60,7 @@ context('Homepage', () => {
         hasPersonalisedPanelOptions([
             'fines',
             'loans',
-            // 'print-balance', // TBA
+            // 'papercut', // TBA
         ]);
     });
 
@@ -72,7 +70,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -91,7 +88,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders a researcher home page correctly', () => {
@@ -99,7 +96,6 @@ context('Homepage', () => {
 
         hasPanels([
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -117,7 +113,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a library staff administrator home page correctly', () => {
@@ -126,7 +122,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -147,7 +142,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
@@ -156,7 +151,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -176,7 +170,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a non-library staff member home page correctly', () => {
@@ -184,7 +178,6 @@ context('Homepage', () => {
 
         hasPanels([
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -202,7 +195,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
@@ -210,7 +203,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -233,7 +225,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -256,7 +247,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -273,7 +263,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders an Associate EM member home page correctly', () => {
@@ -281,7 +271,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -305,7 +294,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -329,7 +317,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -348,7 +335,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders a logged out user', () => {
@@ -357,7 +344,6 @@ context('Homepage', () => {
         cy.get('div#content-container').contains('Search');
 
         hasPanels([
-            // 'feedback',
             'library-hours',
             'training',
         ]);

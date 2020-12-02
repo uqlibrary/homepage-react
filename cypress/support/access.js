@@ -80,9 +80,9 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
     return;
     const availableOptions = new Map();
-    availableOptions.set('print-balance', 'Manage your print balance');
+    availableOptions.set('papercut', 'Manage your print balance');
     availableOptions.set('loans', 'Manage your library loans');
-    availableOptions.set('fines', 'Pay overdue fines');
+    availableOptions.set('fines', 'Manage your library fines');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -90,15 +90,14 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
             .be.true;
     });
 
-    // eslint-disable-next-line guard-for-in
     for (const [key, value] of availableOptions) {
         expect(typeof key).to.equal('string');
         expect(key.length).to.not.equals(0);
         expect(typeof value).to.equal('string');
         expect(value.length).to.not.equals(0);
 
-        const entryname = `${key}-personalisation`;
-        const elementId = `div[data-testid="${entryname}"]`;
+        const entryname = `pp-${key}-menu-button`;
+        const elementId = `li[data-testid="${entryname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
             cy.get(elementId).contains(value);
