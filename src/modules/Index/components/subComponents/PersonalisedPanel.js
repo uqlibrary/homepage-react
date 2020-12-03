@@ -478,7 +478,7 @@ const PersonalisedPanel = ({
                 <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
                     {greeting()} {account.firstName || ''}
                 </Typography>
-                <Grid container spacing={1} style={{ marginLeft: 16 }}>
+                <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
                     {account && account.id && (
                         <Grid item xs={12} lg="auto">
                             <Tooltip
