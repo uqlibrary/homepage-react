@@ -121,7 +121,7 @@ export const CourseResourceSearch = ({
     };
 
     const handleSelectionOfCourseInDropdown = (event, option) => {
-        if (getMatchingOption(option)) {
+        if (!!option && !!option.text) {
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Course Resources page
                 navigateToCourseResourcePage(option);
