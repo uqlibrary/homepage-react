@@ -460,7 +460,11 @@ const PersonalisedPanel = ({
     };
 
     return (
-        <div className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}>
+        <div
+            className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}
+            id="personalised-panel"
+            data-testid="personalised-panel"
+        >
             <div className={classes.flexHeader}>
                 <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
                     {greeting()} {account.firstName || ''}
