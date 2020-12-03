@@ -53,6 +53,9 @@ const useStyles = makeStyles(
                 width: '100%',
             },
         },
+        fullForm: {
+            marginBottom: 50,
+        },
     }),
     { withTheme: true },
 );
@@ -135,7 +138,7 @@ export const CourseResourceSearch = ({
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className={displayType === 'full' ? classes.fullForm : ''}>
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
@@ -170,7 +173,8 @@ export const CourseResourceSearch = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        'data-testid': `${elementId}-autocomplete-input`,
+                                        'data-testid': `${elementId}-autocomplete-input-wrapper`,
+                                        // id: `${elementId}-autocomplete-input-wrapper`,
                                     }}
                                     label={locale.placeholder}
                                 />
@@ -178,6 +182,8 @@ export const CourseResourceSearch = ({
                         }}
                     />
                 </Grid>
+            </Grid>
+            <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-results`}>
                 {!!CRsuggestionsLoading && (
                     <Grid
                         item

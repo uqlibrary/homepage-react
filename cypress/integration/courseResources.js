@@ -1,7 +1,6 @@
 /* eslint camelcase: 0 */
 import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
 import { accounts } from '../../src/mock/data';
-import { searchPanelLocale as searchLocale } from '../../src/modules/Index/components/SearchPanel/components/searchPanelLocale';
 import { courseResourcesLocale } from '../../src/modules/Index/components/subComponents/CourseResources.locale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
@@ -251,15 +250,10 @@ context('Course Resources', () => {
     }
 
     function the_user_sees_the_search_form() {
-        const courseResourceSearchParams = searchLocale.typeSelect.items
-            .filter(obj => {
-                return obj.name === 'Course reading lists';
-            })
-            .pop();
         cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
             'have.attr',
             'placeholder',
-            courseResourceSearchParams.placeholder,
+            courseResourcesLocale.placeholder,
         );
     }
 
