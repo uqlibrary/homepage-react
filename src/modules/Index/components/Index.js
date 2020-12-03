@@ -29,7 +29,7 @@ import Hours from './subComponents/Hours';
 import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
-import CourseResourcesPanel from './CourseResourcesPanel';
+import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -113,18 +113,23 @@ export const Index = ({
     useEffect(() => {
         console.log('rendering');
         if (!spotlights && spotlightsLoading === null) {
+            console.log('spotlights');
             dispatch(loadSpotlights());
         }
         if (!!account && !printBalance && printBalanceLoading === null) {
+            console.log('print balance');
             dispatch(loadPrintBalance());
         }
         if (!!account && !loans && loansLoading === null) {
+            console.log('loans');
             dispatch(loadLoans());
         }
         if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
+            console.log('possible pubs');
             dispatch(searcheSpacePossiblePublications());
         }
         if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+            console.log('incomplete ntro');
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [

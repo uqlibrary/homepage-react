@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from '../../../SharedComponents/Toolbox/StandardCard';
@@ -123,6 +123,15 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
     const [showIcon, setShowIcon] = React.useState(false);
+    useEffect(() => {
+        if (location !== cookies.location) {
+            setShowIcon(true);
+            setLocation(cookies.location);
+            setTimeout(() => {
+                setShowIcon(false);
+            }, 5000);
+        }
+    }, [location, cookies.location]);
     if (!!libHoursLoading) {
         return null;
     }
@@ -158,13 +167,6 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         keys: ['campus'],
         threshold: matchSorter.rankings.NO_MATCH,
     });
-    if (location !== cookies.location) {
-        setShowIcon(true);
-        setLocation(cookies.location);
-        setTimeout(() => {
-            setShowIcon(false);
-        }, 5000);
-    }
     const navigateToUrl = url => {
         window.location.href = url;
     };
