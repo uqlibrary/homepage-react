@@ -18,12 +18,8 @@ import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchP
 import {
     seeCourseResources,
     seeComputerAvailability,
-    // seeFeedback,
-    // seeFines,
     seeLibraryHours,
     seeLibraryServices,
-    // seeLoans,
-    // seePrintBalance,
     seeTraining,
     getUserServices,
 } from 'helpers/access';
@@ -115,13 +111,14 @@ export const Index = ({
     const dispatch = useDispatch();
     // Load homepage data requirements
     useEffect(() => {
-        if (spotlightsLoading === null) {
+        console.log('rendering');
+        if (!spotlights && spotlightsLoading === null) {
             dispatch(loadSpotlights());
         }
-        if (!!account && printBalanceLoading === null) {
+        if (!!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());
         }
-        if (!!account && loansLoading === null) {
+        if (!!account && !loans && loansLoading === null) {
             dispatch(loadLoans());
         }
         if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {

@@ -143,6 +143,7 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadSpotlights();
         this.props.actions.loadAlerts();
         this.props.actions.loadChatStatus();
         this.props.actions.loadLibHours();
