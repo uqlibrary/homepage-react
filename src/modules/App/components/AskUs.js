@@ -42,7 +42,6 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
-        console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {

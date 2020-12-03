@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
@@ -65,8 +66,13 @@ const useStyles = makeStyles(theme => ({
         marginRight: -16,
     },
     menuItemRoot: {
-        paddingTop: 1,
-        paddingBottom: 1,
+        paddingTop: 0,
+        paddingBottom: 0,
+        textTransform: 'none',
+        textAlign: 'left',
+        paddingLeft: 16,
+        paddingRight: 0,
+        marginTop: 2,
     },
     menuItemLabel: {
         fontSize: 14,
@@ -187,7 +193,8 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={handleClick}
                         id={id('menu-button')}
@@ -206,18 +213,15 @@ const PersonalisedPanel = ({
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
                 <Menu
                     id={id('menu')}
                     data-testid={id('menu')}
                     anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
+                    open={!!anchorEl}
                     onClose={handleClose}
-                    onBlur={handleClose}
                 >
-                    <MenuItem disabled>Manage your PaperCut account</MenuItem>
                     <MenuItem
                         id={id('item-button-0')}
                         data-testid={id('item-button-0')}
@@ -264,7 +268,8 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToLoans()}
                         id={id('menu-button')}
@@ -289,7 +294,7 @@ const PersonalisedPanel = ({
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
@@ -308,7 +313,8 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToFines()}
                         id={id('menu-button')}
@@ -330,7 +336,7 @@ const PersonalisedPanel = ({
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
@@ -349,7 +355,8 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToeSpaceDashboard()}
                         id={id('menu-button')}
@@ -371,7 +378,7 @@ const PersonalisedPanel = ({
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
@@ -390,7 +397,8 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToeSpaceDashboard()}
                         id={id('menu-button')}
@@ -412,7 +420,7 @@ const PersonalisedPanel = ({
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
@@ -431,7 +439,8 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToeSpaceDashboard()}
                         id={id('menu-button')}
@@ -453,7 +462,7 @@ const PersonalisedPanel = ({
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
