@@ -33,3 +33,7 @@ Please leave the datatestid elements in place
 Edit [footerLocale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/SharedComponents/Footer/footerLocale.js) and then follow the steps above
 
 (Note that only the Connect Footer items are working - Minimal Footer is controlled by ITS markup)
+
+## Viewing what each user type sees
+
+Visit [the homepage test file](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/cypress/integration/homepage.spec.js#L9) to view what elements many user types can see on the Homepage. (Developers can add remaining types on request) 
