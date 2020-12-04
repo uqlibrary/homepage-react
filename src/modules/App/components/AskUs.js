@@ -112,6 +112,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                         onClick={handleLink(item.url)}
                         disabled={item.title === 'Chat' && !chatStatus}
                         key={index}
+                        aria-label={item.ariaLabel}
                     >
                         {item.icon}
                         {item.title}

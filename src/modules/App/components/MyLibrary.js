@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
-import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
+import AppsIcon from '@material-ui/icons/Apps';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -66,7 +66,7 @@ export const MyLibrary = ({ account, history }) => {
                 onClick={handleClick}
                 classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
             >
-                <QuestionAnswer className={classes.icon} />
+                <AppsIcon className={classes.icon} />
                 <div className={classes.headerButtonTitle}>{myLibraryLocale.title}</div>
             </IconButton>
             <Menu
@@ -97,6 +97,7 @@ export const MyLibrary = ({ account, history }) => {
                                 data-testid={`mylibrary-menuitem-${index}`}
                                 onClick={handleLink(item.link)}
                                 key={index}
+                                aria-label={item.ariaLabel}
                             >
                                 {item.icon}
                                 {item.label}

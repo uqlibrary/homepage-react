@@ -111,7 +111,6 @@ export const Index = ({
     const dispatch = useDispatch();
     // Load homepage data requirements
     useEffect(() => {
-        console.log('rendering');
         if (!spotlights && spotlightsLoading === null) {
             console.log('spotlights');
             dispatch(loadSpotlights());
