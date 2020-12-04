@@ -107,7 +107,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
-    if (!!computerAvailabilityLoading) {
+    if (!computerAvailability || !!computerAvailabilityLoading) {
         return null;
     }
     const cleanedAvailability = computerAvailability.map(item => {

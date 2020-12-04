@@ -132,7 +132,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
             }, 5000);
         }
     }, [location, cookies.location]);
-    if (!!libHoursLoading) {
+    if (!libHours || !!libHoursLoading) {
         return null;
     }
     const cleanedHours =

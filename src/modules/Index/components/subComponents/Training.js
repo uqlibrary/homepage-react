@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
 const Training = ({ trainingEvents, trainingEventsLoading }) => {
     const classes = useStyles();
     const [eventDetail, setEventDetail] = React.useState(null);
-    if (!!trainingEventsLoading) {
+    if (!trainingEvents || !!trainingEventsLoading) {
         return null;
     }
     const handleEventDetail = event => {
