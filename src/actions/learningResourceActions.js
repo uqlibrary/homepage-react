@@ -85,31 +85,43 @@ export function loadReadingLists(coursecode, campus, semester, account) {
     };
 
     const filterReadingLists = (readingLists, coursecode, campus, semester) => {
-        if (!readingLists || readingLists.length === 0) {
+        if (!readingLists || readingLists.length === 0 || !readingLists[0].list || readingLists[0].list.length === 0) {
             return [];
         }
 
-        if (readingLists.length === 1) {
-            return readingLists;
-        }
-
-        !!readingLists &&
-            !!readingLists &&
-            readingLists.length > 0 &&
-            readingLists.map(item => {
+        const importanceOrder = {
+            Required: 1,
+            Recommended: 2,
+            Further: 3,
+        };
+        readingLists[0].list
+            .sort((a, b) => {
+                // Item with defined importance should be higher
+                if (a.hasOwnProperty('importance') && !b.hasOwnProperty('importance')) {
+                    return -1;
+                }
+                // Item with defined importance should be higher
+                if (!a.hasOwnProperty('importance') && b.hasOwnProperty('importance')) {
+                    return 1;
+                }
+                if (!a.hasOwnProperty('importance') && !b.hasOwnProperty('importance')) {
+                    return 0;
+                }
+                const impA = importanceOrder.hasOwnProperty(a.importance) ? importanceOrder[a.importance] : 999;
+                const impB = importanceOrder.hasOwnProperty(b.importance) ? importanceOrder[b.importance] : 999;
+                return impA - impB;
+            })
+            .map(item => {
                 item.coursecode = coursecode;
             });
 
         const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(coursecode);
-        console.log('subjectEnrolment = ', subjectEnrolment);
         if (!subjectEnrolment) {
-            console.log('searching');
             // user is searching
             return readingLists.filter(item => {
                 return item.period === semester && item.campus.indexOf(campus) !== -1;
             });
         } else {
-            console.log('class list');
             // this is the users classes
             const semesterString = subjectEnrolment.semester;
             const campus = getCampusByCode(subjectEnrolment.CAMPUS);

@@ -5,7 +5,7 @@ import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 import { SpacedArrowForwardIcon } from './components/SpacedArrowForwardIcon';
 
 export default {
-    title: 'Course Resources',
+    title: 'Course resources',
     search: {
         title: 'Course search',
     },
@@ -13,12 +13,11 @@ export default {
     myCourses: {
         title: 'My courses',
         none: {
-            title: 'No listed courses',
+            title: 'No enrolled courses available',
             description: (
                 <Fragment>
-                    <p>Courses will be shown 3 weeks prior to the start of semester</p>
-                    <p>Please check back closer to the next enrollment period</p>
-                    <p>You can search for information on courses using the &quot;Course Search&quot; tab, above</p>
+                    <p>Your enrolled courses will appear three weeks prior to the start of the semester.</p>
+                    <p>Search for course resources using the &quot;Course search&quot; tab, above</p>
                 </Fragment>
             ),
         },

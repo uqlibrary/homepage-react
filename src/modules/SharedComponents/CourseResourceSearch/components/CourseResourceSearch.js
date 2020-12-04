@@ -56,6 +56,11 @@ const useStyles = makeStyles(
         fullForm: {
             marginBottom: 50,
         },
+        searchTitle: {
+            marginBlockStart: '0.5rem',
+            marginBlockEnd: '0.5rem',
+            marginLeft: '1rem',
+        },
     }),
     { withTheme: true },
 );
@@ -137,6 +142,14 @@ export const CourseResourceSearch = ({
         }
     };
 
+    // we group them all together to place a header at the top of the search results
+    const renderGroup = params => [
+        <h3 className={classes.searchTitle} key={params.key}>
+            {locale.searchResultsTitle}
+        </h3>,
+        params.children,
+    ];
+
     return (
         <form onSubmit={handleSubmit} className={displayType === 'full' ? classes.fullForm : ''}>
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
@@ -158,6 +171,8 @@ export const CourseResourceSearch = ({
                         inputValue={inputValue}
                         onInputChange={handleTypedKeywordChange}
                         noOptionsText={locale.noOptionsText}
+                        renderGroup={renderGroup}
+                        groupBy={() => false}
                         renderInput={params => {
                             return (
                                 <TextField
@@ -174,7 +189,6 @@ export const CourseResourceSearch = ({
                                     inputProps={{
                                         ...params.inputProps,
                                         'data-testid': `${elementId}-autocomplete-input-wrapper`,
-                                        // id: `${elementId}-autocomplete-input-wrapper`,
                                     }}
                                     label={locale.placeholder}
                                 />

@@ -76,7 +76,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
                 navigateToCourseResourcePage={navigateToCourseResourcePage}
             />
 
-            {!!account && !!account.current_classes && account.current_classes.length > 0 && (
+            {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
                 <div
                     style={{
                         height: 275,
@@ -114,6 +114,8 @@ export const CourseResourcesPanel = ({ account, history }) => {
                         })}
                     </Grid>
                 </div>
+            ) : (
+                <div style={{ marginLeft: 16 }}>{locale.noCourses}</div>
             )}
         </StandardCard>
     );

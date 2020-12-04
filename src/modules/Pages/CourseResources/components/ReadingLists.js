@@ -46,14 +46,15 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
     // with the new api of calling for reading list by course code, campus and semester,
     // we should theoretically only ever have one reading list
     // but handle multiple anyway...
-    const renderMultipleReadingListReference = readingLists => {
-        const coursecode = (!!readingLists && readingLists.length > 0 && readingLists[0].coursecode) || '';
+    const renderMultipleReadingListReference = (readingLists, coursecode) => {
         const chooseListPrompt = coursecode =>
             locale.myCourses.readingLists.error.multiple.replace('[classnumber]', coursecode);
         return (
             <Grid container style={{ paddingBottom: 12 }}>
-                {!!coursecode && (
-                    <Typography style={{ paddingBottom: '15px' }}>{chooseListPrompt(coursecode)}</Typography>
+                {!!readingLists && readingLists.length > 1 && (
+                    <Typography style={{ paddingBottom: '15px' }} data-testid="reading-list-multiple-label">
+                        {chooseListPrompt(coursecode)}
+                    </Typography>
                 )}
                 {!!readingLists &&
                     readingLists.length > 0 &&
@@ -106,15 +107,24 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
             ? singleReadingListLength(readingList) - locale.myCourses.readingLists.visibleItemsCount
             : 0;
 
+    const itemCountLabel = _pluralise('item', singleReadingListLength(readingList));
     const singleReadingListLengthTitle = readingList =>
-        singleReadingListLength(readingList) > 0 ? `(${singleReadingListLength(readingList)})` : '';
+        singleReadingListLength(readingList) > 0 ? `(${singleReadingListLength(readingList)} ${itemCountLabel})` : '';
 
     const readingListTitle = `${locale.myCourses.readingLists.title} ${singleReadingListLengthTitle(readingList)}`;
 
+    const coursecode = (!!readingList && readingList.coursecode) || 'unknown';
     return (
         <Grid container spacing={3} className={'readingLists'}>
             <Grid item xs={12}>
-                <StandardCard style={{ marginBottom: '1rem', marginTop: '1rem' }} title={readingListTitle}>
+                <StandardCard
+                    noHeader
+                    standardCardId={`reading-list-${coursecode}`}
+                    style={{ marginBottom: '1rem', marginTop: '1rem' }}
+                >
+                    <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+                        {readingListTitle}
+                    </Typography>
                     <Grid container>
                         {!!readingListLoading && (
                             <Grid
@@ -176,7 +186,9 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                             !readingListLoading &&
                             !!readingList &&
                             readingList.reading_lists.length > 1 && (
-                                <Grid item>{renderMultipleReadingListReference(readingList.reading_lists)}</Grid>
+                                <Grid item>
+                                    {renderMultipleReadingListReference(readingList.reading_lists, coursecode)}
+                                </Grid>
                             )}
 
                         {!readingListError &&

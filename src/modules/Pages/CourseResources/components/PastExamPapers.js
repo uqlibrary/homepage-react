@@ -32,7 +32,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
     const subject = !!examList && examList.coursecode;
 
     const _extractExtension = url => {
-        return url.substring(url.lastIndexOf('.') + 1);
+        return url.substring(url.lastIndexOf('.') + 1).toUpperCase();
     };
 
     const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : false;
@@ -44,12 +44,16 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
 
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
+    const itemCountLabel = _pluralise('item', listOfExams.length);
     const examPaperTitle = `${locale.myCourses.examPapers.title} ${
-        !!listOfExams && listOfExams.length > 0 ? `(${listOfExams.length})` : ''
+        !!listOfExams && listOfExams.length > 0 ? `(${listOfExams.length} ${itemCountLabel})` : ''
     }`;
 
     return (
-        <StandardCard fullHeight title={examPaperTitle}>
+        <StandardCard fullHeight noHeader standardCardId={`past-exams-${subject}`}>
+            <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+                {examPaperTitle}
+            </Typography>
             <Grid container>
                 {!!examListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
 

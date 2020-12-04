@@ -59,11 +59,9 @@ context('Course Resources', () => {
         const firstReadingListTitle = readingList.title || 'mock data is missing';
         const firstReadingListLink = readingList.itemLink || 'mock data is missing';
 
-        console.log('readingList = ', readingList);
-        console.log(`${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`);
-
-        cy.get('.readingLists h3').contains(
-            `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`,
+        cy.log(`${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`);
+        cy.get('.readingLists h4').contains(
+            `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`,
         );
         cy.get('.readingLists a')
             .contains(firstReadingListTitle)
@@ -77,8 +75,8 @@ context('Course Resources', () => {
             courseReadingList.reading_lists[0];
         const readingListLink = readingList.url || 'mock data is missing';
 
-        cy.get('.readingLists h3').contains(
-            `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)})`,
+        cy.get('.readingLists h4').contains(
+            `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`,
         );
 
         const numberExcessReadingLists =
@@ -88,12 +86,12 @@ context('Course Resources', () => {
             .should('have.attr', 'href', readingListLink);
     }
 
-    function a_subject_with_multiple_reading_lists_loads_correctly(courseReadingList) {
+    function a_subject_with_multiple_reading_lists_loads_correctly(courseReadingList, coursecode) {
         const courseCode = courseReadingList.title || 'mock data is missing';
 
-        cy.get('div[data-testid=standard-card-reading-lists--content]').contains(
-            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', courseCode),
-        );
+        const multipleLabel = locale.myCourses.readingLists.error.multiple.replace('[classnumber]', courseCode);
+        expect(multipleLabel).contains(coursecode);
+        cy.get('p[data-testid=reading-list-multiple-label]').contains(multipleLabel);
         cy.get('a[data-testid=multiple-reading-list-search-link]')
             .contains(locale.myCourses.readingLists.error.footer.linkLabel)
             .should('have.attr', 'href', locale.myCourses.readingLists.error.footer.linkOut);
@@ -119,9 +117,9 @@ context('Course Resources', () => {
         const examPeriod = examPaper.period || 'mock data is missing';
         const examPaperLink = examPaper.url || 'mock data is missing';
 
-        cy.get('.exams h3').contains(`${locale.myCourses.examPapers.title} (${examPapers.list.length})`);
+        cy.get('.exams h4').contains(`${locale.myCourses.examPapers.title} (${examPapers.list.length} items)`);
         cy.get('.exams a')
-            .contains(`${examPeriod} (${examPaperLink.slice(-3)})`)
+            .contains(`${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`)
             .should('have.attr', 'href', examPaperLink);
         const numberExcessExams = examPapers.list.length - locale.myCourses.examPapers.visibleItemsCount;
         cy.get('div[data-testid=exam-more-link] a')
@@ -170,13 +168,13 @@ context('Course Resources', () => {
         });
     }
 
-    function a_subject_with_one_guide_loads_correctly(guides) {
+    function a_subject_with_one_guide_loads_correctly(guides, coursecode) {
         const guide = guides[0] || {};
         const guideTitle = guide.title || 'mock data is missing';
         const guideLink = guide.url || 'mock data is missing';
 
-        cy.get('h3[data-testid=standard-card-library-guides-header]').contains(locale.myCourses.guides.title);
-        cy.get('div[data-testid=standard-card-library-guides-content] a')
+        cy.get(`[data-testid=guides-${coursecode}] h4`).contains(locale.myCourses.guides.title);
+        cy.get(`div[data-testid=guides-${coursecode}] a`)
             .contains(guideTitle)
             .should('have.attr', 'href', guideLink);
     }
@@ -213,7 +211,7 @@ context('Course Resources', () => {
 
         cy.get('ul#full-courseresource-autocomplete-popup')
             .children()
-            .should('have.length', numberOfMatchingSubject);
+            .should('have.length', numberOfMatchingSubject + 1); // plus one for title
 
         cy.log('backspace one char');
         cy.get('div[data-testid=full-courseresource-autocomplete] input').type('{backspace}');
@@ -235,7 +233,7 @@ context('Course Resources', () => {
         // the drop down returns
         cy.get('ul#full-courseresource-autocomplete-popup')
             .children()
-            .should('have.length', numberOfMatchingSubject);
+            .should('have.length', numberOfMatchingSubject + 1);
 
         // click the first option
         cy.get('li#full-courseresource-autocomplete-option-0')
@@ -286,7 +284,8 @@ context('Course Resources', () => {
 
         cy.get('h3[data-testid=course-resource-subject-title]').contains(listTitle);
         cy.get('h3[data-testid=course-resource-subject-title]').contains(coursecode);
-        cy.get('h4[data-testid=course-resource-subject-locator]').contains(`${campus} - ${semester}`);
+        cy.get('h3[data-testid=course-resource-subject-title]').contains(campus);
+        cy.get('h3[data-testid=course-resource-subject-title]').contains(semester);
     }
 
     function FREN1010_loads_properly_for_s111111_user() {
@@ -298,7 +297,7 @@ context('Course Resources', () => {
 
         a_subject_with_many_exams_loads_correctly(FREN1010Exam);
 
-        a_subject_with_one_guide_loads_correctly(FREN1010Guide);
+        a_subject_with_one_guide_loads_correctly(FREN1010Guide, 'FREN1010');
 
         a_subject_page_should_have_correct_Library_Guides_footer_links();
 
@@ -338,7 +337,7 @@ context('Course Resources', () => {
         // next tab
         the_user_clicks_on_the_third_subject_tab(PHIL1002ReadingList);
 
-        a_subject_with_multiple_reading_lists_loads_correctly(PHIL1002ReadingList);
+        a_subject_with_multiple_reading_lists_loads_correctly(PHIL1002ReadingList, 'PHIL1002');
 
         a_subject_with_no_exams_loads_correctly();
 
@@ -380,7 +379,7 @@ context('Course Resources', () => {
 
         a_subject_with_many_exams_loads_correctly(ACCT1101Exam);
 
-        a_subject_with_one_guide_loads_correctly(ACCT1101Guide);
+        a_subject_with_one_guide_loads_correctly(ACCT1101Guide, 'ACCT1101');
 
         a_subject_page_should_have_correct_Library_Guides_footer_links();
 
@@ -427,7 +426,7 @@ context('Course Resources', () => {
         cy.get('div[data-testid=course-resources-panel] form')
             .parent()
             .children()
-            .should('have.length', 1);
+            .should('have.length', 2); // 1 search field and one div with 'no courses' text
         // the user sees a search field
         cy.get('div[data-testid=course-resources-panel] form input').should(
             'have.attr',
@@ -441,7 +440,7 @@ context('Course Resources', () => {
         );
         cy.get('ul#homepage-courseresource-autocomplete-popup')
             .children()
-            .should('have.length', learningResourceSearchSuggestionsWithACCT.length);
+            .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for titiel
         // user clicks on #1, ACCT1101
         cy.get('li#homepage-courseresource-autocomplete-option-0')
             .contains('ACCT1101')

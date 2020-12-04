@@ -90,14 +90,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
                 >
                     {coursecode}
                     {courseTitle()}
-                </Typography>
-                <Typography
-                    color={'primary'}
-                    component={'h4'}
-                    variant={'h6'}
-                    data-testid="course-resource-subject-locator"
-                    style={{ textAlign: 'center', fontWeight: 300 }}
-                >
+                    <br />
                     {coursecampus()}
                     {courseSemester()}
                 </Typography>

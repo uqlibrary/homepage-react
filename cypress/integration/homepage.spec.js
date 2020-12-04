@@ -40,6 +40,7 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels([
+            'computer-availability',
             'library-hours',
             'library-services',
             'training',
@@ -95,6 +96,7 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
         hasPanels([
+            'computer-availability',
             'course-resources',
             'library-hours',
             'library-services',
@@ -177,6 +179,7 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
         hasPanels([
+            'computer-availability',
             'course-resources',
             'library-hours',
             'library-services',
@@ -344,6 +347,7 @@ context('Homepage', () => {
         cy.get('div#content-container').contains('Search');
 
         hasPanels([
+            'computer-availability',
             'library-hours',
             'training',
             'promo',
