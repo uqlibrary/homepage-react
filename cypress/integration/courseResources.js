@@ -97,9 +97,9 @@ context('Course Resources', () => {
             .should('have.attr', 'href', locale.myCourses.readingLists.error.footer.linkOut);
     }
 
-    function a_subject_with_no_exams_loads_correctly() {
-        cy.get('div[data-testid=standard-card-past-exam-papers--content]').contains(locale.myCourses.examPapers.none);
-        cy.get('div[data-testid=standard-card-past-exam-papers--content] a').should(
+    function a_subject_with_no_exams_loads_correctly(coursecode) {
+        cy.get(`div[data-testid=past-exams-${coursecode}]`).contains(locale.myCourses.examPapers.none);
+        cy.get(`div[data-testid=past-exams-${coursecode}] a`).should(
             'have.attr',
             'href',
             _courseLink('', locale.myCourses.examPapers.footer.linkOutPattern),
@@ -147,8 +147,8 @@ context('Course Resources', () => {
         cy.get('div[data-testid=no-guides]').contains(locale.myCourses.guides.none);
     }
 
-    function a_subject_with_many_guides_loads_correctly(guidesList) {
-        cy.get('div[data-testid=standard-card-library-guides] h3').contains(`${locale.myCourses.guides.title}`);
+    function a_subject_with_many_guides_loads_correctly(guidesList, coursecode) {
+        cy.get(`div[data-testid=guides-${coursecode}] h4`).contains(`${locale.myCourses.guides.title}`);
 
         const numGuides = guidesList.length - 1;
         const numGuidesVisible =
@@ -159,9 +159,9 @@ context('Course Resources', () => {
             const guideTitle = guide.title || 'mock data is missing';
             const guideLink = guide.url || 'mock data is missing';
             if (index >= numGuidesVisible) {
-                cy.get('div[data-testid=standard-card-library-guides-content]').should('not.have.value', guideTitle);
+                cy.get(`div[data-testid=guides-${coursecode}]`).should('not.have.value', guideTitle);
             } else {
-                cy.get('div[data-testid=standard-card-library-guides-content] a')
+                cy.get(`div[data-testid=guides-${coursecode}] a`)
                     .contains(guideTitle)
                     .should('have.attr', 'href', guideLink);
             }
@@ -339,9 +339,9 @@ context('Course Resources', () => {
 
         a_subject_with_multiple_reading_lists_loads_correctly(PHIL1002ReadingList, 'PHIL1002');
 
-        a_subject_with_no_exams_loads_correctly();
+        a_subject_with_no_exams_loads_correctly('PHIL1002');
 
-        a_subject_with_many_guides_loads_correctly(PHIL1002Guide);
+        a_subject_with_many_guides_loads_correctly(PHIL1002Guide, 'PHIL1002');
 
         // next tab
         the_user_clicks_on_the_Search_tab();
