@@ -104,6 +104,36 @@ export const LOANS_API = () => ({
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
+// eSpace Possible records
+export const POSSIBLE_RECORDS_API = () => ({
+    apiUrl: 'records/search',
+    options: {
+        params: {
+            rule: 'possible',
+            export_to: '',
+            page: 1,
+            per_page: 20,
+            sort: 'score',
+            order_by: 'desc',
+        },
+    },
+});
+
+// eSpace Possible records
+export const INCOMPLETE_NTRO_RECORDS_API = () => ({
+    apiUrl: 'records/search',
+    options: {
+        params: {
+            rule: 'incomplete',
+            export_to: '',
+            page: 1,
+            per_page: 20,
+            sort: 'score',
+            order_by: 'desc',
+        },
+    },
+});
+
 // Primo Suggestions API
 export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
     return {
@@ -166,17 +196,6 @@ export const EXISTING_COLLECTION_API = ({ pid }) => ({ apiUrl: `records/${pid}` 
 export const EXISTING_COMMUNITY_API = ({ pid }) => ({ apiUrl: `records/${pid}` });
 
 export const RECORDS_ISSUES_API = ({ pid }) => ({ apiUrl: `records/${pid}/issues` });
-
-// search/list records apis
-export const POSSIBLE_RECORDS_API = values => ({
-    apiUrl: 'records/search',
-    options: {
-        params: {
-            rule: 'possible',
-            ...getStandardSearchParams(values),
-        },
-    },
-});
 
 // (POST: with data: [\'pid\' => \'UQ:1\', \'type\' => \'H\'])`);
 export const HIDE_POSSIBLE_RECORD_API = () => ({ apiUrl: 'records/search', options: { params: { rule: 'possible' } } });

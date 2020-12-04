@@ -100,7 +100,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                     console.log('homepage: fetch search_suggestions?type=learning_resource');
                     actions.loadHomepageCourseReadingListsSuggestions(newValue);
                 }
-                console.log('focussing on the input');
                 document.getElementById('primo-search-autocomplete').focus();
             }
         },
@@ -116,11 +115,13 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                             <Select
                                 labelId="primo-search-select-label"
                                 id="primo-search-select"
-                                data-testid="primo-search-select"
                                 error={!!suggestionsError}
                                 value={searchType}
                                 className={classes.selectInput}
                                 onChange={handleSearchTypeChange}
+                                SelectDisplayProps={{
+                                    'data-testid': 'primo-search-select',
+                                }}
                                 MenuProps={{
                                     'data-testid': 'primo-search-select-list',
                                 }}
@@ -137,6 +138,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         <Autocomplete
                             value={searchKeyword}
                             freeSolo
+                            autoFocus
                             id="primo-search-autocomplete"
                             data-testid="primo-search-autocomplete"
                             disableClearable
@@ -160,6 +162,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 return (
                                     <TextField
                                         {...params}
+                                        autoFocus
                                         placeholder={locale.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{
@@ -183,6 +186,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         <VoiceToText
                             sendHandler={handleSearchKeywordChange}
                             clearSuggestions={handleClearSuggestions}
+                            elementId={'primo-search-autocomplete'}
                         />
                     </Grid>
                     {suggestionsLoading && (

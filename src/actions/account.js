@@ -12,6 +12,7 @@ import {
     TRAINING_API,
     PRINTING_API,
     LOANS_API,
+    POSSIBLE_RECORDS_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -88,7 +89,6 @@ export function loadCurrentAccount() {
                     return get(CURRENT_AUTHOR_API());
                 })
                 .then(currentAuthorResponse => {
-                    // TODO: to be decommissioned when author/details will become a part of author api
                     currentAuthor = currentAuthorResponse.data;
                     dispatch({
                         type: actions.CURRENT_AUTHOR_LOADED,
@@ -306,6 +306,54 @@ export function loadAlerts() {
             .catch(error => {
                 dispatch({
                     type: actions.ALERT_STATUS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Search publications from eSpace which are fuzzy matched to currently logged in username
+ * @param {object} activeFacets - optional list of facets
+ * @returns {action}
+ */
+export function searcheSpacePossiblePublications() {
+    return dispatch => {
+        dispatch({ type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING });
+        return get(POSSIBLE_RECORDS_API())
+            .then(response => {
+                dispatch({
+                    type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+}
+
+/**
+ * Search NTRO publications from eSpace which are incomplete for the current user
+ * @param {object} activeFacets - optional list of facets
+ * @returns {action}
+ */
+export function searcheSpaceIncompleteNTROPublications() {
+    return dispatch => {
+        dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
+        return get(POSSIBLE_RECORDS_API())
+            .then(response => {
+                dispatch({
+                    type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADED,
+                    payload: response,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
                     payload: error.message,
                 });
             });

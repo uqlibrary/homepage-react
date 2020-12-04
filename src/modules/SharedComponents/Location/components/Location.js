@@ -59,7 +59,7 @@ export const Location = ({ idLabel }) => {
         }
         setAnchorEl(null);
     };
-    const handleBlur = () => {
+    const handleClose = () => {
         setAnchorEl(null);
     };
     let thisLocation = null;
@@ -70,7 +70,7 @@ export const Location = ({ idLabel }) => {
     }
     const id = tag => `location-${idLabel}${tag ? '-' + tag : ''}`;
     return (
-        <div id={id()} data-testid={id()}>
+        <div id={id()} data-testid={id()} style={{ marginLeft: -16 }}>
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
@@ -93,13 +93,14 @@ export const Location = ({ idLabel }) => {
                 </Button>
             </Tooltip>
             <Menu
+                keepMounted
+                autoFocus
                 id={id('menu')}
                 data-testid={id('menu')}
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onBlur={handleBlur}
+                onClose={handleClose}
             >
-                <MenuItem disabled>{locale.menuTitle}</MenuItem>
                 {locale.locations.map((item, index) => (
                     <MenuItem
                         key={index}

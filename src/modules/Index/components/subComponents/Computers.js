@@ -107,7 +107,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
-    if (!!computerAvailabilityLoading) {
+    if (!computerAvailability || !!computerAvailabilityLoading) {
         return null;
     }
     const cleanedAvailability = computerAvailability.map(item => {
@@ -174,12 +174,16 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
             return (
                 <Dialog
                     onClose={() => closeMap()}
-                    aria-label="UQ Library map"
+                    aria-label="UQ Library computer availablity map"
+                    role="dialog"
                     open={!!mapSrc}
                     maxWidth={'lg'}
                     PaperProps={{
+                        id: 'computers-library-dialog',
+                        'data-testid': 'computers-library-dialog',
                         style: {
-                            backgroundColor: 'transparent',
+                            backgroundColor: '#000020',
+                            color: '#FFFFFF',
                             width: '66%',
                             height: '66%',
                         },
@@ -191,23 +195,38 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                         style={{
                             width: '100%',
                             height: '100%',
-                            backgroundColor: '#000020',
+                            backgroundColor: '#000020 !important',
+                            color: '#FFFFFF !important',
                             padding: 20,
                             overflow: 'hidden',
                         }}
                     >
                         <Grid item xs>
-                            <Typography variant={'h5'} style={{ color: 'white', marginTop: -6 }}>
+                            <Typography
+                                variant={'h5'}
+                                style={{
+                                    color: '#FFFFFF !important',
+                                    backgroundColor: '#000020 !important',
+                                    marginTop: -6,
+                                }}
+                            >
                                 {mapSrc.library} - Level {mapSrc.level}
                             </Typography>
                         </Grid>
                         <Grid item xs={'auto'}>
-                            <IconButton onClick={() => closeMap()} style={{ color: 'white', marginTop: -16 }}>
+                            <IconButton
+                                id="computers-library-dialog-close-button"
+                                data-testid="computers-library-dialog-close-button"
+                                onClick={() => closeMap()}
+                                aria-label="Click to close map"
+                                style={{ color: 'white', marginTop: -16 }}
+                            >
                                 <CloseIcon fontSize="small" />
                             </IconButton>
                         </Grid>
                         <Grid item xs={12} style={{ height: '100%', padding: '32px 0' }}>
                             <iframe
+                                title={`${mapSrc.building} map`}
                                 src={`https://www.library.uq.edu.au/uqlsm/map.php?building=${mapSrc.building}&room=${mapSrc.room}&embed=true`}
                                 style={{
                                     width: '90%',
@@ -227,6 +246,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     return (
         <StandardCard
             accentHeader
+            standardCardId="standard-card-computers"
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
                     <Grid item xs={11} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
@@ -278,6 +298,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                         <Grid item xs style={{ paddingLeft: 16 }}>
                                             <Button
                                                 onClick={() => handleCollapse(index)}
+                                                aria-expanded={!!collapse[index]}
                                                 classes={{
                                                     root: classes.linkButton,
                                                     label: `${classes.linkButtonLabel} ${
@@ -285,6 +306,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                     }`,
                                                 }}
                                                 aria-label={`${item.library} - ${buildingAvail} of ${buildingTotal} free. Click to review each level`}
+                                                id={`computers-library-button-${index}`}
+                                                data-testid={`computers-library-button-${index}`}
                                             >
                                                 {item.library}
                                             </Button>
@@ -302,6 +325,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                 key={levelIndex}
                                             >
                                                 <Grid
+                                                    role="region"
                                                     container
                                                     spacing={1}
                                                     className={classes.row}
@@ -310,6 +334,11 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                 >
                                                     <Grid item xs style={{ paddingLeft: 32 }}>
                                                         <Button
+                                                            id={`computers-${item.library}-level-${item.level}-button`}
+                                                            data-testid={`computers-library-${index}-level-${level.level}-button`}
+                                                            aria-label={`${item.library} level ${level.level}. ${
+                                                                level.available
+                                                            } of ${level.available + level.occupied} computers free`}
                                                             onClick={() =>
                                                                 openMap(
                                                                     item.library,
@@ -331,9 +360,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                         </Button>
                                                     </Grid>
                                                     <Grid xs item />
-                                                    <Grid item xs={'auto'} style={{ fontSize: 14 }}>
-                                                        {level.available} of {level.available + level.occupied}{' '}
-                                                        available
+                                                    <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
+                                                        {level.available} of {level.available + level.occupied} free
                                                     </Grid>
                                                 </Grid>
                                             </Collapse>

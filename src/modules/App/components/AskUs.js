@@ -5,7 +5,7 @@ import QuestionAnswer from '@material-ui/icons/QuestionAnswer';
 import Menu from '@material-ui/core/Menu';
 import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
-import { locale } from './locale';
+import { askUsLocale } from './AskUs.locale';
 
 const useStyles = makeStyles(
     theme => ({
@@ -14,20 +14,18 @@ const useStyles = makeStyles(
             flexDirection: 'column',
         },
         headerIconButton: {
-            color: theme.palette.primary.main,
+            color: `${theme.palette.primary.main} !important`,
         },
         headerButtonTitle: {
-            color: theme.palette.primary.main,
+            color: `${theme.palette.primary.main} !important`,
             fontSize: 12,
         },
         menuItem: {
             width: '50%',
             display: 'inline-block',
-            color: 'rbga(0,0,0,0.87)',
         },
         hours: {
             fontSize: 12,
-            color: 'rbga(0,0,0,0.87)',
         },
         lastLink: {
             marginLeft: 'auto',
@@ -44,7 +42,6 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
-        console.log(event.currentTarget);
         setAnchorEl(event.currentTarget);
     };
     const handleClose = () => {
@@ -83,7 +80,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 classes={{ label: classes.headerIconButtonLabel, root: classes.headerIconButton }}
             >
                 <QuestionAnswer className={classes.icon} />
-                <div className={classes.headerButtonTitle}>{locale.askUs.title}</div>
+                <div className={classes.headerButtonTitle}>{askUsLocale.askUs.title}</div>
             </IconButton>
             <Menu
                 anchorEl={anchorEl}
@@ -94,6 +91,10 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                     id: 'askus-menulist',
                     'data-testid': 'askus-menulist',
                 }}
+                PaperProps={{
+                    id: 'askus-paper',
+                    'data-testid': 'askus-paper',
+                }}
                 transformOrigin={{
                     vertical: 'center',
                     horizontal: 'center',
@@ -103,7 +104,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 className={classes.menu}
                 classes={{ paper: classes.menuPaper }}
             >
-                {locale.askUs.links.map((item, index) => (
+                {askUsLocale.askUs.links.map((item, index) => (
                     <MenuItem
                         className={classes.menuItem}
                         id={`askus-menuitem-${item.title}`}
@@ -111,6 +112,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                         onClick={handleLink(item.url)}
                         disabled={item.title === 'Chat' && !chatStatus}
                         key={index}
+                        aria-label={item.ariaLabel}
                     >
                         {item.icon}
                         {item.title}
@@ -127,11 +129,11 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                     </MenuItem>
                 ))}
                 <MenuItem
-                    onClick={handleLink(locale.askUs.lastLink.url)}
-                    id={`askus-menuitem-${locale.askUs.lastLink.title}`}
-                    data-testid={`askus-menuitem-${locale.askUs.lastLink.title}`}
+                    onClick={handleLink(askUsLocale.askUs.lastLink.url)}
+                    id={`askus-menuitem-${askUsLocale.askUs.lastLink.title}`}
+                    data-testid={`askus-menuitem-${askUsLocale.askUs.lastLink.title}`}
                 >
-                    <span className={classes.lastLink}>{locale.askUs.lastLink.title}</span>
+                    <span className={classes.lastLink}>{askUsLocale.askUs.lastLink.title}</span>
                 </MenuItem>
             </Menu>
         </React.Fragment>

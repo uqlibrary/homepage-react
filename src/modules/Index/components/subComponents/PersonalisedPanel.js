@@ -6,15 +6,18 @@ import Typography from '@material-ui/core/Typography';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import Button from '@material-ui/core/Button';
 import AccountBoxIcon from '@material-ui/icons/AccountBox';
 import MenuBookIcon from '@material-ui/icons/MenuBook';
 import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
-import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import LinkIcon from '@material-ui/icons/Link';
+import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
+import PostAddIcon from '@material-ui/icons/PostAdd';
 import Badge from '@material-ui/core/Badge';
 import PrintIcon from '@material-ui/icons/Print';
 import { Location } from '../../../SharedComponents/Location';
-const moment = require('moment');
 import { ppLocale } from './PersonalisedPanel.locale';
+const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
     flexWrapper: {
@@ -46,7 +49,6 @@ const useStyles = makeStyles(theme => ({
     },
     flexFooter: {
         height: 'auto',
-        marginBottom: -16,
     },
     greeting: {
         fontSize: '2.25rem',
@@ -64,19 +66,27 @@ const useStyles = makeStyles(theme => ({
         marginRight: -16,
     },
     menuItemRoot: {
-        paddingTop: 2,
-        paddingBottom: 1,
+        paddingTop: 0,
+        paddingBottom: 0,
+        textTransform: 'none',
+        textAlign: 'left',
+        paddingLeft: 16,
+        paddingRight: 0,
+        marginTop: 2,
     },
     menuItemLabel: {
         fontSize: 14,
         lineHeight: 2,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap !important',
+        paddingRight: 6,
         color: theme.palette.accent.main,
         '&:hover': {
             textDecoration: 'underline',
         },
     },
     itemButton: {
-        border: '1px dashed green',
         padding: 1,
         minWidth: 0,
         backgroundColor: theme.palette.accent.main,
@@ -93,43 +103,51 @@ const useStyles = makeStyles(theme => ({
     },
     ppBadgeError: {
         zIndex: 999,
-        width: 12,
-        minWidth: 12,
-        height: 12,
-        fontSize: 8,
+        width: 17,
+        minWidth: 17,
+        height: 17,
+        fontSize: 10,
         backgroundColor: 'red',
         left: -14,
-        top: 3,
-        padding: 1,
+        top: 6,
+        padding: 5,
+        lineHeight: 2,
     },
     ppBadgeWarning: {
         zIndex: 999,
-        width: 12,
-        minWidth: 12,
-        height: 12,
-        fontSize: 8,
+        width: 17,
+        minWidth: 17,
+        height: 17,
+        fontSize: 10,
         backgroundColor: 'orange',
         left: -14,
-        top: 3,
-        padding: 1,
+        top: 6,
+        padding: 5,
+        lineHeight: 2,
     },
     ppBadgeInfo: {
         zIndex: 999,
-        width: 12,
-        minWidth: 12,
-        height: 12,
-        fontSize: 8,
-        backgroundColor: theme.palette.secondary.dark,
+        width: 17,
+        minWidth: 17,
+        height: 17,
+        fontSize: 10,
+        backgroundColor: theme.palette.primary.dark,
         left: -14,
-        top: 3,
-        padding: 1,
+        top: 6,
+        padding: 5,
+        lineHeight: 2,
     },
 }));
 
-const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance, isNextToSpotlights }) => {
-    console.log('PP Account ', account);
-    console.log('PP Author ', author);
-    console.log('PP Author Details ', authorDetails);
+const PersonalisedPanel = ({
+    account,
+    author,
+    loans,
+    printBalance,
+    isNextToSpotlights,
+    possibleRecords,
+    incompleteNTRORecords,
+}) => {
     const classes = useStyles();
     const greeting = () => {
         const time = moment().format('H');
@@ -145,6 +163,8 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
         return null;
     }
     const id = tag => `pp${tag ? '-' + tag : ''}`;
+    const isStaff = account.user_group === 'STAFF';
+
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
         const id = tag => `pp-papercut${tag ? '-' + tag : ''}`;
@@ -168,11 +188,13 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
+                    data-testid={id('tooltip')}
                     title={ppLocale.items.papercut.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={handleClick}
                         id={id('menu-button')}
@@ -180,7 +202,10 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.papercut.label.replace('[balance]', printBalance.balance || '0.00')}
+                                {ppLocale.items.papercut.label.replace(
+                                    '[balance]',
+                                    printBalance.balance !== '0.00' ? `($${printBalance.balance})` : '',
+                                )}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
@@ -188,18 +213,15 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
                 <Menu
                     id={id('menu')}
                     data-testid={id('menu')}
                     anchorEl={anchorEl}
-                    keepMounted
-                    open={Boolean(anchorEl)}
+                    open={!!anchorEl}
                     onClose={handleClose}
-                    onBlur={handleClose}
                 >
-                    <MenuItem disabled>Manage your PaperCut account</MenuItem>
                     <MenuItem
                         id={id('item-button-0')}
                         data-testid={id('item-button-0')}
@@ -241,11 +263,13 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
+                    data-testid={id('tooltip')}
                     title={ppLocale.items.loans.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToLoans()}
                         id={id('menu-button')}
@@ -253,7 +277,10 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.loans.label.replace('[loans]', loans.total_loans_count)}
+                                {ppLocale.items.loans.label.replace(
+                                    '[loans]',
+                                    loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
+                                )}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
@@ -267,7 +294,7 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
@@ -281,11 +308,13 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
+                    data-testid={id('tooltip')}
                     title={ppLocale.items.fines.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={() => navigateToFines()}
                         id={id('menu-button')}
@@ -307,59 +336,154 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
     };
-    const RoomBookings = () => {
-        const id = tag => `pp-fines${tag ? '-' + tag : ''}`;
-        const navigateToRoomBooking = () => {
-            window.location.href = ppLocale.items.roomBookings.url;
+    const EspacePossible = () => {
+        const id = tag => `pp-espace-possible${tag ? '-' + tag : ''}`;
+        const navigateToeSpaceDashboard = () => {
+            window.location.href = ppLocale.items.eSpacePossible.url;
         };
         return (
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
                     id={id('tooltip')}
-                    title={ppLocale.items.roomBookings.tooltip}
+                    data-testid={id('tooltip')}
+                    title={ppLocale.items.eSpacePossible.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <MenuItem
+                    <Button
+                        fullWidth
                         classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToRoomBooking()}
+                        onClick={() => navigateToeSpaceDashboard()}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.roomBookings.label}
+                                {ppLocale.items.eSpacePossible.label.replace('[totalRecords]', possibleRecords)}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
-                                    <MeetingRoomIcon className={classes.icon} />
+                                    <Badge
+                                        badgeContent={possibleRecords}
+                                        color="primary"
+                                        classes={{ badge: classes.ppBadgeInfo }}
+                                    >
+                                        <AssignmentIndIcon className={classes.icon} />
+                                    </Badge>
                                 </div>
                             </Grid>
                         </Grid>
-                    </MenuItem>
+                    </Button>
+                </Tooltip>
+            </Grid>
+        );
+    };
+    const EspaceOrcid = () => {
+        const id = tag => `pp-espace-orcid${tag ? '-' + tag : ''}`;
+        const navigateToeSpaceDashboard = () => {
+            window.location.href = ppLocale.items.eSpaceOrcid.url;
+        };
+        return (
+            <Grid item xs={12} className={classes.menuItem}>
+                <Tooltip
+                    id={id('tooltip')}
+                    data-testid={id('tooltip')}
+                    title={ppLocale.items.eSpaceOrcid.tooltip}
+                    placement="left"
+                    TransitionProps={{ timeout: 300 }}
+                >
+                    <Button
+                        fullWidth
+                        classes={{ root: classes.menuItemRoot }}
+                        onClick={() => navigateToeSpaceDashboard()}
+                        id={id('menu-button')}
+                        data-testid={id('menu-button')}
+                    >
+                        <Grid container spacing={0}>
+                            <Grid item xs className={classes.menuItemLabel}>
+                                {ppLocale.items.eSpaceOrcid.label}
+                            </Grid>
+                            <Grid item xs="auto">
+                                <div className={classes.itemButton}>
+                                    <Badge
+                                        badgeContent={'!'}
+                                        color="primary"
+                                        classes={{ badge: classes.ppBadgeWarning }}
+                                    >
+                                        <LinkIcon className={classes.icon} />
+                                    </Badge>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </Button>
+                </Tooltip>
+            </Grid>
+        );
+    };
+    const EspaceNTROs = () => {
+        const id = tag => `pp-espace-ntro${tag ? '-' + tag : ''}`;
+        const navigateToeSpaceDashboard = () => {
+            window.location.href = ppLocale.items.eSpaceNTRO.url;
+        };
+        return (
+            <Grid item xs={12} className={classes.menuItem}>
+                <Tooltip
+                    id={id('tooltip')}
+                    data-testid={id('tooltip')}
+                    title={ppLocale.items.eSpaceNTRO.tooltip}
+                    placement="left"
+                    TransitionProps={{ timeout: 300 }}
+                >
+                    <Button
+                        fullWidth
+                        classes={{ root: classes.menuItemRoot }}
+                        onClick={() => navigateToeSpaceDashboard()}
+                        id={id('menu-button')}
+                        data-testid={id('menu-button')}
+                    >
+                        <Grid container spacing={0}>
+                            <Grid item xs className={classes.menuItemLabel}>
+                                {ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
+                            </Grid>
+                            <Grid item xs="auto">
+                                <div className={classes.itemButton}>
+                                    <Badge
+                                        badgeContent={incompleteNTRORecords.total}
+                                        color="primary"
+                                        classes={{ badge: classes.ppBadgeWarning }}
+                                    >
+                                        <PostAddIcon className={classes.icon} />
+                                    </Badge>
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </Button>
                 </Tooltip>
             </Grid>
         );
     };
 
     return (
-        <div className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}>
+        <div
+            className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}
+            id="personalised-panel"
+            data-testid="personalised-panel"
+        >
             <div className={classes.flexHeader}>
                 <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
                     {greeting()} {account.firstName || ''}
                 </Typography>
-            </div>
-            <div className={classes.flexContent}>
-                <Grid container spacing={0} style={{ marginLeft: 16 }}>
+                <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
                     {account && account.id && (
-                        <Grid item xs="auto">
+                        <Grid item xs={12} lg="auto">
                             <Tooltip
                                 id={id('tooltip')}
+                                data-testid={id('tooltip')}
                                 title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
                                 placement="left"
                                 TransitionProps={{ timeout: 300 }}
@@ -371,15 +495,20 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
                             </Tooltip>
                         </Grid>
                     )}
-                    <Location />
+                    <Grid item xs={12} lg>
+                        <Location />
+                    </Grid>
                 </Grid>
             </div>
+            <div className={classes.flexContent} />
             <div className={classes.flexFooter}>
                 <Grid container spacing={0} style={{ marginLeft: 16 }}>
-                    {!!printBalance && printBalance.balance && <PaperCut />}
-                    {!!loans && loans.total_loans_count > 0 && <Loans />}
+                    {!!printBalance && printBalance.balance && !isStaff && <PaperCut />}
+                    {!!loans && <Loans />}
                     {!!loans && loans.total_fines_count > 0 && <Fines />}
-                    <RoomBookings />
+                    {!!possibleRecords && <EspacePossible />}
+                    {!!author && !author.aut_orcid_id && <EspaceOrcid />}
+                    {!!author && !!incompleteNTRORecords && !!incompleteNTRORecords.total && <EspaceNTROs />}
                 </Grid>
             </div>
         </div>
@@ -389,9 +518,10 @@ const PersonalisedPanel = ({ account, author, authorDetails, loans, printBalance
 PersonalisedPanel.propTypes = {
     account: PropTypes.object,
     author: PropTypes.object,
-    authorDetails: PropTypes.object,
     loans: PropTypes.object,
     printBalance: PropTypes.object,
+    incompleteNTRORecords: PropTypes.object,
+    possibleRecords: PropTypes.number,
     isNextToSpotlights: PropTypes.bool,
 };
 

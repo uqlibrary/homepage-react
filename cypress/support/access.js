@@ -1,7 +1,9 @@
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.get('div[data-testid="personalisedPanel"]').contains(firstname);
+    cy.wait(5000);
+    cy.get('div[data-testid="personalised-panel"]').contains(firstname);
+    cy.wait(5000);
 };
 export const hasPanels = optionsTheUserShouldSee => {
     const availableOptions = new Map();
@@ -47,7 +49,7 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     cy.get('button[data-testid="mylibrary-button"]').click();
 
     const availableOptions = new Map();
-    availableOptions.set('borrowing', 'Borrowing');
+    availableOptions.set('0', 'Borrowing');
     // availableOptions.set('computer-availability', 'Computer');
     availableOptions.set('course-resources', 'Course resources');
     availableOptions.set('document-delivery', 'Document delivery');

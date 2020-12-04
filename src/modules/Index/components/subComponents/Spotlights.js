@@ -8,6 +8,7 @@ import {
     ButtonNext,
     ButtonPlay,
     DotGroup,
+    Dot,
     Image,
 } from 'pure-react-carousel';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
@@ -31,10 +32,33 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
               })
             : [];
     if (slides.length > 0 && !spotlightsLoading) {
+        const renderDots = dotprops => {
+            const totalSlides = dotprops.totalSlides;
+            const visibleSlides = dotprops.visibleSlides;
+            const slideGroups = Math.ceil(totalSlides / visibleSlides);
+            if (slideGroups <= 1) {
+                return null;
+            } else {
+                const dots = [];
+                for (let i = 0; i < totalSlides; i++) {
+                    dots.push(i);
+                }
+                return dots.map((_, index) => (
+                    <Dot
+                        slide={index}
+                        key={index}
+                        aria-label={`UQ Spotlights Slide ${index + 1} of ${totalSlides}`}
+                        id={`spotlights-dot-${index}`}
+                        data-testid={`spotlights-dot-${index}`}
+                    />
+                ));
+            }
+        };
+
         return (
             <div
                 data-testid="spotlights"
-                style={{ height: '100%', position: 'relative' }}
+                style={{ height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' }}
                 role="region"
                 aria-label="UQ Spotlights carousel"
             >
@@ -47,6 +71,8 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                     isPlaying={!account}
                     interval={10000}
                     style={{ height: '100%' }}
+                    id="spotlights-carousel"
+                    data-testid="spotlights-carousel"
                 >
                     {totalSlides > 1 && (
                         <div
@@ -59,7 +85,11 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 zIndex: 101,
                             }}
                         >
-                            <ButtonBack>
+                            <ButtonBack
+                                aria-label="Previous slide"
+                                id="spotlights-previous-button"
+                                data-testid="spotlights-previous-button"
+                            >
                                 <ChevronLeftIcon />
                             </ButtonBack>
                         </div>
@@ -75,7 +105,11 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 zIndex: 101,
                             }}
                         >
-                            <ButtonNext>
+                            <ButtonNext
+                                aria-label="Next slide"
+                                id="spotlights-next-button"
+                                data-testid="spotlights-next-button"
+                            >
                                 <ChevronRightIcon />
                             </ButtonNext>
                         </div>
@@ -90,7 +124,13 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 zIndex: 101,
                             }}
                         >
-                            <ButtonPlay childrenPlaying={<PauseIcon />} childrenPaused={<PlayArrowIcon />} />
+                            <ButtonPlay
+                                childrenPlaying={<PauseIcon />}
+                                childrenPaused={<PlayArrowIcon />}
+                                aria-label="UQ Spotlights Play/Pause slides"
+                                id="spotlights-play-pause-button"
+                                data-testid="spotlights-play-pause-button"
+                            />
                         </div>
                     )}
                     {totalSlides > 1 && (
@@ -105,7 +145,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 textAlign: 'center',
                             }}
                         >
-                            <DotGroup />
+                            <DotGroup showAsSelectedForCurrentSlideOnly renderDots={renderDots} />
                         </div>
                     )}
                     <div
@@ -113,25 +153,31 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                             zIndex: 99,
                         }}
                     >
-                        <Slider
-                            trayProps={{
-                                'aria-label': 'UQ Spotlights slider',
-                            }}
-                        >
-                            {slides.map((item, index) => {
-                                return (
-                                    <Slide index={item.index} key={index}>
-                                        <a href={item.link} aria-label={item.aria}>
-                                            <Image
-                                                src={item.src}
-                                                alt={item.alt}
-                                                style={{ width: '100%' }}
-                                                aria-label={item.aria}
-                                            />
-                                        </a>
-                                    </Slide>
-                                );
-                            })}
+                        <Slider trayTag="div" aria-label="UQ Spotlights" aria-live="off">
+                            {slides.map((item, index) => (
+                                <Slide
+                                    tag="div"
+                                    index={index}
+                                    key={index}
+                                    id={`spotlights-slide-${index}`}
+                                    data-testid={`spotlights-slide-${index}`}
+                                >
+                                    <a
+                                        href={item.link}
+                                        aria-label={item.aria}
+                                        id={`spotlights-link-${index}`}
+                                        data-testid={`spotlights-link-${index}`}
+                                    >
+                                        <Image
+                                            src={item.src}
+                                            alt={item.alt}
+                                            style={{ width: '100%' }}
+                                            id={`spotlights-image-${index}`}
+                                            data-testid={`spotlights-image-${index}`}
+                                        />
+                                    </a>
+                                </Slide>
+                            ))}
                         </Slider>
                     </div>
                 </CarouselProvider>

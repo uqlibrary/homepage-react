@@ -5,13 +5,19 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
-import { loadSpotlights, loadPrintBalance, loadLoans } from 'actions';
+import {
+    clearPrimoSuggestions,
+    loadCourseReadingListsSuggestions,
+    loadSpotlights,
+    loadPrintBalance,
+    loadLoans,
+    searcheSpacePossiblePublications,
+    searcheSpaceIncompleteNTROPublications,
+} from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import {
     seeCourseResources,
     seeComputerAvailability,
-    // seeFeedback,
-    // seeFines,
     seeLibraryHours,
     seeLibraryServices,
     // seeLoans,
@@ -85,7 +91,6 @@ const useStyles = makeStyles(theme => ({
 export const Index = ({
     account,
     author,
-    authorDetails,
     spotlights,
     spotlightsLoading,
     libHours,
@@ -98,22 +103,50 @@ export const Index = ({
     printBalanceLoading,
     loans,
     loansLoading,
+    possibleRecords,
+    possibleRecordsLoading,
+    incompleteNTRO,
+    incompleteNTROLoading,
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-    console.log('INDEX: ', account, author, authorDetails);
     // Load homepage data requirements
     useEffect(() => {
-        if (spotlightsLoading === null) {
+        if (!spotlights && spotlightsLoading === null) {
+            console.log('spotlights');
             dispatch(loadSpotlights());
         }
-        if (!!account && printBalanceLoading === null) {
+        if (!!account && !printBalance && printBalanceLoading === null) {
+            console.log('print balance');
             dispatch(loadPrintBalance());
         }
-        if (!!account && loansLoading === null) {
+        if (!!account && !loans && loansLoading === null) {
+            console.log('loans');
             dispatch(loadLoans());
         }
-    }, [printBalanceLoading, printBalance, spotlightsLoading, spotlights, dispatch, account, loans, loansLoading]);
+        if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
+            console.log('possible pubs');
+            dispatch(searcheSpacePossiblePublications());
+        }
+        if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+            console.log('incomplete ntro');
+            dispatch(searcheSpaceIncompleteNTROPublications());
+        }
+    }, [
+        printBalanceLoading,
+        printBalance,
+        spotlightsLoading,
+        spotlights,
+        dispatch,
+        account,
+        author,
+        loans,
+        loansLoading,
+        possibleRecords,
+        possibleRecordsLoading,
+        incompleteNTRO,
+        incompleteNTROLoading,
+    ]);
     return (
         <StandardPage>
             <div className="layout-card">
@@ -128,9 +161,10 @@ export const Index = ({
                                 <PersonalisedPanel
                                     account={account}
                                     author={author}
-                                    authorDetails={authorDetails}
                                     loans={loans}
                                     printBalance={printBalance}
+                                    possibleRecords={possibleRecords && possibleRecords.total}
+                                    incompleteNTRORecords={incompleteNTRO}
                                 />
                             </Grid>
                         </Hidden>
@@ -146,8 +180,11 @@ export const Index = ({
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
                                     account={account}
+                                    author={author}
                                     loans={loans}
                                     printBalance={printBalance}
+                                    possibleRecords={possibleRecords && possibleRecords.total}
+                                    incompleteNTRORecords={incompleteNTRO}
                                     isNextToSpotlights
                                 />
                             </Grid>
@@ -227,7 +264,6 @@ export const Index = ({
 Index.propTypes = {
     account: PropTypes.object,
     author: PropTypes.object,
-    authorDetails: PropTypes.object,
     actions: PropTypes.any,
     spotlights: PropTypes.any,
     spotlightsError: PropTypes.any,
@@ -242,6 +278,10 @@ Index.propTypes = {
     printBalanceLoading: PropTypes.bool,
     loans: PropTypes.object,
     loansLoading: PropTypes.bool,
+    possibleRecords: PropTypes.object,
+    possibleRecordsLoading: PropTypes.bool,
+    incompleteNTRO: PropTypes.object,
+    incompleteNTROLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

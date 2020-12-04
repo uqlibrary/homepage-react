@@ -1,4 +1,15 @@
 context('ACCESSIBILITY', () => {
+    // it('Whole page', () => {
+    //     cy.visit('/?user=uqstaff');
+    //     cy.injectAxe();
+    //     cy.viewport(1300, 1000);
+    //     cy.get('button[data-testid="uq-site-header-home-button"]').contains('Library');
+    //     cy.checkA11y('html', {
+    //         reportName: 'Connect Footer',
+    //         scopeName: 'Content',
+    //         includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+    //     });
+    // });
     it('Footer', () => {
         cy.visit('/');
         cy.injectAxe();
