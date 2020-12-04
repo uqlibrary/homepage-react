@@ -110,45 +110,55 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     if (!!computerAvailabilityLoading) {
         return null;
     }
-    const cleanedAvailability = computerAvailability.map(item => {
-        const levels = Object.keys(item.availability);
-        const totalLevels = levels.length;
-        let levelsData = [];
-        if (totalLevels > 0) {
-            levelsData = levels
-                .map(level => {
-                    return {
-                        level: parseInt(level.replace('Level ', ''), 10),
-                        roomCode: parseInt(item.availability[level].roomCode, 10),
-                        available: item.availability[level].Available,
-                        occupied: item.availability[level].Occupied,
-                        total: item.availability[level].Available + item.availability[level].Occupied,
-                        floorplan: item.availability[level].floorplan,
-                    };
-                })
-                .sort((a, b) => a.level - b.level);
-        }
-        return {
-            library: item.library.replace('&amp;', '&'),
-            levels: levelsData,
-            buildingCode: parseInt(item.buildingCode, 10),
-            buildingNumber: parseInt(item.buildingNumber, 10),
-            campus: computersLocale.campusMap[item.library],
-        };
-    });
-    const alphaAvailability = cleanedAvailability
-        .filter(e => e !== null)
-        .sort((a, b) => {
-            const textA = a.library.toUpperCase();
-            const textB = b.library.toUpperCase();
-            // eslint-disable-next-line no-nested-ternary
-            const result = textA < textB ? -1 : textA > textB ? 1 : 0;
-            return result;
+    const cleanedAvailability =
+        !!computerAvailability &&
+        computerAvailability.length > 0 &&
+        computerAvailability.map(item => {
+            const levels = Object.keys(item.availability);
+            const totalLevels = levels.length;
+            let levelsData = [];
+            if (totalLevels > 0) {
+                levelsData = levels
+                    .map(level => {
+                        return {
+                            level: parseInt(level.replace('Level ', ''), 10),
+                            roomCode: parseInt(item.availability[level].roomCode, 10),
+                            available: item.availability[level].Available,
+                            occupied: item.availability[level].Occupied,
+                            total: item.availability[level].Available + item.availability[level].Occupied,
+                            floorplan: item.availability[level].floorplan,
+                        };
+                    })
+                    .sort((a, b) => a.level - b.level);
+            }
+            return {
+                library: item.library.replace('&amp;', '&'),
+                levels: levelsData,
+                buildingCode: parseInt(item.buildingCode, 10),
+                buildingNumber: parseInt(item.buildingNumber, 10),
+                campus: computersLocale.campusMap[item.library],
+            };
         });
-    const sortedComputers = matchSorter(alphaAvailability, cookies.location, {
-        keys: ['campus'],
-        threshold: matchSorter.rankings.NO_MATCH,
-    });
+    const alphaAvailability =
+        !!cleanedAvailability &&
+        cleanedAvailability.length > 0 &&
+        cleanedAvailability
+            .filter(e => e !== null)
+            .sort((a, b) => {
+                const textA = a.library.toUpperCase();
+                const textB = b.library.toUpperCase();
+                // eslint-disable-next-line no-nested-ternary
+                const result = textA < textB ? -1 : textA > textB ? 1 : 0;
+                return result;
+            });
+    const sortedComputers =
+        (!!alphaAvailability &&
+            alphaAvailability.length > 0 &&
+            matchSorter(alphaAvailability, cookies.location, {
+                keys: ['campus'],
+                threshold: matchSorter.rankings.NO_MATCH,
+            })) ||
+        [];
     if (location !== cookies.location) {
         setShowIcon(true);
         setLocation(cookies.location);
