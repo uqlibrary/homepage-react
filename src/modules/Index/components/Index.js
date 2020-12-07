@@ -18,9 +18,6 @@ import {
     seeComputerAvailability,
     seeLibraryHours,
     seeLibraryServices,
-    // seeLoans,
-    seeLoggedOut,
-    // seePrintBalance,
     seeTraining,
     getUserServices,
 } from 'helpers/access';
@@ -248,11 +245,9 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeLoggedOut(account) && (
-                        <Grid item xs={12} md={4}>
-                            <PromoPanel />
-                        </Grid>
-                    )}
+                    <Grid item xs={12} md={4}>
+                        <PromoPanel account={account} />
+                    </Grid>
                 </Grid>
             </div>
         </StandardPage>

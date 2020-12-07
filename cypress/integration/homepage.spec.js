@@ -15,6 +15,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -41,6 +42,7 @@ context('Homepage', () => {
             'computer-availability',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -70,6 +72,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -95,6 +98,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -120,6 +124,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -147,6 +152,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -173,6 +179,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -197,6 +204,7 @@ context('Homepage', () => {
             'computer-availability',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -217,6 +225,7 @@ context('Homepage', () => {
             'computer-availability',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -237,6 +246,7 @@ context('Homepage', () => {
             'computer-availability',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -259,6 +269,7 @@ context('Homepage', () => {
             'computer-availability',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -280,6 +291,7 @@ context('Homepage', () => {
             'computer-availability',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 
@@ -301,6 +313,7 @@ context('Homepage', () => {
             'course-resources',
             'library-hours',
             'library-services',
+            'promo',
             'training',
         ]);
 

@@ -6,7 +6,7 @@ import { promoPanel as locale } from './promoPanel.locale';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
-const PromoPanel = () => {
+const PromoPanel = ({ account }) => {
     return (
         <StandardCard
             accentHeader
@@ -15,14 +15,14 @@ const PromoPanel = () => {
             title={
                 <Grid container>
                     <Grid item xs>
-                        {locale.title}
+                        {!!account ? locale.loggedin.title : locale.loggedout.title}
                     </Grid>
                 </Grid>
             }
         >
             <Grid container spacing={1} id="thingummy">
                 <Grid item xs>
-                    {locale.content}
+                    {!!account ? locale.loggedin.content : locale.loggedout.content}
                 </Grid>
             </Grid>
         </StandardCard>
