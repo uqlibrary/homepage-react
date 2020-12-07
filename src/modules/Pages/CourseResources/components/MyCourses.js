@@ -46,7 +46,11 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
             return;
         }
         const coursecode = event.target.innerText;
-        const enrolledClass = (!!account && account.current_classes.find(c => c.classnumber === coursecode)) || null;
+        const enrolledClass =
+            (!!account &&
+                !!account.current_classes &&
+                account.current_classes.find(c => c.classnumber === coursecode)) ||
+            null;
         const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
         const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
         loadNewSubject(coursecode, campus, semester);
@@ -59,15 +63,18 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
         preselectedCourse => {
             if (!initialLoadComplete) {
                 let preselectedSubjectTab = null;
-                account.current_classes.map((item, index) => {
-                    if (
-                        item.classnumber === preselectedCourse.coursecode &&
-                        getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
-                        item.semester === preselectedCourse.semester
-                    ) {
-                        preselectedSubjectTab = `${courseTabLabel}-${index}`;
-                    }
-                });
+                !!account &&
+                    !!account.current_classes &&
+                    !!account.current_classes.length > 0 &&
+                    account.current_classes.map((item, index) => {
+                        if (
+                            item.classnumber === preselectedCourse.coursecode &&
+                            getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
+                            item.semester === preselectedCourse.semester
+                        ) {
+                            preselectedSubjectTab = `${courseTabLabel}-${index}`;
+                        }
+                    });
                 if (preselectedSubjectTab !== null) {
                     setCurrentMenuTab(preselectedSubjectTab);
                 }
@@ -86,7 +93,7 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
     // based on https://material-ui.com/components/tabs/#automatic-scroll-buttons
     return (
         <Fragment>
-            {!!account.current_classes && account.current_classes.length > 0 ? (
+            {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
                 <Fragment>
                     <AppBar position="static" className={classes.myCoursesTabBar} component="div">
                         <Tabs

@@ -65,7 +65,7 @@ export default {
             {
                 dataTestid: 'connect-give-link',
                 label: 'Give to the Library',
-                linkTo: 'https://www.uq.edu.au/giving/organisations/university-queensland-library',
+                linkTo: 'https://alumni.uq.edu.au/uq-library',
             },
         ],
     },

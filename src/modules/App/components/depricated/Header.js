@@ -383,7 +383,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeSavedItems && (
+                                {seeSavedItems(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-saved-items-link">
                                         <MenuItem onClick={handleClose2}>
                                             <FavoriteIcon color={'secondary'} style={{ marginRight: 6 }} />
@@ -391,7 +391,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeSavedSearches && (
+                                {seeSavedSearches(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-saved-searches-link">
                                         <MenuItem onClick={handleClose2}>
                                             <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6 }} />
@@ -399,7 +399,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeFeedback && (
+                                {seeFeedback(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-feedback-link">
                                         <MenuItem onClick={handleClose2}>
                                             <FeedbackIcon color={'secondary'} style={{ marginRight: 6 }} />

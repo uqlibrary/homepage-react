@@ -9,6 +9,7 @@ export default {
         primaryText: 'Close',
     },
     publicmenu: [
+        // the parent items appears in the footer; the submenuItems appear in the megamenu
         {
             id: 'libraryServices',
             dataTestid: 'connect-services-link',

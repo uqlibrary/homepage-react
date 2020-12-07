@@ -27,7 +27,6 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from '../containers/AppAlert';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
@@ -144,6 +143,7 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadSpotlights();
         this.props.actions.loadAlerts();
         this.props.actions.loadChatStatus();
         this.props.actions.loadLibHours();
@@ -217,13 +217,13 @@ export class AppClass extends PureComponent {
         });
         return (
             <Grid container className={classes.layoutFill}>
-                <HelpDrawer />
                 <ConfirmDialogBox
                     hideCancelButton
                     onRef={this.setSessionExpiredConfirmation}
                     onAction={this.props.actions.logout}
                     locale={locale.global.sessionExpiredConfirmation}
                 />
+                <ChatStatus status={this.props.chatStatus} />
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
                     <div className="content-header" role="region" aria-label="Site header">
                         <UQHeader />
@@ -242,7 +242,6 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    <ChatStatus status={this.props.chatStatus} />
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
                     {!isAuthorLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>

@@ -13,12 +13,13 @@ context('ACCESSIBILITY', () => {
         });
         cy.log('Ask Us menu');
         cy.get('button[data-testid="askus-button"]').click();
-        cy.get('li[data-testid="askus-menuitem-FAQ"]').contains('FAQ');
+        cy.get('li[data-testid="askus-menuitem-0"]').contains('FAQ');
+        cy.wait(500);
         // TODO: For some reason, Axe seems to think there is a light foreground color when there isnt.
-        // cy.checkA11y('ul[data-testid="askus-menulist"]', {
-        //     reportName: 'AskUs',
-        //     scopeName: 'Menu',
-        //     includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        // });
+        cy.checkA11y('div[data-testid="askus-paper"]', {
+            reportName: 'AskUs',
+            scopeName: 'Menu',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
     });
 });

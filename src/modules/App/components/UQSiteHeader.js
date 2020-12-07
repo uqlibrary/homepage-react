@@ -11,36 +11,11 @@ import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
 import MenuIcon from '@material-ui/icons/Menu';
 import CloseIcon from '@material-ui/icons/Close';
-import AppsIcon from '@material-ui/icons/Apps';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import SchoolIcon from '@material-ui/icons/School';
-import MoveToInboxIcon from '@material-ui/icons/MoveToInbox';
-import PrintIcon from '@material-ui/icons/Print';
-import AssessmentIcon from '@material-ui/icons/Assessment';
-import RoomServiceIcon from '@material-ui/icons/RoomService';
-import YoutubeSearchedForIcon from '@material-ui/icons/YoutubeSearchedFor';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import FeedbackIcon from '@material-ui/icons/Feedback';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import { pathConfig } from 'config/routes';
 import { AuthButton } from '../../SharedComponents/Toolbox/AuthButton';
 import { AskUs } from './AskUs';
 import { UQSiteHeaderLocale } from './UQSiteHeader.locale';
-
-import {
-    seeCourseResources,
-    seeDocumentDelivery,
-    seeFeedback,
-    seeLoans,
-    seeMasquerade,
-    seePrintBalance,
-    seePublicationMetrics,
-    seeRoomBookings,
-    seeSavedItems,
-    seeSavedSearches,
-} from 'helpers/access';
+import MyLibrary from './MyLibrary';
 
 const useStyles = makeStyles(
     theme => ({
@@ -53,8 +28,8 @@ const useStyles = makeStyles(
             maxWidth: 1280,
             marginLeft: 'auto',
             marginRight: 'auto',
-            paddingTop: '1.5rem',
-            paddingBottom: '0.5rem',
+            paddingTop: '0.5rem',
+            paddingBottom: 0,
             paddingLeft: 46,
             paddingRight: 44,
             marginTop: 0,
@@ -81,10 +56,10 @@ const useStyles = makeStyles(
             },
         },
         utility: {
-            marginTop: -16,
+            marginTop: -8,
             marginBottom: -16,
-            marginLeft: -24,
-            marginRight: 8,
+            marginLeft: 0,
+            marginRight: -8,
         },
         utilityButton: {
             fontSize: 12,
@@ -118,26 +93,6 @@ export const UQSiteHeader = ({
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(!menuOpen);
     const menuItems = routes.getMenuConfig(account, author, authorDetails, !!isHdrStudent, false);
-
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleClick = event => {
-        setAnchorEl(event.currentTarget);
-    };
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-    const _navigateToCourseResources = () => {
-        history.push(pathConfig.courseresources);
-        handleClose();
-    };
-    const _navigateToMasquerade = () => {
-        history.push(pathConfig.admin.masquerade);
-        handleClose();
-    };
-    const _navigateToUrl = url => {
-        window.location.href = url;
-        handleClose();
-    };
     const redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
@@ -145,7 +100,7 @@ export const UQSiteHeader = ({
     };
     return (
         <div className={classes.siteHeader} id="uq-site-header" data-testid="uq-site-header">
-            <Grid container spacing={2} className={classes.siteHeaderTop}>
+            <Grid container spacing={0} className={classes.siteHeaderTop}>
                 <Grid item xs={'auto'}>
                     <Button
                         onClick={() => history.push(pathConfig.index)}
@@ -158,136 +113,8 @@ export const UQSiteHeader = ({
                 </Grid>
                 <Grid item xs />
                 {!!account && (
-                    <Grid item xs={'auto'} className={classes.utility}>
-                        <IconButton
-                            onClick={handleClick}
-                            classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
-                            id="mylibrary-button"
-                            data-testid="mylibrary-button"
-                        >
-                            <AppsIcon color={'primary'} />
-                            <div>{UQSiteHeaderLocale.MyLibraryLabel}</div>
-                        </IconButton>
-                        <Menu
-                            id="mylibrary-menu"
-                            anchorEl={anchorEl}
-                            keepMounted
-                            open={Boolean(anchorEl)}
-                            onClose={handleClose}
-                        >
-                            <Grid container spacing={0} style={{ maxWidth: 400 }}>
-                                {seeLoans(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.borrowing)}
-                                            data-testid="mylibrary-borrowing-link"
-                                        >
-                                            <ImportContactsIcon color={'secondary'} className={classes.icons} />
-                                            Borrowing
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeCourseResources(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={_navigateToCourseResources}
-                                            data-testid="mylibrary-course-resources-link"
-                                        >
-                                            <SchoolIcon color={'secondary'} className={classes.icons} />
-                                            Course resources
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeDocumentDelivery(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.docdel)}
-                                            data-testid="mylibrary-document-delivery-link"
-                                        >
-                                            <MoveToInboxIcon color={'secondary'} className={classes.icons} />
-                                            Document delivery
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeMasquerade(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={_navigateToMasquerade}
-                                            data-testid="mylibrary-masquerade-link"
-                                        >
-                                            <SupervisorAccountIcon color={'secondary'} className={classes.icons} />
-                                            Masquerade
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seePrintBalance(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.papercut)}
-                                            data-testid="mylibrary-print-balance-link"
-                                        >
-                                            <PrintIcon color={'secondary'} className={classes.icons} />
-                                            Printing balance
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seePublicationMetrics(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.pubMetrics)}
-                                            data-testid="mylibrary-publication-metrics-link"
-                                        >
-                                            <AssessmentIcon color={'secondary'} className={classes.icons} />
-                                            Publication metrics
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeRoomBookings(account) && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.roomBookings)}
-                                            data-testid="mylibrary-room-bookings-link"
-                                        >
-                                            <RoomServiceIcon color={'secondary'} className={classes.icons} />
-                                            Room bookings
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeSavedItems && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedItems)}
-                                            data-testid="mylibrary-saved-items-link"
-                                        >
-                                            <FavoriteIcon color={'secondary'} className={classes.icons} />
-                                            Saved items
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeSavedSearches && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.savedSearches)}
-                                            data-testid="mylibrary-saved-searches-link"
-                                        >
-                                            <YoutubeSearchedForIcon color={'secondary'} className={classes.icons} />
-                                            Saved searches
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                                {seeFeedback && (
-                                    <Grid item xs={6}>
-                                        <MenuItem
-                                            onClick={() => _navigateToUrl(UQSiteHeaderLocale.links.feedback)}
-                                            data-testid="mylibrary-feedback-link"
-                                        >
-                                            <FeedbackIcon color={'secondary'} className={classes.icons} />
-                                            Feedback
-                                        </MenuItem>
-                                    </Grid>
-                                )}
-                            </Grid>
-                        </Menu>
+                    <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
+                        <MyLibrary account={account} history={history} />
                     </Grid>
                 )}
                 <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
@@ -302,7 +129,6 @@ export const UQSiteHeader = ({
                 <Grid item xs={'auto'} className={classes.utility} id="mobile-megamenu" data-testid="mobile-megamenu">
                     <Hidden lgUp>
                         <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
-                            {/* hamburger button */}
                             <Tooltip title={locale.global.mainNavButton.tooltip}>
                                 <IconButton
                                     aria-label={locale.global.mainNavButton.aria}

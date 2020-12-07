@@ -38,6 +38,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
 
     const coursecode = subject.classnumber || null;
     const firstReadingList =
+        !!readingList &&
         !!readingList.list &&
         !!readingList.list[coursecode] &&
         !!readingList.list[coursecode].reading_lists &&
@@ -50,8 +51,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
         null;
     const courseSemester = () => {
         const semester =
-            (!!subject.semester && subject.semester) ||
-            (!!readingList && firstReadingList && !!firstReadingList.period && firstReadingList.period) ||
+            (!!subject && !!subject.semester && subject.semester) ||
+            (!!firstReadingList && !!firstReadingList.period && firstReadingList.period) ||
             null;
         if (semester !== null) {
             return ` - ${semester}`;
@@ -89,14 +90,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
                 >
                     {coursecode}
                     {courseTitle()}
-                </Typography>
-                <Typography
-                    color={'primary'}
-                    component={'h4'}
-                    variant={'h6'}
-                    data-testid="course-resource-subject-locator"
-                    style={{ textAlign: 'center', fontWeight: 300 }}
-                >
+                    <br />
                     {coursecampus()}
                     {courseSemester()}
                 </Typography>

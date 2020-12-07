@@ -21,7 +21,16 @@ import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST120
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import { libHours, computerAvailability, training, printBalance, loans } from './data/account';
+import {
+    libHours,
+    computerAvailability,
+    training,
+    printBalance,
+    loans,
+    possibleRecords,
+    incompleteNTROs,
+} from './data/account';
+import { POSSIBLE_RECORDS_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200 });
@@ -69,6 +78,30 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
         return [404, {}];
     });
 
+mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl)
+    .reply(() => {
+        console.log('eSpace Author API hit');
+        // mock current author details from fez
+        if (user === 'anon') {
+            return [403, {}];
+        } else if (mockData.currentAuthor[user]) {
+            return [200, mockData.currentAuthor[user]];
+        }
+        return [404, {}];
+    });
+
+mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl)
+    .reply(() => {
+        console.log('eSpace Author Details API hit');
+        // mock current author details
+        if (user === 'anon') {
+            return [403, {}];
+        } else if (mockData.authorDetails[user]) {
+            return [200, mockData.authorDetails[user]];
+        }
+        return [404, {}];
+    });
+
 mock.onGet(routes.SPOTLIGHTS_API().apiUrl)
     .reply(() => {
         // mock spotlights
@@ -112,6 +145,20 @@ mock.onGet(routes.LIB_HOURS_API().apiUrl)
         return [200, libHours];
     });
 
+mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl)
+    .reply(() => {
+        console.log('eSpace Possible Records API hit');
+        // mock library hours
+        return [200, possibleRecords];
+    });
+
+mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl)
+    .reply(() => {
+        console.log('eSpace Incomplete NTRO Records API hit');
+        // mock library hours
+        return [200, incompleteNTROs];
+    });
+
 mock.onGet(routes.ALERT_API().apiUrl)
     .reply(() => {
         console.log('Alert status API hit');
@@ -128,6 +175,13 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 },
             ],
         ];
+    });
+
+mock.onGet(routes.COMP_AVAIL_API().apiUrl)
+    .reply(() => {
+        console.log('Computer availability API hit');
+        // mock computer availability
+        return [200, computerAvailability];
     });
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
@@ -323,12 +377,6 @@ mock
     .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_ACCT1101]
-    })
-    .onGet(routes.COMP_AVAIL_API.apiUrl)
-    .reply(() => {
-        console.log('Computer availability API hit');
-        // mock computer availability
-        return [200, computerAvailability];
     })
     .onAny()
     .reply(config => {

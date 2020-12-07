@@ -95,6 +95,7 @@ a {
 // The container which houses content
 .content-container {
   display: flex;
+  position: relative;
   flex: 0 1 auto;
   flex-direction: column;
   overflow-y: auto;

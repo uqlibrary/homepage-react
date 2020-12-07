@@ -164,7 +164,12 @@ export const ChatStatus = ({ status }) => {
     }
     if (!!closeChatState) {
         return (
-            <Tooltip title={'Click to open online chat'} placement="left" TransitionProps={{ timeout: 300 }}>
+            <Tooltip
+                title={'Click to open online chat'}
+                placement="left"
+                TransitionProps={{ timeout: 300 }}
+                style={{ zIndex: 999 }}
+            >
                 <Fab
                     color="secondary"
                     className={`${classes.chatAction} ${chatState.online ? classes.badgeOnline : classes.badgeOffline}`}

@@ -34,19 +34,15 @@ export const CourseResourcesPanel = ({ account, history }) => {
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(
         searchUrl => {
-            console.log('pushing to history: ', searchUrl);
             searchUrl !== '' && history.push(searchUrl);
         },
         [history],
     );
     React.useEffect(() => {
-        console.log('change in searchurl found (now ', searchUrl, ')');
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
 
-    const navigateToCourseResourcePage = (option, searchKeyword) => {
-        console.log('navigateToCourseResourcePage: option = ', option);
-        console.log('navigateToCourseResourcePage: searchKeyword = ', searchKeyword);
+    const navigateToCourseResourcePage = option => {
         if (!option.text || !option.rest || !option.rest.campus || !option.rest.period) {
             return; // should never happen
         }
@@ -55,13 +51,10 @@ export const CourseResourcesPanel = ({ account, history }) => {
             campus: option.rest.campus,
             semester: option.rest.period,
         };
-        console.log('navigateToCourseResourcePage: course = ', course);
-        console.log(
-            'navigateToCourseResourcePage: new url = ',
-            getUrlForCourseResourceSpecificTab(course, pageLocation, false, true),
-        );
         setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
     };
+
+    const courseResourceId = 'homepage-courseresource';
 
     return (
         <StandardCard
@@ -71,7 +64,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
             standardCardId="course-resources-panel"
             title={
                 <Grid container>
-                    <Grid item xs>
+                    <Grid item xs id={`${courseResourceId}-autocomplete-label`}>
                         {locale.title}
                     </Grid>
                 </Grid>
@@ -79,11 +72,11 @@ export const CourseResourcesPanel = ({ account, history }) => {
         >
             <CourseResourceSearch
                 displayType="compact"
-                elementId="homepage-courseresource"
+                elementId={courseResourceId}
                 navigateToCourseResourcePage={navigateToCourseResourcePage}
             />
 
-            {!!account && !!account.current_classes && account.current_classes.length > 0 && (
+            {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
                 <div
                     style={{
                         height: 275,
@@ -121,6 +114,8 @@ export const CourseResourcesPanel = ({ account, history }) => {
                         })}
                     </Grid>
                 </div>
+            ) : (
+                <div style={{ marginLeft: 16 }}>{locale.noCourses}</div>
             )}
         </StandardCard>
     );

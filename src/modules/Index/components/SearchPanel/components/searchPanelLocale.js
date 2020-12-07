@@ -19,7 +19,7 @@ export const searchPanelLocale = {
             {
                 name: 'Library',
                 icon: <PublicIcon size="small" color="secondary" />,
-                placeholder: 'Find books, databases, conferences and more...',
+                placeholder: 'Find books, articles, databases, Library guides & more',
                 link:
                     'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]' +
                     primoPrefix +

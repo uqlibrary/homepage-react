@@ -13,7 +13,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -22,26 +21,24 @@ context('Homepage', () => {
         // this type of user will see these options on the Mylibrary Button:
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
             'print-balance',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
         // this type of user will see these lines in the Personalisation Panel
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels([
-            // 'feedback',
+            'computer-availability',
             'library-hours',
             'library-services',
             'training',
@@ -50,10 +47,9 @@ context('Homepage', () => {
         hasMyLibraryButtonOptions([
             'borrowing',
             'document-delivery',
+            'espace',
             // 'print-balance', // TBA
-            'publication-metrics',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -62,7 +58,7 @@ context('Homepage', () => {
         hasPersonalisedPanelOptions([
             'fines',
             'loans',
-            // 'print-balance', // TBA
+            // 'papercut', // TBA
         ]);
     });
 
@@ -72,7 +68,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -80,10 +75,8 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
-            // 'library-hours',
             'print-balance',
             'room-bookings',
             'saved-items',
@@ -91,15 +84,15 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders a researcher home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
         hasPanels([
+            'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -109,15 +102,14 @@ context('Homepage', () => {
             'borrowing',
             'course-resources',
             'document-delivery',
+            'espace',
             'print-balance',
-            'publication-metrics',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a library staff administrator home page correctly', () => {
@@ -126,7 +118,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -134,20 +125,18 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
+            'espace',
             'masquerade',
             'print-balance',
-            'publication-metrics',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
@@ -156,7 +145,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -164,27 +152,25 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
+            'espace',
             'print-balance',
-            'publication-metrics',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a non-library staff member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
         hasPanels([
+            'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -194,15 +180,14 @@ context('Homepage', () => {
             'borrowing',
             'course-resources',
             'document-delivery',
+            'espace',
             'print-balance',
-            'publication-metrics',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['loans', 'papercut']);
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
@@ -210,7 +195,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -218,8 +202,6 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -233,7 +215,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -241,8 +222,6 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -256,7 +235,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -264,16 +242,14 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'document-delivery',
             'print-balance',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders an Associate EM member home page correctly', () => {
@@ -281,7 +257,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -289,9 +264,7 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'document-delivery',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -305,7 +278,6 @@ context('Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -313,8 +285,6 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -329,7 +299,6 @@ context('Homepage', () => {
         hasPanels([
             'computer-availability',
             'course-resources',
-            // 'feedback',
             'library-hours',
             'library-services',
             'training',
@@ -337,18 +306,16 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
-            // 'library-hours',
+            'espace',
             'print-balance',
-            'publication-metrics',
             'saved-items',
             'saved-searches',
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['fines', 'loans', 'print-balance']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders a logged out user', () => {
@@ -357,10 +324,10 @@ context('Homepage', () => {
         cy.get('div#content-container').contains('Search');
 
         hasPanels([
-            // 'feedback',
+            'computer-availability',
             'library-hours',
-            'library-services',
             'training',
+            'promo',
         ]);
 
         // no mylibrary button

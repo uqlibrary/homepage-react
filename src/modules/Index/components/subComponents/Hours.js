@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from '../../../SharedComponents/Toolbox/StandardCard';
@@ -123,12 +123,22 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || null);
     const [showIcon, setShowIcon] = React.useState(false);
-    if (!!libHoursLoading) {
+    useEffect(() => {
+        if (location !== cookies.location) {
+            setShowIcon(true);
+            setLocation(cookies.location);
+            setTimeout(() => {
+                setShowIcon(false);
+            }, 5000);
+        }
+    }, [location, cookies.location]);
+    if (!libHours || !!libHoursLoading) {
         return null;
     }
     const cleanedHours =
         (!!libHours &&
             !!libHours.locations &&
+            libHours.locations.length > 0 &&
             libHours.locations.map(item => {
                 const departments = item.departments.map(item => {
                     return { name: item.name, hours: item.rendered };
@@ -151,20 +161,12 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
             // eslint-disable-next-line no-nested-ternary
-            const result = textA < textB ? -1 : textA > textB ? 1 : 0;
-            return result;
+            return textA < textB ? -1 : textA > textB ? 1 : 0;
         });
     const sortedHours = matchSorter(alphaHours, cookies.location, {
         keys: ['campus'],
         threshold: matchSorter.rankings.NO_MATCH,
     });
-    if (location !== cookies.location) {
-        setShowIcon(true);
-        setLocation(cookies.location);
-        setTimeout(() => {
-            setShowIcon(false);
-        }, 5000);
-    }
     const navigateToUrl = url => {
         window.location.href = url;
     };
@@ -178,7 +180,10 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                 }
                 return null;
             });
-        return `${name || ''}. Study space hours are ${hours[0]} and Ask Us hours are ${hours[1]}`;
+        return `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''} ${
+            !!hours[0] && !!hours[1] ? 'and' : ''
+        }
+            ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
     };
     return (
         <StandardCard

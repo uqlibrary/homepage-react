@@ -84,6 +84,7 @@ const styles = theme => ({
         textAlign: 'right',
     },
     givingBlock: {
+        maxWidth: 240,
         marginRight: 10,
     },
     givingButtonClass: {
@@ -93,9 +94,11 @@ const styles = theme => ({
             backgroundColor: theme.palette.accent.dark,
         },
         padding: '1rem',
+        textTransform: 'initial',
     },
     contacts: {
         marginTop: '-4px',
+        maxWidth: 400,
         '& div': {
             '& div': {
                 [theme.breakpoints.down('sm')]: {
@@ -137,7 +140,7 @@ export function ConnectFooter(props) {
             alignItems="flex-start"
             justify="center"
         >
-            <Grid item xs={12} md={4} className={classes.navigation}>
+            <Grid item xs={12} md={3} className={classes.navigation}>
                 <ul>
                     <li>
                         <a data-testid="footermenu-homepage" href={menuLocale.menuhome.linkTo}>
@@ -155,7 +158,7 @@ export function ConnectFooter(props) {
                     ))}
                 </ul>
             </Grid>
-            <Grid item xs={12} md={4} className={classes.contacts}>
+            <Grid item xs={12} md={5} className={classes.contacts}>
                 <Grid container>
                     <Grid item xs={'auto'}>
                         <Typography variant={'h6'} component={'h3'}>
@@ -206,7 +209,7 @@ export function ConnectFooter(props) {
                 <Grid container spacing={2}>
                     {locale.connectFooter.givingLinks.map((item, index) => {
                         return (
-                            <Grid item xs={12} md={8} key={`givingLinks-${index}`} className={classes.givingBlock}>
+                            <Grid item xs={12} key={`givingLinks-${index}`} className={classes.givingBlock}>
                                 <Button
                                     fullWidth
                                     children={item.label}

@@ -7,6 +7,7 @@ import { _courseLink } from '../courseResourcesHelpers';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(
@@ -32,7 +33,10 @@ export const SubjectLinks = ({ subject }) => {
         locale.myCourses.courseLinks.links.push(locale.myCourses.courseLinks.legalResearchEssentials);
 
     return (
-        <StandardCard fullHeight title={locale.myCourses.courseLinks.title}>
+        <StandardCard fullHeight noHeader standardCardId={`subject-links-${subject.classnumber}`}>
+            <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+                {locale.myCourses.courseLinks.title}
+            </Typography>
             <Grid container className={'CourseLinks'}>
                 {!!locale.myCourses.courseLinks.links &&
                     locale.myCourses.courseLinks.links.length > 0 &&

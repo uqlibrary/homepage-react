@@ -7,7 +7,7 @@ import locale from '../courseResourcesLocale';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
 import { MyCourses } from './MyCourses';
-import { SearchCourseResources } from './SearchCourseResources';
+import { SearchCourses } from './SearchCourses';
 import { TabPanel } from './TabPanel';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -32,6 +32,15 @@ export const CourseResources = ({
 }) => {
     const { account } = useAccountContext();
     const location = useLocation();
+
+    /**
+     * The page consists of 2 sections:
+     * - the user's enrolled courses (aka subjects), and
+     * - search area
+     * If the user is enrolled in courses then we load that section: top0
+     * Otherwise we load the search section: top1
+     * These sections are displayed as 2 tabs across the top
+     */
 
     const getQueryParams = qs => {
         const qs1 = qs.split('+').join(' ');
@@ -89,13 +98,19 @@ export const CourseResources = ({
     const getInitialTopTabState = () => {
         let initialTopTabState = 'top1';
         // if has account and no search param supplied, show My Course tab
-        if (!!account.current_classes && account.current_classes.length && (!params || !params.coursecode)) {
+        if (
+            !!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
+            (!params || !params.coursecode)
+        ) {
             initialTopTabState = 'top0';
         }
         // if has account and param supplied and param in account list, show My Course tab
-        !!account.current_classes &&
-            account.current_classes.length &&
-            !!params &&
+        !!params &&
+            !!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
             account.current_classes.map(item => {
                 if (
                     item.classnumber === (params.coursecode || '') &&
@@ -107,14 +122,6 @@ export const CourseResources = ({
             });
         return initialTopTabState;
     };
-    /**
-     * The page consists of 2 sections:
-     * - the user's enrolled courses (aka subjects), and
-     * - search area
-     * If the user is enrolled in courses then we load that section: top0
-     * Otherwise we load the search section: top1
-     * These sections are displayed as 2 tabs across the top
-     */
     const [topmenu, setCurrentTopTab] = useState(getInitialTopTabState);
     const handleTopTabChange = (event, topMenuTabId) => {
         setCurrentTopTab(topMenuTabId);
@@ -252,7 +259,7 @@ export const CourseResources = ({
                                 label="topmenu"
                                 {...reverseA11yProps('1')}
                             >
-                                <SearchCourseResources
+                                <SearchCourses
                                     account={account}
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
