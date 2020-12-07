@@ -7,16 +7,10 @@ import {
 
 context('Homepage', () => {
     it('Renders an on-campus undergraduate home page correctly', () => {
-        expectUserToDisplayCorrectFirstName('s1111111', 'John');
+        expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
         // this type of user will see the following panels:
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         // this type of user will see these options on the Mylibrary Button:
         hasMyLibraryButtonOptions([
@@ -37,12 +31,7 @@ context('Homepage', () => {
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -65,13 +54,7 @@ context('Homepage', () => {
     it('Renders a remote undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
 
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -90,13 +73,7 @@ context('Homepage', () => {
     it('Renders a researcher home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
 
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -115,13 +92,7 @@ context('Homepage', () => {
     it('Renders a library staff administrator home page correctly', () => {
         expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
 
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -142,13 +113,7 @@ context('Homepage', () => {
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
 
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -168,13 +133,7 @@ context('Homepage', () => {
     it('Renders a non-library staff member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
 
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -193,19 +152,9 @@ context('Homepage', () => {
     it('Renders a paid Community EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
-        hasMyLibraryButtonOptions([
-            'borrowing',
-            'saved-items',
-            'saved-searches',
-            'feedback',
-        ]);
+        hasMyLibraryButtonOptions(['borrowing', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans']);
     });
@@ -213,19 +162,9 @@ context('Homepage', () => {
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
-        hasMyLibraryButtonOptions([
-            'borrowing',
-            'saved-items',
-            'saved-searches',
-            'feedback',
-        ]);
+        hasMyLibraryButtonOptions(['borrowing', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans']);
     });
@@ -233,12 +172,7 @@ context('Homepage', () => {
     it('Renders a Hospital EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -255,20 +189,9 @@ context('Homepage', () => {
     it('Renders an Associate EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
-        hasMyLibraryButtonOptions([
-            'borrowing',
-            'document-delivery',
-            'saved-items',
-            'saved-searches',
-            'feedback',
-        ]);
+        hasMyLibraryButtonOptions(['borrowing', 'document-delivery', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans']);
     });
@@ -276,19 +199,9 @@ context('Homepage', () => {
     it('Renders a Fryer Library EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'library-services', 'training']);
 
-        hasMyLibraryButtonOptions([
-            'borrowing',
-            'saved-items',
-            'saved-searches',
-            'feedback',
-        ]);
+        hasMyLibraryButtonOptions(['borrowing', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans']);
     });
@@ -296,13 +209,7 @@ context('Homepage', () => {
     it('Renders an Honorary EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
 
-        hasPanels([
-            'computer-availability',
-            'course-resources',
-            'library-hours',
-            'library-services',
-            'training',
-        ]);
+        hasPanels(['computer-availability', 'course-resources', 'library-hours', 'library-services', 'training']);
 
         hasMyLibraryButtonOptions([
             'borrowing',
@@ -323,12 +230,7 @@ context('Homepage', () => {
         cy.viewport(1300, 1000);
         cy.get('div#content-container').contains('Search');
 
-        hasPanels([
-            'computer-availability',
-            'library-hours',
-            'training',
-            'promo',
-        ]);
+        hasPanels(['computer-availability', 'library-hours', 'training', 'promo']);
 
         // no mylibrary button
         cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
