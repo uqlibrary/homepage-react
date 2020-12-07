@@ -112,23 +112,18 @@ export const Index = ({
     // Load homepage data requirements
     useEffect(() => {
         if (!spotlights && spotlightsLoading === null) {
-            console.log('spotlights');
             dispatch(loadSpotlights());
         }
         if (!!account && !printBalance && printBalanceLoading === null) {
-            console.log('print balance');
             dispatch(loadPrintBalance());
         }
         if (!!account && !loans && loansLoading === null) {
-            console.log('loans');
             dispatch(loadLoans());
         }
         if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
-            console.log('possible pubs');
             dispatch(searcheSpacePossiblePublications());
         }
         if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
-            console.log('incomplete ntro');
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [
@@ -168,10 +163,15 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     )}
-                    {/* Spotlights */}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
-                    </Grid>
+                    {!!spotlights && spotlights.length > 0 && (
+                        <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
+                            <Spotlights
+                                spotlights={spotlights}
+                                spotlightsLoading={spotlightsLoading}
+                                account={account}
+                            />
+                        </Grid>
+                    )}
 
                     {/* Personalisation panel or hours */}
                     {!!account ? (
@@ -194,7 +194,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeComputerAvailability(account) && (
+                    {!!computerAvailability && seeComputerAvailability(account) && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                             <Computers
                                 computerAvailability={computerAvailability}
@@ -204,7 +204,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!account && seeLibraryHours(account) && (
+                    {!!libHours && seeLibraryHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
