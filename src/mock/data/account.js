@@ -86,7 +86,7 @@ export const accounts = {
         "class": ["IS_UQ_STUDENT_PLACEMENT", "IS_CURRENT"],
         "type": 1,
         "homeLib": "St Lucia",
-        "firstName": "John",
+        "firstName": "Michael",
         "lastName": "Undegraduate",
         "name": "John Undegraduate",
         "mail": "undegraduate@student.uq.edu.au",

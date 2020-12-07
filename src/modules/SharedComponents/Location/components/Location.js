@@ -68,7 +68,7 @@ export const Location = ({ idLabel }) => {
     } else {
         thisLocation = cookies.location;
     }
-    const id = tag => `location-${idLabel}${tag ? '-' + tag : ''}`;
+    const id = (tag = null) => `location${!!idLabel ? '-' + idLabel : ''}${!!tag ? '-' + tag : ''}`;
     return (
         <div id={id()} data-testid={id()} style={{ marginLeft: -16 }}>
             <Tooltip
@@ -100,6 +100,10 @@ export const Location = ({ idLabel }) => {
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
+                PaperProps={{
+                    id: id('paper'),
+                    'data-testid': id('paper'),
+                }}
             >
                 {locale.locations.map((item, index) => (
                     <MenuItem
@@ -124,7 +128,7 @@ Location.propTypes = {
 };
 
 Location.defaultProps = {
-    idLabel: '',
+    idLabel: null,
 };
 
 export default Location;
