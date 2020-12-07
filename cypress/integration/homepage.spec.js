@@ -50,7 +50,7 @@ context('Homepage', () => {
             'borrowing',
             'document-delivery',
             'espace',
-            // 'print-balance', // TBA
+            'print-balance',
             'room-bookings',
             'saved-items',
             'saved-searches',
@@ -210,6 +210,7 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
+            'print-balance',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -231,6 +232,7 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
+            'print-balance',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -276,6 +278,7 @@ context('Homepage', () => {
         hasMyLibraryButtonOptions([
             'borrowing',
             'document-delivery',
+            'print-balance',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -298,6 +301,7 @@ context('Homepage', () => {
         hasMyLibraryButtonOptions([
             'borrowing',
             'saved-items',
+            'print-balance',
             'saved-searches',
             'feedback',
         ]);

@@ -65,24 +65,6 @@ export const seeCourseResources = account => {
 };
 
 export const seeComputerAvailability = account => !!account || true;
-// !!account &&
-// [
-//     UNDERGRADUATE_GENERAL,
-//     UNDERGRADUATE_REMOTE,
-//     UNDERGRADUATE_TESOL,
-//     UNDERGRADUATE_VOCATIONAL,
-//     POSTGRAD_COURSEWORK,
-//     POSTGRAD_COURSEWORK_REMOTE,
-//     LIBRARY_STAFF,
-//     STAFF_AWAITING_AURION,
-//     EXTRAMURAL_COMMUNITY_PAID,
-//     EXTRAMURAL_ALUMNI,
-//     EXTRAMURAL_HOSPITAL,
-//     EXTRAMURAL_ASSOCIATE,
-//     EXTRAMURAL_FRYER,
-//     EXTRAMURAL_HONORARY,
-//     EXTRAMURAL_PROXY,
-// ].includes(account.user_group);
 
 export const seeLibraryHours = account => !!account || true;
 
@@ -122,18 +104,7 @@ export const seeFines = account =>
         EXTRAMURAL_HONORARY,
     ].includes(account.user_group);
 
-export const seePrintBalance = account =>
-    !!account &&
-    [
-        UNDERGRADUATE_GENERAL,
-        UNDERGRADUATE_REMOTE,
-        POSTGRAD_COURSEWORK,
-        POSTGRAD_COURSEWORK_REMOTE,
-        EXTRAMURAL_HOSPITAL,
-        EXTRAMURAL_HONORARY,
-        OTHER_STAFF,
-        LIBRARY_STAFF,
-    ].includes(account.user_group);
+export const seePrintBalance = account => !!account;
 
 export const seeSavedItems = account => !!account || true;
 export const seeSavedSearches = account => !!account || true;
