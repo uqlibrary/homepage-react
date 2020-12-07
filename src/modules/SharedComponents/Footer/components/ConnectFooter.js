@@ -57,11 +57,13 @@ const styles = theme => ({
         display: 'inline-block',
     },
     socialButtonClass: {
-        backgroundColor: '#000 !important',
+        backgroundColor: `${theme.palette.primary.main} !important`,
         color: theme.palette.white.main,
         '&:hover': {
             backgroundColor: theme.palette.accent.dark + '!important',
         },
+        width: 50,
+        height: 50,
     },
     internal: {
         bottom: '1rem',
