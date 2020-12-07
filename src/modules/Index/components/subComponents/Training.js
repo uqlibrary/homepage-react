@@ -169,7 +169,8 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                                         {event.name}
                                                     </Grid>
                                                     <Grid item className={classes.eventSummary}>
-                                                        {eventTime(event.start)} - {event.campus}
+                                                        {eventTime(event.start)}
+                                                        {event.campus ? ` - ${event.campus}` : ''}
                                                     </Grid>
                                                 </Grid>
                                             </Button>
