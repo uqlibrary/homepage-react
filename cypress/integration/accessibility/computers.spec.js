@@ -15,6 +15,7 @@ context('ACCESSIBILITY', () => {
 
         cy.log('Level displayed');
         cy.get('button[data-testid="computers-library-button-0"]').click();
+        cy.wait(500);
         cy.checkA11y('div[data-testid="standard-card-training"]', {
             reportName: 'Computers',
             scopeName: 'Level expanded',
@@ -23,6 +24,7 @@ context('ACCESSIBILITY', () => {
 
         cy.log('Floor map');
         cy.get('button[data-testid="computers-library-0-level-3-button"]').click();
+        cy.wait(500);
         cy.checkA11y('div[data-testid="computers-library-dialog"]', {
             reportName: 'Computers',
             scopeName: 'Lvel map',

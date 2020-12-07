@@ -129,7 +129,7 @@
         "webpack-bundle-analyzer": "^3.6.1",
         "webpack-cli": "^3.0.8",
         "webpack-dev-server": "^3.11.0",
-        "webpack-pwa-manifest": "^4.2.0"
+        "webpack-pwa-manifest": "^4.3.0"
     },
     "dependencies": {
         "@babel/polyfill": "^7.8.7",
@@ -146,7 +146,7 @@
         "babel-loader": "^8.0.6",
         "can-deparam": "^1.1.1",
         "can-param": "^1.0.4",
-        "caniuse-lite": "^1.0.30001038",
+        "caniuse-lite": "^1.0.30001165",
         "classnames": "^2.2.6",
         "clsx": "^1.1.1",
         "connected-react-router": "^6.4.0",

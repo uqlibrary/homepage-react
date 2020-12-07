@@ -130,6 +130,17 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
     const openMoreTraining = () => {
         window.location.href = 'https://web.library.uq.edu.au/library-services/training';
     };
+    const eventTime = eventTime =>
+        moment(eventTime)
+            .calendar(null, {
+                sameDay: '[Today,] dddd D MMMM [at] h.mma',
+                nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
+                nextWeek: 'dddd D MMMM [at] h.mma',
+                lastDay: '[Yesterday]  D MMMM [at] h.mma',
+                lastWeek: '[Last] dddd  D MMMM [at] h.mma',
+                sameElse: 'D MMMM [at] h.mma',
+            })
+            .replace('.00', '');
     return (
         <StandardCard accentHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
@@ -143,16 +154,6 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                         {trainingEvents &&
                             trainingEvents.length > 0 &&
                             trainingEvents.map((event, index) => {
-                                const time = moment(event.start)
-                                    .calendar(null, {
-                                        sameDay: '[Today,] dddd D MMMM [at] h.mma',
-                                        nextDay: '[Tomorrow,] dddd D MMMM [at] h.mma',
-                                        nextWeek: 'dddd D MMMM [at] h.mma',
-                                        lastDay: '[Yesterday]  D MMMM [at] h.mma',
-                                        lastWeek: '[Last] dddd  D MMMM [at] h.mma',
-                                        sameElse: 'D MMMM [at] h.mma',
-                                    })
-                                    .replace('.00', '');
                                 return (
                                     <Grid container spacing={0} className={classes.row} key={index}>
                                         <Grid item xs={12}>
@@ -168,7 +169,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                                         {event.name}
                                                     </Grid>
                                                     <Grid item className={classes.eventSummary}>
-                                                        {time} - {event.campus}
+                                                        {eventTime(event.start)} - {event.campus}
                                                     </Grid>
                                                 </Grid>
                                             </Button>
@@ -206,7 +207,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs>
-                                            <Typography className={classes.detailTitle} variant={'h4'}>
+                                            <Typography className={classes.detailTitle} variant={'h6'} component={'h4'}>
                                                 {eventDetail.name}
                                             </Typography>
                                         </Grid>
@@ -221,12 +222,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={classes.detailMeta}>
-                                            {moment(eventDetail.start).calendar(null, {
-                                                nextWeek: 'dddd MMM Do [at] LT',
-                                                lastDay: '[Yesterday]',
-                                                lastWeek: '[Last] dddd',
-                                                sameElse: 'DD/MM/YYYY',
-                                            })}
+                                            {eventTime(eventDetail.start)}
                                         </Grid>
                                         <Grid item xs={1} className={classes.detailMeta}>
                                             <Tooltip
