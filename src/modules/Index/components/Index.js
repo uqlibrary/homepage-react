@@ -13,17 +13,7 @@ import {
     searcheSpaceIncompleteNTROPublications,
 } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
-import {
-    seeCourseResources,
-    seeComputerAvailability,
-    seeLibraryHours,
-    seeLibraryServices,
-    // seeLoans,
-    seeLoggedOut,
-    // seePrintBalance,
-    seeTraining,
-    getUserServices,
-} from 'helpers/access';
+import { seeCourseResources, seeLibraryServices, seeLoggedOut, seeTraining, getUserServices } from 'helpers/access';
 import Spotlights from './subComponents/Spotlights';
 import { makeStyles } from '@material-ui/styles';
 import Hours from './subComponents/Hours';
@@ -193,7 +183,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!computerAvailability && seeComputerAvailability(account) && (
+                    {!!computerAvailability && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                             <Computers
                                 computerAvailability={computerAvailability}
@@ -203,7 +193,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!libHours && seeLibraryHours(account) && (
+                    {!!account && !!libHours && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>

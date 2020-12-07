@@ -226,7 +226,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                     marginTop: -6,
                                 }}
                             >
-                                {mapSrc.library} - Level {mapSrc.level} ({mapSrc.total} of {mapSrc.available} free)
+                                {mapSrc.library} - Level {mapSrc.level} ({mapSrc.available} of {mapSrc.total} free)
                             </Typography>
                         </Grid>
                         <Grid item xs={'auto'}>
