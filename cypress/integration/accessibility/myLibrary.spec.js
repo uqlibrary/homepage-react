@@ -13,7 +13,7 @@ context('ACCESSIBILITY', () => {
         });
         cy.log('My Library menu');
         cy.get('button[data-testid="mylibrary-button"]').click();
-        cy.get('li[data-testid="mylibrary-menuitem-3"]').contains('Masquerade');
+        cy.get('li[data-testid="mylibrary-menuitem-masquerade"]').contains('Masquerade');
         cy.wait(500);
         // TODO: For some reason, Axe seems to think there is a light foreground color when there isnt.
         cy.checkA11y('div[data-testid="mylibrary-paper"]', {

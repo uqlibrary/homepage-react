@@ -2,7 +2,7 @@ import * as actions from './actionTypes';
 import {
     PRIMO_SUGGESTIONS_API_GENERIC,
     PRIMO_SUGGESTIONS_API_EXAMS,
-    PRIMO_SUGGESTIONS_API_PAST_COURSE,
+    SUGGESTIONS_API_PAST_COURSE,
 } from '../repositories/routes';
 // import { get } from 'repositories/generic';
 /**
@@ -66,10 +66,10 @@ export function loadExamPaperSuggestions(keyword) {
     };
 }
 
-export function loadCourseReadingListsSuggestions(keyword) {
+export function loadHomepageCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return fetch(PRIMO_SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
+        return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
                 const payload = data.map((item, index) => {

@@ -47,7 +47,7 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     cy.get('button[data-testid="mylibrary-button"]').click();
 
     const availableOptions = new Map();
-    availableOptions.set('0', 'Borrowing');
+    availableOptions.set('borrowing', 'Borrowing');
     // availableOptions.set('computer-availability', 'Computer');
     availableOptions.set('course-resources', 'Course resources');
     availableOptions.set('document-delivery', 'Document delivery');
