@@ -12,7 +12,20 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles(() => ({
+    myCourses: {
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        marginRight: -16,
+        marginTop: 4,
+        marginBottom: -24,
+        marginLeft: -16,
+        padding: '0 30px 8px',
+    },
+}));
 
 export const getUrlForCourseResourceSpecificTab = (
     item,
@@ -30,6 +43,7 @@ export const getUrlForCourseResourceSpecificTab = (
 
 export const CourseResourcesPanel = ({ account, history }) => {
     const pageLocation = useLocation();
+    const classes = useStyles();
 
     const [searchUrl, setSearchUrl] = React.useState('');
     const loadSearchResult = React.useCallback(
@@ -77,43 +91,30 @@ export const CourseResourcesPanel = ({ account, history }) => {
             />
 
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
-                <div
-                    style={{
-                        height: 275,
-                        overflowX: 'hidden',
-                        overflowY: 'auto',
-                        marginRight: -16,
-                        marginTop: 4,
-                        marginBottom: -24,
-                        marginLeft: -16,
-                        padding: '0 30px 8px',
-                    }}
-                >
-                    <Grid container spacing={1} style={{ marginTop: 12, marginLeft: 4 }} data-testid="your-courses">
-                        <Grid item xs={12}>
-                            <Typography color={'secondary'} component={'h4'} variant={'h6'}>
-                                {locale.userCourseTitle}
-                            </Typography>
-                        </Grid>
-                        {account.current_classes.map((item, index) => {
-                            return (
-                                <Grid
-                                    item
-                                    xs={12}
-                                    data-testid={`hcr-${index}`}
-                                    key={`hcr-${index}`}
-                                    style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
-                                >
-                                    <Link to={getUrlForCourseResourceSpecificTab(item, pageLocation)}>
-                                        {item.classnumber}
-                                    </Link>
-                                    {' - '}
-                                    {item.DESCR}
-                                </Grid>
-                            );
-                        })}
+                <Grid container spacing={1} data-testid="your-courses" className={classes.myCourses}>
+                    <Grid item xs={12}>
+                        <Typography color={'secondary'} component={'h4'} variant={'h6'}>
+                            {locale.userCourseTitle}
+                        </Typography>
                     </Grid>
-                </div>
+                    {account.current_classes.map((item, index) => {
+                        return (
+                            <Grid
+                                item
+                                xs={12}
+                                data-testid={`hcr-${index}`}
+                                key={`hcr-${index}`}
+                                style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
+                            >
+                                <Link to={getUrlForCourseResourceSpecificTab(item, pageLocation)}>
+                                    {item.classnumber}
+                                </Link>
+                                {' - '}
+                                {item.DESCR}
+                            </Grid>
+                        );
+                    })}
+                </Grid>
             ) : (
                 <div style={{ marginLeft: 16 }}>{locale.noCourses}</div>
             )}
