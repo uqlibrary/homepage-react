@@ -54,6 +54,8 @@ export const CourseResourcesPanel = ({ account, history }) => {
         setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
     };
 
+    const courseResourceId = 'homepage-courseresource';
+
     return (
         <StandardCard
             fullHeight
@@ -62,7 +64,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
             standardCardId="course-resources-panel"
             title={
                 <Grid container>
-                    <Grid item xs>
+                    <Grid item xs id={`${courseResourceId}-autocomplete-label`}>
                         {locale.title}
                     </Grid>
                 </Grid>
@@ -70,11 +72,11 @@ export const CourseResourcesPanel = ({ account, history }) => {
         >
             <CourseResourceSearch
                 displayType="compact"
-                elementId="homepage-courseresource"
+                elementId={courseResourceId}
                 navigateToCourseResourcePage={navigateToCourseResourcePage}
             />
 
-            {!!account && !!account.current_classes && account.current_classes.length > 0 && (
+            {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
                 <div
                     style={{
                         height: 275,
@@ -112,6 +114,8 @@ export const CourseResourcesPanel = ({ account, history }) => {
                         })}
                     </Grid>
                 </div>
+            ) : (
+                <div style={{ marginLeft: 16 }}>{locale.noCourses}</div>
             )}
         </StandardCard>
     );

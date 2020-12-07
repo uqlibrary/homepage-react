@@ -177,6 +177,13 @@ mock.onGet(routes.ALERT_API().apiUrl)
         ];
     });
 
+mock.onGet(routes.COMP_AVAIL_API().apiUrl)
+    .reply(() => {
+        console.log('Computer availability API hit');
+        // mock computer availability
+        return [200, computerAvailability];
+    });
+
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,
     response: {
@@ -370,12 +377,6 @@ mock
     .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_ACCT1101]
-    })
-    .onGet(routes.COMP_AVAIL_API.apiUrl)
-    .reply(() => {
-        console.log('Computer availability API hit');
-        // mock computer availability
-        return [200, computerAvailability];
     })
     .onAny()
     .reply(config => {

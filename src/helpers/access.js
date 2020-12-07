@@ -163,9 +163,11 @@ export const seePublicationMetrics = account =>
 
 export const seeTraining = account => !!account || true;
 
-export const seeLibraryServices = account => !!account || true;
+export const seeLibraryServices = account => !!account;
 
 export const seeFeedback = account => !!account || true;
+
+export const seeLoggedOut = account => !account;
 
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
@@ -203,9 +205,9 @@ const userGroupServices = {
 
 export const getUserServices = account => {
     const allLibraryServices = locale.LibraryServices.links || [];
-    if (!account || !account.user_group) {
-        return allLibraryServices.filter(i => i.title.startsWith('Services for'));
+    if (!!account && !!account.user_group) {
+        const userGroupService = userGroupServices[account.user_group];
+        return userGroupService.map(service => allLibraryServices.find(i => i.id === service));
     }
-    const userGroupService = userGroupServices[account.user_group];
-    return userGroupService.map(service => allLibraryServices.find(i => i.id === service));
+    return [];
 };

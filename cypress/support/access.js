@@ -1,9 +1,7 @@
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.wait(5000);
     cy.get('div[data-testid="personalised-panel"]').contains(firstname);
-    cy.wait(5000);
 };
 export const hasPanels = optionsTheUserShouldSee => {
     const availableOptions = new Map();
@@ -13,6 +11,7 @@ export const hasPanels = optionsTheUserShouldSee => {
     availableOptions.set('library-hours', 'Library hours');
     availableOptions.set('library-services', 'Library services');
     availableOptions.set('training', 'Training');
+    availableOptions.set('promo', 'n/a');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -30,8 +29,13 @@ export const hasPanels = optionsTheUserShouldSee => {
         const panelname = `${key}-panel`;
         const elementId = `div[data-testid="${panelname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
-            cy.log(`checking panel ${panelname} contains ${value}`);
-            cy.get(elementId).contains(value);
+            if (key === 'promo') {
+                // the promo panel is admin editable, so we cant just check the header. Just check it exists
+                cy.get(elementId).length > 0;
+            } else {
+                cy.log(`checking panel ${panelname} contains ${value}`);
+                cy.get(elementId).contains(value);
+            }
         } else {
             cy.log(`checking panel ${panelname} is missing`);
             cy.get(elementId).should('not.exist');
@@ -43,10 +47,11 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     cy.get('button[data-testid="mylibrary-button"]').click();
 
     const availableOptions = new Map();
-    availableOptions.set('0', 'Borrowing');
+    availableOptions.set('borrowing', 'Borrowing');
     // availableOptions.set('computer-availability', 'Computer');
     availableOptions.set('course-resources', 'Course resources');
     availableOptions.set('document-delivery', 'Document delivery');
+    availableOptions.set('espace', 'eSpace dashboard');
     availableOptions.set('print-balance', 'Printing balance');
     availableOptions.set('publication-metrics', 'Publication metrics');
     availableOptions.set('room-bookings', 'Room bookings');
@@ -68,7 +73,7 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
         expect(typeof value).to.equal('string');
         expect(value.length).to.not.equals(0);
 
-        const linkName = `mylibrary-${key}-link`;
+        const linkName = `mylibrary-menuitem-${key}`;
         const elementId = `li[data-testid="${linkName}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking panel ${linkName} contains ${value}`);
@@ -82,9 +87,9 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
     return;
     const availableOptions = new Map();
-    availableOptions.set('print-balance', 'Manage your print balance');
+    availableOptions.set('papercut', 'Manage your print balance');
     availableOptions.set('loans', 'Manage your library loans');
-    availableOptions.set('fines', 'Pay overdue fines');
+    availableOptions.set('fines', 'Manage your library fines');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -92,15 +97,14 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
             .be.true;
     });
 
-    // eslint-disable-next-line guard-for-in
     for (const [key, value] of availableOptions) {
         expect(typeof key).to.equal('string');
         expect(key.length).to.not.equals(0);
         expect(typeof value).to.equal('string');
         expect(value.length).to.not.equals(0);
 
-        const entryname = `${key}-personalisation`;
-        const elementId = `div[data-testid="${entryname}"]`;
+        const entryname = `pp-${key}-menu-button`;
+        const elementId = `li[data-testid="${entryname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
             cy.get(elementId).contains(value);

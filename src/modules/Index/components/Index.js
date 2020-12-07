@@ -6,8 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
 import {
-    clearPrimoSuggestions,
-    loadCourseReadingListsSuggestions,
     loadSpotlights,
     loadPrintBalance,
     loadLoans,
@@ -20,6 +18,9 @@ import {
     seeComputerAvailability,
     seeLibraryHours,
     seeLibraryServices,
+    // seeLoans,
+    seeLoggedOut,
+    // seePrintBalance,
     seeTraining,
     getUserServices,
 } from 'helpers/access';
@@ -30,6 +31,7 @@ import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
 import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
+import PromoPanel from './subComponents/PromoPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -93,9 +95,6 @@ export const Index = ({
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
-    suggestions,
-    suggestionsLoading,
-    suggestionsError,
     trainingEvents,
     trainingEventsLoading,
     printBalance,
@@ -212,15 +211,7 @@ export const Index = ({
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <CourseResourcesPanel
-                                account={account}
-                                clearPrimoSuggestions={clearPrimoSuggestions}
-                                history={history}
-                                loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
-                                suggestions={suggestions}
-                                suggestionsLoading={suggestionsLoading}
-                                suggestionsError={suggestionsError}
-                            />
+                            <CourseResourcesPanel account={account} history={history} />
                         </Grid>
                     )}
 
@@ -256,6 +247,12 @@ export const Index = ({
                             </StandardCard>
                         </Grid>
                     )}
+
+                    {seeLoggedOut(account) && (
+                        <Grid item xs={12} md={4}>
+                            <PromoPanel />
+                        </Grid>
+                    )}
                 </Grid>
             </div>
         </StandardPage>
@@ -273,9 +270,6 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
-    suggestions: PropTypes.any,
-    suggestionsLoading: PropTypes.bool,
-    suggestionsError: PropTypes.string,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
     printBalance: PropTypes.object,

@@ -101,12 +101,11 @@ const styles = theme => {
             },
             [theme.breakpoints.down('md')]: {
                 backgroundColor: theme.palette.white.main,
-                height: 'auto',
+                height: '100%',
                 overflowY: 'auto',
-                paddingLeft: '1rem',
                 position: 'absolute',
                 left: 0,
-                width: 'calc(100% - 16px)',
+                width: '100%',
                 zIndex: 1000,
             },
         },
@@ -125,7 +124,7 @@ const styles = theme => {
             zIndex: 1000,
             position: 'absolute',
             [theme.breakpoints.down('md')]: {
-                width: 'calc(100% - 4rem - 16px)',
+                width: 'calc(100% - 4rem)',
             },
         },
         shiftLeft: {

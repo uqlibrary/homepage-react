@@ -29,7 +29,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const SearchCourseResources = ({
+export const SearchCourses = ({
     account,
     loadNewSubject,
     preselectedCourse,
@@ -181,7 +181,7 @@ export const SearchCourseResources = ({
     );
 };
 
-SearchCourseResources.propTypes = {
+SearchCourses.propTypes = {
     account: PropTypes.object,
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,

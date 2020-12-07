@@ -6,6 +6,8 @@
 
 A repo for the Library of The University of Queensland website homepage
 
+[Instructions for User Admins](docs/admin-howto.md)
+
 ## Technology
 
 - Code: `React (~16.8), Javascript (ES2015 - Babel), Immutable, SASS`

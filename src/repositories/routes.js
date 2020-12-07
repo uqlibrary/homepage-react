@@ -151,7 +151,7 @@ export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
 });
 
-export const PRIMO_SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
+export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
 });
 

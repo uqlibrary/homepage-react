@@ -9,7 +9,7 @@ exports[`Component Megamenu should render 1`] = `
 >
   <WithStyles(ForwardRef(Grid))
     item={true}
-    md={4}
+    md={3}
     xs={12}
   >
     <ul>
@@ -130,7 +130,7 @@ exports[`Component Megamenu should render 1`] = `
   </WithStyles(ForwardRef(Grid))>
   <WithStyles(ForwardRef(Grid))
     item={true}
-    md={4}
+    md={5}
     xs={12}
   >
     <WithStyles(ForwardRef(Grid))
@@ -374,7 +374,6 @@ exports[`Component Megamenu should render 1`] = `
       <WithStyles(ForwardRef(Grid))
         item={true}
         key="givingLinks-0"
-        md={8}
         xs={12}
       >
         <WithStyles(ForwardRef(Button))
@@ -390,7 +389,6 @@ exports[`Component Megamenu should render 1`] = `
       <WithStyles(ForwardRef(Grid))
         item={true}
         key="givingLinks-1"
-        md={8}
         xs={12}
       >
         <WithStyles(ForwardRef(Button))

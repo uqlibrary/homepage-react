@@ -7,7 +7,7 @@ import locale from '../courseResourcesLocale';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
 import { MyCourses } from './MyCourses';
-import { SearchCourseResources } from './SearchCourseResources';
+import { SearchCourses } from './SearchCourses';
 import { TabPanel } from './TabPanel';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -259,7 +259,7 @@ export const CourseResources = ({
                                 label="topmenu"
                                 {...reverseA11yProps('1')}
                             >
-                                <SearchCourseResources
+                                <SearchCourses
                                     account={account}
                                     listSearchedSubjects={listSearchedSubjects}
                                     loadNewSubject={loadNewSubject}
