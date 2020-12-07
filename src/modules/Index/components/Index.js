@@ -27,7 +27,7 @@ import Hours from './subComponents/Hours';
 import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
-import CourseResourcesPanel from './CourseResourcesPanel';
+import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
