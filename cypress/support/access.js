@@ -1,9 +1,7 @@
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
-    cy.wait(5000);
     cy.get('div[data-testid="personalised-panel"]').contains(firstname);
-    cy.wait(5000);
 };
 export const hasPanels = optionsTheUserShouldSee => {
     const availableOptions = new Map();
@@ -49,10 +47,11 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     cy.get('button[data-testid="mylibrary-button"]').click();
 
     const availableOptions = new Map();
-    availableOptions.set('0', 'Borrowing');
+    availableOptions.set('borrowing', 'Borrowing');
     // availableOptions.set('computer-availability', 'Computer');
     availableOptions.set('course-resources', 'Course resources');
     availableOptions.set('document-delivery', 'Document delivery');
+    availableOptions.set('espace', 'eSpace dashboard');
     availableOptions.set('print-balance', 'Printing balance');
     availableOptions.set('publication-metrics', 'Publication metrics');
     availableOptions.set('room-bookings', 'Room bookings');
@@ -74,7 +73,7 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
         expect(typeof value).to.equal('string');
         expect(value.length).to.not.equals(0);
 
-        const linkName = `mylibrary-${key}-link`;
+        const linkName = `mylibrary-menuitem-${key}`;
         const elementId = `li[data-testid="${linkName}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking panel ${linkName} contains ${value}`);

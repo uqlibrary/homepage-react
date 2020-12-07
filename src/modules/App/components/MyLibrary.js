@@ -94,7 +94,7 @@ export const MyLibrary = ({ account, history }) => {
                             <MenuItem
                                 className={classes.menuItem}
                                 id={`mylibrary-menuitem-${index}`}
-                                data-testid={`mylibrary-menuitem-${index}`}
+                                data-testid={`mylibrary-menuitem-${item.dataTestid}`}
                                 onClick={handleLink(item.link)}
                                 key={index}
                                 aria-label={item.ariaLabel}

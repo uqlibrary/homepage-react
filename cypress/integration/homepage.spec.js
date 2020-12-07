@@ -21,12 +21,10 @@ context('Homepage', () => {
         // this type of user will see these options on the Mylibrary Button:
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
             'print-balance',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -49,10 +47,9 @@ context('Homepage', () => {
         hasMyLibraryButtonOptions([
             'borrowing',
             'document-delivery',
+            'espace',
             // 'print-balance', // TBA
-            'publication-metrics',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -78,10 +75,8 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
-            // 'library-hours',
             'print-balance',
             'room-bookings',
             'saved-items',
@@ -107,9 +102,8 @@ context('Homepage', () => {
             'borrowing',
             'course-resources',
             'document-delivery',
+            'espace',
             'print-balance',
-            'publication-metrics',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -131,14 +125,12 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
+            'espace',
             'masquerade',
             'print-balance',
-            'publication-metrics',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -160,13 +152,11 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
+            'espace',
             'print-balance',
-            'publication-metrics',
             'room-bookings',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -190,9 +180,8 @@ context('Homepage', () => {
             'borrowing',
             'course-resources',
             'document-delivery',
+            'espace',
             'print-balance',
-            'publication-metrics',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -213,8 +202,6 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -235,8 +222,6 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -257,10 +242,8 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'document-delivery',
             'print-balance',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -281,9 +264,7 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'document-delivery',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -304,8 +285,6 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
-            // 'library-hours',
             'saved-items',
             'saved-searches',
             'feedback',
@@ -327,12 +306,10 @@ context('Homepage', () => {
 
         hasMyLibraryButtonOptions([
             'borrowing',
-            // 'computer-availability',
             'course-resources',
             'document-delivery',
-            // 'library-hours',
+            'espace',
             'print-balance',
-            'publication-metrics',
             'saved-items',
             'saved-searches',
             'feedback',

@@ -6,8 +6,6 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
 import {
-    clearPrimoSuggestions,
-    loadCourseReadingListsSuggestions,
     loadSpotlights,
     loadPrintBalance,
     loadLoans,
