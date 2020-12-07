@@ -180,7 +180,10 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                 }
                 return null;
             });
-        return `${name || ''}. Study space hours are ${hours[0]} and Ask Us hours are ${hours[1]}`;
+        return `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''} ${
+            !!hours[0] && !!hours[1] ? 'and' : ''
+        }
+            ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
     };
     return (
         <StandardCard
