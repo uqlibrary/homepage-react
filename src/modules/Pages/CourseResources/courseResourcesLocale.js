@@ -49,9 +49,9 @@ export default {
             visibleItemsCount: 2,
         },
         guides: {
-            title: 'Library guides',
-            none: 'No Library guides for this course',
-            unavailable: 'Library guides list currently unavailable',
+            title: 'Subject guides',
+            none: 'No subject guides for this course',
+            unavailable: 'Subject guides list currently unavailable',
             footer: {
                 links: [
                     {
