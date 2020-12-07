@@ -107,8 +107,8 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
                 {askUsLocale.askUs.links.map((item, index) => (
                     <MenuItem
                         className={classes.menuItem}
-                        id={`askus-menuitem-${item.title}`}
-                        data-testid={`askus-menuitem-${item.title}`}
+                        id={`askus-menuitem-${index}`}
+                        data-testid={`askus-menuitem-${index}`}
                         onClick={handleLink(item.url)}
                         disabled={item.title === 'Chat' && !chatStatus}
                         key={index}

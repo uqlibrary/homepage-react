@@ -112,9 +112,11 @@ export const UQSiteHeader = ({
                     </Button>
                 </Grid>
                 <Grid item xs />
-                <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
-                    <MyLibrary account={account} history={history} />
-                </Grid>
+                {!!account && (
+                    <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
+                        <MyLibrary account={account} history={history} />
+                    </Grid>
+                )}
                 <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
                     <AskUs chatStatus={chatStatus} libHours={libHours} libHoursLoading={libHoursLoading} />
                 </Grid>

@@ -28,14 +28,10 @@ context('AskUs', () => {
     it('Shows correct menu for a public user', () => {
         cy.visit('/?user=public');
         cy.viewport(1300, 1000);
-        cy.get('button[data-testid="mylibrary-button"]').contains('My library');
-        cy.get('button[data-testid="mylibrary-button"]').click();
-        cy.get('ul[data-testid="mylibrary-menulist"]')
-            .children()
-            .should('have.length', 3);
+        cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
     });
 
-    it('Shows correct menu for a public user', () => {
+    it('Shows correct menu for a researcher', () => {
         cy.visit('/?user=uqresearcher');
         cy.viewport(1300, 1000);
         cy.get('button[data-testid="mylibrary-button"]').contains('My library');
