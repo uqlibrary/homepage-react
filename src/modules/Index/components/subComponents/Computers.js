@@ -272,7 +272,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     };
     return (
         <StandardCard
-            accentHeader
+            primaryHeader
             standardCardId="standard-card-computers"
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">

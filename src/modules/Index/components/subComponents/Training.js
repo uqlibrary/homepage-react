@@ -142,7 +142,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
             })
             .replace('.00', '');
     return (
-        <StandardCard accentHeader title={trainingLocale.title} noPadding>
+        <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
                 <Fade direction="right" in={!eventDetail} mountOnEnter unmountOnExit>
                     <div

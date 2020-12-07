@@ -214,7 +214,7 @@ export const Index = ({
                     {seeLibraryServices(account) && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
                             <StandardCard
-                                accentHeader
+                                primaryHeader
                                 fullHeight
                                 squareTop={false}
                                 title={

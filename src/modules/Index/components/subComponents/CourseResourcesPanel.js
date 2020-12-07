@@ -59,7 +59,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
     return (
         <StandardCard
             fullHeight
-            accentHeader
+            primaryHeader
             noPadding
             standardCardId="course-resources-panel"
             title={

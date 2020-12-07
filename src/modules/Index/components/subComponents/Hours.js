@@ -188,7 +188,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
     console.log(!!account);
     return (
         <StandardCard
-            accentHeader
+            primaryHeader
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
                     <Grid item xs={'auto'}>
