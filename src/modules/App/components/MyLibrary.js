@@ -78,6 +78,10 @@ export const MyLibrary = ({ account, history }) => {
                     id: 'mylibrary-menulist',
                     'data-testid': 'mylibrary-menulist',
                 }}
+                PaperProps={{
+                    id: 'mylibrary-paper',
+                    'data-testid': 'mylibrary-paper',
+                }}
                 transformOrigin={{
                     vertical: 'center',
                     horizontal: 'center',
