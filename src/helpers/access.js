@@ -66,7 +66,7 @@ export const seeCourseResources = account => {
 
 export const seeComputerAvailability = account => !!account || true;
 
-export const seeLibraryHours = account => !!account || true;
+export const seeOpeningHours = account => !!account || true;
 
 export const seeMasquerade = account => !!account && !!account.canMasquerade;
 
@@ -132,9 +132,13 @@ export const seePublicationMetrics = account =>
         account.user_group,
     );
 
+// everyone sees this, so could just be `true` but lets maintain the flexibility of passing the account
+// (it also makes all the panels load predictably, as they all wait on the account check)
 export const seeTraining = account => !!account || true;
 
 export const seeLibraryServices = account => !!account;
+
+export const seePromoPanel = account => !!account || true;
 
 export const seeFeedback = account => !!account || true;
 

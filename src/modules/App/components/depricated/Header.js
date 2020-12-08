@@ -6,7 +6,7 @@ import {
     seeCourseResources,
     seeDocumentDelivery,
     seeFeedback,
-    seeLibraryHours,
+    seeOpeningHours,
     seeBorrowing,
     seeMasquerade,
     seePrintBalance,
@@ -343,7 +343,7 @@ export const Header = ({ isAuthorizedUser, account, toggleMenu, history }) => {
                                         </MenuItem>
                                     </Grid>
                                 )}
-                                {seeLibraryHours(account) && (
+                                {seeOpeningHours(account) && (
                                     <Grid item xs={6} data-testid="mylibrary-library-hours-link">
                                         <MenuItem onClick={handleClose2}>
                                             <QueryBuilderIcon color={'secondary'} style={{ marginRight: 6 }} />
