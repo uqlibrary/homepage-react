@@ -1,9 +1,10 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import Grid from '@material-ui/core/Grid';
 import { getUserServices } from 'helpers/access';
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+
+import Grid from '@material-ui/core/Grid';
 
 const LibraryServices = ({ account }) => {
     return (
@@ -19,7 +20,7 @@ const LibraryServices = ({ account }) => {
                 </Grid>
             }
         >
-            <Grid container spacing={1}>
+            <Grid container spacing={1} data-testid="library-services-items">
                 {getUserServices(account).map((item, index) => {
                     return (
                         <Grid item xs={12} sm={12} key={index}>
