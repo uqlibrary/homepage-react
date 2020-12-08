@@ -1,17 +1,18 @@
 import React from 'react';
 
 export const promoPanel = {
-    title: 'Welcome to the Library!',
+    title: 'Log in to the new My Library!',
     content: (
         <div>
-            <p>Here are some useful links you might like:</p>
+            <p>Try the new My Library for a great personalised experience.</p>
             <ul>
-                <li>
-                    <a href="/">A bullet point with a link</a>
-                </li>
-                <li>A second point that is just text.</li>
+                <li>Set your campus</li>
+                <li>Get your course resources &amp; more</li>
+                <li>Top-up your print balance</li>
             </ul>
-            <p>We hope you like our site.</p>
+            <p>
+                <a href="/">Log in now!</a>
+            </p>
         </div>
     ),
 };
