@@ -2,7 +2,7 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Welcome to the Library!',
+        title: 'Log in to the new My Library!',
         content: (
             <div>
                 <p>Try the new My Library for a great personalised experience.</p>
