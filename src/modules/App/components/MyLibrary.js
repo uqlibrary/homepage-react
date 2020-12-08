@@ -40,7 +40,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyLibrary = ({ account, history }) => {
+export const MyLibrary = ({ account, author, history }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
@@ -93,7 +93,7 @@ export const MyLibrary = ({ account, history }) => {
             >
                 {myLibraryLocale.items.map((item, index) => {
                     const conditionFunc = item.condition;
-                    if (conditionFunc(account)) {
+                    if (conditionFunc(account, author)) {
                         return (
                             <MenuItem
                                 className={classes.menuItem}
@@ -118,6 +118,7 @@ export const MyLibrary = ({ account, history }) => {
 
 MyLibrary.propTypes = {
     account: PropTypes.object,
+    author: PropTypes.object,
     history: PropTypes.object,
 };
 

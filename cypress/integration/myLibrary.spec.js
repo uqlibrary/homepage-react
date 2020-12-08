@@ -25,7 +25,7 @@ context('AskUs', () => {
             .should('have.length', 10);
     });
 
-    it('Shows correct menu for a public user', () => {
+    it('Shows correct menu for a non-loggedin user', () => {
         cy.visit('/?user=public');
         cy.viewport(1300, 1000);
         cy.get('button[data-testid="mylibrary-button"]').should('not.exist');

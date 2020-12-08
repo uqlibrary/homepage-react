@@ -16,8 +16,8 @@ export default {
             title: 'No enrolled courses available',
             description: (
                 <Fragment>
-                    <p>Your enrolled courses will appear three weeks prior to the start of the semester.</p>
-                    <p>Search for course resources using the &quot;Course search&quot; tab, above</p>
+                    <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
+                    <p>Search for course resources using the &quot;Course search&quot; tab, above.</p>
                 </Fragment>
             ),
         },

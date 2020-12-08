@@ -64,27 +64,13 @@ export const seeCourseResources = account => {
     );
 };
 
-export const seeComputerAvailability = account => !!account || true;
-// !!account &&
-// [
-//     UNDERGRADUATE_GENERAL,
-//     UNDERGRADUATE_REMOTE,
-//     UNDERGRADUATE_TESOL,
-//     UNDERGRADUATE_VOCATIONAL,
-//     POSTGRAD_COURSEWORK,
-//     POSTGRAD_COURSEWORK_REMOTE,
-//     LIBRARY_STAFF,
-//     STAFF_AWAITING_AURION,
-//     EXTRAMURAL_COMMUNITY_PAID,
-//     EXTRAMURAL_ALUMNI,
-//     EXTRAMURAL_HOSPITAL,
-//     EXTRAMURAL_ASSOCIATE,
-//     EXTRAMURAL_FRYER,
-//     EXTRAMURAL_HONORARY,
-//     EXTRAMURAL_PROXY,
-// ].includes(account.user_group);
+// everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
+// (it also makes all the panels load predictably, as they all wait on the account check)
+const everyoneCanSee = account => !!account || true;
 
-export const seeLibraryHours = account => !!account || true;
+export const seeComputerAvailability = account => everyoneCanSee(account);
+
+export const seeOpeningHours = account => everyoneCanSee(account);
 
 export const seeMasquerade = account => !!account && !!account.canMasquerade;
 
@@ -122,21 +108,11 @@ export const seeFines = account =>
         EXTRAMURAL_HONORARY,
     ].includes(account.user_group);
 
-export const seePrintBalance = account =>
-    !!account &&
-    [
-        UNDERGRADUATE_GENERAL,
-        UNDERGRADUATE_REMOTE,
-        POSTGRAD_COURSEWORK,
-        POSTGRAD_COURSEWORK_REMOTE,
-        EXTRAMURAL_HOSPITAL,
-        EXTRAMURAL_HONORARY,
-        OTHER_STAFF,
-        LIBRARY_STAFF,
-    ].includes(account.user_group);
+export const seePrintBalance = account => !!account;
 
-export const seeSavedItems = account => !!account || true;
-export const seeSavedSearches = account => !!account || true;
+export const seeSavedItems = account => everyoneCanSee(account);
+
+export const seeSavedSearches = account => everyoneCanSee(account);
 
 export const seeDocumentDelivery = account =>
     !!account &&
@@ -155,17 +131,15 @@ export const seeDocumentDelivery = account =>
         STAFF_AWAITING_AURION,
     ].includes(account.user_group);
 
-export const seePublicationMetrics = account =>
-    !!account &&
-    [POSTGRAD_RESEARCH, POSTGRAD_RESEARCH_REMOTE, EXTRAMURAL_HONORARY, OTHER_STAFF, LIBRARY_STAFF].includes(
-        account.user_group,
-    );
+export const seeEspace = (account, author) => !!account && !!author;
 
-export const seeTraining = account => !!account || true;
+export const seeTraining = account => everyoneCanSee(account);
 
 export const seeLibraryServices = account => !!account;
 
-export const seeFeedback = account => !!account || true;
+export const seePromoPanel = account => everyoneCanSee(account);
+
+export const seeFeedback = account => everyoneCanSee(account);
 
 export const seeLoggedOut = account => !account;
 
