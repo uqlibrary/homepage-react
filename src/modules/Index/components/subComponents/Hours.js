@@ -66,6 +66,10 @@ const useStyles = makeStyles(theme => ({
         borderBottomRightRadius: 0,
     },
     actionButtonsRight: {
+        backgroundColor: theme.palette.accent.main,
+        '&:hover': {
+            backgroundColor: theme.palette.accent.dark,
+        },
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 0,

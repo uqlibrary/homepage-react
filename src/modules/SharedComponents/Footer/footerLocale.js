@@ -3,6 +3,7 @@ import FacebookIcon from '@material-ui/icons/Facebook';
 import InstagramIcon from '@material-ui/icons/Instagram';
 import TwitterIcon from '@material-ui/icons/Twitter';
 import YouTubeIcon from '@material-ui/icons/YouTube';
+import CreateIcon from '@material-ui/icons/Create';
 
 export default {
     connectFooter: {
@@ -10,7 +11,7 @@ export default {
         buttonSocial: [
             {
                 dataTestid: 'connect-blog-link',
-                linklabel: 'Blog',
+                icon: <CreateIcon />,
                 linkMouseOver: 'Library Blog',
                 linkTo: 'https://web.library.uq.edu.au/blog',
             },
