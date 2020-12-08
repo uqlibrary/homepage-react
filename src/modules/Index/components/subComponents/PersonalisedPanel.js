@@ -221,6 +221,10 @@ const PersonalisedPanel = ({
                     anchorEl={anchorEl}
                     open={!!anchorEl}
                     onClose={handleClose}
+                    PaperProps={{
+                        id: 'papercut-paper',
+                        'data-testid': 'papercut-paper',
+                    }}
                 >
                     <MenuItem
                         id={id('item-button-0')}

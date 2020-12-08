@@ -9,7 +9,7 @@ import Grid from '@material-ui/core/Grid';
 const PromoPanel = ({ account }) => {
     return (
         <StandardCard
-            accentHeader
+            primaryHeader
             fullHeight
             standardCardId="promo-panel"
             title={
