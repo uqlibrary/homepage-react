@@ -6,21 +6,14 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
 import {
-    clearPrimoSuggestions,
-    loadCourseReadingListsSuggestions,
     loadSpotlights,
     loadPrintBalance,
     loadLoans,
+    searcheSpacePossiblePublications,
+    searcheSpaceIncompleteNTROPublications,
 } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
-import {
-    seeCourseResources,
-    seeComputerAvailability,
-    seeLibraryHours,
-    seeLibraryServices,
-    seeTraining,
-    getUserServices,
-} from 'helpers/access';
+import { seeCourseResources, seeLibraryServices, seeLoggedOut, seeTraining, getUserServices } from 'helpers/access';
 import Spotlights from './subComponents/Spotlights';
 import { makeStyles } from '@material-ui/styles';
 import Hours from './subComponents/Hours';
@@ -28,6 +21,7 @@ import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
 import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
+import PromoPanel from './subComponents/PromoPanel';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -84,36 +78,58 @@ const useStyles = makeStyles(theme => ({
 
 export const Index = ({
     account,
+    author,
     spotlights,
     spotlightsLoading,
     libHours,
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
-    suggestions,
-    suggestionsLoading,
-    suggestionsError,
     trainingEvents,
     trainingEventsLoading,
     printBalance,
     printBalanceLoading,
     loans,
     loansLoading,
+    possibleRecords,
+    possibleRecordsLoading,
+    incompleteNTRO,
+    incompleteNTROLoading,
 }) => {
     const classes = useStyles();
     const dispatch = useDispatch();
     // Load homepage data requirements
     useEffect(() => {
-        if (spotlightsLoading === null) {
+        if (!spotlights && spotlightsLoading === null) {
             dispatch(loadSpotlights());
         }
-        if (!!account && printBalanceLoading === null) {
+        if (!!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());
         }
-        if (!!account && loansLoading === null) {
+        if (!!account && !loans && loansLoading === null) {
             dispatch(loadLoans());
         }
-    }, [printBalanceLoading, printBalance, spotlightsLoading, spotlights, dispatch, account, loans, loansLoading]);
+        if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
+            dispatch(searcheSpacePossiblePublications());
+        }
+        if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+            dispatch(searcheSpaceIncompleteNTROPublications());
+        }
+    }, [
+        printBalanceLoading,
+        printBalance,
+        spotlightsLoading,
+        spotlights,
+        dispatch,
+        account,
+        author,
+        loans,
+        loansLoading,
+        possibleRecords,
+        possibleRecordsLoading,
+        incompleteNTRO,
+        incompleteNTROLoading,
+    ]);
     return (
         <StandardPage>
             <div className="layout-card">
@@ -122,16 +138,43 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
-                    {/* Spotlights */}
-                    <Grid item xs={12} lg={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
-                    </Grid>
+                    {!!account && (
+                        <Hidden mdUp>
+                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
+                                <PersonalisedPanel
+                                    account={account}
+                                    author={author}
+                                    loans={loans}
+                                    printBalance={printBalance}
+                                    possibleRecords={possibleRecords && possibleRecords.total}
+                                    incompleteNTRORecords={incompleteNTRO}
+                                />
+                            </Grid>
+                        </Hidden>
+                    )}
+                    {!!spotlights && spotlights.length > 0 && (
+                        <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
+                            <Spotlights
+                                spotlights={spotlights}
+                                spotlightsLoading={spotlightsLoading}
+                                account={account}
+                            />
+                        </Grid>
+                    )}
 
                     {/* Personalisation panel or hours */}
                     {!!account ? (
                         <Hidden smDown>
-                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel account={account} loans={loans} printBalance={printBalance} />
+                            <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
+                                <PersonalisedPanel
+                                    account={account}
+                                    author={author}
+                                    loans={loans}
+                                    printBalance={printBalance}
+                                    possibleRecords={possibleRecords && possibleRecords.total}
+                                    incompleteNTRORecords={incompleteNTRO}
+                                    isNextToSpotlights
+                                />
                             </Grid>
                         </Hidden>
                     ) : (
@@ -140,7 +183,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeComputerAvailability(account) && (
+                    {!!computerAvailability && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                             <Computers
                                 computerAvailability={computerAvailability}
@@ -150,7 +193,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!account && seeLibraryHours(account) && (
+                    {!!account && !!libHours && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -158,28 +201,20 @@ export const Index = ({
 
                     {!!seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <CourseResourcesPanel
-                                account={account}
-                                clearPrimoSuggestions={clearPrimoSuggestions}
-                                history={history}
-                                loadCourseReadingListsSuggestions={loadCourseReadingListsSuggestions}
-                                suggestions={suggestions}
-                                suggestionsLoading={suggestionsLoading}
-                                suggestionsError={suggestionsError}
-                            />
+                            <CourseResourcesPanel account={account} history={history} />
                         </Grid>
                     )}
 
-                    {seeTraining && (
+                    {seeTraining(account) && (
                         <Grid item xs={12} md={4} data-testid="training-panel">
                             <Training trainingEvents={trainingEvents} trainingEventsLoading={trainingEventsLoading} />
                         </Grid>
                     )}
 
-                    {seeLibraryServices && (
+                    {seeLibraryServices(account) && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
                             <StandardCard
-                                accentHeader
+                                primaryHeader
                                 fullHeight
                                 squareTop={false}
                                 title={
@@ -202,6 +237,12 @@ export const Index = ({
                             </StandardCard>
                         </Grid>
                     )}
+
+                    {seeLoggedOut(account) && (
+                        <Grid item xs={12} md={4}>
+                            <PromoPanel />
+                        </Grid>
+                    )}
                 </Grid>
             </div>
         </StandardPage>
@@ -210,6 +251,7 @@ export const Index = ({
 
 Index.propTypes = {
     account: PropTypes.object,
+    author: PropTypes.object,
     actions: PropTypes.any,
     spotlights: PropTypes.any,
     spotlightsError: PropTypes.any,
@@ -218,15 +260,16 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
-    suggestions: PropTypes.any,
-    suggestionsLoading: PropTypes.bool,
-    suggestionsError: PropTypes.string,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
     printBalance: PropTypes.object,
     printBalanceLoading: PropTypes.bool,
     loans: PropTypes.object,
     loansLoading: PropTypes.bool,
+    possibleRecords: PropTypes.object,
+    possibleRecordsLoading: PropTypes.bool,
+    incompleteNTRO: PropTypes.object,
+    incompleteNTROLoading: PropTypes.bool,
 };
 
 Index.defaultProps = {};

@@ -110,7 +110,7 @@ const useStyles = makeStyles(theme => ({
             height: '100%',
         },
         [theme.breakpoints.up('md')]: {
-            height: 300,
+            height: 232,
         },
         [theme.breakpoints.up('lg')]: {
             height: 232,
@@ -185,9 +185,10 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         }
             ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
     };
+    console.log(!!account);
     return (
         <StandardCard
-            accentHeader
+            primaryHeader
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
                     <Grid item xs={'auto'}>
@@ -217,7 +218,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         >
             <div
                 className={`${classes.flexWrapper} ${
-                    !account ? classes.componentHeightPublic : classes.componentHeight
+                    !!account ? classes.componentHeight : classes.componentHeightPublic
                 }`}
             >
                 <div className={classes.flexHeader}>

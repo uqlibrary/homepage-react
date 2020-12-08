@@ -98,6 +98,22 @@ const useStyles = makeStyles(theme => ({
             height: 300,
         },
     },
+    mapAvailSwatch: {
+        display: 'inline-block',
+        height: 12,
+        width: 12,
+        marginRight: 12,
+        backgroundColor: '#00FF00',
+        border: '1px solid #FFFFFF',
+    },
+    mapOccupSwatch: {
+        display: 'inline-block',
+        height: 12,
+        width: 12,
+        marginRight: 12,
+        backgroundColor: '#AA00FF',
+        border: '1px solid #FFFFFF',
+    },
 }));
 
 const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
@@ -166,8 +182,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     const closeMap = () => {
         setMapSrc(null);
     };
-    const openMap = (library, building, room, level) => {
-        setMapSrc({ library, building, room, level });
+    const openMap = (library, building, room, level, total, available) => {
+        setMapSrc({ library, building, room, level, total, available });
     };
     const MapPopup = ({}) => {
         if (!!mapSrc) {
@@ -210,7 +226,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                     marginTop: -6,
                                 }}
                             >
-                                {mapSrc.library} - Level {mapSrc.level}
+                                {mapSrc.library} - Level {mapSrc.level} ({mapSrc.available} of {mapSrc.total} free)
                             </Typography>
                         </Grid>
                         <Grid item xs={'auto'}>
@@ -224,7 +240,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                 <CloseIcon fontSize="small" />
                             </IconButton>
                         </Grid>
-                        <Grid item xs={12} style={{ height: '100%', padding: '32px 0' }}>
+                        <Grid item xs={12} style={{ height: 'calc(100% - 50px)', padding: '32px 0' }}>
                             <iframe
                                 title={`${mapSrc.building} map`}
                                 src={`https://www.library.uq.edu.au/uqlsm/map.php?building=${mapSrc.building}&room=${mapSrc.room}&embed=true`}
@@ -237,6 +253,17 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                 }}
                             />
                         </Grid>
+                        <Grid item xs={12}>
+                            <Grid container spacing={2}>
+                                <Grid item xs />
+                                <Grid item xs={'auto'}>
+                                    <div className={classes.mapAvailSwatch} /> Available
+                                </Grid>
+                                <Grid item xs={'auto'}>
+                                    <div className={classes.mapOccupSwatch} /> Occupied
+                                </Grid>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Dialog>
             );
@@ -245,7 +272,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     };
     return (
         <StandardCard
-            accentHeader
+            primaryHeader
             standardCardId="standard-card-computers"
             title={
                 <Grid container spacing={0} justify="center" alignItems="center">
@@ -345,6 +372,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                                     item.buildingCode,
                                                                     level.roomCode,
                                                                     level.level,
+                                                                    level.total,
+                                                                    level.available,
                                                                 )
                                                             }
                                                             classes={{

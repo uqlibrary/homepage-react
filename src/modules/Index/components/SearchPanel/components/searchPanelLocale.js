@@ -37,7 +37,7 @@ export const searchPanelLocale = {
             {
                 name: 'Journal articles',
                 icon: <SchoolIcon size="small" color="secondary" />,
-                placeholder: 'Enter a keyword, article title, author, publication etc ...',
+                placeholder: 'Enter a keyword, article title, author, publication etc...',
                 link:
                     'https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]' +
                     primoPrefix +
@@ -55,7 +55,7 @@ export const searchPanelLocale = {
             {
                 name: 'Journals',
                 icon: <DescriptionIcon size="small" color="secondary" />,
-                placeholder: 'Enter journal or newspaper title',
+                placeholder: 'Enter a journal or newspaper title',
                 link:
                     'https://search.library.uq.edu.au/primo-explore/search?query=title,contains,[keyword],AND' +
                     primoPrefix +
@@ -73,7 +73,7 @@ export const searchPanelLocale = {
             {
                 name: 'Databases',
                 icon: <StorageIcon size="small" color="secondary" />,
-                placeholder: 'Enter database title',
+                placeholder: 'Enter a database title',
                 link:
                     'https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]',
             },

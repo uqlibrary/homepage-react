@@ -101,6 +101,8 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                     actions.loadHomepageCourseReadingListsSuggestions(newValue);
                 }
                 document.getElementById('primo-search-autocomplete').focus();
+            } else {
+                actions.clearPrimoSuggestions();
             }
         },
         [actions, searchType],

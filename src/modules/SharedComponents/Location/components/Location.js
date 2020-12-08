@@ -48,36 +48,33 @@ export const Location = ({ idLabel }) => {
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const handleLocationChange = location => {
-        setCookie('location', location);
-    };
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
     const handleLocationClose = location => () => {
         if (location === 'not set') {
-            handleLocationChange(null);
+            setCookie('location', null);
         } else {
-            handleLocationChange(location);
+            setCookie('location', location);
         }
         setAnchorEl(null);
     };
-    const handleBlur = () => {
+    const handleClose = () => {
         setAnchorEl(null);
     };
     let thisLocation = null;
-    if (cookies.location === null || cookies.location === 'null') {
+    if (!cookies.location || cookies.location === 'null') {
         thisLocation = locale.noLocationSet;
     } else {
         thisLocation = cookies.location;
     }
-    const id = tag => `location-${idLabel}${tag ? '-' + tag : ''}`;
+    const id = (tag = null) => `location${!!idLabel ? '-' + idLabel : ''}${!!tag ? '-' + tag : ''}`;
     return (
-        <div id={id()} data-testid={id()}>
+        <div id={id()} data-testid={id()} style={{ marginLeft: -16 }}>
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
-                placement="left"
+                placement="right"
                 TransitionProps={{ timeout: 300 }}
             >
                 <Button
@@ -96,13 +93,18 @@ export const Location = ({ idLabel }) => {
                 </Button>
             </Tooltip>
             <Menu
+                keepMounted
+                autoFocus
                 id={id('menu')}
                 data-testid={id('menu')}
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
-                onBlur={handleBlur}
+                onClose={handleClose}
+                PaperProps={{
+                    id: id('paper'),
+                    'data-testid': id('paper'),
+                }}
             >
-                <MenuItem disabled>{locale.menuTitle}</MenuItem>
                 {locale.locations.map((item, index) => (
                     <MenuItem
                         key={index}
@@ -126,7 +128,7 @@ Location.propTypes = {
 };
 
 Location.defaultProps = {
-    idLabel: '',
+    idLabel: null,
 };
 
 export default Location;
