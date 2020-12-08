@@ -9,7 +9,7 @@ exports[`Component Megamenu should render 1`] = `
 >
   <WithStyles(ForwardRef(Grid))
     item={true}
-    md={3}
+    md={4}
     xs={12}
   >
     <ul>
@@ -130,7 +130,7 @@ exports[`Component Megamenu should render 1`] = `
   </WithStyles(ForwardRef(Grid))>
   <WithStyles(ForwardRef(Grid))
     item={true}
-    md={5}
+    md={4}
     xs={12}
   >
     <WithStyles(ForwardRef(Grid))
@@ -142,6 +142,11 @@ exports[`Component Megamenu should render 1`] = `
       >
         <WithStyles(ForwardRef(Typography))
           component="h3"
+          style={
+            Object {
+              "marginTop": -4,
+            }
+          }
           variant="h6"
         >
           Connect with us
@@ -151,11 +156,6 @@ exports[`Component Megamenu should render 1`] = `
     <WithStyles(ForwardRef(Grid))
       container={true}
       spacing={1}
-      style={
-        Object {
-          "justifyContent": "center",
-        }
-      }
     >
       <WithStyles(ForwardRef(Grid))
         id="buttonSocial-0"
@@ -186,7 +186,7 @@ exports[`Component Megamenu should render 1`] = `
             onClick={[Function]}
             variant="contained"
           >
-            Blog
+            <CreateIcon />
           </WithStyles(ForwardRef(Button))>
         </WithStyles(ForwardRef(Tooltip))>
       </WithStyles(ForwardRef(Grid))>
