@@ -78,8 +78,8 @@ export const ChatStatus = ({ status }) => {
                 className={classes.chatStatus}
                 open
                 onClose={closeChatStatus}
-                id={'chat-status-snackbar-online'}
-                data-testid={'chat-status-snackbar-online'}
+                id={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}`}
+                data-testid={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}`}
             >
                 <div>
                     <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
@@ -92,8 +92,10 @@ export const ChatStatus = ({ status }) => {
                                 size="small"
                                 variant="contained"
                                 onClick={launchChat}
-                                id={'chat-status-snackbar-online-launch-button'}
-                                data-testid={'chat-status-snackbar-online-launch-button'}
+                                id={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}-launch-button`}
+                                data-testid={`chat-status-snackbar-${
+                                    chatState.online ? 'online' : 'offline'
+                                }-launch-button`}
                             >
                                 Launch
                             </Button>
@@ -104,8 +106,10 @@ export const ChatStatus = ({ status }) => {
                                 aria-label="close"
                                 color="inherit"
                                 onClick={closeChatStatus}
-                                id={'chat-status-snackbar-online-close-button'}
-                                data-testid={'chat-status-snackbar-online-close-button'}
+                                id={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}-close-button`}
+                                data-testid={`chat-status-snackbar-${
+                                    chatState.online ? 'online' : 'offline'
+                                }-close-button`}
                             >
                                 <CloseIcon fontSize="small" />
                             </IconButton>
