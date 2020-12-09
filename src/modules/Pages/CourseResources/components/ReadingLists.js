@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
+import { unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     () => ({
@@ -218,7 +219,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                                     href={list.itemLink}
                                                     // on-click="linkClicked"
                                                 >
-                                                    {list.title}
+                                                    {unescapeString(list.title)}
                                                 </a>
                                             )}
                                             {!list.itemLink && !!list.title && <Typography>{list.title}</Typography>}

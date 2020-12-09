@@ -68,6 +68,10 @@ export const seeCourseResources = account => {
 // (it also makes all the panels load predictably, as they all wait on the account check)
 const everyoneCanSee = account => !!account || true;
 
+const loggedinCanSee = account => !!account;
+
+export const loggedoutCanSee = account => !account;
+
 export const seeComputerAvailability = account => everyoneCanSee(account);
 
 export const seeOpeningHours = account => everyoneCanSee(account);
@@ -108,7 +112,7 @@ export const seeFines = account =>
         EXTRAMURAL_HONORARY,
     ].includes(account.user_group);
 
-export const seePrintBalance = account => !!account;
+export const seePrintBalance = account => loggedinCanSee(account);
 
 export const seeSavedItems = account => everyoneCanSee(account);
 
@@ -135,13 +139,11 @@ export const seeEspace = (account, author) => !!account && !!author;
 
 export const seeTraining = account => everyoneCanSee(account);
 
-export const seeLibraryServices = account => !!account;
+export const seeLibraryServices = account => loggedinCanSee(account);
 
 export const seePromoPanel = account => everyoneCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);
-
-export const seeLoggedOut = account => !account;
 
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
@@ -180,8 +182,8 @@ const userGroupServices = {
 export const getUserServices = account => {
     const allLibraryServices = locale.LibraryServices.links || [];
     if (!!account && !!account.user_group) {
-        const userGroupService = userGroupServices[account.user_group];
-        return userGroupService.map(service => allLibraryServices.find(i => i.id === service));
+        const userGroupService = userGroupServices[account.user_group] || [];
+        return userGroupService.map(service => allLibraryServices.find(i => (i.id || '') === service));
     }
     return [];
 };
