@@ -49,7 +49,10 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                     </Grid>
                 )}
 
-                {!!guideListError && <Typography>{locale.myCourses.guides.unavailable}</Typography>}
+                {!!guideListError && (
+                    /* istanbul ignore next */
+                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
+                )}
 
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
                     <Grid item xs={12} data-testid="no-guides" className={classes.courseResourceLineItem}>
@@ -70,7 +73,6 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                                     data-title="guideListItem"
                                     href={guide.url}
                                     key={`guide-${index}`}
-                                    // on-click="linkClicked"
                                 >
                                     {guide.title}
                                 </a>
@@ -81,6 +83,8 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                 {!!locale.myCourses.guides.footer.links &&
                     locale.myCourses.guides.footer.links.length > 0 &&
                     locale.myCourses.guides.footer.links.map((item, index) => {
+                        /* istanbul ignore next */
+                        const dataTestId = item.id || null;
                         return (
                             item.linkTo &&
                             item.linkLabel && (
@@ -90,12 +94,7 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                                     key={`studylink-${index}`}
                                     xs={12}
                                 >
-                                    <a
-                                        // on-tap="linkClicked"
-                                        data-testid={item.id || null}
-                                        id={item.id || null}
-                                        href={item.linkTo}
-                                    >
+                                    <a data-testid={dataTestId} id={dataTestId} href={item.linkTo}>
                                         {!!item.icon && item.icon}
                                         {item.linkLabel}
                                     </a>

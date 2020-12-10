@@ -56,18 +56,23 @@ export const SearchCourses = ({
         preselectedCourse => {
             if (!initialLoadComplete) {
                 let tabId = null;
+                /* istanbul ignore next */
                 const searchKeyword = preselectedCourse.coursecode || '';
+                /* istanbul ignore next */
                 const campus = preselectedCourse.campus || '';
+                /* istanbul ignore next */
                 const semester = preselectedCourse.semester || '';
-                if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
-                    loadNewSubject(searchKeyword, campus, semester);
-                    updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                // if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
+                //     console.log('first search');
+                loadNewSubject(searchKeyword, campus, semester);
+                updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
-                    tabId = listSearchedSubjects.length;
-                } else {
-                    // they might search again for a subject - change to that tab instead of reloading
-                    tabId = listSearchedSubjects.indexOf(searchKeyword);
-                }
+                tabId = listSearchedSubjects.length;
+                // } else {
+                //     // they might search again for a subject - change to that tab instead of reloading
+                //     console.log('change tabs');
+                //     tabId = listSearchedSubjects.indexOf(searchKeyword);
+                // }
 
                 setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
             }
@@ -141,10 +146,22 @@ export const SearchCourses = ({
     const loadCourseAndSelectTab = (searchKeyword, suggestions) => {
         let tabId;
 
+        /* istanbul ignore next */
         const thisSuggestion =
-            (!!suggestions && suggestions.filter(course => (course.text || '') === searchKeyword).pop()) || null;
+            (!!suggestions &&
+                suggestions
+                    .filter(course => {
+                        /* istanbul ignore next */
+                        const courseText = course.text || '';
+                        return courseText === searchKeyword;
+                    })
+                    .pop()) ||
+            null;
+        /* istanbul ignore next */
         const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
+        /* istanbul ignore next */
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
+        /* istanbul ignore else */
         if (
             !(
                 !!listSearchedSubjects &&
