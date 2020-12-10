@@ -43,7 +43,7 @@ export const isValidInput = params => {
         }
     });
 
-    const validCourseCodePattern = new RegExp('^[A-Z]{4}[0-9]{4,5}$');
+    const validCourseCodePattern = new RegExp('^[A-Z]{4}[0-9]{4}[A-Z]?$');
     valid = !!valid && validCourseCodePattern.test(params.coursecode);
 
     if (!!valid) {

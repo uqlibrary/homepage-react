@@ -49,6 +49,20 @@ describe('filterProps helper', () => {
         };
         expect(isValidInput(params)).toBe(true);
 
+        const params5 = {
+            campus: 'St Lucia',
+            coursecode: 'FREN1010A', // course code is 4char + 4num OR 4char + 4num + 1char
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params5)).toBe(true);
+
+        const params6 = {
+            campus: 'St Lucia',
+            coursecode: 'FREN10104', // invalid course code
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params6)).toBe(false);
+
         const params2 = {
             campus: 'St Lucia',
             coursecode: 'FRENA1010', // invalid course code
