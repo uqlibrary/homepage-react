@@ -110,7 +110,7 @@ export const CourseResources = ({
     const [currentReadingLists, updateReadingLists] = useState([]);
 
     const loadNewSubject = React.useCallback(
-        (classnumber, campus = null, semester = null) => {
+        (classnumber, campus, semester) => {
             if (!classnumber || classnumber.length < 8 || isRepeatingString(classnumber)) {
                 return;
             }
@@ -156,10 +156,14 @@ export const CourseResources = ({
             !!account.current_classes &&
             account.current_classes.length > 0 &&
             account.current_classes.map(item => {
+                /* istanbul ignore else */
+                const campus = params.campus || '';
+                /* istanbul ignore else */
+                const semester = params.semester || '';
                 if (
-                    item.classnumber === (params.coursecode || '') &&
-                    getCampusByCode(item.CAMPUS) === (params.campus || '') &&
-                    item.semester === (params.semester || '')
+                    item.classnumber === params.coursecode &&
+                    getCampusByCode(item.CAMPUS) === campus &&
+                    item.semester === semester
                 ) {
                     initialTopTabState = 'top0';
                 }
@@ -200,6 +204,7 @@ export const CourseResources = ({
             currentGuidesList[guideList[0].coursecode] === undefined
         ) {
             const subjectNumber = guideList[0].coursecode;
+            /* istanbul ignore else */
             if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;
