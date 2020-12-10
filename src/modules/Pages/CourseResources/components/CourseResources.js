@@ -4,6 +4,7 @@ import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
 
 import locale from '../courseResourcesLocale';
+import global from 'locale/global';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
 import { MyCourses } from './MyCourses';
@@ -18,6 +19,49 @@ import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 
+export const isValidInput = params => {
+    /**
+     * the user must supply 3 parameters: course code, semester and campus
+     * this will normally come from the home page
+     * course code should be a valid coursecode, 4 char + 4-5 numbers
+     * semester can be only letters and numbers
+     * and campus must be in the global campus lookup list
+     * (this cant go in the helpers file because it needs the global locale, which cant be reached during cypress tests)
+     * @param params
+     * @returns {boolean}
+     */
+    let valid = true;
+
+    const allowedKeys = ['coursecode', 'campus', 'semester'];
+    if (window.location.hostname === 'localhost') {
+        allowedKeys.push('user');
+    }
+
+    Object.keys(params).map(key => {
+        if (!allowedKeys.includes(key)) {
+            valid = false;
+        }
+    });
+
+    const validCourseCodePattern = new RegExp('^[A-Z]{4}[0-9]{4,5}$');
+    valid = !!valid && validCourseCodePattern.test(params.coursecode);
+
+    if (!!valid) {
+        let found = false;
+        Object.values(global.campuses).map(value => {
+            if (value === params.campus) {
+                found = true;
+            }
+        });
+        valid = found;
+    }
+
+    const validSemesterPattern = new RegExp('^[A-Za-z0-9, ]+$');
+    valid = !!valid && params.semester && validSemesterPattern.test(params.semester);
+
+    return valid;
+};
+
 export const CourseResources = ({
     actions,
     examList,
@@ -30,9 +74,6 @@ export const CourseResources = ({
     readingListLoading,
     readingListError,
 }) => {
-    const { account } = useAccountContext();
-    const location = useLocation();
-
     /**
      * The page consists of 2 sections:
      * - the user's enrolled courses (aka subjects), and
@@ -41,6 +82,9 @@ export const CourseResources = ({
      * Otherwise we load the search section: top1
      * These sections are displayed as 2 tabs across the top
      */
+
+    const { account } = useAccountContext();
+    const location = useLocation();
 
     const getQueryParams = qs => {
         const qs1 = qs.split('+').join(' ');
@@ -53,7 +97,7 @@ export const CourseResources = ({
             params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
         }
 
-        return params;
+        return isValidInput(params) ? params : [];
     };
 
     // store a list of the Guides that have been loaded, by subject
