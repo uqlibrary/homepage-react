@@ -24,7 +24,7 @@ help: {
 export default {
     pages: {
         index: {
-            title: 'eSpace',
+            title: 'Homepage',
         },
         contact: {
             title: 'Contact UQ Library',
