@@ -16,6 +16,13 @@ function setup(testProps = {}) {
         actions: testProps.actions || {
             loadCurrentAccount: jest.fn(),
             searchAuthorPublications: jest.fn(),
+            loadSpotlights: testProps.loadSpotlights || jest.fn(),
+            loadAlerts: testProps.loadAlerts || jest.fn(),
+            loadChatStatus: testProps.loadChatStatus || jest.fn(),
+            loadLibHours: testProps.loadLibHours || jest.fn(),
+            loadCompAvail: testProps.loadCompAvail || jest.fn(),
+            loadTrainingEvents: testProps.loadTrainingEvents || jest.fn(),
+            showAppAlert: testProps.showAppAlert || jest.fn(),
         },
         location: testProps.location || {},
         history: testProps.history || { location: {} },
@@ -121,25 +128,6 @@ describe('Application component', () => {
         expect(wrapper.instance().sessionExpiredConfirmationBox).toEqual('hello');
     });
 
-    // it(
-    //     'when calling redirectToOrcid, it should redirect appropriately ' +
-    //         'if user already received an orcid response',
-    //     () => {
-    //         const testFn = jest.fn();
-    //         const testFn2 = jest.fn();
-    //         delete global.window.location;
-    //         global.window.location = {
-    //             href: 'http://fez-staging.library.uq.edu.au?code=010101',
-    //             search: '?code=010101',
-    //             assign: testFn,
-    //         };
-    //         const wrapper = setup({ history: { push: testFn2, location: { pathname: 'test' } } });
-    //
-    //         wrapper.instance().redirectToOrcid();
-    //         expect(testFn).toBeCalledWith('http://fez-staging.library.uq.edu.au/author-identifiers/orcid/link');
-    //         expect(testFn2).not.toBeCalled();
-    //     },
-    // );
     // If the system is behind Lambda@Edge scripts then public users will go straight through to public files.
     // A user will only get to the fez-frontend app for a file if they are not logged in and
     // the file is not public, or they are logged in and the the file requires higher privs e.g. needs admin,
@@ -160,14 +148,17 @@ describe('Application component', () => {
         });
         expect(redirectUserToLogin).not.toHaveBeenCalled();
 
-        wrapper.setProps({ accountLoading: false, account: null,
+        wrapper.setProps({
+            accountLoading: false,
+            account: null,
             spotlightsLoading: true,
             spotlights: null,
             libHoursLoading: true,
             libHours: null,
             chatStatus: null,
             alerts: null,
-            location: { pathname: '/view/UQ:1/test.pdf' } });
+            location: { pathname: '/view/UQ:1/test.pdf' },
+        });
         expect(redirectUserToLogin).toHaveBeenCalled();
         wrapper.update();
 
@@ -179,42 +170,6 @@ describe('Application component', () => {
 
         wrapper.instance().setSessionExpiredConfirmation('hello');
         expect(wrapper.instance().sessionExpiredConfirmationBox).toEqual('hello');
-    });
-
-    it(
-        'when calling redirectToOrcid, it should redirect appropriately ' +
-            'if user already received an orcid response',
-        () => {
-            const testFn = jest.fn();
-            const testFn2 = jest.fn();
-            delete global.window.location;
-            global.window.location = {
-                href: 'http://fez-staging.library.uq.edu.au?code=010101',
-                search: '?code=010101',
-                assign: testFn,
-            };
-            const wrapper = setup({ history: { push: testFn2, location: { pathname: 'test' } } });
-
-            wrapper.instance().redirectToOrcid();
-            expect(testFn).toBeCalledWith('http://fez-staging.library.uq.edu.au/author-identifiers/orcid/link');
-            expect(testFn2).not.toBeCalled();
-        },
-    );
-
-    it('when calling redirectToOrcid, it should redirect appropriately', () => {
-        const testFn = jest.fn();
-        const testFn2 = jest.fn();
-        delete global.window.location;
-        global.window.location = {
-            href: 'http://fez-staging.library.uq.edu.au?name=none',
-            search: '?name=none',
-            assign: testFn,
-        };
-        const wrapper = setup({ history: { push: testFn2, location: { pathname: 'test' } } });
-
-        wrapper.instance().redirectToOrcid();
-        expect(testFn).not.toBeCalled();
-        expect(testFn2).toBeCalledWith('/author-identifiers/orcid/link');
     });
 
     it('should call componentWillUnmount', () => {
@@ -250,26 +205,12 @@ describe('Application component', () => {
     });
 
     it('Should display mobile correctly', () => {
-        // current URL is set to testUrl which is set in package.json as http://fez-staging.library.uq.edu.au
+        // current URL is set to testUrl which is set in package.json as http://homepage-staging.library.uq.edu.au
         const wrapper = setup();
         wrapper.setState({ isMobile: true });
         wrapper.instance().getChildContext();
         wrapper.update();
         expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should redirect to login page with correct return url if rhd submission route accessed', () => {
-        window.location.assign = jest.fn();
-
-        // current URL is set to testUrl which is set in package.json as http://fez-staging.library.uq.edu.au
-        const wrapper = setup();
-        expect(toJson(wrapper)).toMatchSnapshot();
-        wrapper.instance().redirectUserToLogin(true, true)();
-        const currentUrl = window.btoa(window.location.href);
-        expect(window.location.assign).toBeCalledWith(expect.stringContaining(currentUrl));
-        const appUrl = window.btoa('https://fez-staging.library.uq.edu.au/');
-        wrapper.instance().redirectUserToLogin(true, false)();
-        expect(window.location.assign).toBeCalledWith(expect.stringContaining(appUrl));
     });
 
     it('should render for anon user', () => {
@@ -288,173 +229,6 @@ describe('Application component', () => {
         const wrapper = setup({
             account: account,
             accountAuthorLoading: true,
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render alert if user is not fez author', () => {
-        const wrapper = setup({
-            account: account,
-            author: null,
-        });
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with fez author with ORCID ID', () => {
-        const wrapper = setup({
-            account: account,
-            author: author,
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with fez author without ORCID ID', () => {
-        const wrapper = setup({
-            account: account,
-            author: {
-                ...author,
-                aut_orcid_id: null,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with fez author without ORCID ID but is an admin', () => {
-        const wrapper = setup({
-            account: account,
-            author: {
-                ...author,
-                aut_orcid_id: null,
-            },
-            authorDetails: {
-                is_administrator: 1,
-                is_super_administrator: 0,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with fez author without ORCID ID but is an super admin', () => {
-        const wrapper = setup({
-            account: account,
-            author: {
-                ...author,
-                aut_orcid_id: null,
-            },
-            authorDetails: {
-                is_administrator: 0,
-                is_super_administrator: 1,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with fez author without ORCID ID but is an admin', () => {
-        const wrapper = setup({
-            account: account,
-            author: author,
-            authorDetails: {
-                is_administrator: 1,
-                is_super_administrator: 0,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with fez author with a ORCID ID but is an super admin', () => {
-        const wrapper = setup({
-            account: account,
-            author: author,
-            authorDetails: {
-                is_administrator: 0,
-                is_super_administrator: 1,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for account with author account without a ORCID ID', () => {
-        const wrapper = setup({
-            account: account,
-            author: {
-                ...author,
-                aut_orcid_id: null,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it(
-        'should render app for account with fez author without ORCID ID should ' +
-            'not display ORCID warning on thesis submission page',
-        () => {
-            const wrapper = setup({
-                location: {
-                    pathname: routes.pathConfig.hdrSubmission,
-                },
-                account: account,
-                author: {
-                    ...author,
-                    aut_orcid_id: null,
-                },
-            });
-            wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-            expect(toJson(wrapper)).toMatchSnapshot();
-        },
-    );
-
-    it('should render app for HDR without ORCID ID', () => {
-        const wrapper = setup({
-            account: accounts.s2222222,
-            author: {
-                ...author,
-                aut_org_username: null,
-                aut_student_username: 's2222222',
-                aut_orcid_id: null,
-            },
-            authorDetails: {
-                is_administrator: 0,
-                is_super_administrator: 0,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render thesis submission for HDR without menu', () => {
-        const wrapper = setup({
-            location: {
-                pathname: routes.pathConfig.hdrSubmission,
-            },
-            account: accounts.s2222222,
-            author: {
-                ...author,
-                aut_org_username: null,
-                aut_student_username: 's2222222',
-                aut_orcid_id: null,
-            },
-        });
-        wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should render app for HDR with ORCID ID', () => {
-        const wrapper = setup({
-            account: accounts.s2222222,
-            author: {
-                ...author,
-                aut_org_username: null,
-                aut_student_username: 's2222222',
-                aut_orcid_id: '1234-1234-1234',
-            },
         });
         wrapper.instance().theme = { palette: { white: { main: '#FFFFFF' } } };
         expect(toJson(wrapper)).toMatchSnapshot();
@@ -479,141 +253,80 @@ describe('Application component', () => {
         expect(window.location.assign).toBeCalledWith(expect.stringContaining(AUTH_URL_LOGOUT));
     });
 
-    it('should handleResize', () => {
-        const wrapper = setup({});
-        expect(wrapper.state().docked).toBeFalsy();
-        wrapper.instance().handleResize({ matches: true });
-        expect(wrapper.state().docked).toBeTruthy();
-        wrapper.instance().handleResize({ matches: false });
-        expect(wrapper.state().docked).toBeFalsy();
-    });
-
-    it('should toggleDrawer', () => {
-        const wrapper = setup();
-        expect(wrapper.state().menuDrawerOpen).toBeFalsy();
-        wrapper.instance().toggleDrawer();
-        expect(wrapper.state().menuDrawerOpen).toBeTruthy();
-        wrapper.instance().toggleDrawer();
-        expect(wrapper.state().menuDrawerOpen).toBeFalsy();
-    });
-
-    it('should redirectToOrcid', () => {
-        const testMethod = jest.fn();
-        const wrapper = setup({
-            account: account,
-            author: author,
-            history: {
-                push: testMethod,
-                location: {},
-            },
-        });
-
-        wrapper.instance().redirectToOrcid();
-        expect(testMethod).toHaveBeenCalledWith(routes.pathConfig.authorIdentifiers.orcid.link);
-    });
-
     it('should start loading current user', () => {
         const testMethod = jest.fn();
         setup({
             actions: {
                 loadCurrentAccount: testMethod,
+                loadSpotlights: jest.fn(),
+                loadAlerts: jest.fn(),
+                loadChatStatus: jest.fn(),
+                loadLibHours: jest.fn(),
+                loadCompAvail: jest.fn(),
+                loadTrainingEvents: jest.fn(),
             },
         });
         expect(testMethod).toHaveBeenCalledWith();
     });
 
-    it('should return true if user is on public page', () => {
-        const menuItems = routes.getMenuConfig(true, false);
+    // it('should load the incomplete publications list when the account is loaded', () => {
+    //     const testMethod = jest.fn();
+    //     const wrapper = setup({
+    //         account: { name: 'test1' },
+    //         accountLoading: false,
+    //         actions: {
+    //             loadCurrentAccount: jest.fn(),
+    //             searchAuthorPublications: testMethod,
+    //         },
+    //     });
+    //     wrapper.update();
+    //     wrapper.setProps({ account: { name: 'test2' } });
+    //     expect(testMethod).toHaveBeenCalled();
+    // });
 
-        const getWrapper = pathname =>
-            setup({
-                location: { pathname },
-            });
+    // it('should determine if it has incomplete works from props and hide menu item', () => {
+    //     const wrapper = setup({
+    //         account: { name: 'test1' },
+    //         accountLoading: false,
+    //         actions: {
+    //             loadCurrentAccount: jest.fn(),
+    //             searchAuthorPublications: jest.fn(),
+    //         },
+    //         incompleteRecordList: {
+    //             incomplete: {
+    //                 publicationsListPagingData: {
+    //                     total: 10,
+    //                 },
+    //             },
+    //         },
+    //     });
+    //     expect(toJson(wrapper)).toMatchSnapshot();
+    // });
 
-        const pathExpectations = [
-            {
-                pathname: '/contact',
-                isPublic: true,
-            },
-            {
-                pathname: '/dashboard',
-                isPublic: false,
-            },
-            {
-                pathname: '/view/UQ:123432',
-                isPublic: true,
-            },
-            {
-                pathname: '/',
-                isPublic: true,
-            },
-            {
-                pathname: '/data-collections/mine',
-                isPublic: false,
-            },
-        ];
-
-        pathExpectations.map(path => {
-            expect(
-                getWrapper(path.pathname)
-                    .instance()
-                    .isPublicPage(menuItems),
-            ).toEqual(path.isPublic);
-        });
-    });
-
-    it('should load the incomplete publications list when the account is loaded', () => {
-        const testMethod = jest.fn();
-        const wrapper = setup({
-            account: { name: 'test1' },
-            accountLoading: false,
-            actions: {
-                loadCurrentAccount: jest.fn(),
-                searchAuthorPublications: testMethod,
-            },
-        });
-        wrapper.update();
-        wrapper.setProps({ account: { name: 'test2' } });
-        expect(testMethod).toHaveBeenCalled();
-    });
-
-    it('should determine if it has incomplete works from props and hide menu item', () => {
-        const wrapper = setup({
-            account: { name: 'test1' },
-            accountLoading: false,
-            actions: {
-                loadCurrentAccount: jest.fn(),
-                searchAuthorPublications: jest.fn(),
-            },
-            incompleteRecordList: {
-                incomplete: {
-                    publicationsListPagingData: {
-                        total: 10,
-                    },
-                },
-            },
-        });
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-
-    it('should determine if it has incomplete works from props and show menu item', () => {
-        const wrapper = setup({
-            account: { name: 'test1' },
-            accountLoading: false,
-            actions: {
-                loadCurrentAccount: jest.fn(),
-                searchAuthorPublications: jest.fn(),
-            },
-            incompleteRecordList: {
-                incomplete: {
-                    publicationsListPagingData: {
-                        total: 10,
-                    },
-                },
-            },
-        });
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
+    // it('should determine if it has incomplete works from props and show menu item', () => {
+    //     const wrapper = setup({
+    //         account: { name: 'test1' },
+    //         accountLoading: false,
+    //         spotlightsLoading: true,
+    //         spotlights: null,
+    //         libHoursLoading: true,
+    //         libHours: null,
+    //         chatStatus: null,
+    //         alerts: null,
+    //         actions: {
+    //             loadCurrentAccount: jest.fn(),
+    //             searchAuthorPublications: jest.fn(),
+    //         },
+    //         incompleteRecordList: {
+    //             incomplete: {
+    //                 publicationsListPagingData: {
+    //                     total: 10,
+    //                 },
+    //             },
+    //         },
+    //     });
+    //     expect(toJson(wrapper)).toMatchSnapshot();
+    // });
 });
 
 describe('Testing wrapped App component', () => {
@@ -627,6 +340,12 @@ describe('Testing wrapped App component', () => {
             actions: {
                 logout: jest.fn(),
                 loadCurrentAccount: jest.fn(),
+                loadSpotlights: jest.fn(),
+                loadAlerts: jest.fn(),
+                loadChatStatus: jest.fn(),
+                loadLibHours: jest.fn(),
+                loadCompAvail: jest.fn(),
+                loadTrainingEvents: jest.fn(),
             },
             account: { name: 'Ky' },
             location: { pathname: '/' },
