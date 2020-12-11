@@ -26,9 +26,7 @@ describe('Account action creators', () => {
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)
             .onGet(repositories.routes.CURRENT_AUTHOR_API().apiUrl)
-            .reply(200, currentAuthor.uqresearcher)
-            .onGet(repositories.routes.AUTHOR_DETAILS_API({ userId: accounts.uqresearcher.id }).apiUrl)
-            .reply(200, authorDetails.uqresearcher);
+            .reply(200, currentAuthor.uqresearcher);
 
         const expectedActions = [
             actions.CURRENT_ACCOUNT_LOADING,
@@ -48,9 +46,7 @@ describe('Account action creators', () => {
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)
             .onGet(repositories.routes.CURRENT_AUTHOR_API().apiUrl)
-            .reply(200, currentAuthor.s2222222)
-            .onGet(repositories.routes.AUTHOR_DETAILS_API({ userId: accounts.s2222222.id }).apiUrl)
-            .reply(200, authorDetails.s2222222);
+            .reply(200, currentAuthor.s2222222);
 
         const expectedActions = [
             actions.CURRENT_ACCOUNT_LOADING,
