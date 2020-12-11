@@ -1,6 +1,4 @@
 import * as routes from './routes';
-import { accounts, currentAuthor, authorDetails } from 'mock/data/account';
-import { locale } from 'locale';
 
 describe('Routes getMenuConfig method', () => {
     it('should return a list of menus for anon user', () => {

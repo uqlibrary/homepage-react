@@ -101,15 +101,6 @@ describe('Validation method', () => {
         expect(validation.maxLength10(12345678901)).toEqual(locale.validationErrors.maxLength.replace('[max]', 10));
     });
 
-    it('should validate doi', () => {
-        expect(validation.isValidDOIValue(' 10.1007/978-3-319-60492-3_52 ')).toBeTruthy();
-        expect(validation.isValidDOIValue(' 10.1007/something ')).toBeTruthy();
-    });
-
-    it('should validate pubmed id', () => {
-        expect(validation.isValidPubMedValue(' 2342523452 ')).toBeTruthy();
-    });
-
     it('should validate publication title', () => {
         expect(validation.isValidPublicationTitle(' global    ')).toBeFalsy();
         expect(validation.isValidPublicationTitle(' global war ')).toBeTruthy();
