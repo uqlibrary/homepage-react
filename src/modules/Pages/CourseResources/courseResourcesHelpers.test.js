@@ -1,4 +1,11 @@
-import { _pluralise, _courseLink, a11yProps, reverseA11yProps, extractSubjectCodeFromName } from './courseResourcesHelpers';
+import {
+    _courseLink,
+    _pluralise,
+    a11yProps,
+    extractSubjectCodeFromName,
+    reverseA11yProps,
+} from './courseResourcesHelpers';
+import { isValidInput } from './components/CourseResources';
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {
@@ -32,5 +39,49 @@ describe('filterProps helper', () => {
 
     it('should extract a subject code from a subject name', () => {
         expect(extractSubjectCodeFromName('CRIM1019 - Introduction to Criminal Justice')).toEqual('CRIM1019');
+    });
+
+    it('should validate paramters correctly', () => {
+        const params = {
+            campus: 'St Lucia',
+            coursecode: 'FREN1010',
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params)).toBe(true);
+
+        const params5 = {
+            campus: 'St Lucia',
+            coursecode: 'FREN1010A', // course code is 4char + 4num OR 4char + 4num + 1char
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params5)).toBe(true);
+
+        const params6 = {
+            campus: 'St Lucia',
+            coursecode: 'FREN10104', // invalid course code
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params6)).toBe(false);
+
+        const params2 = {
+            campus: 'St Lucia',
+            coursecode: 'FRENA1010', // invalid course code
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params2)).toBe(false);
+
+        const params3 = {
+            campus: 'somewhere', // invalid campus
+            coursecode: 'FREN1010',
+            semester: 'Semester 2 2020',
+        };
+        expect(isValidInput(params3)).toBe(false);
+
+        const params4 = {
+            campus: 'St Lucia',
+            coursecode: 'FREN1010',
+            semester: 'alert("hack")', // invalid period
+        };
+        expect(isValidInput(params4)).toBe(false);
     });
 });

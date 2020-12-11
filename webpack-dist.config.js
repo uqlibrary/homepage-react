@@ -234,6 +234,13 @@ const webpackConfig = {
 
 // this is separated out because it causes local build to fail as the env vars required by Sentry arent available
 if (!!process.env.SENTRY_AUTH_TOKEN) {
+    /*
+     * This plugin requires these ENV vars to be in place:
+     * SENTRY_AUTH_TOKEN
+     * SENTRY_ORG
+     * SENTRY_PROJECT
+     * For more info, see https://docs.sentry.io/product/cli/configuration/#environment-variables
+     */
     const SentryCliPlugin = require('@sentry/webpack-plugin');
 
     // if you need to run this locally, create .sentryclirc and add the variables from the codeship env variables

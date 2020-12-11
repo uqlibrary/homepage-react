@@ -16,7 +16,7 @@ import {
     seeLoans,
     seeMasquerade,
     seePrintBalance,
-    seePublicationMetrics,
+    seeEspace,
     seeRoomBookings,
     seeSavedItems,
     seeSavedSearches,
@@ -70,7 +70,7 @@ export const myLibraryLocale = {
             label: 'eSpace dashboard',
             link: 'https://eSpace.library.uq.edu.au/dashboard',
             icon: <AssessmentIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
-            condition: seePublicationMetrics,
+            condition: seeEspace,
             ariaLabel: '',
         },
         {

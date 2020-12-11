@@ -41,6 +41,14 @@ export const hasPanels = optionsTheUserShouldSee => {
             cy.get(elementId).should('not.exist');
         }
     }
+
+    // if they have Library Services then the box should not be blank
+    // but we dont test per type, because we would just be duplicating the data
+    if (!!optionsTheUserShouldSee.services) {
+        cy.get('div[data-testid=library-services-items]')
+            .children()
+            .length.to.be.greaterThan(0);
+    }
 };
 export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     cy.get('button[data-testid="mylibrary-button"]').should('exist');
@@ -85,11 +93,13 @@ export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
     }
 };
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
-    return;
     const availableOptions = new Map();
     availableOptions.set('papercut', 'Manage your print balance');
     availableOptions.set('loans', 'Manage your library loans');
     availableOptions.set('fines', 'Manage your library fines');
+    availableOptions.set('espace-possible', 'possible eSpace records');
+    availableOptions.set('espace-orcid', 'Link ORCiD account to eSpace');
+    availableOptions.set('espace-ntro', 'NTRO records in eSpace');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
@@ -104,7 +114,7 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
         expect(value.length).to.not.equals(0);
 
         const entryname = `pp-${key}-menu-button`;
-        const elementId = `li[data-testid="${entryname}"]`;
+        const elementId = `button[data-testid="${entryname}"]`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
             cy.get(elementId).contains(value);

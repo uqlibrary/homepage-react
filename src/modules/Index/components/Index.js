@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
@@ -13,7 +12,15 @@ import {
     searcheSpaceIncompleteNTROPublications,
 } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
-import { seeCourseResources, seeLibraryServices, seeLoggedOut, seeTraining, getUserServices } from 'helpers/access';
+import {
+    seeCourseResources,
+    seeComputerAvailability,
+    seeLibraryServices,
+    seeOpeningHours,
+    seePromoPanel,
+    seeTraining,
+} from 'helpers/access';
+import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
 import { makeStyles } from '@material-ui/styles';
 import Hours from './subComponents/Hours';
@@ -183,7 +190,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!computerAvailability && (
+                    {!!computerAvailability && seeComputerAvailability(account) && (
                         <Grid item xs={12} md={4} data-testid="computer-availability-panel">
                             <Computers
                                 computerAvailability={computerAvailability}
@@ -193,7 +200,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!account && !!libHours && (
+                    {!!account && !!libHours && seeOpeningHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -213,34 +220,13 @@ export const Index = ({
 
                     {seeLibraryServices(account) && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">
-                            <StandardCard
-                                primaryHeader
-                                fullHeight
-                                squareTop={false}
-                                title={
-                                    <Grid container>
-                                        <Grid item xs>
-                                            Library services
-                                        </Grid>
-                                    </Grid>
-                                }
-                            >
-                                <Grid container spacing={1}>
-                                    {getUserServices(account).map((item, index) => {
-                                        return (
-                                            <Grid item xs={12} sm={12} key={index}>
-                                                <a href={item.url}>{item.title}</a>
-                                            </Grid>
-                                        );
-                                    })}
-                                </Grid>
-                            </StandardCard>
+                            <LibraryServices account={account} />
                         </Grid>
                     )}
 
-                    {seeLoggedOut(account) && (
+                    {seePromoPanel(account) && (
                         <Grid item xs={12} md={4}>
-                            <PromoPanel />
+                            <PromoPanel account={account} />
                         </Grid>
                     )}
                 </Grid>

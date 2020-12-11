@@ -17,6 +17,7 @@ import Badge from '@material-ui/core/Badge';
 import PrintIcon from '@material-ui/icons/Print';
 import { Location } from '../../../SharedComponents/Location';
 import { ppLocale } from './PersonalisedPanel.locale';
+import { seeEspace, seeLoans, seePrintBalance } from 'helpers/access';
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -163,7 +164,6 @@ const PersonalisedPanel = ({
         return null;
     }
     const id = tag => `pp${tag ? '-' + tag : ''}`;
-    const isStaff = account.user_group === 'STAFF';
 
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
@@ -507,12 +507,14 @@ const PersonalisedPanel = ({
             <div className={classes.flexContent} />
             <div className={classes.flexFooter}>
                 <Grid container spacing={0} style={{ marginLeft: 16 }}>
-                    {!!printBalance && printBalance.balance && !isStaff && <PaperCut />}
-                    {!!loans && <Loans />}
-                    {!!loans && loans.total_fines_count > 0 && <Fines />}
-                    {!!possibleRecords && <EspacePossible />}
-                    {!!author && !author.aut_orcid_id && <EspaceOrcid />}
-                    {!!author && !!incompleteNTRORecords && !!incompleteNTRORecords.total && <EspaceNTROs />}
+                    {seePrintBalance(account) && !!printBalance && printBalance.balance && <PaperCut />}
+                    {seeLoans(account) && !!loans && <Loans />}
+                    {seeLoans(account) && !!loans && loans.total_fines_count > 0 && <Fines />}
+                    {seeEspace(account, author) && !!possibleRecords && <EspacePossible />}
+                    {seeEspace(account, author) && !author.aut_orcid_id && <EspaceOrcid />}
+                    {seeEspace(account, author) && !!incompleteNTRORecords && !!incompleteNTRORecords.total && (
+                        <EspaceNTROs />
+                    )}
                 </Grid>
             </div>
         </div>

@@ -114,7 +114,7 @@ export const UQSiteHeader = ({
                 <Grid item xs />
                 {!!account && (
                     <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
-                        <MyLibrary account={account} history={history} />
+                        <MyLibrary account={account} author={author} history={history} />
                     </Grid>
                 )}
                 <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
