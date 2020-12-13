@@ -16,15 +16,15 @@ function setup(testProps = {}) {
 
 describe('AuthButton snapshots test', () => {
     it('renders logged out status', () => {
-        const { getByTestId, getByTitle } = setup({ isAuthorizedUser: false });
+        const { getByTestId } = setup({ isAuthorizedUser: false });
         expect(getByTestId('logged-out-icon')).toBeInTheDocument();
-        expect(getByTitle('Please log in')).toBeInTheDocument();
+        expect(getByTestId('log-in-label')).toBeInTheDocument();
     });
 
     it('renders logged in user status', () => {
-        const { getByTestId, getByTitle } = setup({ isAuthorizedUser: true });
+        const { getByTestId } = setup({ isAuthorizedUser: true });
         expect(getByTestId('logged-in-icon')).toBeInTheDocument();
-        expect(getByTitle('Log out')).toBeInTheDocument();
+        expect(getByTestId('log-out-label')).toBeInTheDocument();
     });
 
     it('should fire a given action on clicking the button', () => {

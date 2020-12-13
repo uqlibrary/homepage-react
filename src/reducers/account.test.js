@@ -44,28 +44,28 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set author details value when successfully loaded', () => {
-        const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_DETAILS_LOADED, payload: mockAccount });
-        expect(test).toEqual({
-            ...emptyState,
-            authorDetails: mockAccount,
-            accountAuthorDetailsLoading: false,
-        });
-    });
+    // it('should set author details value when successfully loaded', () => {
+    //     const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_DETAILS_LOADED, payload: mockAccount });
+    //     expect(test).toEqual({
+    //         ...emptyState,
+    //         authorDetails: mockAccount,
+    //         accountAuthorDetailsLoading: false,
+    //     });
+    // });
 
     it('should set all loading flags to true when loading account', () => {
         const test = accountReducer(emptyState, { type: actions.CURRENT_ACCOUNT_LOADING });
         expect(test).toEqual(emptyState);
     });
 
-    it('should set author details loading flag to true when loading author details', () => {
-        const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
-        expect(test).toEqual({
-            ...emptyState,
-            authorDetails: null,
-            accountAuthorDetailsLoading: true,
-        });
-    });
+    // it('should set author details loading flag to true when loading author details', () => {
+    //     const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
+    //     expect(test).toEqual({
+    //         ...emptyState,
+    //         authorDetails: null,
+    //         accountAuthorDetailsLoading: true,
+    //     });
+    // });
 
     it('should set author loading flag to true when loading author', () => {
         const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_LOADING });
@@ -85,14 +85,14 @@ describe('account reducer', () => {
         });
     });
 
-    it('should set author details to null when failed loading', () => {
-        const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_DETAILS_FAILED });
-        expect(test).toEqual({
-            ...emptyState,
-            authorDetails: null,
-            accountAuthorDetailsLoading: false,
-        });
-    });
+    // it('should set author details to null when failed loading', () => {
+    //     const test = accountReducer(emptyState, { type: actions.CURRENT_AUTHOR_DETAILS_FAILED });
+    //     expect(test).toEqual({
+    //         ...emptyState,
+    //         authorDetails: null,
+    //         accountAuthorDetailsLoading: false,
+    //     });
+    // });
 
     it('should not modify state if invalid action type', () => {
         const test = accountReducer(emptyState, { type: 'INVALID_ACTION_TYPE' });

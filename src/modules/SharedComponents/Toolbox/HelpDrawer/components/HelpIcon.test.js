@@ -19,7 +19,7 @@ function setup(testProps = {}) {
 describe('HelpIcon snapshots tests', () => {
     it('renders help icon', () => {
         const { getByTestId } = setup();
-        expect(getByTestId('help-icon')).toBeInTheDocument();
+        expect(getByTestId('HelpIcon-This is the title-button')).toBeInTheDocument();
     });
 
     it('should set drawer content', () => {
@@ -28,7 +28,7 @@ describe('HelpIcon snapshots tests', () => {
             onClick: onClickFn,
         });
 
-        fireEvent.click(getByTestId('help-icon'));
+        fireEvent.click(getByTestId('HelpIcon-This is the title-button'));
         expect(onClickFn).toHaveBeenCalledWith('This is the title', 'This is some text', 'This is a button');
     });
 });
