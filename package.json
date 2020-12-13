@@ -386,6 +386,7 @@
             "!src/modules/**/*locale*.js",
             "!src/modules/*locale*.js",
             "!src/modules/App/components/pages.js",
+            "!src/modules/SharedComponents/Footer/components/MinimalFooter.uqoriginal.js",
             "!src/modules/testhelpers.js",
             "!src/**/{index,locale,config}.js",
             "!src/**/containers/*.{js,jsx}",
