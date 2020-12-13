@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import { _courseLink } from '../courseResourcesHelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';

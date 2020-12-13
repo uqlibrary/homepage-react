@@ -1,4 +1,4 @@
-import { default as locale } from './footerLocale';
+import { default as locale } from './footer.locale';
 import { isAString, isAValidLink } from 'modules/testhelpers';
 import { default as menuLocale } from 'locale/menu';
 

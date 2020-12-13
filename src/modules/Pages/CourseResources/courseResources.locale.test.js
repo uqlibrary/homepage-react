@@ -1,4 +1,4 @@
-import { default as locale } from './courseResourcesLocale';
+import { default as locale } from './courseResources.locale';
 import { isAString, isAValidLink, isPositiveInteger } from 'modules/testhelpers';
 
 describe('courseResourcesLocale', () => {

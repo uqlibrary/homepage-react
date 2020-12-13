@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import { _pluralise, trimNotes } from '../courseResourcesHelpers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';

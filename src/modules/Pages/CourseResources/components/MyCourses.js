@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode } from 'helpers/general';
 

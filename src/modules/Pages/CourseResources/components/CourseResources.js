@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
 
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import global from 'locale/global';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';

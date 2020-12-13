@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
-import txt from './masqueradeLocale';
+import txt from './masquerade.locale';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
