@@ -1,0 +1,74 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Component InlineLoader should render as expected 1`] = `
+<div
+  style={
+    Object {
+      "padding": 8,
+    }
+  }
+>
+  <WithStyles(ForwardRef(Grid))
+    alignContent="center"
+    alignItems="center"
+    container={true}
+    direction="row"
+    justify="center"
+    spacing={1}
+  >
+    <Hidden
+      smUp={true}
+    >
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        xs={true}
+      />
+    </Hidden>
+    <WithStyles(ForwardRef(Grid))
+      item={true}
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+      xs="auto"
+    >
+      <WithStyles(ForwardRef(CircularProgress))
+        color="primary"
+        size={18}
+        thickness={2}
+      />
+    </WithStyles(ForwardRef(Grid))>
+    <WithStyles(ForwardRef(Grid))
+      item={true}
+      style={
+        Object {
+          "textAlign": "center",
+        }
+      }
+      xs="auto"
+    >
+      <WithStyles(ForwardRef(Typography))
+        color="primary"
+        component="span"
+        style={
+          Object {
+            "fontSize": "1.33rem",
+          }
+        }
+        variant="h5"
+      >
+        This is a tst
+      </WithStyles(ForwardRef(Typography))>
+    </WithStyles(ForwardRef(Grid))>
+    <Hidden
+      smUp={true}
+    >
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        xs={true}
+      />
+    </Hidden>
+  </WithStyles(ForwardRef(Grid))>
+</div>
+`;

@@ -6,48 +6,48 @@ describe('Backend routes method', () => {
         expect(routes.zeroPaddedYear(83)).toBe('0083');
     });
 
-    it('should construct url for POSSIBLE_RECORDS_API', () => {
-        const testCases = [
-            {
-                values: { facets: {} },
-                expected: {
-                    apiUrl: 'records/search',
-                    options: {
-                        params: {
-                            export_to: '',
-                            order_by: 'desc',
-                            page: 1,
-                            per_page: 20,
-                            rule: 'possible',
-                            sort: 'score',
-                        },
-                    },
-                },
-            },
-            {
-                values: { facets: { filters: { one: 'one facet', two: 'two facets' } } },
-                expected: {
-                    apiUrl: 'records/search',
-                    options: {
-                        params: {
-                            export_to: '',
-                            order_by: 'desc',
-                            page: 1,
-                            per_page: 20,
-                            rule: 'possible',
-                            sort: 'score',
-                            ['filters[facets][one]']: 'one facet',
-                            ['filters[facets][two]']: 'two facets',
-                        },
-                    },
-                },
-            },
-        ];
-
-        testCases.map(item => {
-            expect(routes.POSSIBLE_RECORDS_API({ ...item.values })).toEqual(item.expected);
-        });
-    });
+    // it('should construct url for POSSIBLE_RECORDS_API', () => {
+    //     const testCases = [
+    //         {
+    //             values: { facets: {} },
+    //             expected: {
+    //                 apiUrl: 'records/search',
+    //                 options: {
+    //                     params: {
+    //                         export_to: '',
+    //                         order_by: 'desc',
+    //                         page: 1,
+    //                         per_page: 20,
+    //                         rule: 'possible',
+    //                         sort: 'score',
+    //                     },
+    //                 },
+    //             },
+    //         },
+    //         {
+    //             values: { facets: { filters: { one: 'one facet', two: 'two facets' } } },
+    //             expected: {
+    //                 apiUrl: 'records/search',
+    //                 options: {
+    //                     params: {
+    //                         export_to: '',
+    //                         order_by: 'desc',
+    //                         page: 1,
+    //                         per_page: 20,
+    //                         rule: 'possible',
+    //                         sort: 'score',
+    //                         ['filters[facets][one]']: 'one facet',
+    //                         ['filters[facets][two]']: 'two facets',
+    //                     },
+    //                 },
+    //             },
+    //         },
+    //     ];
+    //
+    //     testCases.map(item => {
+    //         expect(routes.POSSIBLE_RECORDS_API({ ...item.values })).toEqual(item.expected);
+    //     });
+    // });
 
     it('should construct url for FILE_UPLOAD_API', () => {
         expect(routes.FILE_UPLOAD_API()).toEqual({

@@ -2,6 +2,7 @@ import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
     ALERT_API,
+    AUTHOR_DETAILS_API,
     CHAT_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
@@ -94,7 +95,23 @@ export function loadCurrentAccount() {
                         type: actions.CURRENT_AUTHOR_LOADED,
                         payload: currentAuthor,
                     });
+
+                    // load repository author details
+                    if (currentAuthor.aut_org_username || currentAuthor.aut_student_username) {
+                        dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
+                        return get(
+                            AUTHOR_DETAILS_API({
+                                userId: currentAuthor.aut_org_username || currentAuthor.aut_student_username,
+                            }),
+                        );
+                    }
                     return null;
+                })
+                .then(authorDetailsResponse => {
+                    dispatch({
+                        type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
+                        payload: authorDetailsResponse,
+                    });
                 })
                 .catch(error => {
                     if (!currentAuthor) {

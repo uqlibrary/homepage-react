@@ -68,37 +68,37 @@ describe('Application component', () => {
         window.location = saveLocation;
     });
 
-    it('redirects user to login if not Authorized', () => {
-        const wrapper = setup();
-        const redirectUserToLogin = jest.spyOn(wrapper.instance(), 'redirectUserToLogin');
-        wrapper.setProps({
-            accountLoading: true,
-            account: null,
-            spotlightsLoading: true,
-            spotlights: null,
-            libHoursLoading: true,
-            libHours: null,
-            chatStatus: null,
-            alerts: null,
-            location: { pathname: '/rhdsubmission' },
-        });
-        expect(redirectUserToLogin).not.toHaveBeenCalled();
-
-        wrapper.setProps({
-            accountLoading: false,
-            account: null,
-            spotlightsLoading: true,
-            spotlights: null,
-            libHoursLoading: true,
-            libHours: null,
-            chatStatus: null,
-            alerts: null,
-            location: { pathname: '/rhdsubmission' } });
-        expect(redirectUserToLogin).toHaveBeenCalled();
-        wrapper.update();
-
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
+    // it('redirects user to login if not Authorized', () => {
+    //     const wrapper = setup();
+    //     const redirectUserToLogin = jest.spyOn(wrapper.instance(), 'redirectUserToLogin');
+    //     wrapper.setProps({
+    //         accountLoading: true,
+    //         account: null,
+    //         spotlightsLoading: true,
+    //         spotlights: null,
+    //         libHoursLoading: true,
+    //         libHours: null,
+    //         chatStatus: null,
+    //         alerts: null,
+    //         location: { pathname: '/rhdsubmission' },
+    //     });
+    //     expect(redirectUserToLogin).not.toHaveBeenCalled();
+    //
+    //     wrapper.setProps({
+    //         accountLoading: false,
+    //         account: null,
+    //         spotlightsLoading: true,
+    //         spotlights: null,
+    //         libHoursLoading: true,
+    //         libHours: null,
+    //         chatStatus: null,
+    //         alerts: null,
+    //         location: { pathname: '/rhdsubmission' } });
+    //     expect(redirectUserToLogin).toHaveBeenCalled();
+    //     wrapper.update();
+    //
+    //     expect(toJson(wrapper)).toMatchSnapshot();
+    // });
 
     // it('should show orcid alert for a student without an author account', () => {
     //     const wrapper = setup({
@@ -132,38 +132,38 @@ describe('Application component', () => {
     // A user will only get to the fez-frontend app for a file if they are not logged in and
     // the file is not public, or they are logged in and the the file requires higher privs e.g. needs admin,
     // but they are a student.
-    it('redirects user to login if going to a secure file url and not user logged in yet', () => {
-        const wrapper = setup({});
-        const redirectUserToLogin = jest.spyOn(wrapper.instance(), 'redirectUserToLogin');
-        wrapper.setProps({
-            accountLoading: true,
-            account: null,
-            spotlightsLoading: true,
-            spotlights: null,
-            libHoursLoading: true,
-            libHours: null,
-            chatStatus: null,
-            alerts: null,
-            location: { pathname: '/view/UQ:1/test.pdf' },
-        });
-        expect(redirectUserToLogin).not.toHaveBeenCalled();
-
-        wrapper.setProps({
-            accountLoading: false,
-            account: null,
-            spotlightsLoading: true,
-            spotlights: null,
-            libHoursLoading: true,
-            libHours: null,
-            chatStatus: null,
-            alerts: null,
-            location: { pathname: '/view/UQ:1/test.pdf' },
-        });
-        expect(redirectUserToLogin).toHaveBeenCalled();
-        wrapper.update();
-
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
+    // it('redirects user to login if going to a secure file url and not user logged in yet', () => {
+    //     const wrapper = setup({});
+    //     const redirectUserToLogin = jest.spyOn(wrapper.instance(), 'redirectUserToLogin');
+    //     wrapper.setProps({
+    //         accountLoading: true,
+    //         account: null,
+    //         spotlightsLoading: true,
+    //         spotlights: null,
+    //         libHoursLoading: true,
+    //         libHours: null,
+    //         chatStatus: null,
+    //         alerts: null,
+    //         location: { pathname: '/view/UQ:1/test.pdf' },
+    //     });
+    //     expect(redirectUserToLogin).not.toHaveBeenCalled();
+    //
+    //     wrapper.setProps({
+    //         accountLoading: false,
+    //         account: null,
+    //         spotlightsLoading: true,
+    //         spotlights: null,
+    //         libHoursLoading: true,
+    //         libHours: null,
+    //         chatStatus: null,
+    //         alerts: null,
+    //         location: { pathname: '/view/UQ:1/test.pdf' },
+    //     });
+    //     expect(redirectUserToLogin).toHaveBeenCalled();
+    //     wrapper.update();
+    //
+    //     expect(toJson(wrapper)).toMatchSnapshot();
+    // });
 
     it('should assign the correct ref to setSessionExpiredConfirmation', () => {
         const wrapper = setup({});
@@ -172,12 +172,12 @@ describe('Application component', () => {
         expect(wrapper.instance().sessionExpiredConfirmationBox).toEqual('hello');
     });
 
-    it('should call componentWillUnmount', () => {
-        const wrapper = setup();
-        const componentWillUnmount = jest.spyOn(wrapper.instance(), 'componentWillUnmount');
-        wrapper.unmount();
-        expect(componentWillUnmount).toHaveBeenCalled();
-    });
+    // it('should call componentWillUnmount', () => {
+    //     const wrapper = setup();
+    //     const componentWillUnmount = jest.spyOn(wrapper.instance(), 'componentWillUnmount');
+    //     wrapper.unmount();
+    //     expect(componentWillUnmount).toHaveBeenCalled();
+    // });
 
     it('Should show confirmation when the session expires', () => {
         const testFn = jest.fn();

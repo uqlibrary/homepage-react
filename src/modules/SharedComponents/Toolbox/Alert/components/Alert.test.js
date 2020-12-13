@@ -6,6 +6,7 @@ import mediaQuery from 'css-mediaquery';
 function setup(testProps = {}) {
     return rtlRender(
         <Alert
+            alertId="1"
             title="Title"
             message="Message"
             type="warning"
@@ -157,9 +158,9 @@ describe('Alert', () => {
         expect(getByText(/This is an error title*/)).toBeInTheDocument();
         expect(getByText('This is an error message')).toBeInTheDocument();
         expect(getByTestId('error-icon')).toBeInTheDocument();
-        expect(getByTestId('action-button')).toBeInTheDocument();
+        expect(getByTestId('1-action-button')).toBeInTheDocument();
 
-        fireEvent.click(getByTestId('action-button'));
+        fireEvent.click(getByTestId('1-action-button'));
         expect(actionFn).toHaveBeenCalledTimes(1);
         expect(toJson(getByText)).toMatchSnapshot();
     });
@@ -171,7 +172,7 @@ describe('Alert', () => {
             type: null,
         });
 
-        fireEvent.click(getByTestId('dismiss'));
+        fireEvent.click(getByTestId('1-dismiss-button'));
         expect(dismissfn).toHaveBeenCalledTimes(1);
         expect(toJson(getByTestId)).toMatchSnapshot();
     });
@@ -179,7 +180,7 @@ describe('Alert', () => {
     it('should display dismiss button for smaller screen size', () => {
         window.matchMedia = createMatchMedia(256);
         const { getByTestId } = setup();
-        expect(getByTestId('dismiss-mobile')).toBeInTheDocument();
+        expect(getByTestId('1-dismiss-button-mobile')).toBeInTheDocument();
         expect(toJson(getByTestId)).toMatchSnapshot();
     });
 

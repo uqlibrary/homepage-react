@@ -6,6 +6,9 @@ export const CURRENT_ACCOUNT_API = () => ({
 });
 export const CURRENT_AUTHOR_API = () => ({ apiUrl: 'fez-authors' });
 export const AUTHOR_API = ({ authorId }) => ({ apiUrl: `fez-authors/${authorId}` });
+export const AUTHOR_DETAILS_API = ({ userId }) => ({
+    apiUrl: `authors/details/${userId}`,
+});
 
 // Spotlights API
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
