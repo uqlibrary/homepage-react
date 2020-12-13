@@ -1,5 +1,5 @@
 /* eslint camelcase: 0 */
-import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
+import { default as locale } from '../../src/modules/Pages/CourseResources/courseResources.locale';
 import { accounts } from '../../src/mock/data';
 import { courseResourcesLocale } from '../../src/modules/Index/components/subComponents/CourseResources.locale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { searchPanelLocale } from './searchPanelLocale';
+import { searchPanelLocale } from './searchPanel.locale';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 

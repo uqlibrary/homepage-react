@@ -5,7 +5,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { useAccountContext } from 'context';
 import { AUTH_URL_LOGIN } from 'config';
-import locale from './notfoundLocale';
+import locale from './notfound.locale';
 import { flattedPathConfig } from 'config/routes';
 
 // tests done in cypress
