@@ -110,33 +110,27 @@ export const Index = ({
         if (!spotlights && spotlightsLoading === null) {
             dispatch(loadSpotlights());
         }
+    }, [spotlights, spotlightsLoading, dispatch]);
+    useEffect(() => {
         if (!!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());
         }
+    }, [account, printBalance, printBalanceLoading, dispatch]);
+    useEffect(() => {
         if (!!account && !loans && loansLoading === null) {
             dispatch(loadLoans());
         }
+    }, [account, loans, loansLoading, dispatch]);
+    useEffect(() => {
         if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
             dispatch(searcheSpacePossiblePublications());
         }
+    }, [account, author, possibleRecords, possibleRecordsLoading, dispatch]);
+    useEffect(() => {
         if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
-    }, [
-        printBalanceLoading,
-        printBalance,
-        spotlightsLoading,
-        spotlights,
-        dispatch,
-        account,
-        author,
-        loans,
-        loansLoading,
-        possibleRecords,
-        possibleRecordsLoading,
-        incompleteNTRO,
-        incompleteNTROLoading,
-    ]);
+    }, [account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <StandardPage>
             <div className="layout-card">
