@@ -70,6 +70,7 @@ const everyoneCanSee = account => !!account || true;
 
 const loggedinCanSee = account => !!account;
 
+/* istanbul ignore next */
 export const loggedoutCanSee = account => !account;
 
 export const seeComputerAvailability = account => everyoneCanSee(account);
@@ -92,6 +93,7 @@ export const seeRoomBookings = account =>
 
 export const seeLoans = account => !!account;
 
+/* istanbul ignore next */
 export const seeFines = account =>
     !!account &&
     [
@@ -180,10 +182,12 @@ const userGroupServices = {
 };
 
 export const getUserServices = account => {
-    const allLibraryServices = locale.LibraryServices.links || [];
-    if (!!account && !!account.user_group) {
-        const userGroupService = userGroupServices[account.user_group] || [];
-        return userGroupService.map(service => allLibraryServices.find(i => (i.id || '') === service));
+    /* istanbul ignore next */
+    if (!account || !account.user_group) {
+        return [];
     }
-    return [];
+
+    const allLibraryServices = locale.LibraryServices.links || [];
+    const userGroupService = userGroupServices[account.user_group] || [];
+    return userGroupService.map(service => allLibraryServices.find(i => (i.id || '') === service));
 };
