@@ -1,4 +1,5 @@
 import * as actions from './actionTypes';
+import fetchJsonp from 'fetch-jsonp';
 import {
     PRIMO_SUGGESTIONS_API_GENERIC,
     PRIMO_SUGGESTIONS_API_EXAMS,
@@ -12,9 +13,13 @@ import {
 export function loadPrimoSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
-        return fetch(PRIMO_SUGGESTIONS_API_GENERIC({ keyword }).apiUrl)
+        return fetchJsonp(PRIMO_SUGGESTIONS_API_GENERIC({ keyword }).apiUrl, {
+            jsonpCallbackFunction: 'byutv_jsonp_callback_c631f96adec14320b23f1cac342d30f6',
+            timeout: 3000,
+        })
             .then(response => response.json())
             .then(data => {
+                console.log('RESPONSE', data);
                 const payload =
                     (data &&
                         data.response &&
@@ -32,6 +37,7 @@ export function loadPrimoSuggestions(keyword) {
                 });
             })
             .catch(error => {
+                console.log(error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,

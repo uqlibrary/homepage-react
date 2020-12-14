@@ -135,7 +135,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                 setShowIcon(false);
             }, 5000);
         }
-    }, [location, cookies.location]);
+    }, [location, cookies]);
     if (!libHours || !!libHoursLoading) {
         return null;
     }
@@ -189,7 +189,6 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         }
             ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
     };
-    console.log(!!account);
     return (
         <StandardCard
             primaryHeader

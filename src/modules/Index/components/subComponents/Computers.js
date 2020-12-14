@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from '../../../SharedComponents/Toolbox/StandardCard';
@@ -123,6 +123,15 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
+    useEffect(() => {
+        if (location !== cookies.location) {
+            setShowIcon(true);
+            setLocation(cookies.location);
+            setTimeout(() => {
+                setShowIcon(false);
+            }, 5000);
+        }
+    }, [location, cookies]);
     if (!computerAvailability || !!computerAvailabilityLoading) {
         return null;
     }
@@ -165,13 +174,6 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
         keys: ['campus'],
         threshold: matchSorter.rankings.NO_MATCH,
     });
-    if (location !== cookies.location) {
-        setShowIcon(true);
-        setLocation(cookies.location);
-        setTimeout(() => {
-            setShowIcon(false);
-        }, 5000);
-    }
     const handleCollapse = index => {
         if (collapse[index]) {
             setCollapse({ [index]: false });

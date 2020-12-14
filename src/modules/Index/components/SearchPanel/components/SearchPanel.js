@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 
 import { searchPanelLocale } from './searchPanelLocale';
@@ -17,7 +17,7 @@ import Select from '@material-ui/core/Select';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import TextField from '@material-ui/core/TextField';
 import Tooltip from '@material-ui/core/Tooltip';
-
+import { throttle } from 'throttle-debounce';
 import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -88,16 +88,17 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         }
     };
 
+    const throttledPrimoLoadSuggestions = useRef(throttle(3100, newValue => actions.loadPrimoSuggestions(newValue)));
+
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
             setSearchKeyword(newValue);
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
                 if ([0, 1, 3, 4, 5].includes(searchType)) {
-                    actions.loadPrimoSuggestions(newValue);
+                    throttledPrimoLoadSuggestions.current(newValue);
                 } else if (searchType === 7) {
                     actions.loadExamPaperSuggestions(newValue);
                 } else if (searchType === 8) {
-                    console.log('homepage: fetch search_suggestions?type=learning_resource');
                     actions.loadHomepageCourseReadingListsSuggestions(newValue);
                 }
                 document.getElementById('primo-search-autocomplete').focus();
