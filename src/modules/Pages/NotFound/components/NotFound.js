@@ -8,8 +8,6 @@ import { AUTH_URL_LOGIN } from 'config';
 import locale from './notfound.locale';
 import { flattedPathConfig } from 'config/routes';
 
-// tests done in cypress
-/* istanbul ignore next */
 export const NotFound = () => {
     const location = useLocation();
     const { account } = useAccountContext();
@@ -38,16 +36,22 @@ export const NotFound = () => {
             // istanbul ignore next
             window.location.assign(`${AUTH_URL_LOGIN}?url=${window.btoa(window.location.href)}`);
         }
-        return <StandardPage standardPageId="authentication-required" {...locale.authenticationRequired} />;
+        return (
+            <StandardPage
+                goBackFunc={() => history.back()}
+                standardPageId="authentication-required"
+                {...locale.authenticationRequired}
+            />
+        );
     }
 
     // if not known page and is logged in
     if (!!account.id && !isValidRoute) {
-        return <StandardPage standardPageId="not-found" {...locale.notFound} />;
+        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
     }
 
     // should never happen? - account did not load properly?
-    return <StandardPage standardPageId="not-found" {...locale.accountError} />;
+    return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.accountError} />;
 };
 
 export default React.memo(NotFound);

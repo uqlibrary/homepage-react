@@ -3,7 +3,6 @@ import React from 'react';
 export default {
     notFound: {
         title: 'Page not found',
-        goBackFunc: () => history.back(),
         children: (
             <div className="layout-card">
                 <p>The requested page could not be found.</p>
@@ -21,7 +20,6 @@ export default {
     },
     authenticationRequired: {
         title: 'Authentication required',
-        goBackFunc: () => history.back(),
         children: (
             <div className="layout-card">
                 <p>The requested page is available to authenticated users only.</p>
@@ -31,12 +29,10 @@ export default {
     },
     permissionDenied: {
         title: 'Permission denied',
-        goBackFunc: () => history.back(),
         children: <div className="layout-card">The requested page is available to authorised users only.</div>,
     },
     accountError: {
         title: 'Error',
-        goBackFunc: () => history.back(),
         children: <div className="layout-card">There has been a problem. Please refresh and try again.</div>,
     },
 };
