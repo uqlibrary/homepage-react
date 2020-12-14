@@ -41,7 +41,9 @@ export const AuthButton = ({ isAuthorizedUser, ariaLabel, onClick }) => {
             ) : (
                 <PersonOutline id="logged-out-icon" className={classes.iconButton} />
             )}
-            <div>{!!isAuthorizedUser ? 'Log out' : 'Log in'}</div>
+            <div id={isAuthorizedUser ? 'log-out-label' : 'log-in-label'}>
+                {!!isAuthorizedUser ? 'Log out' : 'Log in'}
+            </div>
         </IconButton>
     );
 };

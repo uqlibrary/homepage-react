@@ -68,7 +68,7 @@ export const ChatStatus = ({ status }) => {
         );
         return false;
     };
-    if (chatState.online && !closeChatState) {
+    if (!!chatState && chatState.online && !closeChatState) {
         return (
             <Snackbar
                 anchorOrigin={{
@@ -119,7 +119,7 @@ export const ChatStatus = ({ status }) => {
             </Snackbar>
         );
     }
-    if (!chatState.online && !closeChatState) {
+    if ((!chatState || !chatState.online) && !closeChatState) {
         return (
             <Snackbar
                 anchorOrigin={{
@@ -176,16 +176,18 @@ export const ChatStatus = ({ status }) => {
             >
                 <Fab
                     color="secondary"
-                    className={`${classes.chatAction} ${chatState.online ? classes.badgeOnline : classes.badgeOffline}`}
+                    className={`${classes.chatAction} ${
+                        !!chatState && chatState.online ? classes.badgeOnline : classes.badgeOffline
+                    }`}
                     onClick={openChatStatus}
                     size={'small'}
-                    id={`chat-status-icon-button-${chatState.online ? 'online' : 'offline'}`}
-                    data-testid={`chat-status-icon-button-${chatState.online ? 'online' : 'offline'}`}
+                    id={`chat-status-icon-button-${!!chatState && chatState.online ? 'online' : 'offline'}`}
+                    data-testid={`chat-status-icon-button-${!!chatState && chatState.online ? 'online' : 'offline'}`}
                 >
                     <QuestionAnswerIcon
                         className={classes.chatIcon}
-                        id={`chat-status-icon-${chatState.online ? 'online' : 'offline'}`}
-                        data-testid={`chat-status-icon-${chatState.online ? 'online' : 'offline'}`}
+                        id={`chat-status-icon-${!!chatState && chatState.online ? 'online' : 'offline'}`}
+                        data-testid={`chat-status-icon-${!!chatState && chatState.online ? 'online' : 'offline'}`}
                     />
                 </Fab>
             </Tooltip>

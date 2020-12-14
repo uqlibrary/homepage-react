@@ -30,7 +30,7 @@ Please leave the datatestid elements in place
 
 ## To edit the Footer
 
-Edit [footerLocale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/SharedComponents/Footer/footerLocale.js) and then follow the steps above
+Edit [footer.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/SharedComponents/Footer/footerLocale.js) and then follow the steps above
 
 (Note that only the Connect Footer items are working - Minimal Footer is controlled by ITS markup)
 

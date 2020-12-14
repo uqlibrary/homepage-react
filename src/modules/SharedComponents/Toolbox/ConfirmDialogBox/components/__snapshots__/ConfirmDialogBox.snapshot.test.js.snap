@@ -1,0 +1,440 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ConfirmDialogBox snapshots tests renders component with customised locale 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  open={false}
+  style={
+    Object {
+      "padding": 6,
+    }
+  }
+>
+  <WithStyles(ForwardRef(DialogTitle))>
+    ENG: Confirmation
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogContentText))>
+      ENG: Are you sure?
+    </WithStyles(ForwardRef(DialogContentText))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        xsDown={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          autoFocus={true}
+          color="primary"
+          data-testid="confirm-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+        >
+          ENG: Yes
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          data-testid="alternate-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          ENG: Maybe
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          data-testid="cancel-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          ENG: No
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`ConfirmDialogBox snapshots tests renders component with yes 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  open={false}
+  style={
+    Object {
+      "padding": 6,
+    }
+  }
+>
+  <WithStyles(ForwardRef(DialogTitle))>
+    Confirmation
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogContentText))>
+      Are you sure?
+    </WithStyles(ForwardRef(DialogContentText))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        xsDown={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          autoFocus={true}
+          color="primary"
+          data-testid="confirm-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+        >
+          Yes
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`ConfirmDialogBox snapshots tests renders component with yes/no buttons 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  open={false}
+  style={
+    Object {
+      "padding": 6,
+    }
+  }
+>
+  <WithStyles(ForwardRef(DialogTitle))>
+    Confirmation
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogContentText))>
+      Are you sure?
+    </WithStyles(ForwardRef(DialogContentText))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        xsDown={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          autoFocus={true}
+          color="primary"
+          data-testid="confirm-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+        >
+          Yes
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          data-testid="cancel-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          No
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`ConfirmDialogBox snapshots tests renders component with yes/no/maybe buttons 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  open={false}
+  style={
+    Object {
+      "padding": 6,
+    }
+  }
+>
+  <WithStyles(ForwardRef(DialogTitle))>
+    Confirmation
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogContentText))>
+      Are you sure?
+    </WithStyles(ForwardRef(DialogContentText))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        xsDown={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          autoFocus={true}
+          color="primary"
+          data-testid="confirm-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+        >
+          Yes
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          data-testid="alternate-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          Maybe
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          data-testid="cancel-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          No
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`ConfirmDialogBox snapshots tests should have a proper style generator 1`] = `
+Object {
+  "alternateActionButtonClass": Object {
+    "&:hover": Object {
+      "backgroundColor": "test3",
+    },
+    "backgroundColor": "test2",
+    "color": "test4",
+  },
+}
+`;
+
+exports[`ConfirmDialogBox snapshots tests should have a proper style generator 2`] = `
+Object {
+  "alternateActionButtonClass": Object {
+    "&:hover": Object {
+      "backgroundColor": undefined,
+    },
+    "backgroundColor": undefined,
+    "color": undefined,
+  },
+}
+`;
+
+exports[`ConfirmDialogBox snapshots tests should have a proper style generator 3`] = `
+Object {
+  "alternateActionButtonClass": Object {
+    "&:hover": Object {
+      "backgroundColor": undefined,
+    },
+    "backgroundColor": undefined,
+    "color": undefined,
+  },
+}
+`;
+
+exports[`ConfirmDialogBox snapshots tests should show and hide confirmation dialog 1`] = `
+<WithStyles(ForwardRef(Dialog))
+  open={true}
+  style={
+    Object {
+      "padding": 6,
+    }
+  }
+>
+  <WithStyles(ForwardRef(DialogTitle))>
+    Confirmation
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogContentText))>
+      Are you sure?
+    </WithStyles(ForwardRef(DialogContentText))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        xsDown={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          autoFocus={true}
+          color="primary"
+          data-testid="confirm-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+        >
+          Yes
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          data-testid="cancel-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          No
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;
+
+exports[`ConfirmDialogBox snapshots tests should show and hide confirmation dialog 2`] = `
+<WithStyles(ForwardRef(Dialog))
+  open={false}
+  style={
+    Object {
+      "padding": 6,
+    }
+  }
+>
+  <WithStyles(ForwardRef(DialogTitle))>
+    Confirmation
+  </WithStyles(ForwardRef(DialogTitle))>
+  <WithStyles(ForwardRef(DialogContent))>
+    <WithStyles(ForwardRef(DialogContentText))>
+      Are you sure?
+    </WithStyles(ForwardRef(DialogContentText))>
+  </WithStyles(ForwardRef(DialogContent))>
+  <WithStyles(ForwardRef(DialogActions))>
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
+    >
+      <Hidden
+        xsDown={true}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={true}
+        />
+      </Hidden>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          autoFocus={true}
+          color="primary"
+          data-testid="confirm-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+        >
+          Yes
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+      <WithStyles(ForwardRef(Grid))
+        item={true}
+        sm="auto"
+        xs={12}
+      >
+        <WithStyles(ForwardRef(Button))
+          color="primary"
+          data-testid="cancel-dialog-box"
+          fullWidth={true}
+          onClick={[Function]}
+          variant="contained"
+        >
+          No
+        </WithStyles(ForwardRef(Button))>
+      </WithStyles(ForwardRef(Grid))>
+    </WithStyles(ForwardRef(Grid))>
+  </WithStyles(ForwardRef(DialogActions))>
+</WithStyles(ForwardRef(Dialog))>
+`;

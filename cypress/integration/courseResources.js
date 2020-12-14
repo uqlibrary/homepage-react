@@ -1,5 +1,5 @@
 /* eslint camelcase: 0 */
-import { default as locale } from '../../src/modules/Pages/CourseResources/courseResourcesLocale';
+import { default as locale } from '../../src/modules/Pages/CourseResources/courseResources.locale';
 import { accounts } from '../../src/mock/data';
 import { courseResourcesLocale } from '../../src/modules/Index/components/subComponents/CourseResources.locale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
@@ -386,7 +386,7 @@ context('Course Resources', () => {
         a_subject_loads_course_links_correctly(ACCT1101ReadingList);
     });
 
-    it('the Course resources panel links correctly', () => {
+    it('the Course resources panel links correctly and the back button works', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         const currentClasses = accounts.s1111111.current_classes;
@@ -415,6 +415,9 @@ context('Course Resources', () => {
         );
         const classPanelId = 'classpanel-1';
         cy.get(`div[data-testid=${classPanelId}] h3`).contains(secondClass.SUBJECT);
+
+        cy.get('button[data-testid=StandardPage-goback-button]').click();
+        cy.url().should('eq', 'http://localhost:2020/?user=s1111111'); // homepage
     });
 
     it('the Course resources panel searches correctly', () => {
@@ -457,7 +460,7 @@ context('Course Resources', () => {
     it('the non-loggedin user cannot access Course Resources', () => {
         cy.visit('/courseresources?user=public');
         cy.viewport(1300, 1000);
-        cy.get('body').contains('The requested page is available to authorised users only.');
+        cy.get('body').contains('The requested page is available to authenticated users only.');
     });
 
     it('the loggedin user without course resource privs cannot access Course Resources', () => {
@@ -494,5 +497,10 @@ context('Course Resources', () => {
             .contains('FREN1010')
             .click();
         cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
+
+        cy.get('[data-testid=classtab-HIST1201]')
+            .contains('HIST1201')
+            .click();
+        cy.get('div[data-testid=classpanel-1] h3').contains('HIST1201');
     });
 });

@@ -11,11 +11,23 @@ context('ACCESSIBILITY', () => {
         });
     });
 
-    it('public user on a page that requires login', () => {
+    it('non-loggedin user on a page that requires login', () => {
         cy.visit('/courseresources?user=public');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[id="content-container"]').contains('Permission denied');
+        cy.get('div[id="content-container"]').contains('authenticated users only');
+        cy.checkA11y('[data-testid="StandardPage"]', {
+            reportName: 'Not found unauthorised',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+    });
+
+    it('pages that arent available to all logged in users return an authorisation error', () => {
+        cy.visit('/courseresources?user=emcommunity');
+        cy.injectAxe();
+        cy.viewport(1300, 1000);
+        cy.get('div[id="content-container"]').contains('authorised users only');
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Not found unauthorised',
             scopeName: 'Content',

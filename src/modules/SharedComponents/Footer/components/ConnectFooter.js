@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { default as locale } from '../footerLocale.js';
+import { default as locale } from '../footer.locale.js';
 import { default as menuLocale } from 'locale/menu';
 
 import Button from '@material-ui/core/Button';
