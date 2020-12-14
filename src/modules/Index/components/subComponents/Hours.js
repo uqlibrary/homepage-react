@@ -189,7 +189,6 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         }
             ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
     };
-    console.log(!!account);
     return (
         <StandardCard
             primaryHeader
