@@ -13,6 +13,7 @@ import {
     PRINTING_API,
     LOANS_API,
     POSSIBLE_RECORDS_API,
+    INCOMPLETE_NTRO_RECORDS_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
@@ -344,7 +345,7 @@ export function searcheSpacePossiblePublications() {
 export function searcheSpaceIncompleteNTROPublications() {
     return dispatch => {
         dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
-        return get(POSSIBLE_RECORDS_API())
+        return get(INCOMPLETE_NTRO_RECORDS_API())
             .then(response => {
                 dispatch({
                     type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADED,
