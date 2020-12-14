@@ -3,6 +3,19 @@ import { accounts, currentAuthor, authorDetails } from 'mock/data/account';
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import * as accountActions from './account';
+import {
+    getSemesterStringByTermNumber,
+    loadAlerts,
+    loadChatStatus,
+    loadCompAvail,
+    loadLibHours,
+    loadLoans,
+    loadPrintBalance,
+    loadSpotlights,
+    loadTrainingEvents,
+    searcheSpaceIncompleteNTROPublications,
+    searcheSpacePossiblePublications,
+} from './account';
 
 jest.mock('raven-js');
 
@@ -235,5 +248,104 @@ describe('Account action creators', () => {
 
         await mockActionsStore.dispatch(accountActions.clearSessionExpiredFlag());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading spotlights fails', async () => {
+        mockApi.onGet(repositories.routes.SPOTLIGHTS_API).reply(500);
+
+        const expectedActions = [actions.SPOTLIGHTS_LOADING, actions.SPOTLIGHTS_FAILED];
+
+        await mockActionsStore.dispatch(loadSpotlights());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading libhours fails', async () => {
+        mockApi.onGet(repositories.routes.LIB_HOURS_API).reply(500);
+
+        const expectedActions = [actions.LIB_HOURS_LOADING, actions.LIB_HOURS_FAILED];
+
+        await mockActionsStore.dispatch(loadLibHours());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading papercut fails', async () => {
+        mockApi.onGet(repositories.routes.PRINTING_API).reply(500);
+
+        const expectedActions = [actions.PRINT_BALANCE_LOADING, actions.PRINT_BALANCE_FAILED];
+
+        await mockActionsStore.dispatch(loadPrintBalance());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading loans fails', async () => {
+        mockApi.onGet(repositories.routes.LOANS_API).reply(500);
+
+        const expectedActions = [actions.LOANS_LOADING, actions.LOANS_FAILED];
+
+        await mockActionsStore.dispatch(loadLoans());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading computer availability fails', async () => {
+        mockApi.onGet(repositories.routes.COMP_AVAIL_API).reply(500);
+
+        const expectedActions = [actions.COMP_AVAIL_LOADING, actions.COMP_AVAIL_FAILED];
+
+        await mockActionsStore.dispatch(loadCompAvail());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading training fails', async () => {
+        mockApi.onGet(repositories.routes.TRAINING_API).reply(500);
+
+        const expectedActions = [actions.TRAINING_LOADING, actions.TRAINING_FAILED];
+
+        await mockActionsStore.dispatch(loadTrainingEvents());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading chat status fails', async () => {
+        mockApi.onGet(repositories.routes.CHAT_STATUS_API).reply(500);
+
+        const expectedActions = [actions.CHAT_STATUS_LOADING, actions.CHAT_STATUS_FAILED];
+
+        await mockActionsStore.dispatch(loadChatStatus());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when loading alerts fails', async () => {
+        mockApi.onGet(repositories.routes.ALERTS_API).reply(500);
+
+        const expectedActions = [actions.ALERT_STATUS_LOADING, actions.ALERT_STATUS_FAILED];
+
+        await mockActionsStore.dispatch(loadAlerts());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when possible espace publications call fails', async () => {
+        mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API).reply(500);
+
+        const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING, actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED];
+
+        await mockActionsStore.dispatch(searcheSpacePossiblePublications());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when possible espace publications call fails', async () => {
+        mockApi.onGet(repositories.routes.INCOMPLETE_NTRO_RECORDS_API).reply(500);
+
+        const expectedActions = [
+            actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING,
+            actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
+        ];
+
+        await mockActionsStore.dispatch(searcheSpaceIncompleteNTROPublications());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('should calculate term dates correctly', () => {
+        expect(getSemesterStringByTermNumber('7050')).toEqual('Semester 2 2020');
+        expect(getSemesterStringByTermNumber('7080')).toEqual('Semester 3 2020');
+        expect(getSemesterStringByTermNumber('7120')).toEqual('Semester 1 2021');
     });
 });
