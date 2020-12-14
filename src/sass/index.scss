@@ -8,6 +8,41 @@
 @import "./print";
 // Browser update script styles
 @import './browserUpdate';
+// React image gallery styles
+@import "~react-image-gallery/styles/scss/image-gallery.scss";
+
+//pure.react.carousel styles
+@import '~pure-react-carousel/dist/react-carousel.es.css';
+
+// UQ Design System styles
+@import 'UQds';
+
+button.carousel__back-button, button.carousel__next-button, button.carousel__play-button {
+  appearance: none;
+  color: white;
+  background-color: transparent !important;
+  border: none;
+  width: 36px;
+  height: 36px;
+  margin: 0;
+  padding: 0;
+  :focus {
+    outline: -webkit-focus-ring-color auto 1px;
+  }
+  & svg {
+    width: 36px;
+    height: 36px;
+  }
+  &:disabled {
+    appearance: none;
+    color: white;
+    background-color: transparent !important;
+    border: none;
+    & svg {
+      opacity: 0.3;
+    }
+  }
+}
 
 html, body {
   overflow: hidden;
@@ -52,23 +87,25 @@ a {
 
 .layout-card {
   max-width: 1200px;
-  margin: 24px auto;
+  margin: 12px auto;
   width: 90%;
   padding: 0;
 }
 
 // The container which houses content
 .content-container {
-  width: 100%;
-  height: calc(100% - 90px);
+  display: flex;
+  position: relative;
+  flex: 0 1 auto;
+  flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin-top: 0px;
-  padding-top: 24px;
-  padding-bottom: 24px;
+  margin-top: 0;
+  height: 100% !important;
+}
+
+.content-header {
+  flex: 0 1 auto;
 }
 
 // Citation styles
@@ -77,3 +114,15 @@ a {
     font-style: italic;
   }
 }
+
+.image-gallery-thumbnails-wrapper {
+  position: absolute !important;
+  bottom: 5px !important;
+  right: 10px !important;
+  width: 43% !important;
+}
+
+abbr {
+  text-decoration: none !important;
+}
+

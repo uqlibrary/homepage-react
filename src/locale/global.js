@@ -41,7 +41,7 @@ export default {
         logo: {
             // image: 'https://static.uq.net.au/v2/logos/corporate/uq-logo-white.svg',
             label: 'The University of Queensland',
-            link: 'http://www.uq.edu.au',
+            link: 'https://www.uq.edu.au',
         },
         orgTitle: 'The University of Queensland',
         loading: 'Loading',
@@ -89,13 +89,13 @@ export default {
             422: {
                 message:
                     'Error has occurred during request and request cannot be processed. Please contact ' +
-                    'eSpace administrators or try again later.',
+                    'webmaster@library.uq.edu.au or try again later.',
                 status: 500,
             },
             500: {
                 message:
                     'Error has occurred during request and request cannot be processed. Please contact ' +
-                    'eSpace administrators or try again later.',
+                    'webmaster@library.uq.edu.au or try again later.',
                 status: 500,
             },
             generic:
@@ -205,5 +205,11 @@ export default {
             confirmButtonLabel: 'Redirect to login',
         },
         defaultAuthorDataPlaceholder: 'Missing',
+    },
+    campuses: {
+        STLUC: 'St Lucia',
+        GATTN: 'Gatton',
+        IPSWC: 'Ipswich',
+        HERST: 'Herston',
     },
 };

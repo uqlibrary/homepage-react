@@ -8,7 +8,6 @@ import { showAppAlert } from 'actions/app';
 import locale from 'locale/global';
 import Raven from 'raven-js';
 import param from 'can-param';
-import { pathConfig } from 'config/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -61,6 +60,7 @@ let isGet = null;
 api.interceptors.request.use(request => {
     isGet = request.method === 'get';
     if (
+        !!request.url &&
         (request.url.includes('records/search') || request.url.includes('records/export')) &&
         !!request.params &&
         !!request.params.mode &&
@@ -105,11 +105,7 @@ api.interceptors.response.use(
 
         // 403 for tool api lookup is handled in actions/thirdPartyLookupTool.js
         let errorMessage = null;
-        if (
-            !!error &&
-            !!error.config &&
-            (!error.config.url || !error.config.url.includes(pathConfig.admin.thirdPartyTools.slice(1)))
-        ) {
+        if (!!error && !!error.config) {
             if (!!error.response && !!error.response.status && error.response.status === 403) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });

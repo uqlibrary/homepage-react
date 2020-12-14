@@ -1,117 +1,126 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
 
-const styles = theme => ({
-    minimalFooter: {
-        fontFamily: 'Roboto, "Helvetica Neue", Helvetica, Arial, sans-serif',
-        fontSize: '14px',
-        lineHeight: '20px',
-        margin: '0 auto',
-        maxWidth: '1200px',
-        padding: '20px',
-        textDecoration: 'none',
-        '& div': {
-            [theme.breakpoints.down('sm')]: {
-                textAlign: 'center',
-            },
+const styles = () => {
+    return {
+        layout: {
+            maxWidth: 1200,
+            margin: '12px auto',
+            width: '90%',
         },
-        '& li': {
-            listStyle: 'none',
-            padding: '0 0 4px 0',
-        },
-        '& ul': {
-            listStyle: 'none',
-        },
-        '& h3': {
-            fontSize: '17px',
-            fontWeight: '500',
-            color: '#fff',
-        },
-        '& a': {
-            color: '#fff',
-            fontWeight: 'bold',
-        },
-    },
-    siteFooter: {
-        borderTop: '1px solid rgba(255,255,255,0.3)',
-        marginTop: '1rem',
-        paddingTop: '1rem',
-    },
-    footerContent: {
-        '& div': {
-            paddingBottom: '4px',
-        },
-    },
-    footerLegalDetails: {
-        [theme.breakpoints.down('sm')]: {
-            borderTop: '1px solid rgba(255,255,255,0.3)',
-            marginTop: '1rem',
-            paddingTop: '1rem',
-        },
-    },
-});
+    };
+};
 
+// from https://github.com/uq-its-ss/design-system/blob/master/packages/storybook-html/src/components/footer/footer.html
 export function MinimalFooter(props) {
     const { classes } = props;
     return (
-        <Grid container className={`${classes.minimalFooter}`} spacing={3}>
-            <Grid item xs={12}>
-                <Grid container>
-                    <Grid item xs={12} md={9} className={`${classes.footerContent}`}>
-                        <div>&copy; The University of Queensland</div>
-                        <div>
+        <div className="uq-footer" data-gtm-category="Footer" data-testid="minimal-footer">
+            <div className={classNames(classes.layout, 'uq-footer__container')}>
+                <div className="uq-footer__acknowledgement">
+                    UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated.
+                    —{' '}
+                    <a href="https://about.uq.edu.au/reconciliation" className="uq-footer__acknowledgement__link">
+                        Reconciliation statement
+                    </a>
+                </div>
+                <div className="uq-footer__row">
+                    <div className="uq-footer__column">
+                        <div className="uq-footer__copyright">© The University of Queensland</div>
+                        <div className="uq-footer__contact">
                             Enquiries:{' '}
-                            <a href="tel:+61733651111" title="UQ Enquiries phone number">
-                                +61 7 3365 1111
+                            <a href="tel:+61733651111" className="uq-footer__link footer__enquiries-phone">
+                                <span itemProp="telephone">+61 7 3365 1111</span>
                             </a>{' '}
-                            &nbsp; | &nbsp; <a href="http://uq.edu.au/contacts">Contact directory</a>
+                            &nbsp; | &nbsp;{' '}
+                            <a href="https://uq.edu.au/contacts" className="uq-footer__link footer__contacts-link">
+                                Contact directory
+                            </a>
                         </div>
-                        <div>
-                            <abbr title="Australian Business Number">ABN</abbr>: 63 942 912 684 &nbsp; | &nbsp;{' '}
+                        <div className="uq-footer__meta">
+                            <abbr title="Australian Business Number">ABN</abbr>: 63 942 912 684 &nbsp; | &nbsp;
                             <abbr title="Commonwealth Register of Institutions and Courses for Overseas Students">
                                 CRICOS
                             </abbr>{' '}
                             Provider No:{' '}
-                            <a href="https://www.uq.edu.au/about/cricos-link" rel="external" title="Provider number">
+                            <a
+                                className="uq-footer__link cricos__link"
+                                href="https://www.uq.edu.au/about/cricos-link"
+                                rel="external"
+                            >
                                 00025B
                             </a>
                         </div>
-                    </Grid>
-                    <Grid item xs={12} md={3} className={`${classes.footerLegalDetails}`}>
-                        <Typography variant={'h3'}>Emergency</Typography>
-                        Phone:{' '}
-                        <a href="tel:+61733653333" title="UQ Emergency phone number">
-                            3365 3333
-                        </a>
-                    </Grid>
-                </Grid>
-            </Grid>
-            <Grid item xs={12} className={`${classes.siteFooter}`}>
-                <div>
-                    <a href="https://www.uq.edu.au/terms-of-use/" rel="external">
-                        Privacy &amp; Terms of use
-                    </a>{' '}
-                    &nbsp; | &nbsp;
-                    <a href="https://support.my.uq.edu.au/app/library/feedback" rel="external">
-                        Feedback
-                    </a>
+                    </div>
+                    <div className="uq-footer__column">
+                        <div className="uq-footer__emergency-contact uq-footer__aside">
+                            <strong className="uq-footer__sub-title">Emergency</strong>
+                            <br /> Phone:{' '}
+                            <a href="tel:+61733653333" className="uq-footer__link footer__emergency-phone">
+                                3365 3333
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </Grid>
-        </Grid>
+                <div className="uq-footer__footer">
+                    <div className="uq-footer__row">
+                        <div className="uq-footer__column">
+                            <div className="uq-footer__footer-menu">
+                                <ul className="uq-footer__footer-menu__list">
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://www.uq.edu.au/terms-of-use/"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Privacy &amp; Terms of use
+                                        </a>
+                                    </li>
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://www.uq.edu.au/rti/"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Right to Information
+                                        </a>
+                                    </li>
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://uq.edu.au/accessibility/"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Accessibility
+                                        </a>
+                                    </li>
+                                    <li className="uq-footer__footer-menu__item">
+                                        <a
+                                            href="https://its.uq.edu.au/feedback?r=https://uq.edu.au"
+                                            rel="external"
+                                            className="uq-footer__footer-menu__link"
+                                        >
+                                            Feedback
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div className="uq-footer__column" />
+                    </div>
+                </div>
+            </div>
+        </div>
     );
 }
 
 MinimalFooter.propTypes = {
-    className: PropTypes.string,
     classes: PropTypes.object.isRequired,
 };
 
 MinimalFooter.defaultProps = {
-    className: '',
     classes: {},
 };
 

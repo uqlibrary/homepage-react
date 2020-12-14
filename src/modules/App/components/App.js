@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
-import Header from './Header';
 
 browserUpdate({
     required: {
@@ -24,20 +23,18 @@ browserUpdate({
 
 // application components
 import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { ScrollTop } from 'modules/SharedComponents/ScrollTop';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 import AppAlertContainer from '../containers/AppAlert';
-import { Meta } from 'modules/SharedComponents/Meta';
-import { OfflineSnackbar } from 'modules/SharedComponents/OfflineSnackbar';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { HelpDrawer } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import * as pages from './pages';
 import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import { withStyles } from '@material-ui/core/styles';
+import UQHeader from './UQHeader';
+import ChatStatus from './ChatStatus';
+import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
+import UQSiteHeader from './UQSiteHeader';
 
 const styles = theme => ({
     appBG: {
@@ -51,6 +48,9 @@ const styles = theme => ({
         },
     },
     layoutFill: {
+        position: 'relative',
+        display: 'flex',
+        flexFlow: 'column',
         margin: 0,
         padding: 0,
         maxHeight: '100%',
@@ -74,6 +74,15 @@ const styles = theme => ({
         overflow: 'hidden',
         textOverflow: 'ellipsis',
     },
+    connectFooter: {
+        marginTop: 50,
+        backgroundColor: theme.hexToRGBA(theme.palette.secondary.main, 0.15),
+    },
+    minimalFooter: {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.white.main,
+        backgroundImage: 'linear-gradient(90deg,#51247a,87%,#962a8b)',
+    },
 });
 
 export class AppClass extends PureComponent {
@@ -89,6 +98,11 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
+        chatStatus: PropTypes.any,
+        libHours: PropTypes.object,
+        libHoursLoading: PropTypes.bool,
+        trainingEvents: PropTypes.array,
+        trainingEventsLoading: PropTypes.bool,
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
@@ -99,8 +113,10 @@ export class AppClass extends PureComponent {
     constructor(props) {
         super(props);
         this.state = {
-            menuDrawerOpen: false,
+            menuOpen: false,
+            alertOpen: false,
             docked: false,
+            chatStatus: { online: false },
             mediaQuery: window.matchMedia('(min-width: 1280px)'),
             isMobile: window.matchMedia('(max-width: 720px)').matches,
         };
@@ -127,19 +143,31 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
+        this.props.actions.loadSpotlights();
+        this.props.actions.loadAlerts();
+        this.props.actions.loadChatStatus();
+        this.props.actions.loadLibHours();
+        this.props.actions.loadCompAvail();
+        this.props.actions.loadTrainingEvents();
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
         }
-    }
-    toggleDrawer = () => {
-        this.setState({
-            menuDrawerOpen: !this.state.menuDrawerOpen,
+        if (this.props.chatStatus && !!this.props.chatStatus.online) {
+            this.setState({
+                chatStatus: { online: true },
+            });
+        }
+        this.props.actions.showAppAlert({
+            title: 'We are open on-campus and online.',
+            message: 'Access collections, services, and support to help you continue your work and study.',
+            type: 'info_outline',
+            action: () => (window.location.href = 'https://web.library.uq.edu.au/library-services/covid-19'),
+            actionButtonLabel: 'UQ Library COVID-19 Updates',
         });
-    };
-
+    }
     redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
@@ -148,9 +176,7 @@ export class AppClass extends PureComponent {
 
     isPublicPage = menuItems => {
         return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length >
-                0 ||
-            new RegExp(routes.pathConfig.records.view(`(${routes.pidRegExp})`)).test(this.props.location.pathname)
+            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
         );
     };
 
@@ -182,28 +208,6 @@ export class AppClass extends PureComponent {
             this.props.account.class &&
             this.props.account.class.indexOf('IS_CURRENT') >= 0 &&
             this.props.account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
-        const menuItems = routes.getMenuConfig(
-            this.props.account,
-            this.props.author,
-            this.props.authorDetails,
-            isHdrStudent && !false,
-            false,
-        );
-        const isPublicPage = this.isPublicPage(menuItems);
-
-        let userStatusAlert = null;
-        if (!this.props.accountLoading && !this.props.account && !isPublicPage) {
-            // user is not logged in
-            userStatusAlert = {
-                ...locale.global.loginAlert,
-                action: this.redirectUserToLogin(),
-            };
-        } else if (!isPublicPage && !isAuthorLoading && this.props.account && !this.props.author) {
-            // user is logged in, but doesn't have eSpace author identifier
-            userStatusAlert = {
-                ...locale.global.notRegisteredAuthorAlert,
-            };
-        }
         const routesConfig = routes.getRoutesConfig({
             components: pages,
             authorDetails: this.props.authorDetails,
@@ -211,55 +215,68 @@ export class AppClass extends PureComponent {
             accountAuthorDetailsLoading: this.props.accountAuthorDetailsLoading,
             isHdrStudent: isHdrStudent,
         });
-        // const titleStyle = this.state.docked && true ? { paddingLeft: 284 } : { paddingLeft: 0 };
         return (
             <Grid container className={classes.layoutFill}>
-                <Meta routesConfig={routesConfig} />
-                <Header isAuthorizedUser={isAuthorizedUser} />
-                <div className="content-container" id="content-container">
-                    <Hidden smDown>
-                        <ScrollTop show containerId="content-container" />
-                    </Hidden>
-                    <ConfirmDialogBox
-                        hideCancelButton
-                        onRef={this.setSessionExpiredConfirmation}
-                        onAction={this.props.actions.logout}
-                        locale={locale.global.sessionExpiredConfirmation}
+                <ConfirmDialogBox
+                    hideCancelButton
+                    onRef={this.setSessionExpiredConfirmation}
+                    onAction={this.props.actions.logout}
+                    locale={locale.global.sessionExpiredConfirmation}
+                />
+                <ChatStatus status={this.props.chatStatus} />
+                <div className="content-container" id="content-container" role="region" aria-label="Site content">
+                    <div className="content-header" role="region" aria-label="Site header">
+                        <UQHeader />
+                    </div>
+                    <UQSiteHeader
+                        isAuthorizedUser={isAuthorizedUser}
+                        isHdrStudent={isHdrStudent}
+                        account={this.props.account}
+                        author={this.props.author}
+                        authorDetails={this.props.authorDetails}
+                        history={this.props.history}
+                        chatStatus={!!this.props.chatStatus && this.props.chatStatus.online}
+                        libHours={this.props.libHours}
+                        libHoursloading={this.props.libHoursLoading}
                     />
-                    {userStatusAlert && (
-                        <Grid
-                            container
-                            alignContent="center"
-                            justify="center"
-                            alignItems="center"
-                            style={{ marginBottom: 12 }}
-                        >
-                            <Grid item className={classes.layoutCard} style={{ marginTop: 0, marginBottom: 0 }}>
-                                <Alert {...userStatusAlert} />
-                            </Grid>
-                        </Grid>
-                    )}
-                    <AppAlertContainer />
+                    <div role="region" aria-label="UQ Library Alerts">
+                        <AppAlertContainer />
+                    </div>
                     {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
-
                     {!isAuthorLoading && (
-                        <AccountContext.Provider
-                            value={{
-                                account: { ...this.props.account, ...this.props.author, ...this.props.authorDetails },
-                            }}
-                        >
-                            <React.Suspense fallback={<ContentLoader message="Loading content" />}>
-                                <Switch>
-                                    {routesConfig.map((route, index) => (
-                                        <Route key={`route_${index}`} {...route} />
-                                    ))}
-                                </Switch>
-                            </React.Suspense>
-                        </AccountContext.Provider>
+                        <div style={{ flexGrow: 1, marginTop: 16 }}>
+                            <AccountContext.Provider
+                                value={{
+                                    account: {
+                                        ...this.props.account,
+                                        ...this.props.author,
+                                        ...this.props.authorDetails,
+                                    },
+                                }}
+                            >
+                                <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                    <Switch>
+                                        {routesConfig.map((route, index) => (
+                                            <Route key={`route_${index}`} {...route} />
+                                        ))}
+                                    </Switch>
+                                </React.Suspense>
+                            </AccountContext.Provider>
+                        </div>
+                    )}
+                    {!this.props.accountLoading && !isAuthorLoading && (
+                        <div>
+                            <Grid container spacing={0}>
+                                <Grid item xs={12} className={classes.connectFooter}>
+                                    <ConnectFooter history={this.props.history} />
+                                </Grid>
+                                <Grid item xs={12} className={classes.minimalFooter}>
+                                    <MinimalFooter />
+                                </Grid>
+                            </Grid>
+                        </div>
                     )}
                 </div>
-                <HelpDrawer />
-                <OfflineSnackbar />
             </Grid>
         );
     }

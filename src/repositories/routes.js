@@ -1,5 +1,5 @@
 import { validation } from 'config';
-import { IN_CREATION, IN_DRAFT, IN_REVIEW, UNPUBLISHED, RETRACTED, SUBMITTED_FOR_APPROVAL } from 'config/general';
+import { IN_CREATION, IN_DRAFT, IN_REVIEW, RETRACTED, SUBMITTED_FOR_APPROVAL, UNPUBLISHED } from 'config/general';
 
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
 
@@ -83,8 +83,99 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
     apiUrl: `authors/details/${userId}`,
 });
 
-// academic stats apis
+// Spotlights API
+export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
+// Training API
+export const TRAINING_API = (numEvents = 6) => ({
+    apiUrl: 'training_events',
+    options: { params: { take: numEvents, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
+});
+
+// Papercut balance API
+export const PRINTING_API = () => ({
+    apiUrl: 'papercut/balance',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Loans API
+export const LOANS_API = () => ({
+    apiUrl: 'account/loans',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// eSpace Possible records
+export const POSSIBLE_RECORDS_API = () => ({
+    apiUrl: 'records/search',
+    options: {
+        params: {
+            rule: 'possible',
+            export_to: '',
+            page: 1,
+            per_page: 20,
+            sort: 'score',
+            order_by: 'desc',
+        },
+    },
+});
+
+// eSpace Possible records
+export const INCOMPLETE_NTRO_RECORDS_API = () => ({
+    apiUrl: 'records/search',
+    options: {
+        params: {
+            rule: 'incomplete',
+            export_to: '',
+            page: 1,
+            per_page: 20,
+            sort: 'score',
+            order_by: 'desc',
+        },
+    },
+});
+
+// Primo Suggestions API
+// https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=cats&facet=off&fq=scope%3A()%2BAND%2Bcontext%3A(B)&rows=10&wt=json&json.wrf=byutv_jsonp_callback_c631f96adec14320b23f1cac342d30f6&_=2ef82775b72140a6bde04ea6e20012e4
+export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
+    return {
+        apiUrl:
+            'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
+            keyword +
+            '&facet=off' +
+            '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
+            '&rows=10' +
+            '&wt=json' +
+            '&json.wrf=byutv_jsonp_callback_c631f96adec14320b23f1cac342d30f6',
+    };
+};
+
+export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
+});
+
+export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
+    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
+});
+
+// Chat availability API
+export const CHAT_API = () => ({ apiUrl: 'chat_status', options: { params: { ts: `${new Date().getTime()}` } } });
+
+// Library hours
+export const LIB_HOURS_API = () => ({
+    apiUrl: 'library_hours/day',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Computer availability
+export const COMP_AVAIL_API = () => ({
+    apiUrl: 'computer_availability',
+    options: { params: { ts: `${new Date().getTime()}` } },
+});
+
+// Alerts API
+export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });
+
+// academic stats apis
 export const VOCABULARIES_API = ({ id }) => ({ apiUrl: `vocabularies?cvo_ids=${id}` });
 export const GET_PUBLICATION_TYPES_API = () => ({ apiUrl: 'records/types' });
 
@@ -107,17 +198,6 @@ export const EXISTING_COLLECTION_API = ({ pid }) => ({ apiUrl: `records/${pid}` 
 export const EXISTING_COMMUNITY_API = ({ pid }) => ({ apiUrl: `records/${pid}` });
 
 export const RECORDS_ISSUES_API = ({ pid }) => ({ apiUrl: `records/${pid}/issues` });
-
-// search/list records apis
-export const POSSIBLE_RECORDS_API = values => ({
-    apiUrl: 'records/search',
-    options: {
-        params: {
-            rule: 'possible',
-            ...getStandardSearchParams(values),
-        },
-    },
-});
 
 // (POST: with data: [\'pid\' => \'UQ:1\', \'type\' => \'H\'])`);
 export const HIDE_POSSIBLE_RECORD_API = () => ({ apiUrl: 'records/search', options: { params: { rule: 'possible' } } });
@@ -272,3 +352,15 @@ export const BATCH_IMPORT_API = () => ({
 export const UNLOCK_RECORD_API = ({ pid }) => ({
     apiUrl: `records/${pid}/unlock`,
 });
+
+export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
+
+export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
+
+export const READING_LIST_API = ({ coursecode, campus, semester }) => {
+    // api requires this field to be double encoded, as it may include characters like '/'
+    const s = encodeURIComponent(encodeURIComponent(semester));
+    return {
+        apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list`,
+    };
+};

@@ -3,10 +3,8 @@ import * as actions from 'actions/actionTypes';
 export const initialState = {
     account: null,
     author: null,
-    authorDetails: null,
-    accountLoading: true,
-    accountAuthorLoading: true,
-    accountAuthorDetailsLoading: true,
+    accountLoading: false,
+    accountAuthorLoading: false,
     isSessionExpired: null,
 };
 
@@ -78,25 +76,6 @@ const handlers = {
         accountAuthorError: null,
     }),
 
-    [actions.CURRENT_AUTHOR_DETAILS_FAILED]: state => ({
-        ...state,
-        accountLoading: false,
-        authorDetails: null,
-        accountAuthorDetailsLoading: false,
-    }),
-
-    [actions.CURRENT_AUTHOR_DETAILS_LOADED]: (state, action) => ({
-        ...state,
-        authorDetails: action.payload,
-        accountAuthorDetailsLoading: false,
-    }),
-
-    [actions.CURRENT_AUTHOR_DETAILS_LOADING]: state => ({
-        ...state,
-        authorDetails: null,
-        accountAuthorDetailsLoading: true,
-    }),
-
     [actions.CURRENT_ACCOUNT_SESSION_EXPIRED]: state => ({
         ...state,
         isSessionExpired: true,
@@ -110,6 +89,75 @@ const handlers = {
     [actions.CLEAR_CURRENT_ACCOUNT_SESSION_FLAG]: state => ({
         ...state,
         isSessionExpired: null,
+    }),
+
+    [actions.CHAT_STATUS_LOADING]: state => ({
+        ...state,
+        chatStatus: { online: false },
+    }),
+
+    [actions.CHAT_STATUS_LOADED]: (state, action) => ({
+        ...state,
+        chatStatus: action.payload,
+    }),
+
+    [actions.CHAT_STATUS_FAILED]: state => ({
+        ...state,
+        chatStatus: { online: false },
+    }),
+
+    [actions.LIB_HOURS_LOADING]: state => ({
+        ...state,
+        libHours: null,
+        libHoursLoading: true,
+    }),
+
+    [actions.LIB_HOURS_LOADED]: (state, action) => ({
+        ...state,
+        libHours: action.payload,
+        libHoursLoading: false,
+    }),
+
+    [actions.LIB_HOURS_FAILED]: state => ({
+        ...state,
+        libHours: null,
+        libHoursLoading: false,
+    }),
+    // Computer availability
+    [actions.COMP_AVAIL_LOADING]: state => ({
+        ...state,
+        computerAvailability: null,
+        computerAvailabilityLoading: true,
+    }),
+
+    [actions.COMP_AVAIL_LOADED]: (state, action) => ({
+        ...state,
+        computerAvailability: action.payload,
+        computerAvailabilityLoading: false,
+    }),
+
+    [actions.COMP_AVAIL_FAILED]: state => ({
+        ...state,
+        computerAvailability: null,
+        computerAvailabilityLoading: false,
+    }),
+    // Training
+    [actions.TRAINING_LOADING]: state => ({
+        ...state,
+        trainingEvents: null,
+        trainingEventsLoading: true,
+    }),
+
+    [actions.TRAINING_LOADED]: (state, action) => ({
+        ...state,
+        trainingEvents: action.payload,
+        trainingEventsLoading: false,
+    }),
+
+    [actions.TRAINING_FAILED]: state => ({
+        ...state,
+        trainingEvents: null,
+        trainingEventsLoading: false,
     }),
 };
 

@@ -1,13 +1,14 @@
 import { locale } from 'locale';
 import { createHash } from 'crypto';
+import { seeCourseResources } from 'helpers/access';
 
-export const fullPath = process.env.FULL_PATH || 'https://fez-staging.library.uq.edu.au';
+export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 export const pidRegExp = 'UQ:[a-z0-9]+';
 export const isFileUrl = route => new RegExp('\\/view\\/UQ:[a-z0-9]+\\/.*').test(route);
 
-const isAdmin = authorDetails => {
-    return authorDetails && (!!authorDetails.is_administrator || !!authorDetails.is_super_administrator);
-};
+// const isAdmin = authorDetails => {
+//     return authorDetails && (!!authorDetails.is_administrator || !!authorDetails.is_super_administrator);
+// };
 
 export const getDatastreamVersionQueryString = (fileName, checksum) => {
     if (!checksum) {
@@ -23,12 +24,17 @@ export const getDatastreamVersionQueryString = (fileName, checksum) => {
 
 export const pathConfig = {
     index: '/',
+    // I dont think this is needed as contact is handled through web.library, but keep it for the notfound test for now
     contact: '/contact',
+    courseresources: '/courseresources',
     admin: {
         masquerade: '/admin/masquerade',
     },
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
 };
+
+// a duplicate list of routes for checking validity easily
+export const flattedPathConfig = ['/', '/contact', '/courseresources', '/admin/masquerade'];
 
 // TODO: will we even have roles?
 export const roles = {
@@ -50,8 +56,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const courseResoures = [
+        {
+            path: pathConfig.courseresources,
+            component: components.CourseResources,
+            exact: true,
+            pageTitle: locale.pages.courseresources.title,
+        },
+    ];
+
     return [
         ...publicPages,
+        ...(account && seeCourseResources(account) ? courseResoures : []),
         ...(account && account.canMasquerade
             ? [
                   {
@@ -63,70 +79,21 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
                   },
               ]
             : []),
+        {
+            component: components.NotFound,
+        },
     ];
 };
 
 export const getMenuConfig = (account, author, authorDetails, disabled) => {
-    const homePage = [
-        {
-            linkTo: pathConfig.index,
-            ...locale.menu.index,
-            public: true,
-        },
-    ];
-    const publicPages = [
-        {
-            ...locale.menu.libraryServices,
-            public: true,
-        },
-        {
-            ...locale.menu.researchToolsTechniques,
-            public: true,
-        },
-        {
-            ...locale.menu.collections,
-            public: true,
-        },
-        {
-            ...locale.menu.borrowingRequesting,
-            public: true,
-        },
-        {
-            ...locale.menu.locationsHours,
-            public: true,
-        },
-        {
-            ...locale.menu.about,
-            public: true,
-        },
-        {
-            ...locale.menu.contactUs,
-            public: true,
-        },
-    ];
+    const publicPages = [];
+    locale.publicmenu.map(item => {
+        publicPages.push(item);
+    });
 
     if (disabled) {
-        return [...homePage, ...publicPages];
+        return [...publicPages];
     }
 
-    return [
-        ...homePage,
-        ...(account && account.canMasquerade
-            ? [
-                  {
-                      linkTo: pathConfig.admin.masquerade,
-                      ...locale.menu.masquerade,
-                  },
-              ]
-            : []),
-        ...((account && account.canMasquerade) || isAdmin(authorDetails)
-            ? [
-                  {
-                      divider: true,
-                      path: '/234234234242',
-                  },
-              ]
-            : []),
-        ...publicPages,
-    ];
+    return [...publicPages];
 };
