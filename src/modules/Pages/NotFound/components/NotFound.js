@@ -15,7 +15,7 @@ export const NotFound = () => {
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
 
     // if known page and is logged in (page must require admin to land here)
-    if (isValidRoute && account) {
+    if (isValidRoute && !!account && !!account.id) {
         return (
             <StandardPage
                 goBackFunc={() => history.back()}
@@ -26,14 +26,13 @@ export const NotFound = () => {
     }
 
     // if known page and is NOT logged in (page must require logged in to land here)
-    if (isValidRoute && !account) {
-        // istanbul ignore next
+    if (isValidRoute && (!account || !account.id)) {
+        /* istanbul ignore next */
         if (
             process.env.NODE_ENV !== 'test' &&
             process.env.NODE_ENV !== 'cc' &&
             process.env.NODE_ENV !== 'development'
         ) {
-            // istanbul ignore next
             window.location.assign(`${AUTH_URL_LOGIN}?url=${window.btoa(window.location.href)}`);
         }
         return (
@@ -45,12 +44,13 @@ export const NotFound = () => {
         );
     }
 
-    // if not known page and is logged in
-    if (!!account.id && !isValidRoute) {
+    // if not known page but user is is logged in
+    if (!!account && !!account.id && !isValidRoute) {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
     }
 
     // should never happen? - account did not load properly?
+    /* istanbul ignore next */
     return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.accountError} />;
 };
 

@@ -460,7 +460,7 @@ context('Course Resources', () => {
     it('the non-loggedin user cannot access Course Resources', () => {
         cy.visit('/courseresources?user=public');
         cy.viewport(1300, 1000);
-        cy.get('body').contains('The requested page is available to authorised users only.');
+        cy.get('body').contains('The requested page is available to authenticated users only.');
     });
 
     it('the loggedin user without course resource privs cannot access Course Resources', () => {
