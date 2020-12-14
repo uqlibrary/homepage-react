@@ -23,7 +23,7 @@ export const isValidInput = params => {
     /**
      * the user must supply 3 parameters: course code, semester and campus
      * this will normally come from the home page
-     * course code should be a valid coursecode, 4 char + 4-5 numbers
+     * course code should be a valid coursecode, 4 char + 4 numbers + optional char
      * semester can be only letters and numbers
      * and campus must be in the global campus lookup list
      * (this cant go in the helpers file because it needs the global locale, which cant be reached during cypress tests)

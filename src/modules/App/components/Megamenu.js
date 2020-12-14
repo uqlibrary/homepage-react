@@ -291,6 +291,8 @@ export function Megamenu(props) {
 
         const tabKeyCode = 9;
         // if they tab out the end of a submenu, close the menu
+
+        /* istanbul ignore next */
         if (event.keyCode === tabKeyCode) {
             const focusedItem = document.activeElement;
             if (
@@ -303,6 +305,7 @@ export function Megamenu(props) {
         }
 
         // if they shift-tab back out of a menu, close the menu
+        /* istanbul ignore next */
         if (event.shiftKey && event.keyCode === tabKeyCode) {
             const focusedItem = document.activeElement;
             if (
