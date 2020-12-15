@@ -16,15 +16,19 @@ export const NotFound = () => {
 
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
 
-    const isAccountLoaded = actions.CURRENT_ACCOUNT_LOADING === 'CURRENT_ACCOUNT_LOADING';
+    const isAccountLoadingComplete = actions.CURRENT_ACCOUNT_LOADING === 'CURRENT_ACCOUNT_LOADING';
 
-    // if not known page
+    const loggedInConfirmed = isAccountLoadingComplete && !!account && !!account.id;
+
+    const loggedOutConfirmed = isAccountLoadingComplete && !!account && !account.id;
+
+    // if not known page, standard 404
     if (!isValidRoute) {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
     }
 
-    // if known page and is logged in (page must require admin to land here)
-    if (isValidRoute && isAccountLoaded && !!account && !!account.id) {
+    // the page must require admin to land here when they are logged in
+    if (loggedInConfirmed) {
         return (
             <StandardPage
                 goBackFunc={() => history.back()}
@@ -34,8 +38,8 @@ export const NotFound = () => {
         );
     }
 
-    // if known page and is NOT logged in (page must require logged in to land here)
-    if (isValidRoute && isAccountLoaded && (!account || !account.id)) {
+    // the page must require them to be logged in to land here
+    if (loggedOutConfirmed) {
         /* istanbul ignore next */
         if (
             process.env.NODE_ENV !== 'test' &&
@@ -53,18 +57,16 @@ export const NotFound = () => {
         );
     }
 
-    // if not known page but user is logged in
-    if (isAccountLoaded && !!account && !!account.id && !isValidRoute) {
-        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
-    }
-
+    // the call to load the account is complete, but status is undetermined
     // should never happen? - account did not load properly?
     /* istanbul ignore next */
-    if (isAccountLoaded) {
+    if (isAccountLoadingComplete) {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.accountError} />;
     }
 
-    return <CircularProgress color="primary" size={20} id="loading-not-found" />;
+    // unsure of why this isnt called in test. Maybe tests load so fast it never happens?
+    /* istanbul ignore next */
+    return <CircularProgress color="primary" size={20} id="checking-for-page-allowed" />;
 };
 
 export default React.memo(NotFound);
