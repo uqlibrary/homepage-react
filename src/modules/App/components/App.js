@@ -24,7 +24,7 @@ browserUpdate({
 // application components
 // import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from '../containers/AppAlert';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import * as pages from './pages';
@@ -242,35 +242,39 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    <div style={{ flexGrow: 1, marginTop: 16 }}>
-                        <AccountContext.Provider
-                            value={{
-                                account: {
-                                    ...this.props.account,
-                                    ...this.props.author,
-                                    ...this.props.authorDetails,
-                                },
-                            }}
-                        >
-                            <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                                <Switch>
-                                    {routesConfig.map((route, index) => (
-                                        <Route key={`route_${index}`} {...route} />
-                                    ))}
-                                </Switch>
-                            </React.Suspense>
-                        </AccountContext.Provider>
-                    </div>
-                    <div>
-                        <Grid container spacing={0}>
-                            <Grid item xs={12} className={classes.connectFooter}>
-                                <ConnectFooter history={this.props.history} />
+                    {!isAccountLoading && (
+                        <div style={{ flexGrow: 1, marginTop: 16 }}>
+                            <AccountContext.Provider
+                                value={{
+                                    account: {
+                                        ...this.props.account,
+                                        ...this.props.author,
+                                        ...this.props.authorDetails,
+                                    },
+                                }}
+                            >
+                                <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                    <Switch>
+                                        {routesConfig.map((route, index) => (
+                                            <Route key={`route_${index}`} {...route} />
+                                        ))}
+                                    </Switch>
+                                </React.Suspense>
+                            </AccountContext.Provider>
+                        </div>
+                    )}
+                    {!this.props.accountLoading && !isAccountLoading && (
+                        <div>
+                            <Grid container spacing={0}>
+                                <Grid item xs={12} className={classes.connectFooter}>
+                                    <ConnectFooter history={this.props.history} />
+                                </Grid>
+                                <Grid item xs={12} className={classes.minimalFooter}>
+                                    <MinimalFooter />
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} className={classes.minimalFooter}>
-                                <MinimalFooter />
-                            </Grid>
-                        </Grid>
-                    </div>
+                        </div>
+                    )}
                 </div>
             </Grid>
         );
