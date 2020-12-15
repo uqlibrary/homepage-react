@@ -17,7 +17,7 @@ export default {
             description: (
                 <Fragment>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
-                    <p>Search for course resources using the &quot;Course search&quot; tab, above.</p>
+                    <p>Search for course resources using the &apos;Course search&apos; tab, above.</p>
                 </Fragment>
             ),
         },
