@@ -8124,8 +8124,8 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                 "root": "makeStyles-iconButtonRoot-217",
                                               }
                                             }
-                                            data-testid="auth-button"
-                                            id="auth-button"
+                                            data-testid="auth-button-loggedin"
+                                            id="auth-button-loggedin"
                                             onClick={[Function]}
                                           >
                                             <ForwardRef(IconButton)
@@ -8143,17 +8143,17 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                   "sizeSmall": "MuiIconButton-sizeSmall",
                                                 }
                                               }
-                                              data-testid="auth-button"
-                                              id="auth-button"
+                                              data-testid="auth-button-loggedin"
+                                              id="auth-button-loggedin"
                                               onClick={[Function]}
                                             >
                                               <WithStyles(ForwardRef(ButtonBase))
                                                 centerRipple={true}
                                                 className="MuiIconButton-root makeStyles-iconButtonRoot-217 log-out-button"
-                                                data-testid="auth-button"
+                                                data-testid="auth-button-loggedin"
                                                 disabled={false}
                                                 focusRipple={true}
-                                                id="auth-button"
+                                                id="auth-button-loggedin"
                                                 onClick={[Function]}
                                               >
                                                 <ForwardRef(ButtonBase)
@@ -8166,17 +8166,17 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                       "root": "MuiButtonBase-root",
                                                     }
                                                   }
-                                                  data-testid="auth-button"
+                                                  data-testid="auth-button-loggedin"
                                                   disabled={false}
                                                   focusRipple={true}
-                                                  id="auth-button"
+                                                  id="auth-button-loggedin"
                                                   onClick={[Function]}
                                                 >
                                                   <button
                                                     className="MuiButtonBase-root MuiIconButton-root makeStyles-iconButtonRoot-217 log-out-button"
-                                                    data-testid="auth-button"
+                                                    data-testid="auth-button-loggedin"
                                                     disabled={false}
-                                                    id="auth-button"
+                                                    id="auth-button-loggedin"
                                                     onBlur={[Function]}
                                                     onClick={[Function]}
                                                     onDragLeave={[Function]}
