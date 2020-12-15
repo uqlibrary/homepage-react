@@ -181,13 +181,19 @@ const userGroupServices = {
     [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
 };
 
-export const getUserServices = account => {
-    /* istanbul ignore next */
+export const getUserServices = (account, serviceLocale = null) => {
+    const thislocale = serviceLocale === null ? locale : serviceLocale;
+    const allLibraryServices = thislocale.LibraryServices?.links || [];
+    if (allLibraryServices.length === 0) {
+        return [];
+    }
+
     if (!account || !account.user_group) {
         return [];
     }
 
-    const allLibraryServices = locale.LibraryServices.links || [];
     const userGroupService = userGroupServices[account.user_group] || [];
-    return userGroupService.map(service => allLibraryServices.find(i => (i.id || '') === service));
+    return userGroupService
+        .map(service => allLibraryServices.find(i => (i.id || '') === service))
+        .filter(i => i !== undefined);
 };
