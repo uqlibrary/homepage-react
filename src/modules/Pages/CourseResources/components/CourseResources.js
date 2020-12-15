@@ -183,6 +183,31 @@ export const CourseResources = ({
 
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
 
+    const loadSubjectAndFocusOnTab = (coursecode, subjectTabId) => {
+        if (!currentReadingLists[coursecode]) {
+            /* istanbul ignore else */
+            const enrolledClass =
+                (!!account &&
+                    !!account.current_classes &&
+                    account.current_classes.find(c => c.classnumber === coursecode)) ||
+                null;
+            /* istanbul ignore else */
+            const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
+            /* istanbul ignore else */
+            const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
+            loadNewSubject(coursecode, campus, semester);
+        }
+
+        setCurrentMenuTab(subjectTabId);
+    };
+
+    const selectMyCoursesTab = (subjectId, tabPosition) => {
+        setCurrentTopTab('top0');
+        const tabLabel = `${courseTabLabel}-${tabPosition}`;
+
+        loadSubjectAndFocusOnTab(subjectId, tabLabel);
+    };
+
     // store the reading list for this subject in currentReadingLists by subject
     const updateListOfReadingLists = React.useCallback(() => {
         if (!!readingList && !!readingList.coursecode && currentReadingLists[readingList.coursecode] === undefined) {
@@ -305,6 +330,7 @@ export const CourseResources = ({
                                     guideList={guideLists}
                                     setCurrentMenuTab={setCurrentMenuTab}
                                     coursemenu={coursemenu}
+                                    loadSubjectAndFocusOnTab={loadSubjectAndFocusOnTab}
                                 />
                             </TabPanel>
                             <TabPanel
@@ -322,6 +348,7 @@ export const CourseResources = ({
                                     readingList={readingLists}
                                     examList={examLists}
                                     guideList={guideLists}
+                                    selectMyCoursesTab={selectMyCoursesTab}
                                 />
                             </TabPanel>
                         </Grid>

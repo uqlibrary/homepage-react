@@ -38,6 +38,7 @@ export const SearchCourses = ({
     readingList,
     examList,
     guideList,
+    selectMyCoursesTab,
 }) => {
     const classes = useStyles();
 
@@ -143,6 +144,34 @@ export const SearchCourses = ({
         );
     };
 
+    const getPlaceInCurrentAccountList = subject => {
+        // probably a better way to do this...
+        let counter = -1;
+        let result = -1;
+        !!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
+            Object.values(account.current_classes).map(i => {
+                counter++;
+                if (i.classnumber === subject) {
+                    result = counter;
+                }
+            });
+        return result;
+    };
+
+    const isEnrolledInSubject = subject => {
+        return (
+            (!!account &&
+                !!account.current_classes &&
+                account.current_classes.length > 0 &&
+                account.current_classes.filter(item => {
+                    return (item.classnumber || '') === subject;
+                }).length > 0) ||
+            false
+        );
+    };
+
     const loadCourseAndSelectTab = (searchKeyword, suggestions) => {
         let tabId;
 
@@ -162,7 +191,13 @@ export const SearchCourses = ({
         /* istanbul ignore next */
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
         /* istanbul ignore else */
-        if (
+
+        // // if subject is in 'my courses' list, swap to that tab
+        if (isEnrolledInSubject(searchKeyword)) {
+            // swap to correct tab on My Courses tab
+            const subjectId = getPlaceInCurrentAccountList(searchKeyword);
+            selectMyCoursesTab(searchKeyword, subjectId);
+        } else if (
             !(
                 !!listSearchedSubjects &&
                 listSearchedSubjects.length > 0 &&
@@ -174,14 +209,14 @@ export const SearchCourses = ({
             updateSearchList(listSearchedSubjects.concat(searchKeyword));
 
             tabId = listSearchedSubjects.length;
+            setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
         } else {
             tabId =
                 !!listSearchedSubjects && listSearchedSubjects.length > 0
                     ? listSearchedSubjects.indexOf(searchKeyword)
                     : 0;
+            setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
         }
-
-        setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
     };
 
     return (
@@ -207,4 +242,5 @@ SearchCourses.propTypes = {
     readingList: PropTypes.object,
     examList: PropTypes.object,
     guideList: PropTypes.object,
+    selectMyCoursesTab: PropTypes.func,
 };

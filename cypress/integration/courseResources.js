@@ -15,12 +15,12 @@ import { default as ACCT1101Exam } from '../../src/mock/data/records/examListACC
 import { default as learningResourceSearchSuggestions } from '../../src/mock/data/records/learningResourceSearchSuggestions';
 
 context('Course Resources', () => {
-    function the_user_lands_on_the_My_Classes_tab(courseReadingList) {
+    function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId= 0) {
         const title = courseReadingList.course_title || 'mock data is missing';
 
         cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
 
-        cy.get('div[data-testid=classpanel-0] h3').contains(title);
+        cy.get(`div[data-testid=classpanel-${panelId}] h3`).contains(title);
     }
 
     function the_user_lands_on_the_Search_tab() {
@@ -502,5 +502,27 @@ context('Course Resources', () => {
             .contains('HIST1201')
             .click();
         cy.get('div[data-testid=classpanel-1] h3').contains('HIST1201');
+    });
+
+    it('A user who searches for a class they are enrolled in changes to the My Courses tab', () => {
+        cy.visit('/courseresources?user=s1111111');
+        cy.viewport(1300, 1000);
+
+        the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
+
+        the_user_clicks_on_the_Search_tab();
+
+        // user searches for HIST and clicks the first result (which they are enrolled in)
+        cy.get('div[data-testid=full-courseresource-autocomplete] input')
+            .should('exist')
+            .type('HIST');
+
+        cy.get('ul#full-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', 1 + 1); // number of results + 1 for title
+
+        cy.get('li#full-courseresource-autocomplete-option-0').click();
+
+        the_user_lands_on_the_My_Classes_tab(HIST1201ReadingList, 1);
     });
 });

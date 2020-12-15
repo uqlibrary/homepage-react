@@ -37,7 +37,7 @@ const useStyles = makeStyles(
 export const courseTabLabel = 'subjecttab';
 
 export const MyCourses = ({
-    loadNewSubject,
+    loadSubjectAndFocusOnTab,
     preselectedCourse,
     readingList,
     examList,
@@ -55,19 +55,7 @@ export const MyCourses = ({
             return;
         }
         const coursecode = event.target.innerText;
-        /* istanbul ignore next */
-        const enrolledClass =
-            (!!account &&
-                !!account.current_classes &&
-                account.current_classes.find(c => c.classnumber === coursecode)) ||
-            null;
-        /* istanbul ignore next */
-        const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
-        /* istanbul ignore next */
-        const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
-        loadNewSubject(coursecode, campus, semester);
-
-        setCurrentMenuTab(subjectTabId);
+        loadSubjectAndFocusOnTab(coursecode, subjectTabId);
     };
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
@@ -168,7 +156,7 @@ export const MyCourses = ({
 };
 
 MyCourses.propTypes = {
-    loadNewSubject: PropTypes.func,
+    loadSubjectAndFocusOnTab: PropTypes.func,
     preselectedCourse: PropTypes.any,
     readingList: PropTypes.object,
     examList: PropTypes.object,
