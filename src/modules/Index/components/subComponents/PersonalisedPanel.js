@@ -30,6 +30,11 @@ const useStyles = makeStyles(theme => ({
             paddingLeft: 0,
         },
     },
+    locationWrapper: {
+        [theme.breakpoints.down('md')]: {
+            marginLeft: -6,
+        },
+    },
     isNextToSpotlights: {
         borderLeft: '1px solid' + theme.palette.secondary.light,
         paddingLeft: 16,
@@ -499,7 +504,7 @@ const PersonalisedPanel = ({
                             </Tooltip>
                         </Grid>
                     )}
-                    <Grid item xs={12} lg>
+                    <Grid item xs={12} lg className={classes.locationWrapper}>
                         <Location />
                     </Grid>
                 </Grid>
