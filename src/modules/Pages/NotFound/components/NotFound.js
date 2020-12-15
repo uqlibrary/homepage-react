@@ -1,13 +1,14 @@
 import React from 'react';
 import { useLocation } from 'react-router';
+import { useAccountContext } from 'context';
 
+import locale from './notfound.locale';
+import * as actions from 'actions/actionTypes';
+import { AUTH_URL_LOGIN } from 'config';
+import { flattedPathConfig } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { useAccountContext } from 'context';
-import { AUTH_URL_LOGIN } from 'config';
-import locale from './notfound.locale';
-import { flattedPathConfig } from 'config/routes';
-import { CURRENT_ACCOUNT_LOADING } from '../../../../actions/actionTypes';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 export const NotFound = () => {
     const location = useLocation();
@@ -15,8 +16,15 @@ export const NotFound = () => {
 
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
 
+    const isAccountLoaded = actions.CURRENT_ACCOUNT_LOADING === 'CURRENT_ACCOUNT_LOADING';
+
+    // if not known page
+    if (!isValidRoute) {
+        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
+    }
+
     // if known page and is logged in (page must require admin to land here)
-    if (isValidRoute && !CURRENT_ACCOUNT_LOADING && !!account && !!account.id) {
+    if (isValidRoute && isAccountLoaded && !!account && !!account.id) {
         return (
             <StandardPage
                 goBackFunc={() => history.back()}
@@ -27,7 +35,7 @@ export const NotFound = () => {
     }
 
     // if known page and is NOT logged in (page must require logged in to land here)
-    if (isValidRoute && !CURRENT_ACCOUNT_LOADING && (!account || !account.id)) {
+    if (isValidRoute && isAccountLoaded && (!account || !account.id)) {
         /* istanbul ignore next */
         if (
             process.env.NODE_ENV !== 'test' &&
@@ -45,18 +53,18 @@ export const NotFound = () => {
         );
     }
 
-    // if not known page but user is is logged in
-    if (!CURRENT_ACCOUNT_LOADING && !!account && !!account.id && !isValidRoute) {
+    // if not known page but user is logged in
+    if (isAccountLoaded && !!account && !!account.id && !isValidRoute) {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
     }
 
     // should never happen? - account did not load properly?
     /* istanbul ignore next */
-    if (!CURRENT_ACCOUNT_LOADING) {
+    if (isAccountLoaded) {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.accountError} />;
     }
 
-    return 'loading';
+    return <CircularProgress color="primary" size={20} id="loading-not-found" />;
 };
 
 export default React.memo(NotFound);
