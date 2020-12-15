@@ -196,9 +196,88 @@ exports[`Application component should render application with routing for the us
     >
       <Connect(AppAlert) />
     </div>
-    <WithStyles(InlineLoader)
-      message="Loading account"
-    />
+    <div
+      style={
+        Object {
+          "flexGrow": 1,
+          "marginTop": 16,
+        }
+      }
+    >
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {
+              "class": Array [
+                "libstaff",
+                "IS_CURRENT",
+              ],
+              "id": "uqauthor1",
+            },
+          }
+        }
+      >
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
+    </div>
+    <div>
+      <WithStyles(ForwardRef(Grid))
+        container={true}
+        spacing={0}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={12}
+        >
+          <withRouter(WithStyles(ConnectFooter))
+            history={
+              Object {
+                "location": Object {},
+              }
+            }
+          />
+        </WithStyles(ForwardRef(Grid))>
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={12}
+        >
+          <WithStyles(MinimalFooter) />
+        </WithStyles(ForwardRef(Grid))>
+      </WithStyles(ForwardRef(Grid))>
+    </div>
   </div>
 </WithStyles(ForwardRef(Grid))>
 `;
@@ -341,17 +420,133 @@ exports[`Application component should render loading screen while account is loa
 <WithStyles(ForwardRef(Grid))
   container={true}
 >
-  <WithStyles(ForwardRef(Grid))
-    item={true}
-    xs={12}
-    zeroMinWidth={true}
+  <WithStyles(ConfirmDialogBox)
+    hideCancelButton={true}
+    locale={
+      Object {
+        "cancelButtonLabel": "Cancel",
+        "confirmButtonLabel": "Redirect to login",
+        "confirmationMessage": "Your session has expired. Follow the login prompt to return to your submission form. You must upload your files again to successfully deposit your thesis, even if you have already uploaded your files.",
+        "confirmationTitle": "Session Expired",
+      }
+    }
+    onRef={[Function]}
+  />
+  <ChatStatus
+    status={
+      Object {
+        "online": false,
+      }
+    }
+  />
+  <div
+    aria-label="Site content"
+    className="content-container"
+    id="content-container"
+    role="region"
   >
-    <WithStyles(AppLoader)
-      logoImage="largeLogo"
-      logoText="The University of Queensland"
-      title="UQ Library "
+    <div
+      aria-label="Site header"
+      className="content-header"
+      role="region"
+    >
+      <UQHeader />
+    </div>
+    <UQSiteHeader
+      account={null}
+      author={null}
+      chatStatus={false}
+      history={
+        Object {
+          "location": Object {},
+        }
+      }
+      isAuthorizedUser={false}
+      isHdrStudent={false}
     />
-  </WithStyles(ForwardRef(Grid))>
+    <div
+      aria-label="UQ Library Alerts"
+      role="region"
+    >
+      <Connect(AppAlert) />
+    </div>
+    <div
+      style={
+        Object {
+          "flexGrow": 1,
+          "marginTop": 16,
+        }
+      }
+    >
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {},
+          }
+        }
+      >
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
+    </div>
+    <div>
+      <WithStyles(ForwardRef(Grid))
+        container={true}
+        spacing={0}
+      >
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={12}
+        >
+          <withRouter(WithStyles(ConnectFooter))
+            history={
+              Object {
+                "location": Object {},
+              }
+            }
+          />
+        </WithStyles(ForwardRef(Grid))>
+        <WithStyles(ForwardRef(Grid))
+          item={true}
+          xs={12}
+        >
+          <WithStyles(MinimalFooter) />
+        </WithStyles(ForwardRef(Grid))>
+      </WithStyles(ForwardRef(Grid))>
+    </div>
+  </div>
 </WithStyles(ForwardRef(Grid))>
 `;
 
