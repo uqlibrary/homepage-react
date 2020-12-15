@@ -5,7 +5,6 @@ import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { useDispatch } from 'react-redux';
 import {
-    loadSpotlights,
     loadPrintBalance,
     loadLoans,
     searcheSpacePossiblePublications,
@@ -106,11 +105,6 @@ export const Index = ({
     const classes = useStyles();
     const dispatch = useDispatch();
     // Load homepage data requirements
-    useEffect(() => {
-        if (!spotlights && spotlightsLoading === null) {
-            dispatch(loadSpotlights());
-        }
-    }, [spotlights, spotlightsLoading, dispatch]);
     useEffect(() => {
         if (!!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());

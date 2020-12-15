@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
 
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import global from 'locale/global';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
@@ -23,7 +23,7 @@ export const isValidInput = params => {
     /**
      * the user must supply 3 parameters: course code, semester and campus
      * this will normally come from the home page
-     * course code should be a valid coursecode, 4 char + 4-5 numbers
+     * course code should be a valid coursecode, 4 char + 4 numbers + optional char
      * semester can be only letters and numbers
      * and campus must be in the global campus lookup list
      * (this cant go in the helpers file because it needs the global locale, which cant be reached during cypress tests)
@@ -110,7 +110,7 @@ export const CourseResources = ({
     const [currentReadingLists, updateReadingLists] = useState([]);
 
     const loadNewSubject = React.useCallback(
-        (classnumber, campus = null, semester = null) => {
+        (classnumber, campus, semester) => {
             if (!classnumber || classnumber.length < 8 || isRepeatingString(classnumber)) {
                 return;
             }
@@ -156,10 +156,14 @@ export const CourseResources = ({
             !!account.current_classes &&
             account.current_classes.length > 0 &&
             account.current_classes.map(item => {
+                /* istanbul ignore else */
+                const campus = params.campus || '';
+                /* istanbul ignore else */
+                const semester = params.semester || '';
                 if (
-                    item.classnumber === (params.coursecode || '') &&
-                    getCampusByCode(item.CAMPUS) === (params.campus || '') &&
-                    item.semester === (params.semester || '')
+                    item.classnumber === params.coursecode &&
+                    getCampusByCode(item.CAMPUS) === campus &&
+                    item.semester === semester
                 ) {
                     initialTopTabState = 'top0';
                 }
@@ -200,6 +204,7 @@ export const CourseResources = ({
             currentGuidesList[guideList[0].coursecode] === undefined
         ) {
             const subjectNumber = guideList[0].coursecode;
+            /* istanbul ignore else */
             if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;
@@ -330,9 +335,6 @@ CourseResources.propTypes = {
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.any,
-    learningResourcesList: PropTypes.any,
-    learningResourcesListLoading: PropTypes.bool,
-    learningResourcesListError: PropTypes.any,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
     readingListError: PropTypes.any,

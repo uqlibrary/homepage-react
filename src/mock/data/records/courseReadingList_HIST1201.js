@@ -32,7 +32,6 @@ export default {
                     "volume": "1999",
                     "uri": "http://lr.library.uq.edu.au/items/B52F7E8A-0F8F-B6C8-2428-FC9D7530891A",
                     "title": "True stories: history, politics, aboriginality",
-                    "itemLink": "http://lr.library.uq.edu.au/items/B52F7E8A-0F8F-B6C8-2428-FC9D7530891A.html",
                     "created": "2018-07-25T22:46:11+00:00",
                     "studentNote": "Read Chapter 1: Incident on a beach",
                     "libraryNote": "Print book contents: Chapter 1 = pp,5-23 nh 10.7.2020 -- Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",

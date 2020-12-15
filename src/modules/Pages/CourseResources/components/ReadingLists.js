@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
-import locale from '../courseResourcesLocale';
-import { _pluralise } from '../courseResourcesHelpers';
+import locale from '../courseResources.locale';
+import { _pluralise, trimNotes } from '../courseResourcesHelpers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
@@ -32,17 +32,6 @@ const useStyles = makeStyles(
 
 export const ReadingLists = ({ readingList, readingListLoading, readingListError }) => {
     const classes = useStyles();
-
-    const _trimNotes = value => {
-        if (value && value.length > locale.notesTrimLength) {
-            let _trimmed = value.substring(0, locale.notesTrimLength);
-            // trim on word boundary
-            _trimmed = _trimmed.substring(0, _trimmed.lastIndexOf(' '));
-            return _trimmed + '...';
-        } else {
-            return value;
-        }
-    };
 
     // with the new api of calling for reading list by course code, campus and semester,
     // we should theoretically only ever have one reading list
@@ -147,6 +136,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                         )}
 
                         {!!readingListError && (
+                            /* istanbul ignore next */
                             <Fragment>
                                 <Grid item xs={12} className={classes.courseResourceLineItem}>
                                     <Typography>{locale.myCourses.readingLists.error.unavailable}</Typography>
@@ -214,10 +204,9 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                         >
                                             {!!list.itemLink && !!list.title && (
                                                 <a
-                                                    aria-label={readingListItemAriaLabel}
+                                                    aria-label={readingListItemAriaLabel(list.title)}
                                                     className="reading-list-item"
                                                     href={list.itemLink}
-                                                    // on-click="linkClicked"
                                                 >
                                                     {unescapeString(list.title)}
                                                 </a>
@@ -235,7 +224,11 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                                     {!!list.endPage && <Fragment>{` to  ${list.endPage}`}</Fragment>}
                                                 </Typography>
                                             )}
-                                            {!!list.notes && <Typography>{_trimNotes(list.notes)}</Typography>}
+                                            {!!list.studentNote && (
+                                                <Typography>
+                                                    {trimNotes(list.studentNote, locale.notesTrimLength)}
+                                                </Typography>
+                                            )}
                                             <Typography>
                                                 {list.referenceType}
                                                 {!!list.importance && <Fragment>{` - ${list.importance}`}</Fragment>}
@@ -257,10 +250,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                     className={classes.courseResourceLineItem}
                                     data-testid="reading-list-more-link"
                                 >
-                                    <a
-                                        // on-click="linkClicked"
-                                        href={readingList.reading_lists[0].url}
-                                    >
+                                    <a href={readingList.reading_lists[0].url}>
                                         <SpacedArrowForwardIcon />
                                         {locale.myCourses.readingLists.footer.linkLabel
                                             .replace('[numberExcessReadingLists]', numberExcessReadingLists)

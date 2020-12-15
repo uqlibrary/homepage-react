@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import { _courseLink, _pluralise } from '../courseResourcesHelpers';
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
@@ -55,7 +55,10 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
                 {examPaperTitle}
             </Typography>
             <Grid container>
-                {!!examListError && <Typography>{locale.myCourses.examPapers.unavailable}</Typography>}
+                {!!examListError && (
+                    /* istanbul ignore next */
+                    <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
+                )}
 
                 {!examListError && !!examListLoading && (
                     <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
@@ -87,7 +90,6 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
                                     data-title="examPaperItem"
                                     href={paper.url}
                                     key={`exam-${index}`}
-                                    // on-click="linkClicked"
                                 >
                                     {paper.period} ({_extractExtension(paper.url)})
                                 </a>
@@ -96,10 +98,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
                     })}
                 {!!listOfExams && listOfExams.length > 0 && !!numberExcessExams && (
                     <Grid item xs={12} data-testid="exam-more-link" className={classes.courseResourceLineItem}>
-                        <a
-                            // on-click="linkClicked"
-                            href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}
-                        >
+                        <a href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}>
                             <SpacedArrowForwardIcon />
                             {locale.myCourses.examPapers.morePastExams
                                 .replace('[numberExcessExams]', numberExcessExams)
