@@ -22,10 +22,10 @@ export default {
             ),
         },
         readingLists: {
-            title: 'Reading lists',
+            title: 'Reading list',
             error: {
-                none: 'No reading lists for this course',
-                unavailable: 'Reading lists currently unavailable',
+                none: 'No reading list for this course',
+                unavailable: 'Reading list currently unavailable',
                 multiple: 'More than one reading list found for [classnumber]. Please select a list:',
                 footer: {
                     linkLabel: 'Search other reading lists',
