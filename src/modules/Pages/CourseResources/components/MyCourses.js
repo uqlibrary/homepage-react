@@ -34,12 +34,20 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, examList, guideList }) => {
+export const courseTabLabel = 'subjecttab';
+
+export const MyCourses = ({
+    loadNewSubject,
+    preselectedCourse,
+    readingList,
+    examList,
+    guideList,
+    coursemenu,
+    setCurrentMenuTab,
+}) => {
     const { account } = useAccountContext();
     const classes = useStyles();
 
-    const courseTabLabel = 'subjecttab';
-    const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
         /* istanbul ignore next */
         if (!event.target.innerText) {
@@ -165,6 +173,8 @@ MyCourses.propTypes = {
     readingList: PropTypes.object,
     examList: PropTypes.object,
     guideList: PropTypes.object,
+    coursemenu: PropTypes.string,
+    setCurrentMenuTab: PropTypes.func,
 };
 
 export default MyCourses;

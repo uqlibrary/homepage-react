@@ -7,7 +7,7 @@ import locale from '../courseResources.locale';
 import global from 'locale/global';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
-import { MyCourses } from './MyCourses';
+import { courseTabLabel, MyCourses } from './MyCourses';
 import { SearchCourses } from './SearchCourses';
 import { TabPanel } from './TabPanel';
 
@@ -111,7 +111,8 @@ export const CourseResources = ({
 
     const loadNewSubject = React.useCallback(
         (classnumber, campus, semester) => {
-            if (!classnumber || classnumber.length < 8 || isRepeatingString(classnumber)) {
+            const minLengthOfValidCourseCode = 8;
+            if (!classnumber || classnumber.length < minLengthOfValidCourseCode || isRepeatingString(classnumber)) {
                 return;
             }
 
@@ -179,6 +180,8 @@ export const CourseResources = ({
     const updateSearchList = newSearchKey => {
         addToSearchList(newSearchKey);
     };
+
+    const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
 
     // store the reading list for this subject in currentReadingLists by subject
     const updateListOfReadingLists = React.useCallback(() => {
@@ -300,6 +303,8 @@ export const CourseResources = ({
                                     readingList={readingLists}
                                     examList={examLists}
                                     guideList={guideLists}
+                                    setCurrentMenuTab={setCurrentMenuTab}
+                                    coursemenu={coursemenu}
                                 />
                             </TabPanel>
                             <TabPanel
