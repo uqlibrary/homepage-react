@@ -183,10 +183,10 @@ export function loadPrintBalance() {
     return dispatch => {
         dispatch({ type: actions.PRINT_BALANCE_LOADING });
         return get(PRINTING_API())
-            .then(hoursResponse => {
+            .then(papercutResponse => {
                 dispatch({
                     type: actions.PRINT_BALANCE_LOADED,
-                    payload: hoursResponse,
+                    payload: papercutResponse,
                 });
             })
             .catch(error => {
@@ -206,10 +206,10 @@ export function loadLoans() {
     return dispatch => {
         dispatch({ type: actions.LOANS_LOADING });
         return get(LOANS_API())
-            .then(hoursResponse => {
+            .then(loanResponse => {
                 dispatch({
                     type: actions.LOANS_LOADED,
-                    payload: hoursResponse,
+                    payload: loanResponse,
                 });
             })
             .catch(error => {
