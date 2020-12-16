@@ -1,4 +1,5 @@
 import global from 'locale/global';
+import * as actions from '../actions/actionTypes';
 
 export const leftJoin = (objArr1, objArr2, key1, key2) => {
     if (!objArr2) {
@@ -59,3 +60,9 @@ export const unescapeString = text => {
     };
     return text.replace(/&[#\w]+;/g, getEntityMap);
 };
+
+export const isAccountLoadingComplete = actions.CURRENT_ACCOUNT_LOADING === 'CURRENT_ACCOUNT_LOADING';
+
+export const loggedInConfirmed = account => isAccountLoadingComplete && !!account && !!account.id;
+
+export const loggedOutConfirmed = account => isAccountLoadingComplete && !!account && !account.id;

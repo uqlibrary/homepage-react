@@ -16157,7 +16157,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                               </ul>
                                                                                                               <p>
                                                                                                                 <a
-                                                                                                                  href="/"
+                                                                                                                  href="https://auth.library.uq.edu.au/login.php?url=aHR0cDovL2hvbWVwYWdlLXN0YWdpbmcubGlicmFyeS51cS5lZHUuYXUvIy8="
                                                                                                                 >
                                                                                                                   Log in now!
                                                                                                                 </a>

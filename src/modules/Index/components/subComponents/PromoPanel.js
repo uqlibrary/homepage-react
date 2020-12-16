@@ -3,6 +3,7 @@ import { PropTypes } from 'prop-types';
 
 import { promoPanel as locale } from './promoPanel.locale';
 
+import { loggedInConfirmed, loggedOutConfirmed } from 'helpers/general';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
@@ -16,14 +17,14 @@ const PromoPanel = ({ account }) => {
             title={
                 <Grid container>
                     <Grid item xs={10} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {!!account ? locale.loggedin.title : locale.loggedout.title}
+                        {loggedInConfirmed(account) ? locale.loggedin.title : locale.loggedout.title}
                     </Grid>
                 </Grid>
             }
         >
             <Grid container spacing={1}>
                 <Grid item xs>
-                    {!!account ? locale.loggedin.content : locale.loggedout.content}
+                    {loggedOutConfirmed(account) ? locale.loggedin.content : locale.loggedout.content}
                 </Grid>
             </Grid>
         </StandardCard>

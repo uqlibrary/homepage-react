@@ -3,9 +3,10 @@ import { useLocation } from 'react-router';
 import { useAccountContext } from 'context';
 
 import locale from './notfound.locale';
-import * as actions from 'actions/actionTypes';
+
 import { AUTH_URL_LOGIN } from 'config';
 import { flattedPathConfig } from 'config/routes';
+import { isAccountLoadingComplete, loggedInConfirmed, loggedOutConfirmed } from 'helpers/general';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -16,19 +17,13 @@ export const NotFound = () => {
 
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
 
-    const isAccountLoadingComplete = actions.CURRENT_ACCOUNT_LOADING === 'CURRENT_ACCOUNT_LOADING';
-
-    const loggedInConfirmed = isAccountLoadingComplete && !!account && !!account.id;
-
-    const loggedOutConfirmed = isAccountLoadingComplete && !!account && !account.id;
-
     // if not known page, standard 404
     if (!isValidRoute) {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
     }
 
     // the page must require admin to land here when they are logged in
-    if (loggedInConfirmed) {
+    if (loggedInConfirmed(account)) {
         return (
             <StandardPage
                 goBackFunc={() => history.back()}
@@ -39,7 +34,7 @@ export const NotFound = () => {
     }
 
     // the page must require them to be logged in to land here
-    if (loggedOutConfirmed) {
+    if (loggedOutConfirmed(account)) {
         /* istanbul ignore next */
         if (
             process.env.NODE_ENV !== 'test' &&
