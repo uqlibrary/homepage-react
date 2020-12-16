@@ -51,7 +51,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
   - uses mock data from src/mock
 - `npm run start:url`
 
-  - runs <http://dev-library.library.uq.edu.au:2020/> (add `dev-library.library.uq.edu.au` to your /etc/hosts)
+  - runs <http://dev-homepage.library.uq.edu.au:2020/> (add `dev-homepage.library.uq.edu.au` to your /etc/hosts)
   - uses staging data from the aws api as a backend (you will need to set API_URL in .env to `https://api.library.uq.edu.au/staging/`)
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
 
