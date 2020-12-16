@@ -82,7 +82,7 @@ export const MyCourses = ({
             }
             setInitialLoadComplete(true);
         },
-        [account, initialLoadComplete],
+        [account, initialLoadComplete, setCurrentMenuTab],
     );
 
     React.useEffect(() => {
