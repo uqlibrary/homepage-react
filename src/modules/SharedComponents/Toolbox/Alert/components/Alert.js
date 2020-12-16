@@ -517,7 +517,8 @@ Alert.defaultProps = {
     customType: null,
     disableAlertClick: false,
     dismissTitle: 'Click to dismiss this alert',
-    message: 'Unexpected error',
+    message:
+        'We had some problems loading the page - you may not see everything you expect. You might like to try reloading.',
     showLoader: false,
     type: 'error',
     wiggle: null,
