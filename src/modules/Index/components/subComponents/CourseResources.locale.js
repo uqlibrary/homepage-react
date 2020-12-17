@@ -12,5 +12,5 @@ export const courseResourcesLocale = {
             <p>Search for course resources above.</p>
         </Fragment>
     ),
-    searchResultsTitle: 'Search results',
+    autocompleteResultsTitle: 'Selection options',
 };

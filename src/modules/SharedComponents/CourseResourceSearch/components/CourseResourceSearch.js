@@ -148,7 +148,7 @@ export const CourseResourceSearch = ({
     // we group them all together to place a header at the top of the search results
     const renderGroup = params => [
         <h3 className={classes.searchTitle} key={params.key}>
-            {locale.searchResultsTitle}
+            {locale.autocompleteResultsTitle}
         </h3>,
         params.children,
     ];
