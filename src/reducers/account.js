@@ -2,7 +2,7 @@ import * as actions from 'actions/actionTypes';
 
 export const initialState = {
     account: null,
-    author: null,
+    author: null, // ?
     accountLoading: false,
     accountAuthorLoading: false,
     isSessionExpired: null,
@@ -31,6 +31,7 @@ const handlers = {
         accountLoading: false,
         accountAuthorLoading: false,
         accountAuthorDetailsLoading: false,
+        account: false,
     }),
 
     [actions.CURRENT_AUTHOR_FAILED]: state => ({

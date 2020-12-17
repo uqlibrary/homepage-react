@@ -87,7 +87,7 @@ const styles = theme => ({
 
 export class AppClass extends PureComponent {
     static propTypes = {
-        account: PropTypes.object,
+        account: PropTypes.any,
         author: PropTypes.object,
         authorDetails: PropTypes.object,
         accountLoading: PropTypes.bool,

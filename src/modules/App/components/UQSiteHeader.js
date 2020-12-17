@@ -174,7 +174,7 @@ UQSiteHeader.propTypes = {
     isHdrStudent: PropTypes.bool,
     isAuthorizedUser: PropTypes.bool,
     chatStatus: PropTypes.bool,
-    account: PropTypes.object,
+    account: PropTypes.any,
     author: PropTypes.object,
     authorDetails: PropTypes.object,
     history: PropTypes.object,

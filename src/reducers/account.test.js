@@ -20,6 +20,7 @@ describe('account reducer', () => {
         const test = accountReducer(emptyState, { type: actions.CURRENT_ACCOUNT_ANONYMOUS });
         expect(test).toEqual({
             ...emptyState,
+            account: false,
             accountLoading: false,
             accountAuthorLoading: false,
             accountAuthorDetailsLoading: false,
@@ -81,6 +82,7 @@ describe('account reducer', () => {
         expect(test).toEqual({
             ...emptyState,
             author: null,
+            accountLoading: false,
             accountAuthorLoading: false,
         });
     });

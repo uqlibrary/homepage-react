@@ -224,6 +224,7 @@ export const SearchCourses = ({
         }
     };
 
+    console.log('listSearchedSubjects = ', listSearchedSubjects);
     return (
         <StandardCard noPadding noHeader standardCardId="full-courseresource" style={{ boxShadow: 'none' }}>
             <Grid item xs={12} id="courseresource-search">
