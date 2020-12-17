@@ -24,9 +24,12 @@ const useStyles = makeStyles(
         studyLinks: {
             minHeight: '10rem',
         },
-        desktopGap: {
+        panelGap: {
             [theme.breakpoints.up('md')]: {
                 paddingLeft: 16,
+            },
+            [theme.breakpoints.down('sm')]: {
+                paddingTop: 16,
             },
         },
     }),
@@ -90,29 +93,31 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
     };
 
     return (
-        <Grid container>
-            <Grid item xs={12}>
-                <Typography
-                    color={'primary'}
-                    component={subjectHeaderLevel}
-                    variant={'h5'}
-                    data-testid="course-resource-subject-title"
-                    style={{ textAlign: 'center' }}
-                >
-                    {coursecode}
-                    {courseTitle()}
-                    <br />
-                    {coursecampus()}
-                    {courseSemester()}
-                </Typography>
-            </Grid>
+        <React.Fragment>
+            <Typography
+                color={'primary'}
+                component={subjectHeaderLevel}
+                variant={'h5'}
+                data-testid="course-resource-subject-title"
+                style={{ textAlign: 'center' }}
+            >
+                {coursecode}
+                {courseTitle()}
+                <br />
+                {coursecampus()}
+                {courseSemester()}
+            </Typography>
 
-            <ReadingLists
-                readingList={readingList.list[[coursecode]]}
-                readingListLoading={readingList.loading}
-                readingListError={readingList.error}
-                headingLevel={panelHeadingLevel}
-            />
+            <Grid container spacing={3} className={'readingLists'}>
+                <Grid item xs={12}>
+                    <ReadingLists
+                        readingList={readingList.list[[coursecode]]}
+                        readingListLoading={readingList.loading}
+                        readingListError={readingList.error}
+                        headingLevel={panelHeadingLevel}
+                    />
+                </Grid>
+            </Grid>
 
             <Grid container>
                 <Grid item xs={12} md={4} className={'exams'}>
@@ -123,7 +128,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} className={classes.desktopGap}>
+                <Grid item xs={12} md={4} className={classes.panelGap}>
                     <Guides
                         guideList={guideList.list[coursecode]}
                         guideListLoading={guideList.loading}
@@ -131,11 +136,11 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                         headingLevel={panelHeadingLevel}
                     />
                 </Grid>
-                <Grid item xs={12} md={4} className={classes.desktopGap}>
+                <Grid item xs={12} md={4} className={classes.panelGap}>
                     <SubjectLinks subject={subject} headingLevel={panelHeadingLevel} />
                 </Grid>
             </Grid>
-        </Grid>
+        </React.Fragment>
     );
 };
 

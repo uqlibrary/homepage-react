@@ -54,7 +54,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
                 {examPaperTitle}
             </Typography>
-            <Grid container>
+            <Grid container className={'exams'}>
                 {!!examListError && (
                     /* istanbul ignore next */
                     <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
@@ -79,7 +79,9 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                         </Grid>
                     </React.Fragment>
                 )}
-                {!!listOfExams &&
+                {!examListError &&
+                    !examListLoading &&
+                    !!listOfExams &&
                     listOfExams.length > 0 &&
                     listOfExams.slice(0, locale.myCourses.examPapers.visibleItemsCount).map((paper, index) => {
                         return (

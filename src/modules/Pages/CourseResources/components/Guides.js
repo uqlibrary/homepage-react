@@ -34,7 +34,11 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                 {locale.myCourses.guides.title}
             </Typography>
             <Grid container className={'guides'}>
-                {!!guideListLoading && (
+                {!!guideListError && (
+                    /* istanbul ignore next */
+                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
+                )}
+                {!guideListError && !!guideListLoading && (
                     <Grid
                         item
                         xs={12}
@@ -48,18 +52,11 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                         <CircularProgress color="primary" size={20} data-testid="loading-guide-suggestions" />
                     </Grid>
                 )}
-
-                {!!guideListError && (
-                    /* istanbul ignore next */
-                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
-                )}
-
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
                     <Grid item xs={12} data-testid="no-guides" className={classes.courseResourceLineItem}>
                         <Typography>{locale.myCourses.guides.none}</Typography>
                     </Grid>
                 )}
-
                 {!guideListError &&
                     !guideListLoading &&
                     !!guideList &&
@@ -79,11 +76,10 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                             </Grid>
                         );
                     })}
-
+                {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
                 {!!locale.myCourses.guides.footer.links &&
                     locale.myCourses.guides.footer.links.length > 0 &&
                     locale.myCourses.guides.footer.links.map((item, index) => {
-                        /* istanbul ignore next */
                         const dataTestId = item.id || null;
                         return (
                             item.linkTo &&
