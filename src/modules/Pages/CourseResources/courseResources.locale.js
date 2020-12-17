@@ -9,6 +9,7 @@ export default {
     search: {
         title: 'Course search',
     },
+    searchResultsTitle: 'Search results',
     notesTrimLength: 90,
     myCourses: {
         title: 'My courses',

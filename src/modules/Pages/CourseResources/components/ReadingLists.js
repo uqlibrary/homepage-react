@@ -204,7 +204,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                                         >
                                             {!!list.itemLink && !!list.title && (
                                                 <a
-                                                    aria-label={readingListItemAriaLabel(list.title)}
+                                                    aria-label={readingListItemAriaLabel(list)}
                                                     className="reading-list-item"
                                                     href={list.itemLink}
                                                 >

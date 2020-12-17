@@ -2,9 +2,11 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
-import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
+import { default as locale } from '../courseResources.locale';
 import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
+
+import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -13,6 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(
     theme => ({
@@ -227,8 +230,20 @@ export const SearchCourses = ({
                     elementId="full-courseresource"
                     loadCourseAndSelectTab={loadCourseAndSelectTab}
                 />
-                {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
             </Grid>
+            {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
+                <Grid item xs={12} role="region" aria-live="assertive" aria-label="Course Resource Search Results">
+                    <Typography
+                        component="h4"
+                        variant="h6"
+                        style={{ marginLeft: '1rem' }}
+                        id="course-resource-search-results"
+                    >
+                        {locale.searchResultsTitle}
+                    </Typography>
+                    {renderSearchResults(listSearchedSubjects)}
+                </Grid>
+            )}
         </StandardCard>
     );
 };

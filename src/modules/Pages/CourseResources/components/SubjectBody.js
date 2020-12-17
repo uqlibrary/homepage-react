@@ -46,10 +46,12 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
         readingList.list[coursecode].reading_lists.length > 0 &&
         !!readingList.list[coursecode].reading_lists[0] &&
         readingList.list[coursecode].reading_lists[0];
+
     const coursecampus = () =>
         (subject.CAMPUS && getCampusByCode(subject.CAMPUS)) ||
-        (!!readingList && firstReadingList && !!firstReadingList.campus && firstReadingList.campus) ||
+        (!!firstReadingList && !!firstReadingList.campus && firstReadingList.campus) ||
         null;
+
     const courseSemester = () => {
         const semester =
             (!!subject && !!subject.semester && subject.semester) ||
@@ -76,7 +78,19 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
                 !!readingList.list[coursecode].title &&
                 ` - ${readingList.list[coursecode].title}`) ||
             null;
-        // we have titles like "FREN3310 - French&gt;English Translation". This fixes them
+
+        if (title !== null) {
+            // put focus on the tab, for screenreaders
+            // document.getElementById('searchtab-0').focus();
+            // console.log('look for id ', `classtab-${coursecode}`);
+            // document.getElementById(`classtab-${coursecode}`).focus();
+            const searchResults = document.getElementById('course-resource-search-results');
+            !!searchResults && searchResults.focus();
+            !!searchResults && console.log('course-resource-search-results should be focussed');
+            !searchResults && console.log('course-resource-search-results not yet available');
+        }
+
+        // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
         return unescapeString(title);
     };
 
