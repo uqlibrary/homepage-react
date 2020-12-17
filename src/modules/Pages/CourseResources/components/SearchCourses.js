@@ -139,6 +139,8 @@ export const SearchCourses = ({
                                     readingList={readingList}
                                     examList={examList}
                                     guideList={guideList}
+                                    panelHeadingLevel="h5"
+                                    subjectHeaderLevel="h4"
                                 />
                             </TabPanel>
                         );
@@ -234,7 +236,7 @@ export const SearchCourses = ({
             {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
                 <Grid item xs={12} role="region" aria-live="assertive" aria-label="Course Resource Search Results">
                     <Typography
-                        component="h4"
+                        component="h3"
                         variant="h6"
                         style={{ marginLeft: '1rem' }}
                         id="course-resource-search-results"

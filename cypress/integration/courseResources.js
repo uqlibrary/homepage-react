@@ -15,7 +15,7 @@ import { default as ACCT1101Exam } from '../../src/mock/data/records/examListACC
 import { default as learningResourceSearchSuggestions } from '../../src/mock/data/records/learningResourceSearchSuggestions';
 
 context('Course Resources', () => {
-    function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId= 0) {
+    function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
         const title = courseReadingList.course_title || 'mock data is missing';
 
         cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
@@ -54,13 +54,17 @@ context('Course Resources', () => {
         return readingListLength(courseReadingList) > 0 ? courseReadingList.reading_lists[0].list[0] : [];
     }
 
-    function a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(courseReadingList) {
+    function a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(
+        courseReadingList,
+        displayType = 'mycourses',
+    ) {
+        const headerLevel = displayType === 'mycourses' ? 'h4' : 'h5';
         const readingList = firstReadingListItems(courseReadingList);
         const firstReadingListTitle = readingList.title || 'mock data is missing';
         const firstReadingListLink = readingList.itemLink || 'mock data is missing';
 
         cy.log(`${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`);
-        cy.get('.readingLists h4').contains(
+        cy.get(`.readingLists ${headerLevel}`).contains(
             `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`,
         );
         cy.get('.readingLists a')
@@ -110,14 +114,18 @@ context('Course Resources', () => {
         cy.get('div[data-testid=exam-more-link] a').should('not.exist');
     }
 
-    function a_subject_with_many_exams_loads_correctly(examPapers) {
+    function a_subject_with_many_exams_loads_correctly(examPapers, displayType = 'mycourses') {
+        const headerLevel = displayType === 'mycourses' ? 'h4' : 'h5';
+
         const courseCode = examPapers.coursecode || 'mock data is missing';
 
         const examPaper = (!!examPapers.list && examPapers.list.length > 0 && examPapers.list[0]) || {};
         const examPeriod = examPaper.period || 'mock data is missing';
         const examPaperLink = examPaper.url || 'mock data is missing';
 
-        cy.get('.exams h4').contains(`${locale.myCourses.examPapers.title} (${examPapers.list.length} items)`);
+        cy.get(`.exams ${headerLevel}`).contains(
+            `${locale.myCourses.examPapers.title} (${examPapers.list.length} items)`,
+        );
         cy.get('.exams a')
             .contains(`${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`)
             .should('have.attr', 'href', examPaperLink);
@@ -168,12 +176,14 @@ context('Course Resources', () => {
         });
     }
 
-    function a_subject_with_one_guide_loads_correctly(guides, coursecode) {
+    function a_subject_with_one_guide_loads_correctly(guides, coursecode, displayType = 'mycourses') {
+        const headerLevel = displayType === 'mycourses' ? 'h4' : 'h5';
+
         const guide = guides[0] || {};
         const guideTitle = guide.title || 'mock data is missing';
         const guideLink = guide.url || 'mock data is missing';
 
-        cy.get(`[data-testid=guides-${coursecode}] h4`).contains(locale.myCourses.guides.title);
+        cy.get(`[data-testid=guides-${coursecode}] ${headerLevel}`).contains(locale.myCourses.guides.title);
         cy.get(`div[data-testid=guides-${coursecode}] a`)
             .contains(guideTitle)
             .should('have.attr', 'href', guideLink);
@@ -240,7 +250,7 @@ context('Course Resources', () => {
             .contains(`${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.period}`)
             .click();
         // the tab loads and we see the title of the correct course
-        cy.get(`div[data-testid=classpanel-${tabId}] h3`).contains(courseReadingList.course_title);
+        cy.get(`div[data-testid=classpanel-${tabId}] h4`).contains(courseReadingList.course_title);
     }
 
     function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
@@ -375,11 +385,14 @@ context('Course Resources', () => {
 
         the_user_lands_on_the_Search_tab();
 
-        a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(ACCT1101ReadingList);
+        a_subject_with_one_reading_list_with_the_maximum_num_displayable_items_loads_correctly(
+            ACCT1101ReadingList,
+            'searchresults',
+        );
 
-        a_subject_with_many_exams_loads_correctly(ACCT1101Exam);
+        a_subject_with_many_exams_loads_correctly(ACCT1101Exam, 'searchresults');
 
-        a_subject_with_one_guide_loads_correctly(ACCT1101Guide, 'ACCT1101');
+        a_subject_with_one_guide_loads_correctly(ACCT1101Guide, 'ACCT1101', 'searchresults');
 
         a_subject_page_should_have_correct_Library_Guides_footer_links();
 
@@ -454,7 +467,7 @@ context('Course Resources', () => {
             'courseresources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
         );
         const classPanelId = 'classpanel-0';
-        cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
+        cy.get(`div[data-testid=${classPanelId}] h4`).contains('ACCT1101');
     });
 
     it('the non-loggedin user cannot access Course Resources', () => {
@@ -496,12 +509,12 @@ context('Course Resources', () => {
         cy.get('[data-testid=classtab-FREN1010]')
             .contains('FREN1010')
             .click();
-        cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
+        cy.get('div[data-testid=classpanel-0] h4').contains('FREN1010');
 
         cy.get('[data-testid=classtab-HIST1201]')
             .contains('HIST1201')
             .click();
-        cy.get('div[data-testid=classpanel-1] h3').contains('HIST1201');
+        cy.get('div[data-testid=classpanel-1] h4').contains('HIST1201');
     });
 
     it('A user who searches for a class they are enrolled in changes to the My Courses tab', () => {

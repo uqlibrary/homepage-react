@@ -30,7 +30,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const ReadingLists = ({ readingList, readingListLoading, readingListError }) => {
+export const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingListError }) => {
     const classes = useStyles();
 
     // with the new api of calling for reading list by course code, campus and semester,
@@ -112,7 +112,11 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
                     standardCardId={`reading-list-${coursecode}`}
                     style={{ marginBottom: '1rem', marginTop: '1rem' }}
                 >
-                    <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+                    <Typography
+                        component={headingLevel}
+                        variant="h6"
+                        style={{ paddingBottom: '15px', fontWeight: 300 }}
+                    >
                         {readingListTitle}
                     </Typography>
                     <Grid container>
@@ -269,6 +273,7 @@ export const ReadingLists = ({ readingList, readingListLoading, readingListError
 };
 
 ReadingLists.propTypes = {
+    headingLevel: PropTypes.string,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,
     readingListError: PropTypes.any,

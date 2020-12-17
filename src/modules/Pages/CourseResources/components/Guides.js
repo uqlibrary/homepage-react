@@ -24,13 +24,13 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Guides = ({ guideList, guideListLoading, guideListError }) => {
+export const Guides = ({ headingLevel, guideList, guideListLoading, guideListError }) => {
     const classes = useStyles();
 
     const coursecode = !!guideList && !!guideList.length > 0 && guideList[0].coursecode;
     return (
         <StandardCard fullHeight noHeader standardCardId={`guides-${coursecode}`}>
-            <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
                 {locale.myCourses.guides.title}
             </Typography>
             <Grid container className={'guides'}>
@@ -108,13 +108,14 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 };
 
 Guides.propTypes = {
-    readingList: PropTypes.any,
-    readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.any,
+    actions: PropTypes.object,
+    headingLevel: PropTypes.string,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.any,
-    actions: PropTypes.object,
+    readingList: PropTypes.any,
+    readingListLoading: PropTypes.bool,
+    readingListError: PropTypes.any,
 };
 
 export default React.memo(Guides);

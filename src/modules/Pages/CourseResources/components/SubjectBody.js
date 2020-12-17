@@ -33,7 +33,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
+export const SubjectBody = ({ subject, examList, guideList, readingList, subjectHeaderLevel, panelHeadingLevel }) => {
     const classes = useStyles();
 
     /* istanbul ignore next */
@@ -99,7 +99,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
             <Grid item xs={12}>
                 <Typography
                     color={'primary'}
-                    component={'h3'}
+                    component={subjectHeaderLevel}
                     variant={'h5'}
                     data-testid="course-resource-subject-title"
                     style={{ textAlign: 'center' }}
@@ -116,6 +116,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
                 readingList={readingList.list[[coursecode]]}
                 readingListLoading={readingList.loading}
                 readingListError={readingList.error}
+                headingLevel={panelHeadingLevel}
             />
 
             <Grid container>
@@ -124,6 +125,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}
                         examListError={examList.error}
+                        headingLevel={panelHeadingLevel}
                     />
                 </Grid>
                 <Grid item xs={12} md={4} className={classes.desktopGap}>
@@ -131,10 +133,11 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
                         guideList={guideList.list[coursecode]}
                         guideListLoading={guideList.loading}
                         guideListError={guideList.error}
+                        headingLevel={panelHeadingLevel}
                     />
                 </Grid>
                 <Grid item xs={12} md={4} className={classes.desktopGap}>
-                    <SubjectLinks subject={subject} />
+                    <SubjectLinks subject={subject} headingLevel={panelHeadingLevel} />
                 </Grid>
             </Grid>
         </Grid>
@@ -142,10 +145,17 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
 };
 
 SubjectBody.propTypes = {
-    subject: PropTypes.any,
     examList: PropTypes.object,
     guideList: PropTypes.object,
     readingList: PropTypes.object,
+    panelHeadingLevel: PropTypes.string,
+    subjectHeaderLevel: PropTypes.string,
+    subject: PropTypes.any,
+};
+
+SubjectBody.defaultProps = {
+    panelHeadingLevel: 'h4',
+    subjectHeaderLevel: 'h3',
 };
 
 export default SubjectBody;
