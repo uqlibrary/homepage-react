@@ -81,13 +81,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
 
         if (title !== null) {
             // put focus on the tab, for screenreaders
-            // document.getElementById('searchtab-0').focus();
-            // console.log('look for id ', `classtab-${coursecode}`);
-            // document.getElementById(`classtab-${coursecode}`).focus();
             const searchResults = document.getElementById('course-resource-search-results');
             !!searchResults && searchResults.focus();
-            !!searchResults && console.log('course-resource-search-results should be focussed');
-            !searchResults && console.log('course-resource-search-results not yet available');
         }
 
         // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
