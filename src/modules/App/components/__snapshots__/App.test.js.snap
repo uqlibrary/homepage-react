@@ -13210,6 +13210,11 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                               "url": "https://web.library.uq.edu.au/library-services/services-for-hospital-staff",
                                                                                                                             },
                                                                                                                             Object {
+                                                                                                                              "id": "requestliteraturesearch",
+                                                                                                                              "title": "Request literature search",
+                                                                                                                              "url": "https://web.library.uq.edu.au/library-services/services-hospital-staff/literature-request",
+                                                                                                                            },
+                                                                                                                            Object {
                                                                                                                               "id": "servicesforprofessional",
                                                                                                                               "title": "Services for professional staff",
                                                                                                                               "url": "https://web.library.uq.edu.au/library-services/services-professional-staff",

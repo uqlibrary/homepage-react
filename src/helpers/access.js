@@ -174,7 +174,7 @@ const userGroupServices = {
 
     [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
     [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
-    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital'],
+    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
     [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
     [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
     [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
