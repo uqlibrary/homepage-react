@@ -45,6 +45,12 @@ export const SearchCourses = ({
 }) => {
     const classes = useStyles();
 
+    React.useEffect(() => {
+        // when the page loads on the Search tab, put focus in the input field
+        const searchField = document.getElementById('full-courseresource-autocomplete');
+        !!searchField && searchField.focus();
+    }, []);
+
     const subjectTabLabel = 'searchtab';
     const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
     const handleSearchTabChange = (event, newSubjectTabId) => {

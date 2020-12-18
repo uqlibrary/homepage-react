@@ -100,12 +100,6 @@ export const CourseResources = ({
         return isValidInput(params) ? params : [];
     };
 
-    React.useEffect(() => {
-        // when the page loads on the Search tab, put focus in the input field
-        const searchField = document.getElementById('full-courseresource-autocomplete');
-        !!searchField && searchField.focus();
-    }, []);
-
     // store a list of the Guides that have been loaded, by subject
     const [currentGuidesList, updateGuidesList] = useState([]);
 
