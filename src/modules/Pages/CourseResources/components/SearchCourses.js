@@ -75,9 +75,11 @@ export const SearchCourses = ({
                 // if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
                 //     console.log('first search');
                 loadNewSubject(searchKeyword, campus, semester);
-                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                if (!listSearchedSubjects.includes(searchKeyword)) {
+                    updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                }
 
-                tabId = listSearchedSubjects.length;
+                tabId = listSearchedSubjects.length === 0 ? 0 : listSearchedSubjects.length - 1;
                 // } else {
                 //     // they might search again for a subject - change to that tab instead of reloading
                 //     console.log('change tabs');
@@ -217,7 +219,9 @@ export const SearchCourses = ({
             shouldAddToSearchList(searchKeyword)
         ) {
             loadNewSubject(searchKeyword, campus, semester);
-            updateSearchList(listSearchedSubjects.concat(searchKeyword));
+            if (!listSearchedSubjects.includes(searchKeyword)) {
+                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+            }
 
             tabId = listSearchedSubjects.length;
             setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
@@ -230,7 +234,6 @@ export const SearchCourses = ({
         }
     };
 
-    console.log('listSearchedSubjects = ', listSearchedSubjects);
     return (
         <StandardCard noPadding noHeader standardCardId="full-courseresource" style={{ boxShadow: 'none' }}>
             <Grid item xs={12} id="courseresource-search">
