@@ -1,4 +1,5 @@
 import { default as locale } from 'modules/Index/components/locale';
+import { loggedInConfirmed } from './general';
 
 /**
 
@@ -51,7 +52,7 @@ const EXTRAMURAL_PROXY = 'PROXY';
 
 export const seeCourseResources = account => {
     return (
-        !!account &&
+        loggedInConfirmed(account) &&
         [
             UNDERGRADUATE_GENERAL,
             UNDERGRADUATE_REMOTE,
@@ -66,9 +67,9 @@ export const seeCourseResources = account => {
 
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
 // (it also makes all the panels load predictably, as they all wait on the account check)
-const everyoneCanSee = account => !!account || true;
+const everyoneCanSee = account => loggedInConfirmed(account) || true;
 
-const loggedinCanSee = account => !!account;
+const loggedinCanSee = account => loggedInConfirmed(account);
 
 /* istanbul ignore next */
 export const loggedoutCanSee = account => !account;
@@ -77,10 +78,10 @@ export const seeComputerAvailability = account => everyoneCanSee(account);
 
 export const seeOpeningHours = account => everyoneCanSee(account);
 
-export const seeMasquerade = account => !!account && !!account.canMasquerade;
+export const seeMasquerade = account => loggedInConfirmed(account) && !!account.canMasquerade;
 
 export const seeRoomBookings = account =>
-    !!account &&
+    loggedInConfirmed(account) &&
     [
         LIBRARY_STAFF,
         UNDERGRADUATE_GENERAL,
@@ -91,11 +92,11 @@ export const seeRoomBookings = account =>
         POSTGRAD_RESEARCH_REMOTE,
     ].includes(account.user_group);
 
-export const seeLoans = account => !!account;
+export const seeLoans = account => loggedInConfirmed(account);
 
 /* istanbul ignore next */
 export const seeFines = account =>
-    !!account &&
+    loggedInConfirmed(account) &&
     [
         UNDERGRADUATE_GENERAL,
         UNDERGRADUATE_REMOTE,
@@ -121,7 +122,7 @@ export const seeSavedItems = account => everyoneCanSee(account);
 export const seeSavedSearches = account => everyoneCanSee(account);
 
 export const seeDocumentDelivery = account =>
-    !!account &&
+    loggedInConfirmed(account) &&
     [
         UNDERGRADUATE_GENERAL,
         UNDERGRADUATE_REMOTE,
@@ -137,7 +138,7 @@ export const seeDocumentDelivery = account =>
         STAFF_AWAITING_AURION,
     ].includes(account.user_group);
 
-export const seeEspace = (account, author) => !!account && !!author;
+export const seeEspace = (account, author) => loggedInConfirmed(account) && !!author;
 
 export const seeTraining = account => everyoneCanSee(account);
 

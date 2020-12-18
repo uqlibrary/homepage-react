@@ -9,7 +9,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
 const PromoPanel = ({ account }) => {
-    return (
+    return loggedInConfirmed(account) || loggedOutConfirmed(account) ? (
         <StandardCard
             primaryHeader
             fullHeight
@@ -28,6 +28,8 @@ const PromoPanel = ({ account }) => {
                 </Grid>
             </Grid>
         </StandardCard>
+    ) : (
+        <div className="promopanel empty" />
     );
 };
 
