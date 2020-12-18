@@ -22,19 +22,20 @@ browserUpdate({
 });
 
 // application components
-import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from '../containers/AppAlert';
-import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import * as pages from './pages';
 import { AccountContext } from 'context';
-import Grid from '@material-ui/core/Grid';
-import { withStyles } from '@material-ui/core/styles';
 import UQHeader from './UQHeader';
 import ChatStatus from './ChatStatus';
-import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
 import UQSiteHeader from './UQSiteHeader';
+
+import { loggedInConfirmed } from 'helpers/general';
+import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
+import { AppLoader, ContentLoader, InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+
+import Grid from '@material-ui/core/Grid';
+import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     appBG: {
@@ -200,7 +201,7 @@ export class AppClass extends PureComponent {
             );
         }
 
-        const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
+        const isAuthorizedUser = !this.props.accountLoading && loggedInConfirmed(this.props.account);
         const isAuthorLoading = this.props.accountLoading || this.props.accountAuthorLoading;
         const isHdrStudent =
             !isAuthorLoading &&

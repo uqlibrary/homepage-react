@@ -35,7 +35,7 @@ const PromoPanel = ({ account }) => {
 
 PromoPanel.propTypes = {
     libHours: PropTypes.object,
-    account: PropTypes.object,
+    account: PropTypes.any,
     libHoursLoading: PropTypes.bool,
 };
 

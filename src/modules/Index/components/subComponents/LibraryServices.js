@@ -34,7 +34,7 @@ const LibraryServices = ({ account }) => {
 };
 
 LibraryServices.propTypes = {
-    account: PropTypes.object,
+    account: PropTypes.any,
 };
 
 LibraryServices.defaultProps = {};

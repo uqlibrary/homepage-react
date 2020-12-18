@@ -29,6 +29,7 @@ import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
 import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
 import PromoPanel from './subComponents/PromoPanel';
+import { loggedInConfirmed, loggedOutConfirmed } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -112,22 +113,22 @@ export const Index = ({
         }
     }, [spotlights, spotlightsLoading, dispatch]);
     useEffect(() => {
-        if (!!account && !printBalance && printBalanceLoading === null) {
+        if (loggedInConfirmed(account) && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());
         }
     }, [account, printBalance, printBalanceLoading, dispatch]);
     useEffect(() => {
-        if (!!account && !loans && loansLoading === null) {
+        if (loggedInConfirmed(account) && !loans && loansLoading === null) {
             dispatch(loadLoans());
         }
     }, [account, loans, loansLoading, dispatch]);
     useEffect(() => {
-        if (!!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
+        if (loggedInConfirmed(account) && !!author && !possibleRecords && possibleRecordsLoading === null) {
             dispatch(searcheSpacePossiblePublications());
         }
     }, [account, author, possibleRecords, possibleRecordsLoading, dispatch]);
     useEffect(() => {
-        if (!!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+        if (loggedInConfirmed(account) && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
@@ -139,7 +140,7 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
-                    {!!account && (
+                    {loggedInConfirmed(account) && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -164,7 +165,7 @@ export const Index = ({
                     )}
 
                     {/* Personalisation panel or hours */}
-                    {!!account ? (
+                    {loggedInConfirmed(account) && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -178,7 +179,9 @@ export const Index = ({
                                 />
                             </Grid>
                         </Hidden>
-                    ) : (
+                    )}
+
+                    {loggedOutConfirmed(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -194,7 +197,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {!!account && !!libHours && seeOpeningHours(account) && (
+                    {loggedInConfirmed(account) && !!libHours && seeOpeningHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -230,7 +233,7 @@ export const Index = ({
 };
 
 Index.propTypes = {
-    account: PropTypes.object,
+    account: PropTypes.any,
     author: PropTypes.object,
     actions: PropTypes.any,
     spotlights: PropTypes.any,

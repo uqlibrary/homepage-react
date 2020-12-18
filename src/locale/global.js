@@ -54,8 +54,8 @@ export default {
         authentication: {
             signInText: 'Log in',
             signOutText: 'Log out',
-            ariaIn: 'Click to log in to eSpace',
-            ariaOut: 'Click to log out of eSpace',
+            ariaIn: 'Click to log in to the Library',
+            ariaOut: 'Click to log out of the Library',
         },
         skipNav: {
             title: 'Skip Navigation',

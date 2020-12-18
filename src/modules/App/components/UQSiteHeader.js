@@ -1,21 +1,24 @@
 import React, { useState } from 'react';
-import { makeStyles } from '@material-ui/styles';
 import { PropTypes } from 'prop-types';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
+
 import Megamenu from './Megamenu';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, routes } from '../../../config';
 import locale from '../../../locale/global';
-import IconButton from '@material-ui/core/IconButton';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import MenuIcon from '@material-ui/icons/Menu';
-import CloseIcon from '@material-ui/icons/Close';
 import { pathConfig } from 'config/routes';
 import { AuthButton } from '../../SharedComponents/Toolbox/AuthButton';
 import { AskUs } from './AskUs';
 import { UQSiteHeaderLocale } from './UQSiteHeader.locale';
 import MyLibrary from './MyLibrary';
+import { loggedInConfirmed } from 'helpers/general';
+
+import { makeStyles } from '@material-ui/styles';
+import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
+import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
+import MenuIcon from '@material-ui/icons/Menu';
+import CloseIcon from '@material-ui/icons/Close';
 
 const useStyles = makeStyles(
     theme => ({
@@ -112,7 +115,7 @@ export const UQSiteHeader = ({
                     </Button>
                 </Grid>
                 <Grid item xs />
-                {!!account && (
+                {loggedInConfirmed(account) && (
                     <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
                         <MyLibrary account={account} author={author} history={history} />
                     </Grid>

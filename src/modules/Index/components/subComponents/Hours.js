@@ -12,6 +12,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import Tooltip from '@material-ui/core/Tooltip';
 import { hoursLocale } from './Hours.locale';
 import Button from '@material-ui/core/Button';
+import { loggedInConfirmed } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -221,7 +222,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         >
             <div
                 className={`${classes.flexWrapper} ${
-                    !!account ? classes.componentHeight : classes.componentHeightPublic
+                    loggedInConfirmed(account) ? classes.componentHeight : classes.componentHeightPublic
                 }`}
             >
                 <div className={classes.flexHeader}>
@@ -314,7 +315,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
 
 Hours.propTypes = {
     libHours: PropTypes.object,
-    account: PropTypes.object,
+    account: PropTypes.any,
     libHoursLoading: PropTypes.bool,
 };
 

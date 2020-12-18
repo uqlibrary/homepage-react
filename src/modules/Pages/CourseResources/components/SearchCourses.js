@@ -261,7 +261,7 @@ export const SearchCourses = ({
 };
 
 SearchCourses.propTypes = {
-    account: PropTypes.object,
+    account: PropTypes.any,
     loadNewSubject: PropTypes.func,
     listSearchedSubjects: PropTypes.array,
     preselectedCourse: PropTypes.any,
