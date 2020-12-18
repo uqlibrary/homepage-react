@@ -193,6 +193,7 @@ export const CourseResourceSearch = ({
                                     inputProps={{
                                         ...params.inputProps,
                                         'data-testid': `${elementId}-autocomplete-input-wrapper`,
+                                        'aria-label': 'search for a subject by course code or title',
                                     }}
                                     label={locale.placeholder}
                                 />
