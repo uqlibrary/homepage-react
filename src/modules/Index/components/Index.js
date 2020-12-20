@@ -140,6 +140,8 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
+
+                    {/* Personalisation panel, mobile */}
                     {loggedInConfirmed(account) && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
@@ -164,7 +166,7 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {/* Personalisation panel or hours */}
+                    {/* Personalisation panel, desktop */}
                     {loggedInConfirmed(account) && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
@@ -181,7 +183,8 @@ export const Index = ({
                         </Hidden>
                     )}
 
-                    {loggedOutConfirmed(account) && (
+                    {/* Hours panel, logged out */}
+                    {loggedOutConfirmed(account) && seeOpeningHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -197,13 +200,14 @@ export const Index = ({
                         </Grid>
                     )}
 
+                    {/* Hours panel, logged in */}
                     {loggedInConfirmed(account) && !!libHours && seeOpeningHours(account) && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
-                    {!!seeCourseResources(account) && (
+                    {seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
                             <CourseResourcesPanel account={account} history={history} />
                         </Grid>

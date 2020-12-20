@@ -2,7 +2,7 @@ import * as actions from 'actions/actionTypes';
 
 export const initialState = {
     account: null,
-    author: null, // ?
+    author: null,
     accountLoading: false,
     accountAuthorLoading: false,
     isSessionExpired: null,
@@ -12,7 +12,14 @@ export const initSavingState = {
     accountAuthorSaving: false,
     accountAuthorError: null,
 };
-
+/*
+ * account has 3 possible states:
+ * - user has logged in (account.id has been set)
+ * - user is not logged in (account === false)
+ * - we do not yet know if the user is loggedin (ie initial check not yet complete) (account === null)
+ * this is because on the homepage we need to know if they are logged in or logged out before we show some panels
+ * always confirm logged in/out via loggedOutConfirmed and loggedInConfirmed
+ */
 const handlers = {
     [actions.CURRENT_ACCOUNT_LOADING]: () => ({
         ...initialState,
