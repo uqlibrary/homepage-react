@@ -20,6 +20,10 @@ import { sessionApi } from 'config';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
 export function getClassNumberFromPieces(subject) {
+    /* istanbul ignore next */
+    if (!subject || !subject.SUBJECT || !subject.CATALOG_NBR) {
+        return '';
+    }
     return `${subject.SUBJECT}${subject.CATALOG_NBR}`;
 }
 
