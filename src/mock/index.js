@@ -36,7 +36,7 @@ const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 200});
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 200 });
 const escapeRegExp = input => input.replace('.\\*', '.*')
-    .replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+    .replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
 Cookies.set(SESSION_COOKIE_NAME, 'abc123');
 
@@ -55,7 +55,7 @@ if (user && !mockData.accounts[user]) {
 user = user || 'vanilla';
 
 const withDelay = (response) => config => {
-    const randomTime = Math.floor(Math.random() * 5000) + 1000; // Change these values to delay mock API
+    const randomTime = Math.floor(Math.random() * 200) + 200; // Change these values to delay mock API
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
