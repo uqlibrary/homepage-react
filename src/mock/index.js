@@ -33,10 +33,10 @@ import {
 import { POSSIBLE_RECORDS_API } from 'repositories/routes';
 
 const queryString = require('query-string');
-const mock = new MockAdapter(api, { delayResponse: 200 });
+const mock = new MockAdapter(api, { delayResponse: 200});
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 200 });
 const escapeRegExp = input => input.replace('.\\*', '.*')
-    .replace(/[\-\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
+    .replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
 Cookies.set(SESSION_COOKIE_NAME, 'abc123');
 
@@ -54,16 +54,24 @@ if (user && !mockData.accounts[user]) {
 // default user is researcher if user is not defined
 user = user || 'vanilla';
 
+const withDelay = (response) => config => {
+    const randomTime = Math.floor(Math.random() * 0) + 200; // Change these values to delay mock API
+    return new Promise(function(resolve, reject) {
+        setTimeout(function() {
+            resolve(response);
+        }, randomTime);
+    });
+};
+
 mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
     .reply(() => {
-        console.log('Account API hit');
         // mock account response
         if (['s2222222', 's3333333'].indexOf(user) > -1) {
-            return [200, mockData.accounts[user]];
+            withDelay([200, mockData.accounts[user]]);
         } else if (mockData.accounts[user]) {
-            return [403, {}];
+            withDelay([403, {}]);
         }
-        return [404, {}];
+        withDelay([404, {}]);
     });
 
 mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
@@ -103,67 +111,31 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl)
     });
 
 mock.onGet(routes.SPOTLIGHTS_API().apiUrl)
-    .reply(() => {
-        // mock spotlights
-        console.log('Spotlights API hit');
-        return [200, [...spotlights]];
-    });
+    .reply(withDelay([200, [...spotlights]]));
 
 mock.onGet(routes.CHAT_API().apiUrl)
-    .reply(() => {
-        console.log('Chat status API hit');
-        // mock chat status
-        return [200, { online: true }];
-        // return [200, { online: false }];
-    });
+    .reply(withDelay([200, { online: true }]));
 
 mock.onGet(routes.TRAINING_API(10).apiUrl)
-    .reply(() => {
-        console.log('Training events API hit');
-        // mock training evemts
-        return [200, training];
-    });
+    .reply(withDelay([200, training]));
 
 mock.onGet(routes.PRINTING_API().apiUrl)
-    .reply(() => {
-        console.log('Papercut API hit');
-        // mock print balance
-        return [200, printBalance];
-    });
+    .reply(withDelay([200, printBalance]));
 
 mock.onGet(routes.LOANS_API().apiUrl)
-    .reply(() => {
-        console.log('Loans API hit');
-        // mock print balance
-        return [200, loans];
-    });
+    .reply(withDelay([200, loans]));
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl)
-    .reply(() => {
-        console.log('Library Hours API hit');
-        // mock library hours
-        return [200, libHours];
-    });
+    .reply(withDelay([200, libHours]));
 
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl)
-    .reply(() => {
-        console.log('eSpace Possible Records API hit');
-        // mock library hours
-        return [200, possibleRecords];
-    });
+    .reply(withDelay([200, possibleRecords]));
 
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl)
-    .reply(() => {
-        console.log('eSpace Incomplete NTRO Records API hit');
-        // mock library hours
-        return [200, incompleteNTROs];
-    });
+    .reply(withDelay([200, incompleteNTROs]));
 
 mock.onGet(routes.ALERT_API().apiUrl)
-    .reply(() => {
-        console.log('Alert status API hit');
-        // mock alerts status
-        return [200,
+    .reply(withDelay([200,
             [
                 {
                 'id': 'e895b270-d62b-11e7-954e-57c2cc19d151',
@@ -174,15 +146,11 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 'urgent': 1,
                 },
             ],
-        ];
-    });
+        ]
+    ));
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl)
-    .reply(() => {
-        console.log('Computer availability API hit');
-        // mock computer availability
-        return [200, computerAvailability];
-    });
+    .reply(withDelay([200, computerAvailability]));
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,

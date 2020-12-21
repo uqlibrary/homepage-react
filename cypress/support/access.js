@@ -113,14 +113,19 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
         expect(typeof value).to.equal('string');
         expect(value.length).to.not.equals(0);
 
+        // Using the Collapse item in the Personalised Panel means all the items are always in the tree.
+        // For items which should not appear, look for the 'hidden' class that stops it displaying
         const entryname = `pp-${key}-menu-button`;
         const elementId = `button[data-testid="${entryname}"]`;
+        const elementIdFound = `#personalisedPanel :not(div[class*="MuiCollapse-hidden-"]) ${elementId}`;
+        const elementIdMissing = `#personalisedPanel div[class*="MuiCollapse-hidden-"] ${elementId}`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
-            cy.get(elementId).contains(value);
+            cy.get(elementIdFound).contains(value);
+            cy.get(elementIdMissing).should('not.exist');
         } else {
-            cy.log(`checking personalisation line ${entryname} is missing`);
-            cy.get(elementId).should('not.exist');
+            cy.log(`checking personalisation line ${entryname} is hidden`);
+            cy.get(elementIdMissing).should('exist');
         }
     }
 };

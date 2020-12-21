@@ -17,6 +17,48 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { computersLocale } from './Computers.locale';
+import ContentLoader from 'react-content-loader';
+
+const MyLoader = props => (
+    <ContentLoader
+        speed={2}
+        uniqueKey="computers"
+        width={'100%'}
+        height={'100%'}
+        viewBox="0 0 365 300"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#e2e2e2"
+        {...props}
+    >
+        <rect x="5%" y="15" rx="3" ry="3" width="50%" height="14" />
+        <rect x="70%" y="15" rx="3" ry="3" width="20%" height="14" />
+        <rect x="0" y="40" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="55" rx="3" ry="3" width="52%" height="14" />
+        <rect x="70%" y="55" rx="3" ry="3" width="19%" height="14" />
+        <rect x="0" y="80" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="95" rx="3" ry="3" width="47%" height="14" />
+        <rect x="70%" y="95" rx="3" ry="3" width="21%" height="14" />
+        <rect x="0" y="120" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="135" rx="3" ry="3" width="50%" height="14" />
+        <rect x="70%" y="135" rx="3" ry="3" width="20%" height="14" />
+        <rect x="0" y="160" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="175" rx="3" ry="3" width="52%" height="14" />
+        <rect x="70%" y="175" rx="3" ry="3" width="19%" height="14" />
+        <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="215" rx="3" ry="3" width="50%" height="14" />
+        <rect x="70%" y="215" rx="3" ry="3" width="20%" height="14" />
+        <rect x="0" y="240" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="255" rx="3" ry="3" width="47%" height="14" />
+        <rect x="70%" y="255" rx="3" ry="3" width="21%" height="14" />
+        <rect x="0" y="280" rx="3" ry="3" width="100%" height="1" />
+    </ContentLoader>
+);
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -87,6 +129,11 @@ const useStyles = makeStyles(theme => ({
             overflowY: 'hidden',
         },
     },
+    flexLoaderContent: {
+        flexGrow: 1,
+        overflowY: 'hidden',
+        overflowX: 'hidden',
+    },
     flexFooter: {
         height: 'auto',
     },
@@ -132,48 +179,51 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
             }, 5000);
         }
     }, [location, cookies]);
-    if (!computerAvailability || !!computerAvailabilityLoading) {
-        return null;
-    }
-    const cleanedAvailability = computerAvailability.map(item => {
-        const levels = Object.keys(item.availability);
-        const totalLevels = levels.length;
-        let levelsData = [];
-        if (totalLevels > 0) {
-            levelsData = levels
-                .map(level => {
-                    return {
-                        level: parseInt(level.replace('Level ', ''), 10),
-                        roomCode: parseInt(item.availability[level].roomCode, 10),
-                        available: item.availability[level].Available,
-                        occupied: item.availability[level].Occupied,
-                        total: item.availability[level].Available + item.availability[level].Occupied,
-                        floorplan: item.availability[level].floorplan,
-                    };
-                })
-                .sort((a, b) => a.level - b.level);
-        }
-        return {
-            library: item.library.replace('&amp;', '&'),
-            levels: levelsData,
-            buildingCode: parseInt(item.buildingCode, 10),
-            buildingNumber: parseInt(item.buildingNumber, 10),
-            campus: computersLocale.campusMap[item.library],
-        };
-    });
-    const alphaAvailability = cleanedAvailability
-        .filter(e => e !== null)
-        .sort((a, b) => {
-            const textA = a.library.toUpperCase();
-            const textB = b.library.toUpperCase();
-            // eslint-disable-next-line no-nested-ternary
-            const result = textA < textB ? -1 : textA > textB ? 1 : 0;
-            return result;
+    const cleanedAvailability =
+        computerAvailability &&
+        computerAvailability.map(item => {
+            const levels = Object.keys(item.availability);
+            const totalLevels = levels.length;
+            let levelsData = [];
+            if (totalLevels > 0) {
+                levelsData = levels
+                    .map(level => {
+                        return {
+                            level: parseInt(level.replace('Level ', ''), 10),
+                            roomCode: parseInt(item.availability[level].roomCode, 10),
+                            available: item.availability[level].Available,
+                            occupied: item.availability[level].Occupied,
+                            total: item.availability[level].Available + item.availability[level].Occupied,
+                            floorplan: item.availability[level].floorplan,
+                        };
+                    })
+                    .sort((a, b) => a.level - b.level);
+            }
+            return {
+                library: item.library.replace('&amp;', '&'),
+                levels: levelsData,
+                buildingCode: parseInt(item.buildingCode, 10),
+                buildingNumber: parseInt(item.buildingNumber, 10),
+                campus: computersLocale.campusMap[item.library],
+            };
         });
-    const sortedComputers = matchSorter(alphaAvailability, cookies.location, {
-        keys: ['campus'],
-        threshold: matchSorter.rankings.NO_MATCH,
-    });
+    const alphaAvailability =
+        !!cleanedAvailability &&
+        cleanedAvailability
+            .filter(e => e !== null)
+            .sort((a, b) => {
+                const textA = a.library.toUpperCase();
+                const textB = b.library.toUpperCase();
+                // eslint-disable-next-line no-nested-ternary
+                const result = textA < textB ? -1 : textA > textB ? 1 : 0;
+                return result;
+            });
+    const sortedComputers =
+        alphaAvailability &&
+        matchSorter(alphaAvailability, cookies.location, {
+            keys: ['campus'],
+            threshold: matchSorter.rankings.NO_MATCH,
+        });
     const handleCollapse = index => {
         if (collapse[index]) {
             setCollapse({ [index]: false });
@@ -306,101 +356,117 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
         >
             <MapPopup />
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
-                <div className={classes.flexContent}>
-                    {!!sortedComputers &&
-                        sortedComputers.length > 1 &&
-                        sortedComputers.map((item, index) => {
-                            const add = (a, b) => a + b;
-                            const buildingAvail = item.levels.map(level => level.available).reduce(add);
-                            const buildingTotal = item.levels
-                                .map(level => level.occupied + level.available)
-                                .reduce(add);
-                            return (
-                                <React.Fragment key={index}>
-                                    <Grid
-                                        container
-                                        spacing={1}
-                                        className={classes.row}
-                                        justify="center"
-                                        alignItems="center"
-                                    >
-                                        <Grid item xs style={{ paddingLeft: 16 }}>
-                                            <Button
-                                                onClick={() => handleCollapse(index)}
-                                                aria-expanded={!!collapse[index]}
-                                                classes={{
-                                                    root: classes.linkButton,
-                                                    label: `${classes.linkButtonLabel} ${
-                                                        cookies.location === item.campus ? classes.selectedCampus : ''
-                                                    }`,
-                                                }}
-                                                aria-label={`${item.library} - ${buildingAvail} of ${buildingTotal} free. Click to review each level`}
-                                                id={`computers-library-button-${index}`}
-                                                data-testid={`computers-library-button-${index}`}
+                {computerAvailability && !computerAvailabilityLoading ? (
+                    <Fade in={!computerAvailabilityLoading} timeout={1000}>
+                        <div className={classes.flexContent}>
+                            {!!sortedComputers &&
+                                sortedComputers.length > 1 &&
+                                sortedComputers.map((item, index) => {
+                                    const add = (a, b) => a + b;
+                                    const buildingAvail = item.levels.map(level => level.available).reduce(add);
+                                    const buildingTotal = item.levels
+                                        .map(level => level.occupied + level.available)
+                                        .reduce(add);
+                                    return (
+                                        <React.Fragment key={index}>
+                                            <Grid
+                                                container
+                                                spacing={1}
+                                                className={classes.row}
+                                                justify="center"
+                                                alignItems="center"
                                             >
-                                                {item.library}
-                                            </Button>
-                                        </Grid>
-                                        <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
-                                            {buildingAvail} of {buildingTotal} free
-                                        </Grid>
-                                    </Grid>
-                                    {item.levels.length > 0 &&
-                                        item.levels.map((level, levelIndex) => (
-                                            <Collapse
-                                                in={collapse[index]}
-                                                timeout="auto"
-                                                unmountOnExit
-                                                key={levelIndex}
-                                            >
-                                                <Grid
-                                                    role="region"
-                                                    container
-                                                    spacing={1}
-                                                    className={classes.row}
-                                                    justify="center"
-                                                    alignItems="center"
-                                                >
-                                                    <Grid item xs style={{ paddingLeft: 32 }}>
-                                                        <Button
-                                                            id={`computers-${item.library}-level-${item.level}-button`}
-                                                            data-testid={`computers-library-${index}-level-${level.level}-button`}
-                                                            aria-label={`${item.library} level ${level.level}. ${
-                                                                level.available
-                                                            } of ${level.available + level.occupied} computers free`}
-                                                            onClick={() =>
-                                                                openMap(
-                                                                    item.library,
-                                                                    item.buildingCode,
-                                                                    level.roomCode,
-                                                                    level.level,
-                                                                    level.total,
-                                                                    level.available,
-                                                                )
-                                                            }
-                                                            classes={{
-                                                                root: classes.linkButton,
-                                                                label: `${classes.linkButtonLabel} ${
-                                                                    cookies.location === item.campus
-                                                                        ? classes.selectedCampus
-                                                                        : ''
-                                                                }`,
-                                                            }}
-                                                        >
-                                                            Level {level.level}
-                                                        </Button>
-                                                    </Grid>
-                                                    <Grid xs item />
-                                                    <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
-                                                        {level.available} of {level.available + level.occupied} free
-                                                    </Grid>
+                                                <Grid item xs style={{ paddingLeft: 16 }}>
+                                                    <Button
+                                                        onClick={() => handleCollapse(index)}
+                                                        aria-expanded={!!collapse[index]}
+                                                        classes={{
+                                                            root: classes.linkButton,
+                                                            label: `${classes.linkButtonLabel} ${
+                                                                cookies.location === item.campus
+                                                                    ? classes.selectedCampus
+                                                                    : ''
+                                                            }`,
+                                                        }}
+                                                        aria-label={`${item.library} - ${buildingAvail} of ${buildingTotal} free. Click to review each level`}
+                                                        id={`computers-library-button-${index}`}
+                                                        data-testid={`computers-library-button-${index}`}
+                                                    >
+                                                        {item.library}
+                                                    </Button>
                                                 </Grid>
-                                            </Collapse>
-                                        ))}
-                                </React.Fragment>
-                            );
-                        })}
-                </div>
+                                                <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
+                                                    {buildingAvail} of {buildingTotal} free
+                                                </Grid>
+                                            </Grid>
+                                            {item.levels.length > 0 &&
+                                                item.levels.map((level, levelIndex) => (
+                                                    <Collapse
+                                                        in={collapse[index]}
+                                                        timeout="auto"
+                                                        unmountOnExit
+                                                        key={levelIndex}
+                                                    >
+                                                        <Grid
+                                                            role="region"
+                                                            container
+                                                            spacing={1}
+                                                            className={classes.row}
+                                                            justify="center"
+                                                            alignItems="center"
+                                                        >
+                                                            <Grid item xs style={{ paddingLeft: 32 }}>
+                                                                <Button
+                                                                    id={`computers-${item.library}-level-${item.level}-button`}
+                                                                    data-testid={`computers-library-${index}-level-${level.level}-button`}
+                                                                    aria-label={`${item.library} level ${
+                                                                        level.level
+                                                                    }. ${level.available} of ${level.available +
+                                                                        level.occupied} computers free`}
+                                                                    onClick={() =>
+                                                                        openMap(
+                                                                            item.library,
+                                                                            item.buildingCode,
+                                                                            level.roomCode,
+                                                                            level.level,
+                                                                            level.total,
+                                                                            level.available,
+                                                                        )
+                                                                    }
+                                                                    classes={{
+                                                                        root: classes.linkButton,
+                                                                        label: `${classes.linkButtonLabel} ${
+                                                                            cookies.location === item.campus
+                                                                                ? classes.selectedCampus
+                                                                                : ''
+                                                                        }`,
+                                                                    }}
+                                                                >
+                                                                    Level {level.level}
+                                                                </Button>
+                                                            </Grid>
+                                                            <Grid xs item />
+                                                            <Grid
+                                                                item
+                                                                xs={'auto'}
+                                                                style={{ fontSize: 14, marginRight: 16 }}
+                                                            >
+                                                                {level.available} of {level.available + level.occupied}{' '}
+                                                                free
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Collapse>
+                                                ))}
+                                        </React.Fragment>
+                                    );
+                                })}
+                        </div>
+                    </Fade>
+                ) : (
+                    <div className={classes.flexLoaderContent}>
+                        <MyLoader />
+                    </div>
+                )}
             </div>
         </StandardCard>
     );

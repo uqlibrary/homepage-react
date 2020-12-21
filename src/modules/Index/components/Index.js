@@ -11,14 +11,7 @@ import {
     searcheSpaceIncompleteNTROPublications,
 } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
-import {
-    seeCourseResources,
-    seeComputerAvailability,
-    seeLibraryServices,
-    seeOpeningHours,
-    seePromoPanel,
-    seeTraining,
-} from 'helpers/access';
+import { seeCourseResources, seeLibraryServices, seePromoPanel } from 'helpers/access';
 import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
 import { makeStyles } from '@material-ui/styles';
@@ -147,16 +140,9 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     )}
-                    {!!spotlights && spotlights.length > 0 && (
-                        <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                            <Spotlights
-                                spotlights={spotlights}
-                                spotlightsLoading={spotlightsLoading}
-                                account={account}
-                            />
-                        </Grid>
-                    )}
-
+                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights" style={{ minHeight: 320 }}>
+                        <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
+                    </Grid>
                     {/* Personalisation panel or hours */}
                     {!!account ? (
                         <Hidden smDown>
@@ -177,18 +163,14 @@ export const Index = ({
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
-
-                    {!!computerAvailability && seeComputerAvailability(account) && (
-                        <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                            <Computers
-                                computerAvailability={computerAvailability}
-                                computerAvailabilityLoading={computerAvailabilityLoading}
-                                height={classes.computersAvailHeight}
-                            />
-                        </Grid>
-                    )}
-
-                    {!!account && !!libHours && seeOpeningHours(account) && (
+                    <Grid item xs={12} md={4} data-testid="computer-availability-panel">
+                        <Computers
+                            computerAvailability={computerAvailability}
+                            computerAvailabilityLoading={computerAvailabilityLoading}
+                            height={classes.computersAvailHeight}
+                        />
+                    </Grid>
+                    {!!account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -200,11 +182,9 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seeTraining(account) && (
-                        <Grid item xs={12} md={4} data-testid="training-panel">
-                            <Training trainingEvents={trainingEvents} trainingEventsLoading={trainingEventsLoading} />
-                        </Grid>
-                    )}
+                    <Grid item xs={12} md={4} data-testid="training-panel">
+                        <Training trainingEvents={trainingEvents} trainingEventsLoading={trainingEventsLoading} />
+                    </Grid>
 
                     {seeLibraryServices(account) && (
                         <Grid item xs={12} md={4} data-testid="library-services-panel">

@@ -18,6 +18,8 @@ import PrintIcon from '@material-ui/icons/Print';
 import { Location } from '../../../SharedComponents/Location';
 import { ppLocale } from './PersonalisedPanel.locale';
 import { seeEspace, seeLoans, seePrintBalance } from 'helpers/access';
+import Collapse from '@material-ui/core/Collapse';
+import Fade from '@material-ui/core/Fade';
 const moment = require('moment');
 
 const useStyles = makeStyles(theme => ({
@@ -165,9 +167,6 @@ const PersonalisedPanel = ({
             return ppLocale.greetings.evening;
         }
     };
-    if (!account) {
-        return null;
-    }
     const id = tag => `pp${tag ? '-' + tag : ''}`;
 
     const PaperCut = () => {
@@ -209,7 +208,7 @@ const PersonalisedPanel = ({
                             <Grid item xs className={classes.menuItemLabel}>
                                 {ppLocale.items.papercut.label.replace(
                                     '[balance]',
-                                    printBalance.balance !== '0.00' ? `($${printBalance.balance})` : '',
+                                    printBalance && printBalance.balance ? `($${printBalance.balance})` : '',
                                 )}
                             </Grid>
                             <Grid item xs="auto">
@@ -288,13 +287,13 @@ const PersonalisedPanel = ({
                             <Grid item xs className={classes.menuItemLabel}>
                                 {ppLocale.items.loans.label.replace(
                                     '[loans]',
-                                    loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
+                                    loans && loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
                                 )}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
                                     <Badge
-                                        badgeContent={loans.total_loans_count}
+                                        badgeContent={loans && loans.total_loans_count}
                                         color="primary"
                                         classes={{ badge: classes.ppBadgeInfo }}
                                     >
@@ -331,12 +330,12 @@ const PersonalisedPanel = ({
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.fines.label.replace('[fines]', loans.total_fines_sum)}
+                                {ppLocale.items.fines.label.replace('[fines]', loans && loans.total_fines_sum)}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
                                     <Badge
-                                        badgeContent={loans.total_fines_count}
+                                        badgeContent={loans && loans.total_fines_count}
                                         color="primary"
                                         classes={{ badge: classes.ppBadgeError }}
                                     >
@@ -457,12 +456,14 @@ const PersonalisedPanel = ({
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
+                                {incompleteNTRORecords &&
+                                    incompleteNTRORecords.total &&
+                                    ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
                             </Grid>
                             <Grid item xs="auto">
                                 <div className={classes.itemButton}>
                                     <Badge
-                                        badgeContent={incompleteNTRORecords.total}
+                                        badgeContent={incompleteNTRORecords && incompleteNTRORecords.total}
                                         color="primary"
                                         classes={{ badge: classes.ppBadgeWarning }}
                                     >
@@ -478,51 +479,78 @@ const PersonalisedPanel = ({
     };
 
     return (
-        <div
-            className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}
-            id="personalised-panel"
-            data-testid="personalised-panel"
-        >
-            <div className={classes.flexHeader}>
-                <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
-                    {greeting()} {account.firstName || ''}
-                </Typography>
-                <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
-                    {account && account.id && (
-                        <Grid item xs={12} lg="auto">
-                            <Tooltip
-                                id={id('tooltip')}
-                                data-testid={id('tooltip')}
-                                title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
-                                placement="left"
-                                TransitionProps={{ timeout: 300 }}
-                            >
-                                <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
-                                    <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
-                                    {(account && account.id) || ''}
-                                </Typography>
-                            </Tooltip>
+        <Fade in={!!account}>
+            <div
+                className={`${classes.flexWrapper} ${!!isNextToSpotlights && classes.isNextToSpotlights}`}
+                id="personalised-panel"
+                data-testid="personalised-panel"
+            >
+                <div className={classes.flexHeader}>
+                    <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
+                        {greeting()} {account.firstName || ''}
+                    </Typography>
+                    <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
+                        {account && account.id && (
+                            <Grid item xs={12} lg="auto">
+                                <Tooltip
+                                    id={id('tooltip')}
+                                    data-testid={id('tooltip')}
+                                    title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
+                                    placement="left"
+                                    TransitionProps={{ timeout: 300 }}
+                                >
+                                    <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
+                                        <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
+                                        {(account && account.id) || ''}
+                                    </Typography>
+                                </Tooltip>
+                            </Grid>
+                        )}
+                        <Grid item xs={12} lg className={classes.locationWrapper}>
+                            <Location />
                         </Grid>
-                    )}
-                    <Grid item xs={12} lg className={classes.locationWrapper}>
-                        <Location />
                     </Grid>
-                </Grid>
+                </div>
+                <div className={classes.flexContent} />
+                <div className={classes.flexFooter}>
+                    <Grid container spacing={0} style={{ marginLeft: 16 }}>
+                        <Collapse
+                            style={{ width: '100%' }}
+                            in={!!(seePrintBalance(account) && !!printBalance && printBalance.balance)}
+                        >
+                            <PaperCut />
+                        </Collapse>
+                        <Collapse style={{ width: '100%' }} in={!!(seeLoans(account) && !!loans)}>
+                            <Loans />
+                        </Collapse>
+                        <Collapse
+                            style={{ width: '100%' }}
+                            in={!!(seeLoans(account) && !!loans && loans.total_fines_count > 0)}
+                        >
+                            <Fines />
+                        </Collapse>
+                        <Collapse style={{ width: '100%' }} in={!!(seeEspace(account, author) && !!possibleRecords)}>
+                            <EspacePossible />
+                        </Collapse>
+                        <Collapse style={{ width: '100%' }} in={!!(seeEspace(account, author) && !author.aut_orcid_id)}>
+                            <EspaceOrcid />
+                        </Collapse>
+                        <Collapse
+                            style={{ width: '100%' }}
+                            in={
+                                !!(
+                                    seeEspace(account, author) &&
+                                    !!incompleteNTRORecords &&
+                                    !!incompleteNTRORecords.total
+                                )
+                            }
+                        >
+                            <EspaceNTROs />
+                        </Collapse>
+                    </Grid>
+                </div>
             </div>
-            <div className={classes.flexContent} />
-            <div className={classes.flexFooter}>
-                <Grid container spacing={0} style={{ marginLeft: 16 }}>
-                    {seePrintBalance(account) && !!printBalance && printBalance.balance && <PaperCut />}
-                    {seeLoans(account) && !!loans && <Loans />}
-                    {seeLoans(account) && !!loans && loans.total_fines_count > 0 && <Fines />}
-                    {seeEspace(account, author) && !!possibleRecords && <EspacePossible />}
-                    {seeEspace(account, author) && !author.aut_orcid_id && <EspaceOrcid />}
-                    {seeEspace(account, author) && !!incompleteNTRORecords && !!incompleteNTRORecords.total && (
-                        <EspaceNTROs />
-                    )}
-                </Grid>
-            </div>
-        </div>
+        </Fade>
     );
 };
 

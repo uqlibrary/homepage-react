@@ -22,9 +22,7 @@ browserUpdate({
 });
 
 // application components
-import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from '../containers/AppAlert';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import * as pages from './pages';
@@ -186,24 +184,10 @@ export class AppClass extends PureComponent {
 
     render() {
         const { classes } = this.props;
-        if (this.props.accountLoading) {
-            return (
-                <Grid container className={classes.layoutFill}>
-                    <Grid zeroMinWidth item xs={12}>
-                        <AppLoader
-                            title={locale.global.title}
-                            logoImage="largeLogo"
-                            logoText={locale.global.logo.label}
-                        />
-                    </Grid>
-                </Grid>
-            );
-        }
-
         const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
-        const isAuthorLoading = this.props.accountLoading || this.props.accountAuthorLoading;
+        const isAccountLoading = this.props.accountLoading;
         const isHdrStudent =
-            !isAuthorLoading &&
+            !isAccountLoading &&
             !!this.props.account &&
             this.props.account.class &&
             this.props.account.class.indexOf('IS_CURRENT') >= 0 &&
@@ -242,8 +226,7 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    {isAuthorLoading && <InlineLoader message={locale.global.loadingUserAccount} />}
-                    {!isAuthorLoading && (
+                    {!isAccountLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>
                             <AccountContext.Provider
                                 value={{
@@ -264,18 +247,16 @@ export class AppClass extends PureComponent {
                             </AccountContext.Provider>
                         </div>
                     )}
-                    {!this.props.accountLoading && !isAuthorLoading && (
-                        <div>
-                            <Grid container spacing={0}>
-                                <Grid item xs={12} className={classes.connectFooter}>
-                                    <ConnectFooter history={this.props.history} />
-                                </Grid>
-                                <Grid item xs={12} className={classes.minimalFooter}>
-                                    <MinimalFooter />
-                                </Grid>
+                    <div>
+                        <Grid container spacing={0}>
+                            <Grid item xs={12} className={classes.connectFooter}>
+                                <ConnectFooter history={this.props.history} />
                             </Grid>
-                        </div>
-                    )}
+                            <Grid item xs={12} className={classes.minimalFooter}>
+                                <MinimalFooter />
+                            </Grid>
+                        </Grid>
+                    </div>
                 </div>
             </Grid>
         );
