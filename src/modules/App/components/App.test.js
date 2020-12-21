@@ -194,13 +194,6 @@ describe('Application component', () => {
         const wrapper = setup();
         expect(wrapper.instance().getChildContext()).toEqual({
             userCountry: 'AU',
-            isMobile: false,
-            selectFieldMobileOverrides: {
-                autoWidth: true,
-                fullWidth: false,
-                menuItemStyle: {},
-                style: { width: '100%' },
-            },
         });
     });
 

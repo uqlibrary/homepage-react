@@ -104,38 +104,18 @@ export class AppClass extends PureComponent {
     };
     static childContextTypes = {
         userCountry: PropTypes.any,
-        isMobile: PropTypes.bool,
-        selectFieldMobileOverrides: PropTypes.object,
     };
 
     constructor(props) {
         super(props);
         this.state = {
-            menuOpen: false,
-            alertOpen: false,
-            docked: false,
             chatStatus: { online: false },
-            mediaQuery: window.matchMedia('(min-width: 1280px)'),
-            isMobile: window.matchMedia('(max-width: 720px)').matches,
         };
     }
 
     getChildContext() {
         return {
             userCountry: 'AU', // this.state.userCountry,
-            isMobile: this.state.isMobile,
-            selectFieldMobileOverrides: {
-                style: !this.state.isMobile ? { width: '100%' } : {},
-                autoWidth: !this.state.isMobile,
-                fullWidth: this.state.isMobile,
-                menuItemStyle: this.state.isMobile
-                    ? {
-                          whiteSpace: 'normal',
-                          lineHeight: '18px',
-                          paddingBottom: '8px',
-                      }
-                    : {},
-            },
         };
     }
 
@@ -170,12 +150,6 @@ export class AppClass extends PureComponent {
         const redirectUrl = isAuthorizedUser ? AUTH_URL_LOGOUT : AUTH_URL_LOGIN;
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
-    };
-
-    isPublicPage = menuItems => {
-        return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
-        );
     };
 
     setSessionExpiredConfirmation = ref => {
