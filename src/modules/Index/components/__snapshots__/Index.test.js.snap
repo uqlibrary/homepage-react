@@ -6347,7 +6347,7 @@ exports[`Index page should render placeholders 1`] = `
                                                         width="100%"
                                                       >
                                                         <svg
-                                                          aria-labelledby="3ey44di-aria"
+                                                          aria-labelledby="x0jy5d-aria"
                                                           height="100%"
                                                           id={null}
                                                           role="img"
@@ -6356,17 +6356,17 @@ exports[`Index page should render placeholders 1`] = `
                                                           width="100%"
                                                         >
                                                           <title
-                                                            id="3ey44di-aria"
+                                                            id="x0jy5d-aria"
                                                           >
                                                             Loading...
                                                           </title>
                                                           <rect
-                                                            clipPath="url(#3ey44di-diff)"
+                                                            clipPath="url(#x0jy5d-diff)"
                                                             height="100%"
                                                             role="presentation"
                                                             style={
                                                               Object {
-                                                                "fill": "url(#3ey44di-animated-diff)",
+                                                                "fill": "url(#x0jy5d-animated-diff)",
                                                               }
                                                             }
                                                             width="100%"
@@ -6377,7 +6377,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             role="presentation"
                                                           >
                                                             <clipPath
-                                                              id="3ey44di-diff"
+                                                              id="x0jy5d-diff"
                                                             >
                                                               <rect
                                                                 height="100%"
@@ -6389,7 +6389,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               />
                                                             </clipPath>
                                                             <linearGradient
-                                                              id="3ey44di-animated-diff"
+                                                              id="x0jy5d-animated-diff"
                                                             >
                                                               <stop
                                                                 offset="0%"
@@ -8732,7 +8732,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               >
                                                                                 <svg
                                                                                   aria-label="Hours data is laoding"
-                                                                                  aria-labelledby="qn5bz84-aria"
+                                                                                  aria-labelledby="okl0twk-aria"
                                                                                   data-testid="hours-loader"
                                                                                   height="100%"
                                                                                   id="hours-loader"
@@ -8742,17 +8742,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <title
-                                                                                    id="qn5bz84-aria"
+                                                                                    id="okl0twk-aria"
                                                                                   >
                                                                                     Loading...
                                                                                   </title>
                                                                                   <rect
-                                                                                    clipPath="url(#qn5bz84-diff)"
+                                                                                    clipPath="url(#okl0twk-diff)"
                                                                                     height="100%"
                                                                                     role="presentation"
                                                                                     style={
                                                                                       Object {
-                                                                                        "fill": "url(#qn5bz84-animated-diff)",
+                                                                                        "fill": "url(#okl0twk-animated-diff)",
                                                                                       }
                                                                                     }
                                                                                     width="100%"
@@ -8763,7 +8763,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     role="presentation"
                                                                                   >
                                                                                     <clipPath
-                                                                                      id="qn5bz84-diff"
+                                                                                      id="okl0twk-diff"
                                                                                     >
                                                                                       <rect
                                                                                         height="14"
@@ -8959,7 +8959,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                       />
                                                                                     </clipPath>
                                                                                     <linearGradient
-                                                                                      id="qn5bz84-animated-diff"
+                                                                                      id="okl0twk-animated-diff"
                                                                                     >
                                                                                       <stop
                                                                                         offset="0%"
@@ -11357,7 +11357,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 width="100%"
                                                                               >
                                                                                 <svg
-                                                                                  aria-labelledby="nyxemdh-aria"
+                                                                                  aria-labelledby="5zlkk9y-aria"
                                                                                   height="100%"
                                                                                   id={null}
                                                                                   role="img"
@@ -11366,17 +11366,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <title
-                                                                                    id="nyxemdh-aria"
+                                                                                    id="5zlkk9y-aria"
                                                                                   >
                                                                                     Loading...
                                                                                   </title>
                                                                                   <rect
-                                                                                    clipPath="url(#nyxemdh-diff)"
+                                                                                    clipPath="url(#5zlkk9y-diff)"
                                                                                     height="100%"
                                                                                     role="presentation"
                                                                                     style={
                                                                                       Object {
-                                                                                        "fill": "url(#nyxemdh-animated-diff)",
+                                                                                        "fill": "url(#5zlkk9y-animated-diff)",
                                                                                       }
                                                                                     }
                                                                                     width="100%"
@@ -11387,7 +11387,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     role="presentation"
                                                                                   >
                                                                                     <clipPath
-                                                                                      id="nyxemdh-diff"
+                                                                                      id="5zlkk9y-diff"
                                                                                     >
                                                                                       <rect
                                                                                         height="14"
@@ -11559,7 +11559,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                       />
                                                                                     </clipPath>
                                                                                     <linearGradient
-                                                                                      id="nyxemdh-animated-diff"
+                                                                                      id="5zlkk9y-animated-diff"
                                                                                     >
                                                                                       <stop
                                                                                         offset="0%"
@@ -12370,7 +12370,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 width="100%"
                                                                               >
                                                                                 <svg
-                                                                                  aria-labelledby="4zw217v-aria"
+                                                                                  aria-labelledby="d6j44kr-aria"
                                                                                   height="100%"
                                                                                   id={null}
                                                                                   role="img"
@@ -12379,17 +12379,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <title
-                                                                                    id="4zw217v-aria"
+                                                                                    id="d6j44kr-aria"
                                                                                   >
                                                                                     Loading...
                                                                                   </title>
                                                                                   <rect
-                                                                                    clipPath="url(#4zw217v-diff)"
+                                                                                    clipPath="url(#d6j44kr-diff)"
                                                                                     height="100%"
                                                                                     role="presentation"
                                                                                     style={
                                                                                       Object {
-                                                                                        "fill": "url(#4zw217v-animated-diff)",
+                                                                                        "fill": "url(#d6j44kr-animated-diff)",
                                                                                       }
                                                                                     }
                                                                                     width="100%"
@@ -12400,7 +12400,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     role="presentation"
                                                                                   >
                                                                                     <clipPath
-                                                                                      id="4zw217v-diff"
+                                                                                      id="d6j44kr-diff"
                                                                                     >
                                                                                       <rect
                                                                                         height="14"
@@ -12524,7 +12524,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                       />
                                                                                     </clipPath>
                                                                                     <linearGradient
-                                                                                      id="4zw217v-animated-diff"
+                                                                                      id="d6j44kr-animated-diff"
                                                                                     >
                                                                                       <stop
                                                                                         offset="0%"
