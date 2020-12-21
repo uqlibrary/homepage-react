@@ -123,10 +123,7 @@ export function loadReadingLists(coursecode, campus, semester, account) {
             const semesterString = subjectEnrolment.semester;
             const campus = getCampusByCode(subjectEnrolment.CAMPUS);
             return readingLists.filter(item => {
-                return (
-                    item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
-                );
+                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
             });
         }
     };
