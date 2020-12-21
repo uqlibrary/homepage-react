@@ -15239,7 +15239,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <svg
-                                                                                    aria-labelledby="4qxhh0p-aria"
+                                                                                    aria-labelledby="xnby7q-aria"
                                                                                     height="100%"
                                                                                     id={null}
                                                                                     role="img"
@@ -15248,17 +15248,17 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                     width="100%"
                                                                                   >
                                                                                     <title
-                                                                                      id="4qxhh0p-aria"
+                                                                                      id="xnby7q-aria"
                                                                                     >
                                                                                       Loading...
                                                                                     </title>
                                                                                     <rect
-                                                                                      clipPath="url(#4qxhh0p-diff)"
+                                                                                      clipPath="url(#xnby7q-diff)"
                                                                                       height="100%"
                                                                                       role="presentation"
                                                                                       style={
                                                                                         Object {
-                                                                                          "fill": "url(#4qxhh0p-animated-diff)",
+                                                                                          "fill": "url(#xnby7q-animated-diff)",
                                                                                         }
                                                                                       }
                                                                                       width="100%"
@@ -15269,7 +15269,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                       role="presentation"
                                                                                     >
                                                                                       <clipPath
-                                                                                        id="4qxhh0p-diff"
+                                                                                        id="xnby7q-diff"
                                                                                       >
                                                                                         <rect
                                                                                           height="100%"
@@ -15281,7 +15281,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                         />
                                                                                       </clipPath>
                                                                                       <linearGradient
-                                                                                        id="4qxhh0p-animated-diff"
+                                                                                        id="xnby7q-animated-diff"
                                                                                       >
                                                                                         <stop
                                                                                           offset="0%"
@@ -17624,7 +17624,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                         >
                                                                                                           <svg
                                                                                                             aria-label="Hours data is laoding"
-                                                                                                            aria-labelledby="62knd4h-aria"
+                                                                                                            aria-labelledby="imsbbxp-aria"
                                                                                                             data-testid="hours-loader"
                                                                                                             height="100%"
                                                                                                             id="hours-loader"
@@ -17634,17 +17634,17 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                             width="100%"
                                                                                                           >
                                                                                                             <title
-                                                                                                              id="62knd4h-aria"
+                                                                                                              id="imsbbxp-aria"
                                                                                                             >
                                                                                                               Loading...
                                                                                                             </title>
                                                                                                             <rect
-                                                                                                              clipPath="url(#62knd4h-diff)"
+                                                                                                              clipPath="url(#imsbbxp-diff)"
                                                                                                               height="100%"
                                                                                                               role="presentation"
                                                                                                               style={
                                                                                                                 Object {
-                                                                                                                  "fill": "url(#62knd4h-animated-diff)",
+                                                                                                                  "fill": "url(#imsbbxp-animated-diff)",
                                                                                                                 }
                                                                                                               }
                                                                                                               width="100%"
@@ -17655,7 +17655,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                               role="presentation"
                                                                                                             >
                                                                                                               <clipPath
-                                                                                                                id="62knd4h-diff"
+                                                                                                                id="imsbbxp-diff"
                                                                                                               >
                                                                                                                 <rect
                                                                                                                   height="14"
@@ -17851,7 +17851,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                 />
                                                                                                               </clipPath>
                                                                                                               <linearGradient
-                                                                                                                id="62knd4h-animated-diff"
+                                                                                                                id="imsbbxp-animated-diff"
                                                                                                               >
                                                                                                                 <stop
                                                                                                                   offset="0%"
@@ -20249,7 +20249,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                           width="100%"
                                                                                                         >
                                                                                                           <svg
-                                                                                                            aria-labelledby="y0ioprh-aria"
+                                                                                                            aria-labelledby="4cxbyej-aria"
                                                                                                             height="100%"
                                                                                                             id={null}
                                                                                                             role="img"
@@ -20258,17 +20258,17 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                             width="100%"
                                                                                                           >
                                                                                                             <title
-                                                                                                              id="y0ioprh-aria"
+                                                                                                              id="4cxbyej-aria"
                                                                                                             >
                                                                                                               Loading...
                                                                                                             </title>
                                                                                                             <rect
-                                                                                                              clipPath="url(#y0ioprh-diff)"
+                                                                                                              clipPath="url(#4cxbyej-diff)"
                                                                                                               height="100%"
                                                                                                               role="presentation"
                                                                                                               style={
                                                                                                                 Object {
-                                                                                                                  "fill": "url(#y0ioprh-animated-diff)",
+                                                                                                                  "fill": "url(#4cxbyej-animated-diff)",
                                                                                                                 }
                                                                                                               }
                                                                                                               width="100%"
@@ -20279,7 +20279,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                               role="presentation"
                                                                                                             >
                                                                                                               <clipPath
-                                                                                                                id="y0ioprh-diff"
+                                                                                                                id="4cxbyej-diff"
                                                                                                               >
                                                                                                                 <rect
                                                                                                                   height="14"
@@ -20451,7 +20451,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                 />
                                                                                                               </clipPath>
                                                                                                               <linearGradient
-                                                                                                                id="y0ioprh-animated-diff"
+                                                                                                                id="4cxbyej-animated-diff"
                                                                                                               >
                                                                                                                 <stop
                                                                                                                   offset="0%"
@@ -21262,7 +21262,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                           width="100%"
                                                                                                         >
                                                                                                           <svg
-                                                                                                            aria-labelledby="gnfem6-aria"
+                                                                                                            aria-labelledby="wj6b2l-aria"
                                                                                                             height="100%"
                                                                                                             id={null}
                                                                                                             role="img"
@@ -21271,17 +21271,17 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                             width="100%"
                                                                                                           >
                                                                                                             <title
-                                                                                                              id="gnfem6-aria"
+                                                                                                              id="wj6b2l-aria"
                                                                                                             >
                                                                                                               Loading...
                                                                                                             </title>
                                                                                                             <rect
-                                                                                                              clipPath="url(#gnfem6-diff)"
+                                                                                                              clipPath="url(#wj6b2l-diff)"
                                                                                                               height="100%"
                                                                                                               role="presentation"
                                                                                                               style={
                                                                                                                 Object {
-                                                                                                                  "fill": "url(#gnfem6-animated-diff)",
+                                                                                                                  "fill": "url(#wj6b2l-animated-diff)",
                                                                                                                 }
                                                                                                               }
                                                                                                               width="100%"
@@ -21292,7 +21292,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                               role="presentation"
                                                                                                             >
                                                                                                               <clipPath
-                                                                                                                id="gnfem6-diff"
+                                                                                                                id="wj6b2l-diff"
                                                                                                               >
                                                                                                                 <rect
                                                                                                                   height="14"
@@ -21416,7 +21416,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                 />
                                                                                                               </clipPath>
                                                                                                               <linearGradient
-                                                                                                                id="gnfem6-animated-diff"
+                                                                                                                id="wj6b2l-animated-diff"
                                                                                                               >
                                                                                                                 <stop
                                                                                                                   offset="0%"
