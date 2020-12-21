@@ -12,6 +12,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import Tooltip from '@material-ui/core/Tooltip';
 import { hoursLocale } from './Hours.locale';
 import Button from '@material-ui/core/Button';
+import ContentLoader from 'react-content-loader';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -120,7 +121,54 @@ const useStyles = makeStyles(theme => ({
             height: 232,
         },
     },
+    loaderContent: {
+        flexGrow: 1,
+        overflowY: 'hidden',
+        overflowX: 'hidden',
+    },
 }));
+
+const MyLoader = props => (
+    <ContentLoader
+        speed={2}
+        width={'100%'}
+        height={'100%'}
+        viewBox="0 0 365 250"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#e2e2e2"
+        {...props}
+    >
+        <rect x="5%" y="15" rx="3" ry="3" width="21%" height="14" />
+        <rect x="35%" y="15" rx="3" ry="3" width="18%" height="14" />
+        <rect x="65%" y="15" rx="3" ry="3" width="22%" height="14" />
+        <rect x="0" y="40" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="55" rx="3" ry="3" width="18%" height="14" />
+        <rect x="35%" y="55" rx="3" ry="3" width="21%" height="14" />
+        <rect x="65%" y="55" rx="3" ry="3" width="23%" height="14" />
+        <rect x="0" y="80" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="95" rx="3" ry="3" width="12%" height="14" />
+        <rect x="35%" y="95" rx="3" ry="3" width="10%" height="14" />
+        <rect x="65%" y="95" rx="3" ry="3" width="20%" height="14" />
+        <rect x="0" y="120" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="135" rx="3" ry="3" width="21%" height="14" />
+        <rect x="35%" y="135" rx="3" ry="3" width="19%" height="14" />
+        <rect x="65%" y="135" rx="3" ry="3" width="17%" height="14" />
+        <rect x="0" y="160" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="175" rx="3" ry="3" width="19%" height="14" />
+        <rect x="35%" y="175" rx="3" ry="3" width="10%" height="14" />
+        <rect x="65%" y="175" rx="3" ry="3" width="12%" height="14" />
+        <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="215" rx="3" ry="3" width="23%" height="14" />
+        <rect x="35%" y="215" rx="3" ry="3" width="18%" height="14" />
+        <rect x="65%" y="215" rx="3" ry="3" width="17%" height="14" />
+        <rect x="0" y="240" rx="3" ry="3" width="100%" height="1" />
+    </ContentLoader>
+);
 
 const Hours = ({ libHours, libHoursLoading, account }) => {
     const classes = useStyles();
@@ -136,9 +184,6 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
             }, 5000);
         }
     }, [location, cookies]);
-    if (!libHours || !!libHoursLoading) {
-        return null;
-    }
     const cleanedHours =
         (!!libHours &&
             !!libHours.locations &&
@@ -199,7 +244,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                     </Grid>
                     <Grid item xs />
                     <Grid item xs={'auto'}>
-                        <Fade in={showIcon} timeout={500}>
+                        <Fade in={!!showIcon} timeout={500}>
                             <Tooltip
                                 title={hoursLocale.locationTooltip}
                                 placement="bottom"
@@ -236,46 +281,55 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                         })}
                     </Grid>
                 </div>
-                <div className={classes.flexContent}>
-                    {/* Scrollable area */}
-                    {!!sortedHours &&
-                        sortedHours.length > 1 &&
-                        sortedHours.map((item, index) => {
-                            return (
-                                <Grid
-                                    container
-                                    spacing={1}
-                                    key={index}
-                                    className={classes.row}
-                                    alignItems={'flex-start'}
-                                >
-                                    <Grid item xs={4}>
-                                        <a
-                                            aria-label={ariaLabelForLocation(item)}
-                                            href={item.url}
-                                            style={{ marginLeft: 8 }}
-                                            className={
-                                                (cookies.location === item.campus && classes.selectedCampus) || ''
-                                            }
+                {!!libHours && !libHoursLoading ? (
+                    <Fade in={!libHoursLoading} timeout={1000}>
+                        <div className={classes.flexContent}>
+                            {/* Scrollable area */}
+                            {!!sortedHours &&
+                                sortedHours.length > 1 &&
+                                sortedHours.map((item, index) => {
+                                    return (
+                                        <Grid
+                                            container
+                                            spacing={1}
+                                            key={index}
+                                            className={classes.row}
+                                            alignItems={'flex-start'}
                                         >
-                                            {item.name}
-                                        </a>
-                                    </Grid>
-                                    {item.departments.length > 0 &&
-                                        item.departments.map((item, index) => {
-                                            if (hoursLocale.departmentsMap.includes(item.name)) {
-                                                return (
-                                                    <Grid item xs key={index} style={{ fontSize: 14 }}>
-                                                        {item.hours}
-                                                    </Grid>
-                                                );
-                                            }
-                                            return null;
-                                        })}
-                                </Grid>
-                            );
-                        })}
-                </div>
+                                            <Grid item xs={4}>
+                                                <a
+                                                    aria-label={ariaLabelForLocation(item)}
+                                                    href={item.url}
+                                                    style={{ marginLeft: 8 }}
+                                                    className={
+                                                        (cookies.location === item.campus && classes.selectedCampus) ||
+                                                        ''
+                                                    }
+                                                >
+                                                    {item.name}
+                                                </a>
+                                            </Grid>
+                                            {item.departments.length > 0 &&
+                                                item.departments.map((item, index) => {
+                                                    if (hoursLocale.departmentsMap.includes(item.name)) {
+                                                        return (
+                                                            <Grid item xs key={index} style={{ fontSize: 14 }}>
+                                                                {item.hours}
+                                                            </Grid>
+                                                        );
+                                                    }
+                                                    return null;
+                                                })}
+                                        </Grid>
+                                    );
+                                })}
+                        </div>
+                    </Fade>
+                ) : (
+                    <div className={classes.loaderContent}>
+                        <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Hours data is laoding" />
+                    </div>
+                )}
                 <div className={classes.flexFooter}>
                     {/* Buttons */}
                     <Grid container spacing={0}>

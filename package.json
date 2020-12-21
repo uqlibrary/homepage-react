@@ -180,6 +180,7 @@
         "raven-js": "^3.24.2",
         "react": "^16.8",
         "react-aria-live": "^2.0.5",
+        "react-content-loader": "^5.1.4",
         "react-cookie": "^4.0.3",
         "react-dom": ">=16.8",
         "react-dropzone": "^6.2.4",

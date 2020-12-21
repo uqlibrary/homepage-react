@@ -22,9 +22,7 @@ browserUpdate({
 });
 
 // application components
-// import { AppLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from '../containers/AppAlert';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import * as pages from './pages';
@@ -186,20 +184,6 @@ export class AppClass extends PureComponent {
 
     render() {
         const { classes } = this.props;
-        // if (this.props.accountLoading) {
-        //     return (
-        //         <Grid container className={classes.layoutFill}>
-        //             <Grid zeroMinWidth item xs={12}>
-        //                 <AppLoader
-        //                     title={locale.global.title}
-        //                     logoImage="largeLogo"
-        //                     logoText={locale.global.logo.label}
-        //                 />
-        //             </Grid>
-        //         </Grid>
-        //     );
-        // }
-
         const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
         const isAccountLoading = this.props.accountLoading;
         const isHdrStudent =
@@ -263,18 +247,16 @@ export class AppClass extends PureComponent {
                             </AccountContext.Provider>
                         </div>
                     )}
-                    {!this.props.accountLoading && !isAccountLoading && (
-                        <div>
-                            <Grid container spacing={0}>
-                                <Grid item xs={12} className={classes.connectFooter}>
-                                    <ConnectFooter history={this.props.history} />
-                                </Grid>
-                                <Grid item xs={12} className={classes.minimalFooter}>
-                                    <MinimalFooter />
-                                </Grid>
+                    <div>
+                        <Grid container spacing={0}>
+                            <Grid item xs={12} className={classes.connectFooter}>
+                                <ConnectFooter history={this.props.history} />
                             </Grid>
-                        </div>
-                    )}
+                            <Grid item xs={12} className={classes.minimalFooter}>
+                                <MinimalFooter />
+                            </Grid>
+                        </Grid>
+                    </div>
                 </div>
             </Grid>
         );

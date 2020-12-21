@@ -16,9 +16,42 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 const defaultSlide = require('../../../../../public/images/Welcome_Spotlight.jpg');
+import ContentLoader from 'react-content-loader';
+import Fade from '@material-ui/core/Fade';
+const MyLoader = props => (
+    <ContentLoader
+        speed={2}
+        width={'100%'}
+        height={'100%'}
+        viewBox="0 0 1500 528"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#e2e2e2"
+        {...props}
+    >
+        <rect x="0" y="0" rx="5" ry="5" width="100%" height="100%" />
+    </ContentLoader>
+);
 
 const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
     const totalSlides = spotlights && spotlights.length;
+    if (spotlightsLoading || !totalSlides || totalSlides === 0) {
+        return (
+            <div
+                data-testid="spotlights"
+                style={{
+                    height: '100%',
+                    position: 'relative',
+                    flexGrow: 1,
+                    borderRadius: 4,
+                    overflow: 'hidden',
+                }}
+                role="region"
+                aria-label="UQ Spotlights carousel loading"
+            >
+                <MyLoader />
+            </div>
+        );
+    }
     const slides =
         spotlights && spotlights.length > 0
             ? spotlights.map((item, index) => {
@@ -31,37 +64,36 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                   };
               })
             : [];
-    if (slides.length > 0 && !spotlightsLoading) {
-        const renderDots = dotprops => {
-            const totalSlides = dotprops.totalSlides;
-            const visibleSlides = dotprops.visibleSlides;
-            const slideGroups = Math.ceil(totalSlides / visibleSlides);
-            if (slideGroups <= 1) {
-                return null;
-            } else {
-                const dots = [];
-                for (let i = 0; i < totalSlides; i++) {
-                    dots.push(i);
-                }
-                return dots.map((_, index) => (
-                    <Dot
-                        slide={index}
-                        key={index}
-                        aria-label={`UQ Spotlights Slide ${index + 1} of ${totalSlides}`}
-                        id={`spotlights-dot-${index}`}
-                        data-testid={`spotlights-dot-${index}`}
-                    />
-                ));
+    const renderDots = dotprops => {
+        const totalSlides = dotprops.totalSlides;
+        const visibleSlides = dotprops.visibleSlides;
+        const slideGroups = Math.ceil(totalSlides / visibleSlides);
+        if (slideGroups <= 1) {
+            return null;
+        } else {
+            const dots = [];
+            for (let i = 0; i < totalSlides; i++) {
+                dots.push(i);
             }
-        };
-
-        return (
-            <div
-                data-testid="spotlights"
-                style={{ height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' }}
-                role="region"
-                aria-label="UQ Spotlights carousel"
-            >
+            return dots.map((_, index) => (
+                <Dot
+                    slide={index}
+                    key={index}
+                    aria-label={`UQ Spotlights Slide ${index + 1} of ${totalSlides}`}
+                    id={`spotlights-dot-${index}`}
+                    data-testid={`spotlights-dot-${index}`}
+                />
+            ));
+        }
+    };
+    return (
+        <div
+            data-testid="spotlights"
+            style={{ height: '100%', position: 'relative', borderRadius: 4, overflow: 'hidden' }}
+            role="region"
+            aria-label="UQ Spotlights carousel"
+        >
+            <Fade in={totalSlides > 0} timeout={1000}>
                 <CarouselProvider
                     visibleSlides={1}
                     totalSlides={totalSlides}
@@ -181,10 +213,9 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                         </Slider>
                     </div>
                 </CarouselProvider>
-            </div>
-        );
-    }
-    return null;
+            </Fade>
+        </div>
+    );
 };
 
 Spotlights.propTypes = {
