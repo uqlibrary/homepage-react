@@ -14,6 +14,40 @@ import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { trainingLocale } from './Training.locale';
 const moment = require('moment');
+import ContentLoader from 'react-content-loader';
+
+const MyLoader = props => (
+    <ContentLoader
+        speed={2}
+        uniqueKey="training"
+        width={'100%'}
+        height={'100%'}
+        viewBox="0 0 365 300"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#e2e2e2"
+        {...props}
+    >
+        <rect x="5%" y="15" rx="3" ry="3" width="50%" height="14" />
+        <rect x="5%" y="40" rx="3" ry="3" width="40%" height="10" />
+        <rect x="0" y="65" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="80" rx="3" ry="3" width="42%" height="14" />
+        <rect x="5%" y="110" rx="3" ry="3" width="45%" height="10" />
+        <rect x="0" y="135" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="150" rx="3" ry="3" width="75%" height="14" />
+        <rect x="5%" y="175" rx="3" ry="3" width="41%" height="10" />
+        <rect x="0" y="200" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="215" rx="3" ry="3" width="52%" height="14" />
+        <rect x="5%" y="245" rx="3" ry="3" width="25%" height="10" />
+        <rect x="0" y="270" rx="3" ry="3" width="100%" height="1" />
+
+        <rect x="5%" y="285" rx="3" ry="3" width="47%" height="14" />
+        <rect x="5%" y="310" rx="3" ry="3" width="42%" height="10" />
+        <rect x="0" y="325" rx="3" ry="3" width="100%" height="1" />
+    </ContentLoader>
+);
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -61,6 +95,11 @@ const useStyles = makeStyles(theme => ({
             overflowY: 'hidden',
         },
     },
+    flexLoader: {
+        flexGrow: 1,
+        overflowX: 'hidden',
+        overflowY: 'hidden',
+    },
     flexFooter: {
         height: 'auto',
     },
@@ -86,7 +125,7 @@ const useStyles = makeStyles(theme => ({
         borderTopRightRadius: 0,
     },
     detailHeader: {
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.primary.dark,
         color: theme.palette.white.main,
     },
     detailIcon: {
@@ -109,9 +148,6 @@ const useStyles = makeStyles(theme => ({
 const Training = ({ trainingEvents, trainingEventsLoading }) => {
     const classes = useStyles();
     const [eventDetail, setEventDetail] = React.useState(null);
-    if (!trainingEvents || !!trainingEventsLoading) {
-        return null;
-    }
     const handleEventDetail = event => {
         setEventDetail(event);
         setTimeout(() => {
@@ -144,42 +180,49 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
     return (
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
-                <Fade direction="right" in={!eventDetail} mountOnEnter unmountOnExit>
-                    <div
-                        className={classes.flexContent}
-                        role="region"
-                        aria-live="assertive"
-                        aria-label="UQ training Events list"
-                    >
-                        {trainingEvents &&
-                            trainingEvents.length > 0 &&
-                            trainingEvents.map((event, index) => {
-                                return (
-                                    <Grid container spacing={0} className={classes.row} key={index}>
-                                        <Grid item xs={12}>
-                                            <Button
-                                                id={`training-event-detail-button-${event.entityId}`}
-                                                data-testid={`training-event-detail-button-${index}`}
-                                                onClick={() => handleEventDetail(event)}
-                                                classes={{ root: classes.linkButton }}
-                                                fullWidth
-                                            >
-                                                <Grid container spacing={0} direction="column">
-                                                    <Grid item className={classes.linkButtonLabel}>
-                                                        {event.name}
+                {trainingEvents && trainingEvents.length > 0 && !trainingEventsLoading && !eventDetail && (
+                    <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                        <div
+                            className={classes.flexContent}
+                            role="region"
+                            aria-live="assertive"
+                            aria-label="UQ training Events list"
+                        >
+                            {trainingEvents &&
+                                trainingEvents.length > 0 &&
+                                trainingEvents.map((event, index) => {
+                                    return (
+                                        <Grid container spacing={0} className={classes.row} key={index}>
+                                            <Grid item xs={12}>
+                                                <Button
+                                                    id={`training-event-detail-button-${event.entityId}`}
+                                                    data-testid={`training-event-detail-button-${index}`}
+                                                    onClick={() => handleEventDetail(event)}
+                                                    classes={{ root: classes.linkButton }}
+                                                    fullWidth
+                                                >
+                                                    <Grid container spacing={0} direction="column">
+                                                        <Grid item className={classes.linkButtonLabel}>
+                                                            {event.name}
+                                                        </Grid>
+                                                        <Grid item className={classes.eventSummary}>
+                                                            {eventTime(event.start)}
+                                                            {event.campus ? ` - ${event.campus}` : ''}
+                                                        </Grid>
                                                     </Grid>
-                                                    <Grid item className={classes.eventSummary}>
-                                                        {eventTime(event.start)}
-                                                        {event.campus ? ` - ${event.campus}` : ''}
-                                                    </Grid>
-                                                </Grid>
-                                            </Button>
+                                                </Button>
+                                            </Grid>
                                         </Grid>
-                                    </Grid>
-                                );
-                            })}
+                                    );
+                                })}
+                        </div>
+                    </Fade>
+                )}
+                {(!trainingEvents || trainingEventsLoading) && !eventDetail && (
+                    <div className={classes.flexLoader} aria-label="UQ training Events loading">
+                        <MyLoader />
                     </div>
-                </Fade>
+                )}
                 <Fade
                     direction="left"
                     in={!!eventDetail}

@@ -1,6 +1,7 @@
 context('ACCESSIBILITY', () => {
     it('Personalised panel', () => {
         cy.visit('/?user=uqresearcher');
+        cy.wait(2000);
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personalised-panel"]').contains('John');
@@ -14,6 +15,7 @@ context('ACCESSIBILITY', () => {
     });
     it('Personalised panel print menu', () => {
         cy.visit('/');
+        cy.wait(2000);
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personalised-panel"]').contains('Vanilla');
@@ -32,6 +34,7 @@ context('ACCESSIBILITY', () => {
 
     it('Personalised panel location menu', () => {
         cy.visit('/');
+        cy.wait(2000);
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personalised-panel"]').contains('Vanilla');

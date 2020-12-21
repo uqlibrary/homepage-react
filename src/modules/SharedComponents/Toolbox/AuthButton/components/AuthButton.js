@@ -26,8 +26,8 @@ export const AuthButton = ({ isAuthorizedUser, ariaLabel, onClick }) => {
     const classes = useStyles();
     return (
         <IconButton
-            id="auth-button"
-            data-testid="auth-button"
+            id={isAuthorizedUser ? 'auth-button-loggedin' : 'auth-button-loggedout'}
+            data-testid={isAuthorizedUser ? 'auth-button-loggedin' : 'auth-button-loggedout'}
             aria-label={ariaLabel}
             onClick={onClick}
             className={isAuthorizedUser ? 'log-out-button' : 'log-in-button'}

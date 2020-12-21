@@ -8,19 +8,8 @@ import Grid from '@material-ui/core/Grid';
 
 const LibraryServices = ({ account }) => {
     return (
-        <StandardCard
-            primaryHeader
-            fullHeight
-            squareTop={false}
-            title={
-                <Grid container>
-                    <Grid item xs>
-                        Library services
-                    </Grid>
-                </Grid>
-            }
-        >
-            <Grid container spacing={1} data-testid="library-services-items">
+        <StandardCard primaryHeader fullHeight squareTop={false} title="Library services">
+            <Grid container spacing={1} data-testid="library-services-items" style={{ marginBottom: -8 }}>
                 {getUserServices(account).map((item, index) => {
                     return (
                         <Grid item xs={12} sm={12} key={index}>
