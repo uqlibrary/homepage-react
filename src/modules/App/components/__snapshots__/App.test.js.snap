@@ -15484,7 +15484,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                   xs="auto"
                                                                                 >
                                                                                   <ForwardRef(Fade)
-                                                                                    in={true}
+                                                                                    in={false}
                                                                                     timeout={500}
                                                                                   >
                                                                                     <WithStyles(ForwardRef(Tooltip))
@@ -15543,7 +15543,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                     xs="auto"
                                                                                   >
                                                                                     <ForwardRef(Fade)
-                                                                                      in={true}
+                                                                                      in={false}
                                                                                       timeout={500}
                                                                                     >
                                                                                       <WithStyles(ForwardRef(Tooltip))
@@ -15961,7 +15961,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                       xs="auto"
                                                                                     >
                                                                                       <ForwardRef(Fade)
-                                                                                        in={true}
+                                                                                        in={false}
                                                                                         timeout={500}
                                                                                       >
                                                                                         <WithStyles(ForwardRef(Tooltip))
@@ -16099,7 +16099,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                   xs="auto"
                                                                                                 >
                                                                                                   <ForwardRef(Fade)
-                                                                                                    in={true}
+                                                                                                    in={false}
                                                                                                     timeout={500}
                                                                                                   >
                                                                                                     <WithStyles(ForwardRef(Tooltip))
@@ -16181,7 +16181,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                     xs="auto"
                                                                                                   >
                                                                                                     <ForwardRef(Fade)
-                                                                                                      in={true}
+                                                                                                      in={false}
                                                                                                       timeout={500}
                                                                                                     >
                                                                                                       <WithStyles(ForwardRef(Tooltip))
@@ -16772,14 +16772,14 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-auto"
                                                                                                                   >
                                                                                                                     <ForwardRef(Fade)
-                                                                                                                      in={true}
+                                                                                                                      in={false}
                                                                                                                       timeout={500}
                                                                                                                     >
                                                                                                                       <Transition
                                                                                                                         appear={true}
                                                                                                                         enter={true}
                                                                                                                         exit={true}
-                                                                                                                        in={true}
+                                                                                                                        in={false}
                                                                                                                         mountOnEnter={false}
                                                                                                                         onEnter={[Function]}
                                                                                                                         onEntered={[Function]}
@@ -16799,8 +16799,8 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                           placement="bottom"
                                                                                                                           style={
                                                                                                                             Object {
-                                                                                                                              "opacity": 1,
-                                                                                                                              "visibility": undefined,
+                                                                                                                              "opacity": 0,
+                                                                                                                              "visibility": "hidden",
                                                                                                                             }
                                                                                                                           }
                                                                                                                           title="Your preferred campus has been updated"
@@ -16829,8 +16829,8 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                             placement="bottom"
                                                                                                                             style={
                                                                                                                               Object {
-                                                                                                                                "opacity": 1,
-                                                                                                                                "visibility": undefined,
+                                                                                                                                "opacity": 0,
+                                                                                                                                "visibility": "hidden",
                                                                                                                               }
                                                                                                                             }
                                                                                                                             title="Your preferred campus has been updated"
@@ -16858,8 +16858,8 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                               onTouchStart={[Function]}
                                                                                                                               style={
                                                                                                                                 Object {
-                                                                                                                                  "opacity": 1,
-                                                                                                                                  "visibility": undefined,
+                                                                                                                                  "opacity": 0,
+                                                                                                                                  "visibility": "hidden",
                                                                                                                                 }
                                                                                                                               }
                                                                                                                               title="Your preferred campus has been updated"
@@ -16901,8 +16901,8 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                 onTouchStart={[Function]}
                                                                                                                                 style={
                                                                                                                                   Object {
-                                                                                                                                    "opacity": 1,
-                                                                                                                                    "visibility": undefined,
+                                                                                                                                    "opacity": 0,
+                                                                                                                                    "visibility": "hidden",
                                                                                                                                   }
                                                                                                                                 }
                                                                                                                                 title="Your preferred campus has been updated"
@@ -16918,8 +16918,8 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                   onTouchStart={[Function]}
                                                                                                                                   style={
                                                                                                                                     Object {
-                                                                                                                                      "opacity": 1,
-                                                                                                                                      "visibility": undefined,
+                                                                                                                                      "opacity": 0,
+                                                                                                                                      "visibility": "hidden",
                                                                                                                                     }
                                                                                                                                   }
                                                                                                                                   title="Your preferred campus has been updated"
@@ -17004,7 +17004,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                               anchorEl={
                                                                                                                                 <span
                                                                                                                                   class="MuiBadge-root"
-                                                                                                                                  style="opacity: 1; webkit-transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
+                                                                                                                                  style="opacity: 0; visibility: hidden;"
                                                                                                                                   title="Your preferred campus has been updated"
                                                                                                                                 >
                                                                                                                                   <svg
@@ -18706,39 +18706,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                 <WithStyles(ForwardRef(Grid))
                                                                                   item={true}
                                                                                   xs={1}
-                                                                                >
-                                                                                  <ForwardRef(Fade)
-                                                                                    in={true}
-                                                                                    timeout={500}
-                                                                                  >
-                                                                                    <WithStyles(ForwardRef(Tooltip))
-                                                                                      TransitionProps={
-                                                                                        Object {
-                                                                                          "timeout": 300,
-                                                                                        }
-                                                                                      }
-                                                                                      placement="bottom"
-                                                                                      title="Your preferred campus has been updated"
-                                                                                    >
-                                                                                      <WithStyles(ForwardRef(Badge))
-                                                                                        badgeContent={
-                                                                                          <Memo(CheckIcon)
-                                                                                            className="makeStyles-badgeIcon-438"
-                                                                                            size="small"
-                                                                                          />
-                                                                                        }
-                                                                                        classes={
-                                                                                          Object {
-                                                                                            "badge": "makeStyles-badge-437",
-                                                                                          }
-                                                                                        }
-                                                                                        color="primary"
-                                                                                      >
-                                                                                        <Memo(RoomIcon) />
-                                                                                      </WithStyles(ForwardRef(Badge))>
-                                                                                    </WithStyles(ForwardRef(Tooltip))>
-                                                                                  </ForwardRef(Fade)>
-                                                                                </WithStyles(ForwardRef(Grid))>
+                                                                                />
                                                                               </WithStyles(ForwardRef(Grid))>
                                                                             }
                                                                           >
@@ -18768,39 +18736,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                   <WithStyles(ForwardRef(Grid))
                                                                                     item={true}
                                                                                     xs={1}
-                                                                                  >
-                                                                                    <ForwardRef(Fade)
-                                                                                      in={true}
-                                                                                      timeout={500}
-                                                                                    >
-                                                                                      <WithStyles(ForwardRef(Tooltip))
-                                                                                        TransitionProps={
-                                                                                          Object {
-                                                                                            "timeout": 300,
-                                                                                          }
-                                                                                        }
-                                                                                        placement="bottom"
-                                                                                        title="Your preferred campus has been updated"
-                                                                                      >
-                                                                                        <WithStyles(ForwardRef(Badge))
-                                                                                          badgeContent={
-                                                                                            <Memo(CheckIcon)
-                                                                                              className="makeStyles-badgeIcon-438"
-                                                                                              size="small"
-                                                                                            />
-                                                                                          }
-                                                                                          classes={
-                                                                                            Object {
-                                                                                              "badge": "makeStyles-badge-437",
-                                                                                            }
-                                                                                          }
-                                                                                          color="primary"
-                                                                                        >
-                                                                                          <Memo(RoomIcon) />
-                                                                                        </WithStyles(ForwardRef(Badge))>
-                                                                                      </WithStyles(ForwardRef(Tooltip))>
-                                                                                    </ForwardRef(Fade)>
-                                                                                  </WithStyles(ForwardRef(Grid))>
+                                                                                  />
                                                                                 </WithStyles(ForwardRef(Grid))>
                                                                               }
                                                                             >
@@ -19189,39 +19125,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                     <WithStyles(ForwardRef(Grid))
                                                                                       item={true}
                                                                                       xs={1}
-                                                                                    >
-                                                                                      <ForwardRef(Fade)
-                                                                                        in={true}
-                                                                                        timeout={500}
-                                                                                      >
-                                                                                        <WithStyles(ForwardRef(Tooltip))
-                                                                                          TransitionProps={
-                                                                                            Object {
-                                                                                              "timeout": 300,
-                                                                                            }
-                                                                                          }
-                                                                                          placement="bottom"
-                                                                                          title="Your preferred campus has been updated"
-                                                                                        >
-                                                                                          <WithStyles(ForwardRef(Badge))
-                                                                                            badgeContent={
-                                                                                              <Memo(CheckIcon)
-                                                                                                className="makeStyles-badgeIcon-438"
-                                                                                                size="small"
-                                                                                              />
-                                                                                            }
-                                                                                            classes={
-                                                                                              Object {
-                                                                                                "badge": "makeStyles-badge-437",
-                                                                                              }
-                                                                                            }
-                                                                                            color="primary"
-                                                                                          >
-                                                                                            <Memo(RoomIcon) />
-                                                                                          </WithStyles(ForwardRef(Badge))>
-                                                                                        </WithStyles(ForwardRef(Tooltip))>
-                                                                                      </ForwardRef(Fade)>
-                                                                                    </WithStyles(ForwardRef(Grid))>
+                                                                                    />
                                                                                   </WithStyles(ForwardRef(Grid))>
                                                                                 }
                                                                               >
@@ -19329,39 +19233,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                 <WithStyles(ForwardRef(Grid))
                                                                                                   item={true}
                                                                                                   xs={1}
-                                                                                                >
-                                                                                                  <ForwardRef(Fade)
-                                                                                                    in={true}
-                                                                                                    timeout={500}
-                                                                                                  >
-                                                                                                    <WithStyles(ForwardRef(Tooltip))
-                                                                                                      TransitionProps={
-                                                                                                        Object {
-                                                                                                          "timeout": 300,
-                                                                                                        }
-                                                                                                      }
-                                                                                                      placement="bottom"
-                                                                                                      title="Your preferred campus has been updated"
-                                                                                                    >
-                                                                                                      <WithStyles(ForwardRef(Badge))
-                                                                                                        badgeContent={
-                                                                                                          <Memo(CheckIcon)
-                                                                                                            className="makeStyles-badgeIcon-438"
-                                                                                                            size="small"
-                                                                                                          />
-                                                                                                        }
-                                                                                                        classes={
-                                                                                                          Object {
-                                                                                                            "badge": "makeStyles-badge-437",
-                                                                                                          }
-                                                                                                        }
-                                                                                                        color="primary"
-                                                                                                      >
-                                                                                                        <Memo(RoomIcon) />
-                                                                                                      </WithStyles(ForwardRef(Badge))>
-                                                                                                    </WithStyles(ForwardRef(Tooltip))>
-                                                                                                  </ForwardRef(Fade)>
-                                                                                                </WithStyles(ForwardRef(Grid))>
+                                                                                                />
                                                                                               </WithStyles(ForwardRef(Grid))>
                                                                                             }
                                                                                             titleTypographyProps={
@@ -19413,39 +19285,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                   <WithStyles(ForwardRef(Grid))
                                                                                                     item={true}
                                                                                                     xs={1}
-                                                                                                  >
-                                                                                                    <ForwardRef(Fade)
-                                                                                                      in={true}
-                                                                                                      timeout={500}
-                                                                                                    >
-                                                                                                      <WithStyles(ForwardRef(Tooltip))
-                                                                                                        TransitionProps={
-                                                                                                          Object {
-                                                                                                            "timeout": 300,
-                                                                                                          }
-                                                                                                        }
-                                                                                                        placement="bottom"
-                                                                                                        title="Your preferred campus has been updated"
-                                                                                                      >
-                                                                                                        <WithStyles(ForwardRef(Badge))
-                                                                                                          badgeContent={
-                                                                                                            <Memo(CheckIcon)
-                                                                                                              className="makeStyles-badgeIcon-438"
-                                                                                                              size="small"
-                                                                                                            />
-                                                                                                          }
-                                                                                                          classes={
-                                                                                                            Object {
-                                                                                                              "badge": "makeStyles-badge-437",
-                                                                                                            }
-                                                                                                          }
-                                                                                                          color="primary"
-                                                                                                        >
-                                                                                                          <Memo(RoomIcon) />
-                                                                                                        </WithStyles(ForwardRef(Badge))>
-                                                                                                      </WithStyles(ForwardRef(Tooltip))>
-                                                                                                    </ForwardRef(Fade)>
-                                                                                                  </WithStyles(ForwardRef(Grid))>
+                                                                                                  />
                                                                                                 </WithStyles(ForwardRef(Grid))>
                                                                                               }
                                                                                               titleTypographyProps={
@@ -19902,290 +19742,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                 >
                                                                                                                   <div
                                                                                                                     className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-1"
-                                                                                                                  >
-                                                                                                                    <ForwardRef(Fade)
-                                                                                                                      in={true}
-                                                                                                                      timeout={500}
-                                                                                                                    >
-                                                                                                                      <Transition
-                                                                                                                        appear={true}
-                                                                                                                        enter={true}
-                                                                                                                        exit={true}
-                                                                                                                        in={true}
-                                                                                                                        mountOnEnter={false}
-                                                                                                                        onEnter={[Function]}
-                                                                                                                        onEntered={[Function]}
-                                                                                                                        onEntering={[Function]}
-                                                                                                                        onExit={[Function]}
-                                                                                                                        onExited={[Function]}
-                                                                                                                        onExiting={[Function]}
-                                                                                                                        timeout={500}
-                                                                                                                        unmountOnExit={false}
-                                                                                                                      >
-                                                                                                                        <WithStyles(ForwardRef(Tooltip))
-                                                                                                                          TransitionProps={
-                                                                                                                            Object {
-                                                                                                                              "timeout": 300,
-                                                                                                                            }
-                                                                                                                          }
-                                                                                                                          placement="bottom"
-                                                                                                                          style={
-                                                                                                                            Object {
-                                                                                                                              "opacity": 1,
-                                                                                                                              "visibility": undefined,
-                                                                                                                            }
-                                                                                                                          }
-                                                                                                                          title="Your preferred campus has been updated"
-                                                                                                                        >
-                                                                                                                          <ForwardRef(Tooltip)
-                                                                                                                            TransitionProps={
-                                                                                                                              Object {
-                                                                                                                                "timeout": 300,
-                                                                                                                              }
-                                                                                                                            }
-                                                                                                                            classes={
-                                                                                                                              Object {
-                                                                                                                                "arrow": "MuiTooltip-arrow",
-                                                                                                                                "popper": "MuiTooltip-popper",
-                                                                                                                                "popperArrow": "MuiTooltip-popperArrow",
-                                                                                                                                "popperInteractive": "MuiTooltip-popperInteractive",
-                                                                                                                                "tooltip": "MuiTooltip-tooltip",
-                                                                                                                                "tooltipArrow": "MuiTooltip-tooltipArrow",
-                                                                                                                                "tooltipPlacementBottom": "MuiTooltip-tooltipPlacementBottom",
-                                                                                                                                "tooltipPlacementLeft": "MuiTooltip-tooltipPlacementLeft",
-                                                                                                                                "tooltipPlacementRight": "MuiTooltip-tooltipPlacementRight",
-                                                                                                                                "tooltipPlacementTop": "MuiTooltip-tooltipPlacementTop",
-                                                                                                                                "touch": "MuiTooltip-touch",
-                                                                                                                              }
-                                                                                                                            }
-                                                                                                                            placement="bottom"
-                                                                                                                            style={
-                                                                                                                              Object {
-                                                                                                                                "opacity": 1,
-                                                                                                                                "visibility": undefined,
-                                                                                                                              }
-                                                                                                                            }
-                                                                                                                            title="Your preferred campus has been updated"
-                                                                                                                          >
-                                                                                                                            <WithStyles(ForwardRef(Badge))
-                                                                                                                              aria-describedby={null}
-                                                                                                                              badgeContent={
-                                                                                                                                <Memo(CheckIcon)
-                                                                                                                                  className="makeStyles-badgeIcon-438"
-                                                                                                                                  size="small"
-                                                                                                                                />
-                                                                                                                              }
-                                                                                                                              className=""
-                                                                                                                              classes={
-                                                                                                                                Object {
-                                                                                                                                  "badge": "makeStyles-badge-437",
-                                                                                                                                }
-                                                                                                                              }
-                                                                                                                              color="primary"
-                                                                                                                              onBlur={[Function]}
-                                                                                                                              onFocus={[Function]}
-                                                                                                                              onMouseLeave={[Function]}
-                                                                                                                              onMouseOver={[Function]}
-                                                                                                                              onTouchEnd={[Function]}
-                                                                                                                              onTouchStart={[Function]}
-                                                                                                                              style={
-                                                                                                                                Object {
-                                                                                                                                  "opacity": 1,
-                                                                                                                                  "visibility": undefined,
-                                                                                                                                }
-                                                                                                                              }
-                                                                                                                              title="Your preferred campus has been updated"
-                                                                                                                            >
-                                                                                                                              <ForwardRef(Badge)
-                                                                                                                                aria-describedby={null}
-                                                                                                                                badgeContent={
-                                                                                                                                  <Memo(CheckIcon)
-                                                                                                                                    className="makeStyles-badgeIcon-438"
-                                                                                                                                    size="small"
-                                                                                                                                  />
-                                                                                                                                }
-                                                                                                                                className=""
-                                                                                                                                classes={
-                                                                                                                                  Object {
-                                                                                                                                    "anchorOriginBottomLeftCircle": "MuiBadge-anchorOriginBottomLeftCircle",
-                                                                                                                                    "anchorOriginBottomLeftRectangle": "MuiBadge-anchorOriginBottomLeftRectangle",
-                                                                                                                                    "anchorOriginBottomRightCircle": "MuiBadge-anchorOriginBottomRightCircle",
-                                                                                                                                    "anchorOriginBottomRightRectangle": "MuiBadge-anchorOriginBottomRightRectangle",
-                                                                                                                                    "anchorOriginTopLeftCircle": "MuiBadge-anchorOriginTopLeftCircle",
-                                                                                                                                    "anchorOriginTopLeftRectangle": "MuiBadge-anchorOriginTopLeftRectangle",
-                                                                                                                                    "anchorOriginTopRightCircle": "MuiBadge-anchorOriginTopRightCircle",
-                                                                                                                                    "anchorOriginTopRightRectangle": "MuiBadge-anchorOriginTopRightRectangle",
-                                                                                                                                    "badge": "MuiBadge-badge makeStyles-badge-437",
-                                                                                                                                    "colorError": "MuiBadge-colorError",
-                                                                                                                                    "colorPrimary": "MuiBadge-colorPrimary",
-                                                                                                                                    "colorSecondary": "MuiBadge-colorSecondary",
-                                                                                                                                    "dot": "MuiBadge-dot",
-                                                                                                                                    "invisible": "MuiBadge-invisible",
-                                                                                                                                    "root": "MuiBadge-root",
-                                                                                                                                  }
-                                                                                                                                }
-                                                                                                                                color="primary"
-                                                                                                                                onBlur={[Function]}
-                                                                                                                                onFocus={[Function]}
-                                                                                                                                onMouseLeave={[Function]}
-                                                                                                                                onMouseOver={[Function]}
-                                                                                                                                onTouchEnd={[Function]}
-                                                                                                                                onTouchStart={[Function]}
-                                                                                                                                style={
-                                                                                                                                  Object {
-                                                                                                                                    "opacity": 1,
-                                                                                                                                    "visibility": undefined,
-                                                                                                                                  }
-                                                                                                                                }
-                                                                                                                                title="Your preferred campus has been updated"
-                                                                                                                              >
-                                                                                                                                <span
-                                                                                                                                  aria-describedby={null}
-                                                                                                                                  className="MuiBadge-root"
-                                                                                                                                  onBlur={[Function]}
-                                                                                                                                  onFocus={[Function]}
-                                                                                                                                  onMouseLeave={[Function]}
-                                                                                                                                  onMouseOver={[Function]}
-                                                                                                                                  onTouchEnd={[Function]}
-                                                                                                                                  onTouchStart={[Function]}
-                                                                                                                                  style={
-                                                                                                                                    Object {
-                                                                                                                                      "opacity": 1,
-                                                                                                                                      "visibility": undefined,
-                                                                                                                                    }
-                                                                                                                                  }
-                                                                                                                                  title="Your preferred campus has been updated"
-                                                                                                                                >
-                                                                                                                                  <ForwardRef>
-                                                                                                                                    <WithStyles(ForwardRef(SvgIcon))>
-                                                                                                                                      <ForwardRef(SvgIcon)
-                                                                                                                                        classes={
-                                                                                                                                          Object {
-                                                                                                                                            "colorAction": "MuiSvgIcon-colorAction",
-                                                                                                                                            "colorDisabled": "MuiSvgIcon-colorDisabled",
-                                                                                                                                            "colorError": "MuiSvgIcon-colorError",
-                                                                                                                                            "colorPrimary": "MuiSvgIcon-colorPrimary",
-                                                                                                                                            "colorSecondary": "MuiSvgIcon-colorSecondary",
-                                                                                                                                            "fontSizeInherit": "MuiSvgIcon-fontSizeInherit",
-                                                                                                                                            "fontSizeLarge": "MuiSvgIcon-fontSizeLarge",
-                                                                                                                                            "fontSizeSmall": "MuiSvgIcon-fontSizeSmall",
-                                                                                                                                            "root": "MuiSvgIcon-root",
-                                                                                                                                          }
-                                                                                                                                        }
-                                                                                                                                      >
-                                                                                                                                        <svg
-                                                                                                                                          aria-hidden="true"
-                                                                                                                                          className="MuiSvgIcon-root"
-                                                                                                                                          focusable="false"
-                                                                                                                                          viewBox="0 0 24 24"
-                                                                                                                                        >
-                                                                                                                                          <path
-                                                                                                                                            d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                                                                                                                                          />
-                                                                                                                                        </svg>
-                                                                                                                                      </ForwardRef(SvgIcon)>
-                                                                                                                                    </WithStyles(ForwardRef(SvgIcon))>
-                                                                                                                                  </ForwardRef>
-                                                                                                                                  <span
-                                                                                                                                    className="MuiBadge-badge makeStyles-badge-437 MuiBadge-anchorOriginTopRightRectangle MuiBadge-colorPrimary"
-                                                                                                                                  >
-                                                                                                                                    <ForwardRef
-                                                                                                                                      className="makeStyles-badgeIcon-438"
-                                                                                                                                      size="small"
-                                                                                                                                    >
-                                                                                                                                      <WithStyles(ForwardRef(SvgIcon))
-                                                                                                                                        className="makeStyles-badgeIcon-438"
-                                                                                                                                        size="small"
-                                                                                                                                      >
-                                                                                                                                        <ForwardRef(SvgIcon)
-                                                                                                                                          className="makeStyles-badgeIcon-438"
-                                                                                                                                          classes={
-                                                                                                                                            Object {
-                                                                                                                                              "colorAction": "MuiSvgIcon-colorAction",
-                                                                                                                                              "colorDisabled": "MuiSvgIcon-colorDisabled",
-                                                                                                                                              "colorError": "MuiSvgIcon-colorError",
-                                                                                                                                              "colorPrimary": "MuiSvgIcon-colorPrimary",
-                                                                                                                                              "colorSecondary": "MuiSvgIcon-colorSecondary",
-                                                                                                                                              "fontSizeInherit": "MuiSvgIcon-fontSizeInherit",
-                                                                                                                                              "fontSizeLarge": "MuiSvgIcon-fontSizeLarge",
-                                                                                                                                              "fontSizeSmall": "MuiSvgIcon-fontSizeSmall",
-                                                                                                                                              "root": "MuiSvgIcon-root",
-                                                                                                                                            }
-                                                                                                                                          }
-                                                                                                                                          size="small"
-                                                                                                                                        >
-                                                                                                                                          <svg
-                                                                                                                                            aria-hidden="true"
-                                                                                                                                            className="MuiSvgIcon-root makeStyles-badgeIcon-438"
-                                                                                                                                            focusable="false"
-                                                                                                                                            size="small"
-                                                                                                                                            viewBox="0 0 24 24"
-                                                                                                                                          >
-                                                                                                                                            <path
-                                                                                                                                              d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-                                                                                                                                            />
-                                                                                                                                          </svg>
-                                                                                                                                        </ForwardRef(SvgIcon)>
-                                                                                                                                      </WithStyles(ForwardRef(SvgIcon))>
-                                                                                                                                    </ForwardRef>
-                                                                                                                                  </span>
-                                                                                                                                </span>
-                                                                                                                              </ForwardRef(Badge)>
-                                                                                                                            </WithStyles(ForwardRef(Badge))>
-                                                                                                                            <ForwardRef(Popper)
-                                                                                                                              anchorEl={
-                                                                                                                                <span
-                                                                                                                                  class="MuiBadge-root"
-                                                                                                                                  style="opacity: 1; webkit-transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms; transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;"
-                                                                                                                                  title="Your preferred campus has been updated"
-                                                                                                                                >
-                                                                                                                                  <svg
-                                                                                                                                    aria-hidden="true"
-                                                                                                                                    class="MuiSvgIcon-root"
-                                                                                                                                    focusable="false"
-                                                                                                                                    viewBox="0 0 24 24"
-                                                                                                                                  >
-                                                                                                                                    <path
-                                                                                                                                      d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"
-                                                                                                                                    />
-                                                                                                                                  </svg>
-                                                                                                                                  <span
-                                                                                                                                    class="MuiBadge-badge makeStyles-badge-437 MuiBadge-anchorOriginTopRightRectangle MuiBadge-colorPrimary"
-                                                                                                                                  >
-                                                                                                                                    <svg
-                                                                                                                                      aria-hidden="true"
-                                                                                                                                      class="MuiSvgIcon-root makeStyles-badgeIcon-438"
-                                                                                                                                      focusable="false"
-                                                                                                                                      viewBox="0 0 24 24"
-                                                                                                                                    >
-                                                                                                                                      <path
-                                                                                                                                        d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"
-                                                                                                                                      />
-                                                                                                                                    </svg>
-                                                                                                                                  </span>
-                                                                                                                                </span>
-                                                                                                                              }
-                                                                                                                              className="MuiTooltip-popper"
-                                                                                                                              id={null}
-                                                                                                                              open={false}
-                                                                                                                              placement="bottom"
-                                                                                                                              popperOptions={
-                                                                                                                                Object {
-                                                                                                                                  "modifiers": Object {
-                                                                                                                                    "arrow": Object {
-                                                                                                                                      "element": null,
-                                                                                                                                      "enabled": false,
-                                                                                                                                    },
-                                                                                                                                  },
-                                                                                                                                }
-                                                                                                                              }
-                                                                                                                              transition={true}
-                                                                                                                            />
-                                                                                                                          </ForwardRef(Tooltip)>
-                                                                                                                        </WithStyles(ForwardRef(Tooltip))>
-                                                                                                                      </Transition>
-                                                                                                                    </ForwardRef(Fade)>
-                                                                                                                  </div>
+                                                                                                                  />
                                                                                                                 </ForwardRef(Grid)>
                                                                                                               </WithStyles(ForwardRef(Grid))>
                                                                                                             </div>

@@ -174,7 +174,7 @@ const MyLoader = props => (
 const Hours = ({ libHours, libHoursLoading, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies.location || null);
+    const [location, setLocation] = React.useState(cookies.location || undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     useEffect(() => {
         if (location !== cookies.location) {

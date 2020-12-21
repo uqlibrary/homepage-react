@@ -166,7 +166,7 @@ const useStyles = makeStyles(theme => ({
 const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
-    const [location, setLocation] = React.useState(cookies.location || null);
+    const [location, setLocation] = React.useState(cookies.location || undefined);
     const [showIcon, setShowIcon] = React.useState(false);
     const [collapse, setCollapse] = React.useState({});
     const [mapSrc, setMapSrc] = React.useState(null);
