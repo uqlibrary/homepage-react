@@ -20,6 +20,7 @@ import ContentLoader from 'react-content-loader';
 import Fade from '@material-ui/core/Fade';
 const MyLoader = props => (
     <ContentLoader
+        uniqueKey="spotlights"
         speed={2}
         width={'100%'}
         height={'100%'}

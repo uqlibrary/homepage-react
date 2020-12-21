@@ -6325,6 +6325,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       foregroundColor="#e2e2e2"
                                                       height="100%"
                                                       speed={2}
+                                                      uniqueKey="spotlights"
                                                       viewBox="0 0 1500 528"
                                                       width="100%"
                                                     >
@@ -6343,11 +6344,12 @@ exports[`Index page should render placeholders 1`] = `
                                                         speed={2}
                                                         style={Object {}}
                                                         title="Loading..."
+                                                        uniqueKey="spotlights"
                                                         viewBox="0 0 1500 528"
                                                         width="100%"
                                                       >
                                                         <svg
-                                                          aria-labelledby="evicly-aria"
+                                                          aria-labelledby="spotlights-aria"
                                                           height="100%"
                                                           id={null}
                                                           role="img"
@@ -6356,17 +6358,17 @@ exports[`Index page should render placeholders 1`] = `
                                                           width="100%"
                                                         >
                                                           <title
-                                                            id="evicly-aria"
+                                                            id="spotlights-aria"
                                                           >
                                                             Loading...
                                                           </title>
                                                           <rect
-                                                            clipPath="url(#evicly-diff)"
+                                                            clipPath="url(#spotlights-diff)"
                                                             height="100%"
                                                             role="presentation"
                                                             style={
                                                               Object {
-                                                                "fill": "url(#evicly-animated-diff)",
+                                                                "fill": "url(#spotlights-animated-diff)",
                                                               }
                                                             }
                                                             width="100%"
@@ -6377,7 +6379,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             role="presentation"
                                                           >
                                                             <clipPath
-                                                              id="evicly-diff"
+                                                              id="spotlights-diff"
                                                             >
                                                               <rect
                                                                 height="100%"
@@ -6389,7 +6391,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               />
                                                             </clipPath>
                                                             <linearGradient
-                                                              id="evicly-animated-diff"
+                                                              id="spotlights-animated-diff"
                                                             >
                                                               <stop
                                                                 offset="0%"
@@ -8707,6 +8709,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               height="100%"
                                                                               id="hours-loader"
                                                                               speed={2}
+                                                                              uniqueKey="hours"
                                                                               viewBox="0 0 365 250"
                                                                               width="100%"
                                                                             >
@@ -8727,12 +8730,13 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 speed={2}
                                                                                 style={Object {}}
                                                                                 title="Loading..."
+                                                                                uniqueKey="hours"
                                                                                 viewBox="0 0 365 250"
                                                                                 width="100%"
                                                                               >
                                                                                 <svg
                                                                                   aria-label="Hours data is laoding"
-                                                                                  aria-labelledby="lavgwvm-aria"
+                                                                                  aria-labelledby="hours-aria"
                                                                                   data-testid="hours-loader"
                                                                                   height="100%"
                                                                                   id="hours-loader"
@@ -8742,17 +8746,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <title
-                                                                                    id="lavgwvm-aria"
+                                                                                    id="hours-aria"
                                                                                   >
                                                                                     Loading...
                                                                                   </title>
                                                                                   <rect
-                                                                                    clipPath="url(#lavgwvm-diff)"
+                                                                                    clipPath="url(#hours-diff)"
                                                                                     height="100%"
                                                                                     role="presentation"
                                                                                     style={
                                                                                       Object {
-                                                                                        "fill": "url(#lavgwvm-animated-diff)",
+                                                                                        "fill": "url(#hours-animated-diff)",
                                                                                       }
                                                                                     }
                                                                                     width="100%"
@@ -8763,7 +8767,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     role="presentation"
                                                                                   >
                                                                                     <clipPath
-                                                                                      id="lavgwvm-diff"
+                                                                                      id="hours-diff"
                                                                                     >
                                                                                       <rect
                                                                                         height="14"
@@ -8959,7 +8963,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                       />
                                                                                     </clipPath>
                                                                                     <linearGradient
-                                                                                      id="lavgwvm-animated-diff"
+                                                                                      id="hours-animated-diff"
                                                                                     >
                                                                                       <stop
                                                                                         offset="0%"
@@ -11335,6 +11339,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               foregroundColor="#e2e2e2"
                                                                               height="100%"
                                                                               speed={2}
+                                                                              uniqueKey="computers"
                                                                               viewBox="0 0 365 300"
                                                                               width="100%"
                                                                             >
@@ -11353,11 +11358,12 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 speed={2}
                                                                                 style={Object {}}
                                                                                 title="Loading..."
+                                                                                uniqueKey="computers"
                                                                                 viewBox="0 0 365 300"
                                                                                 width="100%"
                                                                               >
                                                                                 <svg
-                                                                                  aria-labelledby="htxsrmi-aria"
+                                                                                  aria-labelledby="computers-aria"
                                                                                   height="100%"
                                                                                   id={null}
                                                                                   role="img"
@@ -11366,17 +11372,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <title
-                                                                                    id="htxsrmi-aria"
+                                                                                    id="computers-aria"
                                                                                   >
                                                                                     Loading...
                                                                                   </title>
                                                                                   <rect
-                                                                                    clipPath="url(#htxsrmi-diff)"
+                                                                                    clipPath="url(#computers-diff)"
                                                                                     height="100%"
                                                                                     role="presentation"
                                                                                     style={
                                                                                       Object {
-                                                                                        "fill": "url(#htxsrmi-animated-diff)",
+                                                                                        "fill": "url(#computers-animated-diff)",
                                                                                       }
                                                                                     }
                                                                                     width="100%"
@@ -11387,7 +11393,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     role="presentation"
                                                                                   >
                                                                                     <clipPath
-                                                                                      id="htxsrmi-diff"
+                                                                                      id="computers-diff"
                                                                                     >
                                                                                       <rect
                                                                                         height="14"
@@ -11559,7 +11565,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                       />
                                                                                     </clipPath>
                                                                                     <linearGradient
-                                                                                      id="htxsrmi-animated-diff"
+                                                                                      id="computers-animated-diff"
                                                                                     >
                                                                                       <stop
                                                                                         offset="0%"
@@ -12348,6 +12354,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                               foregroundColor="#e2e2e2"
                                                                               height="100%"
                                                                               speed={2}
+                                                                              uniqueKey="training"
                                                                               viewBox="0 0 365 300"
                                                                               width="100%"
                                                                             >
@@ -12366,11 +12373,12 @@ exports[`Index page should render placeholders 1`] = `
                                                                                 speed={2}
                                                                                 style={Object {}}
                                                                                 title="Loading..."
+                                                                                uniqueKey="training"
                                                                                 viewBox="0 0 365 300"
                                                                                 width="100%"
                                                                               >
                                                                                 <svg
-                                                                                  aria-labelledby="azms7x8-aria"
+                                                                                  aria-labelledby="training-aria"
                                                                                   height="100%"
                                                                                   id={null}
                                                                                   role="img"
@@ -12379,17 +12387,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   width="100%"
                                                                                 >
                                                                                   <title
-                                                                                    id="azms7x8-aria"
+                                                                                    id="training-aria"
                                                                                   >
                                                                                     Loading...
                                                                                   </title>
                                                                                   <rect
-                                                                                    clipPath="url(#azms7x8-diff)"
+                                                                                    clipPath="url(#training-diff)"
                                                                                     height="100%"
                                                                                     role="presentation"
                                                                                     style={
                                                                                       Object {
-                                                                                        "fill": "url(#azms7x8-animated-diff)",
+                                                                                        "fill": "url(#training-animated-diff)",
                                                                                       }
                                                                                     }
                                                                                     width="100%"
@@ -12400,7 +12408,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                     role="presentation"
                                                                                   >
                                                                                     <clipPath
-                                                                                      id="azms7x8-diff"
+                                                                                      id="training-diff"
                                                                                     >
                                                                                       <rect
                                                                                         height="14"
@@ -12524,7 +12532,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                       />
                                                                                     </clipPath>
                                                                                     <linearGradient
-                                                                                      id="azms7x8-animated-diff"
+                                                                                      id="training-animated-diff"
                                                                                     >
                                                                                       <stop
                                                                                         offset="0%"
