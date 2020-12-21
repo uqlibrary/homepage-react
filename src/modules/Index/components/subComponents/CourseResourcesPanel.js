@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
-import { courseResourcesLocale as locale } from './CourseResources.locale';
+import { default as locale } from 'modules/Pages/CourseResources/courseResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
@@ -79,7 +79,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
             title={
                 <Grid container>
                     <Grid item xs id={`${courseResourceId}-autocomplete-label`}>
-                        {locale.title}
+                        {locale.homepagePanel.title}
                     </Grid>
                 </Grid>
             }
@@ -94,7 +94,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
                 <Grid container spacing={1} data-testid="your-courses" className={classes.myCourses}>
                     <Grid item xs={12}>
                         <Typography color={'secondary'} component={'h4'} variant={'h6'}>
-                            {locale.userCourseTitle}
+                            {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>
                     {account.current_classes.map((item, index) => {
@@ -116,7 +116,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
                     })}
                 </Grid>
             ) : (
-                <div style={{ marginLeft: 16 }}>{locale.noCourses}</div>
+                <div style={{ marginLeft: 16 }}>{locale.homepagePanel.noCourses}</div>
             )}
         </StandardCard>
     );

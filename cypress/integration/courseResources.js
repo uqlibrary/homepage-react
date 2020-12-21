@@ -1,7 +1,6 @@
 /* eslint camelcase: 0 */
-import { default as locale } from '../../src/modules/Pages/CourseResources/courseResources.locale';
 import { accounts } from '../../src/mock/data';
-import { courseResourcesLocale } from '../../src/modules/Index/components/subComponents/CourseResources.locale';
+import { default as locale } from '../../src/modules/Pages/CourseResources/courseResources.locale';
 import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';
@@ -261,7 +260,7 @@ context('Course Resources', () => {
         cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
             'have.attr',
             'placeholder',
-            courseResourcesLocale.placeholder,
+            locale.search.placeholder,
         );
     }
 
@@ -405,8 +404,8 @@ context('Course Resources', () => {
         const currentClasses = accounts.s1111111.current_classes;
         expect(currentClasses.length).to.be.above(1); // the course we are going to click on exists
 
-        cy.get('div[data-testid=course-resources-panel]').contains(courseResourcesLocale.title);
-        cy.get('div[data-testid=course-resources-panel] h4').contains(courseResourcesLocale.userCourseTitle);
+        cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
+        cy.get('div[data-testid=course-resources-panel] h4').contains(locale.homepagePanel.userCourseTitle);
 
         const numberOfBlocks = currentClasses.length + 1; // n classes + 1 header
         cy.get('div[data-testid=course-resources-panel] h4')
@@ -436,7 +435,7 @@ context('Course Resources', () => {
     it('the Course resources panel searches correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
-        cy.get('div[data-testid=course-resources-panel]').contains(courseResourcesLocale.title);
+        cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
 
         // the user sees NO subjects (the form has no sibling elements)
         cy.get('div[data-testid=course-resources-panel] form')
@@ -447,7 +446,7 @@ context('Course Resources', () => {
         cy.get('div[data-testid=course-resources-panel] form input').should(
             'have.attr',
             'placeholder',
-            courseResourcesLocale.placeholder,
+            locale.search.placeholder,
         );
         // user enters ACCT
         cy.get('div[data-testid=course-resources-panel] form input').type('ACCT');

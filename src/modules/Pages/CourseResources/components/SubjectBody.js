@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
+// import { default as locale } from '../courseResources.locale';
 import { Guides } from './Guides';
 import { PastExamPapers } from './PastExamPapers';
 import { ReadingLists } from './ReadingLists';
@@ -53,6 +54,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
     const coursecampus = () =>
         (subject.CAMPUS && getCampusByCode(subject.CAMPUS)) ||
         (!!firstReadingList && !!firstReadingList.campus && firstReadingList.campus) ||
+        // (subject.INSTRUCTION_MODE === 'EX' && locale.externalSubjectLocation) ||
         null;
 
     const courseSemester = () => {
