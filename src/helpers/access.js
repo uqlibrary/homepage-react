@@ -135,7 +135,7 @@ export const seeDocumentDelivery = account =>
         STAFF_AWAITING_AURION,
     ].includes(account.user_group);
 
-export const seeEspace = (account, author) => !!account && !!author;
+export const seeEspace = (account, author) => !!account && !!author && !!author.aut_id;
 
 export const seeTraining = account => everyoneCanSee(account);
 

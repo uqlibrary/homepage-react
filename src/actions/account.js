@@ -134,6 +134,7 @@ export function loadCurrentAccount() {
  * @returns {function(*)}
  */
 export function loadSpotlights() {
+    console.log('Loading Spotlights');
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHTS_LOADING });
         return get(SPOTLIGHTS_API())
@@ -157,6 +158,7 @@ export function loadSpotlights() {
  * @returns {function(*)}
  */
 export function loadLibHours() {
+    console.log('Loading Library Hours');
     return dispatch => {
         dispatch({ type: actions.LIB_HOURS_LOADING });
         return get(LIB_HOURS_API())
@@ -180,6 +182,7 @@ export function loadLibHours() {
  * @returns {function(*)}
  */
 export function loadPrintBalance() {
+    console.log('Loading Print Balance');
     return dispatch => {
         dispatch({ type: actions.PRINT_BALANCE_LOADING });
         return get(PRINTING_API())
@@ -203,6 +206,7 @@ export function loadPrintBalance() {
  * @returns {function(*)}
  */
 export function loadLoans() {
+    console.log('Loading Loans');
     return dispatch => {
         dispatch({ type: actions.LOANS_LOADING });
         return get(LOANS_API())
@@ -226,6 +230,7 @@ export function loadLoans() {
  * @returns {function(*)}
  */
 export function loadCompAvail() {
+    console.log('Loading Computer Availability');
     return dispatch => {
         dispatch({ type: actions.COMP_AVAIL_LOADING });
         return get(COMP_AVAIL_API())
@@ -249,6 +254,7 @@ export function loadCompAvail() {
  * @returns {function(*)}
  */
 export function loadTrainingEvents() {
+    console.log('Loading Training Events');
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
         return get(TRAINING_API(10))
@@ -272,6 +278,7 @@ export function loadTrainingEvents() {
  * @returns {function(*)}
  */
 export function loadChatStatus() {
+    console.log('Loading Chat Status');
     return dispatch => {
         dispatch({ type: actions.CHAT_STATUS_LOADING });
         return get(CHAT_API())
@@ -295,6 +302,7 @@ export function loadChatStatus() {
  * @returns {function(*)}
  */
 export function loadAlerts() {
+    console.log('Loading Alerts');
     return dispatch => {
         dispatch({ type: actions.ALERT_STATUS_LOADING });
         return get(ALERT_API())
@@ -319,6 +327,7 @@ export function loadAlerts() {
  * @returns {action}
  */
 export function searcheSpacePossiblePublications() {
+    console.log('Loading Possible eSpace Pubs');
     return dispatch => {
         dispatch({ type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING });
         return get(POSSIBLE_RECORDS_API())
@@ -343,6 +352,7 @@ export function searcheSpacePossiblePublications() {
  * @returns {action}
  */
 export function searcheSpaceIncompleteNTROPublications() {
+    console.log('Loading Incomplete NTRO Pubs');
     return dispatch => {
         dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
         return get(INCOMPLETE_NTRO_RECORDS_API())

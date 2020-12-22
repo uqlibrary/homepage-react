@@ -87,6 +87,7 @@ export class AppClass extends PureComponent {
     static propTypes = {
         account: PropTypes.object,
         author: PropTypes.object,
+        authorLoading: PropTypes.bool,
         authorDetails: PropTypes.object,
         accountLoading: PropTypes.bool,
         accountAuthorLoading: PropTypes.bool,
@@ -121,12 +122,8 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
-        this.props.actions.loadSpotlights();
         this.props.actions.loadAlerts();
         this.props.actions.loadChatStatus();
-        this.props.actions.loadLibHours();
-        this.props.actions.loadCompAvail();
-        this.props.actions.loadTrainingEvents();
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {

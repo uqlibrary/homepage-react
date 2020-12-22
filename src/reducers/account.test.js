@@ -53,9 +53,12 @@ describe('account reducer', () => {
     //     });
     // });
 
-    it('should set all loading flags to true when loading account', () => {
+    it('should set account loading flags to true when loading account', () => {
         const test = accountReducer(emptyState, { type: actions.CURRENT_ACCOUNT_LOADING });
-        expect(test).toEqual(emptyState);
+        expect(test).toEqual({
+            ...emptyState,
+            accountLoading: true,
+        });
     });
 
     // it('should set author details loading flag to true when loading author details', () => {
@@ -81,6 +84,7 @@ describe('account reducer', () => {
         expect(test).toEqual({
             ...emptyState,
             author: null,
+            accountLoading: false,
             accountAuthorLoading: false,
         });
     });
