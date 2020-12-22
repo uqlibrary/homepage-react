@@ -117,7 +117,7 @@ export const MyLibrary = ({ account, author, history }) => {
 };
 
 MyLibrary.propTypes = {
-    account: PropTypes.any,
+    account: PropTypes.object,
     author: PropTypes.object,
     history: PropTypes.object,
 };

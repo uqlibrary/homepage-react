@@ -123,7 +123,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
 };
 
 CourseResourcesPanel.propTypes = {
-    account: PropTypes.any,
+    account: PropTypes.object,
     history: PropTypes.object,
 };
 

@@ -223,7 +223,7 @@ Spotlights.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.bool,
     defaultSlide: PropTypes.string,
-    account: PropTypes.any,
+    account: PropTypes.object,
 };
 
 Spotlights.defaultProps = {

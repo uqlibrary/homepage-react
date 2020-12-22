@@ -555,7 +555,7 @@ const PersonalisedPanel = ({
 };
 
 PersonalisedPanel.propTypes = {
-    account: PropTypes.any,
+    account: PropTypes.object,
     author: PropTypes.object,
     loans: PropTypes.object,
     printBalance: PropTypes.object,
