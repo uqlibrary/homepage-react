@@ -267,7 +267,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         >
             <div
                 className={`${classes.flexWrapper} ${
-                    isLoggedIn ? classes.componentHeight : classes.componentHeightPublic
+                    !!account && !!account.id ? classes.componentHeight : classes.componentHeightPublic
                 }`}
             >
                 <div className={classes.flexHeader}>
@@ -369,7 +369,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
 
 Hours.propTypes = {
     libHours: PropTypes.object,
-    isLoggedIn: PropTypes.bool,
+    account: PropTypes.object,
     libHoursLoading: PropTypes.bool,
 };
 

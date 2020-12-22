@@ -68,13 +68,14 @@ export const seeCourseResources = account => {
 const loggedInConfirmed = account => !!account && !!account.id;
 
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
-// (it also makes all the panels load predictably, as they all wait on the account check)
 const everyoneCanSee = account => !!account || true;
 
 const loggedinCanSee = account => !!account && !!account.id;
 
+/* istanbul ignore next */
 export const seeComputerAvailability = account => everyoneCanSee(account);
 
+/* istanbul ignore next */
 export const seeOpeningHours = account => everyoneCanSee(account);
 
 export const seeMasquerade = account => loggedInConfirmed(account) && !!account.canMasquerade;
@@ -94,7 +95,6 @@ export const seeRoomBookings = account =>
 
 export const seeLoans = account => loggedInConfirmed(account);
 
-/* istanbul ignore next */
 export const seeFines = account =>
     loggedInConfirmed(account) &&
     [
@@ -138,12 +138,13 @@ export const seeDocumentDelivery = account =>
         STAFF_AWAITING_AURION,
     ].includes(account.user_group);
 
-export const seeEspace = (account, author) => loggedInConfirmed(account) && !!author;
+export const seeEspace = (account, author) => loggedInConfirmed(account) && !!author && !!author.aut_id;
 
 export const seeTraining = account => everyoneCanSee(account);
 
 export const seeLibraryServices = account => loggedinCanSee(account);
 
+/* istanbul ignore next */
 export const seePromoPanel = account => everyoneCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);

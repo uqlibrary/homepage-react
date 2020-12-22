@@ -131,8 +131,6 @@ export const Index = ({
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
-    const isLoggedIn = !accountLoading && !!account && !!account.id;
-    const isLoggedOut = !accountLoading && !account;
     return (
         <StandardPage>
             <div className="layout-card">
@@ -141,7 +139,7 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
-                    {isLoggedIn && (
+                    {!accountLoading && !!account && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -158,9 +156,8 @@ export const Index = ({
                     <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights" style={{ minHeight: 320 }}>
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
-
                     {/* Personalisation panel, desktop */}
-                    {isLoggedIn && (
+                    {!accountLoading && !!account && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -175,15 +172,10 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     )}
-
                     {/* Hours panel, logged out */}
-                    {isLoggedOut && (
+                    {!accountLoading && !account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                isLoggedIn={!accountLoading && !!account}
-                            />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
                     <Grid item xs={12} md={4} data-testid="computer-availability-panel">
@@ -193,13 +185,9 @@ export const Index = ({
                             height={classes.computersAvailHeight}
                         />
                     </Grid>
-                    {isLoggedIn && (
+                    {!accountLoading && !!account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                isLoggedIn={!accountLoading && !!account}
-                            />
+                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
