@@ -1024,17 +1024,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                     },
                   ],
                 },
-                "loadCompAvail": [MockFunction] {
-                  "calls": Array [
-                    Array [],
-                  ],
-                  "results": Array [
-                    Object {
-                      "type": "return",
-                      "value": undefined,
-                    },
-                  ],
-                },
+                "loadCompAvail": [MockFunction],
                 "loadCurrentAccount": [MockFunction] {
                   "calls": Array [
                     Array [],
@@ -1046,39 +1036,9 @@ exports[`Testing wrapped App component Mounts 1`] = `
                     },
                   ],
                 },
-                "loadLibHours": [MockFunction] {
-                  "calls": Array [
-                    Array [],
-                  ],
-                  "results": Array [
-                    Object {
-                      "type": "return",
-                      "value": undefined,
-                    },
-                  ],
-                },
-                "loadSpotlights": [MockFunction] {
-                  "calls": Array [
-                    Array [],
-                  ],
-                  "results": Array [
-                    Object {
-                      "type": "return",
-                      "value": undefined,
-                    },
-                  ],
-                },
-                "loadTrainingEvents": [MockFunction] {
-                  "calls": Array [
-                    Array [],
-                  ],
-                  "results": Array [
-                    Object {
-                      "type": "return",
-                      "value": undefined,
-                    },
-                  ],
-                },
+                "loadLibHours": [MockFunction],
+                "loadSpotlights": [MockFunction],
+                "loadTrainingEvents": [MockFunction],
                 "logout": [MockFunction],
               }
             }
@@ -1137,17 +1097,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                       },
                     ],
                   },
-                  "loadCompAvail": [MockFunction] {
-                    "calls": Array [
-                      Array [],
-                    ],
-                    "results": Array [
-                      Object {
-                        "type": "return",
-                        "value": undefined,
-                      },
-                    ],
-                  },
+                  "loadCompAvail": [MockFunction],
                   "loadCurrentAccount": [MockFunction] {
                     "calls": Array [
                       Array [],
@@ -1159,39 +1109,9 @@ exports[`Testing wrapped App component Mounts 1`] = `
                       },
                     ],
                   },
-                  "loadLibHours": [MockFunction] {
-                    "calls": Array [
-                      Array [],
-                    ],
-                    "results": Array [
-                      Object {
-                        "type": "return",
-                        "value": undefined,
-                      },
-                    ],
-                  },
-                  "loadSpotlights": [MockFunction] {
-                    "calls": Array [
-                      Array [],
-                    ],
-                    "results": Array [
-                      Object {
-                        "type": "return",
-                        "value": undefined,
-                      },
-                    ],
-                  },
-                  "loadTrainingEvents": [MockFunction] {
-                    "calls": Array [
-                      Array [],
-                    ],
-                    "results": Array [
-                      Object {
-                        "type": "return",
-                        "value": undefined,
-                      },
-                    ],
-                  },
+                  "loadLibHours": [MockFunction],
+                  "loadSpotlights": [MockFunction],
+                  "loadTrainingEvents": [MockFunction],
                   "logout": [MockFunction],
                 }
               }
@@ -1250,17 +1170,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                         },
                       ],
                     },
-                    "loadCompAvail": [MockFunction] {
-                      "calls": Array [
-                        Array [],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "return",
-                          "value": undefined,
-                        },
-                      ],
-                    },
+                    "loadCompAvail": [MockFunction],
                     "loadCurrentAccount": [MockFunction] {
                       "calls": Array [
                         Array [],
@@ -1272,39 +1182,9 @@ exports[`Testing wrapped App component Mounts 1`] = `
                         },
                       ],
                     },
-                    "loadLibHours": [MockFunction] {
-                      "calls": Array [
-                        Array [],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "return",
-                          "value": undefined,
-                        },
-                      ],
-                    },
-                    "loadSpotlights": [MockFunction] {
-                      "calls": Array [
-                        Array [],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "return",
-                          "value": undefined,
-                        },
-                      ],
-                    },
-                    "loadTrainingEvents": [MockFunction] {
-                      "calls": Array [
-                        Array [],
-                      ],
-                      "results": Array [
-                        Object {
-                          "type": "return",
-                          "value": undefined,
-                        },
-                      ],
-                    },
+                    "loadLibHours": [MockFunction],
+                    "loadSpotlights": [MockFunction],
+                    "loadTrainingEvents": [MockFunction],
                     "logout": [MockFunction],
                   }
                 }
