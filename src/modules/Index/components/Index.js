@@ -139,7 +139,7 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
-                    {!!account && (
+                    {!accountLoading && !!account && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -156,8 +156,8 @@ export const Index = ({
                     <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights" style={{ minHeight: 320 }}>
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
-                    {/* Personalisation panel or hours */}
-                    {!!account ? (
+                    {/* Personalisation panel, desktop */}
+                    {!accountLoading && !!account && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -171,7 +171,9 @@ export const Index = ({
                                 />
                             </Grid>
                         </Hidden>
-                    ) : (
+                    )}
+                    {/* Hours panel, logged out */}
+                    {!accountLoading && !account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -183,13 +185,13 @@ export const Index = ({
                             height={classes.computersAvailHeight}
                         />
                     </Grid>
-                    {!!account && (
+                    {!accountLoading && !!account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
                     )}
 
-                    {!!seeCourseResources(account) && (
+                    {seeCourseResources(account) && (
                         <Grid item xs={12} md={4} data-testid="course-resources-panel">
                             <CourseResourcesPanel account={account} history={history} />
                         </Grid>

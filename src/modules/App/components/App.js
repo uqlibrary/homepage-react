@@ -31,7 +31,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import UQHeader from './UQHeader';
 import ChatStatus from './ChatStatus';
-import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
+import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 import UQSiteHeader from './UQSiteHeader';
 
 const styles = theme => ({
@@ -197,6 +197,12 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
+                    <span
+                        id="headerAfter"
+                        tabIndex="0"
+                        aria-label="Start of content"
+                        style={{ position: 'fixed', top: '-200px', left: '-200px' }}
+                    />
                     {!isAccountLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>
                             <AccountContext.Provider

@@ -34,12 +34,20 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, examList, guideList }) => {
+export const courseTabLabel = 'subjecttab';
+
+export const MyCourses = ({
+    loadSubjectAndFocusOnTab,
+    preselectedCourse,
+    readingList,
+    examList,
+    guideList,
+    coursemenu,
+    setCurrentMenuTab,
+}) => {
     const { account } = useAccountContext();
     const classes = useStyles();
 
-    const courseTabLabel = 'subjecttab';
-    const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
     const handleCourseTabChange = (event, subjectTabId) => {
         /* istanbul ignore next */
         if (!event.target.innerText) {
@@ -47,19 +55,7 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
             return;
         }
         const coursecode = event.target.innerText;
-        /* istanbul ignore next */
-        const enrolledClass =
-            (!!account &&
-                !!account.current_classes &&
-                account.current_classes.find(c => c.classnumber === coursecode)) ||
-            null;
-        /* istanbul ignore next */
-        const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
-        /* istanbul ignore next */
-        const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
-        loadNewSubject(coursecode, campus, semester);
-
-        setCurrentMenuTab(subjectTabId);
+        loadSubjectAndFocusOnTab(coursecode, subjectTabId);
     };
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
@@ -86,7 +82,7 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
             }
             setInitialLoadComplete(true);
         },
-        [account, initialLoadComplete],
+        [account, initialLoadComplete, setCurrentMenuTab],
     );
 
     React.useEffect(() => {
@@ -160,11 +156,13 @@ export const MyCourses = ({ loadNewSubject, preselectedCourse, readingList, exam
 };
 
 MyCourses.propTypes = {
-    loadNewSubject: PropTypes.func,
+    loadSubjectAndFocusOnTab: PropTypes.func,
     preselectedCourse: PropTypes.any,
     readingList: PropTypes.object,
     examList: PropTypes.object,
     guideList: PropTypes.object,
+    coursemenu: PropTypes.string,
+    setCurrentMenuTab: PropTypes.func,
 };
 
 export default MyCourses;

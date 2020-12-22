@@ -15,9 +15,9 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
       <WithStyles(ForwardRef(ListItem))
         button={true}
         className="submenuheader"
-        data-testid="submenus-item-0"
-        id="submenus-item-0"
-        key="submenus-item-0"
+        data-testid="megamenu-submenus-item-0"
+        id="megamenu-submenus-item-0"
+        key="megamenu-submenus-item-0"
         onClick={[Function]}
       >
         <WithStyles(ForwardRef(ListItemText))
@@ -38,9 +38,9 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
       <WithStyles(ForwardRef(ListItem))
         button={true}
         className="submenuheader"
-        data-testid="submenus-item-1"
-        id="submenus-item-1"
-        key="submenus-item-1"
+        data-testid="megamenu-submenus-item-1"
+        id="megamenu-submenus-item-1"
+        key="megamenu-submenus-item-1"
         onClick={[Function]}
       >
         <WithStyles(ForwardRef(ListItemText))
@@ -56,9 +56,21 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
       </WithStyles(ForwardRef(ListItem))>
     </div>
   </WithStyles(ForwardRef(List))>
-  <div
+  <span
+    aria-label="Start of content"
     id="afterMegamenu"
-  />
+    role="region"
+    style={
+      Object {
+        "left": "-2000px",
+        "position": "fixed",
+        "top": "-2000px",
+      }
+    }
+    tabIndex="0"
+  >
+    Start of content
+  </span>
 </div>
 `;
 
@@ -83,9 +95,9 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
       <WithStyles(ForwardRef(ListItem))
         button={true}
         className="submenuheader"
-        data-testid="submenus-item-0"
-        id="submenus-item-0"
-        key="submenus-item-0"
+        data-testid="megamenu-submenus-item-0"
+        id="megamenu-submenus-item-0"
+        key="megamenu-submenus-item-0"
         onClick={[Function]}
       >
         <WithStyles(ForwardRef(ListItemText))
@@ -106,9 +118,9 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
       <WithStyles(ForwardRef(ListItem))
         button={true}
         className="submenuheader"
-        data-testid="submenus-item-1"
-        id="submenus-item-1"
-        key="submenus-item-1"
+        data-testid="megamenu-submenus-item-1"
+        id="megamenu-submenus-item-1"
+        key="megamenu-submenus-item-1"
         onClick={[Function]}
       >
         <WithStyles(ForwardRef(ListItemText))
@@ -124,8 +136,20 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
       </WithStyles(ForwardRef(ListItem))>
     </div>
   </WithStyles(ForwardRef(List))>
-  <div
+  <span
+    aria-label="Start of content"
     id="afterMegamenu"
-  />
+    role="region"
+    style={
+      Object {
+        "left": "-2000px",
+        "position": "fixed",
+        "top": "-2000px",
+      }
+    }
+    tabIndex="0"
+  >
+    Start of content
+  </span>
 </div>
 `;

@@ -1,4 +1,6 @@
-import { leftJoin, stripHtml, getCampusByCode, isRepeatingString } from './general';
+import { getCampusByCode, isRepeatingString, leftJoin, stripHtml } from './general';
+import { getUserServices } from './access';
+import { accounts } from '../mock/data';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -36,6 +38,7 @@ describe('general helpers', () => {
 
     it('should detect long repeating strings (book-on-keyboard problem)', () => {
         expect(isRepeatingString('PHIL1001')).toBe(false);
+        expect(isRepeatingString('XXXX3333B')).toBe(false); // the maximum possible repeat on a valid course code
         expect(isRepeatingString('the quick brown dog jumped over the lazy dog')).toBe(false);
 
         // the classic example of a book on the keyboard:
@@ -44,5 +47,46 @@ describe('general helpers', () => {
         expect(isRepeatingString('sss')).toBe(false);
         expect(isRepeatingString('ssss')).toBe(false);
         expect(isRepeatingString('sssss')).toBe(true);
+    });
+
+    it('should show the correct services to the correct groups', () => {
+        // happy path
+        expect(getUserServices(accounts.s1111111).length).toEqual(3);
+
+        // coverage: various parameters invalid
+        expect(getUserServices(accounts.s1111111, {})).toEqual([]);
+
+        expect(
+            getUserServices(accounts.s1111111, {
+                LibraryServices: 'x',
+            }),
+        ).toEqual([]);
+
+        expect(
+            getUserServices({
+                id: 'dummy',
+                user_group: 'unknown',
+            }),
+        ).toEqual([]);
+
+        expect(
+            getUserServices({
+                user_group: 'unknown',
+            }),
+        ).toEqual([]);
+
+        expect(
+            getUserServices(accounts.s1111111, {
+                LibraryServices: {
+                    links: [
+                        {
+                            // missing id
+                            title: 'Title',
+                            url: 'https://blah',
+                        },
+                    ],
+                },
+            }),
+        ).toEqual([]);
     });
 });

@@ -24,7 +24,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const SubjectLinks = ({ subject }) => {
+export const SubjectLinks = ({ subject, headingLevel }) => {
     const classes = useStyles();
 
     // on the first render, add Legal Research Essentials to the Course Links for LAWS subjects
@@ -35,7 +35,7 @@ export const SubjectLinks = ({ subject }) => {
 
     return (
         <StandardCard fullHeight noHeader standardCardId={`subject-links-${subject.classnumber}`}>
-            <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
                 {locale.myCourses.courseLinks.title}
             </Typography>
             <Grid container className={'CourseLinks'}>
@@ -72,5 +72,6 @@ export const SubjectLinks = ({ subject }) => {
 };
 
 SubjectLinks.propTypes = {
+    headingLevel: PropTypes.string,
     subject: PropTypes.object,
 };

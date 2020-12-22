@@ -47,11 +47,17 @@ const EXTRAMURAL_FRYER = 'FRYVISITOR';
 const EXTRAMURAL_HONORARY = 'HON';
 const EXTRAMURAL_PROXY = 'PROXY';
 
+// everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
+const everyoneCanSee = account => true || !!account;
+
+const loggedinCanSee = account => !!account && !!account.id;
+
 // define which home page panel items and mylibrary popup items each user type can see
 
 export const seeCourseResources = account => {
     return (
         !!account &&
+        !!account.id &&
         [
             UNDERGRADUATE_GENERAL,
             UNDERGRADUATE_REMOTE,
@@ -64,22 +70,11 @@ export const seeCourseResources = account => {
     );
 };
 
-// everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
-// (it also makes all the panels load predictably, as they all wait on the account check)
-const everyoneCanSee = account => !!account || true;
-
-const loggedinCanSee = account => !!account;
-
-export const loggedoutCanSee = account => !account;
-
-export const seeComputerAvailability = account => everyoneCanSee(account);
-
-export const seeOpeningHours = account => everyoneCanSee(account);
-
-export const seeMasquerade = account => !!account && !!account.canMasquerade;
+export const seeMasquerade = account => loggedinCanSee(account) && !!account.canMasquerade;
 
 export const seeRoomBookings = account =>
     !!account &&
+    !!account.user_group &&
     [
         LIBRARY_STAFF,
         UNDERGRADUATE_GENERAL,
@@ -90,27 +85,7 @@ export const seeRoomBookings = account =>
         POSTGRAD_RESEARCH_REMOTE,
     ].includes(account.user_group);
 
-export const seeLoans = account => !!account;
-
-export const seeFines = account =>
-    !!account &&
-    [
-        UNDERGRADUATE_GENERAL,
-        UNDERGRADUATE_REMOTE,
-        UNDERGRADUATE_TESOL,
-        UNDERGRADUATE_VOCATIONAL,
-        POSTGRAD_COURSEWORK,
-        POSTGRAD_COURSEWORK_REMOTE,
-        POSTGRAD_RESEARCH,
-        POSTGRAD_RESEARCH_REMOTE,
-        EXTRAMURAL_COMMUNITY_PAID,
-        EXTRAMURAL_ALUMNI,
-        EXTRAMURAL_HOSPITAL,
-        EXTRAMURAL_ASSOCIATE,
-        EXTRAMURAL_FRYER,
-        EXTRAMURAL_PROXY,
-        EXTRAMURAL_HONORARY,
-    ].includes(account.user_group);
+export const seeLoans = account => loggedinCanSee(account);
 
 export const seePrintBalance = account => loggedinCanSee(account);
 
@@ -119,7 +94,7 @@ export const seeSavedItems = account => everyoneCanSee(account);
 export const seeSavedSearches = account => everyoneCanSee(account);
 
 export const seeDocumentDelivery = account =>
-    !!account &&
+    loggedinCanSee(account) &&
     [
         UNDERGRADUATE_GENERAL,
         UNDERGRADUATE_REMOTE,
@@ -135,13 +110,11 @@ export const seeDocumentDelivery = account =>
         STAFF_AWAITING_AURION,
     ].includes(account.user_group);
 
-export const seeEspace = (account, author) => !!account && !!author && !!author.aut_id;
+export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
 
 export const seeTraining = account => everyoneCanSee(account);
 
 export const seeLibraryServices = account => loggedinCanSee(account);
-
-export const seePromoPanel = account => everyoneCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);
 
@@ -172,18 +145,26 @@ const userGroupServices = {
 
     [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
     [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
-    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital'],
+    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
     [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
     [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
     [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
     [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
 };
 
-export const getUserServices = account => {
-    const allLibraryServices = locale.LibraryServices.links || [];
-    if (!!account && !!account.user_group) {
-        const userGroupService = userGroupServices[account.user_group] || [];
-        return userGroupService.map(service => allLibraryServices.find(i => (i.id || '') === service));
+export const getUserServices = (account, serviceLocale = null) => {
+    const thislocale = serviceLocale === null ? locale : serviceLocale;
+    const allLibraryServices = thislocale.LibraryServices?.links || [];
+    if (allLibraryServices.length === 0) {
+        return [];
     }
-    return [];
+
+    if (!account || !account.user_group) {
+        return [];
+    }
+
+    const userGroupService = userGroupServices[account.user_group] || [];
+    return userGroupService
+        .map(service => allLibraryServices.find(i => (i.id || '') === service))
+        .filter(i => i !== undefined);
 };

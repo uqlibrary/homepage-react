@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 import { PropTypes } from 'prop-types';
 import { isRepeatingString, unescapeString } from 'helpers/general';
-import { courseResourcesLocale as locale } from 'modules/Index/components/subComponents/CourseResources.locale';
+import { default as locale } from 'modules/Pages/CourseResources/courseResources.locale';
 import { extractSubjectCodeFromName } from 'modules/Pages/CourseResources/courseResourcesHelpers';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -148,7 +148,7 @@ export const CourseResourceSearch = ({
     // we group them all together to place a header at the top of the search results
     const renderGroup = params => [
         <h3 className={classes.searchTitle} key={params.key}>
-            {locale.searchResultsTitle}
+            {locale.search.autocompleteResultsTitle}
         </h3>,
         params.children,
     ];
@@ -158,7 +158,7 @@ export const CourseResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
-                        debug
+                        debug // dev
                         autoSelect
                         data-testid={`${elementId}-autocomplete`}
                         blurOnSelect="mouse"
@@ -174,14 +174,14 @@ export const CourseResourceSearch = ({
                         }}
                         inputValue={inputValue}
                         onInputChange={handleTypedKeywordChange}
-                        noOptionsText={locale.noOptionsText}
+                        noOptionsText={locale.search.noOptionsText}
                         renderGroup={renderGroup}
                         groupBy={() => false}
                         renderInput={params => {
                             return (
                                 <TextField
                                     {...params}
-                                    placeholder={locale.placeholder}
+                                    placeholder={locale.search.placeholder}
                                     error={!!CRsuggestionsError}
                                     InputProps={{
                                         ...params.InputProps,
@@ -193,8 +193,9 @@ export const CourseResourceSearch = ({
                                     inputProps={{
                                         ...params.inputProps,
                                         'data-testid': `${elementId}-autocomplete-input-wrapper`,
+                                        'aria-label': 'search for a subject by course code or title',
                                     }}
-                                    label={locale.placeholder}
+                                    label={locale.search.placeholder}
                                 />
                             );
                         }}
@@ -216,7 +217,7 @@ export const CourseResourceSearch = ({
                 {!!CRsuggestionsError ? (
                     /* istanbul ignore next */
                     <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
-                        <span>{locale.unavailableText}</span>
+                        <span>{locale.search.unavailableText}</span>
                     </Grid>
                 ) : (
                     <Hidden smDown>

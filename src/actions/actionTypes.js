@@ -1,4 +1,5 @@
 export const getActionSuffix = action => action.substring(action.indexOf('@') + 1, action.length);
+/* istanbul ignore next */
 export const getAction = action => action.substring(0, action.indexOf('@') + 1);
 
 // Academic stats

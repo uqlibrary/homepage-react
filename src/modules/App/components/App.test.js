@@ -1,7 +1,6 @@
 import { AppClass } from './App';
 import App from './App';
-import { accounts, currentAuthor } from 'mock/data';
-import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
+import { AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
 import mui1theme from 'config';
 
 function setup(testProps = {}) {
