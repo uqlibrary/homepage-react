@@ -9,7 +9,6 @@ import { AuthButton } from '../../SharedComponents/Toolbox/AuthButton';
 import { AskUs } from './AskUs';
 import { UQSiteHeaderLocale } from './UQSiteHeader.locale';
 import MyLibrary from './MyLibrary';
-import { loggedInConfirmed } from 'helpers/general';
 
 import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
@@ -115,7 +114,7 @@ export const UQSiteHeader = ({
                     </Button>
                 </Grid>
                 <Grid item xs />
-                {loggedInConfirmed(account) && (
+                {isAuthorizedUser && (
                     <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
                         <MyLibrary account={account} author={author} history={history} />
                     </Grid>
@@ -177,7 +176,7 @@ UQSiteHeader.propTypes = {
     isHdrStudent: PropTypes.bool,
     isAuthorizedUser: PropTypes.bool,
     chatStatus: PropTypes.bool,
-    account: PropTypes.any,
+    account: PropTypes.object,
     author: PropTypes.object,
     authorDetails: PropTypes.object,
     history: PropTypes.object,

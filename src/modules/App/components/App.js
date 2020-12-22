@@ -33,7 +33,6 @@ import UQHeader from './UQHeader';
 import ChatStatus from './ChatStatus';
 import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 import UQSiteHeader from './UQSiteHeader';
-import { loggedInConfirmed } from 'helpers/general';
 
 const styles = theme => ({
     appBG: {
@@ -86,8 +85,9 @@ const styles = theme => ({
 
 export class AppClass extends PureComponent {
     static propTypes = {
-        account: PropTypes.any,
+        account: PropTypes.object,
         author: PropTypes.object,
+        authorLoading: PropTypes.bool,
         authorDetails: PropTypes.object,
         accountLoading: PropTypes.bool,
         accountAuthorLoading: PropTypes.bool,
@@ -122,12 +122,8 @@ export class AppClass extends PureComponent {
 
     componentDidMount() {
         this.props.actions.loadCurrentAccount();
-        this.props.actions.loadSpotlights();
         this.props.actions.loadAlerts();
         this.props.actions.loadChatStatus();
-        this.props.actions.loadLibHours();
-        this.props.actions.loadCompAvail();
-        this.props.actions.loadTrainingEvents();
     }
     // eslint-disable-next-line camelcase
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -153,19 +149,13 @@ export class AppClass extends PureComponent {
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
     };
 
-    isPublicPage = menuItems => {
-        return (
-            menuItems.filter(menuItem => this.props.location.pathname === menuItem.linkTo && menuItem.public).length > 0
-        );
-    };
-
     setSessionExpiredConfirmation = ref => {
         this.sessionExpiredConfirmationBox = ref;
     };
 
     render() {
         const { classes } = this.props;
-        const isAuthorizedUser = !this.props.accountLoading && loggedInConfirmed(this.props.account);
+        const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
         const isAccountLoading = this.props.accountLoading;
         const isHdrStudent =
             !isAccountLoading &&

@@ -6,10 +6,9 @@ import locale from './notfound.locale';
 
 import { AUTH_URL_LOGIN } from 'config';
 import { flattedPathConfig } from 'config/routes';
-import { loggedInConfirmed, loggedOutConfirmed } from 'helpers/general';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-export const NotFound = ({ account }) => {
+export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
 
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
@@ -19,8 +18,12 @@ export const NotFound = ({ account }) => {
         return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
     }
 
+    console.log('accountLoading = ', accountLoading);
+    console.log('account = ', account);
     // the page must require admin to land here when they are logged in
-    if (loggedInConfirmed(account)) {
+    const isLoggedIn = !accountLoading && !!account && !!account.id;
+    console.log('isLoggedIn = ', isLoggedIn);
+    if (isLoggedIn) {
         return (
             <StandardPage
                 goBackFunc={() => history.back()}
@@ -31,7 +34,9 @@ export const NotFound = ({ account }) => {
     }
 
     // the page must require them to be logged in to land here
-    if (loggedOutConfirmed(account)) {
+    const isLoggedOut = !accountLoading && !account;
+    console.log('isLoggedOut = ', isLoggedOut);
+    if (isLoggedOut) {
         /* istanbul ignore next */
         if (
             process.env.NODE_ENV !== 'test' &&
@@ -53,7 +58,8 @@ export const NotFound = ({ account }) => {
 };
 
 NotFound.propTypes = {
-    account: PropTypes.any,
+    account: PropTypes.object,
+    accountLoading: PropTypes.bool,
 };
 
 export default React.memo(NotFound);

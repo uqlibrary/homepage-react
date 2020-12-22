@@ -3,8 +3,8 @@ import * as actions from 'actions/actionTypes';
 export const initialState = {
     account: null,
     author: null,
-    accountLoading: false,
-    accountAuthorLoading: false,
+    accountLoading: null,
+    accountAuthorLoading: null,
     isSessionExpired: null,
 };
 
@@ -12,18 +12,12 @@ export const initSavingState = {
     accountAuthorSaving: false,
     accountAuthorError: null,
 };
-/*
- * account has 3 possible states:
- * - user has logged in (account.id has been set)
- * - user is not logged in (account === false)
- * - we do not yet know if the user is loggedin (ie initial check not yet complete) (account === null)
- * this is because on the homepage we need to know if they are logged in or logged out before we show some panels
- * always confirm logged in/out via loggedOutConfirmed and loggedInConfirmed
- */
+
 const handlers = {
     [actions.CURRENT_ACCOUNT_LOADING]: () => ({
         ...initialState,
         ...initSavingState,
+        accountLoading: true,
     }),
 
     [actions.CURRENT_ACCOUNT_LOADED]: (state, action) => ({
@@ -35,10 +29,10 @@ const handlers = {
     [actions.CURRENT_ACCOUNT_ANONYMOUS]: () => ({
         ...initialState,
         ...initSavingState,
+        account: null,
         accountLoading: false,
         accountAuthorLoading: false,
         accountAuthorDetailsLoading: false,
-        account: false,
     }),
 
     [actions.CURRENT_AUTHOR_FAILED]: state => ({

@@ -9,9 +9,13 @@ import {
     loadLoans,
     searcheSpacePossiblePublications,
     searcheSpaceIncompleteNTROPublications,
+    loadSpotlights,
+    loadLibHours,
+    loadCompAvail,
+    loadTrainingEvents,
 } from 'actions';
 import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
-import { seeCourseResources, seeLibraryServices, seePromoPanel } from 'helpers/access';
+import { seeCourseResources, seeLibraryServices } from 'helpers/access';
 import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
 import { makeStyles } from '@material-ui/styles';
@@ -21,7 +25,6 @@ import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
 import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
 import PromoPanel from './subComponents/PromoPanel';
-import { loggedInConfirmed, loggedOutConfirmed } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -78,6 +81,7 @@ const useStyles = makeStyles(theme => ({
 
 export const Index = ({
     account,
+    accountLoading,
     author,
     spotlights,
     spotlightsLoading,
@@ -100,25 +104,35 @@ export const Index = ({
     const dispatch = useDispatch();
     // Load homepage data requirements
     useEffect(() => {
-        if (loggedInConfirmed(account) && !printBalance && printBalanceLoading === null) {
+        if (accountLoading === false) {
+            dispatch(loadSpotlights());
+            dispatch(loadLibHours());
+            dispatch(loadCompAvail());
+            dispatch(loadTrainingEvents());
+        }
+    }, [accountLoading, dispatch]);
+    useEffect(() => {
+        if (!accountLoading && !!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());
         }
-    }, [account, printBalance, printBalanceLoading, dispatch]);
+    }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
     useEffect(() => {
-        if (loggedInConfirmed(account) && !loans && loansLoading === null) {
+        if (!accountLoading && !!account && !loans && loansLoading === null) {
             dispatch(loadLoans());
         }
-    }, [account, loans, loansLoading, dispatch]);
+    }, [accountLoading, account, loans, loansLoading, dispatch]);
     useEffect(() => {
-        if (loggedInConfirmed(account) && !!author && !possibleRecords && possibleRecordsLoading === null) {
+        if (!accountLoading && !!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
             dispatch(searcheSpacePossiblePublications());
         }
-    }, [account, author, possibleRecords, possibleRecordsLoading, dispatch]);
+    }, [accountLoading, account, author, possibleRecords, possibleRecordsLoading, dispatch]);
     useEffect(() => {
-        if (loggedInConfirmed(account) && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+        if (!accountLoading && !!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
-    }, [account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
+    }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
+    const isLoggedIn = !accountLoading && !!account && !!account.id;
+    const isLoggedOut = !accountLoading && !account;
     return (
         <StandardPage>
             <div className="layout-card">
@@ -127,9 +141,7 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
-
-                    {/* Personalisation panel, mobile */}
-                    {loggedInConfirmed(account) && (
+                    {isLoggedIn && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -148,7 +160,7 @@ export const Index = ({
                     </Grid>
 
                     {/* Personalisation panel, desktop */}
-                    {loggedInConfirmed(account) && (
+                    {isLoggedIn && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -165,9 +177,13 @@ export const Index = ({
                     )}
 
                     {/* Hours panel, logged out */}
-                    {loggedOutConfirmed(account) && (
+                    {isLoggedOut && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
+                            <Hours
+                                libHours={libHours}
+                                libHoursLoading={libHoursLoading}
+                                isLoggedIn={!accountLoading && !!account}
+                            />
                         </Grid>
                     )}
                     <Grid item xs={12} md={4} data-testid="computer-availability-panel">
@@ -177,10 +193,13 @@ export const Index = ({
                             height={classes.computersAvailHeight}
                         />
                     </Grid>
-                    {/* Hours panel, logged in */}
-                    {loggedInConfirmed(account) && (
+                    {isLoggedIn && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
+                            <Hours
+                                libHours={libHours}
+                                libHoursLoading={libHoursLoading}
+                                isLoggedIn={!accountLoading && !!account}
+                            />
                         </Grid>
                     )}
 
@@ -200,11 +219,9 @@ export const Index = ({
                         </Grid>
                     )}
 
-                    {seePromoPanel(account) && (
-                        <Grid item xs={12} md={4}>
-                            <PromoPanel account={account} />
-                        </Grid>
-                    )}
+                    <Grid item xs={12} md={4}>
+                        <PromoPanel account={account} />
+                    </Grid>
                 </Grid>
             </div>
         </StandardPage>
@@ -212,7 +229,8 @@ export const Index = ({
 };
 
 Index.propTypes = {
-    account: PropTypes.any,
+    account: PropTypes.object,
+    accountLoading: PropTypes.bool,
     author: PropTypes.object,
     actions: PropTypes.any,
     spotlights: PropTypes.any,

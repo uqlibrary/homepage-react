@@ -59,7 +59,3 @@ export const unescapeString = text => {
     };
     return text.replace(/&[#\w]+;/g, getEntityMap);
 };
-
-export const loggedInConfirmed = account => !!account && !!account.id;
-
-export const loggedOutConfirmed = account => account === false;

@@ -13,7 +13,6 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { hoursLocale } from './Hours.locale';
 import Button from '@material-ui/core/Button';
 import ContentLoader from 'react-content-loader';
-import { loggedInConfirmed } from 'helpers/general';
 
 const useStyles = makeStyles(theme => ({
     scrollArea: {
@@ -172,7 +171,7 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const Hours = ({ libHours, libHoursLoading, account }) => {
+const Hours = ({ libHours, libHoursLoading, isLoggedIn }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || undefined);
@@ -268,7 +267,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         >
             <div
                 className={`${classes.flexWrapper} ${
-                    loggedInConfirmed(account) ? classes.componentHeight : classes.componentHeightPublic
+                    isLoggedIn ? classes.componentHeight : classes.componentHeightPublic
                 }`}
             >
                 <div className={classes.flexHeader}>
@@ -370,7 +369,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
 
 Hours.propTypes = {
     libHours: PropTypes.object,
-    account: PropTypes.any,
+    isLoggedIn: PropTypes.bool,
     libHoursLoading: PropTypes.bool,
 };
 

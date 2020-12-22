@@ -1,5 +1,4 @@
 import { default as locale } from 'modules/Index/components/locale';
-import { loggedInConfirmed } from './general';
 
 /**
 
@@ -52,7 +51,8 @@ const EXTRAMURAL_PROXY = 'PROXY';
 
 export const seeCourseResources = account => {
     return (
-        loggedInConfirmed(account) &&
+        !!account &&
+        !!account.id &&
         [
             UNDERGRADUATE_GENERAL,
             UNDERGRADUATE_REMOTE,
@@ -65,11 +65,13 @@ export const seeCourseResources = account => {
     );
 };
 
+const loggedInConfirmed = account => !!account && !!account.id;
+
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
 // (it also makes all the panels load predictably, as they all wait on the account check)
-const everyoneCanSee = account => loggedInConfirmed(account) || true;
+const everyoneCanSee = account => !!account || true;
 
-const loggedinCanSee = account => loggedInConfirmed(account);
+const loggedinCanSee = account => !!account && !!account.id;
 
 /* istanbul ignore next */
 export const loggedoutCanSee = account => !account;
@@ -81,7 +83,8 @@ export const seeOpeningHours = account => everyoneCanSee(account);
 export const seeMasquerade = account => loggedInConfirmed(account) && !!account.canMasquerade;
 
 export const seeRoomBookings = account =>
-    loggedInConfirmed(account) &&
+    !!account &&
+    !!account.user_group &&
     [
         LIBRARY_STAFF,
         UNDERGRADUATE_GENERAL,
