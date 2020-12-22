@@ -54,6 +54,18 @@ exports[`Application component Should display mobile correctly 1`] = `
     >
       <Connect(AppAlert) />
     </div>
+    <span
+      aria-label="Start of content"
+      id="headerAfter"
+      style={
+        Object {
+          "left": "-200px",
+          "position": "fixed",
+          "top": "-200px",
+        }
+      }
+      tabIndex="0"
+    />
     <div
       style={
         Object {
@@ -196,6 +208,18 @@ exports[`Application component should render application with routing for the us
     >
       <Connect(AppAlert) />
     </div>
+    <span
+      aria-label="Start of content"
+      id="headerAfter"
+      style={
+        Object {
+          "left": "-200px",
+          "position": "fixed",
+          "top": "-200px",
+        }
+      }
+      tabIndex="0"
+    />
     <div
       style={
         Object {
@@ -336,6 +360,18 @@ exports[`Application component should render for anon user 1`] = `
     >
       <Connect(AppAlert) />
     </div>
+    <span
+      aria-label="Start of content"
+      id="headerAfter"
+      style={
+        Object {
+          "left": "-200px",
+          "position": "fixed",
+          "top": "-200px",
+        }
+      }
+      tabIndex="0"
+    />
     <div
       style={
         Object {
@@ -470,6 +506,18 @@ exports[`Application component should render loading screen while account is loa
     >
       <Connect(AppAlert) />
     </div>
+    <span
+      aria-label="Start of content"
+      id="headerAfter"
+      style={
+        Object {
+          "left": "-200px",
+          "position": "fixed",
+          "top": "-200px",
+        }
+      }
+      tabIndex="0"
+    />
     <div>
       <WithStyles(ForwardRef(Grid))
         container={true}
@@ -2783,6 +2831,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                           <UQHeader>
                             <header
                               className="uq-header"
+                              id="uqheader"
                             >
                               <div
                                 className="uq-header__container"
@@ -2790,6 +2839,14 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                 <div
                                   className="nav-global"
                                 >
+                                  <a
+                                    aria-label="skip navigation"
+                                    href="#afterMegamenu"
+                                    id="skipNavigation"
+                                    title="Skip navigation"
+                                  >
+                                    Skip navigation
+                                  </a>
                                   <div
                                     className="logo"
                                   >
@@ -2932,6 +2989,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                               defaultChecked={true}
                                               id="edit-as_sitesearch-off"
                                               name="as_sitesearch"
+                                              tabIndex="-1"
                                               type="radio"
                                               value=""
                                             />
@@ -2949,6 +3007,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                               className="form-radio"
                                               id="edit-as_sitesearch-on"
                                               name="as_sitesearch"
+                                              tabIndex="-1"
                                               type="radio"
                                               value="https://library.uq.edu.au"
                                             />
@@ -2980,6 +3039,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                           maxLength="128"
                                           name="q"
                                           size="60"
+                                          tabIndex="-1"
                                           type="text"
                                         />
                                         <span
@@ -2987,7 +3047,9 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                         >
                                           <input
                                             className="search-query__submit"
+                                            id="uq-search"
                                             name="Search"
+                                            tabIndex="-1"
                                             type="submit"
                                             value="Search"
                                           />
@@ -6262,6 +6324,18 @@ exports[`Testing wrapped App component Mounts 1`] = `
                             />
                           </Connect(AppAlert)>
                         </div>
+                        <span
+                          aria-label="Start of content"
+                          id="headerAfter"
+                          style={
+                            Object {
+                              "left": "-200px",
+                              "position": "fixed",
+                              "top": "-200px",
+                            }
+                          }
+                          tabIndex="0"
+                        />
                         <div
                           style={
                             Object {

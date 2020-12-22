@@ -19,17 +19,27 @@ export const UQHeader = ({}) => {
         .slice(1, -1); // browsers re-quote string style values
     const mqLargeList = window.matchMedia(mqLarge);
 
+    function controlSiteSearchTabInclusion(tabIndexValue) {
+        document.getElementById('edit-as_sitesearch-off').tabIndex = tabIndexValue;
+        document.getElementById('edit-as_sitesearch-on').tabIndex = tabIndexValue;
+        document.getElementById('edit-q').tabIndex = tabIndexValue;
+        document.getElementById('uq-search').tabIndex = tabIndexValue;
+    }
+
     const handleToggle = () => {
         toggle.classList.toggle('search-toggle__button--icon-close');
         search.classList.toggle('nav-search--open');
 
         if (search.classList.contains('nav-search--open')) {
             if (mqLargeList.matches) {
+                controlSiteSearchTabInclusion('0');
                 searchInput.focus();
             } else {
+                controlSiteSearchTabInclusion('-1');
                 toggle.blur();
             }
         } else {
+            controlSiteSearchTabInclusion('-1');
             toggle.blur();
         }
     };
@@ -114,6 +124,7 @@ export const UQHeader = ({}) => {
                                             value=""
                                             className="form-radio"
                                             defaultChecked
+                                            tabIndex="-1"
                                         />
                                         <label htmlFor="edit-as_sitesearch-off" className="option">
                                             Search all UQ websites
@@ -126,6 +137,7 @@ export const UQHeader = ({}) => {
                                             name="as_sitesearch"
                                             value="https://library.uq.edu.au"
                                             className="form-radio"
+                                            tabIndex="-1"
                                         />
                                         <label htmlFor="edit-as_sitesearch-on" className="option">
                                             Search this website (library.uq.edu.au)
@@ -146,13 +158,16 @@ export const UQHeader = ({}) => {
                                     size="60"
                                     maxLength="128"
                                     className="search-query__input"
+                                    tabIndex="-1"
                                 />
                                 <span className="search-query__button">
                                     <input
+                                        id="uq-search"
                                         type="submit"
                                         name="Search"
                                         value="Search"
                                         className="search-query__submit"
+                                        tabIndex="-1"
                                     />
                                 </span>
                             </span>
