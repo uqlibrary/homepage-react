@@ -205,6 +205,14 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 ## Testing
 
+To run the complete test suite and get code coverage, run `npm run test:cc`
+
+This will run unit tests (jest) and e2e tests (cypress) and then merge the coverage of the 2 to give complete coverage.
+
+(make sure the local mock server isnt running before cypress begins or coverage doesnt work)
+
+This will wipe previous coverage file. 
+
 ### Unit testing
 
 Jest is used as testing tool for unit tests. Any HTMl markup is to be tested with snapshots.

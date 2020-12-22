@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseResourcesLocale';
+import locale from '../courseResources.locale';
 import { _courseLink } from '../courseResourcesHelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -28,6 +28,7 @@ export const SubjectLinks = ({ subject }) => {
     const classes = useStyles();
 
     // on the first render, add Legal Research Essentials to the Course Links for LAWS subjects
+    /* istanbul ignore next */
     !locale.myCourses.courseLinks.links.find(i => i.id === 'legalResearchEssentials') &&
         subject.classnumber.startsWith('LAWS') &&
         locale.myCourses.courseLinks.links.push(locale.myCourses.courseLinks.legalResearchEssentials);
@@ -41,6 +42,9 @@ export const SubjectLinks = ({ subject }) => {
                 {!!locale.myCourses.courseLinks.links &&
                     locale.myCourses.courseLinks.links.length > 0 &&
                     locale.myCourses.courseLinks.links.map((item, index) => {
+                        /* istanbul ignore next */
+                        const dataTestid =
+                            (!!item.id && subject.classnumber && `${item.id}-${subject.classnumber}`) || null;
                         return (
                             item.linkOutPattern &&
                             item.linkLabel && (
@@ -51,9 +55,8 @@ export const SubjectLinks = ({ subject }) => {
                                     xs={12}
                                 >
                                     <a
-                                        // on-tap="linkClicked"
-                                        data-testid={`${item.id}-${subject.classnumber}`}
-                                        id={item.id || null}
+                                        data-testid={dataTestid}
+                                        id={dataTestid}
                                         href={_courseLink(subject.classnumber, item.linkOutPattern)}
                                     >
                                         {!!item.icon && item.icon}

@@ -28,3 +28,14 @@ export const reverseA11yProps = (index, classname = null) => {
 };
 
 export const extractSubjectCodeFromName = subjectName => (subjectName || '').trim().split(' ')[0];
+
+export const trimNotes = (value, trimTo) => {
+    if (value && value.length > trimTo) {
+        let _trimmed = value.substring(0, trimTo);
+        // trim on word boundary
+        _trimmed = _trimmed.substring(0, _trimmed.lastIndexOf(' '));
+        return _trimmed + '...';
+    } else {
+        return value;
+    }
+};

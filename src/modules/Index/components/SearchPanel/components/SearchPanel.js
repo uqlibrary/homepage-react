@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { PropTypes } from 'prop-types';
 
-import { searchPanelLocale } from './searchPanelLocale';
+import { searchPanelLocale } from './searchPanel.locale';
 import { VoiceToText } from './voiceToText';
 import { isRepeatingString } from 'helpers/general';
 
@@ -124,9 +124,15 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 onChange={handleSearchTypeChange}
                                 SelectDisplayProps={{
                                     'data-testid': 'primo-search-select',
+                                    id: 'primo-search-select',
                                 }}
                                 MenuProps={{
                                     'data-testid': 'primo-search-select-list',
+                                    id: 'primo-search-select-list',
+                                }}
+                                inputProps={{
+                                    id: 'primo-search-select-input',
+                                    'data-testid': 'primo-search-select-input',
                                 }}
                             >
                                 {locale.typeSelect.items.map((item, index) => (

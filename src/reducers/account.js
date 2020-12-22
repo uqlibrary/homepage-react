@@ -3,8 +3,8 @@ import * as actions from 'actions/actionTypes';
 export const initialState = {
     account: null,
     author: null,
-    accountLoading: false,
-    accountAuthorLoading: false,
+    accountLoading: null,
+    accountAuthorLoading: null,
     isSessionExpired: null,
 };
 
@@ -17,6 +17,7 @@ const handlers = {
     [actions.CURRENT_ACCOUNT_LOADING]: () => ({
         ...initialState,
         ...initSavingState,
+        accountLoading: true,
     }),
 
     [actions.CURRENT_ACCOUNT_LOADED]: (state, action) => ({
@@ -28,6 +29,7 @@ const handlers = {
     [actions.CURRENT_ACCOUNT_ANONYMOUS]: () => ({
         ...initialState,
         ...initSavingState,
+        account: null,
         accountLoading: false,
         accountAuthorLoading: false,
         accountAuthorDetailsLoading: false,

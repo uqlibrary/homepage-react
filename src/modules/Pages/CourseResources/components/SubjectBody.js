@@ -36,6 +36,7 @@ const useStyles = makeStyles(
 export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
     const classes = useStyles();
 
+    /* istanbul ignore next */
     const coursecode = subject.classnumber || null;
     const firstReadingList =
         !!readingList &&
@@ -62,6 +63,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList }) => {
 
     const courseTitle = () => {
         // whichever one we get first (they should both have the same value)
+        /* istanbul ignore next */
         const title =
             (!!examList &&
                 !!examList.list &&

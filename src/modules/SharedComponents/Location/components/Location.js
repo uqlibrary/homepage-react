@@ -17,15 +17,15 @@ const useStyles = makeStyles(theme => ({
     },
     iconButton: {
         marginTop: -4,
-        marginLeft: -3,
+        marginLeft: 0,
         color: theme.palette.secondary.main,
         textTransform: 'none',
         fontSize: 14,
     },
     icon: {
-        marginLeft: 13,
+        marginLeft: 0,
         marginBottom: -2,
-        marginRight: 5,
+        marginRight: 0,
         marginTop: -2,
         height: 14,
         width: 14,
@@ -70,7 +70,7 @@ export const Location = ({ idLabel }) => {
     }
     const id = (tag = null) => `location${!!idLabel ? '-' + idLabel : ''}${!!tag ? '-' + tag : ''}`;
     return (
-        <div id={id()} data-testid={id()} style={{ marginLeft: -16 }}>
+        <div id={id()} data-testid={id()}>
             <Tooltip
                 id={id('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}

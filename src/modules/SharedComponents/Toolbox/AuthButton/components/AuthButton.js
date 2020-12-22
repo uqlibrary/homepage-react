@@ -26,8 +26,8 @@ export const AuthButton = ({ isAuthorizedUser, ariaLabel, onClick }) => {
     const classes = useStyles();
     return (
         <IconButton
-            id="auth-button"
-            data-testid="auth-button"
+            id={isAuthorizedUser ? 'auth-button-loggedin' : 'auth-button-loggedout'}
+            data-testid={isAuthorizedUser ? 'auth-button-loggedin' : 'auth-button-loggedout'}
             aria-label={ariaLabel}
             onClick={onClick}
             className={isAuthorizedUser ? 'log-out-button' : 'log-in-button'}
@@ -41,7 +41,9 @@ export const AuthButton = ({ isAuthorizedUser, ariaLabel, onClick }) => {
             ) : (
                 <PersonOutline id="logged-out-icon" className={classes.iconButton} />
             )}
-            <div>{!!isAuthorizedUser ? 'Log out' : 'Log in'}</div>
+            <div id={isAuthorizedUser ? 'log-out-label' : 'log-in-label'}>
+                {!!isAuthorizedUser ? 'Log out' : 'Log in'}
+            </div>
         </IconButton>
     );
 };

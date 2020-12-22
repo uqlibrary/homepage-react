@@ -46,44 +46,6 @@ export const maxWords = max => value => {
         : undefined;
 };
 
-export const maxWords100 = maxWords(100);
-
-export const maxListEditorTextLength = max => value => {
-    let valueToValidate = null;
-    if (typeof value === 'object' && value.hasOwnProperty('plainText')) {
-        valueToValidate = value.plainText;
-    } else {
-        valueToValidate = value;
-    }
-
-    return maxLengthWithWhitespace(max)(valueToValidate);
-};
-
-export const maxListEditorTextLength800 = maxListEditorTextLength(800);
-export const maxListEditorTextLength2000 = maxListEditorTextLength(2000);
-
-// TODO: fix validation, make it generic etc....
-export const isValidDOIValue = value => {
-    const regexGroup = [
-        /^10.\d{4,9}\/[-._;()/:A-Z0-9]+$/i,
-        /^10.1002\/[^\s]+$/i,
-        /^10.\d{4}\/\d+-\d+X?\(\d+\)\d+<[\d\w]+:[\d\w]*>\d+.\d+.\w+;\d$/i,
-        /^10.1021\/\w\w\d+$/i,
-        /^10.1207\/[\w\d]+\&\d+_\d+$/i,
-    ];
-
-    return regexGroup.reduce((isValid, regex) => regex.test(value.trim()) || isValid, false);
-};
-export const isValidPubMedValue = value => {
-    // pubmed id is all digits, min 3 digits
-    const isValid = /^[\d]{3,}$/;
-    return isValid.test(value.trim());
-};
-export const isValidPartialDOIValue = value => {
-    const isValid = /^10\..*/;
-    return isValid.test(value.trim());
-};
-
 export const isValidPid = value => {
     const isValid = /^uq:[a-z0-9]+$/i;
     return isValid.test(value.toString().trim());
@@ -110,7 +72,6 @@ export const email = value =>
     !value || !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value) ? locale.validationErrors.email : undefined;
 export const url = value =>
     value && !/^(http[s]?|ftp[s]?)(:\/\/){1}(.*)$/i.test(value) ? locale.validationErrors.url : maxLength2000(value);
-export const doi = value => (!!value && !isValidDOIValue(value) ? locale.validationErrors.doi : undefined);
 export const pid = value => (!!value && !isValidPid(value) ? locale.validationErrors.pid : undefined);
 export const forRequired = itemList =>
     !itemList || itemList.length === 0 ? locale.validationErrors.forRequired : undefined;

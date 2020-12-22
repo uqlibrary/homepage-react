@@ -4,6 +4,7 @@ import {
     a11yProps,
     extractSubjectCodeFromName,
     reverseA11yProps,
+    trimNotes,
 } from './courseResourcesHelpers';
 import { isValidInput } from './components/CourseResources';
 
@@ -83,5 +84,18 @@ describe('filterProps helper', () => {
             semester: 'alert("hack")', // invalid period
         };
         expect(isValidInput(params4)).toBe(false);
+
+        const params7 = {
+            campus: 'St Lucia',
+            coursecode: 'FREN1010',
+            semester: 'Semester 2 2020',
+            other: 'some other option that isnt allowed',
+        };
+        expect(isValidInput(params7)).toBe(false);
+    });
+
+    it('should trim text properly', () => {
+        expect(trimNotes('the quick brown fox jumped over the lazy yellow dog', 10)).toEqual('the quick...');
+        expect(trimNotes('good test', 20)).toEqual('good test');
     });
 });
