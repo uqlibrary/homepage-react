@@ -70,12 +70,6 @@ export const seeCourseResources = account => {
     );
 };
 
-/* istanbul ignore next */
-export const seeComputerAvailability = account => everyoneCanSee(account);
-
-/* istanbul ignore next */
-export const seeOpeningHours = account => everyoneCanSee(account);
-
 export const seeMasquerade = account => loggedinCanSee(account) && !!account.canMasquerade;
 
 export const seeRoomBookings = account =>
@@ -92,26 +86,6 @@ export const seeRoomBookings = account =>
     ].includes(account.user_group);
 
 export const seeLoans = account => loggedinCanSee(account);
-
-export const seeFines = account =>
-    loggedinCanSee(account) &&
-    [
-        UNDERGRADUATE_GENERAL,
-        UNDERGRADUATE_REMOTE,
-        UNDERGRADUATE_TESOL,
-        UNDERGRADUATE_VOCATIONAL,
-        POSTGRAD_COURSEWORK,
-        POSTGRAD_COURSEWORK_REMOTE,
-        POSTGRAD_RESEARCH,
-        POSTGRAD_RESEARCH_REMOTE,
-        EXTRAMURAL_COMMUNITY_PAID,
-        EXTRAMURAL_ALUMNI,
-        EXTRAMURAL_HOSPITAL,
-        EXTRAMURAL_ASSOCIATE,
-        EXTRAMURAL_FRYER,
-        EXTRAMURAL_PROXY,
-        EXTRAMURAL_HONORARY,
-    ].includes(account.user_group);
 
 export const seePrintBalance = account => loggedinCanSee(account);
 
@@ -141,9 +115,6 @@ export const seeEspace = (account, author) => loggedinCanSee(account) && !!autho
 export const seeTraining = account => everyoneCanSee(account);
 
 export const seeLibraryServices = account => loggedinCanSee(account);
-
-/* istanbul ignore next */
-export const seePromoPanel = account => everyoneCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);
 
