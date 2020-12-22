@@ -126,3 +126,22 @@ abbr {
   text-decoration: none !important;
 }
 
+#skipNavigation {
+  position: absolute;
+  transform: translateY(-100%);
+  transition: transform 0.3s;
+
+  background-color: #000;
+  color: #FFF;
+  left: 300px;
+  margin: 5px;
+  padding: 1rem 0.5rem;
+  top: -50px;
+}
+
+#skipNavigation:focus {
+  transform: translateY(0%);
+  outline: #73B8F9 auto 5px;
+  outline-offset: -4px;
+  top: auto;
+}

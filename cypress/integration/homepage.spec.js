@@ -8,7 +8,6 @@ import {
 context('Homepage', () => {
     it('Renders an on-campus undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
-        cy.wait(1000);
 
         // this type of user will see the following panels:
         hasPanels([
@@ -39,7 +38,6 @@ context('Homepage', () => {
 
     it('Renders an RHD home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
-        cy.wait(1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
@@ -59,7 +57,6 @@ context('Homepage', () => {
 
     it('Renders a remote undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s3333333', 'Juno');
-        cy.wait(1000);
 
         hasPanels([
             'computer-availability',
@@ -87,7 +84,6 @@ context('Homepage', () => {
 
     it('Renders a researcher home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqresearcher', 'John');
-        cy.wait(1000);
 
         hasPanels([
             'computer-availability',
@@ -114,7 +110,6 @@ context('Homepage', () => {
 
     it('Renders a library staff administrator home page correctly', () => {
         expectUserToDisplayCorrectFirstName('digiteamMember', 'Caroline');
-        cy.wait(1000);
 
         hasPanels([
             'computer-availability',
@@ -143,7 +138,6 @@ context('Homepage', () => {
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqstaffnonpriv', 'UQ');
-        cy.wait(1000);
 
         hasPanels([
             'computer-availability',
@@ -171,7 +165,6 @@ context('Homepage', () => {
 
     it('Renders a non-library staff member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('uqpkopit', 'Peter');
-        cy.wait(1000);
 
         hasPanels([
             'computer-availability',
@@ -198,7 +191,6 @@ context('Homepage', () => {
 
     it('Renders a paid Community EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
-        cy.wait(1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
@@ -209,7 +201,6 @@ context('Homepage', () => {
 
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emalumni', 'Alumni');
-        cy.wait(1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
@@ -220,7 +211,6 @@ context('Homepage', () => {
 
     it('Renders a Hospital EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
-        cy.wait(1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
@@ -238,7 +228,6 @@ context('Homepage', () => {
 
     it('Renders an Associate EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emassociate', 'Associate');
-        cy.wait(1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
@@ -256,7 +245,6 @@ context('Homepage', () => {
 
     it('Renders a Fryer Library EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
-        cy.wait(1000);
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
@@ -267,7 +255,6 @@ context('Homepage', () => {
 
     it('Renders an Honorary EM member home page correctly', () => {
         expectUserToDisplayCorrectFirstName('emhonorary', 'Honorary');
-        cy.wait(1000);
 
         hasPanels([
             'computer-availability',
@@ -303,4 +290,20 @@ context('Homepage', () => {
         // no mylibrary button
         cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
     });
+
+    // it('The skip navigation link works', () => {
+    //     console.log('start test');
+    //     cy.visit('/?user=vanilla');
+    //     cy.wait(1000);
+    //     cy.viewport(1300, 1000);
+    //
+    //     // put focus on the top of the page, tab into the first element, which will be the skip element,
+    //     // click and focus should then be further down the page
+    //     cy.get('#skipNavigation')
+    //         .first()
+    //         .focus()
+    //         .type('{enter}', { force: true });
+    //     // current lelement is skip nav button
+    //     cy.focused().should('have.attr', 'id', 'afterMegamenu');
+    // });
 });

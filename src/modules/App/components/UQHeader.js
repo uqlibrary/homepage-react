@@ -35,9 +35,12 @@ export const UQHeader = ({}) => {
     };
 
     return (
-        <header className="uq-header">
+        <header className="uq-header" id="uqheader">
             <div className="uq-header__container">
                 <div className="nav-global">
+                    <a id="skipNavigation" aria-label="skip navigation" title="Skip navigation" href="#afterMegamenu">
+                        Skip navigation
+                    </a>
                     <div className="logo">
                         <a className="logo--large" href="https://www.uq.edu.au/">
                             <img

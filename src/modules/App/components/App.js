@@ -207,6 +207,12 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
+                    <span
+                        id="headerAfter"
+                        tabIndex="0"
+                        aria-label="Start of content"
+                        style={{ position: 'fixed', top: '-200px', left: '-200px' }}
+                    />
                     {!isAccountLoading && (
                         <div style={{ flexGrow: 1, marginTop: 16 }}>
                             <AccountContext.Provider
