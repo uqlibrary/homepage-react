@@ -71,7 +71,6 @@ context('Homepage', () => {
             'borrowing',
             'course-resources',
             'document-delivery',
-            'espace',
             'print-balance',
             'room-bookings',
             'saved-items',
@@ -79,7 +78,7 @@ context('Homepage', () => {
             'feedback',
         ]);
 
-        hasPersonalisedPanelOptions(['espace-possible', 'espace-orcid', 'espace-ntro', 'fines', 'loans', 'papercut']);
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
     it('Renders a researcher home page correctly', () => {

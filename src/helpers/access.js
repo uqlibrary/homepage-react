@@ -73,9 +73,6 @@ const everyoneCanSee = account => !!account || true;
 
 const loggedinCanSee = account => !!account && !!account.id;
 
-/* istanbul ignore next */
-export const loggedoutCanSee = account => !account;
-
 export const seeComputerAvailability = account => everyoneCanSee(account);
 
 export const seeOpeningHours = account => everyoneCanSee(account);

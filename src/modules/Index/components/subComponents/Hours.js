@@ -171,7 +171,7 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const Hours = ({ libHours, libHoursLoading, isLoggedIn }) => {
+const Hours = ({ libHours, libHoursLoading, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || undefined);
