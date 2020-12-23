@@ -2797,13 +2797,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                       </li>
                                       <li>
                                         <a
-                                          href="https://www.library.uq.edu.au/"
-                                        >
-                                          Library
-                                        </a>
-                                      </li>
-                                      <li>
-                                        <a
                                           href="https://giving.uq.edu.au/"
                                         >
                                           Give now
@@ -2866,7 +2859,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                           >
                                             <input
                                               className="form-radio"
-                                              defaultChecked={true}
                                               id="edit-as_sitesearch-off"
                                               name="as_sitesearch"
                                               tabIndex="-1"
@@ -2885,6 +2877,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                           >
                                             <input
                                               className="form-radio"
+                                              defaultChecked={true}
                                               id="edit-as_sitesearch-on"
                                               name="as_sitesearch"
                                               tabIndex="-1"
