@@ -454,7 +454,7 @@ export function Megamenu(props) {
     }
 
     if (!menuOpen) {
-        return <div className="megamenu empty" />;
+        return <div data-testid="mega-menu-empty" className="megamenu empty" />;
     }
 
     const renderHomePageItem = () => {
@@ -498,7 +498,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className={classes.megamenu} id={rest.id || 'megamenu'}>
+        <div className={classes.megamenu} data-testid="mega-menu" id={rest.id || 'megamenu'}>
             <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
                 {props.hasHomePageItem && renderHomePageItem()}
                 {menuItems.map((menuItem, index) => {
