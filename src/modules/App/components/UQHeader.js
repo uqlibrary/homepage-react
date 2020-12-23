@@ -86,9 +86,6 @@ export const UQHeader = ({}) => {
                                 <a href="https://jobs.uq.edu.au/">Jobs</a>
                             </li>
                             <li>
-                                <a href="https://www.library.uq.edu.au/">Library</a>
-                            </li>
-                            <li>
                                 <a href="https://giving.uq.edu.au/">Give now</a>
                             </li>
                             <li>
@@ -123,7 +120,6 @@ export const UQHeader = ({}) => {
                                             name="as_sitesearch"
                                             value=""
                                             className="form-radio"
-                                            defaultChecked
                                             tabIndex="-1"
                                         />
                                         <label htmlFor="edit-as_sitesearch-off" className="option">
@@ -137,6 +133,7 @@ export const UQHeader = ({}) => {
                                             name="as_sitesearch"
                                             value="https://library.uq.edu.au"
                                             className="form-radio"
+                                            defaultChecked
                                             tabIndex="-1"
                                         />
                                         <label htmlFor="edit-as_sitesearch-on" className="option">
