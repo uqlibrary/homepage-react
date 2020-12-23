@@ -23,7 +23,7 @@ context('Megamenu', () => {
             .click();
 
         // menu items no longer available
-        cy.get('[data-testid=mobile-menu] div.megamenu.empty').should('have.length', 1);
+        cy.get('[data-testid=mega-menu-empty]').should('have.length', 1);
     });
 
     it('Megamenu Desktop', () => {
