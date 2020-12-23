@@ -2,6 +2,7 @@
 
 exports[`Component Megamenu should display mobile correctly 1`] = `
 <div
+  data-testid="mega-menu"
   id="megamenu"
 >
   <WithStyles(ForwardRef(List))
@@ -77,11 +78,13 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
 exports[`Component Megamenu should render empty drawer 1`] = `
 <div
   className="megamenu empty"
+  data-testid="mega-menu-empty"
 />
 `;
 
 exports[`Component Megamenu should render opened drawer with menus 1`] = `
 <div
+  data-testid="mega-menu"
   id="megamenu"
 >
   <WithStyles(ForwardRef(List))
