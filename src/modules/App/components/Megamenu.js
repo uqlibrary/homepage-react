@@ -356,9 +356,9 @@ export function Megamenu(props) {
             <List
                 component="div"
                 disablePadding
-                key={`menu-group-${index}`}
-                data-testid={`menu-group-${index}`}
-                id={`menu-group-${index}`}
+                key={`megamenu-group-${index}`}
+                data-testid={`megamenu-group-${index}`}
+                id={`megamenu-group-${index}`}
                 className={classes.verticalMenuList}
             >
                 {!!menuColumn &&
@@ -368,9 +368,9 @@ export function Megamenu(props) {
                         return (
                             <ListItem
                                 button
-                                data-testid={`menu-group-${index}-item-${index2}`}
-                                key={`menu-group-${index}-item-${index2}`}
-                                id={`menu-group-${index}-item-${index2}`}
+                                data-testid={`megamenu-group-${index}-item-${index2}`}
+                                key={`megamenu-group-${index}-item-${index2}`}
+                                id={`megamenu-group-${index}-item-${index2}`}
                                 onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
                                 className={`classes.menuItem ${endItemClass}`}
                             >
@@ -427,9 +427,9 @@ export function Megamenu(props) {
                         menuItem.linkTo === window.location.href ? classes.currentPage : '',
                         'submenuheader',
                     )}
-                    data-testid={`submenus-item-${index}`}
-                    key={`submenus-item-${index}`}
-                    id={`submenus-item-${index}`}
+                    data-testid={`megamenu-submenus-item-${index}`}
+                    key={`megamenu-submenus-item-${index}`}
+                    id={`megamenu-submenus-item-${index}`}
                     onClick={() => clickMenuItem(menuItem)}
                 >
                     <ListItemText
@@ -506,7 +506,15 @@ export function Megamenu(props) {
                 })}
                 {props.hasCloseItem && renderCloseItem()}
             </List>
-            <div id="afterMegamenu" />
+            <span
+                id="afterMegamenu"
+                role="region"
+                tabIndex="0"
+                aria-label="Start of content"
+                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+            >
+                Start of content
+            </span>
         </div>
     );
 }

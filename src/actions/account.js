@@ -20,6 +20,10 @@ import { sessionApi } from 'config';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
 export function getClassNumberFromPieces(subject) {
+    /* istanbul ignore next */
+    if (!subject || !subject.SUBJECT || !subject.CATALOG_NBR) {
+        return '';
+    }
     return `${subject.SUBJECT}${subject.CATALOG_NBR}`;
 }
 
@@ -186,10 +190,10 @@ export function loadPrintBalance() {
     return dispatch => {
         dispatch({ type: actions.PRINT_BALANCE_LOADING });
         return get(PRINTING_API())
-            .then(hoursResponse => {
+            .then(papercutResponse => {
                 dispatch({
                     type: actions.PRINT_BALANCE_LOADED,
-                    payload: hoursResponse,
+                    payload: papercutResponse,
                 });
             })
             .catch(error => {
@@ -210,10 +214,10 @@ export function loadLoans() {
     return dispatch => {
         dispatch({ type: actions.LOANS_LOADING });
         return get(LOANS_API())
-            .then(hoursResponse => {
+            .then(loanResponse => {
                 dispatch({
                     type: actions.LOANS_LOADED,
-                    payload: hoursResponse,
+                    payload: loanResponse,
                 });
             })
             .catch(error => {

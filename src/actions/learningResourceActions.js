@@ -66,20 +66,17 @@ export function loadReadingLists(coursecode, campus, semester, account) {
     const extractDetailsOfEnrolmentFromCurrentClassList = classnumber => {
         const currentClasses = account.current_classes;
 
-        const subjectTemplate = {
-            semester: null,
-            CAMPUS: null,
-            INSTRUCTION_MODE: null,
-        };
-
         const subjectlist =
             !!currentClasses && currentClasses.filter(aClass => !!aClass && aClass.classnumber === classnumber);
         const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+        const theSemester = thisSubject?.semester || null;
+        const theCampus = thisSubject?.CAMPUS || null;
+        const instructionMode = thisSubject?.INSTRUCTION_MODE || null;
         return !!thisSubject
             ? {
-                  semester: thisSubject?.semester || subjectTemplate.semester,
-                  CAMPUS: thisSubject?.CAMPUS || subjectTemplate.CAMPUS,
-                  INSTRUCTION_MODE: thisSubject?.INSTRUCTION_MODE || subjectTemplate.INSTRUCTION_MODE,
+                  semester: theSemester,
+                  CAMPUS: theCampus,
+                  INSTRUCTION_MODE: instructionMode,
               }
             : null;
     };
@@ -126,14 +123,12 @@ export function loadReadingLists(coursecode, campus, semester, account) {
             const semesterString = subjectEnrolment.semester;
             const campus = getCampusByCode(subjectEnrolment.CAMPUS);
             return readingLists.filter(item => {
-                return (
-                    item.period === semesterString &&
-                    (item.campus.indexOf(campus) !== -1 || subjectEnrolment.INSTRUCTION_MODE === 'EX')
-                );
+                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
             });
         }
     };
 
+    /* istanbul ignore next */
     if (coursecode.length !== 8 && coursecode.length !== 9) {
         // coursecodes have a length of 8 eg FREN1101, with a small number of weird outliers with 9
         return false;

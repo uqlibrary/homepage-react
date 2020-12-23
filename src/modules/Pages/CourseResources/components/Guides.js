@@ -24,17 +24,21 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const Guides = ({ guideList, guideListLoading, guideListError }) => {
+export const Guides = ({ headingLevel, guideList, guideListLoading, guideListError }) => {
     const classes = useStyles();
 
     const coursecode = !!guideList && !!guideList.length > 0 && guideList[0].coursecode;
     return (
         <StandardCard fullHeight noHeader standardCardId={`guides-${coursecode}`}>
-            <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
                 {locale.myCourses.guides.title}
             </Typography>
             <Grid container className={'guides'}>
-                {!!guideListLoading && (
+                {!!guideListError && (
+                    /* istanbul ignore next */
+                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
+                )}
+                {!guideListError && !!guideListLoading && (
                     <Grid
                         item
                         xs={12}
@@ -48,18 +52,11 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                         <CircularProgress color="primary" size={20} data-testid="loading-guide-suggestions" />
                     </Grid>
                 )}
-
-                {!!guideListError && (
-                    /* istanbul ignore next */
-                    <Typography>{locale.myCourses.guides.unavailable}</Typography>
-                )}
-
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
                     <Grid item xs={12} data-testid="no-guides" className={classes.courseResourceLineItem}>
                         <Typography>{locale.myCourses.guides.none}</Typography>
                     </Grid>
                 )}
-
                 {!guideListError &&
                     !guideListLoading &&
                     !!guideList &&
@@ -79,11 +76,10 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
                             </Grid>
                         );
                     })}
-
+                {/* guides doesnt display a 'view N more' link because Guides doesnt have a search-by-course-code fn*/}
                 {!!locale.myCourses.guides.footer.links &&
                     locale.myCourses.guides.footer.links.length > 0 &&
                     locale.myCourses.guides.footer.links.map((item, index) => {
-                        /* istanbul ignore next */
                         const dataTestId = item.id || null;
                         return (
                             item.linkTo &&
@@ -108,13 +104,14 @@ export const Guides = ({ guideList, guideListLoading, guideListError }) => {
 };
 
 Guides.propTypes = {
-    readingList: PropTypes.any,
-    readingListLoading: PropTypes.bool,
-    readingListError: PropTypes.any,
+    actions: PropTypes.object,
+    headingLevel: PropTypes.string,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.any,
-    actions: PropTypes.object,
+    readingList: PropTypes.any,
+    readingListLoading: PropTypes.bool,
+    readingListError: PropTypes.any,
 };
 
 export default React.memo(Guides);

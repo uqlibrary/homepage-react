@@ -30,7 +30,7 @@ import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import UQHeader from './UQHeader';
 import ChatStatus from './ChatStatus';
-import { ConnectFooter, MinimalFooter } from '../../SharedComponents/Footer';
+import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 import UQSiteHeader from './UQSiteHeader';
 
 const styles = theme => ({

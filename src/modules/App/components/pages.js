@@ -1,7 +1,7 @@
 import React from 'react';
 
 // lazy loaded components
-export const NotFound = React.lazy(() => import('modules/Pages/NotFound/components/NotFound'));
+export const NotFound = React.lazy(() => import('modules/Pages/NotFound/containers/NotFound'));
 export const CourseResources = React.lazy(() => import('modules/Pages/CourseResources/containers/CourseResources'));
 
 // always load components

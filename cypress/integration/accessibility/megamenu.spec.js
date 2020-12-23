@@ -6,7 +6,7 @@ context('ACCESSIBILITY Megamenu', () => {
         cy.get('[data-testid=main-menu]').contains('Library services');
         cy.log('Megamenu Desktop');
         // open first menu
-        cy.get('[data-testid=submenus-item-0').click();
+        cy.get('[data-testid=megamenu-submenus-item-0').click();
         cy.checkA11y('[data-testid=main-menu]', {
             reportName: 'Megamenu',
             scopeName: 'Content',

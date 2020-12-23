@@ -11,11 +11,11 @@ context('Megamenu', () => {
             .contains('Menu')
             .click();
         // open first menu
-        cy.get('[data-testid=submenus-item-0]').click();
+        cy.get('[data-testid=megamenu-submenus-item-0]').click();
 
-        cy.get('[data-testid=menu-group-1-item-1]').contains(menu.publicmenu[0].submenuItems[1].primaryText);
+        cy.get('[data-testid=megamenu-group-1-item-1]').contains(menu.publicmenu[0].submenuItems[1].primaryText);
         // close sub menu so the Close button isnt covered up (close button removed from menu list)
-        // cy.get('[data-testid=submenus-item-0]').click();
+        // cy.get('[data-testid=megamenu-submenus-item-0]').click();
 
         // close the hamburger menu
         cy.get('[data-testid=mobile-menu]')
@@ -34,23 +34,23 @@ context('Megamenu', () => {
         cy.get('[data-testid=main-menu]').contains('Library services');
 
         // open first menu
-        cy.get('[data-testid=submenus-item-0').click();
-        cy.get('[data-testid=menu-group-1-item-0]').should('be.visible');
+        cy.get('[data-testid=megamenu-submenus-item-0').click();
+        cy.get('[data-testid=megamenu-group-1-item-0]').should('be.visible');
 
         // menus close when user tabs out of end of menu or
         // shift-tabs out of the beginning of a menu and then off the header
         // tbd - cypress support coming https://github.com/cypress-io/cypress/issues/299
 
         // a menu can be closed with an escape key click
-        cy.get('[data-testid=submenus-item-0]').type('{esc}', { force: true });
-        cy.get('[data-testid=menu-group-1-item-0]').should('not.be.visible');
+        cy.get('[data-testid=megamenu-submenus-item-0]').type('{esc}', { force: true });
+        cy.get('[data-testid=megamenu-group-1-item-0]').should('not.be.visible');
 
         // the menu items contain the correct labels
-        cy.get('[data-testid=submenus-item-0]')
+        cy.get('[data-testid=megamenu-submenus-item-0]')
             .contains(menu.publicmenu[0].primaryText)
             .click();
-        cy.get('[data-testid=menu-group-1-item-0] p').contains(menu.publicmenu[0].submenuItems[0].secondaryText);
-        cy.get('[data-testid=menu-group-1-item-0]')
+        cy.get('[data-testid=megamenu-group-1-item-0] p').contains(menu.publicmenu[0].submenuItems[0].secondaryText);
+        cy.get('[data-testid=megamenu-group-1-item-0]')
             .contains(menu.publicmenu[0].submenuItems[0].primaryText)
             .click();
 

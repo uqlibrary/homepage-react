@@ -1,5 +1,5 @@
-context('ACCESSIBILITY', () => {
-    it('Spotlights', () => {
+context('Spotlights', () => {
+    it('Renders as expected', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);

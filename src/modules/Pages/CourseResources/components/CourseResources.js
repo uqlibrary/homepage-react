@@ -7,7 +7,7 @@ import locale from '../courseResources.locale';
 import global from 'locale/global';
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
-import { MyCourses } from './MyCourses';
+import { courseTabLabel, MyCourses } from './MyCourses';
 import { SearchCourses } from './SearchCourses';
 import { TabPanel } from './TabPanel';
 
@@ -111,7 +111,8 @@ export const CourseResources = ({
 
     const loadNewSubject = React.useCallback(
         (classnumber, campus, semester) => {
-            if (!classnumber || classnumber.length < 8 || isRepeatingString(classnumber)) {
+            const minLengthOfValidCourseCode = 8;
+            if (!classnumber || classnumber.length < minLengthOfValidCourseCode || isRepeatingString(classnumber)) {
                 return;
             }
 
@@ -178,6 +179,33 @@ export const CourseResources = ({
     const [listSearchedSubjects, addToSearchList] = useState([]);
     const updateSearchList = newSearchKey => {
         addToSearchList(newSearchKey);
+    };
+
+    const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
+
+    const loadSubjectAndFocusOnTab = (coursecode, subjectTabId) => {
+        if (!currentReadingLists[coursecode]) {
+            /* istanbul ignore else */
+            const enrolledClass =
+                (!!account &&
+                    !!account.current_classes &&
+                    account.current_classes.find(c => c.classnumber === coursecode)) ||
+                null;
+            /* istanbul ignore else */
+            const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
+            /* istanbul ignore else */
+            const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
+            loadNewSubject(coursecode, campus, semester);
+        }
+
+        setCurrentMenuTab(subjectTabId);
+    };
+
+    const selectMyCoursesTab = (subjectId, tabPosition) => {
+        setCurrentTopTab('top0');
+        const tabLabel = `${courseTabLabel}-${tabPosition}`;
+
+        loadSubjectAndFocusOnTab(subjectId, tabLabel);
     };
 
     // store the reading list for this subject in currentReadingLists by subject
@@ -272,7 +300,7 @@ export const CourseResources = ({
 
     return (
         <StandardPage title={locale.title} goBackFunc={() => history.back()} goBackTooltip="Go back">
-            <div className="layout-card" style={{ margin: '0 auto 16px' }}>
+            <section className="layout-card" style={{ margin: '0 auto 16px' }} aria-live="assertive">
                 <StandardCard noPadding noHeader customBackgroundColor="#F7F7F7" style={{ boxShadow: '0 0 black' }}>
                     <Grid container>
                         <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
@@ -300,6 +328,9 @@ export const CourseResources = ({
                                     readingList={readingLists}
                                     examList={examLists}
                                     guideList={guideLists}
+                                    setCurrentMenuTab={setCurrentMenuTab}
+                                    coursemenu={coursemenu}
+                                    loadSubjectAndFocusOnTab={loadSubjectAndFocusOnTab}
                                 />
                             </TabPanel>
                             <TabPanel
@@ -317,12 +348,13 @@ export const CourseResources = ({
                                     readingList={readingLists}
                                     examList={examLists}
                                     guideList={guideLists}
+                                    selectMyCoursesTab={selectMyCoursesTab}
                                 />
                             </TabPanel>
                         </Grid>
                     </Grid>
                 </StandardCard>
-            </div>
+            </section>
         </StandardPage>
     );
 };

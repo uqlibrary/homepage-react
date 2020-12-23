@@ -55,7 +55,7 @@ export default {
                     "created": "2018-07-25T22:46:13+00:00",
                     "studentNote": "",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": "Recommended"
                 },
                 {
                     "referenceType": "Book",
@@ -74,7 +74,7 @@ export default {
                     "created": "2018-07-25T22:46:14+00:00",
                     "studentNote": "Read pages 78-89",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": "Further"
                 },
                 {
                     "isbn": "",
@@ -94,7 +94,6 @@ export default {
                     "created": "2018-07-25T23:49:23+00:00",
                     "studentNote": "",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
                 },
                 {
                     "referenceType": "Book",
@@ -134,7 +133,7 @@ export default {
                     "created": "2018-07-25T23:57:49+00:00",
                     "studentNote": "",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": "Recommended"
                 },
                 {
                     "referenceType": "Book",
@@ -153,7 +152,7 @@ export default {
                     "created": "2018-07-26T00:17:45+00:00",
                     "studentNote": "Read Question 4: Why Did the Australian Colonies Federate? pp.89-121",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": "Further"
                 },
                 {
                     "referenceType": "Book",
@@ -172,7 +171,7 @@ export default {
                     "created": "2018-07-26T00:19:42+00:00",
                     "studentNote": "Read Chapter 11: States of Mind: Federation and the Problematic Constitution Clive Moore, pp.170-185",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": ""
                 },
                 {
                     "referenceType": "Book",
@@ -191,7 +190,6 @@ export default {
                     "created": "2018-07-26T00:23:32+00:00",
                     "studentNote": "Read pages 72-79; 134-137, 173",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
                 },
                 {
                     "isbn": "",
@@ -224,7 +222,7 @@ export default {
                     "created": "2018-07-26T00:27:23+00:00",
                     "studentNote": "Read 2015 Dawn Service, Gallipoli, 25 April 2015.",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": "Recommended"
                 },
                 {
                     "referenceType": "Book",
@@ -243,7 +241,7 @@ export default {
                     "created": "2018-07-26T00:38:32+00:00",
                     "studentNote": "Read Chapter 6: Reversal of Fortunes: POW Contacts in Captivity, pp.148-171",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": "Further"
                 },
                 {
                     "referenceType": "Book",
@@ -261,7 +259,6 @@ export default {
                     "created": "2018-07-26T00:42:57+00:00",
                     "studentNote": "Read Chapter 2: Fortune Hunters, pp.32-54",
                     "libraryNote": "Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
                 },
                 {
                     "referenceType": "Book",
@@ -279,7 +276,7 @@ export default {
                     "created": "2018-07-26T00:45:25+00:00",
                     "studentNote": "Read Chapter 7: Seduction and coercion",
                     "libraryNote": "Print book contents: Chapter 7 = p.134-150 nh 10.7.2020 -- Requested by lec Martin Crotty 9.7.2020 for Semester 2 2020 nh",
-                    "importance": "Required"
+                    "importance": ""
                 },
                 {
                     "isbn": "",

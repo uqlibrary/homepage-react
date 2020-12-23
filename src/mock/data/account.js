@@ -119,7 +119,7 @@ export const accounts = {
             "SUBJECT": "PHIL",
             "CATALOG_NBR": "1002",
             "CAMPUS": "STLUC",
-            "INSTRUCTION_MODE": "IN",
+            "INSTRUCTION_MODE": "EX",
             "ACAD_GROUP": "SCI",
             "STRM": "7060",
         }
@@ -150,7 +150,7 @@ export const accounts = {
             "SUBJECT": "PHIL",
             "CATALOG_NBR": "1002",
             "CAMPUS": "STLUC",
-            "INSTRUCTION_MODE": "IN",
+            "INSTRUCTION_MODE": "EX",
             "ACAD_GROUP": "SCI",
             "STRM": "7060",
         }
