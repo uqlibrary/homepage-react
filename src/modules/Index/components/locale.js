@@ -24,6 +24,11 @@ export default {
                 url: 'https://web.library.uq.edu.au/library-services/services-for-hospital-staff',
             },
             {
+                id: 'requestliteraturesearch',
+                title: 'Request literature search',
+                url: 'https://web.library.uq.edu.au/library-services/services-hospital-staff/literature-request',
+            },
+            {
                 id: 'servicesforprofessional',
                 title: 'Services for professional staff',
                 url: 'https://web.library.uq.edu.au/library-services/services-professional-staff',

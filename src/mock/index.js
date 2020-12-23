@@ -33,8 +33,8 @@ import {
 import { POSSIBLE_RECORDS_API } from 'repositories/routes';
 
 const queryString = require('query-string');
-const mock = new MockAdapter(api, { delayResponse: 200});
-const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 200 });
+const mock = new MockAdapter(api, { delayResponse: 100});
+const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 100 });
 const escapeRegExp = input => input.replace('.\\*', '.*')
     .replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
@@ -55,7 +55,7 @@ if (user && !mockData.accounts[user]) {
 user = user || 'vanilla';
 
 const withDelay = (response) => config => {
-    const randomTime = Math.floor(Math.random() * 0) + 200; // Change these values to delay mock API
+    const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
@@ -76,7 +76,7 @@ mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
 
 mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
     .reply(() => {
-        console.log('Account API hit');
+        console.log('Loading Account');
         // mock account response
         if (user === 'public') {
             return [403, {}];
@@ -88,7 +88,7 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl)
 
 mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl)
     .reply(() => {
-        console.log('eSpace Author API hit');
+        console.log('Loading eSpace Author');
         // mock current author details from fez
         if (user === 'anon') {
             return [403, {}];
@@ -100,7 +100,7 @@ mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl)
 
 mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl)
     .reply(() => {
-        console.log('eSpace Author Details API hit');
+        console.log('Loading eSpace Author Details');
         // mock current author details
         if (user === 'anon') {
             return [403, {}];

@@ -1,6 +1,6 @@
 import React from 'react';
 import ImportContactsIcon from '@material-ui/icons/ImportContacts';
-import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
+// import SupervisorAccountIcon from '@material-ui/icons/SupervisorAccount';
 import MailIcon from '@material-ui/icons/Mail';
 import PhoneIcon from '@material-ui/icons/Phone';
 import DescriptionIcon from '@material-ui/icons/Description';
@@ -40,12 +40,12 @@ export const askUsLocale = {
                 icon: <DescriptionIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
                 ariaLabel: '',
             },
-            {
-                title: 'Exam support',
-                url: 'https://web.library.uq.edu.au/contact-us',
-                icon: <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
-                ariaLabel: '',
-            },
+            // {
+            //     title: 'Exam support',
+            //     url: 'https://web.library.uq.edu.au/contact-us',
+            //     icon: <SupervisorAccountIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
+            //     ariaLabel: '',
+            // },
         ],
         lastLink: {
             title: 'More ways to contact us',

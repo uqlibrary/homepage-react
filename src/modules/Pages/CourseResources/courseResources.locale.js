@@ -8,8 +8,24 @@ export default {
     title: 'Course resources',
     search: {
         title: 'Course search',
+        autocompleteResultsTitle: 'Matching courses',
+        noOptionsText: 'Enter a course code to find a course',
+        placeholder: 'Search by course code or title',
+        unavailableText: 'Course Resource suggestions unavailable',
     },
+    searchResultsTitle: 'Search results',
     notesTrimLength: 90,
+    externalSubjectLocation: 'External Instruction',
+    homepagePanel: {
+        title: 'Course resources',
+        userCourseTitle: 'Your courses',
+        noCourses: (
+            <Fragment>
+                <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
+                <p>Search for course resources above.</p>
+            </Fragment>
+        ),
+    },
     myCourses: {
         title: 'My courses',
         none: {
@@ -17,15 +33,15 @@ export default {
             description: (
                 <Fragment>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
-                    <p>Search for course resources using the &quot;Course search&quot; tab, above.</p>
+                    <p>Search for course resources using the &apos;Course search&apos; tab, above.</p>
                 </Fragment>
             ),
         },
         readingLists: {
-            title: 'Reading lists',
+            title: 'Reading list',
             error: {
-                none: 'No reading lists for this course',
-                unavailable: 'Reading lists currently unavailable',
+                none: 'No reading list for this course',
+                unavailable: 'Reading list currently unavailable',
                 multiple: 'More than one reading list found for [classnumber]. Please select a list:',
                 footer: {
                     linkLabel: 'Search other reading lists',
