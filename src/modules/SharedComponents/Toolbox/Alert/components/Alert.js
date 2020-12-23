@@ -517,7 +517,7 @@ Alert.defaultProps = {
     customType: null,
     disableAlertClick: false,
     dismissTitle: 'Click to dismiss this alert',
-    message: 'Unexpected error',
+    message: 'An error has occurred. If this continues after reloading the page, please email askus@library.uq.edu.au',
     showLoader: false,
     type: 'error',
     wiggle: null,

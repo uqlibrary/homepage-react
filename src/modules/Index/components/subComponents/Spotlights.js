@@ -16,8 +16,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
 const defaultSlide = require('../../../../../public/images/Welcome_Spotlight.jpg');
-import ContentLoader from 'react-content-loader';
 import Fade from '@material-ui/core/Fade';
+import ContentLoader from 'react-content-loader';
 const MyLoader = props => (
     <ContentLoader
         uniqueKey="spotlights"

@@ -1,21 +1,29 @@
 import React from 'react';
 import { useLocation } from 'react-router';
+import PropTypes from 'prop-types';
 
+import locale from './notfound.locale';
+
+import { AUTH_URL_LOGIN } from 'config';
+import { flattedPathConfig } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { useAccountContext } from 'context';
-import { AUTH_URL_LOGIN } from 'config';
-import locale from './notfound.locale';
-import { flattedPathConfig } from 'config/routes';
-
-export const NotFound = () => {
+export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
-    const { account } = useAccountContext();
 
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
 
-    // if known page and is logged in (page must require admin to land here)
-    if (isValidRoute && !!account && !!account.id) {
+    // if not known page, standard 404
+    if (!isValidRoute) {
+        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
+    }
+
+    console.log('accountLoading = ', accountLoading);
+    console.log('account = ', account);
+    // the page must require admin to land here when they are logged in
+    const isLoggedIn = !accountLoading && !!account && !!account.id;
+    console.log('isLoggedIn = ', isLoggedIn);
+    if (isLoggedIn) {
         return (
             <StandardPage
                 goBackFunc={() => history.back()}
@@ -25,8 +33,10 @@ export const NotFound = () => {
         );
     }
 
-    // if known page and is NOT logged in (page must require logged in to land here)
-    if (isValidRoute && (!account || !account.id)) {
+    // the page must require them to be logged in to land here
+    const isLoggedOut = !accountLoading && !account;
+    console.log('isLoggedOut = ', isLoggedOut);
+    if (isLoggedOut) {
         /* istanbul ignore next */
         if (
             process.env.NODE_ENV !== 'test' &&
@@ -44,14 +54,12 @@ export const NotFound = () => {
         );
     }
 
-    // if not known page but user is is logged in
-    if (!!account && !!account.id && !isValidRoute) {
-        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
-    }
+    return <div className="waiting empty" />;
+};
 
-    // should never happen? - account did not load properly?
-    /* istanbul ignore next */
-    return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.accountError} />;
+NotFound.propTypes = {
+    account: PropTypes.object,
+    accountLoading: PropTypes.bool,
 };
 
 export default React.memo(NotFound);

@@ -26,7 +26,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const PastExamPapers = ({ examList, examListLoading, examListError }) => {
+export const PastExamPapers = ({ examList, examListLoading, examListError, headingLevel }) => {
     const classes = useStyles();
 
     const subject = !!examList && examList.coursecode;
@@ -51,10 +51,10 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
 
     return (
         <StandardCard fullHeight noHeader standardCardId={`past-exams-${subject}`}>
-            <Typography component="h4" variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
+            <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
                 {examPaperTitle}
             </Typography>
-            <Grid container>
+            <Grid container className={'exams'}>
                 {!!examListError && (
                     /* istanbul ignore next */
                     <Typography>{locale.myCourses.examPapers.unavailable}</Typography>
@@ -79,7 +79,9 @@ export const PastExamPapers = ({ examList, examListLoading, examListError }) => 
                         </Grid>
                     </React.Fragment>
                 )}
-                {!!listOfExams &&
+                {!examListError &&
+                    !examListLoading &&
+                    !!listOfExams &&
                     listOfExams.length > 0 &&
                     listOfExams.slice(0, locale.myCourses.examPapers.visibleItemsCount).map((paper, index) => {
                         return (
@@ -115,6 +117,7 @@ PastExamPapers.propTypes = {
     examList: PropTypes.any,
     examListError: PropTypes.any,
     examListLoading: PropTypes.bool,
+    headingLevel: PropTypes.string,
 };
 
 export default React.memo(PastExamPapers);

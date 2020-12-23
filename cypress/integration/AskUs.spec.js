@@ -12,6 +12,7 @@ context('AskUs', () => {
         cy.get('button[data-testid="askus-button"]').click();
         cy.get('ul[data-testid="askus-menulist"]')
             .children()
-            .should('have.length', 7);
+            .its('length')
+            .should('be.gt', 0);
     });
 });

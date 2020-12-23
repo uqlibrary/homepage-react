@@ -7,8 +7,8 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import Grid from '@material-ui/core/Grid';
 
-const PromoPanel = ({ account }) => {
-    return (
+const PromoPanel = ({ account, accountLoading }) => {
+    return !accountLoading ? (
         <StandardCard
             primaryHeader
             fullHeight
@@ -16,24 +16,25 @@ const PromoPanel = ({ account }) => {
             title={
                 <Grid container>
                     <Grid item xs={10} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {!!account ? locale.loggedin.title : locale.loggedout.title}
+                        {!!account && !!account.id ? locale.loggedin.title : locale.loggedout.title}
                     </Grid>
                 </Grid>
             }
         >
             <Grid container spacing={1}>
                 <Grid item xs>
-                    {!!account ? locale.loggedin.content : locale.loggedout.content}
+                    {!!account && !!account.id ? locale.loggedin.content : locale.loggedout.content}
                 </Grid>
             </Grid>
         </StandardCard>
+    ) : (
+        <div className="promopanel empty" />
     );
 };
 
 PromoPanel.propTypes = {
-    libHours: PropTypes.object,
     account: PropTypes.object,
-    libHoursLoading: PropTypes.bool,
+    accountLoading: PropTypes.bool,
 };
 
 PromoPanel.defaultProps = {};

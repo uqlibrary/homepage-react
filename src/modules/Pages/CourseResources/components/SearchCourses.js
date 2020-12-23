@@ -2,9 +2,11 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
-import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
+import { default as locale } from '../courseResources.locale';
 import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
+
+import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -13,6 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(
     theme => ({
@@ -38,8 +41,15 @@ export const SearchCourses = ({
     readingList,
     examList,
     guideList,
+    selectMyCoursesTab,
 }) => {
     const classes = useStyles();
+
+    React.useEffect(() => {
+        // when the page loads on the Search tab, put focus in the input field
+        const searchField = document.getElementById('full-courseresource-autocomplete');
+        !!searchField && searchField.focus();
+    }, []);
 
     const subjectTabLabel = 'searchtab';
     const [searchTab, setCurrentSearchTab] = useState(`${subjectTabLabel}-0`);
@@ -65,9 +75,11 @@ export const SearchCourses = ({
                 // if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
                 //     console.log('first search');
                 loadNewSubject(searchKeyword, campus, semester);
-                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                if (!listSearchedSubjects.includes(searchKeyword)) {
+                    updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                }
 
-                tabId = listSearchedSubjects.length;
+                tabId = listSearchedSubjects.length === 0 ? 0 : listSearchedSubjects.length - 1;
                 // } else {
                 //     // they might search again for a subject - change to that tab instead of reloading
                 //     console.log('change tabs');
@@ -135,11 +147,41 @@ export const SearchCourses = ({
                                     readingList={readingList}
                                     examList={examList}
                                     guideList={guideList}
+                                    panelHeadingLevel="h5"
+                                    subjectHeaderLevel="h4"
                                 />
                             </TabPanel>
                         );
                     })}
             </Fragment>
+        );
+    };
+
+    const getPlaceInCurrentAccountList = subject => {
+        // probably a better way to do this...
+        let counter = -1;
+        let result = -1;
+        !!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
+            Object.values(account.current_classes).map(i => {
+                counter++;
+                if (i.classnumber === subject) {
+                    result = counter;
+                }
+            });
+        return result;
+    };
+
+    const isEnrolledInSubject = subject => {
+        return (
+            (!!account &&
+                !!account.current_classes &&
+                account.current_classes.length > 0 &&
+                account.current_classes.filter(item => {
+                    return (item.classnumber || '') === subject;
+                }).length > 0) ||
+            false
         );
     };
 
@@ -162,7 +204,13 @@ export const SearchCourses = ({
         /* istanbul ignore next */
         const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
         /* istanbul ignore else */
-        if (
+
+        // // if subject is in 'my courses' list, swap to that tab
+        if (isEnrolledInSubject(searchKeyword)) {
+            // swap to correct tab on My Courses tab
+            const subjectId = getPlaceInCurrentAccountList(searchKeyword);
+            selectMyCoursesTab(searchKeyword, subjectId);
+        } else if (
             !(
                 !!listSearchedSubjects &&
                 listSearchedSubjects.length > 0 &&
@@ -171,17 +219,19 @@ export const SearchCourses = ({
             shouldAddToSearchList(searchKeyword)
         ) {
             loadNewSubject(searchKeyword, campus, semester);
-            updateSearchList(listSearchedSubjects.concat(searchKeyword));
+            if (!listSearchedSubjects.includes(searchKeyword)) {
+                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+            }
 
             tabId = listSearchedSubjects.length;
+            setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
         } else {
             tabId =
                 !!listSearchedSubjects && listSearchedSubjects.length > 0
                     ? listSearchedSubjects.indexOf(searchKeyword)
                     : 0;
+            setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
         }
-
-        setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
     };
 
     return (
@@ -192,8 +242,20 @@ export const SearchCourses = ({
                     elementId="full-courseresource"
                     loadCourseAndSelectTab={loadCourseAndSelectTab}
                 />
-                {!!listSearchedSubjects && listSearchedSubjects.length > 0 && renderSearchResults(listSearchedSubjects)}
             </Grid>
+            {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
+                <Grid item xs={12} role="region" aria-live="assertive" aria-label="Course Resource Search Results">
+                    <Typography
+                        component="h3"
+                        variant="h6"
+                        style={{ marginLeft: '1rem' }}
+                        id="course-resource-search-results"
+                    >
+                        {locale.searchResultsTitle}
+                    </Typography>
+                    {renderSearchResults(listSearchedSubjects)}
+                </Grid>
+            )}
         </StandardCard>
     );
 };
@@ -207,4 +269,5 @@ SearchCourses.propTypes = {
     readingList: PropTypes.object,
     examList: PropTypes.object,
     guideList: PropTypes.object,
+    selectMyCoursesTab: PropTypes.func,
 };
