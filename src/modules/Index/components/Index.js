@@ -178,7 +178,7 @@ export const Index = ({
                             <MyLoader />
                         </Grid>
                     )}
-                    {!!account && !accountLoading ? (
+                    {!!account && !accountLoading && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel

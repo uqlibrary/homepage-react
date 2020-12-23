@@ -301,7 +301,6 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                             {!!sortedHours &&
                                 sortedHours.length > 1 &&
                                 sortedHours.map((item, index) => {
-                                    console.log(item.name, hasDepartments(item));
                                     return (
                                         <Grid
                                             container

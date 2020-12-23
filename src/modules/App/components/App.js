@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
+import { AccountContext } from 'context';
 
 browserUpdate({
     required: {
@@ -198,13 +199,21 @@ export class AppClass extends PureComponent {
                         <AppAlertContainer />
                     </div>
                     <div style={{ flexGrow: 1, marginTop: 16 }}>
-                        <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Switch>
-                                {routesConfig.map((route, index) => (
-                                    <Route key={`route_${index}`} {...route} />
-                                ))}
-                            </Switch>
-                        </React.Suspense>
+                        <AccountContext.Provider
+                            value={{
+                                account: {
+                                    ...this.props.account,
+                                },
+                            }}
+                        >
+                            <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                <Switch>
+                                    {routesConfig.map((route, index) => (
+                                        <Route key={`route_${index}`} {...route} />
+                                    ))}
+                                </Switch>
+                            </React.Suspense>
+                        </AccountContext.Provider>
                     </div>
                     <div>
                         <Grid container spacing={0}>

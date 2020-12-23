@@ -37,7 +37,6 @@ export function loadPrimoSuggestions(keyword) {
                 });
             })
             .catch(error => {
-                console.log(error);
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_FAILED,
                     payload: error.message,
