@@ -66,7 +66,8 @@ const styles = theme => {
         },
         megamenu: {
             backgroundColor: theme.palette.white.main,
-            margin: 0,
+            height: '100%',
+            margin: '-7px 0 0 0',
             maxWidth: 'initial',
             padding: 0,
             width: '100%',
@@ -101,7 +102,6 @@ const styles = theme => {
             },
             [theme.breakpoints.down('md')]: {
                 backgroundColor: theme.palette.white.main,
-                height: '100%',
                 overflowY: 'auto',
                 position: 'absolute',
                 left: 0,
@@ -190,7 +190,7 @@ const styles = theme => {
                 '& div > div:first-child div > span': {
                     // primaryText of submenu items
                     borderBottom: 'thin solid #e2e2e2',
-                    padding: '0.75rem 1.5rem 0.75rem 2.5rem',
+                    padding: '0.4rem 1.5rem 0.4rem 2.5rem',
                 },
                 '& svg': {
                     border: 'thin solid #e2e2e2',
@@ -360,6 +360,7 @@ export function Megamenu(props) {
                 data-testid={`megamenu-group-${index}`}
                 id={`megamenu-group-${index}`}
                 className={classes.verticalMenuList}
+                dense={isMobile}
             >
                 {!!menuColumn &&
                     menuColumn.length > 0 &&
@@ -416,6 +417,14 @@ export function Megamenu(props) {
         );
     };
 
+    const setMenuHeight = theheight => {
+        const mainmenu = document.getElementById('mainMenu');
+        if (!!mainmenu) {
+            mainmenu.style.height = theheight;
+        }
+        return true;
+    };
+
     const renderSingleMenu = (menuItem, index) => {
         const hasChildren = !!menuItem.submenuItems && menuItem.submenuItems.length > 0;
         const iconSize = isMobile ? 'default' : 'small';
@@ -440,8 +449,12 @@ export function Megamenu(props) {
                         primary={menuItem.primaryText}
                         secondary={menuItem.secondaryText}
                     />
-                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="disabled" />}
-                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="disabled" />}
+                    {hasChildren && isSubMenuOpen[menuItem.id] && setMenuHeight('initial') && (
+                        <ExpandLess size={iconSize} color="disabled" />
+                    )}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && setMenuHeight('100%') && (
+                        <ExpandMore size={iconSize} color="disabled" />
+                    )}
                 </ListItem>
                 {hasChildren && renderSubMenu(menuItem, index, classes)}
             </div>
