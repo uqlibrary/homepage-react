@@ -63,40 +63,48 @@ exports[`Application component Should display mobile correctly 1`] = `
         }
       }
     >
-      <Suspense
-        fallback={
-          <ContentLoader
-            message="Loading"
-          />
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {},
+          }
         }
       >
-        <Switch>
-          <Route
-            component={[Function]}
-            exact={true}
-            key="route_0"
-            pageTitle="Homepage"
-            path="/"
-          />
-          <Route
-            key="route_1"
-            pageTitle="Contact UQ Library"
-            path="/contact"
-            render={[Function]}
-          />
-          <Route
-            component={
-              Object {
-                "$$typeof": Symbol(react.lazy),
-                "_ctor": [Function],
-                "_result": null,
-                "_status": -1,
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
               }
-            }
-            key="route_2"
-          />
-        </Switch>
-      </Suspense>
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
     </div>
     <div>
       <WithStyles(ForwardRef(Grid))
@@ -198,40 +206,54 @@ exports[`Application component should render application with routing for the us
         }
       }
     >
-      <Suspense
-        fallback={
-          <ContentLoader
-            message="Loading"
-          />
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {
+              "class": Array [
+                "libstaff",
+                "IS_CURRENT",
+              ],
+              "id": "uqauthor1",
+            },
+          }
         }
       >
-        <Switch>
-          <Route
-            component={[Function]}
-            exact={true}
-            key="route_0"
-            pageTitle="Homepage"
-            path="/"
-          />
-          <Route
-            key="route_1"
-            pageTitle="Contact UQ Library"
-            path="/contact"
-            render={[Function]}
-          />
-          <Route
-            component={
-              Object {
-                "$$typeof": Symbol(react.lazy),
-                "_ctor": [Function],
-                "_result": null,
-                "_status": -1,
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
               }
-            }
-            key="route_2"
-          />
-        </Switch>
-      </Suspense>
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
     </div>
     <div>
       <WithStyles(ForwardRef(Grid))
@@ -325,40 +347,48 @@ exports[`Application component should render for anon user 1`] = `
         }
       }
     >
-      <Suspense
-        fallback={
-          <ContentLoader
-            message="Loading"
-          />
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {},
+          }
         }
       >
-        <Switch>
-          <Route
-            component={[Function]}
-            exact={true}
-            key="route_0"
-            pageTitle="Homepage"
-            path="/"
-          />
-          <Route
-            key="route_1"
-            pageTitle="Contact UQ Library"
-            path="/contact"
-            render={[Function]}
-          />
-          <Route
-            component={
-              Object {
-                "$$typeof": Symbol(react.lazy),
-                "_ctor": [Function],
-                "_result": null,
-                "_status": -1,
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
               }
-            }
-            key="route_2"
-          />
-        </Switch>
-      </Suspense>
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
     </div>
     <div>
       <WithStyles(ForwardRef(Grid))
@@ -452,40 +482,48 @@ exports[`Application component should render loading screen while account is loa
         }
       }
     >
-      <Suspense
-        fallback={
-          <ContentLoader
-            message="Loading"
-          />
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {},
+          }
         }
       >
-        <Switch>
-          <Route
-            component={[Function]}
-            exact={true}
-            key="route_0"
-            pageTitle="Homepage"
-            path="/"
-          />
-          <Route
-            key="route_1"
-            pageTitle="Contact UQ Library"
-            path="/contact"
-            render={[Function]}
-          />
-          <Route
-            component={
-              Object {
-                "$$typeof": Symbol(react.lazy),
-                "_ctor": [Function],
-                "_result": null,
-                "_status": -1,
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
               }
-            }
-            key="route_2"
-          />
-        </Switch>
-      </Suspense>
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
     </div>
     <div>
       <WithStyles(ForwardRef(Grid))
