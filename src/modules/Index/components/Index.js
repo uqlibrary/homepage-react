@@ -172,6 +172,12 @@ export const Index = ({
                     <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
+                    {/* Personalisation panel or hours */}
+                    {!!accountLoading && (
+                        <Grid item xs={12} md={4}>
+                            <MyLoader />
+                        </Grid>
+                    )}
                     {/* Personalisation panel, desktop */}
                     {accountLoading === false && !!account && (
                         <Hidden smDown>
