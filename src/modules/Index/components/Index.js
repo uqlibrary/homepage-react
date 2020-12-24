@@ -112,22 +112,22 @@ export const Index = ({
         }
     }, [accountLoading, dispatch]);
     useEffect(() => {
-        if (!accountLoading && !!account && !printBalance && printBalanceLoading === null) {
+        if (accountLoading === false && !!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());
         }
     }, [accountLoading, account, printBalance, printBalanceLoading, dispatch]);
     useEffect(() => {
-        if (!accountLoading && !!account && !loans && loansLoading === null) {
+        if (accountLoading === false && !!account && !loans && loansLoading === null) {
             dispatch(loadLoans());
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
     useEffect(() => {
-        if (!accountLoading && !!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
+        if (accountLoading === false && !!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
             dispatch(searcheSpacePossiblePublications());
         }
     }, [accountLoading, account, author, possibleRecords, possibleRecordsLoading, dispatch]);
     useEffect(() => {
-        if (!accountLoading && !!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+        if (accountLoading === false && !!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
@@ -139,7 +139,7 @@ export const Index = ({
                     <Grid item xs={12}>
                         <SearchPanel />
                     </Grid>
-                    {!accountLoading && !!account && (
+                    {accountLoading === false && !!account && (
                         <Hidden mdUp>
                             <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -157,7 +157,7 @@ export const Index = ({
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
                     {/* Personalisation panel, desktop */}
-                    {!accountLoading && !!account && (
+                    {accountLoading === false && !!account && (
                         <Hidden smDown>
                             <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
                                 <PersonalisedPanel
@@ -173,7 +173,7 @@ export const Index = ({
                         </Hidden>
                     )}
                     {/* Hours panel, logged out */}
-                    {!accountLoading && !account && (
+                    {accountLoading === false && !account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -185,7 +185,7 @@ export const Index = ({
                             height={classes.computersAvailHeight}
                         />
                     </Grid>
-                    {!accountLoading && !!account && (
+                    {accountLoading === false && !!account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
                             <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
                         </Grid>
@@ -208,7 +208,7 @@ export const Index = ({
                     )}
 
                     <Grid item xs={12} md={4}>
-                        <PromoPanel account={account} />
+                        <PromoPanel account={account} accountLoading={accountLoading} />
                     </Grid>
                 </Grid>
             </div>
