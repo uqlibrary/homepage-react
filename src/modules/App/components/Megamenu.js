@@ -14,61 +14,8 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => {
     return {
-        paper: {
-            width: 260,
-        },
-        docked: {
-            '& $paper': {
-                '-webkit-box-shadow': '5px 0 5px -2px rgba(0,0,0,0.15)',
-                'box-shadow': '5px 0 5px -2px rgba(0,0,0,0.15)',
-            },
-        },
-        paperAnchorDockedLeft: {
-            border: 'none',
-        },
-        header: {
-            backgroundColor: theme.palette.primary.main,
-            height: '70px',
-            boxShadow:
-                '0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), ' +
-                '0px 1px 10px 0px rgba(0, 0, 0, 0.12)',
-            textAlign: 'center',
-            '& img': {
-                maxHeight: '45px',
-            },
-        },
-        skipNav: {
-            width: '100%',
-            height: '90%',
-            position: 'absolute',
-            zIndex: 998,
-            left: '-2000px',
-            outline: 'none',
-            background:
-                'linear-gradient(to bottom, rgba(255,255,255,0.75) 0%,rgba(255,255,255,0.75) 78%,' +
-                'rgba(255,255,255,0) 100%)',
-            filter:
-                'progid:DXImageTransform.Microsoft.gradient( startColorstr="#bfffffff", ' +
-                'endColorstr="#00ffffff",GradientType=0 )',
-            '&:focus': {
-                left: 0,
-            },
-            '& .skipNavButton': {
-                position: 'absolute',
-                top: '25%',
-                left: 'calc(50% - 90px)',
-                textAlign: 'center',
-                width: '160px',
-                whiteSpace: 'normal',
-                overflow: 'visible',
-                zIndex: 999,
-            },
-        },
-        megamenu: {
+        megamenublock: {
             backgroundColor: theme.palette.white.main,
-            margin: 0,
-            maxWidth: 'initial',
-            padding: 0,
             width: '100%',
         },
         mainMenu: {
@@ -98,15 +45,10 @@ const styles = theme => {
                     paddingLeft: 8,
                     paddingRight: 8,
                 },
-            },
-            [theme.breakpoints.down('md')]: {
-                backgroundColor: theme.palette.white.main,
-                height: '100%',
-                overflowY: 'auto',
-                position: 'absolute',
-                left: 0,
-                width: '100%',
-                zIndex: 1000,
+                // first menu item should be lined up with Library title
+                '& > div:first-child > div': {
+                    paddingLeft: 0,
+                },
             },
         },
         ListItemTextPrimary: {
@@ -116,23 +58,18 @@ const styles = theme => {
         ListItemTextSecondary: {
             ...theme.typography.caption,
         },
-        iconButton: {
-            color: theme.palette.white.main,
-        },
         menuDropdown: {
             backgroundColor: theme.palette.secondary.light,
-            zIndex: 1000,
-            position: 'absolute',
-            [theme.breakpoints.down('md')]: {
-                width: 'calc(100% - 4rem)',
+            [theme.breakpoints.up('lg')]: {
+                // apply this to mobile as well and the submenu goes over the other menu headers
+                zIndex: 1000,
+                position: 'absolute',
             },
         },
         shiftLeft: {
             marginLeft: '-20rem',
         },
         submenus: {
-            paddingBottom: '8px',
-            paddingTop: '10px',
             [theme.breakpoints.up('lg')]: {
                 flexDirection: 'row',
             },
@@ -143,29 +80,10 @@ const styles = theme => {
             },
             '& > div': {
                 marginTop: '6px',
-                borderLeft: 'thin solid #ccc',
+                borderLeft: '1px solid #ccc',
             },
             '& div:first-child': {
                 borderLeft: 'none',
-            },
-        },
-        verticalMenuList: {
-            [theme.breakpoints.up('lg')]: {
-                display: 'flex',
-                flexDirection: 'column',
-            },
-        },
-        menuItem: {
-            [theme.breakpoints.up('lg')]: {
-                alignItems: 'flex-start',
-                paddingTop: 0,
-            },
-            paddingBottom: 0,
-            minHeight: '51px',
-            verticalAlign: 'top',
-            [theme.breakpoints.down('md')]: {
-                paddingLeft: '2rem',
-                paddingTop: '0',
             },
         },
         currentPage: {
@@ -184,16 +102,16 @@ const styles = theme => {
                 },
                 '& > div > div:first-child > span': {
                     // top level of menu under hamburger
-                    border: 'thin solid #e2e2e2',
+                    border: '1px solid #e2e2e2',
                     padding: '1rem 1.5rem',
                 },
                 '& div > div:first-child div > span': {
                     // primaryText of submenu items
-                    borderBottom: 'thin solid #e2e2e2',
-                    padding: '0.75rem 1.5rem 0.75rem 2.5rem',
+                    borderBottom: '1px solid #e2e2e2',
+                    padding: '0.7rem 1.5rem 0.7rem 2.5rem',
                 },
                 '& svg': {
-                    border: 'thin solid #e2e2e2',
+                    border: '1px solid #e2e2e2',
                     padding: '1rem',
                 },
             },
@@ -257,6 +175,12 @@ export function Megamenu(props) {
             setBackGroundColourOfMenuHeader(key, newOpen && key === changingId ? '#f2f2f2' : '#fff');
         });
         setSubMenuOpen(newValues);
+
+        // scroll up when they change menus, otherwise we often end with the menu off screen :(
+        if (isMobile) {
+            const topHeight = document.getElementById('uqheader').offsetHeight;
+            document.getElementById('content-container').scrollTop = topHeight;
+        }
     };
 
     const isAnyMenuOpen = () => {
@@ -440,8 +364,8 @@ export function Megamenu(props) {
                         primary={menuItem.primaryText}
                         secondary={menuItem.secondaryText}
                     />
-                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="disabled" />}
-                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="disabled" />}
+                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="primary" />}
+                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="primary" />}
                 </ListItem>
                 {hasChildren && renderSubMenu(menuItem, index, classes)}
             </div>
@@ -454,7 +378,7 @@ export function Megamenu(props) {
     }
 
     if (!menuOpen) {
-        return <div className="megamenu empty" />;
+        return <div data-testid="mega-menu-empty" className="megamenu empty" />;
     }
 
     const renderHomePageItem = () => {
@@ -498,7 +422,7 @@ export function Megamenu(props) {
     }
 
     return (
-        <div className={classes.megamenu} id={rest.id || 'megamenu'}>
+        <div className={classes.megamenublock} data-testid="mega-menu" id={rest.id || 'megamenu'}>
             <List component="nav" data-testid="main-menu" id="mainMenu" className={classes.mainMenu} ref={menuRef}>
                 {props.hasHomePageItem && renderHomePageItem()}
                 {menuItems.map((menuItem, index) => {

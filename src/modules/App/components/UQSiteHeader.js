@@ -24,6 +24,7 @@ const useStyles = makeStyles(
         siteHeader: {
             width: '100%',
             backgroundColor: theme.palette.white.main,
+            paddingBottom: '1rem',
         },
         siteHeaderTop: {
             // border: '1px solid red',co
@@ -128,7 +129,7 @@ export const UQSiteHeader = ({
                         onClick={redirectUserToLogin(isAuthorizedUser, true)}
                     />
                 </Grid>
-                <Grid item xs={'auto'} className={classes.utility} id="mobile-megamenu" data-testid="mobile-megamenu">
+                <Grid item xs={'auto'} className={classes.utility} data-testid="mobile-megamenu" id="mobile-megamenu">
                     <Hidden lgUp>
                         <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
                             <Tooltip title={locale.global.mainNavButton.tooltip}>
@@ -143,16 +144,20 @@ export const UQSiteHeader = ({
                                     <div>Menu</div>
                                 </IconButton>
                             </Tooltip>
-                            <Megamenu
-                                history={history}
-                                menuItems={menuItems}
-                                menuOpen={menuOpen}
-                                toggleMenu={toggleMenu}
-                                isMobile
-                            />
                         </Grid>
                     </Hidden>
                 </Grid>
+            </Grid>
+            <Grid container>
+                <Hidden lgUp>
+                    <Megamenu
+                        history={history}
+                        menuItems={menuItems}
+                        menuOpen={menuOpen}
+                        toggleMenu={toggleMenu}
+                        isMobile
+                    />
+                </Hidden>
             </Grid>
             <Grid
                 container
