@@ -235,6 +235,18 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         }
             ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
     };
+    const hasDepartments = item => {
+        const departments = item.departments.map(item => {
+            if (hoursLocale.departmentsMap.includes(item.name)) {
+                return item.name;
+            }
+            return null;
+        });
+        const hasDepartments = departments.filter(el => {
+            return el !== null;
+        });
+        return !hasDepartments.length > 0;
+    };
     return (
         <StandardCard
             primaryHeader
@@ -310,6 +322,11 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                                                     {item.name}
                                                 </a>
                                             </Grid>
+                                            {hasDepartments(item) && (
+                                                <Grid item xs key={index} style={{ fontSize: 14 }}>
+                                                    {hoursLocale.noDepartments}
+                                                </Grid>
+                                            )}
                                             {item.departments.length > 0 &&
                                                 item.departments.map((item, index) => {
                                                     if (hoursLocale.departmentsMap.includes(item.name)) {

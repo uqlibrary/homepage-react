@@ -2424,7 +2424,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                     "id": "primo-search-select",
                                                                                                   }
                                                                                                 }
-                                                                                                className="makeStyles-selectInput-114"
                                                                                                 error={false}
                                                                                                 id="primo-search-select"
                                                                                                 inputProps={
@@ -2450,7 +2449,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       "id": "primo-search-select",
                                                                                                     }
                                                                                                   }
-                                                                                                  className="makeStyles-selectInput-114"
                                                                                                   classes={
                                                                                                     Object {
                                                                                                       "disabled": "Mui-disabled",
@@ -2478,7 +2476,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                   value={0}
                                                                                                 >
                                                                                                   <WithStyles(ForwardRef(Input))
-                                                                                                    className="makeStyles-selectInput-114"
                                                                                                     error={false}
                                                                                                     inputComponent={
                                                                                                       Object {
@@ -2668,7 +2665,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                     value={0}
                                                                                                   >
                                                                                                     <ForwardRef(Input)
-                                                                                                      className="makeStyles-selectInput-114"
                                                                                                       classes={
                                                                                                         Object {
                                                                                                           "colorSecondary": "MuiInput-colorSecondary",
@@ -2876,7 +2872,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       value={0}
                                                                                                     >
                                                                                                       <WithStyles(ForwardRef(InputBase))
-                                                                                                        className="makeStyles-selectInput-114"
                                                                                                         classes={
                                                                                                           Object {
                                                                                                             "colorSecondary": "MuiInput-colorSecondary",
@@ -3087,7 +3082,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         value={0}
                                                                                                       >
                                                                                                         <ForwardRef(InputBase)
-                                                                                                          className="makeStyles-selectInput-114"
                                                                                                           classes={
                                                                                                             Object {
                                                                                                               "adornedEnd": "MuiInputBase-adornedEnd",
@@ -3302,7 +3296,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                           value={0}
                                                                                                         >
                                                                                                           <div
-                                                                                                            className="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-selectInput-114 MuiInputBase-formControl MuiInput-formControl"
+                                                                                                            className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
                                                                                                             onClick={[Function]}
                                                                                                           >
                                                                                                             <ForwardRef(SelectInput)
@@ -6170,11 +6164,6 @@ exports[`Index page should render placeholders 1`] = `
                                           id="spotlights"
                                           item={true}
                                           md={8}
-                                          style={
-                                            Object {
-                                              "minHeight": 320,
-                                            }
-                                          }
                                           xs={12}
                                         >
                                           <ForwardRef(Grid)
@@ -6289,22 +6278,12 @@ exports[`Index page should render placeholders 1`] = `
                                             id="spotlights"
                                             item={true}
                                             md={8}
-                                            style={
-                                              Object {
-                                                "minHeight": 320,
-                                              }
-                                            }
                                             xs={12}
                                           >
                                             <div
                                               className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                                               data-testid="spotlights"
                                               id="spotlights"
-                                              style={
-                                                Object {
-                                                  "minHeight": 320,
-                                                }
-                                              }
                                             >
                                               <Spotlights
                                                 defaultSlide=""

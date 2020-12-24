@@ -20,6 +20,7 @@ export const hoursLocale = {
         Toowoomba: 'Other',
     },
     departmentsMap: ['Service', 'Study space'],
+    noDepartments: 'See location',
     locationTooltip: 'Your preferred campus has been updated',
     actionButtons: [
         {

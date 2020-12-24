@@ -37,7 +37,6 @@ const useStyles = makeStyles(
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
             '&::placeholder': {
-                paddingRight: 50,
                 textOverflow: 'ellipsis !important',
                 overflow: 'hidden !important',
                 whiteSpace: 'nowrap !important',
@@ -120,7 +119,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 id="primo-search-select"
                                 error={!!suggestionsError}
                                 value={searchType}
-                                className={classes.selectInput}
                                 onChange={handleSearchTypeChange}
                                 SelectDisplayProps={{
                                     'data-testid': 'primo-search-select',

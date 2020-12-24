@@ -4,6 +4,7 @@ import { Route, Switch } from 'react-router';
 import { routes, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, APP_URL } from 'config';
 import locale from 'locale/global';
 import browserUpdate from 'browser-update';
+import { AccountContext } from 'context';
 
 browserUpdate({
     required: {
@@ -26,7 +27,6 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from '../containers/AppAlert';
 import { ConfirmDialogBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import * as pages from './pages';
-import { AccountContext } from 'context';
 import Grid from '@material-ui/core/Grid';
 import { withStyles } from '@material-ui/core/styles';
 import UQHeader from './UQHeader';
@@ -187,6 +187,7 @@ export class AppClass extends PureComponent {
                         isAuthorizedUser={isAuthorizedUser}
                         isHdrStudent={isHdrStudent}
                         account={this.props.account}
+                        accountLoading={isAccountLoading}
                         author={this.props.author}
                         authorDetails={this.props.authorDetails}
                         history={this.props.history}
@@ -197,33 +198,23 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    <span
-                        id="headerAfter"
-                        tabIndex="0"
-                        aria-label="Start of content"
-                        style={{ position: 'fixed', top: '-200px', left: '-200px' }}
-                    />
-                    {!isAccountLoading && (
-                        <div style={{ flexGrow: 1, marginTop: 16 }}>
-                            <AccountContext.Provider
-                                value={{
-                                    account: {
-                                        ...this.props.account,
-                                        ...this.props.author,
-                                        ...this.props.authorDetails,
-                                    },
-                                }}
-                            >
-                                <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                                    <Switch>
-                                        {routesConfig.map((route, index) => (
-                                            <Route key={`route_${index}`} {...route} />
-                                        ))}
-                                    </Switch>
-                                </React.Suspense>
-                            </AccountContext.Provider>
-                        </div>
-                    )}
+                    <div style={{ flexGrow: 1, marginTop: 16 }}>
+                        <AccountContext.Provider
+                            value={{
+                                account: {
+                                    ...this.props.account,
+                                },
+                            }}
+                        >
+                            <React.Suspense fallback={<ContentLoader message="Loading" />}>
+                                <Switch>
+                                    {routesConfig.map((route, index) => (
+                                        <Route key={`route_${index}`} {...route} />
+                                    ))}
+                                </Switch>
+                            </React.Suspense>
+                        </AccountContext.Provider>
+                    </div>
                     <div>
                         <Grid container spacing={0}>
                             <Grid item xs={12} className={classes.connectFooter}>

@@ -38,6 +38,7 @@ exports[`Application component Should display mobile correctly 1`] = `
     </div>
     <UQSiteHeader
       account={null}
+      accountLoading={false}
       author={null}
       chatStatus={false}
       history={
@@ -54,18 +55,6 @@ exports[`Application component Should display mobile correctly 1`] = `
     >
       <Connect(AppAlert) />
     </div>
-    <span
-      aria-label="Start of content"
-      id="headerAfter"
-      style={
-        Object {
-          "left": "-200px",
-          "position": "fixed",
-          "top": "-200px",
-        }
-      }
-      tabIndex="0"
-    />
     <div
       style={
         Object {
@@ -192,6 +181,7 @@ exports[`Application component should render application with routing for the us
           "id": "uqauthor1",
         }
       }
+      accountLoading={false}
       author={null}
       chatStatus={false}
       history={
@@ -208,18 +198,6 @@ exports[`Application component should render application with routing for the us
     >
       <Connect(AppAlert) />
     </div>
-    <span
-      aria-label="Start of content"
-      id="headerAfter"
-      style={
-        Object {
-          "left": "-200px",
-          "position": "fixed",
-          "top": "-200px",
-        }
-      }
-      tabIndex="0"
-    />
     <div
       style={
         Object {
@@ -344,6 +322,7 @@ exports[`Application component should render for anon user 1`] = `
     </div>
     <UQSiteHeader
       account={null}
+      accountLoading={false}
       author={null}
       chatStatus={false}
       history={
@@ -360,18 +339,6 @@ exports[`Application component should render for anon user 1`] = `
     >
       <Connect(AppAlert) />
     </div>
-    <span
-      aria-label="Start of content"
-      id="headerAfter"
-      style={
-        Object {
-          "left": "-200px",
-          "position": "fixed",
-          "top": "-200px",
-        }
-      }
-      tabIndex="0"
-    />
     <div
       style={
         Object {
@@ -490,6 +457,7 @@ exports[`Application component should render loading screen while account is loa
     </div>
     <UQSiteHeader
       account={null}
+      accountLoading={true}
       author={null}
       chatStatus={false}
       history={
@@ -506,18 +474,57 @@ exports[`Application component should render loading screen while account is loa
     >
       <Connect(AppAlert) />
     </div>
-    <span
-      aria-label="Start of content"
-      id="headerAfter"
+    <div
       style={
         Object {
-          "left": "-200px",
-          "position": "fixed",
-          "top": "-200px",
+          "flexGrow": 1,
+          "marginTop": 16,
         }
       }
-      tabIndex="0"
-    />
+    >
+      <ContextProvider
+        value={
+          Object {
+            "account": Object {},
+          }
+        }
+      >
+        <Suspense
+          fallback={
+            <ContentLoader
+              message="Loading"
+            />
+          }
+        >
+          <Switch>
+            <Route
+              component={[Function]}
+              exact={true}
+              key="route_0"
+              pageTitle="Homepage"
+              path="/"
+            />
+            <Route
+              key="route_1"
+              pageTitle="Contact UQ Library"
+              path="/contact"
+              render={[Function]}
+            />
+            <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              key="route_2"
+            />
+          </Switch>
+        </Suspense>
+      </ContextProvider>
+    </div>
     <div>
       <WithStyles(ForwardRef(Grid))
         container={true}
@@ -8033,18 +8040,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                             />
                           </Connect(AppAlert)>
                         </div>
-                        <span
-                          aria-label="Start of content"
-                          id="headerAfter"
-                          style={
-                            Object {
-                              "left": "-200px",
-                              "position": "fixed",
-                              "top": "-200px",
-                            }
-                          }
-                          tabIndex="0"
-                        />
                         <div
                           style={
                             Object {
@@ -10225,7 +10220,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                               "id": "primo-search-select",
                                                                                                                             }
                                                                                                                           }
-                                                                                                                          className="makeStyles-selectInput-228"
                                                                                                                           error={false}
                                                                                                                           id="primo-search-select"
                                                                                                                           inputProps={
@@ -10251,7 +10245,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                 "id": "primo-search-select",
                                                                                                                               }
                                                                                                                             }
-                                                                                                                            className="makeStyles-selectInput-228"
                                                                                                                             classes={
                                                                                                                               Object {
                                                                                                                                 "disabled": "Mui-disabled",
@@ -10279,7 +10272,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                             value={0}
                                                                                                                           >
                                                                                                                             <WithStyles(ForwardRef(Input))
-                                                                                                                              className="makeStyles-selectInput-228"
                                                                                                                               error={false}
                                                                                                                               inputComponent={
                                                                                                                                 Object {
@@ -10469,7 +10461,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                               value={0}
                                                                                                                             >
                                                                                                                               <ForwardRef(Input)
-                                                                                                                                className="makeStyles-selectInput-228"
                                                                                                                                 classes={
                                                                                                                                   Object {
                                                                                                                                     "colorSecondary": "MuiInput-colorSecondary",
@@ -10677,7 +10668,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                 value={0}
                                                                                                                               >
                                                                                                                                 <WithStyles(ForwardRef(InputBase))
-                                                                                                                                  className="makeStyles-selectInput-228"
                                                                                                                                   classes={
                                                                                                                                     Object {
                                                                                                                                       "colorSecondary": "MuiInput-colorSecondary",
@@ -10888,7 +10878,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                   value={0}
                                                                                                                                 >
                                                                                                                                   <ForwardRef(InputBase)
-                                                                                                                                    className="makeStyles-selectInput-228"
                                                                                                                                     classes={
                                                                                                                                       Object {
                                                                                                                                         "adornedEnd": "MuiInputBase-adornedEnd",
@@ -11103,7 +11092,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                     value={0}
                                                                                                                                   >
                                                                                                                                     <div
-                                                                                                                                      className="MuiInputBase-root MuiInput-root MuiInput-underline makeStyles-selectInput-228 MuiInputBase-formControl MuiInput-formControl"
+                                                                                                                                      className="MuiInputBase-root MuiInput-root MuiInput-underline MuiInputBase-formControl MuiInput-formControl"
                                                                                                                                       onClick={[Function]}
                                                                                                                                     >
                                                                                                                                       <ForwardRef(SelectInput)
@@ -14264,11 +14253,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                     id="spotlights"
                                                                     item={true}
                                                                     md={8}
-                                                                    style={
-                                                                      Object {
-                                                                        "minHeight": 320,
-                                                                      }
-                                                                    }
                                                                     xs={12}
                                                                   >
                                                                     <ForwardRef(Grid)
@@ -14383,22 +14367,12 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                       id="spotlights"
                                                                       item={true}
                                                                       md={8}
-                                                                      style={
-                                                                        Object {
-                                                                          "minHeight": 320,
-                                                                        }
-                                                                      }
                                                                       xs={12}
                                                                     >
                                                                       <div
                                                                         className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                                                                         data-testid="spotlights"
                                                                         id="spotlights"
-                                                                        style={
-                                                                          Object {
-                                                                            "minHeight": 320,
-                                                                          }
-                                                                        }
                                                                       >
                                                                         <Spotlights
                                                                           defaultSlide=""

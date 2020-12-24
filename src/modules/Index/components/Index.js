@@ -25,6 +25,22 @@ import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
 import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
 import PromoPanel from './subComponents/PromoPanel';
+import ContentLoader from 'react-content-loader';
+
+const MyLoader = props => (
+    <ContentLoader
+        uniqueKey="spotlights"
+        speed={2}
+        width={'100%'}
+        height={'100%'}
+        viewBox="0 0 320 245"
+        backgroundColor="#f3f3f3"
+        foregroundColor="#e2e2e2"
+        {...props}
+    >
+        <rect x="0" y="0" rx="5" ry="5" width="100%" height="100%" />
+    </ContentLoader>
+);
 
 const useStyles = makeStyles(theme => ({
     ppButton: {
@@ -153,7 +169,7 @@ export const Index = ({
                             </Grid>
                         </Hidden>
                     )}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights" style={{ minHeight: 320 }}>
+                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                         <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
                     </Grid>
                     {/* Personalisation panel, desktop */}
