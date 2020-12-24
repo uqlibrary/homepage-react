@@ -175,6 +175,10 @@ export function Megamenu(props) {
             setBackGroundColourOfMenuHeader(key, newOpen && key === changingId ? '#f2f2f2' : '#fff');
         });
         setSubMenuOpen(newValues);
+
+        // scroll up when they change menus, otherwise we often end with the menu off screen :(
+        const topHeight = document.getElementById('uqheader').offsetHeight;
+        document.getElementById('content-container').scrollTop = topHeight;
     };
 
     const isAnyMenuOpen = () => {
