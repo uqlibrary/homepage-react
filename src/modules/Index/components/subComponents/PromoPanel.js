@@ -8,7 +8,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
 
 const PromoPanel = ({ account, accountLoading }) => {
-    return !accountLoading ? (
+    return accountLoading === false ? (
         <StandardCard
             primaryHeader
             fullHeight
