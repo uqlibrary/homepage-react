@@ -177,8 +177,10 @@ export function Megamenu(props) {
         setSubMenuOpen(newValues);
 
         // scroll up when they change menus, otherwise we often end with the menu off screen :(
-        const topHeight = document.getElementById('uqheader').offsetHeight;
-        document.getElementById('content-container').scrollTop = topHeight;
+        if (isMobile) {
+            const topHeight = document.getElementById('uqheader').offsetHeight;
+            document.getElementById('content-container').scrollTop = topHeight;
+        }
     };
 
     const isAnyMenuOpen = () => {
