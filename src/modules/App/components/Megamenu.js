@@ -45,6 +45,10 @@ const styles = theme => {
                     paddingLeft: 8,
                     paddingRight: 8,
                 },
+                // first menu item should be lined up with Library title
+                '& > div:first-child > div': {
+                    paddingLeft: 0,
+                },
             },
         },
         ListItemTextPrimary: {
