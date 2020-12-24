@@ -46,9 +46,6 @@ const styles = theme => {
                     paddingRight: 8,
                 },
             },
-            [theme.breakpoints.down('md')]: {
-                backgroundColor: theme.palette.white.main,
-            },
         },
         ListItemTextPrimary: {
             whiteSpace: 'nowrap',
@@ -57,16 +54,12 @@ const styles = theme => {
         ListItemTextSecondary: {
             ...theme.typography.caption,
         },
-        iconButton: {
-            color: theme.palette.white.main,
-        },
         menuDropdown: {
             backgroundColor: theme.palette.secondary.light,
-            zIndex: 1000,
-            position: 'absolute',
-            [theme.breakpoints.down('md')]: {
-                width: 'calc(100% - 3.7rem)',
-                // width: '100%',
+            [theme.breakpoints.up('lg')]: {
+                // apply this to mobile as well and the submenu goes over the other menu headers
+                zIndex: 1000,
+                position: 'absolute',
             },
         },
         shiftLeft: {
@@ -83,7 +76,7 @@ const styles = theme => {
             },
             '& > div': {
                 marginTop: '6px',
-                borderLeft: 'thin solid #ccc',
+                borderLeft: '1px solid #ccc',
             },
             '& div:first-child': {
                 borderLeft: 'none',
@@ -105,16 +98,16 @@ const styles = theme => {
                 },
                 '& > div > div:first-child > span': {
                     // top level of menu under hamburger
-                    border: '0.1rem solid #e2e2e2',
+                    border: '1px solid #e2e2e2',
                     padding: '1rem 1.5rem',
                 },
                 '& div > div:first-child div > span': {
                     // primaryText of submenu items
-                    borderBottom: '0.1rem solid #e2e2e2',
+                    borderBottom: '1px solid #e2e2e2',
                     padding: '0.7rem 1.5rem 0.7rem 2.5rem',
                 },
                 '& svg': {
-                    border: '0.1rem solid #e2e2e2',
+                    border: '1px solid #e2e2e2',
                     padding: '1rem',
                 },
             },
