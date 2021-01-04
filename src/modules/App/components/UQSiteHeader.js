@@ -27,7 +27,6 @@ const useStyles = makeStyles(
             paddingBottom: '1rem',
         },
         siteHeaderTop: {
-            // border: '1px solid red',co
             maxWidth: 1280,
             marginLeft: 'auto',
             marginRight: 'auto',
@@ -35,11 +34,14 @@ const useStyles = makeStyles(
             paddingBottom: 0,
             paddingLeft: 46,
             paddingRight: 44,
+            [theme.breakpoints.down('xs')]: {
+                paddingLeft: 12,
+                paddingRight: 12,
+            },
             marginTop: 0,
             marginBottom: 0,
         },
         siteHeaderBottom: {
-            // border: '1px solid blue',
             maxWidth: 1280,
             marginLeft: 'auto',
             marginRight: 'auto',
