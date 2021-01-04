@@ -6,7 +6,7 @@ context('ACCESSIBILITY', () => {
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personalised-panel"]').contains('John');
         cy.get('div[data-testid="personalised-panel"]').contains('Link ORCiD account to eSpace');
-        cy.log('Personalied panel as loaded');
+        cy.log('Personalised panel as loaded');
         cy.checkA11y('div[data-testid="personalised-panel"]', {
             reportName: 'Personalised panel',
             scopeName: 'As loaded',

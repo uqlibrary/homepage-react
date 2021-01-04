@@ -80,7 +80,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                 {!!locale.myCourses.guides.footer.links &&
                     locale.myCourses.guides.footer.links.length > 0 &&
                     locale.myCourses.guides.footer.links.map((item, index) => {
-                        const dataTestId = item.id || null;
+                        const dataTestId = item.id || /* istanbul ignore next */ null;
                         return (
                             item.linkTo &&
                             item.linkLabel && (

@@ -32,6 +32,18 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
+export const isEnrolledInSubject = (subject, account) => {
+    return (
+        (!!account &&
+            !!account.current_classes &&
+            account.current_classes.length > 0 &&
+            account.current_classes.filter(item => {
+                return (item.classnumber || '') === subject;
+            }).length > 0) ||
+        false
+    );
+};
+
 export const SearchCourses = ({
     account,
     loadNewSubject,
@@ -57,7 +69,7 @@ export const SearchCourses = ({
         setCurrentSearchTab(newSubjectTabId);
     };
 
-    const shouldAddToSearchList = searchKeyword => {
+    const isValidSubjectNumber = searchKeyword => {
         return searchKeyword.length >= 8;
     };
 
@@ -72,19 +84,15 @@ export const SearchCourses = ({
                 const campus = preselectedCourse.campus || '';
                 /* istanbul ignore next */
                 const semester = preselectedCourse.semester || '';
-                // if (!listSearchedSubjects.includes(searchKeyword) && shouldAddToSearchList(searchKeyword)) {
-                //     console.log('first search');
                 loadNewSubject(searchKeyword, campus, semester);
+                /* istanbul ignore else */
                 if (!listSearchedSubjects.includes(searchKeyword)) {
-                    updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                    // function not called when listSearchedSubjects has keyword, so the `if` is only for paranoia
+                    updateSearchList(searchKeyword);
                 }
 
-                tabId = listSearchedSubjects.length === 0 ? 0 : listSearchedSubjects.length - 1;
-                // } else {
-                //     // they might search again for a subject - change to that tab instead of reloading
-                //     console.log('change tabs');
-                //     tabId = listSearchedSubjects.indexOf(searchKeyword);
-                // }
+                // tabId = listSearchedSubjects.length === 0 ? 0 : listSearchedSubjects.length - 1;
+                tabId = 0;
 
                 setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
             }
@@ -173,40 +181,24 @@ export const SearchCourses = ({
         return result;
     };
 
-    const isEnrolledInSubject = subject => {
-        return (
-            (!!account &&
-                !!account.current_classes &&
-                account.current_classes.length > 0 &&
-                account.current_classes.filter(item => {
-                    return (item.classnumber || '') === subject;
-                }).length > 0) ||
-            false
-        );
-    };
-
     const loadCourseAndSelectTab = (searchKeyword, suggestions) => {
         let tabId;
 
-        /* istanbul ignore next */
         const thisSuggestion =
             (!!suggestions &&
                 suggestions
                     .filter(course => {
-                        /* istanbul ignore next */
-                        const courseText = course.text || '';
-                        return courseText === searchKeyword;
+                        return (course.text || /* istanbul ignore next */ '') === searchKeyword;
                     })
                     .pop()) ||
-            null;
-        /* istanbul ignore next */
-        const campus = (!!thisSuggestion && thisSuggestion.rest?.campus) || '';
-        /* istanbul ignore next */
-        const semester = (!!thisSuggestion && thisSuggestion.rest?.period) || '';
-        /* istanbul ignore else */
+            /* istanbul ignore next */ null;
 
-        // // if subject is in 'my courses' list, swap to that tab
-        if (isEnrolledInSubject(searchKeyword)) {
+        const campus = thisSuggestion?.rest?.campus || /* istanbul ignore next */ '';
+
+        const semester = thisSuggestion?.rest?.period || /* istanbul ignore next */ '';
+
+        // if subject is in 'my courses' list, swap to that tab
+        if (isEnrolledInSubject(searchKeyword, account)) {
             // swap to correct tab on My Courses tab
             const subjectId = getPlaceInCurrentAccountList(searchKeyword);
             selectMyCoursesTab(searchKeyword, subjectId);
@@ -216,11 +208,12 @@ export const SearchCourses = ({
                 listSearchedSubjects.length > 0 &&
                 listSearchedSubjects.includes(searchKeyword)
             ) &&
-            shouldAddToSearchList(searchKeyword)
+            isValidSubjectNumber(searchKeyword)
         ) {
             loadNewSubject(searchKeyword, campus, semester);
+            /* istanbul ignore else */
             if (!listSearchedSubjects.includes(searchKeyword)) {
-                updateSearchList(listSearchedSubjects.concat(searchKeyword));
+                updateSearchList(searchKeyword);
             }
 
             tabId = listSearchedSubjects.length;
@@ -229,7 +222,7 @@ export const SearchCourses = ({
             tabId =
                 !!listSearchedSubjects && listSearchedSubjects.length > 0
                     ? listSearchedSubjects.indexOf(searchKeyword)
-                    : 0;
+                    : /* istanbul ignore next */ 0;
             setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
         }
     };

@@ -44,12 +44,12 @@ export const isValidInput = params => {
     });
 
     const validCourseCodePattern = new RegExp('^[A-Z]{4}[0-9]{4}[A-Z]?$');
-    valid = !!valid && validCourseCodePattern.test(params.coursecode);
+    valid = !!valid && !!params.coursecode && validCourseCodePattern.test(params.coursecode);
 
     if (!!valid) {
         let found = false;
         Object.values(global.campuses).map(value => {
-            if (value === params.campus) {
+            if (!!params.campus && value === params.campus) {
                 found = true;
             }
         });
@@ -57,7 +57,7 @@ export const isValidInput = params => {
     }
 
     const validSemesterPattern = new RegExp('^[A-Za-z0-9, ]+$');
-    valid = !!valid && params.semester && validSemesterPattern.test(params.semester);
+    valid = !!valid && !!params.semester && validSemesterPattern.test(params.semester);
 
     return valid;
 };
@@ -178,23 +178,24 @@ export const CourseResources = ({
 
     const [listSearchedSubjects, addToSearchList] = useState([]);
     const updateSearchList = newSearchKey => {
-        addToSearchList(newSearchKey);
+        addToSearchList(listSearchedSubjects.concat(newSearchKey));
     };
 
     const [coursemenu, setCurrentMenuTab] = useState(`${courseTabLabel}-0`);
 
     const loadSubjectAndFocusOnTab = (coursecode, subjectTabId) => {
         if (!currentReadingLists[coursecode]) {
-            /* istanbul ignore else */
             const enrolledClass =
                 (!!account &&
                     !!account.current_classes &&
                     account.current_classes.find(c => c.classnumber === coursecode)) ||
-                null;
-            /* istanbul ignore else */
-            const campus = (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) || null;
-            /* istanbul ignore else */
-            const semester = (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) || null;
+                /* istanbul ignore next */ null;
+            const campus =
+                (!!enrolledClass && !!enrolledClass.CAMPUS && getCampusByCode(enrolledClass.CAMPUS)) ||
+                /* istanbul ignore next */ null;
+            const semester =
+                (!!enrolledClass && !!enrolledClass.semester && enrolledClass.semester) ||
+                /* istanbul ignore next */ null;
             loadNewSubject(coursecode, campus, semester);
         }
 
