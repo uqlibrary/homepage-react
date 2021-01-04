@@ -1,57 +1,39 @@
 # HOMEPAGE-REACT
 
-[![Codeship Status for uqlibrary/fez-frontend](https://app.codeship.com/projects/5f018a50-f4f8-0134-5dd6-4eabb52e4bf9/status?branch=master)](https://app.codeship.com/projects/210111)
-[![Dependency Status](https://david-dm.org/uqlibrary/fez-frontend.svg)](https://david-dm.org/uqlibrary/fez-frontend)
-[![Dev Dependency Status](https://david-dm.org/uqlibrary/fez-frontend/dev-status.svg)](https://david-dm.org/uqlibrary/fez-frontend)
+[![Codebuild Status for uqlibrary/homepage-react](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSUhCeGFUaW5iaHMyYjNIcnNWTGJMOTA3eThjRFFTYVhyY3NiSDVTWlJlbnl5VllnUHlvRzVyeWdhYW52VnduNUNzbDBPZUkreVFvUTFkQkhyQ0YxZUJZPSIsIml2UGFyYW1ldGVyU3BlYyI6IldlOVk5dlVxU0ROSE5IaDciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/homepage-master/view?region=ap-southeast-2)
+[![Dependency Status](https://david-dm.org/uqlibrary/homepage-react.svg)](https://david-dm.org/uqlibrary/homepage-react)
+[![Dev Dependency Status](https://david-dm.org/uqlibrary/homepage-react/dev-status.svg)](https://david-dm.org/uqlibrary/homepage-react)
 
 A repo for the Library of The University of Queensland website homepage
-
-[Instructions for User Admins](docs/admin-howto.md)
 
 ## Technology
 
 - Code: `React (~16.8), Javascript (ES2015 - Babel), Immutable, SASS`
-- State: `Redux`, [Formik](https://formik.org/)
-- Design: [Google Material UI](https://material-ui.com/components/app-bar/)
+- State: `Redux, ReduxForm`
+- Design: `Google Material Design` - [Material UI](https://v0.material-ui.com/#/components/app-bar)
 - Build and dev tools: `Webpack`
 - Unit tests: `Jest`
 - E2E tests: `Cypress`
 - WCAG tests: `Cypress/aXe`
 
-This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
-
-## Installation
-
-1. Clone from github
-
-2. Create a .env file based on example.env
-
-3. install npm: `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server`
- 
-4. Create these git hooks to manage branches to project standard: 
-
-- `ln -sf "../../scripts/pre-commit" ".git/hooks/pre-commit"`
-
-  (Prevent direct commits to the staging branch and run `prettier-eslint` automatically before every local commit)
-
-- `ln -sf "../../scripts/prepare-commit-msg" ".git/hooks/prepare-commit-msg"`
-
-  (Prevent accidental merges from the staging branch:)
-
 ## Development
 
-- `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this coomand
+This project is using `npm` for dependency management. Make sure `npm` is installed on your machine.
+
+- make sure to create a .env file based on example.env
+- `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server` - initial setup
+- `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this
   clears & reinstalls npm packages
 - `npm run start`
-  - runs <http://localhost:2020/>
+  - runs <http://localhost:3000/>
   - uses dev api for backend (<http://dev-api.library.uq.edu.au:8050/>) (requires additional setup of uqlibrary/api
     project)
 - `npm run start:mock`
-  - runs <http://localhost:2020/>
+  - runs <http://localhost:3000/>
   - uses mock data from src/mock
 - `npm run start:url`
 
-  - runs <http://dev-homepage.library.uq.edu.au:2020/> (add `dev-homepage.library.uq.edu.au` to your /etc/hosts)
+  - runs <http://dev-espace.library.uq.edu.au:3000/> (add `dev-espace.library.uq.edu.au` to your /etc/hosts)
   - uses staging data from the aws api as a backend (you will need to set API_URL in .env to `https://api.library.uq.edu.au/staging/`)
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
 
@@ -68,7 +50,7 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
 
 - `npm run start:build`
-  - runs production build version on <http://dev-library.library.uq.edu.au:9000/> and `http://localhost:9000/`
+  - runs production build version on <http://dev-espace.library.uq.edu.au:9000/> and `http://localhost:9000/`
   - uses PRODUCTION DATA from the aws api (ie `https://api.library.uq.edu.au/v1/1) as a backend!! Careful!!
 - `npm run start:build:e2e`
   - runs production build version on <http://localhost:9000/>
@@ -82,6 +64,25 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 Mock data is provided for all pages and actions under `src/mock/`.
 
 ### Development notes
+
+#### Git safety checks
+
+- Run the following in the project root directory to install the pre-commit hook:
+
+  ```sh
+  ln -sf "../../scripts/pre-commit" ".git/hooks/pre-commit"
+  ```
+
+  It does two things:
+
+  - Prevent direct commits to the staging branch.
+  - Run `prettier-eslint` automatically before every local commit
+
+- Run the following in the project root directory to prevent accidental merges from the staging branch:
+
+  ```sh
+    ln -sf "../../scripts/prepare-commit-msg" ".git/hooks/prepare-commit-msg"
+  ```
 
 #### Naming conventions
 
@@ -171,7 +172,6 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 - Because FE is served from cloudFront, add a behaviour to serve css/js filename patterns. E.g. behaviours have been
   added for `main-*` and `commons-*` files.
-- if you cant get eg <https://fez-staging.library.uq.edu.au/view/UQ:e6c5854> to load the new FE (it always loads legacy) you can use the alternate url of <https://fez-staging.library.uq.edu.au/view_new/UQ:e6c5854>
 
 #### Optimisation Guidelines
 
@@ -199,9 +199,9 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 - any custom reject() by promises should return an object with status and message defined
   `{status: 401, message: 'Unauthorised user'}`
-  [Example](https://github.com/uqlibrary/fez-frontend/blob/5b77d698065ddbff6f8ffcd31cf95ffcacd6f16b/src/repositories/account.js#L13)
+  [Example](https://github.com/uqlibrary/homepage-react/blob/master/src/repositories/account.js#L13)
 - any custom catch() methods of promises should process known errors and throw other errors.
-  [Example](https://github.com/uqlibrary/fez-frontend/blob/5b77d698065ddbff6f8ffcd31cf95ffcacd6f16b/src/modules/App/actions.js#L27)
+  [Example](https://github.com/uqlibrary/homepage-react/blob/master/src/modules/App/actions.js#L27)
 
 ## Testing
 
@@ -227,9 +227,9 @@ Before committing changes, locally run tests and update stapshots (if required).
 
 #### Guidelines
 
-- [Action creators](https://github.com/uqlibrary/fez-frontend/blob/master/src/actions/README.md#testing)
-- [Rendered components](https://github.com/uqlibrary/fez-frontend/blob/master/src/modules/README.md#testing)
-- [Reducers](https://github.com/uqlibrary/fez-frontend/blob/master/src/reducers/README.md#testing)
+- [Action creators](https://github.com/uqlibrary/homepage-react/blob/master/src/actions/README.md#testing)
+- [Rendered components](https://github.com/uqlibrary/homepage-react/blob/master/src/modules/README.md#testing)
+- [Reducers](https://github.com/uqlibrary/homepage-react/blob/master/src/reducers/README.md#testing)
 
 ### E2E testing
 
@@ -298,22 +298,22 @@ If you want Codeship to run cypress tests before you merge to master, include th
 
 ## Mocking
 
-To run website on mock data run `npm run start:mock` webserver will start on `http://localhost:2020/`
+To run website on mock data run `npm run start:mock` webserver will start on `http://localhost:3000/`
 
 The project allows the user to "login" as any test user. Simply add `?user=<username>` to the request and it will log
 you in as that user. Usernames can be found in the `src/mock/data/accounts.js` file.
 
-- anonymous user: <http://localhost:2020/?user=anon>
-- researcher user: <http://localhost:2020/?user=uqresearcher>
-- staff/not author user (has admin): <http://localhost:2020/?user=uqstaff>
-- undegrad student user: <http://localhost:2020/?user=s1111111>
-- postgrad student user: <http://localhost:2020/?user=s2222222>
-- RHD submission form: <http://localhost:2020/rhdsubmission?user=s2222222>
-- user with expired token: <http://localhost:2020/?user=uqexpired>
-- user who has readonly masquerade (but not admin): <http://localhost:2020/?user=uqmasquerade>
-- user who can do CSV Ingest: <http://localhost:2020/?user=digiteamMember>
+- anonymous user: <http://localhost:3000/?user=anon>
+- researcher user: <http://localhost:3000/?user=uqresearcher>
+- staff/not author user (has admin): <http://localhost:3000/?user=uqstaff>
+- undegrad student user: <http://localhost:3000/?user=s1111111>
+- postgrad student user: <http://localhost:3000/?user=s2222222>
+- RHD submission form: <http://localhost:3000/rhdsubmission?user=s2222222>
+- user with expired token: <http://localhost:3000/?user=uqexpired>
+- user who has readonly masquerade (but not admin): <http://localhost:3000/?user=uqmasquerade>
+- user who can do CSV Ingest: <http://localhost:3000/?user=digiteamMember>
 
-So an example staff link for an example admin edit page will be <http://localhost:2020/admin/edit/UQ:358319?user=uqstaff>
+So an example staff link for an example admin edit page will be <http://localhost:3000/admin/edit/UQ:358319?user=uqstaff>
 
 The following access is required:
 
@@ -339,20 +339,20 @@ Ask for review from team-mates if you'd like other eyes on your changes.
 
 ## Deployment
 
-Application deployment is 100% automated using AWS Codebuild, and is hosted in S3. All deployment configuration (S3 bucket
-access keys, post deployment cache invalidation configuration) is stored within Codeship. Deployment pipelines are setup
-for branches: "master", "staging, "production" - other branches have to be done manually (branch per user to come).
+Application deployment is 100% automated using AWS Codebuild (and Codepipeline), and is hosted in S3. All testing and deployment commands and configuration are stored in the buildspec yaml files in the repo. All secrets (access keys and tokens for PT, Cypress, Sentry and Google) are stored in AWS Parameter Store, and then populated into ENV variables in those buildspec yaml files.
+Deployment pipelines are setup for branches: "master", "staging, "production" and several key branches starting with "feature-".
 
-- Deployments to production are hosted on <https://www.library.uq.edu.au/>
+- Master branch is always deployed to staging/production
+- Deployments to production are hosted on <https://homepage-production.library.uq.edu.au/>
 - Deployments to staging are hosted on <https://homepage-staging.library.uq.edu.au/>
-- All other branches are deployed on <https://homepage-development.library.uq.edu.au/branchname/#/>.
+- All other branches are deployed on <https://homepage-development.library.uq.edu/branchName/>.
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions
 
 ## Google Analytics integration
 
-Fez-frontend includes GTM (Google Tag Manager). GTM is set at webpack build time in webpack configuration. It can be
+Homepage includes GTM (Google Tag Manager). GTM is set at webpack build time in webpack configuration. It can be
 setup as an environmental variable at CI level if required.
 
 GTM is very flexible and easy to configure to track required events. See more details on
