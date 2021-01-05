@@ -138,10 +138,10 @@ api.interceptors.response.use(
             }
         }
 
+        reportToSentry(error);
         if (!!errorMessage) {
             return Promise.reject({ ...errorMessage });
         } else {
-            reportToSentry(error);
             return Promise.reject(error);
         }
     },
