@@ -241,7 +241,7 @@ export const SearchCourses = ({
                     <Typography
                         component="h3"
                         variant="h6"
-                        style={{ marginLeft: '1rem' }}
+                        style={{ marginLeft: '1.2rem' }}
                         id="course-resource-search-results"
                     >
                         {locale.searchResultsTitle}
