@@ -12,10 +12,18 @@ const AppAlert = ({ appAlert, customAlert }) => {
         appAlerts = appAlert.map(item => {
             // Strip marked down links from the body and assign to Alert props
             const linkRegex = item.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
+            let message = '';
+            let canHide = true;
+            if (item.body.indexOf('[permanent]') > 0) {
+                message = item.body.replace('[permanent]', '');
+                canHide = false;
+            } else {
+                message = item.body;
+            }
             let markdownBody = {};
             if (!!linkRegex && linkRegex.length === 3) {
                 markdownBody = {
-                    message: item.body.replace(linkRegex[0], '').replace('  ', ' '),
+                    message: message.replace(linkRegex[0], '').replace('  ', ' '),
                     action: () => (window.location.href = linkRegex[2]),
                     actionButtonLabel: linkRegex[1],
                 };
@@ -25,7 +33,7 @@ const AppAlert = ({ appAlert, customAlert }) => {
                 message: item.body,
                 ...markdownBody,
                 type: item.urgent === 1 ? 'warning' : 'info_outline',
-                canHide: true,
+                canHide: canHide,
             };
         });
     }
