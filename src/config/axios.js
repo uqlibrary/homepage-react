@@ -93,17 +93,6 @@ api.interceptors.response.use(
         return Promise.resolve(response.data);
     },
     error => {
-        const reportHttpStatusToSentry = [422, 500];
-        if (
-            !!error &&
-            !!error.response &&
-            !!error.response.status &&
-            reportHttpStatusToSentry.indexOf(error.response.status) !== -1
-        ) {
-            reportToSentry(error);
-        }
-
-        // 403 for tool api lookup is handled in actions/thirdPartyLookupTool.js
         let errorMessage = null;
         if (!!error && !!error.config) {
             if (!!error.response && !!error.response.status && error.response.status === 403) {
@@ -139,6 +128,7 @@ api.interceptors.response.use(
         }
 
         reportToSentry(error);
+
         if (!!errorMessage) {
             return Promise.reject({ ...errorMessage });
         } else {
