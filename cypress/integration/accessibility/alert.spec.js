@@ -10,13 +10,5 @@ context('ACCESSIBILITY', () => {
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
-
-        cy.get('div[data-testid="alert-1"]').contains('We are open on-campus and online.');
-        cy.log('Alert 2');
-        cy.checkA11y('div[data-testid="alert-1"]', {
-            reportName: 'Homepage',
-            scopeName: 'Content',
-            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        });
     });
 });

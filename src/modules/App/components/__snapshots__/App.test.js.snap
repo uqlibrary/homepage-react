@@ -14455,10 +14455,10 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                         id="spotlights-diff"
                                                                                       >
                                                                                         <rect
-                                                                                          height="100%"
+                                                                                          height="721"
                                                                                           rx="5"
                                                                                           ry="5"
-                                                                                          width="100%"
+                                                                                          width="1967"
                                                                                           x="0"
                                                                                           y="0"
                                                                                         />
