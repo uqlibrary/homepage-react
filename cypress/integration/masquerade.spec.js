@@ -24,4 +24,14 @@ context('Masquerade', () => {
             .click();
         cy.url().should('include', 'https://auth.library.uq.edu.au/masquerade?user=s1111111');
     });
+
+    it('has a working back button', () => {
+        cy.visit('/?user=uqstaff'); // supply a page the back button can return to
+
+        cy.visit('/admin/masquerade/?user=uqstaff');
+        cy.get('body').contains('When masquerading');
+
+        cy.get('button[data-testid=StandardPage-goback-button]').click();
+        cy.url().should('eq', 'http://localhost:2020/?user=uqstaff');
+    });
 });

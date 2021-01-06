@@ -9,7 +9,6 @@ export function loadGuides(keyword) {
         dispatch({ type: actions.GUIDES_LOADING });
         return get(GUIDES_API({ keyword }))
             .then(data => {
-                console.log('fetched GUIDES_API for ', keyword, ': ', data);
                 const updatedData = data.map(subject => {
                     subject.coursecode = keyword;
                     return subject;
@@ -41,7 +40,6 @@ export function loadExams(keyword) {
         dispatch({ type: actions.EXAMS_LOADING });
         return get(EXAMS_API({ keyword }))
             .then(data => {
-                console.log('fetched EXAMS_API: ', data);
                 dispatch({
                     type: actions.EXAMS_LOADED,
                     payload: data,
@@ -139,7 +137,6 @@ export function loadReadingLists(coursecode, campus, semester, account) {
         dispatch({ type: actions.READING_LIST_LOADING });
         return get(READING_LIST_API({ coursecode, campus, semester }))
             .then(data => {
-                console.log('fetched READING_LIST_API for ', coursecode, ': ', data);
                 const updatedData = data;
                 // make the returned value a more sensibly named variable
                 updatedData.coursecode = data.title;
@@ -180,7 +177,6 @@ export function loadCourseReadingListsSuggestions(keyword) {
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(response => response.json())
             .then(data => {
-                console.log(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl, ' fetched ', data);
                 const payload = data.map((item, index) => {
                     return {
                         text: item.name,

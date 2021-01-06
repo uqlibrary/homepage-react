@@ -15,7 +15,7 @@ export const NotFound = ({ account, accountLoading }) => {
 
     // if not known page, standard 404
     if (!isValidRoute) {
-        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
+        return <StandardPage standardPageId="not-found" {...locale.notFound} />;
     }
     // the page must require admin to land here when they are logged in
     const isLoggedIn = accountLoading === false && !!account && !!account.id;

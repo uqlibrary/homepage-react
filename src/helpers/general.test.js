@@ -1,4 +1,4 @@
-import { getCampusByCode, isRepeatingString, leftJoin, stripHtml } from './general';
+import { getCampusByCode, isRepeatingString, leftJoin, stripHtml, unescapeString } from './general';
 import { getUserServices } from './access';
 import { accounts } from '../mock/data';
 
@@ -88,5 +88,11 @@ describe('general helpers', () => {
                 },
             }),
         ).toEqual([]);
+    });
+
+    it('should unescape a string', () => {
+        expect(unescapeString(null)).toEqual('');
+
+        expect(unescapeString('1&amp;2')).toEqual('1 and 2');
     });
 });

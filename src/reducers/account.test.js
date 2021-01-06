@@ -176,4 +176,63 @@ describe('account reducer', () => {
             isSessionExpired: null,
         });
     });
+
+    it('should set chat status loading flags to true when loading account', () => {
+        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            chatStatus: { online: false },
+        });
+    });
+
+    it('should set chat status online when chat available', () => {
+        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: true } });
+        expect(test).toEqual({
+            ...emptyState,
+            chatStatus: { online: true },
+        });
+    });
+
+    it('should set chat status offline when chat offline', () => {
+        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: false } });
+        expect(test).toEqual({
+            ...emptyState,
+            chatStatus: { online: false },
+        });
+    });
+
+    it('should set chat status to null when failed loading', () => {
+        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_FAILED });
+        expect(test).toEqual({
+            ...emptyState,
+            chatStatus: { online: false },
+        });
+    });
+
+    it('should set hours to null when failed loading', () => {
+        const test = accountReducer(emptyState, { type: actions.LIB_HOURS_FAILED });
+        expect(test).toEqual({
+            ...emptyState,
+            libHours: null,
+            libHoursLoading: false,
+        });
+    });
+
+    it('should set computer availability to null when failed loading', () => {
+        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_FAILED });
+        expect(test).toEqual({
+            ...emptyState,
+            computerAvailability: null,
+            computerAvailabilityLoading: false,
+        });
+    });
+
+    it('should set training to null when failed loading', () => {
+        const test = accountReducer(emptyState, { type: actions.TRAINING_FAILED });
+        expect(test).toEqual({
+            ...emptyState,
+            trainingEvents: null,
+            trainingEventsLoading: false,
+        });
+    });
 });
