@@ -57,21 +57,6 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
       </WithStyles(ForwardRef(ListItem))>
     </div>
   </WithStyles(ForwardRef(List))>
-  <span
-    aria-label="Start of content"
-    id="afterMegamenu"
-    role="region"
-    style={
-      Object {
-        "left": "-2000px",
-        "position": "fixed",
-        "top": "-2000px",
-      }
-    }
-    tabIndex="0"
-  >
-    Start of content
-  </span>
 </div>
 `;
 
@@ -139,20 +124,5 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
       </WithStyles(ForwardRef(ListItem))>
     </div>
   </WithStyles(ForwardRef(List))>
-  <span
-    aria-label="Start of content"
-    id="afterMegamenu"
-    role="region"
-    style={
-      Object {
-        "left": "-2000px",
-        "position": "fixed",
-        "top": "-2000px",
-      }
-    }
-    tabIndex="0"
-  >
-    Start of content
-  </span>
 </div>
 `;

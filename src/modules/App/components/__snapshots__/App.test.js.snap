@@ -49,6 +49,21 @@ exports[`Application component Should display mobile correctly 1`] = `
       isAuthorizedUser={false}
       isHdrStudent={false}
     />
+    <span
+      aria-label="Start of content"
+      id="afterNavigation"
+      role="region"
+      style={
+        Object {
+          "left": "-2000px",
+          "position": "fixed",
+          "top": "-2000px",
+        }
+      }
+      tabIndex="0"
+    >
+      Start of content
+    </span>
     <div
       aria-label="UQ Library Alerts"
       role="region"
@@ -192,6 +207,21 @@ exports[`Application component should render application with routing for the us
       isAuthorizedUser={true}
       isHdrStudent={false}
     />
+    <span
+      aria-label="Start of content"
+      id="afterNavigation"
+      role="region"
+      style={
+        Object {
+          "left": "-2000px",
+          "position": "fixed",
+          "top": "-2000px",
+        }
+      }
+      tabIndex="0"
+    >
+      Start of content
+    </span>
     <div
       aria-label="UQ Library Alerts"
       role="region"
@@ -333,6 +363,21 @@ exports[`Application component should render for anon user 1`] = `
       isAuthorizedUser={false}
       isHdrStudent={false}
     />
+    <span
+      aria-label="Start of content"
+      id="afterNavigation"
+      role="region"
+      style={
+        Object {
+          "left": "-2000px",
+          "position": "fixed",
+          "top": "-2000px",
+        }
+      }
+      tabIndex="0"
+    >
+      Start of content
+    </span>
     <div
       aria-label="UQ Library Alerts"
       role="region"
@@ -468,6 +513,21 @@ exports[`Application component should render loading screen while account is loa
       isAuthorizedUser={false}
       isHdrStudent={false}
     />
+    <span
+      aria-label="Start of content"
+      id="afterNavigation"
+      role="region"
+      style={
+        Object {
+          "left": "-2000px",
+          "position": "fixed",
+          "top": "-2000px",
+        }
+      }
+      tabIndex="0"
+    >
+      Start of content
+    </span>
     <div
       aria-label="UQ Library Alerts"
       role="region"
@@ -2728,8 +2788,10 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                 >
                                   <a
                                     aria-label="skip navigation"
-                                    href="#afterMegamenu"
+                                    href="#"
                                     id="skipNavigation"
+                                    onClick={[Function]}
+                                    onKeyDown={[Function]}
                                     title="Skip navigation"
                                   >
                                     Skip navigation
@@ -7992,6 +8054,21 @@ exports[`Testing wrapped App component Mounts 1`] = `
                             </WithStyles(ForwardRef(Grid))>
                           </div>
                         </UQSiteHeader>
+                        <span
+                          aria-label="Start of content"
+                          id="afterNavigation"
+                          role="region"
+                          style={
+                            Object {
+                              "left": "-2000px",
+                              "position": "fixed",
+                              "top": "-2000px",
+                            }
+                          }
+                          tabIndex="0"
+                        >
+                          Start of content
+                        </span>
                         <div
                           aria-label="UQ Library Alerts"
                           role="region"
