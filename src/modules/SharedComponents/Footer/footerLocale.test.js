@@ -37,8 +37,7 @@ describe('footerLocale', () => {
             isAString(menu.dataTestid);
             isAValidLink(menu.linkTo);
             isAString(menu.linkMouseOver);
-            (!!menu.linklabel && expect(menu.linklabel.length).not.toBe(0)) ||
-                (!!menu.icon && expect(menu.icon.length).not.toBe(0));
+            expect(menu.icon.length).not.toBe(0);
         });
 
         locale.connectFooter.internalLinks.forEach(menu => {

@@ -85,6 +85,7 @@ describe('Component Megamenu', () => {
         menuLocale.publicmenu.forEach(menu => {
             expect(menu.linkTo.length).not.toBe(0);
             expect(menu.primaryText.length).not.toBe(0);
+            expect(menu.dataTestid.length).not.toBe(0);
             !menu.shiftLeft || expect(menu.shiftLeft).toEqual(true);
             !menu.submenuItems ||
                 menu.submenuItems.forEach(submenu => {
