@@ -44,11 +44,24 @@ export const UQHeader = ({}) => {
         }
     };
 
+    const skipNav = () => {
+        const afterNavigation = document.getElementById('afterNavigation');
+        !!afterNavigation && afterNavigation.focus();
+        return false;
+    };
+
     return (
         <header className="uq-header" id="uqheader">
             <div className="uq-header__container">
                 <div className="nav-global">
-                    <a id="skipNavigation" aria-label="skip navigation" title="Skip navigation" href="#afterMegamenu">
+                    <a
+                        id="skipNavigation"
+                        aria-label="skip navigation"
+                        title="Skip navigation"
+                        onClick={() => skipNav()}
+                        onKeyDown={() => skipNav()}
+                        href="#"
+                    >
                         Skip navigation
                     </a>
                     <div className="logo">

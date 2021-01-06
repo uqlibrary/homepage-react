@@ -290,19 +290,18 @@ context('Homepage', () => {
         cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
     });
 
-    // it('The skip navigation link works', () => {
-    //     console.log('start test');
-    //     cy.visit('/?user=vanilla');
-    //     cy.wait(1000);
-    //     cy.viewport(1300, 1000);
-    //
-    //     // put focus on the top of the page, tab into the first element, which will be the skip element,
-    //     // click and focus should then be further down the page
-    //     cy.get('#skipNavigation')
-    //         .first()
-    //         .focus()
-    //         .type('{enter}', { force: true });
-    //     // current lelement is skip nav button
-    //     cy.focused().should('have.attr', 'id', 'afterMegamenu');
-    // });
+    it('The skip navigation link works', () => {
+        cy.visit('/?user=vanilla');
+        cy.wait(1000);
+        cy.viewport(1300, 1000);
+
+        // put focus on the top of the page, tab into the first element, which will be the skip element and hit enter
+        cy.get('#skipNavigation')
+            .first()
+            .focus()
+            .type('{enter}', { force: true });
+
+        // current focus is now on an element after the header block
+        cy.focused().should('have.attr', 'id', 'afterNavigation');
+    });
 });
