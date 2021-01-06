@@ -1,7 +1,7 @@
 import * as routes from './routes';
 
 describe('Backend routes method', () => {
-    it('should get zer-padded year', () => {
+    it('should get zero-padded year', () => {
         expect(routes.zeroPaddedYear(null)).toBe('*');
         expect(routes.zeroPaddedYear(83)).toBe('0083');
     });
@@ -71,5 +71,16 @@ describe('Backend routes method', () => {
             options: { params: { ts: '1577836800000' } },
         });
         MockDate.reset();
+    });
+
+    it('should construct url for TRAINING_API with special number of events', () => {
+        const defaultNumberOfEvents = 6;
+        const expectedParams = { take: defaultNumberOfEvents, 'filterIds[]': 104, ts: '1609905271491' };
+
+        const get10TrainingEvents = routes.TRAINING_API();
+
+        expect(get10TrainingEvents.apiUrl).toEqual('training_events');
+        expect(get10TrainingEvents.options.params.take).toEqual(expectedParams.take);
+        expect(get10TrainingEvents.options.params.filterIds).toEqual(expectedParams.filterIds);
     });
 });
