@@ -50,7 +50,6 @@ export const MyLibrary = ({ account, author, history }) => {
         setAnchorEl(null);
     };
     const handleLink = link => () => {
-        console.log(link);
         if (link.includes('http')) {
             window.location.href = link;
         } else {
