@@ -12,14 +12,14 @@ const AppAlert = ({ appAlert, customAlert }) => {
         appAlerts = appAlert.map(item => {
             // Strip marked down links from the body and assign to Alert props
             const linkRegex = item.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-            let message = '';
+            let message = item.body;
             let canHide = true;
             if (item.body.indexOf('[permanent]') > 0) {
-                message = item.body.replace('[permanent]', '');
+                console.log('ping');
+                message = message.replace('[permanent]', '');
                 canHide = false;
-            } else {
-                message = item.body;
             }
+            console.log(message);
             let markdownBody = {};
             if (!!linkRegex && linkRegex.length === 3) {
                 markdownBody = {
@@ -30,7 +30,7 @@ const AppAlert = ({ appAlert, customAlert }) => {
             }
             return {
                 title: item.title,
-                message: item.body,
+                message: message,
                 ...markdownBody,
                 type: item.urgent === 1 ? 'warning' : 'info_outline',
                 canHide: canHide,
