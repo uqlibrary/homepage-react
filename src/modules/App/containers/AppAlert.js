@@ -15,11 +15,9 @@ const AppAlert = ({ appAlert, customAlert }) => {
             let message = item.body;
             let canHide = true;
             if (item.body.indexOf('[permanent]') > 0) {
-                console.log('ping');
                 message = message.replace('[permanent]', '');
                 canHide = false;
             }
-            console.log(message);
             let markdownBody = {};
             if (!!linkRegex && linkRegex.length === 3) {
                 markdownBody = {

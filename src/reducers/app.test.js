@@ -2,11 +2,19 @@ import * as actions from 'actions/actionTypes';
 import appReducer from './app';
 
 describe('app reducer', () => {
+    let emptyState;
+
     const initialState = {
         hidePossiblyYourPublicationsLure: false,
         appAlert: null,
         redirectPath: null,
     };
+
+    beforeEach(() => {
+        emptyState = {
+            ...initialState,
+        };
+    });
 
     it('returns the initialState due to an invalid action type', () => {
         const test = appReducer(initialState, { type: 'INVALID_ACTION_TYPE' });
@@ -37,6 +45,15 @@ describe('app reducer', () => {
         expect(test).toEqual(initialState);
     });
 
+    it('should set alert to null when failed loading', () => {
+        const test = appReducer(emptyState, { type: actions.ALERT_STATUS_FAILED });
+        expect(test).toEqual({
+            ...emptyState,
+            alertStatusLoading: false,
+            alertStatus: null,
+        });
+    });
+
     it('returns the redirect location we are setting', () => {
         const test = appReducer(initialState, {
             type: actions.SET_REDIRECT_PATH,
@@ -56,4 +73,13 @@ describe('app reducer', () => {
         expect(test.redirectPath).toBeNull;
         expect(test).toEqual(initialState);
     });
+
+    // it('should set course resource suggestions to null when failed loading', () => {
+    //     const test = appReducer(emptyState, { type: actions.COURSE_RESOURCE_SUGGESTIONS_FAILED });
+    //     expect(test).toEqual({
+    //         ...emptyState,
+    //         CRsuggestionsLoading: false,
+    //         CRsuggestionsError: action.payload,
+    //     });
+    // });
 });

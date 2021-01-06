@@ -70,8 +70,7 @@ export default {
         errorMessages: {
             401: {
                 message:
-                    'You are not authorised to access the requested information. Please contact eSpace ' +
-                    'administrators or try again later.',
+                    'You are not authorised to access the requested information. Please contact askus@library.uq.edu.au or try again later.',
                 status: 401,
             },
             403: {
@@ -99,11 +98,9 @@ export default {
                 status: 500,
             },
             generic:
-                'Error has occurred during request and request cannot be processed. Please contact eSpace ' +
-                'administrators or try again later.',
+                'Error has occurred during request and request cannot be processed. Please contact webmaster@library.uq.edu.au or try again later.',
             genericAlternate:
-                "Error has occurred during request and request can't be processed. Please contact eSpace " +
-                'administrators or try again later.',
+                "Error has occurred during request and request can't be processed. Please contact webmaster@library.uq.edu.au or try again later.",
         },
         notRegisteredAuthorAlert: {
             title: 'You are not registered in UQ Library as an author',

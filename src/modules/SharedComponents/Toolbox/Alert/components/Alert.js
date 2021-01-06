@@ -399,7 +399,7 @@ export const Alert = ({
                                     <Grid item className={classes.dismissButton}>
                                         <IconButton
                                             onClick={dismissAction}
-                                            aria-label={dismissTitle || 'Hide this alert'}
+                                            aria-label={dismissTitle}
                                             id={`${alertId}-dismiss-button-mobile`}
                                             data-testid={`${alertId}-dismiss-button-mobile`}
                                         >
@@ -413,7 +413,7 @@ export const Alert = ({
                                     <Grid item className={classes.dismissButton}>
                                         <IconButton
                                             onClick={hideThisAlert}
-                                            aria-label={dismissTitle || 'Hide this alert'}
+                                            aria-label={dismissTitle}
                                             id={`${alertId}-hide-button-mobile`}
                                             data-testid={`${alertId}-hide-button-mobile`}
                                         >
@@ -442,7 +442,7 @@ export const Alert = ({
                             <Grid item className={classes.dismissButton}>
                                 <IconButton
                                     onClick={dismissAction}
-                                    aria-label={dismissTitle || 'Hide this alert'}
+                                    aria-label={dismissTitle}
                                     id={`${alertId}-dismiss-button`}
                                     data-testid={`${alertId}-dismiss-button`}
                                 >
@@ -456,7 +456,7 @@ export const Alert = ({
                             <Grid item className={classes.dismissButton}>
                                 <IconButton
                                     onClick={hideThisAlert}
-                                    aria-label={dismissTitle || 'Hide this alert'}
+                                    aria-label={dismissTitle}
                                     id={`${alertId}-hide-button`}
                                     data-testid={`${alertId}-hide-button`}
                                 >

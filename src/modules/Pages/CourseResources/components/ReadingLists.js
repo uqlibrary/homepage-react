@@ -130,8 +130,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                 )}
 
                 {!!readingListError && (
-                    /* istanbul ignore next */
-                    <Fragment>
+                    /* istanbul ignore next */ <Fragment>
                         <Grid item xs={12} className={classes.courseResourceLineItem}>
                             <Typography>{locale.myCourses.readingLists.error.unavailable}</Typography>
                         </Grid>

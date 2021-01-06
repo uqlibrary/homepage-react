@@ -15,14 +15,10 @@ export const NotFound = ({ account, accountLoading }) => {
 
     // if not known page, standard 404
     if (!isValidRoute) {
-        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
+        return <StandardPage standardPageId="not-found" {...locale.notFound} />;
     }
-
-    console.log('accountLoading = ', accountLoading);
-    console.log('account = ', account);
     // the page must require admin to land here when they are logged in
     const isLoggedIn = accountLoading === false && !!account && !!account.id;
-    console.log('isLoggedIn = ', isLoggedIn);
     if (isLoggedIn) {
         return (
             <StandardPage
@@ -35,7 +31,6 @@ export const NotFound = ({ account, accountLoading }) => {
 
     // the page must require them to be logged in to land here
     const isLoggedOut = accountLoading === false && !account;
-    console.log('isLoggedOut = ', isLoggedOut);
     if (isLoggedOut) {
         /* istanbul ignore next */
         if (

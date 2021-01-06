@@ -13,7 +13,11 @@ export const leftJoin = (objArr1, objArr2, key1, key2) => {
 export const stripHtml = html => {
     const temporalDivElement = document.createElement('div');
     temporalDivElement.innerHTML = html;
-    return temporalDivElement.textContent || temporalDivElement.innerText || '';
+    return (
+        temporalDivElement.textContent ||
+        /* istanbul ignore next */ temporalDivElement.innerText ||
+        /* istanbul ignore next */ ''
+    );
 };
 
 export const getCampusByCode = code => {

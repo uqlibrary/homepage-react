@@ -48,7 +48,7 @@ const EXTRAMURAL_HONORARY = 'HON';
 const EXTRAMURAL_PROXY = 'PROXY';
 
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
-const everyoneCanSee = account => true || !!account;
+const everyoneCanSee = account => true || /* istanbul ignore next */ !!account;
 
 const loggedinCanSee = account => !!account && !!account.id;
 
@@ -111,8 +111,6 @@ export const seeDocumentDelivery = account =>
     ].includes(account.user_group);
 
 export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
-
-export const seeTraining = account => everyoneCanSee(account);
 
 export const seeLibraryServices = account => loggedinCanSee(account);
 

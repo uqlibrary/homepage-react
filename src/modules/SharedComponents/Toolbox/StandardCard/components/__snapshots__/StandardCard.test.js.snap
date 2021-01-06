@@ -78,7 +78,11 @@ exports[`Cards component renders with custom colours and full height 1`] = `
   <WithStyles(ForwardRef(CardContent))
     className="no-padding"
     data-testid="standard-card-card-title-content"
-    style={Object {}}
+    style={
+      Object {
+        "color": "blue !important",
+      }
+    }
   />
 </WithStyles(ForwardRef(Card))>
 `;

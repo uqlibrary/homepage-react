@@ -89,7 +89,11 @@ export class Cards extends Component {
             : { borderTopLeftRadius: 4, borderTopRightRadius: 4 };
         const standardCardId = !!this.props.standardCardId
             ? this.props.standardCardId
-            : `standard-card${typeof title === 'string' ? '-' + title.replace(/ /g, '-').toLowerCase() : ''}`;
+            : `standard-card${
+                  typeof title === 'string'
+                      ? '-' + title.replace(/ /g, '-').toLowerCase()
+                      : /* istanbul ignore next */ ''
+              }`;
         return (
             <Card
                 data-testid={standardCardId}
