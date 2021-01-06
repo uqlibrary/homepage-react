@@ -33,6 +33,7 @@ describe('Cards component', () => {
             customBackgroundColor: '#fcc',
             customTitleColor: '#111',
             customTitleBgColor: '#ccc',
+            customTextColor: 'blue',
             fullHeight: true,
             noPadding: true,
             primaryHeader: true,

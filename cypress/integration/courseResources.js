@@ -490,13 +490,13 @@ context('Course Resources', () => {
             locale.search.placeholder,
         );
         // user enters ACCT
-        cy.get('div[data-testid=course-resources-panel] form input').type('ACCT');
+        cy.get('div[data-testid=course-resources-panel] form input').type('ACCT11');
         const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
-            item.name.startsWith('ACCT'),
+            item.name.startsWith('ACCT11'),
         );
         cy.get('ul#homepage-courseresource-autocomplete-popup')
             .children()
-            .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for titiel
+            .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for title
         // user clicks on #1, ACCT1101
         cy.get('li#homepage-courseresource-autocomplete-option-0')
             .contains('ACCT1101')
@@ -564,5 +564,15 @@ context('Course Resources', () => {
             8,
             2,
         );
+    });
+
+    it('A repeating string is handled correctly', () => {
+        cy.visit('/courseresources?user=s3333333');
+        cy.viewport(1300, 1000);
+
+        // enter a repeating string
+        cy.get('div[data-testid=full-courseresource-content] form input').type('AAAAA');
+        // and the drop down will not appear
+        cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
     });
 });

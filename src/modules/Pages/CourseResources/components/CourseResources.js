@@ -300,7 +300,7 @@ export const CourseResources = ({
     };
 
     return (
-        <StandardPage title={locale.title} goBackFunc={() => history.back()} goBackTooltip="Go back">
+        <StandardPage title={locale.title}>
             <section className="layout-card" style={{ margin: '0 auto 16px' }} aria-live="assertive">
                 <StandardCard noPadding noHeader customBackgroundColor="#F7F7F7" style={{ boxShadow: '0 0 black' }}>
                     <Grid container>

@@ -43,4 +43,13 @@ context('Header', () => {
             .click();
         cy.get('div[data-testid="mega-menu-empty"]').should('have.length', 1);
     });
+
+    it('has a working home link', () => {
+        cy.visit('/courseresources?user=s1111111');
+        cy.get('body').contains('Introductory French 1');
+
+        cy.get('button[data-testid=uq-site-header-home-button]').click();
+        cy.url().should('eq', 'http://localhost:2020/');
+        cy.get('body').contains('Set a preferred campus');
+    });
 });
