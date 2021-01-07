@@ -118,9 +118,11 @@ export const CourseResourceSearch = ({
 
     /* istanbul ignore next */
     const courseResourceSubjectDisplay = option => {
-        return !!option && !!option.text && !!option.rest && !!option.rest.course_title && !!option.rest.period
-            ? `${option.text} (${unescapeString(option.rest.course_title)}, ${option.rest.period})`
-            : '';
+        const specifier =
+            !!option && !!option.rest && !!option.rest.course_title && !!option.rest.period
+                ? ` (${unescapeString(option.rest.course_title)}, ${option.rest.period})`
+                : '';
+        return !!option && !!option.text ? `${option.text}${specifier}` : '';
     };
 
     const getMatchingOption = option => {

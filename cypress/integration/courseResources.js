@@ -542,7 +542,7 @@ context('Course Resources', () => {
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
-            8,
+            learningResourceSearchSuggestions.filter(item => item.name.startsWith('ACCT')).length,
             2,
         );
 
@@ -561,7 +561,7 @@ context('Course Resources', () => {
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
-            8,
+            learningResourceSearchSuggestions.filter(item => item.name.startsWith('ACCT')).length,
             2,
         );
     });

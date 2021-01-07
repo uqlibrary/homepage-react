@@ -21,6 +21,7 @@ import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST120
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
+import examSuggestions from './data/records/examSuggestions';
 import {
     libHours,
     computerAvailability,
@@ -185,134 +186,8 @@ fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/a
     },
 });
 
-fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper', [
-    {
-        name: 'ACCT2111',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations_2019_ACCT2111.pdf',
-        type: 'exam_paper',
-        course_title: 'Principles of Financial Accounting',
-    },
-    {
-        name: 'ACCT1101',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT1101.pdf',
-        type: 'exam_paper',
-        course_title: 'Accounting for Decision Making',
-    },
-    {
-        name: 'ACCT7804',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations_2019_ACCT7804.pdf',
-        type: 'exam_paper',
-        course_title: 'Accounting and Business Analysis',
-    },
-    {
-        name: 'ACCT2112',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations_2019_ACCT2112.pdf',
-        type: 'exam_paper',
-        course_title: 'Financial Accounting for Business',
-    },
-    {
-        name: 'ACCT3101',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT3101.pdf',
-        type: 'exam_paper',
-        course_title: 'Auditing & Public Practice',
-    },
-    {
-        name: 'ACCT3102',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT3102.pdf',
-        type: 'exam_paper',
-        course_title: 'External Reporting Issues',
-    },
-    {
-        name: 'ACCT3103',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT3103.pdf',
-        type: 'exam_paper',
-        course_title: 'Advanced Financial Accounting',
-    },
-    {
-        name: 'ACCT3104',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT3104.pdf',
-        type: 'exam_paper',
-        course_title: 'Management Accounting',
-    },
-    {
-        name: 'ACCT1110',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT1110.pdf',
-        type: 'exam_paper',
-        course_title: 'Financial Reporting and Analysis',
-    },
-    {
-        name: 'ACCT2101',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT2101.pdf',
-        type: 'exam_paper',
-        course_title: 'Financial Reporting',
-    },
-    {
-        name: 'ACCT2102',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT2102.pdf',
-        type: 'exam_paper',
-        course_title: 'Principles of Management Accounting',
-    },
-    {
-        name: 'ACCT2113',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT2113.pdf',
-        type: 'exam_paper',
-        course_title: 'Management Accounting Principles',
-    },
-    {
-        name: 'ACCT7101',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7101.pdf',
-        type: 'exam_paper',
-        course_title: 'Accounting',
-    },
-    {
-        name: 'ACCT7102',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7102.pdf',
-        type: 'exam_paper',
-        course_title: 'Financial Accounting',
-    },
-    {
-        name: 'ACCT7103',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7103.pdf',
-        type: 'exam_paper',
-        course_title: 'Auditing',
-    },
-    {
-        name: 'ACCT7104',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7104.pdf',
-        type: 'exam_paper',
-        course_title: 'Corporate Accounting',
-    },
-    {
-        name: 'ACCT7106',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7106.pdf',
-        type: 'exam_paper',
-        course_title: 'Financial Statement Analysis',
-    },
-    {
-        name: 'ACCT7107',
-        url: 'https://files.library.uq.edu.au/exams/2019/Semester_One_Final_Examinations__2019_ACCT7107.pdf',
-        type: 'exam_paper',
-        course_title: 'Management Accounting and Control',
-    },
-    {
-        name: 'ACCT3105',
-        url: 'https://files.library.uq.edu.au/exams/2018/Semester_One_Final_Examinations__2018_ACCT3105.pdf',
-        type: 'exam_paper',
-        course_title: 'Advanced Management Accounting',
-    },
-    {
-        name: 'ACCT7209',
-        url: 'https://files.library.uq.edu.au/exams/2016/Semester_One_Final_Examinations__2016_ACCT7209_Sample.pdf',
-        type: 'exam_paper',
-        course_title: 'Business Information Systems',
-    },
-    {
-        name: 'ACCT3201',
-        url: 'https://files.library.uq.edu.au/exams/2016/Semester_One_Final_Examinations__2016_ACCT3201_Sample.pdf',
-        type: 'exam_paper',
-        course_title: 'Business Information Systems',
-    },
-]);
+// Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
+fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper', examSuggestions);
 
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
