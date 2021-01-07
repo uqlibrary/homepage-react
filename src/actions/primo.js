@@ -45,15 +45,27 @@ export function loadPrimoSuggestions(keyword) {
     };
 }
 
+// "A fetch() promise does not reject on HTTP errors (404, etc.).
+// Instead, a then() handler must check the Response.ok and/or Response.status properties."
+// https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+function handleErrors(response) {
+    if (!response.ok) {
+        throw Error(response.statusText);
+    }
+    return response;
+}
+
 export function loadExamPaperSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
         return fetch(PRIMO_SUGGESTIONS_API_EXAMS({ keyword }).apiUrl)
+            .then(handleErrors)
             .then(response => response.json())
             .then(data => {
                 const payload = data.map((item, index) => {
+                    const title = !!item.course_title ? ` (${item.course_title})` : '';
                     return {
-                        text: item.name,
+                        text: `${item.name}${title}`,
                         index,
                     };
                 });
@@ -75,6 +87,7 @@ export function loadHomepageCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.PRIMO_SUGGESTIONS_LOADING });
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
+            .then(handleErrors)
             .then(response => response.json())
             .then(data => {
                 const payload = data.map((item, index) => {
