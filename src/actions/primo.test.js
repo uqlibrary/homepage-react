@@ -43,6 +43,7 @@ describe('Account action creators', () => {
     const response500 = {
         ok: false,
         statusText: 'Internal Server Error',
+        status: 500,
     };
     it('dispatches expected actions when possible Exams search suggestions call fails', async () => {
         global.fetch = jest.fn(() => {

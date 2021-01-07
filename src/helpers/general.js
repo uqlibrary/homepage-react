@@ -63,3 +63,15 @@ export const unescapeString = text => {
     };
     return text.replace(/&[#\w]+;/g, getEntityMap);
 };
+
+// "A fetch() promise does not reject on HTTP errors (404, etc.).
+// Instead, a then() handler must check the Response.ok and/or Response.status properties."
+// https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
+export const throwFetchErrors = response => {
+    if (!response.ok) {
+        const status = response.status || 'status undefined';
+        const statusText = response.statusText || 'status message undefined';
+        throw Error(`Error ${status} - ${statusText}`);
+    }
+    return response;
+};

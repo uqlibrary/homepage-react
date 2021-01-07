@@ -1,7 +1,7 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import { GUIDES_API, EXAMS_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
-import { getCampusByCode } from '../helpers/general';
+import { getCampusByCode, throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
     console.log('will load loadGuides for ', keyword);
@@ -150,7 +150,7 @@ export function loadReadingLists(coursecode, campus, semester, account) {
             .catch(error => {
                 console.log(
                     'error for READING_LIST_API ',
-                    READING_LIST_API({ coursecode, campus, semester }),
+                    READING_LIST_API({ coursecode, campus, semester }).apiUrl,
                     ': ',
                     error,
                 );
@@ -175,6 +175,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
         dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADING });
         console.log('will fetch ', SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl);
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
+            .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
                 const payload = data.map((item, index) => {
