@@ -193,7 +193,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         <VoiceToText
                             sendHandler={handleSearchKeywordChange}
                             clearSuggestions={handleClearSuggestions}
-                            elementId={'primo-search-autocomplete'}
                         />
                     </Grid>
                     {suggestionsLoading && (

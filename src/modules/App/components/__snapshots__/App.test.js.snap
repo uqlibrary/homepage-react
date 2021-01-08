@@ -12678,7 +12678,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                 >
                                                                                                                   <VoiceToText
                                                                                                                     clearSuggestions={[Function]}
-                                                                                                                    elementId="primo-search-autocomplete"
                                                                                                                     locale={
                                                                                                                       Object {
                                                                                                                         "Computers": Array [
