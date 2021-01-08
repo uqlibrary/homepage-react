@@ -8,7 +8,8 @@ import SpeechRecognition, { useSpeechRecognition } from 'react-speech-recognitio
 import { PropTypes } from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 
-export const VoiceToText = ({ sendHandler, clearSuggestions, elementId = 'homepage-search' }) => {
+export const VoiceToText = ({ sendHandler, clearSuggestions }) => {
+    const elementId = 'primo-search-autocomplete';
     const { transcript, resetTranscript, listening } = useSpeechRecognition({
         clearTranscriptOnListen: true,
     });
@@ -82,7 +83,6 @@ export const VoiceToText = ({ sendHandler, clearSuggestions, elementId = 'homepa
 
 VoiceToText.propTypes = {
     clearSuggestions: PropTypes.func,
-    elementId: PropTypes.string,
     sendHandler: PropTypes.func,
 };
 
