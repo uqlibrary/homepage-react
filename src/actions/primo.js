@@ -18,6 +18,7 @@ export function loadPrimoSuggestions(keyword) {
             jsonpCallbackFunction: 'byutv_jsonp_callback_c631f96adec14320b23f1cac342d30f6',
             timeout: 3000,
         })
+            .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
                 console.log('RESPONSE', data);
@@ -31,7 +32,7 @@ export function loadPrimoSuggestions(keyword) {
                                 index,
                             };
                         })) ||
-                    [];
+                    /* istanbul ignore next */ [];
                 dispatch({
                     type: actions.PRIMO_SUGGESTIONS_LOADED,
                     payload: payload,
