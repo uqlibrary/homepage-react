@@ -9,13 +9,13 @@ export const promoPanel = {
         title: 'New home page!',
         content: (
             <div>
-                <p>We have updated the home page with a great new look and feel.</p>    
+                <p>We have updated the home page with a great new look and feel.</p>
                 <p>
-                    <a href={loginUrl}>Log in now</a> for a brand new personalised experience: 
+                    <a href={loginUrl}>Log in now</a> for a brand new personalised experience:
                 </p>
                 <ul>
                     <li>Set your campus</li>
-                    <li>Top-up your print balance</li>        
+                    <li>Top-up your print balance</li>
                     <li>Get your course resources &amp; more</li>
                 </ul>
                 <p>
@@ -30,7 +30,7 @@ export const promoPanel = {
             <div>
                 <p>We have personalised your home page just for you. Your page may contain additional features depdending on who you are.</p>
                 <ul>
-                    <li>Get your course resources (UQ students)</li>        
+                    <li>Get your course resources (UQ students)</li>
                     <li>Set your campus to sort library hours &amp; computer availability</li>
                     <li>Top-up your print balance</li>
                     <li>Click the My Library button for links to library services</li>
