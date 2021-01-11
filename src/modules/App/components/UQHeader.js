@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export const UQHeader = ({}) => {
+    const [searchPanelShown, setSearchPanelShown] = useState(false);
     const toggle = document.querySelector('.search-toggle__button');
     const search = document.querySelector('.nav-search');
     const searchInput = document.querySelector('.search-query__input');
@@ -29,29 +30,36 @@ export const UQHeader = ({}) => {
     const handleToggle = () => {
         toggle.classList.toggle('search-toggle__button--icon-close');
         search.classList.toggle('nav-search--open');
+        setSearchPanelShown(!searchPanelShown);
 
         if (search.classList.contains('nav-search--open')) {
             if (mqLargeList.matches) {
-                controlSiteSearchTabInclusion('0');
+                controlSiteSearchTabInclusion(0);
                 searchInput.focus();
             } else {
-                controlSiteSearchTabInclusion('-1');
+                controlSiteSearchTabInclusion(-1);
                 toggle.blur();
             }
         } else {
-            controlSiteSearchTabInclusion('-1');
+            controlSiteSearchTabInclusion(-1);
             toggle.blur();
         }
     };
 
     const skipNav = () => {
-        const afterNavigation = document.getElementById('afterNavigation');
+        const afterNavigation = document.getElementById('primo-search-autocomplete');
         !!afterNavigation && afterNavigation.focus();
         return false;
     };
 
+    const skipnavKeyHander = e => {
+        if (e && e.keyCode === 13) {
+            skipNav();
+        }
+    };
+
     return (
-        <header className="uq-header" id="uqheader">
+        <header className="uq-header">
             <div className="uq-header__container">
                 <div className="nav-global">
                     <a
@@ -59,7 +67,7 @@ export const UQHeader = ({}) => {
                         aria-label="skip navigation"
                         title="Skip navigation"
                         onClick={() => skipNav()}
-                        onKeyDown={() => skipNav()}
+                        onKeyDown={() => skipnavKeyHander()}
                         href="#"
                     >
                         Skip navigation
@@ -81,7 +89,7 @@ export const UQHeader = ({}) => {
                     <nav className="menu-global">
                         <ul>
                             <li>
-                                <a href="https://www.uq.edu.au/contacts/">Contacts</a>
+                                <a href="https://contacts.uq.edu.au/">Contacts</a>
                             </li>
                             <li>
                                 <a href="https://future-students.uq.edu.au/">Study</a>
@@ -106,13 +114,13 @@ export const UQHeader = ({}) => {
                             </li>
                             <li className="menu-global__search-toggle">
                                 <button className="search-toggle__button" onClick={handleToggle}>
-                                    Toggle search
+                                    Search
                                 </button>
                             </li>
                         </ul>
                     </nav>
                 </div>
-                <div className="nav-search">
+                <div className="nav-search" aria-hidden={!searchPanelShown}>
                     <form
                         className="nav-search__form"
                         action="https://www.uq.edu.au/search/"
@@ -145,8 +153,8 @@ export const UQHeader = ({}) => {
                                             id="edit-as_sitesearch-on"
                                             name="as_sitesearch"
                                             value="https://library.uq.edu.au"
-                                            className="form-radio"
                                             defaultChecked
+                                            className="form-radio"
                                             tabIndex="-1"
                                         />
                                         <label htmlFor="edit-as_sitesearch-on" className="option">
@@ -164,20 +172,20 @@ export const UQHeader = ({}) => {
                                 <input
                                     type="text"
                                     id="edit-q"
+                                    tabIndex="-1"
                                     name="q"
                                     size="60"
                                     maxLength="128"
                                     className="search-query__input"
-                                    tabIndex="-1"
                                 />
                                 <span className="search-query__button">
                                     <input
                                         id="uq-search"
+                                        tabIndex="-1"
                                         type="submit"
-                                        name="Search"
+                                        name="op"
                                         value="Search"
                                         className="search-query__submit"
-                                        tabIndex="-1"
                                     />
                                 </span>
                             </span>
@@ -186,7 +194,7 @@ export const UQHeader = ({}) => {
                     <nav className="menu-global">
                         <ul>
                             <li>
-                                <a href="https://www.uq.edu.au/contacts/">Contacts</a>
+                                <a href="https://contacts.uq.edu.au/">Contacts</a>
                             </li>
                             <li>
                                 <a href="https://www.uq.edu.au/news/">News</a>

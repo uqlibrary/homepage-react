@@ -2778,7 +2778,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                           <UQHeader>
                             <header
                               className="uq-header"
-                              id="uqheader"
                             >
                               <div
                                 className="uq-header__container"
@@ -2824,7 +2823,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                     <ul>
                                       <li>
                                         <a
-                                          href="https://www.uq.edu.au/contacts/"
+                                          href="https://contacts.uq.edu.au/"
                                         >
                                           Contacts
                                         </a>
@@ -2885,13 +2884,14 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                           className="search-toggle__button"
                                           onClick={[Function]}
                                         >
-                                          Toggle search
+                                          Search
                                         </button>
                                       </li>
                                     </ul>
                                   </nav>
                                 </div>
                                 <div
+                                  aria-hidden={true}
                                   className="nav-search"
                                 >
                                   <form
@@ -2990,7 +2990,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                           <input
                                             className="search-query__submit"
                                             id="uq-search"
-                                            name="Search"
+                                            name="op"
                                             tabIndex="-1"
                                             type="submit"
                                             value="Search"
@@ -3005,7 +3005,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                     <ul>
                                       <li>
                                         <a
-                                          href="https://www.uq.edu.au/contacts/"
+                                          href="https://contacts.uq.edu.au/"
                                         >
                                           Contacts
                                         </a>

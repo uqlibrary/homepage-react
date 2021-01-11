@@ -56,7 +56,7 @@ if (user && !mockData.accounts[user]) {
 user = user || 'vanilla';
 
 const withDelay = (response) => config => {
-    const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
+    const randomTime = Math.floor(Math.random() * 100) + 1; // Change these values to delay mock API
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
