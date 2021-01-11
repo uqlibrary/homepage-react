@@ -229,13 +229,24 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
             setCollapse({ [index]: false });
         } else {
             setCollapse({ [index]: true });
+            if (index !== 0) {
+                setTimeout(() => {
+                    document.getElementById('computers-library-content').scrollBy({
+                        top: 32,
+                        left: 0,
+                        behavior: 'smooth',
+                    });
+                }, 100);
+            }
         }
     };
     const closeMap = () => {
         setMapSrc(null);
     };
-    const openMap = (library, building, room, level, total, available) => {
-        setMapSrc({ library, building, room, level, total, available });
+    const openMap = (library, building, room, level, total, available, floorplan) => {
+        if (!!floorplan) {
+            setMapSrc({ library, building, room, level, total, available, floorplan });
+        }
     };
     const MapPopup = ({}) => {
         if (!!mapSrc) {
@@ -358,7 +369,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
                 {computerAvailability && !computerAvailabilityLoading ? (
                     <Fade in={!computerAvailabilityLoading} timeout={1000}>
-                        <div className={classes.flexContent}>
+                        <div className={classes.flexContent} id="computers-library-content">
                             {!!sortedComputers &&
                                 sortedComputers.length > 1 &&
                                 sortedComputers.map((item, index) => {
@@ -423,6 +434,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                                         level.level
                                                                     }. ${level.available} of ${level.available +
                                                                         level.occupied} computers free`}
+                                                                    disabled={!level.floorplan}
                                                                     onClick={() =>
                                                                         openMap(
                                                                             item.library,
@@ -431,6 +443,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                                             level.level,
                                                                             level.total,
                                                                             level.available,
+                                                                            level.floorplan,
                                                                         )
                                                                     }
                                                                     classes={{
