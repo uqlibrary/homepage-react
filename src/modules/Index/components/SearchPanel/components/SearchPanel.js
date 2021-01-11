@@ -82,7 +82,9 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     const handleSearchButton = event => {
         event.preventDefault();
         if (!!searchKeyword) {
-            const link = locale.typeSelect.items[searchType].link.replace('[keyword]', searchKeyword);
+            const link = locale.typeSelect.items[searchType].link
+                .replace('[keyword]', searchKeyword)
+                .replace('[keyword]', searchKeyword); // database search has two instances of keyword
             window.location.assign(link);
         }
     };
