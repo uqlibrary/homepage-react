@@ -32,7 +32,7 @@ function setup(testProps = {}) {
     return getElement(ConnectFooter, props);
 }
 
-describe('Component Megamenu', () => {
+describe('Component ConnectFooter', () => {
     it('should render', () => {
         const wrapper = setup();
         const tree = toJson(wrapper);

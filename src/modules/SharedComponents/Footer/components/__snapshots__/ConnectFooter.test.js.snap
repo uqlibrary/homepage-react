@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Component Megamenu should render 1`] = `
+exports[`Component ConnectFooter should render 1`] = `
 <WithStyles(ForwardRef(Grid))
   alignItems="flex-start"
   container={true}

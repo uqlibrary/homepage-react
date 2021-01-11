@@ -148,7 +148,7 @@ export class AppClass extends PureComponent {
 
     render() {
         const { classes } = this.props;
-        const isAuthorizedUser = !this.props.accountLoading && this.props.account !== null;
+        const isAuthorizedUser = this.props.accountLoading === false && this.props.account !== null;
         const isAccountLoading = this.props.accountLoading;
         const isHdrStudent =
             !isAccountLoading &&

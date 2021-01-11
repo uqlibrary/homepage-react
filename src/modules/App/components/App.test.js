@@ -340,6 +340,7 @@ describe('Testing wrapped App component', () => {
                 loadTrainingEvents: jest.fn(),
             },
             account: { name: 'Ky' },
+            accountLoading: false,
             location: { pathname: '/' },
             classes: {},
             theme: {
