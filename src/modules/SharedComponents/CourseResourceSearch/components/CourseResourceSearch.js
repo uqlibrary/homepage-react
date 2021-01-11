@@ -116,11 +116,13 @@ export const CourseResourceSearch = ({
         [actions, elementId],
     );
 
-    /* istanbul ignore next */
     const courseResourceSubjectDisplay = option => {
-        return !!option && !!option.text && !!option.rest && !!option.rest.course_title && !!option.rest.period
-            ? `${option.text} (${unescapeString(option.rest.course_title)}, ${option.rest.period})`
-            : '';
+        const coursecode = option.text;
+        const title = !!option.rest.course_title ? `${unescapeString(option.rest.course_title)}, ` : '';
+        const campus = !!option.rest.campus ? `${option.rest.campus}, ` : '';
+        const semester = !!option.rest.period ? option.rest.period : '';
+        // we need coursecode AND campus AND semester to make the api call for the details, so exclude any without
+        return !!option && !!coursecode && !!semester && !!campus ? `${coursecode} (${title}${campus}${semester})` : '';
     };
 
     const getMatchingOption = option => {

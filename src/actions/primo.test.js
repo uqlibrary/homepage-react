@@ -1,6 +1,11 @@
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { clearPrimoSuggestions, loadPrimoSuggestions } from './primo';
+import {
+    clearPrimoSuggestions,
+    loadExamPaperSuggestions,
+    loadHomepageCourseReadingListsSuggestions,
+    loadPrimoSuggestions,
+} from './primo';
 
 jest.mock('raven-js');
 
@@ -35,21 +40,30 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
+    const response500 = {
+        ok: false,
+        statusText: 'Internal Server Error',
+        status: 500,
+    };
     it('dispatches expected actions when possible Exams search suggestions call fails', async () => {
-        mockApi.onGet(repositories.routes.PRIMO_SUGGESTIONS_API_EXAMS({ keyword: 'FREN1' })).reply(500);
+        global.fetch = jest.fn(() => {
+            return Promise.resolve(response500);
+        });
 
         const expectedActions = [actions.PRIMO_SUGGESTIONS_LOADING, actions.PRIMO_SUGGESTIONS_FAILED];
 
-        await mockActionsStore.dispatch(loadPrimoSuggestions('FREN1010'));
+        await mockActionsStore.dispatch(loadExamPaperSuggestions('FREN1010'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
     it('dispatches expected actions when possible Homepage Course Reading Lists search suggestions call fails', async () => {
-        mockApi.onGet(repositories.routes.SUGGESTIONS_API_PAST_COURSE({ keyword: 'FREN1' })).reply(500);
+        global.fetch = jest.fn(() => {
+            return Promise.resolve(response500);
+        });
 
         const expectedActions = [actions.PRIMO_SUGGESTIONS_LOADING, actions.PRIMO_SUGGESTIONS_FAILED];
 
-        await mockActionsStore.dispatch(loadPrimoSuggestions('FREN1010'));
+        await mockActionsStore.dispatch(loadHomepageCourseReadingListsSuggestions('FREN1010'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 });

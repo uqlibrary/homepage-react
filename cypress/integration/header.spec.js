@@ -2,14 +2,14 @@ context('Header', () => {
     it('site search button toggles', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
-        cy.get('li.menu-global__search-toggle button').contains('Toggle search');
+        cy.get('li.menu-global__search-toggle button').contains('Search');
         cy.get('#edit-as_sitesearch-off').should('have.attr', 'tabindex', '-1');
         cy.get('#edit-as_sitesearch-on').should('have.attr', 'tabindex', '-1');
         cy.get('#edit-q').should('have.attr', 'tabindex', '-1');
         cy.get('#uq-search').should('have.attr', 'tabindex', '-1');
 
         cy.get('li.menu-global__search-toggle button')
-            .contains('Toggle search')
+            .contains('Search')
             .click();
 
         cy.get('#edit-as_sitesearch-off').should('have.attr', 'tabindex', '0');
@@ -18,7 +18,7 @@ context('Header', () => {
         cy.get('#uq-search').should('have.attr', 'tabindex', '0');
 
         cy.get('li.menu-global__search-toggle button')
-            .contains('Toggle search')
+            .contains('Search')
             .click();
 
         cy.get('#edit-as_sitesearch-off').should('have.attr', 'tabindex', '-1');

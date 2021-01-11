@@ -257,7 +257,9 @@ context('Course Resources', () => {
 
         // click the first option
         cy.get('li#full-courseresource-autocomplete-option-0')
-            .contains(`${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.period}`)
+            .contains(
+                `${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.campus}, ${frenchSearchSuggestion.period}`,
+            )
             .click();
     }
 
@@ -542,7 +544,7 @@ context('Course Resources', () => {
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
-            8,
+            7,
             2,
         );
 
@@ -561,7 +563,7 @@ context('Course Resources', () => {
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
-            8,
+            7,
             2,
         );
     });

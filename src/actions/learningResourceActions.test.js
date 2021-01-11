@@ -135,17 +135,37 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    // it('dispatches expected actions when possible suggestions call fails', async () => {
-    //     mockApi.onGet(repositories.routes.SUGGESTIONS_API_PAST_COURSE({ keyword: 'FREN1010' }).apiUrl).reply(500);
-    //
-    //     const expectedActions = [
-    //         actions.COURSE_RESOURCE_SUGGESTIONS_LOADING,
-    //         actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
-    //     ];
-    //
-    //     await mockActionsStore.dispatch(loadCourseReadingListsSuggestions('FREN1010'));
-    //     expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    // });
+    it('dispatches expected actions when possible suggestions call fails', async () => {
+        global.fetch = jest.fn(() => {
+            return Promise.resolve({
+                ok: false,
+                statusText: 'Internal Server Error',
+                status: 500,
+            });
+        });
+
+        const expectedActions = [
+            actions.COURSE_RESOURCE_SUGGESTIONS_LOADING,
+            actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
+        ];
+
+        await mockActionsStore.dispatch(loadCourseReadingListsSuggestions('FREN1010'));
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when the response is invalid', async () => {
+        global.fetch = jest.fn(() => {
+            return Promise.resolve({});
+        });
+
+        const expectedActions = [
+            actions.COURSE_RESOURCE_SUGGESTIONS_LOADING,
+            actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
+        ];
+
+        await mockActionsStore.dispatch(loadCourseReadingListsSuggestions('FREN1010'));
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
 
     it('should dispatch clear course suggestions list action', async () => {
         const expectedActions = [actions.COURSE_RESOURCE_SUGGESTIONS_CLEAR];

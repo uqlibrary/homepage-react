@@ -62,12 +62,10 @@ export default [{
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
+        // some fields missing for code coverage
         name: 'ACCT3103',
         url: 'http://lr.library.uq.edu.au/lists/9290F8D7-E2CC-77B7-F272-0DD398391E90',
         type: 'learning_resource',
-        course_title: 'Advanced Financial Accounting',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
     }, {
         "name": "FREN3111",
         "url": "http:\/\/lr.library.uq.edu.au\/lists\/351A111E-CD11-2B60-52A2-767A7F167C6D",

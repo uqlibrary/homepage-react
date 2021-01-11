@@ -114,20 +114,14 @@ const styles = theme => ({
 });
 
 export function ConnectFooter(props) {
-    const { classes, history } = props;
+    const { classes } = props;
 
-    const _navigateToLink = (url, target = '_self') => {
-        const isInternaLink = url => url.indexOf('http') === -1;
-        if (!!url) {
-            if (isInternaLink(url)) {
-                history.push(url);
-            } else if (target === '_self') {
-                window.location.assign(url);
-            } else {
-                // external link
-                window.open(url, target);
-            }
-        }
+    const loadLinkInSamePage = url => {
+        window.location.assign(url);
+    };
+
+    const loadLinkToTarget = (url, target) => {
+        window.open(url, target);
     };
 
     const separator = () => (
@@ -154,7 +148,7 @@ export function ConnectFooter(props) {
                     </li>
                     {menuLocale.publicmenu.map((linkProperties, index) => (
                         <li key={`footerli-${index}`}>
-                            <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                            <a data-testid={linkProperties.dataTestid} href={linkProperties.linkTo}>
                                 {linkProperties.primaryText}
                             </a>
                             {index < menuLocale.publicmenu.length - 1 && separator()}
@@ -188,9 +182,9 @@ export function ConnectFooter(props) {
                                     variant="contained"
                                     data-testid={item.dataTestid}
                                     id={`socialbutton-${index}`}
-                                    onClick={() => _navigateToLink(item.linkTo, '_blank')}
+                                    onClick={() => loadLinkToTarget(item.linkTo)}
                                 >
-                                    {!!item.linklabel ? item.linklabel : item.icon}
+                                    {item.icon}
                                 </Button>
                             </Tooltip>
                         </Grid>
@@ -200,7 +194,7 @@ export function ConnectFooter(props) {
                     {locale.connectFooter.internalLinks.map((linkProperties, index) => {
                         return (
                             <span key={`internallabel-${index}`}>
-                                <a data-testid={linkProperties.dataTestid || null} href={linkProperties.linkTo}>
+                                <a data-testid={linkProperties.dataTestid} href={linkProperties.linkTo}>
                                     {linkProperties.linklabel}
                                 </a>
                                 {index < locale.connectFooter.internalLinks.length - 1 && <span>&nbsp;|&nbsp; </span>}
@@ -220,7 +214,7 @@ export function ConnectFooter(props) {
                                     className={classes.givingButtonClass}
                                     data-testid={item.dataTestid}
                                     key={`givingLinks-${index}`}
-                                    onClick={() => _navigateToLink(item.linkTo)}
+                                    onClick={() => loadLinkInSamePage(item.linkTo)}
                                     variant="contained"
                                 />
                             </Grid>
