@@ -257,21 +257,23 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                     </Grid>
                     <Grid item xs />
                     <Grid item xs={'auto'}>
-                        <Fade in={!!showIcon} timeout={500}>
-                            <Tooltip
-                                title={hoursLocale.locationTooltip}
-                                placement="bottom"
-                                TransitionProps={{ timeout: 300 }}
-                            >
-                                <Badge
-                                    classes={{ badge: classes.badge }}
-                                    color="primary"
-                                    badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
+                        {showIcon && (
+                            <Fade in={!!showIcon} timeout={500}>
+                                <Tooltip
+                                    title={hoursLocale.locationTooltip}
+                                    placement="bottom"
+                                    TransitionProps={{ timeout: 300 }}
                                 >
-                                    <RoomIcon />
-                                </Badge>
-                            </Tooltip>
-                        </Fade>
+                                    <Badge
+                                        classes={{ badge: classes.badge }}
+                                        color="primary"
+                                        badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
+                                    >
+                                        <RoomIcon data-testid="hours-wiggler" />
+                                    </Badge>
+                                </Tooltip>
+                            </Fade>
+                        )}
                     </Grid>
                 </Grid>
             }
@@ -304,6 +306,7 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                                     return (
                                         <Grid
                                             container
+                                            data-testid={`hours-item-${index}`}
                                             spacing={1}
                                             key={index}
                                             className={classes.row}
