@@ -30,6 +30,8 @@ Edit [menu.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manag
 
 Please leave the datatestid elements in place
 
+* Note: the older reusable-elements json file still needs to be updated identically at the time of writing, to provide the same menu to Drupal... [see the README](https://github.com/uqlibrary/uqlibrary-reusable-components#updating-ia)
+
 ## To edit the Footer
 
 Edit [footer.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/SharedComponents/Footer/footerLocale.js) and then follow the steps above
