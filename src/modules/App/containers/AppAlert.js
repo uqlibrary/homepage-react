@@ -6,6 +6,13 @@ import * as actions from 'actions';
 
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 
+// possibly only of use during golive, this function excludes alerts by id
+// (we put an alert on the old home page saying "refresh to see the new homepage")
+function excludePlannedItems(item) {
+    const excludedItems = ['b1739480-4ef4-11eb-91a1-6d3f07452c24'];
+    return !excludedItems.includes(item.id);
+}
+
 const AppAlert = ({ appAlert, customAlert }) => {
     let appAlerts = [];
     if (appAlert && appAlert.length > 0) {
@@ -27,6 +34,7 @@ const AppAlert = ({ appAlert, customAlert }) => {
                 };
             }
             return {
+                id: item.id,
                 title: item.title,
                 message: message,
                 ...markdownBody,
@@ -39,11 +47,13 @@ const AppAlert = ({ appAlert, customAlert }) => {
         appAlerts.push({ ...customAlert });
     }
     if (appAlerts && appAlerts.length > 0) {
-        return appAlerts.map((item, index) => (
-            <div style={{ width: '100%' }} key={index}>
-                <Alert {...item} alertId={`alert-${index}`} />
-            </div>
-        ));
+        return appAlerts
+            .filter(item => excludePlannedItems(item))
+            .map((item, index) => (
+                <div style={{ width: '100%' }} key={index}>
+                    <Alert {...item} alertId={`alert-${index}`} />
+                </div>
+            ));
     } else {
         return null;
     }

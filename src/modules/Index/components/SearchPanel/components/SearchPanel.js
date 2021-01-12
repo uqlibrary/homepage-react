@@ -73,10 +73,17 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     const handleClearSuggestions = () => {
         actions.clearPrimoSuggestions();
     };
+    const focusOnSearchInput = () => {
+        setTimeout(() => {
+            const searchInput = document.getElementById('primo-search-autocomplete');
+            searchInput.focus();
+        }, 200);
+    };
 
     const handleSearchTypeChange = event => {
         setSearchType(event.target.value);
         actions.clearPrimoSuggestions();
+        focusOnSearchInput();
     };
 
     const handleSearchButton = event => {
@@ -102,7 +109,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                 } else if (searchType === 8) {
                     actions.loadHomepageCourseReadingListsSuggestions(newValue);
                 }
-                document.getElementById('primo-search-autocomplete').focus();
+                focusOnSearchInput();
             } else {
                 actions.clearPrimoSuggestions();
             }
