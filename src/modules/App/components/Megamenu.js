@@ -121,6 +121,7 @@ const styles = theme => {
                 paddingTop: 0,
                 paddingBottom: 0,
                 '& div': {
+                    marginTop: 0,
                     minHeight: 45,
                 },
             },
