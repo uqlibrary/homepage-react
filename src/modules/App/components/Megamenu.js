@@ -118,8 +118,11 @@ const styles = theme => {
         },
         menuItem: {
             [theme.breakpoints.up('lg')]: {
-                paddingTop: 4,
-                paddingBottom: 4,
+                paddingTop: 0,
+                paddingBottom: 0,
+                '& div': {
+                    minHeight: 45,
+                },
             },
         },
     };
