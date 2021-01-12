@@ -43,7 +43,7 @@ export default {
         internalLinks: [
             {
                 dataTestid: 'connect-feedback-link',
-                linklabel: 'Feedback',
+                linklabel: 'Library feedback',
                 linkTo: 'https://support.my.uq.edu.au/app/library/feedback',
             },
             {

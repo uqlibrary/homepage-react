@@ -331,7 +331,7 @@ exports[`Component ConnectFooter should render 1`] = `
           data-testid="connect-feedback-link"
           href="https://support.my.uq.edu.au/app/library/feedback"
         >
-          Feedback
+          Library feedback
         </a>
         <span>
            |  
