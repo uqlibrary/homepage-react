@@ -10,6 +10,8 @@ If you are using Github to edit, then your screen should look like this:
 3. Preview the change at <http://homepage-development.library.uq.edu.au/user-admin-manage/#/>
 4. Let devs know that you have a change to be merged in
 
+* If it does not pass on first go and you do not have permissions to view the error in AWS, it is suggested you immediately get a dev to fix it for you as they can fix code layout errors very simply. Worry about getting the words right :)
+
 ## To edit the Promo Panel on the homepage
 
 Edit [promoPanel.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/Index/components/subComponents/promoPanel.locale.js) and then follow the steps above
