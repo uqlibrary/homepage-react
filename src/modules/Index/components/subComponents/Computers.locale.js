@@ -11,7 +11,7 @@ export const computersLocale = {
         'Gatton Campus Library': 'Gatton',
         'Herston Health Sciences Library': 'Herston',
         'Law Library': 'St Lucia',
-        Whitty: 'Other',
+        'Whitty Mater': 'Other',
         'PACE Health Sciences Library': 'Other',
     },
 };

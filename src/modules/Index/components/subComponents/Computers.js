@@ -394,7 +394,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                         classes={{
                                                             root: classes.linkButton,
                                                             label: `${classes.linkButtonLabel} ${
-                                                                cookies.location === item.campus
+                                                                item.campus && cookies.location === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
