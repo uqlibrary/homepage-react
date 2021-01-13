@@ -32,7 +32,7 @@ export const promoPanel = {
             <div>
                 <p>
                     We have personalised your home page just for you. Your page may contain additional features
-                    depdending on who you are.
+                    depending on who you are.
                 </p>
                 <ul>
                     <li>Get your course resources (UQ students)</li>
