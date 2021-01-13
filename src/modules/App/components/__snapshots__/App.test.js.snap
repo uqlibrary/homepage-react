@@ -94,10 +94,18 @@ exports[`Application component Should display mobile correctly 1`] = `
               path="/"
             />
             <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              exact={true}
               key="route_1"
-              pageTitle="Contact UQ Library"
-              path="/contact"
-              render={[Function]}
+              pageTitle="Payment receipt"
+              path="/payment-receipt"
             />
             <Route
               component={
@@ -251,10 +259,18 @@ exports[`Application component should render application with routing for the us
               path="/"
             />
             <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              exact={true}
               key="route_1"
-              pageTitle="Contact UQ Library"
-              path="/contact"
-              render={[Function]}
+              pageTitle="Payment receipt"
+              path="/payment-receipt"
             />
             <Route
               component={
@@ -394,10 +410,18 @@ exports[`Application component should render for anon user 1`] = `
               path="/"
             />
             <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              exact={true}
               key="route_1"
-              pageTitle="Contact UQ Library"
-              path="/contact"
-              render={[Function]}
+              pageTitle="Payment receipt"
+              path="/payment-receipt"
             />
             <Route
               component={
@@ -537,10 +561,18 @@ exports[`Application component should render loading screen while account is loa
               path="/"
             />
             <Route
+              component={
+                Object {
+                  "$$typeof": Symbol(react.lazy),
+                  "_ctor": [Function],
+                  "_result": null,
+                  "_status": -1,
+                }
+              }
+              exact={true}
               key="route_1"
-              pageTitle="Contact UQ Library"
-              path="/contact"
-              render={[Function]}
+              pageTitle="Payment receipt"
+              path="/payment-receipt"
             />
             <Route
               component={
