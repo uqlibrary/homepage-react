@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import Fab from '@material-ui/core/Fab';
 import Tooltip from '@material-ui/core/Tooltip';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles(
     theme => ({
@@ -46,11 +47,13 @@ const useStyles = makeStyles(
 
 export const ChatStatus = ({ status }) => {
     const classes = useStyles();
-    const [chatState, setChatState] = useState(status);
+    const isMobile = useMediaQuery('(max-width:600px)');
     const [closeChatState, setCloseChatState] = useState(false);
     useEffect(() => {
-        setChatState(status);
-    }, [status]);
+        if (isMobile) {
+            setCloseChatState(true);
+        }
+    }, [isMobile]);
     const closeChatStatus = () => {
         setCloseChatState(true);
     };
@@ -68,7 +71,7 @@ export const ChatStatus = ({ status }) => {
         );
         return false;
     };
-    if (!!chatState && chatState.online && !closeChatState) {
+    if (!!status && status.online && !closeChatState) {
         return (
             <Snackbar
                 anchorOrigin={{
@@ -78,8 +81,8 @@ export const ChatStatus = ({ status }) => {
                 className={classes.chatStatus}
                 open
                 onClose={closeChatStatus}
-                id={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}`}
-                data-testid={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}`}
+                id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}`}
+                data-testid={`chat-status-snackbar-${status.online ? 'online' : 'offline'}`}
             >
                 <div>
                     <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
@@ -92,9 +95,9 @@ export const ChatStatus = ({ status }) => {
                                 size="small"
                                 variant="contained"
                                 onClick={launchChat}
-                                id={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}-launch-button`}
+                                id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-launch-button`}
                                 data-testid={`chat-status-snackbar-${
-                                    chatState.online ? 'online' : 'offline'
+                                    status.online ? 'online' : 'offline'
                                 }-launch-button`}
                             >
                                 Launch
@@ -106,9 +109,9 @@ export const ChatStatus = ({ status }) => {
                                 aria-label="close"
                                 color="inherit"
                                 onClick={closeChatStatus}
-                                id={`chat-status-snackbar-${chatState.online ? 'online' : 'offline'}-close-button`}
+                                id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-close-button`}
                                 data-testid={`chat-status-snackbar-${
-                                    chatState.online ? 'online' : 'offline'
+                                    status.online ? 'online' : 'offline'
                                 }-close-button`}
                             >
                                 <CloseIcon fontSize="small" />
@@ -119,7 +122,7 @@ export const ChatStatus = ({ status }) => {
             </Snackbar>
         );
     }
-    if ((!chatState || !chatState.online) && !closeChatState) {
+    if ((!status || !status.online) && !closeChatState) {
         return (
             <Snackbar
                 anchorOrigin={{
@@ -177,17 +180,17 @@ export const ChatStatus = ({ status }) => {
                 <Fab
                     color="secondary"
                     className={`${classes.chatAction} ${
-                        !!chatState && chatState.online ? classes.badgeOnline : classes.badgeOffline
+                        !!status && status.online ? classes.badgeOnline : classes.badgeOffline
                     }`}
                     onClick={openChatStatus}
                     size={'small'}
-                    id={`chat-status-icon-button-${!!chatState && chatState.online ? 'online' : 'offline'}`}
-                    data-testid={`chat-status-icon-button-${!!chatState && chatState.online ? 'online' : 'offline'}`}
+                    id={`chat-status-icon-button-${!!status && status.online ? 'online' : 'offline'}`}
+                    data-testid={`chat-status-icon-button-${!!status && status.online ? 'online' : 'offline'}`}
                 >
                     <QuestionAnswerIcon
                         className={classes.chatIcon}
-                        id={`chat-status-icon-${!!chatState && chatState.online ? 'online' : 'offline'}`}
-                        data-testid={`chat-status-icon-${!!chatState && chatState.online ? 'online' : 'offline'}`}
+                        id={`chat-status-icon-${!!status && status.online ? 'online' : 'offline'}`}
+                        data-testid={`chat-status-icon-${!!status && status.online ? 'online' : 'offline'}`}
                     />
                 </Fab>
             </Tooltip>

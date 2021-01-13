@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 
 import { searchPanelLocale } from './searchPanel.locale';
@@ -70,6 +70,12 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     const classes = useStyles();
     const [searchType, setSearchType] = useState(0);
     const [searchKeyword, setSearchKeyword] = useState('');
+    const isDesktop = useMediaQuery('(min-width:600px)');
+    useEffect(() => {
+        if (isDesktop) {
+            document.getElementById('primo-search-autocomplete').focus();
+        }
+    }, [isDesktop]);
 
     const handleClearSuggestions = () => {
         actions.clearPrimoSuggestions();
@@ -98,7 +104,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     };
 
     const throttledPrimoLoadSuggestions = useRef(throttle(3100, newValue => actions.loadPrimoSuggestions(newValue)));
-    const isDesktop = !useMediaQuery('(max-width:600px)');
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
             setSearchKeyword(newValue);
@@ -178,7 +183,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 return (
                                     <TextField
                                         {...params}
-                                        autoFocus={isDesktop}
                                         placeholder={locale.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{
