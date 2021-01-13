@@ -72,9 +72,6 @@ const useStyles = makeStyles(
         actionButton: {
             marginRight: -4,
             '& .action': {
-                [theme.breakpoints.up('xs')]: {
-                    marginTop: 6,
-                },
                 [theme.breakpoints.down('xs')]: {
                     marginRight: 12,
                 },
