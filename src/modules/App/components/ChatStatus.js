@@ -203,8 +203,4 @@ ChatStatus.propTypes = {
     status: PropTypes.object,
 };
 
-ChatStatus.defaultProps = {
-    status: { online: false },
-};
-
 export default ChatStatus;
