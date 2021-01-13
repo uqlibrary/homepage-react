@@ -97,7 +97,7 @@ export class AppClass extends PureComponent {
         location: PropTypes.object,
         history: PropTypes.object.isRequired,
         classes: PropTypes.object,
-        chatStatus: PropTypes.any,
+        chatStatus: PropTypes.object,
         libHours: PropTypes.object,
         libHoursLoading: PropTypes.bool,
         trainingEvents: PropTypes.array,
@@ -163,9 +163,7 @@ export class AppClass extends PureComponent {
                     onAction={this.props.actions.logout}
                     locale={locale.global.sessionExpiredConfirmation}
                 />
-                {!!this.props.chatStatus && this.props.chatStatus.online && (
-                    <ChatStatus status={this.props.chatStatus} />
-                )}
+                {this.props.chatStatus && this.props.chatStatus.online && <ChatStatus status={this.props.chatStatus} />}
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
                     <div className="content-header" role="region" aria-label="Site header">
                         <UQHeader />
