@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 'bold',
     },
     iconButton: {
-        marginTop: -4,
+        marginTop: -5,
         marginLeft: 0,
         color: theme.palette.secondary.main,
         textTransform: 'none',
