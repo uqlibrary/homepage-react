@@ -145,7 +145,14 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 'title': 'Test urgent alert 2',
                 'body': '[urgent link description](http:\/\/www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                 'urgent': 1,
-                },
+                }, {
+                    "id": "b1739480-4ef4-11eb-91a1-6d3f07452c24",
+                    "start": "2021-01-12 00:00:00",
+                    "end": "2021-02-12 00:00:00",
+                    "title": "The new Library home page is live!",
+                    "body": "However, you are seeing the previous version. You can refresh your browser cache to get the new home page now.[More about the new home page](https:\/\/web.library.uq.edu.au\/blog\/2021\/01\/discover-new-library-home-page)",
+                    "urgent": 0
+                }
             ],
         ]
     ));

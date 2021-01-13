@@ -355,7 +355,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                         color="primary"
                                         badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
                                     >
-                                        <RoomIcon />
+                                        <RoomIcon data-testid="computers-wiggler" />
                                     </Badge>
                                 </Tooltip>
                             </Fade>
