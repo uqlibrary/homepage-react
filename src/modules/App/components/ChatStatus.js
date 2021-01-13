@@ -71,7 +71,7 @@ export const ChatStatus = ({ status }) => {
         );
         return false;
     };
-    if (!!status && status.online && !closeChatState) {
+    if (!!status && !!status.online && !closeChatState) {
         return (
             <Snackbar
                 anchorOrigin={{
