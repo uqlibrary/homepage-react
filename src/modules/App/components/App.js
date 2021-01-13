@@ -163,7 +163,10 @@ export class AppClass extends PureComponent {
                     onAction={this.props.actions.logout}
                     locale={locale.global.sessionExpiredConfirmation}
                 />
-                {this.props.chatStatus && this.props.chatStatus.online && <ChatStatus status={this.props.chatStatus} />}
+                {this.props.chatStatus &&
+                    (this.props.chatStatus.online === true || this.props.chatStatus.online === false) && (
+                        <ChatStatus status={this.props.chatStatus} />
+                    )}
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
                     <div className="content-header" role="region" aria-label="Site header">
                         <UQHeader />
