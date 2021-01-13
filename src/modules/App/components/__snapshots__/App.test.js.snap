@@ -1852,6 +1852,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                           <UQHeader>
                             <header
                               className="uq-header"
+                              id="uqheader"
                             >
                               <div
                                 className="uq-header__container"
