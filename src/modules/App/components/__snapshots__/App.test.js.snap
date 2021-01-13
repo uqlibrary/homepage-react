@@ -11154,7 +11154,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                               "type": "search",
                                                                                                                             }
                                                                                                                           }
-                                                                                                                          autoFocus={true}
                                                                                                                           disabled={false}
                                                                                                                           error={false}
                                                                                                                           fullWidth={true}
@@ -11218,7 +11217,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                 "type": "search",
                                                                                                                               }
                                                                                                                             }
-                                                                                                                            autoFocus={true}
                                                                                                                             classes={
                                                                                                                               Object {
                                                                                                                                 "root": "MuiTextField-root",
@@ -11296,7 +11294,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                   className="MuiFormControl-root MuiTextField-root MuiFormControl-fullWidth"
                                                                                                                                 >
                                                                                                                                   <WithStyles(ForwardRef(Input))
-                                                                                                                                    autoFocus={true}
+                                                                                                                                    autoFocus={false}
                                                                                                                                     className="MuiAutocomplete-inputRoot"
                                                                                                                                     classes={
                                                                                                                                       Object {
@@ -11351,7 +11349,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                     type="search"
                                                                                                                                   >
                                                                                                                                     <ForwardRef(Input)
-                                                                                                                                      autoFocus={true}
+                                                                                                                                      autoFocus={false}
                                                                                                                                       className="MuiAutocomplete-inputRoot"
                                                                                                                                       classes={
                                                                                                                                         Object {
@@ -11419,7 +11417,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                       type="search"
                                                                                                                                     >
                                                                                                                                       <WithStyles(ForwardRef(InputBase))
-                                                                                                                                        autoFocus={true}
+                                                                                                                                        autoFocus={false}
                                                                                                                                         className="MuiAutocomplete-inputRoot"
                                                                                                                                         classes={
                                                                                                                                           Object {
@@ -11488,7 +11486,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                         type="search"
                                                                                                                                       >
                                                                                                                                         <ForwardRef(InputBase)
-                                                                                                                                          autoFocus={true}
+                                                                                                                                          autoFocus={false}
                                                                                                                                           className="MuiAutocomplete-inputRoot"
                                                                                                                                           classes={
                                                                                                                                             Object {
@@ -11572,7 +11570,7 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                                                                                               aria-label="Enter your search terms"
                                                                                                                                               autoCapitalize="none"
                                                                                                                                               autoComplete="off"
-                                                                                                                                              autoFocus={true}
+                                                                                                                                              autoFocus={false}
                                                                                                                                               className="MuiInputBase-input MuiInput-input makeStyles-selectInput-216 MuiAutocomplete-input MuiAutocomplete-inputFocused MuiInputBase-inputAdornedEnd MuiInputBase-inputTypeSearch MuiInput-inputTypeSearch"
                                                                                                                                               data-testid="primo-search-autocomplete-input"
                                                                                                                                               disabled={false}
