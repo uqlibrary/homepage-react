@@ -192,7 +192,6 @@ export class AppClass extends PureComponent {
                     <div role="region" aria-label="UQ Library Alerts">
                         <AppAlertContainer />
                     </div>
-                    {JSON.stringify(this.props.chatStatus || null)}
                     <div style={{ flexGrow: 1, marginTop: 16 }}>
                         <AccountContext.Provider
                             value={{

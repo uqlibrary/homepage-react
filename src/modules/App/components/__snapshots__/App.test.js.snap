@@ -63,7 +63,6 @@ exports[`Application component Should display mobile correctly 1`] = `
     >
       <Connect(AppAlert) />
     </div>
-    null
     <div
       style={
         Object {
@@ -215,7 +214,6 @@ exports[`Application component should render application with routing for the us
     >
       <Connect(AppAlert) />
     </div>
-    null
     <div
       style={
         Object {
@@ -365,7 +363,6 @@ exports[`Application component should render for anon user 1`] = `
     >
       <Connect(AppAlert) />
     </div>
-    null
     <div
       style={
         Object {
@@ -509,7 +506,6 @@ exports[`Application component should render loading screen while account is loa
     >
       <Connect(AppAlert) />
     </div>
-    null
     <div
       style={
         Object {
@@ -7197,7 +7193,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                             />
                           </Connect(AppAlert)>
                         </div>
-                        null
                         <div
                           style={
                             Object {
