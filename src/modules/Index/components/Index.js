@@ -138,12 +138,26 @@ export const Index = ({
         }
     }, [accountLoading, account, loans, loansLoading, dispatch]);
     useEffect(() => {
-        if (accountLoading === false && !!account && !!author && !possibleRecords && possibleRecordsLoading === null) {
+        if (
+            accountLoading === false &&
+            !!account &&
+            !!author &&
+            !!author.aut_id &&
+            !possibleRecords &&
+            possibleRecordsLoading === null
+        ) {
             dispatch(searcheSpacePossiblePublications());
         }
     }, [accountLoading, account, author, possibleRecords, possibleRecordsLoading, dispatch]);
     useEffect(() => {
-        if (accountLoading === false && !!account && !!author && !incompleteNTRO && incompleteNTROLoading === null) {
+        if (
+            accountLoading === false &&
+            !!account &&
+            !!author &&
+            !!author.aut_id &&
+            !incompleteNTRO &&
+            incompleteNTROLoading === null
+        ) {
             dispatch(searcheSpaceIncompleteNTROPublications());
         }
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
