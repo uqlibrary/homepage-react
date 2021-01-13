@@ -20,6 +20,7 @@ import Tooltip from '@material-ui/core/Tooltip';
 import { throttle } from 'throttle-debounce';
 import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 const useStyles = makeStyles(
     theme => ({
@@ -97,7 +98,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     };
 
     const throttledPrimoLoadSuggestions = useRef(throttle(3100, newValue => actions.loadPrimoSuggestions(newValue)));
-
+    const isDesktop = !useMediaQuery('(max-width:600px)');
     const handleSearchKeywordChange = React.useCallback(
         (event, newValue) => {
             setSearchKeyword(newValue);
@@ -154,7 +155,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         <Autocomplete
                             value={searchKeyword}
                             freeSolo
-                            autoFocus
                             id="primo-search-autocomplete"
                             data-testid="primo-search-autocomplete"
                             disableClearable
@@ -178,7 +178,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 return (
                                     <TextField
                                         {...params}
-                                        autoFocus
+                                        autoFocus={isDesktop}
                                         placeholder={locale.typeSelect.items[searchType].placeholder}
                                         error={!!suggestionsError}
                                         InputProps={{

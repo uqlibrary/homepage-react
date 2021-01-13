@@ -59,7 +59,7 @@ export const UQHeader = ({}) => {
     };
 
     return (
-        <header className="uq-header">
+        <header className="uq-header" id="uqheader">
             <div className="uq-header__container">
                 <div className="nav-global">
                     <a

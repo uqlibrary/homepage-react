@@ -3823,7 +3823,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                               "id": "primo-search-autocomplete-listbox",
                                                                                             }
                                                                                           }
-                                                                                          autoFocus={true}
                                                                                           clearOnEscape={true}
                                                                                           data-testid="primo-search-autocomplete"
                                                                                           disableClearable={true}
@@ -3844,7 +3843,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                 "id": "primo-search-autocomplete-listbox",
                                                                                               }
                                                                                             }
-                                                                                            autoFocus={true}
                                                                                             classes={
                                                                                               Object {
                                                                                                 "clearIndicator": "MuiAutocomplete-clearIndicator",
@@ -3886,7 +3884,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                             <div
                                                                                               aria-expanded={false}
                                                                                               aria-owns={null}
-                                                                                              autoFocus={true}
                                                                                               className="MuiAutocomplete-root"
                                                                                               data-testid="primo-search-autocomplete"
                                                                                               onClick={[Function]}

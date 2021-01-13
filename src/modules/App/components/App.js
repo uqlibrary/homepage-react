@@ -109,9 +109,6 @@ export class AppClass extends PureComponent {
 
     constructor(props) {
         super(props);
-        this.state = {
-            chatStatus: { online: false },
-        };
     }
 
     getChildContext() {
@@ -129,11 +126,6 @@ export class AppClass extends PureComponent {
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.isSessionExpired) {
             this.sessionExpiredConfirmationBox.showConfirmation();
-        }
-        if (this.props.chatStatus && !!this.props.chatStatus.online) {
-            this.setState({
-                chatStatus: { online: true },
-            });
         }
     }
     redirectUserToLogin = (isAuthorizedUser = false, redirectToCurrentLocation = false) => () => {
@@ -171,7 +163,9 @@ export class AppClass extends PureComponent {
                     onAction={this.props.actions.logout}
                     locale={locale.global.sessionExpiredConfirmation}
                 />
-                <ChatStatus status={this.props.chatStatus} />
+                {!!this.props.chatStatus && this.props.chatStatus.online && (
+                    <ChatStatus status={this.props.chatStatus} />
+                )}
                 <div className="content-container" id="content-container" role="region" aria-label="Site content">
                     <div className="content-header" role="region" aria-label="Site header">
                         <UQHeader />
