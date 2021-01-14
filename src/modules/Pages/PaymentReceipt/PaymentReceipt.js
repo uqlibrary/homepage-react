@@ -3,12 +3,9 @@ import locale from './PaymentRecept.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import queryString from 'query-string';
-
-// ?Success=1&Receipt=1234&AmountPaid=1250
-
 export const PaymentReceipt = () => {
     const querystring = queryString.parse(location.search);
-    const amountPaid = parseFloat(querystring.AmountPaid / 100).toFixed(2);
+    const amountPaid = parseFloat(querystring.AmountPaid).toFixed(2);
     const receipt = querystring.Receipt;
     const success = querystring.Success === '1' ? 'successful' : 'unsuccessful';
     if (!querystring.AmountPaid || !querystring.Receipt || !querystring.Success) {
