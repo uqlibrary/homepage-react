@@ -27,7 +27,7 @@ export const ppLocale = {
         eSpacePossible: {
             label: 'Claim [totalRecords] possible eSpace records',
             tooltip: 'Click to visit your eSpace dashboard',
-            url: 'https://espace.library.uq.edu.au/dashboard',
+            url: 'https://espace.library.uq.edu.au/records/possible',
         },
         eSpaceOrcid: {
             label: 'Link ORCiD account to eSpace',
