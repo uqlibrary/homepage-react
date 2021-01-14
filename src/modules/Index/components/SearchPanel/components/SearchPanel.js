@@ -93,12 +93,21 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         focusOnSearchInput();
     };
 
+    const isExamSearch = searchType === 7;
+    const isCourseResourceSearch = searchType === 8;
+
     const handleSearchButton = event => {
         event.preventDefault();
         if (!!searchKeyword) {
+            let keyword = searchKeyword;
+            if (isCourseResourceSearch || isExamSearch) {
+                // because the display text in the dropdown has the descriptors in it, that text reaches here.
+                // trim down to the course code only
+                keyword = searchKeyword.substr(0, searchKeyword.indexOf(' '));
+            }
             const link = locale.typeSelect.items[searchType].link
-                .replace('[keyword]', searchKeyword)
-                .replace('[keyword]', searchKeyword); // database search has two instances of keyword
+                .replace('[keyword]', keyword)
+                .replace('[keyword]', keyword); // database search has two instances of keyword
             window.location.assign(link);
         }
     };
@@ -110,17 +119,20 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
             if (newValue.length > 3 && !isRepeatingString(newValue)) {
                 if ([0, 1, 3, 4, 5].includes(searchType)) {
                     throttledPrimoLoadSuggestions.current(newValue);
-                } else if (searchType === 7) {
+                } else if (isExamSearch) {
                     actions.loadExamPaperSuggestions(newValue);
-                } else if (searchType === 8) {
-                    actions.loadHomepageCourseReadingListsSuggestions(newValue.substr(0, newValue.indexOf(' ')));
+                } else if (isCourseResourceSearch) {
+                    // on the first pass we only get what they types;
+                    // on the second pass we get the full description string
+                    const keyword = newValue.substr(0, newValue.indexOf(' '));
+                    actions.loadHomepageCourseReadingListsSuggestions(keyword || newValue);
                 }
                 focusOnSearchInput();
             } else {
                 actions.clearPrimoSuggestions();
             }
         },
-        [actions, searchType],
+        [actions, searchType, isExamSearch, isCourseResourceSearch],
     );
     return (
         <StandardCard noPadding noHeader standardCardId="primo-search">
