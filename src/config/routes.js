@@ -1,32 +1,12 @@
 import { locale } from 'locale';
-import { createHash } from 'crypto';
 import { seeCourseResources } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
-export const pidRegExp = 'UQ:[a-z0-9]+';
-export const isFileUrl = route => new RegExp('\\/view\\/UQ:[a-z0-9]+\\/.*').test(route);
-
-// const isAdmin = authorDetails => {
-//     return authorDetails && (!!authorDetails.is_administrator || !!authorDetails.is_super_administrator);
-// };
-
-export const getDatastreamVersionQueryString = (fileName, checksum) => {
-    if (!checksum) {
-        return '';
-    }
-
-    const hash = createHash('md5')
-        .update(`${fileName}${checksum.trim()}`)
-        .digest('hex');
-
-    return hash;
-};
 
 export const pathConfig = {
     index: '/',
-    // I dont think this is needed as contact is handled through web.library, but keep it for the notfound test for now
-    contact: '/contact',
     courseresources: '/courseresources',
+    paymentReceipt: '/payment-receipt',
     admin: {
         masquerade: '/admin/masquerade',
     },
@@ -34,7 +14,7 @@ export const pathConfig = {
 };
 
 // a duplicate list of routes for checking validity easily
-export const flattedPathConfig = ['/', '/contact', '/courseresources', '/admin/masquerade'];
+export const flattedPathConfig = ['/', '/courseresources', '/payment-receipt', '/admin/masquerade'];
 
 // TODO: will we even have roles?
 export const roles = {
@@ -50,9 +30,10 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             pageTitle: locale.pages.index.title,
         },
         {
-            path: pathConfig.contact,
-            render: () => components.StandardPage({ ...locale.pages.contact }),
-            pageTitle: locale.pages.contact.title,
+            path: pathConfig.paymentReceipt,
+            component: components.PaymentReceipt,
+            exact: true,
+            pageTitle: locale.pages.paymentReceipt.title,
         },
     ];
 

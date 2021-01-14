@@ -41,5 +41,8 @@ export default {
         courseresources: {
             title: 'Course resources',
         },
+        paymentReceipt: {
+            title: 'Payment receipt',
+        },
     },
 };
