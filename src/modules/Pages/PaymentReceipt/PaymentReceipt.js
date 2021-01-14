@@ -2,6 +2,8 @@ import React from 'react';
 import locale from './PaymentRecept.locale';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import Grid from '@material-ui/core/Grid';
+import { pathConfig } from 'config/routes';
 import queryString from 'query-string';
 export const PaymentReceipt = () => {
     const querystring = queryString.parse(location.search);
@@ -22,7 +24,7 @@ export const PaymentReceipt = () => {
         );
     }
     return (
-        <StandardPage goBackFunc={() => history.back()} standardPageId="payment-receipt" title={locale.title}>
+        <StandardPage goBackFunc={null} standardPageId="payment-receipt" title={locale.title}>
             <section className="layout-card">
                 <StandardCard noHeader>
                     <p>
@@ -32,6 +34,11 @@ export const PaymentReceipt = () => {
                     <p>{locale.check.replace('[Receipt]', receipt)}</p>
                     <sub>{locale.maintenance}</sub>
                 </StandardCard>
+                <Grid container style={{ marginTop: 16 }}>
+                    <Grid item xs>
+                        <a href={pathConfig.index}>Return to the Library homepage</a>
+                    </Grid>
+                </Grid>
             </section>
         </StandardPage>
     );
