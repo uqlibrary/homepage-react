@@ -86,8 +86,9 @@ export const Location = ({ idLabel }) => {
                     data-testid={id('button')}
                 >
                     <RoomIcon
-                        className={`${classes.icon} ${cookies.location === null ||
-                            (cookies.location === 'null' && classes.wiggler)}`}
+                        className={`${classes.icon} ${
+                            !cookies.location || cookies.location === 'null' ? classes.wiggler : ''
+                        }`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
                 </Button>
