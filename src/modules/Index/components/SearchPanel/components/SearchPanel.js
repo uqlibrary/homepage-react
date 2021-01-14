@@ -113,7 +113,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                 } else if (searchType === 7) {
                     actions.loadExamPaperSuggestions(newValue);
                 } else if (searchType === 8) {
-                    actions.loadHomepageCourseReadingListsSuggestions(newValue);
+                    actions.loadHomepageCourseReadingListsSuggestions(newValue.substr(0, newValue.indexOf(' ')));
                 }
                 focusOnSearchInput();
             } else {
