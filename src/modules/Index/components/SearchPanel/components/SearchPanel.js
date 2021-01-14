@@ -3,7 +3,7 @@ import { PropTypes } from 'prop-types';
 
 import { searchPanelLocale } from './searchPanel.locale';
 import { VoiceToText } from './voiceToText';
-import { isRepeatingString } from 'helpers/general';
+import { isRepeatingString, unescapeString } from 'helpers/general';
 
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -181,7 +181,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 (!!suggestions &&
                                     suggestions
                                         .filter(option => option.text !== searchKeyword)
-                                        .map(option => option.text)) ||
+                                        .map(option => unescapeString(option.text))) ||
                                 []
                             }
                             onInputChange={handleSearchKeywordChange}
