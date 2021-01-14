@@ -53,9 +53,9 @@ export const Location = ({ idLabel }) => {
     };
     const handleLocationClose = location => () => {
         if (location === 'not set') {
-            setCookie('location', null);
+            setCookie('location', null, { expires: '2022-01-01T00:00:00.000Z' });
         } else {
-            setCookie('location', location);
+            setCookie('location', location, { expires: '2022-01-01T00:00:00.000Z' });
         }
         setAnchorEl(null);
     };
