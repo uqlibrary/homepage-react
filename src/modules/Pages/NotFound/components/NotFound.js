@@ -19,7 +19,7 @@ export const NotFound = ({ account, accountLoading }) => {
                 <ScriptTag
                     type="text/javascript"
                     src={`/404.js?requri=${window.location.pathname}&requester=${
-                        !accountLoading && account ? account.id : 'Not available'
+                        !accountLoading && account ? account.id : 'NA'
                     }`}
                 />
                 {locale.notFound.content}
