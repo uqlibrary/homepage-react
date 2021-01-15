@@ -12,6 +12,7 @@ const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const WebpackStrip = require('strip-loader');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotstxtPlugin = require('robotstxt-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
 
 const options = {
     policy: [
@@ -99,6 +100,14 @@ const webpackConfig = {
             ],
             fingerprints: false,
         }),
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: resolve(__dirname, 'public', '404.js'),
+                    to: resolve(__dirname, './dist/', config.basePath),
+                },
+            ],
+        }),
         new ProgressBarPlugin({
             format: `  building webpack... [:bar] ${chalk.green.bold(
                 ':percent',
@@ -121,8 +130,6 @@ const webpackConfig = {
             'process.env.APP_URL': JSON.stringify(config.url(process.env.CI_BRANCH)),
             'process.env.FULL_PATH': JSON.stringify(config.fullPath(process.env.CI_BRANCH)),
             'process.env.BRANCH': JSON.stringify(config.environment),
-            // 'process.env.ORCID_URL': JSON.stringify(config.orcidUrl),
-            // 'process.env.ORCID_CLIENT_ID': JSON.stringify(config.orcidClientId),
             'process.env.PUBLIC_PATH': JSON.stringify(config.basePath),
             'process.env.GOOGLE_MAPS_URL': JSON.stringify(config.googleMaps),
             'process.env.GOOGLE_MAPS_API_KEY': JSON.stringify(process.env.GOOGLE_MAPS_API_KEY),
