@@ -18,7 +18,11 @@ export const NotFound = ({ account, accountLoading }) => {
             <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" title={locale.notFound.title}>
                 <ScriptTag
                     type="text/javascript"
-                    src={`https://www.library.uq.edu.au/404.js?url=${window.location.hostname}${window.location.pathname}&referrer=${document.referrer}`}
+                    src={`https://www.library.uq.edu.au/404.js?uri=${window.location.hostname}${
+                        window.location.pathname
+                    }&referrer=${document.referrer || 'Not available'}&requester=${
+                        account ? account.id : 'Not available'
+                    }`}
                 />
                 {locale.notFound.content}
             </StandardPage>
