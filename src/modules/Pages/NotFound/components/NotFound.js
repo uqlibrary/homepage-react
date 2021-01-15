@@ -18,7 +18,7 @@ export const NotFound = ({ account, accountLoading }) => {
             <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" title={locale.notFound.title}>
                 <ScriptTag
                     type="text/javascript"
-                    src={`/404.js?uri=${window.location.hostname}${window.location.pathname}&requester=${
+                    src={`/404.js?requri=${window.location.pathname}&requester=${
                         !accountLoading && account ? account.id : 'Not available'
                     }`}
                 />
