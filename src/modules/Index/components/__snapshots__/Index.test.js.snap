@@ -6280,7 +6280,6 @@ exports[`Index page should render placeholders 1`] = `
                                               id="spotlights"
                                             >
                                               <Spotlights
-                                                defaultSlide=""
                                                 spotlightsLoading={false}
                                               >
                                                 <div

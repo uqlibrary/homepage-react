@@ -13554,7 +13554,6 @@ exports[`Testing wrapped App component Mounts 1`] = `
                                                                         id="spotlights"
                                                                       >
                                                                         <Spotlights
-                                                                          defaultSlide=""
                                                                           spotlightsLoading={false}
                                                                         >
                                                                           <div

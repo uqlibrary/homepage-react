@@ -17,7 +17,7 @@ export const NotFound = ({ account, accountLoading }) => {
         const referrer = document.referrer;
         return (
             <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" title={locale.notFound.title}>
-                <ScriptTag type="text/javascript" src={`/404.js?${referrer}`} />
+                <ScriptTag type="text/javascript" src={`/404.js?referrer=${referrer}`} />
                 {locale.notFound.content}
             </StandardPage>
         );
