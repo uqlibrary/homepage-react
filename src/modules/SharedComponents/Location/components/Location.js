@@ -52,10 +52,13 @@ export const Location = ({ idLabel }) => {
         setAnchorEl(event.currentTarget);
     };
     const handleLocationClose = location => () => {
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
         if (location === 'not set') {
-            setCookie('location', null, { expires: '2022-01-01T00:00:00.000Z' });
+            setCookie('location', null, { expires: nextYear });
         } else {
-            setCookie('location', location, { expires: '2022-01-01T00:00:00.000Z' });
+            setCookie('location', location, { expires: nextYear });
         }
         setAnchorEl(null);
     };
