@@ -14,7 +14,13 @@ export const pathConfig = {
 };
 
 // a duplicate list of routes for checking validity easily
-export const flattedPathConfig = ['/', '/courseresources', '/payment-receipt', '/admin/masquerade'];
+export const flattedPathConfig = [
+    '/',
+    '/courseresources',
+    '/payment-receipt',
+    '/admin/masquerade',
+    'https://www.library.uq.edu.au/404.js',
+];
 
 // TODO: will we even have roles?
 export const roles = {

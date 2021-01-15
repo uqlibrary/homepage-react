@@ -7,15 +7,24 @@ import locale from './notfound.locale';
 import { AUTH_URL_LOGIN } from 'config';
 import { flattedPathConfig } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import ScriptTag from 'react-script-tag';
 
 export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
-
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
-
     // if not known page, standard 404
     if (!isValidRoute) {
-        return <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" {...locale.notFound} />;
+        return (
+            <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" title={locale.notFound.title}>
+                <ScriptTag
+                    type="text/javascript"
+                    src={`/404.js?requri=${window.location.pathname}&requester=${
+                        !accountLoading && account ? account.id : 'NA'
+                    }`}
+                />
+                {locale.notFound.content}
+            </StandardPage>
+        );
     }
     // the page must require admin to land here when they are logged in
     const isLoggedIn = accountLoading === false && !!account && !!account.id;

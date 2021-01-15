@@ -15,7 +15,6 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import PauseIcon from '@material-ui/icons/Pause';
-const defaultSlide = require('../../../../../public/images/Welcome_Spotlight.jpg');
 import Fade from '@material-ui/core/Fade';
 import ContentLoader from 'react-content-loader';
 const MyLoader = props => (
@@ -222,13 +221,11 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
 Spotlights.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.bool,
-    defaultSlide: PropTypes.string,
     account: PropTypes.object,
 };
 
 Spotlights.defaultProps = {
     spotlightsLoading: false,
-    defaultSlide: defaultSlide,
 };
 
 export default Spotlights;

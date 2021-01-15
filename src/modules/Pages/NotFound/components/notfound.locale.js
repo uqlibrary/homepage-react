@@ -3,7 +3,7 @@ import React from 'react';
 export default {
     notFound: {
         title: 'Page not found',
-        children: (
+        content: (
             <div className="layout-card">
                 <p>The requested page could not be found.</p>
                 <p>Sorry about that, but here's what you can do next:</p>
