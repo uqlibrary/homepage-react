@@ -20,7 +20,7 @@ export const NotFound = ({ account, accountLoading }) => {
                     type="text/javascript"
                     src={`/404.js?uri=${window.location.hostname}${window.location.pathname}&requester=${
                         !accountLoading && account ? account.id : 'Not available'
-                    }&query=${location.search || 'Not available'}`}
+                    }`}
                 />
                 {locale.notFound.content}
             </StandardPage>
