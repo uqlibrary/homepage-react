@@ -22,7 +22,7 @@ export const NotFound = ({ account, accountLoading }) => {
                         window.location.pathname
                     }&referrer=${document.referrer || 'Not available'}&requester=${
                         !accountLoading && account ? account.id : 'Not available'
-                    }`}
+                    }&query=${location.search || 'Not available'}`}
                 />
                 {locale.notFound.content}
             </StandardPage>
