@@ -13,20 +13,17 @@ export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
     // if not known page, standard 404
-    const isLocal = window.location.hostname.indexOf('localhost') > 0;
     if (!isValidRoute) {
         return (
             <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" title={locale.notFound.title}>
-                {!isLocal && (
-                    <ScriptTag
-                        type="text/javascript"
-                        src={`https://www.library.uq.edu.au/404.js?uri=${window.location.hostname}${
-                            window.location.pathname
-                        }&referrer=${document.referrer || 'Not available'}&requester=${
-                            !accountLoading && account ? account.id : 'Not available'
-                        }`}
-                    />
-                )}
+                <ScriptTag
+                    type="text/javascript"
+                    src={`/404.js?uri=${window.location.hostname}${
+                        window.location.pathname
+                    }&referrer=${document.referrer || 'Not available'}&requester=${
+                        !accountLoading && account ? account.id : 'Not available'
+                    }`}
+                />
                 {locale.notFound.content}
             </StandardPage>
         );
