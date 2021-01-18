@@ -125,15 +125,15 @@ export const CourseResources = ({
             }
 
             if (!currentGuidesList[classnumber]) {
-                throttledGuideLoad(classnumber);
+                throttledGuideLoad.current(classnumber);
             }
 
             if (!currentExamsList[classnumber]) {
-                throttledExamsLoad(classnumber);
+                throttledExamsLoad.current(classnumber);
             }
 
             if (!currentReadingLists[classnumber]) {
-                throttledReadingListLoad(classnumber, campus, semester, account);
+                throttledReadingListLoad.current(classnumber, campus, semester, account);
             }
         },
         [currentGuidesList, currentExamsList, currentReadingLists, account, actions],
