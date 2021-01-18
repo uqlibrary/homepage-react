@@ -96,6 +96,20 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     const isExamSearch = searchType === 7;
     const isCourseResourceSearch = searchType === 8;
 
+    /**
+     * get the characters in the string before the specified character
+     * eg `ACCT7101 ( Accounting | St Lucia , semester 2 2020 )` returns 'ACCT7101'
+     * @param string
+     * @param separator
+     * @returns {string|*}
+     */
+    const charactersBefore = (string, separator) => {
+        if (string.indexOf(separator) === -1) {
+            return string.trim();
+        }
+        return string.substr(0, string.indexOf(separator));
+    };
+
     const handleSearchButton = event => {
         event.preventDefault();
         if (!!searchKeyword) {
@@ -103,7 +117,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
             if (isCourseResourceSearch || isExamSearch) {
                 // because the display text in the dropdown has the descriptors in it, that text reaches here.
                 // trim down to the course code only
-                keyword = searchKeyword.substr(0, searchKeyword.indexOf(' '));
+                keyword = charactersBefore(searchKeyword, ' ');
             }
             const link = locale.typeSelect.items[searchType].link
                 .replace('[keyword]', keyword)
@@ -112,20 +126,49 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         }
     };
 
+    /**
+     * when they click on a particular suggestion they should go straight to the result for it
+     * @param event
+     * @param typedText
+     */
+    const visitSelectedLink = (event, typedText) => {
+        event.preventDefault();
+        let link;
+        if (isCourseResourceSearch) {
+            const suggestion = suggestions.find(item => item.text === typedText);
+            link = suggestion?.rest?.url || '';
+        } else if (isExamSearch) {
+            // because the display text in the dropdown has the descriptors in it, that text reaches here.
+            // trim down to the course code only
+            const courseCode = charactersBefore(typedText, ' ');
+            link = locale.typeSelect?.items[searchType]?.link?.replace('[keyword]', courseCode) || '';
+        } else {
+            // if we had a suggest api for Databases, we would need to duplicate the keyword replace,
+            // as it has two instances
+            link = locale.typeSelect?.items[searchType]?.link?.replace('[keyword]', typedText) || '';
+        }
+        !!link ? window.location.assign(link) : alert('sorry, we could not load that link - please try again...');
+    };
+
     const throttledPrimoLoadSuggestions = useRef(throttle(3100, newValue => actions.loadPrimoSuggestions(newValue)));
-    const handleSearchKeywordChange = React.useCallback(
-        (event, newValue) => {
-            setSearchKeyword(newValue);
-            if (newValue.length > 3 && !isRepeatingString(newValue)) {
+    const throttledExamLoadSuggestions = useRef(throttle(3100, newValue => actions.loadExamPaperSuggestions(newValue)));
+    const throttledReadingListLoadSuggestions = useRef(
+        throttle(3100, newValue => actions.loadHomepageCourseReadingListsSuggestions(newValue)),
+    );
+
+    const getSuggestions = React.useCallback(
+        (event, typedText) => {
+            setSearchKeyword(typedText);
+            if (typedText.length > 3 && !isRepeatingString(typedText)) {
                 if ([0, 1, 3, 4, 5].includes(searchType)) {
-                    throttledPrimoLoadSuggestions.current(newValue);
+                    throttledPrimoLoadSuggestions.current(typedText);
                 } else if (isExamSearch) {
-                    actions.loadExamPaperSuggestions(newValue);
+                    throttledExamLoadSuggestions.current(typedText);
                 } else if (isCourseResourceSearch) {
-                    // on the first pass we only get what they types;
+                    // on the first pass we only get what they type;
                     // on the second pass we get the full description string
-                    const keyword = newValue.substr(0, newValue.indexOf(' '));
-                    actions.loadHomepageCourseReadingListsSuggestions(keyword || newValue);
+                    const coursecode = charactersBefore(typedText, ' ');
+                    throttledReadingListLoadSuggestions.current(coursecode || typedText);
                 }
                 focusOnSearchInput();
             } else {
@@ -184,12 +227,15 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                         .map(option => unescapeString(option.text))) ||
                                 []
                             }
-                            onInputChange={handleSearchKeywordChange}
+                            onInputChange={getSuggestions}
                             ListboxProps={{
                                 'aria-labelledby': 'primo-search-select-label',
                                 id: 'primo-search-autocomplete-listbox',
                                 'data-testid': 'primo-search-autocomplete-listbox',
                                 'aria-label': 'Suggestion list',
+                            }}
+                            onChange={(event, value) => {
+                                visitSelectedLink(event, value);
                             }}
                             renderInput={params => {
                                 return (
@@ -215,10 +261,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                         />
                     </Grid>
                     <Grid item xs={'auto'} style={{ width: 90, marginLeft: -70, marginRight: -20, marginBottom: 6 }}>
-                        <VoiceToText
-                            sendHandler={handleSearchKeywordChange}
-                            clearSuggestions={handleClearSuggestions}
-                        />
+                        <VoiceToText sendHandler={getSuggestions} clearSuggestions={handleClearSuggestions} />
                     </Grid>
                     {suggestionsLoading && (
                         <Grid
