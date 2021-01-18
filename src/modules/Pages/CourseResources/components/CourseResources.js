@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
+import { throttle } from 'throttle-debounce';
 
 import locale from '../courseResources.locale';
 import global from 'locale/global';
@@ -109,6 +110,13 @@ export const CourseResources = ({
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
 
+    const throttledGuideLoad = useRef(throttle(5000, classnumber => actions.loadGuides(classnumber)));
+    const throttledExamsLoad = useRef(throttle(5000, classnumber => actions.loadExams(classnumber)));
+    const throttledReadingListLoad = useRef(
+        throttle(5000, (classnumber, campus, semester, account) =>
+            actions.loadReadingLists(classnumber, campus, semester, account),
+        ),
+    );
     const loadNewSubject = React.useCallback(
         (classnumber, campus, semester) => {
             const minLengthOfValidCourseCode = 8;
@@ -117,15 +125,15 @@ export const CourseResources = ({
             }
 
             if (!currentGuidesList[classnumber]) {
-                actions.loadGuides(classnumber);
+                throttledGuideLoad(classnumber);
             }
 
             if (!currentExamsList[classnumber]) {
-                actions.loadExams(classnumber);
+                throttledExamsLoad(classnumber);
             }
 
             if (!currentReadingLists[classnumber]) {
-                actions.loadReadingLists(classnumber, campus, semester, account);
+                throttledReadingListLoad(classnumber, campus, semester, account);
             }
         },
         [currentGuidesList, currentExamsList, currentReadingLists, account, actions],
