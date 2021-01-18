@@ -136,7 +136,7 @@ export const CourseResources = ({
                 throttledReadingListLoad.current(classnumber, campus, semester, account);
             }
         },
-        [currentGuidesList, currentExamsList, currentReadingLists, account, actions],
+        [currentGuidesList, currentExamsList, currentReadingLists, account],
     );
 
     const params = getQueryParams(location.search);

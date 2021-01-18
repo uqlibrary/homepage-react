@@ -168,7 +168,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                     // on the first pass we only get what they type;
                     // on the second pass we get the full description string
                     const coursecode = charactersBefore(typedText, ' ');
-                    throttledReadingListLoadSuggestions.current(coursecode || typedText);
+                    throttledReadingListLoadSuggestions.current(coursecode);
                 }
                 focusOnSearchInput();
             } else {

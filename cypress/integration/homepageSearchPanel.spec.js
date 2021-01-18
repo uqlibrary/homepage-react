@@ -49,9 +49,9 @@ context('Homepage Search Panel', () => {
             .its('length')
             .should('eq', 11);
 
-        // main library search
+        // main library search (choose Books)
         cy.get('div[data-testid="primo-search-select"]').click();
-        cy.get('li[data-testid="primo-search-item-0"]').click();
+        cy.get('li[data-testid="primo-search-item-1"]').click();
         cy.get('button[data-testid="primo-search-autocomplete-voice-clear"]').click();
         cy.get('input[data-testid="primo-search-autocomplete-input"]').type('beard', 100);
         cy.get('ul[data-testid="primo-search-autocomplete-listbox"]')
@@ -68,5 +68,12 @@ context('Homepage Search Panel', () => {
             .find('li')
             .its('length')
             .should('eq', 21);
+
+        // databases (no suggestion api rpovided)
+        cy.get('div[data-testid="primo-search-select"]').click();
+        cy.get('li[data-testid="primo-search-item-6"]').click();
+        cy.get('button[data-testid="primo-search-autocomplete-voice-clear"]').click();
+        cy.get('input[data-testid="primo-search-autocomplete-input"]').type('history', 100);
+        cy.get('ul[data-testid="primo-search-autocomplete-listbox"]').should('not.exist');
     });
 });
