@@ -1455,7 +1455,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               5,
                                                             ],
                                                             "label": "Advanced search",
-                                                            "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced",
+                                                            "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                           },
                                                           Object {
                                                             "display": Array [
@@ -1467,7 +1467,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               5,
                                                             ],
                                                             "label": "Database search",
-                                                            "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ",
+                                                            "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                           },
                                                           Object {
                                                             "display": Array [
@@ -1481,7 +1481,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               6,
                                                             ],
                                                             "label": "Browse databases",
-                                                            "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ",
+                                                            "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                           },
                                                           Object {
                                                             "display": Array [
@@ -1493,7 +1493,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               5,
                                                             ],
                                                             "label": "Browse search",
-                                                            "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                            "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                           },
                                                           Object {
                                                             "display": Array [
@@ -1501,7 +1501,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               8,
                                                             ],
                                                             "label": "Browse courses",
-                                                            "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                            "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                           },
                                                         ],
                                                         "typeSelect": Object {
@@ -1511,7 +1511,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,exclude,newspaper_articles,lk&facet=rtype,exclude,reviews,lk",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=rtype,exclude,newspaper_articles,lk&facet=rtype,exclude,reviews,lk",
                                                               "name": "Library",
                                                               "placeholder": "Find books, articles, databases, Library guides & more",
                                                             },
@@ -1520,7 +1520,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,include,books",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=rtype,include,books",
                                                               "name": "Books",
                                                               "placeholder": "Enter a keyword, title, author etc...",
                                                             },
@@ -1529,7 +1529,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,include,articles",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=rtype,include,articles",
                                                               "name": "Journal articles",
                                                               "placeholder": "Enter a keyword, article title, author, publication etc...",
                                                             },
@@ -1538,7 +1538,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&mfacet=rtype,include,videos,1&mfacet=rtype,include,audios,1",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&mfacet=rtype,include,videos,1&mfacet=rtype,include,audios,1",
                                                               "name": "Video & audio",
                                                               "placeholder": "Enter a keyword, title, cast, crew, composer, artist etc...",
                                                             },
@@ -1547,7 +1547,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=title,contains,[keyword],AND&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&mfacet=rtype,include,newspapers,1&mfacet=rtype,include,journals,1&mode=advanced",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=title,contains,[keyword],AND&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&mfacet=rtype,include,newspapers,1&mfacet=rtype,include,journals,1&mode=advanced",
                                                               "name": "Journals",
                                                               "placeholder": "Enter a journal or newspaper title",
                                                             },
@@ -1556,7 +1556,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=tlevel,include,physical_items",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=tlevel,include,physical_items",
                                                               "name": "Physical items",
                                                               "placeholder": "Enter a keyword, title, author etc...",
                                                             },
@@ -1565,7 +1565,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                 color="secondary"
                                                                 size="small"
                                                               />,
-                                                              "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]",
+                                                              "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                               "name": "Databases",
                                                               "placeholder": "Enter a database title",
                                                             },
@@ -4922,7 +4922,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       5,
                                                                                                     ],
                                                                                                     "label": "Advanced search",
-                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced",
+                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                                                                   },
                                                                                                   Object {
                                                                                                     "display": Array [
@@ -4934,7 +4934,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       5,
                                                                                                     ],
                                                                                                     "label": "Database search",
-                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ",
+                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                                                                   },
                                                                                                   Object {
                                                                                                     "display": Array [
@@ -4948,7 +4948,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       6,
                                                                                                     ],
                                                                                                     "label": "Browse databases",
-                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ",
+                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                                                                   },
                                                                                                   Object {
                                                                                                     "display": Array [
@@ -4960,7 +4960,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       5,
                                                                                                     ],
                                                                                                     "label": "Browse search",
-                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                                                                   },
                                                                                                   Object {
                                                                                                     "display": Array [
@@ -4968,7 +4968,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       8,
                                                                                                     ],
                                                                                                     "label": "Browse courses",
-                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                                    "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                                                                   },
                                                                                                 ],
                                                                                                 "typeSelect": Object {
@@ -4978,7 +4978,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,exclude,newspaper_articles,lk&facet=rtype,exclude,reviews,lk",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=rtype,exclude,newspaper_articles,lk&facet=rtype,exclude,reviews,lk",
                                                                                                       "name": "Library",
                                                                                                       "placeholder": "Find books, articles, databases, Library guides & more",
                                                                                                     },
@@ -4987,7 +4987,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,include,books",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=rtype,include,books",
                                                                                                       "name": "Books",
                                                                                                       "placeholder": "Enter a keyword, title, author etc...",
                                                                                                     },
@@ -4996,7 +4996,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=rtype,include,articles",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=rtype,include,articles",
                                                                                                       "name": "Journal articles",
                                                                                                       "placeholder": "Enter a keyword, article title, author, publication etc...",
                                                                                                     },
@@ -5005,7 +5005,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&mfacet=rtype,include,videos,1&mfacet=rtype,include,audios,1",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&mfacet=rtype,include,videos,1&mfacet=rtype,include,audios,1",
                                                                                                       "name": "Video & audio",
                                                                                                       "placeholder": "Enter a keyword, title, cast, crew, composer, artist etc...",
                                                                                                     },
@@ -5014,7 +5014,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=title,contains,[keyword],AND&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&mfacet=rtype,include,newspapers,1&mfacet=rtype,include,journals,1&mode=advanced",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=title,contains,[keyword],AND&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&mfacet=rtype,include,newspapers,1&mfacet=rtype,include,journals,1&mode=advanced",
                                                                                                       "name": "Journals",
                                                                                                       "placeholder": "Enter a journal or newspaper title",
                                                                                                     },
@@ -5023,7 +5023,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&facet=tlevel,include,physical_items",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/search?query=any,contains,[keyword]&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&facet=tlevel,include,physical_items",
                                                                                                       "name": "Physical items",
                                                                                                       "placeholder": "Enter a keyword, title, author etc...",
                                                                                                     },
@@ -5032,7 +5032,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                         color="secondary"
                                                                                                         size="small"
                                                                                                       />,
-                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]",
+                                                                                                      "link": "https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview",
                                                                                                       "name": "Databases",
                                                                                                       "placeholder": "Enter a database title",
                                                                                                     },
@@ -5860,7 +5860,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                         data-testid="primo-search-links-1"
                                                                                       >
                                                                                         <a
-                                                                                          href="https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced"
+                                                                                          href="https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview"
                                                                                           rel="noreferrer"
                                                                                         >
                                                                                           Advanced search
@@ -5993,7 +5993,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                         data-testid="primo-search-links-2"
                                                                                       >
                                                                                         <a
-                                                                                          href="https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ"
+                                                                                          href="https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview"
                                                                                           rel="noreferrer"
                                                                                         >
                                                                                           Database search
@@ -6126,7 +6126,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                                         data-testid="primo-search-links-5"
                                                                                       >
                                                                                         <a
-                                                                                          href="https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank"
+                                                                                          href="https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview"
                                                                                           rel="noreferrer"
                                                                                         >
                                                                                           Browse search

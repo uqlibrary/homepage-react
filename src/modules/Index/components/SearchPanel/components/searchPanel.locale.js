@@ -10,7 +10,8 @@ import PublicIcon from '@material-ui/icons/Public';
 import SchoolIcon from '@material-ui/icons/School';
 import StorageIcon from '@material-ui/icons/Storage';
 
-const primoPrefix = '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0';
+const primoPrefix =
+    '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview';
 
 export const searchPanelLocale = {
     typeSelect: {
@@ -75,7 +76,7 @@ export const searchPanelLocale = {
                 icon: <StorageIcon size="small" color="secondary" />,
                 placeholder: 'Enter a database title',
                 link:
-                    'https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]',
+                    'https://search.library.uq.edu.au/primo-explore/dbsearch?query=any,contains,[keyword]&tab=jsearch_slot&vid=61UQ&offset=0&databases=any,[keyword]&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
             },
             {
                 name: 'Past exam papers',
@@ -100,12 +101,14 @@ export const searchPanelLocale = {
         },
         {
             label: 'Advanced search',
-            link: 'https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
             display: [0, 1, 2, 3, 4, 5],
         },
         {
             label: 'Database search',
-            link: 'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
             display: [0, 1, 2, 3, 4, 5],
         },
         {
@@ -116,17 +119,20 @@ export const searchPanelLocale = {
         },
         {
             label: 'Browse databases',
-            link: 'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
             display: [6],
         },
         {
             label: 'Browse search',
-            link: 'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
             display: [0, 1, 2, 3, 4, 5],
         },
         {
             label: 'Browse courses',
-            link: 'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
             display: [7, 8],
         },
     ],

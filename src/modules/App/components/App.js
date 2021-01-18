@@ -95,7 +95,8 @@ export const App = ({
         actions.loadCurrentAccount();
         actions.loadAlerts();
         actions.loadChatStatus();
-    }, [actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const classes = useStyles();
     const isAuthorizedUser = accountLoading === false && account !== null;
