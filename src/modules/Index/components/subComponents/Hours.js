@@ -311,12 +311,12 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                                             key={index}
                                             className={classes.row}
                                             alignItems={'flex-start'}
+                                            style={{ marginLeft: 8 }}
                                         >
                                             <Grid item xs={4}>
                                                 <a
                                                     aria-label={ariaLabelForLocation(item)}
                                                     href={item.url}
-                                                    style={{ marginLeft: 8 }}
                                                     className={
                                                         (cookies.location === item.campus && classes.selectedCampus) ||
                                                         ''
