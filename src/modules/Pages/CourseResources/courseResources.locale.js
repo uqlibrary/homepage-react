@@ -45,7 +45,7 @@ export default {
                 multiple: 'More than one reading list found for [classnumber]. Please select a list:',
                 footer: {
                     linkLabel: 'Search other reading lists',
-                    linkOut: 'http://lr.library.uq.edu.au/index.html',
+                    linkOut: 'https://uq.rl.talis.com/index.html',
                 },
             },
             footer: {

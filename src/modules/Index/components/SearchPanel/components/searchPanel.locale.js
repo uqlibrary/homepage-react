@@ -89,7 +89,6 @@ export const searchPanelLocale = {
                 icon: <ListAltIcon size="small" color="secondary" />,
                 placeholder: 'Enter a course code',
                 link: 'https://uq.rl.talis.com/search.html?q=[keyword]',
-                // link: 'http://lr.library.uq.edu.au/search?q=[keyword]',
             },
         ],
     },

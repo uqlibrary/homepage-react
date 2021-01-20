@@ -4248,23 +4248,23 @@ exports[`Application component should render for anon user 1`] = `
                             </div>
                           </ForwardRef(Grid)>
                         </WithStyles(ForwardRef(Grid))>
+                        <span
+                          aria-label="Start of content"
+                          id="after-navigation"
+                          role="region"
+                          style={
+                            Object {
+                              "left": "-2000px",
+                              "position": "fixed",
+                              "top": "-2000px",
+                            }
+                          }
+                          tabIndex="0"
+                        >
+                          Start of content
+                        </span>
                       </div>
                     </UQSiteHeader>
-                    <span
-                      aria-label="Start of content"
-                      id="afterNavigation"
-                      role="region"
-                      style={
-                        Object {
-                          "left": "-2000px",
-                          "position": "fixed",
-                          "top": "-2000px",
-                        }
-                      }
-                      tabIndex="0"
-                    >
-                      Start of content
-                    </span>
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
@@ -23559,23 +23559,23 @@ exports[`Application component should render loading screen while account is loa
                             </div>
                           </ForwardRef(Grid)>
                         </WithStyles(ForwardRef(Grid))>
+                        <span
+                          aria-label="Start of content"
+                          id="after-navigation"
+                          role="region"
+                          style={
+                            Object {
+                              "left": "-2000px",
+                              "position": "fixed",
+                              "top": "-2000px",
+                            }
+                          }
+                          tabIndex="0"
+                        >
+                          Start of content
+                        </span>
                       </div>
                     </UQSiteHeader>
-                    <span
-                      aria-label="Start of content"
-                      id="afterNavigation"
-                      role="region"
-                      style={
-                        Object {
-                          "left": "-2000px",
-                          "position": "fixed",
-                          "top": "-2000px",
-                        }
-                      }
-                      tabIndex="0"
-                    >
-                      Start of content
-                    </span>
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"

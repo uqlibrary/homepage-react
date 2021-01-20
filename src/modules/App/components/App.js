@@ -135,15 +135,6 @@ export const App = ({
                     libHours={libHours}
                     libHoursloading={libHoursLoading}
                 />
-                <span
-                    id="afterNavigation"
-                    role="region"
-                    tabIndex="0"
-                    aria-label="Start of content"
-                    style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
-                >
-                    Start of content
-                </span>
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
                 </div>
