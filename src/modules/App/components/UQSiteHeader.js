@@ -175,6 +175,15 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Hidden>
             </Grid>
+            <span
+                id="after-navigation"
+                role="region"
+                tabIndex="0"
+                aria-label="Start of content"
+                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+            >
+                Start of content
+            </span>
         </div>
     );
 };
