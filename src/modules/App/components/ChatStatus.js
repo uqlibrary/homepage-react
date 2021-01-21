@@ -85,7 +85,7 @@ export const ChatStatus = ({ status }) => {
                 data-testid={`chat-status-snackbar-${status.online ? 'online' : 'offline'}`}
             >
                 <div>
-                    <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
+                    <Grid container spacing={2} alignContent="center" alignItems="center" direction="row">
                         <Grid item xs>
                             Chat&nbsp;online&nbsp;now
                         </Grid>
@@ -136,7 +136,7 @@ export const ChatStatus = ({ status }) => {
                 data-testid={'chat-status-snackbar-offline'}
             >
                 <div>
-                    <Grid container spacing={2} alignContent={'center'} alignItems={'center'}>
+                    <Grid container spacing={2} alignContent="center" alignItems="center" direction="row">
                         <Grid item xs>
                             Online&nbsp;chat&nbsp;unavailable
                         </Grid>
