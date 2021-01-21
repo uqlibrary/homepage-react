@@ -24,7 +24,7 @@ const useStyles = makeStyles(
             paddingBottom: 8,
             paddingLeft: 16,
             paddingRight: 16,
-            minWidth: 300,
+            minWidth: 260,
             borderRadius: 4,
         },
         chatAction: {
