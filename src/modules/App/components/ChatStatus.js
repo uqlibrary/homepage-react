@@ -24,7 +24,7 @@ const useStyles = makeStyles(
             paddingBottom: 8,
             paddingLeft: 16,
             paddingRight: 16,
-            // width: 340,
+            minWidth: 350,
             borderRadius: 4,
         },
         chatAction: {
@@ -84,41 +84,35 @@ export const ChatStatus = ({ status }) => {
                 id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}`}
                 data-testid={`chat-status-snackbar-${status.online ? 'online' : 'offline'}`}
             >
-                <div>
-                    <Grid container spacing={2} alignContent="center" alignItems="center" direction="row">
-                        <Grid item xs>
-                            Chat&nbsp;online&nbsp;now
-                        </Grid>
-                        <Grid item xs={'auto'}>
-                            <Button
-                                color="primary"
-                                size="small"
-                                variant="contained"
-                                onClick={launchChat}
-                                id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-launch-button`}
-                                data-testid={`chat-status-snackbar-${
-                                    status.online ? 'online' : 'offline'
-                                }-launch-button`}
-                            >
-                                Launch
-                            </Button>
-                        </Grid>
-                        <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
-                            <IconButton
-                                size="small"
-                                aria-label="close"
-                                color="inherit"
-                                onClick={closeChatStatus}
-                                id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-close-button`}
-                                data-testid={`chat-status-snackbar-${
-                                    status.online ? 'online' : 'offline'
-                                }-close-button`}
-                            >
-                                <CloseIcon fontSize="small" />
-                            </IconButton>
-                        </Grid>
+                <Grid container spacing={2} alignContent="center" alignItems="center" direction="row">
+                    <Grid item xs>
+                        Chat&nbsp;online&nbsp;now
                     </Grid>
-                </div>
+                    <Grid item xs={'auto'}>
+                        <Button
+                            color="primary"
+                            size="small"
+                            variant="contained"
+                            onClick={launchChat}
+                            id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-launch-button`}
+                            data-testid={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-launch-button`}
+                        >
+                            Launch
+                        </Button>
+                    </Grid>
+                    <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
+                        <IconButton
+                            size="small"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={closeChatStatus}
+                            id={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-close-button`}
+                            data-testid={`chat-status-snackbar-${status.online ? 'online' : 'offline'}-close-button`}
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </Grid>
+                </Grid>
             </Snackbar>
         );
     }
@@ -135,37 +129,35 @@ export const ChatStatus = ({ status }) => {
                 id={'chat-status-snackbar-offline'}
                 data-testid={'chat-status-snackbar-offline'}
             >
-                <div>
-                    <Grid container spacing={2} alignContent="center" alignItems="center" direction="row">
-                        <Grid item xs>
-                            Online&nbsp;chat&nbsp;unavailable
-                        </Grid>
-                        <Grid item xs={'auto'}>
-                            <Button
-                                color="primary"
-                                size="small"
-                                variant="contained"
-                                onClick={openContactUs}
-                                id={'chat-status-snackbar-offline-launch-button'}
-                                data-testid={'chat-status-snackbar-offline-launch-button'}
-                            >
-                                Contact us
-                            </Button>
-                        </Grid>
-                        <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
-                            <IconButton
-                                size="small"
-                                aria-label="close"
-                                color="inherit"
-                                onClick={closeChatStatus}
-                                id={'chat-status-snackbar-offline-close-button'}
-                                data-testid={'chat-status-snackbar-offline-close-button'}
-                            >
-                                <CloseIcon fontSize="small" />
-                            </IconButton>
-                        </Grid>
+                <Grid container spacing={2} alignContent="center" alignItems="center" direction="row">
+                    <Grid item xs>
+                        Online&nbsp;chat&nbsp;unavailable
                     </Grid>
-                </div>
+                    <Grid item xs={'auto'}>
+                        <Button
+                            color="primary"
+                            size="small"
+                            variant="contained"
+                            onClick={openContactUs}
+                            id={'chat-status-snackbar-offline-launch-button'}
+                            data-testid={'chat-status-snackbar-offline-launch-button'}
+                        >
+                            Contact us
+                        </Button>
+                    </Grid>
+                    <Grid item xs={'auto'} style={{ marginLeft: -8, marginRight: -8 }}>
+                        <IconButton
+                            size="small"
+                            aria-label="close"
+                            color="inherit"
+                            onClick={closeChatStatus}
+                            id={'chat-status-snackbar-offline-close-button'}
+                            data-testid={'chat-status-snackbar-offline-close-button'}
+                        >
+                            <CloseIcon fontSize="small" />
+                        </IconButton>
+                    </Grid>
+                </Grid>
             </Snackbar>
         );
     }
