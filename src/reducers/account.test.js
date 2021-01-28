@@ -234,6 +234,7 @@ describe('account reducer', () => {
             ...emptyState,
             trainingEvents: null,
             trainingEventsLoading: false,
+            trainingEventsError: true,
         });
     });
 });
