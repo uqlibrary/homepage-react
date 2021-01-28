@@ -8,6 +8,7 @@ import { showAppAlert } from 'actions/app';
 import locale from 'locale/global';
 import Raven from 'raven-js';
 import param from 'can-param';
+import { TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -94,6 +95,7 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
+        const listSkip500s = [TRAINING_API().apiUrl];
         if (!!error && !!error.config) {
             if (!!error.response && !!error.response.status && error.response.status === 403) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
@@ -111,8 +113,13 @@ api.interceptors.response.use(
             if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
                 errorMessage =
                     ((error.response || {}).data || {}).message || locale.global.errorMessages[error.response.status];
-                if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
-                    global.mockActionsStore.dispatch(showAppAlert(error.response.data));
+                if (
+                    !!error.response?.request?.responseUrl &&
+                    listSkip500s.includes(error.response.request.responseUrl)
+                ) {
+                    // we dont display an error banner for these (the associated panel displays an error)
+                } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
+                    global.mockActionsStore.dispatch(showAppAlert(error.response));
                 } else {
                     store.dispatch(showAppAlert(error.response.data));
                 }

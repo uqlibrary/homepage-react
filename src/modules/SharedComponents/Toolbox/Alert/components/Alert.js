@@ -508,8 +508,8 @@ Alert.propTypes = {
 };
 
 Alert.defaultProps = {
-    allowDismiss: false,
-    canHide: false,
+    allowDismiss: true,
+    canHide: true,
     customIcon: null,
     customType: null,
     disableAlertClick: false,
