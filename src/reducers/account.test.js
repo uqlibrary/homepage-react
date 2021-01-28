@@ -216,6 +216,7 @@ describe('account reducer', () => {
             ...emptyState,
             libHours: null,
             libHoursLoading: false,
+            libHoursError: true,
         });
     });
 

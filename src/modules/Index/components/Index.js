@@ -103,6 +103,7 @@ export const Index = ({
     spotlightsLoading,
     libHours,
     libHoursLoading,
+    libHoursError,
     computerAvailability,
     computerAvailabilityLoading,
     computerAvailabilityError,
@@ -213,7 +214,12 @@ export const Index = ({
                     {/* Hours panel, logged out */}
                     {accountLoading === false && !account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
+                            <Hours
+                                libHours={libHours}
+                                libHoursLoading={libHoursLoading}
+                                libHoursError={libHoursError}
+                                account={account}
+                            />
                         </Grid>
                     )}
                     <Grid item xs={12} md={4} data-testid="computer-availability-panel">
@@ -226,7 +232,12 @@ export const Index = ({
                     </Grid>
                     {accountLoading === false && !!account && (
                         <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours libHours={libHours} libHoursLoading={libHoursLoading} account={account} />
+                            <Hours
+                                libHours={libHours}
+                                libHoursLoading={libHoursLoading}
+                                libHoursError={libHoursError}
+                                account={account}
+                            />
                         </Grid>
                     )}
 
@@ -269,6 +280,7 @@ Index.propTypes = {
     spotlightsLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    libHoursError: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
     computerAvailabilityError: PropTypes.bool,

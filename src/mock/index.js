@@ -129,6 +129,7 @@ mock.onGet(routes.LOANS_API().apiUrl)
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl)
     .reply(withDelay([200, libHours]));
+    // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl)
     .reply(withDelay([200, possibleRecords]));
