@@ -21,7 +21,7 @@ export function loadPrimoSuggestions(keyword) {
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
-                console.log('RESPONSE', data);
+                console.log('primo jsonp RESPONSE', data);
                 const payload =
                     (data &&
                         data.response &&

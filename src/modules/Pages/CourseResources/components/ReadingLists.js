@@ -83,7 +83,8 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
     const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
 
     const singleReadingListLength = readingList => {
-        return !!readingList &&
+        return !readingListError &&
+            !!readingList &&
             !!readingList.reading_lists &&
             readingList.reading_lists.length === 1 &&
             !!readingList.reading_lists[0] &&

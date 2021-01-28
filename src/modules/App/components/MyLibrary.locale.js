@@ -44,7 +44,7 @@ export const myLibraryLocale = {
         {
             dataTestid: 'document-delivery',
             label: 'Document delivery',
-            link: 'https://qu.relais-host.com/my/request.html?requestType=open',
+            link: 'https://auth.library.uq.edu.au/login?relais_return=1',
             icon: <SchoolIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
             condition: seeDocumentDelivery,
             ariaLabel: '',

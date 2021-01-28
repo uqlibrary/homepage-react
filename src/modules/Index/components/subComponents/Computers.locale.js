@@ -11,7 +11,8 @@ export const computersLocale = {
         'Gatton Campus Library': 'Gatton',
         'Herston Health Sciences Library': 'Herston',
         'Law Library': 'St Lucia',
-        Whitty: 'Other',
+        'Whitty Mater': 'Other',
         'PACE Health Sciences Library': 'Other',
     },
+    unavailable: "We can't load computer availability right now. Please refresh your browser or try again later.",
 };

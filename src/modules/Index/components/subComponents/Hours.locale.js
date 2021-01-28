@@ -34,4 +34,5 @@ export const hoursLocale = {
             color: 'primary',
         },
     ],
+    unavailable: 'We can’t load opening hours right now. Please refresh your browser or try again later.',
 };

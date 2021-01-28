@@ -163,7 +163,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
+const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || undefined);
@@ -229,13 +229,24 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
             setCollapse({ [index]: false });
         } else {
             setCollapse({ [index]: true });
+            if (index !== 0) {
+                setTimeout(() => {
+                    document.getElementById('computers-library-content').scrollBy({
+                        top: 32,
+                        left: 0,
+                        behavior: 'smooth',
+                    });
+                }, 100);
+            }
         }
     };
     const closeMap = () => {
         setMapSrc(null);
     };
-    const openMap = (library, building, room, level, total, available) => {
-        setMapSrc({ library, building, room, level, total, available });
+    const openMap = (library, building, room, level, total, available, floorplan) => {
+        if (!!floorplan) {
+            setMapSrc({ library, building, room, level, total, available, floorplan });
+        }
     };
     const MapPopup = ({}) => {
         if (!!mapSrc) {
@@ -344,7 +355,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                         color="primary"
                                         badgeContent={<CheckIcon size="small" className={classes.badgeIcon} />}
                                     >
-                                        <RoomIcon />
+                                        <RoomIcon data-testid="computers-wiggler" />
                                     </Badge>
                                 </Tooltip>
                             </Fade>
@@ -356,9 +367,16 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
         >
             <MapPopup />
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
-                {computerAvailability && !computerAvailabilityLoading ? (
+                {!!computerAvailabilityError && (
                     <Fade in={!computerAvailabilityLoading} timeout={1000}>
                         <div className={classes.flexContent}>
+                            <Typography style={{ padding: '1rem' }}>{computersLocale.unavailable}</Typography>
+                        </div>
+                    </Fade>
+                )}
+                {!computerAvailabilityError && computerAvailability && !computerAvailabilityLoading && (
+                    <Fade in={!computerAvailabilityLoading} timeout={1000}>
+                        <div className={classes.flexContent} id="computers-library-content">
                             {!!sortedComputers &&
                                 sortedComputers.length > 1 &&
                                 sortedComputers.map((item, index) => {
@@ -383,7 +401,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                         classes={{
                                                             root: classes.linkButton,
                                                             label: `${classes.linkButtonLabel} ${
-                                                                cookies.location === item.campus
+                                                                item.campus && cookies.location === item.campus
                                                                     ? classes.selectedCampus
                                                                     : ''
                                                             }`,
@@ -423,6 +441,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                                         level.level
                                                                     }. ${level.available} of ${level.available +
                                                                         level.occupied} computers free`}
+                                                                    disabled={!level.floorplan}
                                                                     onClick={() =>
                                                                         openMap(
                                                                             item.library,
@@ -431,6 +450,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                                                             level.level,
                                                                             level.total,
                                                                             level.available,
+                                                                            level.floorplan,
                                                                         )
                                                                     }
                                                                     classes={{
@@ -462,7 +482,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                 })}
                         </div>
                     </Fade>
-                ) : (
+                )}
+                {!computerAvailabilityError && !(computerAvailability && !computerAvailabilityLoading) && (
                     <div className={classes.flexLoaderContent}>
                         <MyLoader />
                     </div>
@@ -475,6 +496,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
 Computers.propTypes = {
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
+    computerAvailabilityError: PropTypes.bool,
 };
 
 Computers.defaultProps = {};

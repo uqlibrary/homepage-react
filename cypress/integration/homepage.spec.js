@@ -299,9 +299,9 @@ context('Homepage', () => {
         cy.get('#skipNavigation')
             .first()
             .focus()
-            .type('{enter}', { force: true });
-
+            .click();
+        // .type('{enter}', { force: true });
         // current focus is now on an element after the header block
-        cy.focused().should('have.attr', 'id', 'afterNavigation');
+        cy.focused().should('have.attr', 'id', 'primo-search-autocomplete');
     });
 });

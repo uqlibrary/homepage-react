@@ -1,5 +1,6 @@
 import * as actions from 'actions/actionTypes';
 import accountReducer from './account';
+import chatReducer from './chat';
 import { initialState, initSavingState } from './account';
 
 describe('account reducer', () => {
@@ -178,15 +179,15 @@ describe('account reducer', () => {
     });
 
     it('should set chat status loading flags to true when loading account', () => {
-        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_LOADING });
+        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_LOADING });
         expect(test).toEqual({
             ...emptyState,
-            chatStatus: { online: false },
+            chatStatus: null,
         });
     });
 
     it('should set chat status online when chat available', () => {
-        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: true } });
+        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: true } });
         expect(test).toEqual({
             ...emptyState,
             chatStatus: { online: true },
@@ -194,7 +195,7 @@ describe('account reducer', () => {
     });
 
     it('should set chat status offline when chat offline', () => {
-        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: false } });
+        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: false } });
         expect(test).toEqual({
             ...emptyState,
             chatStatus: { online: false },
@@ -202,10 +203,10 @@ describe('account reducer', () => {
     });
 
     it('should set chat status to null when failed loading', () => {
-        const test = accountReducer(emptyState, { type: actions.CHAT_STATUS_FAILED });
+        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_FAILED });
         expect(test).toEqual({
             ...emptyState,
-            chatStatus: { online: false },
+            chatStatus: { online: 'failed' },
         });
     });
 
@@ -215,6 +216,7 @@ describe('account reducer', () => {
             ...emptyState,
             libHours: null,
             libHoursLoading: false,
+            libHoursError: true,
         });
     });
 
@@ -224,6 +226,7 @@ describe('account reducer', () => {
             ...emptyState,
             computerAvailability: null,
             computerAvailabilityLoading: false,
+            computerAvailabilityError: true,
         });
     });
 
@@ -233,6 +236,7 @@ describe('account reducer', () => {
             ...emptyState,
             trainingEvents: null,
             trainingEventsLoading: false,
+            trainingEventsError: true,
         });
     });
 });

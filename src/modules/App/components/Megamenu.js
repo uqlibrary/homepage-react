@@ -116,6 +116,16 @@ const styles = theme => {
                 },
             },
         },
+        menuItem: {
+            [theme.breakpoints.up('lg')]: {
+                paddingTop: 0,
+                paddingBottom: 0,
+                '& div': {
+                    marginTop: 0,
+                    minHeight: 45,
+                },
+            },
+        },
     };
 };
 
@@ -296,7 +306,7 @@ export function Megamenu(props) {
                                 key={`megamenu-group-${index}-item-${index2}`}
                                 id={`megamenu-group-${index}-item-${index2}`}
                                 onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
-                                className={`classes.menuItem ${endItemClass}`}
+                                className={classNames(classes.menuItem, `${endItemClass}`)}
                             >
                                 <ListItemText
                                     classes={{

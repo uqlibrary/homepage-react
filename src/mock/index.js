@@ -56,7 +56,7 @@ if (user && !mockData.accounts[user]) {
 user = user || 'vanilla';
 
 const withDelay = (response) => config => {
-    const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
+    const randomTime = Math.floor(Math.random() * 100) + 1; // Change these values to delay mock API
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
@@ -119,6 +119,7 @@ mock.onGet(routes.CHAT_API().apiUrl)
 
 mock.onGet(routes.TRAINING_API(10).apiUrl)
     .reply(withDelay([200, training]));
+    // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.PRINTING_API().apiUrl)
     .reply(withDelay([200, printBalance]));
@@ -128,6 +129,7 @@ mock.onGet(routes.LOANS_API().apiUrl)
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl)
     .reply(withDelay([200, libHours]));
+    // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl)
     .reply(withDelay([200, possibleRecords]));
@@ -145,13 +147,21 @@ mock.onGet(routes.ALERT_API().apiUrl)
                 'title': 'Test urgent alert 2',
                 'body': '[urgent link description](http:\/\/www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
                 'urgent': 1,
-                },
+                }, {
+                    "id": "b1739480-4ef4-11eb-91a1-6d3f07452c24",
+                    "start": "2021-01-12 00:00:00",
+                    "end": "2021-02-12 00:00:00",
+                    "title": "The new Library home page is live!",
+                    "body": "However, you are seeing the previous version. You can refresh your browser cache to get the new home page now.[More about the new home page](https:\/\/web.library.uq.edu.au\/blog\/2021\/01\/discover-new-library-home-page)",
+                    "urgent": 0
+                }
             ],
         ]
     ));
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl)
     .reply(withDelay([200, computerAvailability]));
+    // .reply(withDelay([500, {}]));
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,

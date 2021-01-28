@@ -10,6 +10,8 @@ If you are using Github to edit, then your screen should look like this:
 3. Preview the change at <http://homepage-development.library.uq.edu.au/user-admin-manage/#/>
 4. Let devs know that you have a change to be merged in
 
+* If it does not pass on first go and you do not have permissions to view the error in AWS, it is suggested you immediately get a dev to fix it for you as they can fix code layout errors very simply. Worry about getting the words right :)
+
 ## To edit the Promo Panel on the homepage
 
 Edit [promoPanel.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/Index/components/subComponents/promoPanel.locale.js) and then follow the steps above
@@ -27,6 +29,8 @@ Notes:
 Edit [menu.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/locale/menu.js) and then follow the steps above
 
 Please leave the datatestid elements in place
+
+* Note: the older reusable-elements json file still needs to be updated identically at the time of writing, to provide the same menu to Drupal... [see the README](https://github.com/uqlibrary/uqlibrary-reusable-components#updating-ia)
 
 ## To edit the Footer
 

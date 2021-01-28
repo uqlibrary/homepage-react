@@ -72,9 +72,6 @@ const useStyles = makeStyles(
         actionButton: {
             marginRight: -4,
             '& .action': {
-                [theme.breakpoints.up('xs')]: {
-                    marginTop: 6,
-                },
                 [theme.breakpoints.down('xs')]: {
                     marginRight: 12,
                 },
@@ -511,13 +508,14 @@ Alert.propTypes = {
 };
 
 Alert.defaultProps = {
-    allowDismiss: false,
-    canHide: false,
+    allowDismiss: true,
+    canHide: true,
     customIcon: null,
     customType: null,
     disableAlertClick: false,
     dismissTitle: 'Click to dismiss this alert',
-    message: 'An error has occurred. If this continues after reloading the page, please email askus@library.uq.edu.au',
+    message:
+        'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
     showLoader: false,
     type: 'error',
     wiggle: null,

@@ -145,7 +145,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Training = ({ trainingEvents, trainingEventsLoading }) => {
+const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
     const classes = useStyles();
     const [eventDetail, setEventDetail] = React.useState(null);
     const handleEventDetail = event => {
@@ -180,45 +180,56 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
     return (
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
-                {trainingEvents && trainingEvents.length > 0 && !trainingEventsLoading && !eventDetail && (
+                {!!trainingEventsError && (
                     <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
-                        <div
-                            className={classes.flexContent}
-                            role="region"
-                            aria-live="assertive"
-                            aria-label="UQ training Events list"
-                        >
-                            {trainingEvents &&
-                                trainingEvents.length > 0 &&
-                                trainingEvents.map((event, index) => {
-                                    return (
-                                        <Grid container spacing={0} className={classes.row} key={index}>
-                                            <Grid item xs={12}>
-                                                <Button
-                                                    id={`training-event-detail-button-${event.entityId}`}
-                                                    data-testid={`training-event-detail-button-${index}`}
-                                                    onClick={() => handleEventDetail(event)}
-                                                    classes={{ root: classes.linkButton }}
-                                                    fullWidth
-                                                >
-                                                    <Grid container spacing={0} direction="column">
-                                                        <Grid item className={classes.linkButtonLabel}>
-                                                            {event.name}
-                                                        </Grid>
-                                                        <Grid item className={classes.eventSummary}>
-                                                            {eventTime(event.start)}
-                                                            {event.campus ? ` - ${event.campus}` : ''}
-                                                        </Grid>
-                                                    </Grid>
-                                                </Button>
-                                            </Grid>
-                                        </Grid>
-                                    );
-                                })}
+                        <div className={classes.flexContent} role="region">
+                            <Typography style={{ padding: '1rem' }}>{trainingLocale.unavailable}</Typography>
                         </div>
                     </Fade>
                 )}
-                {(!trainingEvents || trainingEventsLoading) && !eventDetail && (
+                {!trainingEventsError &&
+                    trainingEvents &&
+                    trainingEvents.length > 0 &&
+                    !trainingEventsLoading &&
+                    !eventDetail && (
+                        <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                            <div
+                                className={classes.flexContent}
+                                role="region"
+                                aria-live="assertive"
+                                aria-label="UQ training Events list"
+                            >
+                                {trainingEvents &&
+                                    trainingEvents.length > 0 &&
+                                    trainingEvents.map((event, index) => {
+                                        return (
+                                            <Grid container spacing={0} className={classes.row} key={index}>
+                                                <Grid item xs={12}>
+                                                    <Button
+                                                        id={`training-event-detail-button-${event.entityId}`}
+                                                        data-testid={`training-event-detail-button-${index}`}
+                                                        onClick={() => handleEventDetail(event)}
+                                                        classes={{ root: classes.linkButton }}
+                                                        fullWidth
+                                                    >
+                                                        <Grid container spacing={0} direction="column">
+                                                            <Grid item className={classes.linkButtonLabel}>
+                                                                {event.name}
+                                                            </Grid>
+                                                            <Grid item className={classes.eventSummary}>
+                                                                {eventTime(event.start)}
+                                                                {event.campus ? ` - ${event.campus}` : ''}
+                                                            </Grid>
+                                                        </Grid>
+                                                    </Button>
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    })}
+                            </div>
+                        </Fade>
+                    )}
+                {!trainingEventsError && (!trainingEvents || trainingEventsLoading) && !eventDetail && (
                     <div className={classes.flexLoader} aria-label="UQ training Events loading">
                         <MyLoader />
                     </div>
@@ -346,6 +357,7 @@ const Training = ({ trainingEvents, trainingEventsLoading }) => {
 Training.propTypes = {
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
+    trainingEventsError: PropTypes.bool,
 };
 
 Training.defaultProps = {};
