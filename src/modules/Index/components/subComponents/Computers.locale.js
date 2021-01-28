@@ -14,5 +14,5 @@ export const computersLocale = {
         'Whitty Mater': 'Other',
         'PACE Health Sciences Library': 'Other',
     },
-    unavailable: "Computer availability isn't available right now. Refresh to try again.",
+    unavailable: "We can't load computer availability right now. Please refresh your browser or try again later.",
 };

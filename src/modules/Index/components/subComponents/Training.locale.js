@@ -1,5 +1,5 @@
 export const trainingLocale = {
     title: 'Training',
     closeEvent: 'Close event detail',
-    unavailable: 'Training events currently unavailable. Refresh to try again.',
+    unavailable: 'We can’t load training events right now. Please refresh your browser or try again later.',
 };
