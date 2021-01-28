@@ -46,7 +46,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
     const itemCountLabel = _pluralise('item', listOfExams.length);
     const examPaperTitle = `${locale.myCourses.examPapers.title} ${
-        !!listOfExams && listOfExams.length > 0 ? `(${listOfExams.length} ${itemCountLabel})` : ''
+        !examListError && !!listOfExams && listOfExams.length > 0 ? `(${listOfExams.length} ${itemCountLabel})` : ''
     }`;
 
     return (

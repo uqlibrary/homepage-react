@@ -14,8 +14,11 @@ context('Megamenu', () => {
         cy.get('[data-testid=megamenu-submenus-item-0]').click();
 
         cy.get('[data-testid=megamenu-group-1-item-1]').contains(menu.publicmenu[0].submenuItems[1].primaryText);
-        // close sub menu so the Close button isnt covered up (close button removed from menu list)
-        // cy.get('[data-testid=megamenu-submenus-item-0]').click();
+
+        // open a lower menu
+        cy.get('[data-testid=megamenu-submenus-item-4]').click();
+        // the screen should scroll up and show the full menus, otherwise we often end with the menu off screen
+        cy.get('div[data-testid="megamenu-submenus-item-0"]').should('be.visible');
 
         // close the hamburger menu
         cy.get('[data-testid=mobile-menu]')

@@ -47,8 +47,13 @@ export const UQHeader = ({}) => {
     };
 
     const skipNav = () => {
-        const afterNavigation = document.getElementById('primo-search-autocomplete');
-        !!afterNavigation && afterNavigation.focus();
+        const homepageSearchPanelField = document.getElementById('primo-search-autocomplete');
+        !!homepageSearchPanelField && homepageSearchPanelField.focus();
+        // searchpanel only available on homepage
+        if (!homepageSearchPanelField) {
+            const afterNavigation = document.getElementById('after-navigation');
+            !!afterNavigation && afterNavigation.focus();
+        }
         return false;
     };
 
@@ -59,7 +64,7 @@ export const UQHeader = ({}) => {
     };
 
     return (
-        <header className="uq-header">
+        <header className="uq-header" id="uqheader">
             <div className="uq-header__container">
                 <div className="nav-global">
                     <a

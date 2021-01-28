@@ -203,6 +203,12 @@ export default {
                     linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-essentials',
                     column: 2,
                 },
+                {
+                    primaryText: 'Digital Researcher Lab',
+                    secondaryText: 'Projects, tools and support',
+                    linkTo: 'https://web.library.uq.edu.au/research-tools-techniques/digital-researcher-lab',
+                    column: 2,
+                },
             ],
         },
         {

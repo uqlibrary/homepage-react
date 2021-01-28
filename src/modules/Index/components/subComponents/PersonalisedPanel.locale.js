@@ -17,17 +17,19 @@ export const ppLocale = {
         loans: {
             label: 'Manage your library loans [loans]',
             tooltip: 'Click to manage your library loans',
-            url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US',
+            url:
+                'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
         },
         fines: {
             label: 'Manage your library fines ($[fines])',
             tooltip: 'Click to manage your library fines',
-            url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US',
+            url:
+                'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
         },
         eSpacePossible: {
             label: 'Claim [totalRecords] possible eSpace records',
             tooltip: 'Click to visit your eSpace dashboard',
-            url: 'https://espace.library.uq.edu.au/dashboard',
+            url: 'https://espace.library.uq.edu.au/records/possible',
         },
         eSpaceOrcid: {
             label: 'Link ORCiD account to eSpace',

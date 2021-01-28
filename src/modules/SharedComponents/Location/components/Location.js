@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 'bold',
     },
     iconButton: {
-        marginTop: -4,
+        marginTop: -5,
         marginLeft: 0,
         color: theme.palette.secondary.main,
         textTransform: 'none',
@@ -52,10 +52,13 @@ export const Location = ({ idLabel }) => {
         setAnchorEl(event.currentTarget);
     };
     const handleLocationClose = location => () => {
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
         if (location === 'not set') {
-            setCookie('location', null);
+            setCookie('location', null, { expires: nextYear });
         } else {
-            setCookie('location', location);
+            setCookie('location', location, { expires: nextYear });
         }
         setAnchorEl(null);
     };
@@ -86,8 +89,9 @@ export const Location = ({ idLabel }) => {
                     data-testid={id('button')}
                 >
                     <RoomIcon
-                        className={`${classes.icon} ${cookies.location === null ||
-                            (cookies.location === 'null' && classes.wiggler)}`}
+                        className={`${classes.icon} ${
+                            !cookies.location || cookies.location === 'null' ? classes.wiggler : ''
+                        }`}
                     />{' '}
                     {thisLocation.replace(locale.noLocationSet, locale.noLocationSetLabel)}
                 </Button>
