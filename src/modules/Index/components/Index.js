@@ -105,6 +105,7 @@ export const Index = ({
     libHoursLoading,
     computerAvailability,
     computerAvailabilityLoading,
+    computerAvailabilityError,
     trainingEvents,
     trainingEventsLoading,
     trainingEventsError,
@@ -219,6 +220,7 @@ export const Index = ({
                         <Computers
                             computerAvailability={computerAvailability}
                             computerAvailabilityLoading={computerAvailabilityLoading}
+                            computerAvailabilityError={computerAvailabilityError}
                             height={classes.computersAvailHeight}
                         />
                     </Grid>
@@ -269,6 +271,7 @@ Index.propTypes = {
     libHoursLoading: PropTypes.bool,
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
+    computerAvailabilityError: PropTypes.bool,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,

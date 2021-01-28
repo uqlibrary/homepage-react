@@ -514,7 +514,8 @@ Alert.defaultProps = {
     customType: null,
     disableAlertClick: false,
     dismissTitle: 'Click to dismiss this alert',
-    message: 'An error has occurred. If this continues after reloading the page, please email askus@library.uq.edu.au',
+    message:
+        'We encountered a problem loading the page but you may not be impacted. If you are, try refreshing. If it continues, please email askus@library.uq.edu.au',
     showLoader: false,
     type: 'error',
     wiggle: null,

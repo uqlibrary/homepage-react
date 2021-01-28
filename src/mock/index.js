@@ -160,6 +160,7 @@ mock.onGet(routes.ALERT_API().apiUrl)
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl)
     .reply(withDelay([200, computerAvailability]));
+    // .reply(withDelay([500, {}]));
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,

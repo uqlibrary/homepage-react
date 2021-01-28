@@ -115,18 +115,21 @@ const handlers = {
         ...state,
         computerAvailability: null,
         computerAvailabilityLoading: true,
+        computerAvailabilityError: false,
     }),
 
     [actions.COMP_AVAIL_LOADED]: (state, action) => ({
         ...state,
         computerAvailability: action.payload,
         computerAvailabilityLoading: false,
+        computerAvailabilityError: false,
     }),
 
     [actions.COMP_AVAIL_FAILED]: state => ({
         ...state,
         computerAvailability: null,
         computerAvailabilityLoading: false,
+        computerAvailabilityError: true,
     }),
     // Training
     [actions.TRAINING_LOADING]: state => ({

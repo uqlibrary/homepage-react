@@ -225,6 +225,7 @@ describe('account reducer', () => {
             ...emptyState,
             computerAvailability: null,
             computerAvailabilityLoading: false,
+            computerAvailabilityError: true,
         });
     });
 
