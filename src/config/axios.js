@@ -8,7 +8,7 @@ import { showAppAlert } from 'actions/app';
 import locale from 'locale/global';
 import Raven from 'raven-js';
 import param from 'can-param';
-import { COMP_AVAIL_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
+import { COMP_AVAIL_API, CURRENT_ACCOUNT_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -75,6 +75,11 @@ api.interceptors.request.use(request => {
 });
 
 const reportToSentry = error => {
+    // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
+    if (error?.response?.status === 403 && error?.response?.request?.responseUrl === CURRENT_ACCOUNT_API().apiUrl) {
+        return false;
+    }
+
     let detailedError = '';
     if (error.response) {
         detailedError = `Data: ${JSON.stringify(error.response.data)}; Status: ${
@@ -84,6 +89,7 @@ const reportToSentry = error => {
         detailedError = `Something happened in setting up the request that triggered an Error: ${error.message}`;
     }
     Raven.captureException(error, { extra: { error: detailedError } });
+    return true;
 };
 
 function alertDisplayAllowed(error) {
