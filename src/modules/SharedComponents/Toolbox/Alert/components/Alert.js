@@ -515,7 +515,7 @@ Alert.defaultProps = {
     disableAlertClick: false,
     dismissTitle: 'Click to dismiss this alert',
     message:
-        'We encountered a problem loading the page but you may not be impacted. If you are, try refreshing. If it continues, please email askus@library.uq.edu.au',
+        'Some items on your page have not loaded properly and may not work as expected. This issue has been automatically reported.',
     showLoader: false,
     type: 'error',
     wiggle: null,
