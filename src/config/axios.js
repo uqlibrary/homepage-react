@@ -8,7 +8,7 @@ import { showAppAlert } from 'actions/app';
 import locale from 'locale/global';
 import Raven from 'raven-js';
 import param from 'can-param';
-import { TRAINING_API } from '../repositories/routes';
+import { COMP_AVAIL_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -95,7 +95,8 @@ api.interceptors.response.use(
     },
     error => {
         let errorMessage = null;
-        const listSkip500s = [TRAINING_API().apiUrl];
+        // thsee APIs don't put a banner on the page because they are reported within the panel
+        const listSkip500s = [TRAINING_API().apiUrl, COMP_AVAIL_API().apiUrl, LIB_HOURS_API().apiUrl];
         if (!!error && !!error.config) {
             if (!!error.response && !!error.response.status && error.response.status === 403) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
