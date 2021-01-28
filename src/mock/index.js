@@ -119,6 +119,7 @@ mock.onGet(routes.CHAT_API().apiUrl)
 
 mock.onGet(routes.TRAINING_API(10).apiUrl)
     .reply(withDelay([200, training]));
+    // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.PRINTING_API().apiUrl)
     .reply(withDelay([200, printBalance]));

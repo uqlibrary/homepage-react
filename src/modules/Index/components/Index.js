@@ -107,6 +107,7 @@ export const Index = ({
     computerAvailabilityLoading,
     trainingEvents,
     trainingEventsLoading,
+    trainingEventsError,
     printBalance,
     printBalanceLoading,
     loans,
@@ -234,7 +235,11 @@ export const Index = ({
                     )}
 
                     <Grid item xs={12} md={4} data-testid="training-panel">
-                        <Training trainingEvents={trainingEvents} trainingEventsLoading={trainingEventsLoading} />
+                        <Training
+                            trainingEvents={trainingEvents}
+                            trainingEventsLoading={trainingEventsLoading}
+                            trainingEventsError={trainingEventsError}
+                        />
                     </Grid>
 
                     {seeLibraryServices(account) && (
@@ -266,6 +271,7 @@ Index.propTypes = {
     computerAvailabilityLoading: PropTypes.bool,
     trainingEvents: PropTypes.array,
     trainingEventsLoading: PropTypes.bool,
+    trainingEventsError: PropTypes.bool,
     printBalance: PropTypes.object,
     printBalanceLoading: PropTypes.bool,
     loans: PropTypes.object,

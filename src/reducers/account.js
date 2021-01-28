@@ -133,18 +133,21 @@ const handlers = {
         ...state,
         trainingEvents: null,
         trainingEventsLoading: true,
+        trainingEventsError: false,
     }),
 
     [actions.TRAINING_LOADED]: (state, action) => ({
         ...state,
         trainingEvents: action.payload,
         trainingEventsLoading: false,
+        trainingEventsError: false,
     }),
 
     [actions.TRAINING_FAILED]: state => ({
         ...state,
         trainingEvents: null,
         trainingEventsLoading: false,
+        trainingEventsError: true,
     }),
 };
 
