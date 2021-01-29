@@ -173,7 +173,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         console.log('loadCourseReadingListsSuggestions will dispatch ');
         dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADING });
-        console.log('will fetch ', SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl);
+        console.log(`will fetch '${SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl}'`);
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())

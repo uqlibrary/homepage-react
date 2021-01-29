@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-// import { useLocation } from 'react-router';
+import React, { useRef, useState } from 'react';
+import { throttle } from 'throttle-debounce';
 
 import { PropTypes } from 'prop-types';
 import { isRepeatingString, unescapeString } from 'helpers/general';
@@ -79,27 +79,22 @@ export const CourseResourceSearch = ({
 }) => {
     const classes = useStyles();
 
-    const [searchKeyword, setSearchKeyword] = useState('');
-
     // control the displayed value (we dont want the subject hanging around in the input field after selection)
-    const [inputValue, setInputValue] = React.useState('');
+    const [inputValue, setInputValue] = useState('');
 
     /* istanbul ignore next */
     const handleSubmit = event => {
         event.preventDefault();
     };
 
+    const throttledCourseResourceLoadSuggestions = useRef(
+        throttle(3100, newValue => actions.loadCourseReadingListsSuggestions(newValue)),
+    );
+
     const handleTypedKeywordChange = React.useCallback(
         (event, newValue) => {
-            setSearchKeyword(newValue);
             if (newValue.includes(' ')) {
-                // Autocomplete fires onInputChange when the full subject name loads into the input field
-                // Dont call the action for this subsequent call,
-                // (a valid course code will never have a space in it)
-                // Also clear what is typed & the old suggestions - its not helpful to have it there
-                setInputValue('');
-                actions.clearCourseResourceSuggestions();
-
+                // skip a space in the input - api doesnt really handle multiple words
                 return;
             }
 
@@ -109,7 +104,11 @@ export const CourseResourceSearch = ({
             if (newValue.length <= 3) {
                 actions.clearCourseResourceSuggestions();
             } else if (!isRepeatingString(newValue)) {
-                actions.loadCourseReadingListsSuggestions(newValue);
+                // if we pass a space in the search string, Autocomplete refuses to display a result
+                // but - api only returns anything for "multiple words" when they make up a course code
+                // (eg 'health economics' doesnt return anything, but 'FREN 1010' does)
+                // so spaces do nothing anyway
+                throttledCourseResourceLoadSuggestions.current(newValue.replace(' ', ''));
                 document.getElementById(`${elementId}-autocomplete`).focus();
             }
         },
@@ -123,10 +122,6 @@ export const CourseResourceSearch = ({
         const semester = !!option.rest.period ? option.rest.period : '';
         // we need coursecode AND campus AND semester to make the api call for the details, so exclude any without
         return !!option && !!coursecode && !!semester && !!campus ? `${coursecode} (${title}${campus}${semester})` : '';
-    };
-
-    const getMatchingOption = option => {
-        return !!option && !!option.text && option.text.toUpperCase().startsWith(searchKeyword.toUpperCase());
     };
 
     const handleSelectionOfCourseInDropdown = (event, option) => {
@@ -144,6 +139,9 @@ export const CourseResourceSearch = ({
 
             // we dont want the previous list to pop up if they search again
             actions.clearCourseResourceSuggestions();
+
+            // clear the input after they select so they can re-search in a clean field
+            setInputValue('');
         }
     };
 
@@ -165,9 +163,6 @@ export const CourseResourceSearch = ({
                         blurOnSelect="mouse"
                         clearOnEscape
                         id={`${elementId}-autocomplete`}
-                        getOptionSelected={(option, value) => {
-                            return getMatchingOption(option, value);
-                        }}
                         options={(!!CRsuggestions && CRsuggestions) || []}
                         getOptionLabel={option => courseResourceSubjectDisplay(option)}
                         onChange={(event, value) => {
