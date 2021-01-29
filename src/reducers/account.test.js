@@ -216,6 +216,7 @@ describe('account reducer', () => {
             ...emptyState,
             libHours: null,
             libHoursLoading: false,
+            libHoursError: true,
         });
     });
 
@@ -225,6 +226,7 @@ describe('account reducer', () => {
             ...emptyState,
             computerAvailability: null,
             computerAvailabilityLoading: false,
+            computerAvailabilityError: true,
         });
     });
 
@@ -234,6 +236,7 @@ describe('account reducer', () => {
             ...emptyState,
             trainingEvents: null,
             trainingEventsLoading: false,
+            trainingEventsError: true,
         });
     });
 });

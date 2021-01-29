@@ -10,6 +10,7 @@ import Fade from '@material-ui/core/Fade';
 import Badge from '@material-ui/core/Badge';
 import CheckIcon from '@material-ui/icons/Check';
 import Tooltip from '@material-ui/core/Tooltip';
+import Typography from '@material-ui/core/Typography';
 import { hoursLocale } from './Hours.locale';
 import Button from '@material-ui/core/Button';
 import ContentLoader from 'react-content-loader';
@@ -171,7 +172,7 @@ const MyLoader = props => (
     </ContentLoader>
 );
 
-const Hours = ({ libHours, libHoursLoading, account }) => {
+const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || undefined);
@@ -186,7 +187,8 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
         }
     }, [location, cookies]);
     const cleanedHours =
-        (!!libHours &&
+        (!libHoursError &&
+            !!libHours &&
             !!libHours.locations &&
             libHours.locations.length > 0 &&
             libHours.locations.map(item => {
@@ -284,19 +286,28 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                     !!account && !!account.id ? classes.componentHeight : classes.componentHeightPublic
                 }`}
             >
-                <div className={classes.flexHeader}>
-                    {/* Header */}
-                    <Grid container spacing={1} className={classes.listHeader}>
-                        {hoursLocale.header.map((item, index) => {
-                            return (
-                                <Grid item xs={4} key={index}>
-                                    {item}
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
-                </div>
-                {!!libHours && !libHoursLoading ? (
+                {!libHoursError && (
+                    <div className={classes.flexHeader}>
+                        {/* Header */}
+                        <Grid container spacing={1} className={classes.listHeader}>
+                            {hoursLocale.header.map((item, index) => {
+                                return (
+                                    <Grid item xs={4} key={index}>
+                                        {item}
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
+                    </div>
+                )}
+                {!!libHoursError && (
+                    <Fade in={!libHoursLoading} timeout={1000}>
+                        <div className={classes.flexContent}>
+                            <Typography style={{ padding: '1rem' }}>{hoursLocale.unavailable}</Typography>
+                        </div>
+                    </Fade>
+                )}
+                {!libHoursError && !!libHours && !libHoursLoading && (
                     <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={classes.flexContent}>
                             {/* Scrollable area */}
@@ -346,7 +357,8 @@ const Hours = ({ libHours, libHoursLoading, account }) => {
                                 })}
                         </div>
                     </Fade>
-                ) : (
+                )}
+                {!libHoursError && !(!!libHours && !libHoursLoading) && (
                     <div className={classes.loaderContent}>
                         <MyLoader id="hours-loader" data-testid="hours-loader" aria-label="Hours data is laoding" />
                     </div>
@@ -391,6 +403,7 @@ Hours.propTypes = {
     libHours: PropTypes.object,
     account: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    libHoursError: PropTypes.bool,
 };
 
 Hours.defaultProps = {};

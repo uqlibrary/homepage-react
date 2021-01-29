@@ -163,7 +163,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
+const Computers = ({ computerAvailability, computerAvailabilityLoading, computerAvailabilityError }) => {
     const classes = useStyles();
     const [cookies] = useCookies();
     const [location, setLocation] = React.useState(cookies.location || undefined);
@@ -367,7 +367,14 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
         >
             <MapPopup />
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
-                {computerAvailability && !computerAvailabilityLoading ? (
+                {!!computerAvailabilityError && (
+                    <Fade in={!computerAvailabilityLoading} timeout={1000}>
+                        <div className={classes.flexContent}>
+                            <Typography style={{ padding: '1rem' }}>{computersLocale.unavailable}</Typography>
+                        </div>
+                    </Fade>
+                )}
+                {!computerAvailabilityError && computerAvailability && !computerAvailabilityLoading && (
                     <Fade in={!computerAvailabilityLoading} timeout={1000}>
                         <div className={classes.flexContent} id="computers-library-content">
                             {!!sortedComputers &&
@@ -475,7 +482,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
                                 })}
                         </div>
                     </Fade>
-                ) : (
+                )}
+                {!computerAvailabilityError && !(computerAvailability && !computerAvailabilityLoading) && (
                     <div className={classes.flexLoaderContent}>
                         <MyLoader />
                     </div>
@@ -488,6 +496,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading }) => {
 Computers.propTypes = {
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
+    computerAvailabilityError: PropTypes.bool,
 };
 
 Computers.defaultProps = {};
