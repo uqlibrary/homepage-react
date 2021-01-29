@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
+import { throttle } from 'throttle-debounce';
 
 import { PropTypes } from 'prop-types';
 import { isRepeatingString, unescapeString } from 'helpers/general';
@@ -86,6 +87,10 @@ export const CourseResourceSearch = ({
         event.preventDefault();
     };
 
+    const throttledCourseResourceLoadSuggestions = useRef(
+        throttle(3100, newValue => actions.loadCourseReadingListsSuggestions(newValue)),
+    );
+
     const handleTypedKeywordChange = React.useCallback(
         (event, newValue) => {
             if (newValue.includes(' ')) {
@@ -103,7 +108,7 @@ export const CourseResourceSearch = ({
                 // but - api only returns anything for "multiple words" when they make up a course code
                 // (eg 'health economics' doesnt return anything, but 'FREN 1010' does)
                 // so spaces do nothing anyway
-                actions.loadCourseReadingListsSuggestions(newValue.replace(' ', ''));
+                throttledCourseResourceLoadSuggestions.current(newValue.replace(' ', ''));
                 document.getElementById(`${elementId}-autocomplete`).focus();
             }
         },
