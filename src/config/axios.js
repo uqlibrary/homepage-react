@@ -76,7 +76,8 @@ api.interceptors.request.use(request => {
 
 const reportToSentry = error => {
     // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
-    if (error?.response?.status === 403 && error?.response?.request?.responseUrl === CURRENT_ACCOUNT_API().apiUrl) {
+    const isCallToAccountAPI = error?.response?.request?.responseURL.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
+    if (error?.response?.status === 403 && isCallToAccountAPI) {
         return false;
     }
 
