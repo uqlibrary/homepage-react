@@ -93,6 +93,7 @@ export const UQSiteHeader = ({
     chatStatus,
     libHours,
     libHoursLoading,
+    libHoursError,
 }) => {
     const classes = useStyles();
     const [menuOpen, setMenuOpen] = useState(false);
@@ -123,7 +124,12 @@ export const UQSiteHeader = ({
                     </Grid>
                 )}
                 <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
-                    <AskUs chatStatus={chatStatus} libHours={libHours} libHoursLoading={libHoursLoading} />
+                    <AskUs
+                        chatStatus={chatStatus}
+                        libHours={libHours}
+                        libHoursLoading={libHoursLoading}
+                        libHoursError={libHoursError}
+                    />
                 </Grid>
                 <Grid item xs={'auto'} className={classes.utility} id="auth" data-testid="auth">
                     <AuthButton
@@ -175,6 +181,15 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Hidden>
             </Grid>
+            <span
+                id="after-navigation"
+                role="region"
+                tabIndex="0"
+                aria-label="Start of content"
+                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+            >
+                Start of content
+            </span>
         </div>
     );
 };
@@ -189,6 +204,7 @@ UQSiteHeader.propTypes = {
     history: PropTypes.object,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    libHoursError: PropTypes.bool,
 };
 
 UQSiteHeader.defaultProps = {};

@@ -4248,23 +4248,23 @@ exports[`Application component should render for anon user 1`] = `
                             </div>
                           </ForwardRef(Grid)>
                         </WithStyles(ForwardRef(Grid))>
+                        <span
+                          aria-label="Start of content"
+                          id="after-navigation"
+                          role="region"
+                          style={
+                            Object {
+                              "left": "-2000px",
+                              "position": "fixed",
+                              "top": "-2000px",
+                            }
+                          }
+                          tabIndex="0"
+                        >
+                          Start of content
+                        </span>
                       </div>
                     </UQSiteHeader>
-                    <span
-                      aria-label="Start of content"
-                      id="afterNavigation"
-                      role="region"
-                      style={
-                        Object {
-                          "left": "-2000px",
-                          "position": "fixed",
-                          "top": "-2000px",
-                        }
-                      }
-                      tabIndex="0"
-                    >
-                      Start of content
-                    </span>
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
@@ -9468,7 +9468,6 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                     fullWidth={true}
                                                                                                                     id="primo-search-submit"
                                                                                                                     onBlur={[Function]}
-                                                                                                                    onClick={[Function]}
                                                                                                                     onFocus={[Function]}
                                                                                                                     onMouseLeave={[Function]}
                                                                                                                     onMouseOver={[Function]}
@@ -9476,6 +9475,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                     onTouchStart={[Function]}
                                                                                                                     size="large"
                                                                                                                     title="Perform your search"
+                                                                                                                    type="submit"
+                                                                                                                    value="Submit"
                                                                                                                     variant="contained"
                                                                                                                   >
                                                                                                                     <ForwardRef(Button)
@@ -9519,7 +9520,6 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                       fullWidth={true}
                                                                                                                       id="primo-search-submit"
                                                                                                                       onBlur={[Function]}
-                                                                                                                      onClick={[Function]}
                                                                                                                       onFocus={[Function]}
                                                                                                                       onMouseLeave={[Function]}
                                                                                                                       onMouseOver={[Function]}
@@ -9527,6 +9527,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                       onTouchStart={[Function]}
                                                                                                                       size="large"
                                                                                                                       title="Perform your search"
+                                                                                                                      type="submit"
+                                                                                                                      value="Submit"
                                                                                                                       variant="contained"
                                                                                                                     >
                                                                                                                       <WithStyles(ForwardRef(ButtonBase))
@@ -9539,14 +9541,14 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                         focusVisibleClassName="Mui-focusVisible"
                                                                                                                         id="primo-search-submit"
                                                                                                                         onBlur={[Function]}
-                                                                                                                        onClick={[Function]}
                                                                                                                         onFocus={[Function]}
                                                                                                                         onMouseLeave={[Function]}
                                                                                                                         onMouseOver={[Function]}
                                                                                                                         onTouchEnd={[Function]}
                                                                                                                         onTouchStart={[Function]}
                                                                                                                         title="Perform your search"
-                                                                                                                        type="button"
+                                                                                                                        type="submit"
+                                                                                                                        value="Submit"
                                                                                                                       >
                                                                                                                         <ForwardRef(ButtonBase)
                                                                                                                           aria-describedby={null}
@@ -9565,14 +9567,14 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                           focusVisibleClassName="Mui-focusVisible"
                                                                                                                           id="primo-search-submit"
                                                                                                                           onBlur={[Function]}
-                                                                                                                          onClick={[Function]}
                                                                                                                           onFocus={[Function]}
                                                                                                                           onMouseLeave={[Function]}
                                                                                                                           onMouseOver={[Function]}
                                                                                                                           onTouchEnd={[Function]}
                                                                                                                           onTouchStart={[Function]}
                                                                                                                           title="Perform your search"
-                                                                                                                          type="button"
+                                                                                                                          type="submit"
+                                                                                                                          value="Submit"
                                                                                                                         >
                                                                                                                           <button
                                                                                                                             aria-describedby={null}
@@ -9581,7 +9583,6 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                             disabled={false}
                                                                                                                             id="primo-search-submit"
                                                                                                                             onBlur={[Function]}
-                                                                                                                            onClick={[Function]}
                                                                                                                             onDragLeave={[Function]}
                                                                                                                             onFocus={[Function]}
                                                                                                                             onKeyDown={[Function]}
@@ -9595,7 +9596,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                             onTouchStart={[Function]}
                                                                                                                             tabIndex={0}
                                                                                                                             title="Perform your search"
-                                                                                                                            type="button"
+                                                                                                                            type="submit"
+                                                                                                                            value="Submit"
                                                                                                                           >
                                                                                                                             <span
                                                                                                                               className="MuiButton-label"
@@ -9672,7 +9674,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                         id="primo-search-submit"
                                                                                                                         tabindex="0"
                                                                                                                         title="Perform your search"
-                                                                                                                        type="button"
+                                                                                                                        type="submit"
+                                                                                                                        value="Submit"
                                                                                                                       >
                                                                                                                         <span
                                                                                                                           class="MuiButton-label"
@@ -23559,23 +23562,23 @@ exports[`Application component should render loading screen while account is loa
                             </div>
                           </ForwardRef(Grid)>
                         </WithStyles(ForwardRef(Grid))>
+                        <span
+                          aria-label="Start of content"
+                          id="after-navigation"
+                          role="region"
+                          style={
+                            Object {
+                              "left": "-2000px",
+                              "position": "fixed",
+                              "top": "-2000px",
+                            }
+                          }
+                          tabIndex="0"
+                        >
+                          Start of content
+                        </span>
                       </div>
                     </UQSiteHeader>
-                    <span
-                      aria-label="Start of content"
-                      id="afterNavigation"
-                      role="region"
-                      style={
-                        Object {
-                          "left": "-2000px",
-                          "position": "fixed",
-                          "top": "-2000px",
-                        }
-                      }
-                      tabIndex="0"
-                    >
-                      Start of content
-                    </span>
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
@@ -28961,7 +28964,6 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                     fullWidth={true}
                                                                                                                     id="primo-search-submit"
                                                                                                                     onBlur={[Function]}
-                                                                                                                    onClick={[Function]}
                                                                                                                     onFocus={[Function]}
                                                                                                                     onMouseLeave={[Function]}
                                                                                                                     onMouseOver={[Function]}
@@ -28969,6 +28971,8 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                     onTouchStart={[Function]}
                                                                                                                     size="large"
                                                                                                                     title="Perform your search"
+                                                                                                                    type="submit"
+                                                                                                                    value="Submit"
                                                                                                                     variant="contained"
                                                                                                                   >
                                                                                                                     <ForwardRef(Button)
@@ -29012,7 +29016,6 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                       fullWidth={true}
                                                                                                                       id="primo-search-submit"
                                                                                                                       onBlur={[Function]}
-                                                                                                                      onClick={[Function]}
                                                                                                                       onFocus={[Function]}
                                                                                                                       onMouseLeave={[Function]}
                                                                                                                       onMouseOver={[Function]}
@@ -29020,6 +29023,8 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                       onTouchStart={[Function]}
                                                                                                                       size="large"
                                                                                                                       title="Perform your search"
+                                                                                                                      type="submit"
+                                                                                                                      value="Submit"
                                                                                                                       variant="contained"
                                                                                                                     >
                                                                                                                       <WithStyles(ForwardRef(ButtonBase))
@@ -29032,14 +29037,14 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                         focusVisibleClassName="Mui-focusVisible"
                                                                                                                         id="primo-search-submit"
                                                                                                                         onBlur={[Function]}
-                                                                                                                        onClick={[Function]}
                                                                                                                         onFocus={[Function]}
                                                                                                                         onMouseLeave={[Function]}
                                                                                                                         onMouseOver={[Function]}
                                                                                                                         onTouchEnd={[Function]}
                                                                                                                         onTouchStart={[Function]}
                                                                                                                         title="Perform your search"
-                                                                                                                        type="button"
+                                                                                                                        type="submit"
+                                                                                                                        value="Submit"
                                                                                                                       >
                                                                                                                         <ForwardRef(ButtonBase)
                                                                                                                           aria-describedby={null}
@@ -29058,14 +29063,14 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                           focusVisibleClassName="Mui-focusVisible"
                                                                                                                           id="primo-search-submit"
                                                                                                                           onBlur={[Function]}
-                                                                                                                          onClick={[Function]}
                                                                                                                           onFocus={[Function]}
                                                                                                                           onMouseLeave={[Function]}
                                                                                                                           onMouseOver={[Function]}
                                                                                                                           onTouchEnd={[Function]}
                                                                                                                           onTouchStart={[Function]}
                                                                                                                           title="Perform your search"
-                                                                                                                          type="button"
+                                                                                                                          type="submit"
+                                                                                                                          value="Submit"
                                                                                                                         >
                                                                                                                           <button
                                                                                                                             aria-describedby={null}
@@ -29074,7 +29079,6 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                             disabled={false}
                                                                                                                             id="primo-search-submit"
                                                                                                                             onBlur={[Function]}
-                                                                                                                            onClick={[Function]}
                                                                                                                             onDragLeave={[Function]}
                                                                                                                             onFocus={[Function]}
                                                                                                                             onKeyDown={[Function]}
@@ -29088,7 +29092,8 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                             onTouchStart={[Function]}
                                                                                                                             tabIndex={0}
                                                                                                                             title="Perform your search"
-                                                                                                                            type="button"
+                                                                                                                            type="submit"
+                                                                                                                            value="Submit"
                                                                                                                           >
                                                                                                                             <span
                                                                                                                               className="MuiButton-label"
@@ -29165,7 +29170,8 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                         id="primo-search-submit"
                                                                                                                         tabindex="0"
                                                                                                                         title="Perform your search"
-                                                                                                                        type="button"
+                                                                                                                        type="submit"
+                                                                                                                        value="Submit"
                                                                                                                       >
                                                                                                                         <span
                                                                                                                           class="MuiButton-label"

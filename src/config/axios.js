@@ -1,13 +1,14 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { setupCache } from 'axios-cache-adapter';
-import { API_URL, SESSION_COOKIE_NAME, TOKEN_NAME, SESSION_USER_GROUP_COOKIE_NAME } from './general';
+import { API_URL, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, TOKEN_NAME } from './general';
 import { store } from 'config/store';
 import { logout } from 'actions/account';
 import { showAppAlert } from 'actions/app';
 import locale from 'locale/global';
 import Raven from 'raven-js';
 import param from 'can-param';
+import { COMP_AVAIL_API, CURRENT_ACCOUNT_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
 
 export const cache = setupCache({
     maxAge: 15 * 60 * 1000,
@@ -74,6 +75,12 @@ api.interceptors.request.use(request => {
 });
 
 const reportToSentry = error => {
+    // the non-logged in user always generates a 403 on the Account call. We dont need to report that to Sentry
+    const isCallToAccountAPI = error?.response?.request?.responseURL.includes(`${CURRENT_ACCOUNT_API().apiUrl}?ts=`);
+    if (error?.response?.status === 403 && isCallToAccountAPI) {
+        return false;
+    }
+
     let detailedError = '';
     if (error.response) {
         detailedError = `Data: ${JSON.stringify(error.response.data)}; Status: ${
@@ -83,7 +90,20 @@ const reportToSentry = error => {
         detailedError = `Something happened in setting up the request that triggered an Error: ${error.message}`;
     }
     Raven.captureException(error, { extra: { error: detailedError } });
+    return true;
 };
+
+function alertDisplayAllowed(error) {
+    // these APIs don't put a banner on the page because they are reported within the panel
+    const apisThatManageTheirOwn500 = [TRAINING_API().apiUrl, COMP_AVAIL_API().apiUrl, LIB_HOURS_API().apiUrl];
+    if (
+        !!error.response?.request?.responseUrl &&
+        apisThatManageTheirOwn500.includes(error.response.request.responseUrl)
+    ) {
+        return false;
+    }
+    return true;
+}
 
 api.interceptors.response.use(
     response => {
@@ -111,8 +131,10 @@ api.interceptors.response.use(
             if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
                 errorMessage =
                     ((error.response || {}).data || {}).message || locale.global.errorMessages[error.response.status];
-                if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
-                    global.mockActionsStore.dispatch(showAppAlert(error.response.data));
+                if (!alertDisplayAllowed(error)) {
+                    // we dont display an error banner for these (the associated panel displays an error)
+                } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {
+                    global.mockActionsStore.dispatch(showAppAlert(error.response));
                 } else {
                     store.dispatch(showAppAlert(error.response.data));
                 }

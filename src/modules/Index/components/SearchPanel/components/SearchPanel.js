@@ -281,8 +281,10 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 size={'large'}
                                 variant="contained"
                                 color={'primary'}
-                                onClick={handleSearchButton}
+                                // onClick={handleSearchButton}
                                 className={classes.searchButton}
+                                type="submit"
+                                value="Submit"
                             >
                                 <SearchIcon />
                             </Button>

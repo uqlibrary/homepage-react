@@ -89,6 +89,7 @@ export const App = ({
     chatStatus,
     libHours,
     libHoursLoading,
+    libHoursError,
     history,
 }) => {
     useEffect(() => {
@@ -134,16 +135,8 @@ export const App = ({
                     chatStatus={!!chatStatus && chatStatus.online}
                     libHours={libHours}
                     libHoursloading={libHoursLoading}
+                    libHoursError={libHoursError}
                 />
-                <span
-                    id="afterNavigation"
-                    role="region"
-                    tabIndex="0"
-                    aria-label="Start of content"
-                    style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
-                >
-                    Start of content
-                </span>
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
                 </div>
@@ -189,6 +182,7 @@ App.propTypes = {
     history: PropTypes.any,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    libHoursError: PropTypes.bool,
     chatStatus: PropTypes.object,
     isSessionExpired: PropTypes.any,
 };

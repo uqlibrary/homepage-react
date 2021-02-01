@@ -119,6 +119,7 @@ mock.onGet(routes.CHAT_API().apiUrl)
 
 mock.onGet(routes.TRAINING_API(10).apiUrl)
     .reply(withDelay([200, training]));
+    // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.PRINTING_API().apiUrl)
     .reply(withDelay([200, printBalance]));
@@ -128,6 +129,7 @@ mock.onGet(routes.LOANS_API().apiUrl)
 
 mock.onGet(routes.LIB_HOURS_API().apiUrl)
     .reply(withDelay([200, libHours]));
+    // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl)
     .reply(withDelay([200, possibleRecords]));
@@ -159,6 +161,7 @@ mock.onGet(routes.ALERT_API().apiUrl)
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl)
     .reply(withDelay([200, computerAvailability]));
+    // .reply(withDelay([500, {}]));
 
 fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
     status: 200,

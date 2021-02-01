@@ -38,7 +38,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
+export const AskUs = ({ chatStatus, libHours, libHoursLoading, libHoursError }) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const handleClick = event => {
@@ -57,7 +57,7 @@ export const AskUs = ({ chatStatus, libHours, libHoursLoading }) => {
     };
     const cleanHours = hours => {
         let askusHours = null;
-        if (!!hours && !!hours.locations && hours.locations.length > 1 && !libHoursLoading) {
+        if (!!hours && !!hours.locations && hours.locations.length > 1 && !libHoursLoading && !libHoursError) {
             askusHours = hours.locations.map(item => {
                 if (item.abbr === 'AskUs') {
                     return {
@@ -144,6 +144,7 @@ AskUs.propTypes = {
     chatStatus: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
+    libHoursError: PropTypes.bool,
 };
 
 AskUs.defaultProps = {};
