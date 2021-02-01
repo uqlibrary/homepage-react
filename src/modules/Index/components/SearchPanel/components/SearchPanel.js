@@ -111,7 +111,10 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     };
 
     const handleSearchButton = event => {
-        event.preventDefault();
+        if (!!event) {
+            event.preventDefault();
+        }
+        console.log(searchKeyword);
         if (!!searchKeyword) {
             let keyword = searchKeyword;
             if (isCourseResourceSearch || isExamSearch) {
@@ -211,7 +214,9 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 'aria-label': 'Suggestion list',
                             }}
                             onChange={() => {
-                                document.getElementById('primo-search-form').submit();
+                                setTimeout(() => {
+                                    document.getElementById('primo-search-submit').click();
+                                }, 300);
                             }}
                             renderInput={params => {
                                 return (
@@ -257,7 +262,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 size={'large'}
                                 variant="contained"
                                 color={'primary'}
-                                // onClick={handleSearchButton}
                                 className={classes.searchButton}
                                 type="submit"
                                 value="Submit"
