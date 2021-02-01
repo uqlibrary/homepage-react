@@ -6142,6 +6142,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                 style={Object {}}
                                                                                               >
                                                                                                 <form
+                                                                                                  id="primo-search-form"
                                                                                                   onSubmit={[Function]}
                                                                                                 >
                                                                                                   <WithStyles(ForwardRef(Grid))
@@ -25456,6 +25457,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                                 style={Object {}}
                                                                                               >
                                                                                                 <form
+                                                                                                  id="primo-search-form"
                                                                                                   onSubmit={[Function]}
                                                                                                 >
                                                                                                   <WithStyles(ForwardRef(Grid))
