@@ -2073,6 +2073,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                           style={Object {}}
                                                                         >
                                                                           <form
+                                                                            id="primo-search-form"
                                                                             onSubmit={[Function]}
                                                                           >
                                                                             <WithStyles(ForwardRef(Grid))
@@ -5214,7 +5215,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                               fullWidth={true}
                                                                                               id="primo-search-submit"
                                                                                               onBlur={[Function]}
-                                                                                              onClick={[Function]}
                                                                                               onFocus={[Function]}
                                                                                               onMouseLeave={[Function]}
                                                                                               onMouseOver={[Function]}
@@ -5222,6 +5222,8 @@ exports[`Index page should render placeholders 1`] = `
                                                                                               onTouchStart={[Function]}
                                                                                               size="large"
                                                                                               title="Perform your search"
+                                                                                              type="submit"
+                                                                                              value="Submit"
                                                                                               variant="contained"
                                                                                             >
                                                                                               <ForwardRef(Button)
@@ -5265,7 +5267,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                 fullWidth={true}
                                                                                                 id="primo-search-submit"
                                                                                                 onBlur={[Function]}
-                                                                                                onClick={[Function]}
                                                                                                 onFocus={[Function]}
                                                                                                 onMouseLeave={[Function]}
                                                                                                 onMouseOver={[Function]}
@@ -5273,6 +5274,8 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                 onTouchStart={[Function]}
                                                                                                 size="large"
                                                                                                 title="Perform your search"
+                                                                                                type="submit"
+                                                                                                value="Submit"
                                                                                                 variant="contained"
                                                                                               >
                                                                                                 <WithStyles(ForwardRef(ButtonBase))
@@ -5285,14 +5288,14 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                   focusVisibleClassName="Mui-focusVisible"
                                                                                                   id="primo-search-submit"
                                                                                                   onBlur={[Function]}
-                                                                                                  onClick={[Function]}
                                                                                                   onFocus={[Function]}
                                                                                                   onMouseLeave={[Function]}
                                                                                                   onMouseOver={[Function]}
                                                                                                   onTouchEnd={[Function]}
                                                                                                   onTouchStart={[Function]}
                                                                                                   title="Perform your search"
-                                                                                                  type="button"
+                                                                                                  type="submit"
+                                                                                                  value="Submit"
                                                                                                 >
                                                                                                   <ForwardRef(ButtonBase)
                                                                                                     aria-describedby={null}
@@ -5311,14 +5314,14 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                     focusVisibleClassName="Mui-focusVisible"
                                                                                                     id="primo-search-submit"
                                                                                                     onBlur={[Function]}
-                                                                                                    onClick={[Function]}
                                                                                                     onFocus={[Function]}
                                                                                                     onMouseLeave={[Function]}
                                                                                                     onMouseOver={[Function]}
                                                                                                     onTouchEnd={[Function]}
                                                                                                     onTouchStart={[Function]}
                                                                                                     title="Perform your search"
-                                                                                                    type="button"
+                                                                                                    type="submit"
+                                                                                                    value="Submit"
                                                                                                   >
                                                                                                     <button
                                                                                                       aria-describedby={null}
@@ -5327,7 +5330,6 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       disabled={false}
                                                                                                       id="primo-search-submit"
                                                                                                       onBlur={[Function]}
-                                                                                                      onClick={[Function]}
                                                                                                       onDragLeave={[Function]}
                                                                                                       onFocus={[Function]}
                                                                                                       onKeyDown={[Function]}
@@ -5341,7 +5343,8 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                       onTouchStart={[Function]}
                                                                                                       tabIndex={0}
                                                                                                       title="Perform your search"
-                                                                                                      type="button"
+                                                                                                      type="submit"
+                                                                                                      value="Submit"
                                                                                                     >
                                                                                                       <span
                                                                                                         className="MuiButton-label"
@@ -5418,7 +5421,8 @@ exports[`Index page should render placeholders 1`] = `
                                                                                                   id="primo-search-submit"
                                                                                                   tabindex="0"
                                                                                                   title="Perform your search"
-                                                                                                  type="button"
+                                                                                                  type="submit"
+                                                                                                  value="Submit"
                                                                                                 >
                                                                                                   <span
                                                                                                     class="MuiButton-label"

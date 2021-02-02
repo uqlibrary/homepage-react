@@ -111,7 +111,10 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     };
 
     const handleSearchButton = event => {
-        event.preventDefault();
+        if (!!event) {
+            event.preventDefault();
+        }
+        console.log(searchKeyword);
         if (!!searchKeyword) {
             let keyword = searchKeyword;
             if (isCourseResourceSearch || isExamSearch) {
@@ -124,30 +127,6 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                 .replace('[keyword]', keyword); // database search has two instances of keyword
             window.location.assign(link);
         }
-    };
-
-    /**
-     * when they click on a particular suggestion they should go straight to the result for it
-     * @param event
-     * @param typedText
-     */
-    const visitSelectedLink = (event, typedText) => {
-        event.preventDefault();
-        let link;
-        if (isCourseResourceSearch) {
-            const suggestion = suggestions.find(item => item.text === typedText);
-            link = suggestion?.rest?.url || '';
-        } else if (isExamSearch) {
-            // because the display text in the dropdown has the descriptors in it, that text reaches here.
-            // trim down to the course code only
-            const courseCode = charactersBefore(typedText, ' ');
-            link = locale.typeSelect?.items[searchType]?.link?.replace('[keyword]', courseCode) || '';
-        } else {
-            // if we had a suggest api for Databases, we would need to duplicate the keyword replace,
-            // as it has two instances
-            link = locale.typeSelect?.items[searchType]?.link?.replace('[keyword]', typedText) || '';
-        }
-        !!link ? window.location.assign(link) : alert('sorry, we could not load that link - please try again...');
     };
 
     const throttledPrimoLoadSuggestions = useRef(throttle(3100, newValue => actions.loadPrimoSuggestions(newValue)));
@@ -179,7 +158,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
     );
     return (
         <StandardCard noPadding noHeader standardCardId="primo-search">
-            <form onSubmit={handleSearchButton}>
+            <form id="primo-search-form" onSubmit={handleSearchButton}>
                 <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                     <Grid item xs={12} md={'auto'}>
                         <FormControl style={{ width: '100%' }}>
@@ -234,8 +213,10 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 'data-testid': 'primo-search-autocomplete-listbox',
                                 'aria-label': 'Suggestion list',
                             }}
-                            onChange={(event, value) => {
-                                visitSelectedLink(event, value);
+                            onChange={() => {
+                                setTimeout(() => {
+                                    document.getElementById('primo-search-submit').click();
+                                }, 300);
                             }}
                             renderInput={params => {
                                 return (
@@ -281,8 +262,9 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                                 size={'large'}
                                 variant="contained"
                                 color={'primary'}
-                                onClick={handleSearchButton}
                                 className={classes.searchButton}
+                                type="submit"
+                                value="Submit"
                             >
                                 <SearchIcon />
                             </Button>
