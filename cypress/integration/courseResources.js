@@ -577,4 +577,26 @@ context('Course Resources', () => {
         // and the drop down will not appear
         cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
     });
+
+    it('A user putting a space in a search still gets their result on the homepage', () => {
+        cy.visit('/?user=s3333333');
+        cy.viewport(1300, 1000);
+
+        cy.get('div[data-testid=course-resources-panel] form input').type('FREN 1');
+        cy.get('ul#homepage-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', 1 + 1);
+    });
+
+    it('A user putting a space in a search still gets their result on the full page', () => {
+        cy.visit('/courseresources?user=s3333333');
+        cy.viewport(1300, 1000);
+
+        // enter a repeating string
+        cy.get('div[data-testid=full-courseresource-content] form input').type('FREN 1');
+        // and the drop down will not appear
+        cy.get('ul#full-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', 1 + 1);
+    });
 });
