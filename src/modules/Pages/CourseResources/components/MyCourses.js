@@ -1,18 +1,14 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-
 import locale from '../courseResources.locale';
 import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
 import { getCampusByCode } from 'helpers/general';
-
 import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { makeStyles } from '@material-ui/styles';
@@ -139,15 +135,18 @@ export const MyCourses = ({
                     })}
                 </Fragment>
             ) : (
-                <Grid container spacing={3} data-testid="no-classes" className={'noreadingLists'}>
+                <Grid
+                    container
+                    spacing={3}
+                    data-testid="no-classes"
+                    style={{ paddingLeft: 24, paddingRight: 24 }}
+                    className={'noreadingLists'}
+                >
+                    <Grid item>
+                        <Typography variant={'h5'}>{locale.myCourses.none.title}</Typography>
+                    </Grid>
                     <Grid item xs={12}>
-                        <StandardCard className={classes.noclasses} title={locale.myCourses.none.title}>
-                            <Grid container>
-                                <Grid item xs={12}>
-                                    {locale.myCourses.none.description}
-                                </Grid>
-                            </Grid>
-                        </StandardCard>
+                        {locale.myCourses.none.description}
                     </Grid>
                 </Grid>
             )}

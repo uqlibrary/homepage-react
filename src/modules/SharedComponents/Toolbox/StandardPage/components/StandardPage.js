@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import { HelpIcon } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -25,6 +26,14 @@ const styles = theme => ({
         padding: 0,
         [theme.breakpoints.down('sm')]: {
             margin: '0 auto 12px auto',
+        },
+    },
+    title: {
+        marginLeft: -58,
+        marginBottom: 24,
+        [theme.breakpoints.down('sm')]: {
+            marginLeft: -20,
+            marginBottom: 8,
         },
     },
     helpIcon: {
@@ -58,10 +67,10 @@ export class Page extends Component {
             goBackTooltip = 'Go back',
         } = this.props;
         return (
-            <div className={classes.wrapper}>
-                <Grid justify={'flex-start'} container spacing={1} data-testid="StandardPage" id="StandardPage">
+            <div className="layout-card">
+                <Grid justify={'flex-start'} container spacing={0} data-testid="StandardPage" id="StandardPage">
                     {title && (
-                        <Grid item xs>
+                        <Grid item xs className={classes.title}>
                             <Typography
                                 className={classes.layoutTitle}
                                 color={'primary'}
@@ -70,32 +79,34 @@ export class Page extends Component {
                                 variant={'h4'}
                             >
                                 {!!goBackFunc && (
-                                    <Tooltip
-                                        id="StandardPage-goback-tooltip"
-                                        data-testid="StandardPage-goback-tooltip"
-                                        title={goBackTooltip}
-                                        TransitionProps={{ timeout: 300 }}
-                                    >
-                                        <IconButton
-                                            className={classes.arrowBack}
-                                            onClick={goBackFunc}
-                                            id="StandardPage-goback-button"
-                                            data-testid="StandardPage-goback-button"
+                                    <Hidden xsDown>
+                                        <Tooltip
+                                            id="StandardPage-goback-tooltip"
+                                            data-testid="StandardPage-goback-tooltip"
+                                            title={goBackTooltip}
+                                            TransitionProps={{ timeout: 300 }}
                                         >
-                                            <ArrowBackIcon color="secondary" />
-                                        </IconButton>
-                                    </Tooltip>
+                                            <IconButton
+                                                className={classes.arrowBack}
+                                                onClick={goBackFunc}
+                                                id="StandardPage-goback-button"
+                                                data-testid="StandardPage-goback-button"
+                                            >
+                                                <ArrowBackIcon color="secondary" />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </Hidden>
                                 )}
                                 {title}
                             </Typography>
                         </Grid>
                     )}
                     {help && (
-                        <div className={classes.helpIcon}>
+                        <Grid item xs={'auto'} className={classes.helpIcon}>
                             <HelpIcon {...help} />
-                        </div>
+                        </Grid>
                     )}
-                    <Grid item className={classes.layoutCard}>
+                    <Grid item xs={12}>
                         {children}
                     </Grid>
                 </Grid>
