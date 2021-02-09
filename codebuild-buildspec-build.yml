@@ -44,6 +44,7 @@ phases:
     commands:
       set &&
       npm run build &&
+      npm run build:offSiteApps &&
       ls dist
   post_build:
     commands:
