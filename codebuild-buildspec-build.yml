@@ -43,8 +43,8 @@ phases:
   build:
     commands:
       set &&
-      npm run build &&
       npm run build:offSiteApps &&
+      npm run build &&
       ls dist
   post_build:
     commands:
