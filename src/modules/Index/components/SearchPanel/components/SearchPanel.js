@@ -104,7 +104,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
      * @returns {string|*}
      */
     const charactersBefore = (string, separator) => {
-        if (string.indexOf(separator) === -1) {
+        if (!!string && string.indexOf(separator) === -1) {
             return string.trim();
         }
         return string.substr(0, string.indexOf(separator));
