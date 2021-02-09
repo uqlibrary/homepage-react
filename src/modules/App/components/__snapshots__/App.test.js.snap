@@ -985,8 +985,7 @@ exports[`Application component should render for anon user 1`] = `
                           "location": Object {},
                         }
                       }
-                      isAuthorizedUser={false}
-                      isHdrStudent={false}
+                      isLibraryWebsiteCall={true}
                     >
                       <div
                         className="makeStyles-siteHeader-111"
@@ -1489,8 +1488,13 @@ exports[`Application component should render for anon user 1`] = `
                               <WithStyles(ForwardRef(Grid))
                                 className="makeStyles-utility-115"
                                 data-testid="askus"
-                                id="askus"
+                                id="askus-button-block"
                                 item={true}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
                                 xs="auto"
                               >
                                 <ForwardRef(Grid)
@@ -1603,14 +1607,24 @@ exports[`Application component should render for anon user 1`] = `
                                     }
                                   }
                                   data-testid="askus"
-                                  id="askus"
+                                  id="askus-button-block"
                                   item={true}
+                                  style={
+                                    Object {
+                                      "display": "none",
+                                    }
+                                  }
                                   xs="auto"
                                 >
                                   <div
                                     className="MuiGrid-root makeStyles-utility-115 MuiGrid-item MuiGrid-grid-xs-auto"
                                     data-testid="askus"
-                                    id="askus"
+                                    id="askus-button-block"
+                                    style={
+                                      Object {
+                                        "display": "none",
+                                      }
+                                    }
                                   >
                                     <AskUs
                                       chatStatus={false}
@@ -3530,8 +3544,13 @@ exports[`Application component should render for anon user 1`] = `
                               <WithStyles(ForwardRef(Grid))
                                 className="makeStyles-utility-115"
                                 data-testid="auth"
-                                id="auth"
+                                id="auth-button-block"
                                 item={true}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
                                 xs="auto"
                               >
                                 <ForwardRef(Grid)
@@ -3644,14 +3663,24 @@ exports[`Application component should render for anon user 1`] = `
                                     }
                                   }
                                   data-testid="auth"
-                                  id="auth"
+                                  id="auth-button-block"
                                   item={true}
+                                  style={
+                                    Object {
+                                      "display": "none",
+                                    }
+                                  }
                                   xs="auto"
                                 >
                                   <div
                                     className="MuiGrid-root makeStyles-utility-115 MuiGrid-item MuiGrid-grid-xs-auto"
                                     data-testid="auth"
-                                    id="auth"
+                                    id="auth-button-block"
+                                    style={
+                                      Object {
+                                        "display": "none",
+                                      }
+                                    }
                                   >
                                     <AuthButton
                                       isAuthorizedUser={false}
@@ -13742,7 +13771,9 @@ exports[`Application component should render for anon user 1`] = `
                         </Switch>
                       </Suspense>
                     </div>
-                    <div>
+                    <div
+                      id="full-footer-block"
+                    >
                       <WithStyles(ForwardRef(Grid))
                         container={true}
                         spacing={0}
@@ -14452,7 +14483,13 @@ exports[`Application component should render for anon user 1`] = `
                                           className="ConnectFooter-connectFooter-402"
                                           container={true}
                                           data-testid="connect-footer"
+                                          id="connect-footer-block"
                                           justify="center"
+                                          style={
+                                            Object {
+                                              "display": "none",
+                                            }
+                                          }
                                         >
                                           <ForwardRef(Grid)
                                             alignItems="flex-start"
@@ -14566,11 +14603,23 @@ exports[`Application component should render for anon user 1`] = `
                                             }
                                             container={true}
                                             data-testid="connect-footer"
+                                            id="connect-footer-block"
                                             justify="center"
+                                            style={
+                                              Object {
+                                                "display": "none",
+                                              }
+                                            }
                                           >
                                             <div
                                               className="MuiGrid-root ConnectFooter-connectFooter-402 MuiGrid-container MuiGrid-align-items-xs-flex-start MuiGrid-justify-xs-center"
                                               data-testid="connect-footer"
+                                              id="connect-footer-block"
+                                              style={
+                                                Object {
+                                                  "display": "none",
+                                                }
+                                              }
                                             >
                                               <WithStyles(ForwardRef(Grid))
                                                 className="ConnectFooter-navigation-403"
@@ -20118,8 +20167,7 @@ exports[`Application component should render loading screen while account is loa
                           "location": Object {},
                         }
                       }
-                      isAuthorizedUser={false}
-                      isHdrStudent={false}
+                      isLibraryWebsiteCall={true}
                     >
                       <div
                         className="makeStyles-siteHeader-111"
@@ -20622,8 +20670,13 @@ exports[`Application component should render loading screen while account is loa
                               <WithStyles(ForwardRef(Grid))
                                 className="makeStyles-utility-115"
                                 data-testid="askus"
-                                id="askus"
+                                id="askus-button-block"
                                 item={true}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
                                 xs="auto"
                               >
                                 <ForwardRef(Grid)
@@ -20736,14 +20789,24 @@ exports[`Application component should render loading screen while account is loa
                                     }
                                   }
                                   data-testid="askus"
-                                  id="askus"
+                                  id="askus-button-block"
                                   item={true}
+                                  style={
+                                    Object {
+                                      "display": "none",
+                                    }
+                                  }
                                   xs="auto"
                                 >
                                   <div
                                     className="MuiGrid-root makeStyles-utility-115 MuiGrid-item MuiGrid-grid-xs-auto"
                                     data-testid="askus"
-                                    id="askus"
+                                    id="askus-button-block"
+                                    style={
+                                      Object {
+                                        "display": "none",
+                                      }
+                                    }
                                   >
                                     <AskUs
                                       chatStatus={false}
@@ -22845,8 +22908,13 @@ exports[`Application component should render loading screen while account is loa
                               <WithStyles(ForwardRef(Grid))
                                 className="makeStyles-utility-115"
                                 data-testid="auth"
-                                id="auth"
+                                id="auth-button-block"
                                 item={true}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
                                 xs="auto"
                               >
                                 <ForwardRef(Grid)
@@ -22959,14 +23027,24 @@ exports[`Application component should render loading screen while account is loa
                                     }
                                   }
                                   data-testid="auth"
-                                  id="auth"
+                                  id="auth-button-block"
                                   item={true}
+                                  style={
+                                    Object {
+                                      "display": "none",
+                                    }
+                                  }
                                   xs="auto"
                                 >
                                   <div
                                     className="MuiGrid-root makeStyles-utility-115 MuiGrid-item MuiGrid-grid-xs-auto"
                                     data-testid="auth"
-                                    id="auth"
+                                    id="auth-button-block"
+                                    style={
+                                      Object {
+                                        "display": "none",
+                                      }
+                                    }
                                   >
                                     <AuthButton
                                       isAuthorizedUser={false}
@@ -33239,7 +33317,9 @@ exports[`Application component should render loading screen while account is loa
                         </Switch>
                       </Suspense>
                     </div>
-                    <div>
+                    <div
+                      id="full-footer-block"
+                    >
                       <WithStyles(ForwardRef(Grid))
                         container={true}
                         spacing={0}
@@ -33949,7 +34029,13 @@ exports[`Application component should render loading screen while account is loa
                                           className="ConnectFooter-connectFooter-402"
                                           container={true}
                                           data-testid="connect-footer"
+                                          id="connect-footer-block"
                                           justify="center"
+                                          style={
+                                            Object {
+                                              "display": "none",
+                                            }
+                                          }
                                         >
                                           <ForwardRef(Grid)
                                             alignItems="flex-start"
@@ -34063,11 +34149,23 @@ exports[`Application component should render loading screen while account is loa
                                             }
                                             container={true}
                                             data-testid="connect-footer"
+                                            id="connect-footer-block"
                                             justify="center"
+                                            style={
+                                              Object {
+                                                "display": "none",
+                                              }
+                                            }
                                           >
                                             <div
                                               className="MuiGrid-root ConnectFooter-connectFooter-402 MuiGrid-container MuiGrid-align-items-xs-flex-start MuiGrid-justify-xs-center"
                                               data-testid="connect-footer"
+                                              id="connect-footer-block"
+                                              style={
+                                                Object {
+                                                  "display": "none",
+                                                }
+                                              }
                                             >
                                               <WithStyles(ForwardRef(Grid))
                                                 className="ConnectFooter-navigation-403"

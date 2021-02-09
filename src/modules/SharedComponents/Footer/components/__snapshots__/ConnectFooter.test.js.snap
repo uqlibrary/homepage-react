@@ -5,7 +5,13 @@ exports[`Component ConnectFooter should render 1`] = `
   alignItems="flex-start"
   container={true}
   data-testid="connect-footer"
+  id="connect-footer-block"
   justify="center"
+  style={
+    Object {
+      "display": "none",
+    }
+  }
 >
   <WithStyles(ForwardRef(Grid))
     item={true}
