@@ -19,7 +19,7 @@ context('authorisation errors', () => {
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
     it('page that isnt available to all logged in users does not return an authorisation error for privileged users', () => {
-        cy.visit('/courseresources?user=emcommunity');
+        cy.visit('/courseresources?user=s1111111');
         cy.viewport(1300, 1000);
         cy.get('body').should('not.contain', 'The requested page is available to authorised users only.');
     });
