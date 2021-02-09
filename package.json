@@ -145,6 +145,7 @@
         "axios-cache-adapter": "^2.5.0",
         "babel-loader": "^8.0.6",
         "can-param": "^1.0.4",
+        "caniuse-lite": "^1.0.30001178",
         "classnames": "^2.2.6",
         "connected-react-router": "^6.4.0",
         "copy-webpack-plugin": "^6.2.1",
@@ -178,6 +179,7 @@
     "scripts": {
         "analyse": "webpack --config=./webpack-dist.config --profile --json > stats.json",
         "build": "webpack -p --config=./webpack-dist.config",
+        "build:offSiteApps": "webpack -p --config=./webpack-offSiteApps.config",
         "build:dev": "webpack --config=./webpack.config",
         "cc:reportAll": "scripts/code-coverage.sh",
         "clean": "rm -rf assets coverage cypress/screenshots cypress/videos dist node_modules stats.json .nyc_output",
@@ -239,7 +241,7 @@
             "production": {
                 "presets": [
                     [
-                        "@babel/env",
+                        "env",
                         {
                             "es2015": {
                                 "modules": false
@@ -257,7 +259,6 @@
                     "@babel/plugin-proposal-class-properties",
                     "@babel/plugin-proposal-export-namespace-from",
                     "@babel/plugin-proposal-export-default-from",
-                    "@babel/plugin-proposal-class-properties",
                     [
                         "@babel/plugin-transform-spread",
                         {

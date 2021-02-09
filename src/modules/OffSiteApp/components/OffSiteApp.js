@@ -1,19 +1,13 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Route, Switch } from 'react-router';
-import { routes } from 'config';
 import browserUpdate from 'browser-update';
-import { AccountContext } from 'context';
-import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from 'modules/App/containers/AppAlert';
-import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import UQHeader from 'modules/App/components/UQHeader';
 import ChatStatus from 'modules/App/components/ChatStatus';
-import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 import UQSiteHeader from 'modules/App/components/UQSiteHeader';
 import { makeStyles } from '@material-ui/core/styles';
-import { isHdrStudent } from 'helpers/access';
+import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 
 browserUpdate({
     required: {
@@ -80,12 +74,11 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const App = ({
+export const OffSiteApp = ({
     account,
     author,
     authorDetails,
     accountLoading,
-    accountAuthorDetailsLoading,
     actions,
     chatStatus,
     libHours,
@@ -93,66 +86,17 @@ export const App = ({
     libHoursError,
     history,
 }) => {
-    function showButton(button) {
-        button.style.display = 'block';
-    }
-
-    const showAuthButton = setInterval(() => {
-        const button = document.getElementById('auth-button-block');
-        if (!!button) {
-            showButton(button);
-            clearInterval(showAuthButton);
-        }
-    }, 100); // check every 100ms
-
-    const showMyLibraryButton = setInterval(() => {
-        const button = document.getElementById('mylibrary-button-block');
-        if (!!button) {
-            showButton(button);
-            clearInterval(showMyLibraryButton);
-        }
-    }, 100); // check every 100ms
-
-    const showAskUsButton = setInterval(() => {
-        const button = document.getElementById('askus-button-block');
-        if (!!button) {
-            showButton(button);
-            clearInterval(showAskUsButton);
-        }
-    }, 100); // check every 100ms
-
-    const showConnectFooter = setInterval(() => {
-        const elem = document.getElementById('connect-footer-block');
-        if (!!elem) {
-            elem.style.display = 'flex';
-            clearInterval(showConnectFooter);
-        }
-    }, 100); // check every 100ms
-
     useEffect(() => {
         actions.loadCurrentAccount();
         actions.loadAlerts();
         actions.loadChatStatus();
-
-        // reinsert the elements that are auto hidden so they are optional on other sites
-        showAskUsButton;
-        showAuthButton;
-        showMyLibraryButton;
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const classes = useStyles();
-    const isAccountLoading = accountLoading;
-    const routesConfig = routes.getRoutesConfig({
-        components: pages,
-        authorDetails: authorDetails,
-        account: account,
-        accountAuthorDetailsLoading: accountAuthorDetailsLoading,
-        isHdrStudent: isHdrStudent,
-    });
+    // position static makes the Chat go to the bottom of the screen
     return (
-        <Grid container className={classes.layoutFill}>
+        <Grid container className={classes.layoutFill} style={{ position: 'static' }}>
             {chatStatus && (chatStatus.online === true || chatStatus.online === false) && (
                 <ChatStatus status={chatStatus} />
             )}
@@ -162,7 +106,7 @@ export const App = ({
                 </div>
                 <UQSiteHeader
                     account={account}
-                    accountLoading={isAccountLoading}
+                    accountLoading={accountLoading}
                     author={author}
                     authorDetails={authorDetails}
                     history={history}
@@ -170,44 +114,28 @@ export const App = ({
                     libHours={libHours}
                     libHoursloading={libHoursLoading}
                     libHoursError={libHoursError}
-                    isLibraryWebsiteCall
                 />
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
                 </div>
-                <div style={{ flexGrow: 1, marginTop: 16 }}>
-                    <AccountContext.Provider
-                        value={{
-                            account: {
-                                ...account,
-                            },
-                        }}
-                    >
-                        <React.Suspense fallback={<ContentLoader message="Loading" />}>
-                            <Switch>
-                                {routesConfig.map((route, index) => (
-                                    <Route key={`route_${index}`} {...route} />
-                                ))}
-                            </Switch>
-                        </React.Suspense>
-                    </AccountContext.Provider>
-                </div>
-                <div id="full-footer-block">
-                    <Grid container spacing={0}>
-                        <Grid item xs={12} className={classes.connectFooter}>
-                            <ConnectFooter history={history} />
+                <div>
+                    <div id="full-footer-block">
+                        <Grid container spacing={0} id="full-footer-block-child">
+                            <Grid item xs={12} className={classes.connectFooter}>
+                                <ConnectFooter history={history} />
+                            </Grid>
+                            <Grid item xs={12} className={classes.minimalFooter}>
+                                <MinimalFooter />
+                            </Grid>
                         </Grid>
-                        <Grid item xs={12} className={classes.minimalFooter}>
-                            <MinimalFooter />
-                        </Grid>
-                    </Grid>
+                    </div>
                 </div>
             </div>
         </Grid>
     );
 };
 
-App.propTypes = {
+OffSiteApp.propTypes = {
     account: PropTypes.object,
     accountLoading: PropTypes.bool,
     accountAuthorDetailsLoading: PropTypes.bool,
@@ -222,6 +150,4 @@ App.propTypes = {
     isSessionExpired: PropTypes.any,
 };
 
-App.defaultProps = {};
-
-export default App;
+export default OffSiteApp;

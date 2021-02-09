@@ -137,6 +137,8 @@ export function ConnectFooter(props) {
             data-testid="connect-footer"
             alignItems="flex-start"
             justify="center"
+            id="connect-footer-block"
+            style={{ display: 'none' }}
         >
             <Grid item xs={12} md={4} className={classes.navigation}>
                 <ul>
