@@ -1,4 +1,4 @@
-# SASS Styling for fez-frontend
+# SASS Styling for homepage-react
 
 ## Table of Contents
 
@@ -8,7 +8,7 @@
 
 ## Material Design
 
-Fez-frontend is based on Material Design, and while we are using Material UI for React as a component library, not all components are included, or adhere to Google's philosophy or specifications. As Material design is considered a "guide" more than strict rules, we have liberty to add functionality as we see, but it must :
+Homepage is based on Material Design, and while we are using Material UI for React as a component library, not all components are included, or adhere to Google's philosophy or specifications. As Material design is considered a "guide" more than strict rules, we have liberty to add functionality as we see, but it must :
 
 - Adhere as closely as possible to Materual Design specifications
 - Be usable, and have a UX approach

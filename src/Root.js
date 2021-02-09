@@ -14,7 +14,7 @@ const generateClassName = createGenerateClassName({
 });
 
 // Top level "pages"
-import { App } from 'modules/App';
+import { App } from 'modules/App/components';
 import { ScrollToTop } from 'modules/SharedComponents/Toolbox/ScrollToTop';
 
 const Root = ({ history }) => {

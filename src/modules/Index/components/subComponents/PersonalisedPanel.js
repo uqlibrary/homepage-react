@@ -15,7 +15,7 @@ import AssignmentIndIcon from '@material-ui/icons/AssignmentInd';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import Badge from '@material-ui/core/Badge';
 import PrintIcon from '@material-ui/icons/Print';
-import { Location } from '../../../SharedComponents/Location';
+import { Location } from 'modules/SharedComponents/Location';
 import { ppLocale } from './PersonalisedPanel.locale';
 import { seeEspace, seeLoans, seePrintBalance } from 'helpers/access';
 import Collapse from '@material-ui/core/Collapse';
