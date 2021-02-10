@@ -187,7 +187,7 @@ const webpackConfig = {
             filename: '[name]-[hash].min.css',
         }),
         new CreateOffSiteApp({
-            filename: 'dist/offSiteAppWrapper.js',
+            filename: resolve(__dirname, './dist/') + '/' + config.basePath + 'offSiteAppWrapper.js',
         }),
 
         // plugin for passing in data to the js, like what NODE_ENV we are in.
