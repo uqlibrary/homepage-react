@@ -100,8 +100,9 @@ class CreateOffSiteApp {
             '\n' +
             // TODO dev address
             '    const root = ' +
-            "location.hostname.startsWith('localhost') ? '/homepage-react/dist/development/' : " +
+            "location.hostname.startsWith('localhost') ? '/homepage-react/dist/development/' : '" +
             liveLocation +
+            "'" +
             ';\n' +
             "    const locator = root + 'offSiteApps-js/';\n" +
             "    await insertScript(locator + 'vendor-" +
