@@ -41,6 +41,15 @@ class CreateOffSiteApp {
         };
     }
     apply(compiler) {
+        let liveLocation;
+        if (branch === 'staging') {
+            liveLocation = 'https://homepage-staging.library.uq.edu.au/';
+        } else if (branch.startsWith('feature-')) {
+            liveLocation = 'https://homepage-development.library.uq.edu.au/' + branch + '/';
+        } else {
+            // must be prod, or update list above
+            liveLocation = 'https://www.library.uq.edu.au/';
+        }
         const allData = hash =>
             'async function ready(fn) {\n' +
             "    if (document.readyState !== 'loading'){\n" +
@@ -91,7 +100,9 @@ class CreateOffSiteApp {
             '\n' +
             // TODO dev address
             '    const root = ' +
-            "location.hostname.startsWith('localhost') ? '/homepage-react/dist/development/' : 'https://www.library.uq.edu.au/';\n" +
+            "location.hostname.startsWith('localhost') ? '/homepage-react/dist/development/' : " +
+            liveLocation +
+            ';\n' +
             "    const locator = root + 'offSiteApps-js/';\n" +
             "    await insertScript(locator + 'vendor-" +
             hash +
