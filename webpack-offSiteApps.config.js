@@ -33,7 +33,7 @@ if (config.environment === 'development') {
 
 // TODO see if this can moved to an external file
 class CreateOffSiteApp {
-    // creates offSiteAppWrapper.js in dist that include the appropriate files because it can read the hash value here
+    // creates offSiteAppWrapper.js in dist that includes the appropriate files because it can read the hash value here
     // from https://stackoverflow.com/questions/50228128/how-to-inject-webpack-build-hash-to-application-code
     constructor(options = {}) {
         this.options = {
@@ -42,10 +42,10 @@ class CreateOffSiteApp {
     }
     apply(compiler) {
         let liveLocation;
-        if (branch === 'staging') {
+        if ((this.options.branch || '') === 'staging') {
             liveLocation = 'https://homepage-staging.library.uq.edu.au/';
-        } else if (branch.startsWith('feature-')) {
-            liveLocation = 'https://homepage-development.library.uq.edu.au/' + branch + '/';
+        } else if ((this.options.branch || '').startsWith('feature-')) {
+            liveLocation = 'https://homepage-development.library.uq.edu.au/' + this.options.branch + '/';
         } else {
             // must be prod, or update list above
             liveLocation = 'https://www.library.uq.edu.au/';
@@ -133,14 +133,67 @@ class CreateOffSiteApp {
     }
 }
 
+function recursiveIssuer(m) {
+    if (m.issuer) {
+        return recursiveIssuer(m.issuer);
+    } else if (m.name) {
+        return m.name;
+    } else {
+        return false;
+    }
+}
+
+// per https://github.com/webpack-contrib/mini-css-extract-plugin/issues/45
+// one entry per application
+const siteCss = [
+    {
+        path: 'applications/uqlapp/',
+        name: 'uqlapp',
+        // primary: true, // unused
+    },
+    {
+        path: 'applications/primo/',
+        name: 'primo',
+        // primary: true, // unused
+    },
+    {
+        path: 'applications/rightnow/',
+        name: 'rightnow',
+        // primary: false, // unused
+    },
+];
+
+const entryPoints = {
+    main: resolve(__dirname, './src/offSiteAppWrapper-index.js'),
+    vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
+};
+siteCss.forEach(entry => {
+    const cssFile = resolve(__dirname, './src/' + entry.path + 'custom-styles.scss');
+    // from https://stackoverflow.com/questions/40991518/webpack-check-file-exist-and-import-in-condition
+    if (fs.existsSync(cssFile)) {
+        entryPoints[entry.name] = cssFile;
+    }
+});
+console.log('entryPoints = ', entryPoints);
+const cacheGroups = {
+    commons: {
+        chunks: 'all',
+    },
+};
+siteCss.forEach(entryPoint => {
+    cacheGroups[entryPoint.name] = {
+        name: entryPoint.name + '/load.js',
+        test: (m, c, entry = entryPoint.name) => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
+        chunks: 'all',
+        enforce: true,
+    };
+});
+console.log('cacheGroups = ', cacheGroups);
 const webpackConfig = {
     mode: 'production',
     devtool: 'source-map',
     // The entry file. All your app roots from here.
-    entry: {
-        main: resolve(__dirname, './src/offSiteAppWrapper-index.js'),
-        vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
-    },
+    entry: entryPoints,
     // Where you want the output to go
     output: {
         path: resolve(__dirname, './dist/', config.basePath),
@@ -196,10 +249,21 @@ const webpackConfig = {
         }),
         // new ExtractTextPlugin('[name]-[hash].min.css'),
         new MiniCssExtractPlugin({
-            filename: '[name]-[hash].min.css',
+            // filename: '[name]-[hash].min.css',
+            // moduleFilename doesnt seem to do anything
+            moduleFilename: props => {
+                const { name, rest } = props;
+                console.log('MiniCssExtractPlugin: rest = ', rest);
+                console.log('MiniCssExtractPlugin: name = ', name);
+                return name === 'main' ? '[name]-[hash].min.css' : '[name].min.css';
+            },
+            // moduleFilename: ({ name }) => {
+            //     return name === 'main' ? '[name]-[hash].min.css' : '[name].min.css';
+            // },
         }),
         new CreateOffSiteApp({
             filename: resolve(__dirname, './dist/') + '/' + config.basePath + 'offSiteAppWrapper.js',
+            branch: branch,
         }),
 
         // plugin for passing in data to the js, like what NODE_ENV we are in.
@@ -245,11 +309,8 @@ const webpackConfig = {
         splitChunks: {
             automaticNameDelimiter: '-',
             minChunks: 5,
-            cacheGroups: {
-                commons: {
-                    chunks: 'all',
-                },
-            },
+            // from https://github.com/webpack-contrib/mini-css-extract-plugin/issues/45#issuecomment-425645975
+            cacheGroups: cacheGroups,
         },
         minimizer: [
             new TerserPlugin({
@@ -285,6 +346,7 @@ const webpackConfig = {
             },
             {
                 test: /\.scss/,
+                // exclude: [/src\/applications/],
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
             {
