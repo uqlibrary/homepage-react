@@ -95,7 +95,7 @@ function showFooter(isFooterRequired = true, isConnectFooterRequired = false) {
 
 showAskusButtonBlock();
 
-showAuthButtonBlock(); //auth button but no mylibrary
+showAuthButtonBlock(); // auth button but no mylibrary
 
 showFooter(); // show both Minimal (purple) and Connect (grey) Footers
 
