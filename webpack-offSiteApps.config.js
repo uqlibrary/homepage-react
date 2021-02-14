@@ -50,7 +50,7 @@ class CreateOffSiteApp {
             // must be prod, or update list above
             liveLocation = 'https://www.library.uq.edu.au/';
         }
-        const allData = hash =>
+        const allData = (hash, appname) =>
             'async function ready(fn) {\n' +
             "    if (document.readyState !== 'loading'){\n" +
             '        await fn();\n' +
@@ -97,7 +97,6 @@ class CreateOffSiteApp {
             // eg
             // "    await insertScript('https://unpkg.com/@webcomponents/webcomponentsjs@2.2.10/webcomponents-bundle.js');\n" +
             // "    await insertScript('https://unpkg.com/@webcomponents/webcomponentsjs@2.2.10/custom-elements-es5-adapter.js');\n" +
-            '\n' +
             // TODO dev address
             '    const root = ' +
             "location.hostname.startsWith('localhost') ? '/homepage-react/dist/development/' : '" +
@@ -105,41 +104,29 @@ class CreateOffSiteApp {
             "'" +
             ';\n' +
             "    const locator = root + 'offSiteApps-js/';\n" +
-            "    await insertScript(locator + 'vendor-" +
-            hash +
-            ".min.js');\n" +
-            "    await insertScript(locator + 'main-" +
-            hash +
-            ".min.js');\n" +
-            "    await insertLink(root + 'main-" +
-            hash +
-            ".min.css');\n" +
-            '\n' +
+            `    await insertScript(locator + 'vendor-${hash}.min.js');\n` +
+            `    await insertScript(locator + 'main-${hash}.min.js');\n` +
+            `    await insertLink(root + 'main-${hash}.min.css');\n\n` +
+            `    await insertScript(locator + '${appname}-${hash}.min.js');\n` +
+            `    await insertLink(root + '${appname}-${hash}.min.css');\n` +
             '}\n' +
             '\n' +
             'ready(loadReusableComponents);\n';
 
         compiler.hooks.done.tap(this.constructor.name, stats => {
             return new Promise((resolve, reject) => {
-                fs.writeFile(this.options.filename, allData(stats.hash), 'utf8', error => {
-                    if (error) {
-                        reject(error);
-                        return;
-                    }
-                    resolve();
-                });
+                const map = new Map(Object.entries(this.options.filenames));
+                for (const [appname, filename] of map) {
+                    fs.writeFile(filename, allData(stats.hash, appname), 'utf8', error => {
+                        if (error) {
+                            reject(error);
+                            return;
+                        }
+                        resolve();
+                    });
+                }
             });
         });
-    }
-}
-
-function recursiveIssuer(m) {
-    if (m.issuer) {
-        return recursiveIssuer(m.issuer);
-    } else if (m.name) {
-        return m.name;
-    } else {
-        return false;
     }
 }
 
@@ -167,6 +154,7 @@ const entryPoints = {
     main: resolve(__dirname, './src/offSiteAppWrapper-index.js'),
     vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
 };
+const loadWrapper = {};
 siteCss.forEach(entry => {
     entryPoints[entry.name] = [];
     const cssFile = resolve(__dirname, './src/' + entry.path + 'custom-styles.scss');
@@ -180,23 +168,10 @@ siteCss.forEach(entry => {
     }
     if (entryPoints[entry.name].length === 0) {
         delete entryPoints[entry.name];
+    } else {
+        loadWrapper[entry.name] = resolve(__dirname, './dist/') + '/' + config.basePath + entry.name + '.js';
     }
 });
-console.log('entryPoints = ', entryPoints);
-const cacheGroups = {
-    commons: {
-        chunks: 'all',
-    },
-};
-// siteCss.forEach(entryPoint => {
-//     cacheGroups[entryPoint.name] = {
-//         name: entryPoint.name + '/load.js',
-//         test: (m, c, entry = entryPoint.name) => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-//         chunks: 'all',
-//         enforce: true,
-//     };
-// });
-console.log('cacheGroups = ', cacheGroups);
 const webpackConfig = {
     mode: 'production',
     devtool: 'source-map',
@@ -257,15 +232,10 @@ const webpackConfig = {
         }),
         // new ExtractTextPlugin('[name]-[hash].min.css'),
         new MiniCssExtractPlugin({
-            // we want a hashed filename for main, but the offsite apps (eg primo) must have an unhashed name
-            // or it is too hard to figureout what file to load
-            // this works in v0.8 but did not work when I upgraded all the way to 1.3.6
-            moduleFilename: ({ name }) => {
-                return name === 'main' ? '[name]-[hash].min.css' : '[name].min.css';
-            },
+            filename: '[name]-[hash].min.css',
         }),
         new CreateOffSiteApp({
-            filename: resolve(__dirname, './dist/') + '/' + config.basePath + 'offSiteAppWrapper.js',
+            filenames: loadWrapper,
             branch: branch,
         }),
 
@@ -312,8 +282,11 @@ const webpackConfig = {
         splitChunks: {
             automaticNameDelimiter: '-',
             minChunks: 5,
-            // from https://github.com/webpack-contrib/mini-css-extract-plugin/issues/45#issuecomment-425645975
-            cacheGroups: cacheGroups,
+            cacheGroups: {
+                commons: {
+                    chunks: 'all',
+                },
+            },
         },
         minimizer: [
             new TerserPlugin({
