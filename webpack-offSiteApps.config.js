@@ -168,10 +168,18 @@ const entryPoints = {
     vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
 };
 siteCss.forEach(entry => {
+    entryPoints[entry.name] = [];
     const cssFile = resolve(__dirname, './src/' + entry.path + 'custom-styles.scss');
     // from https://stackoverflow.com/questions/40991518/webpack-check-file-exist-and-import-in-condition
     if (fs.existsSync(cssFile)) {
-        entryPoints[entry.name] = cssFile;
+        entryPoints[entry.name].push(cssFile);
+    }
+    const jsFile = resolve(__dirname, './src/' + entry.path + 'load.js');
+    if (fs.existsSync(jsFile)) {
+        entryPoints[entry.name].push(jsFile);
+    }
+    if (entryPoints[entry.name].length === 0) {
+        delete entryPoints[entry.name];
     }
 });
 console.log('entryPoints = ', entryPoints);
@@ -180,14 +188,14 @@ const cacheGroups = {
         chunks: 'all',
     },
 };
-siteCss.forEach(entryPoint => {
-    cacheGroups[entryPoint.name] = {
-        name: entryPoint.name + '/load.js',
-        test: (m, c, entry = entryPoint.name) => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
-        chunks: 'all',
-        enforce: true,
-    };
-});
+// siteCss.forEach(entryPoint => {
+//     cacheGroups[entryPoint.name] = {
+//         name: entryPoint.name + '/load.js',
+//         test: (m, c, entry = entryPoint.name) => m.constructor.name === 'CssModule' && recursiveIssuer(m) === entry,
+//         chunks: 'all',
+//         enforce: true,
+//     };
+// });
 console.log('cacheGroups = ', cacheGroups);
 const webpackConfig = {
     mode: 'production',
