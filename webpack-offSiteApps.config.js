@@ -249,17 +249,12 @@ const webpackConfig = {
         }),
         // new ExtractTextPlugin('[name]-[hash].min.css'),
         new MiniCssExtractPlugin({
-            // filename: '[name]-[hash].min.css',
-            // moduleFilename doesnt seem to do anything
-            moduleFilename: props => {
-                const { name, rest } = props;
-                console.log('MiniCssExtractPlugin: rest = ', rest);
-                console.log('MiniCssExtractPlugin: name = ', name);
+            // we want a hashed filename for main, but the offsite apps (eg primo) must have an unhashed name
+            // or it is too hard to figureout what file to load
+            // this works in v0.8 but did not work when I upgraded all the way to 1.3.6
+            moduleFilename: ({ name }) => {
                 return name === 'main' ? '[name]-[hash].min.css' : '[name].min.css';
             },
-            // moduleFilename: ({ name }) => {
-            //     return name === 'main' ? '[name]-[hash].min.css' : '[name].min.css';
-            // },
         }),
         new CreateOffSiteApp({
             filename: resolve(__dirname, './dist/') + '/' + config.basePath + 'offSiteAppWrapper.js',
