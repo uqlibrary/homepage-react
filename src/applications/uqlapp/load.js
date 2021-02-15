@@ -6,22 +6,6 @@ function ready(fn) {
     }
 }
 
-// insert the react-root into the document tree
-function loadReusableComponents() {
-    // insert elements, even before React is loaded
-
-    // first element of the original document
-    const firstElement = document.body.children[0];
-
-    // insert the react root for the react code to grab onto
-    const reactRoot = document.createElement('div');
-    reactRoot.setAttribute('id', 'react-root');
-    reactRoot.setAttribute('class', 'layout-fill');
-    reactRoot.setAttribute('style', 'height:auto');
-    document.body.insertBefore(reactRoot, firstElement);
-}
-
-// unfortunately, all these functions must repeat in every load.js - I couldnt get them to include from a common file
 function showElement(button) {
     button.style.display = 'block';
 }
@@ -72,14 +56,14 @@ function showConnectFooterBlock() {
     }, 100);
 }
 
-function showFooter(isFooterRequired = true, isConnectFooterRequired = false) {
+function showFooter(isFooterRequired = true, isConnectFooterRequired = true) {
     const footerExists = setInterval(() => {
         const footer = document.getElementById('full-footer-block');
         if (!!footer) {
             clearInterval(footerExists);
 
             if (!!isFooterRequired) {
-                document.body.appendChild(footer.firstElementChild);
+                document.body.append(footer.firstElementChild);
 
                 const footerChild = document.getElementById('full-footer-block-child');
                 !!footerChild && (footerChild.style.display = 'flex');
@@ -88,15 +72,29 @@ function showFooter(isFooterRequired = true, isConnectFooterRequired = false) {
             } else {
                 footer.style.display = 'none';
             }
-            document.body.style.overflow = 'auto'; // the default homepage style blocks page scroll
         }
+        document.body.style.overflow = 'auto'; // the default homepage style blocks page scroll
     }, 100);
 }
 
-showAskusButtonBlock();
+function loadReusableComponents() {
+    // insert elements, even before React is loaded
 
-showAuthButtonBlock(); // auth button but no mylibrary
+    // first element of the original document
+    const firstElement = document.body.children[0];
 
-showFooter(); // show both Minimal (purple) and Connect (grey) Footers
+    // insert the react root for the react code to grab onto
+    const reactRoot = document.createElement('div');
+    reactRoot.setAttribute('id', 'react-root');
+    reactRoot.setAttribute('class', 'layout-fill');
+    reactRoot.setAttribute('style', 'height:auto');
+    document.body.insertBefore(reactRoot, firstElement);
+
+    showAskusButtonBlock();
+
+    showAuthButtonBlock(); // auth button but no mylibrary
+
+    showFooter(); // show both Minimal (purple) and Connect (grey) Footers
+}
 
 ready(loadReusableComponents);
