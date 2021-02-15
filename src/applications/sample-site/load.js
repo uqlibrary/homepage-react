@@ -86,7 +86,7 @@ function loadReusableComponents() {
 
     // insert the react root for the react code to grab onto
     const reactRoot = document.createElement('div');
-    reactRoot.setAttribute('id', 'react-root');
+    reactRoot.setAttribute('id', 'headerfooter-react-root');
     reactRoot.setAttribute('class', 'layout-fill');
     reactRoot.setAttribute('style', 'height:auto');
     document.body.insertBefore(reactRoot, firstElement);
