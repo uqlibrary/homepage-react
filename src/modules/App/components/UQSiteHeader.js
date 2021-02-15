@@ -201,7 +201,14 @@ export const UQSiteHeader = ({
                         onClick={redirectUserToLogin(isAuthorizedUser, true)}
                     />
                 </Grid>
-                <Grid item xs={'auto'} className={classes.utility} data-testid="mobile-megamenu" id="mobile-megamenu">
+                <Grid
+                    item
+                    xs={'auto'}
+                    className={classes.utility}
+                    data-testid="mobile-megamenu"
+                    id="mobile-megamenu"
+                    style={{ display: 'none' }}
+                >
                     <Hidden lgUp>
                         <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
                             <Tooltip title={locale.global.mainNavButton.tooltip}>
@@ -233,11 +240,13 @@ export const UQSiteHeader = ({
             </Grid>
             <Grid
                 container
+                id="desktop-megamenu-block"
                 spacing={0}
                 role="region"
                 aria-label="Main site navigation"
                 className={classes.siteHeaderBottom}
                 justify={'flex-start'}
+                style={{ display: 'none' }}
             >
                 <Hidden mdDown>
                     <Grid item xs={12} id="desktop-megamenu">

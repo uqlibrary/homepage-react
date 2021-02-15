@@ -47,6 +47,23 @@ function showAuthButtonBlock(isMyLibraryButtonRequired = false) {
     }, 100);
 }
 
+function showMegaMenuBlock() {
+    const showMegaMenuButtonDesktop = setInterval(() => {
+        const button = document.getElementById('desktop-megamenu-block');
+        if (!!button) {
+            button.style.display = 'flex';
+            clearInterval(showMegaMenuButtonDesktop);
+        }
+    }, 100);
+    const showMegaMenuButtonMobile = setInterval(() => {
+        const button = document.getElementById('mobile-megamenu');
+        if (!!button) {
+            button.style.display = 'flex';
+            clearInterval(showMegaMenuButtonMobile);
+        }
+    }, 100);
+}
+
 function showConnectFooterBlock() {
     const showConnectFooter = setInterval(() => {
         const elem = document.getElementById('connect-footer-block');
@@ -97,6 +114,9 @@ function loadReusableComponents() {
     // to have the login/logout button appear, call this function;
     // to also have the My Library button appear (when logged in), pass a parameter of true
     showAuthButtonBlock(true);
+
+    // to have the mega menu appear, call this function;
+    showMegaMenuBlock();
 
     // always call this function - it fixes a scrolling issue with the page
     // to have the footer NOT display, call this with a first parameter of false
