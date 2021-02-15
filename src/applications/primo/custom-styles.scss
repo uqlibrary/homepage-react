@@ -63,6 +63,7 @@
 
 /* Style imports to override primo defaults */
 @import "styles-imports/variables";
+@import "www/styles/main";
 @import "styles-imports/main-search-buttons";
 @import "styles-imports/prm-user-area";
 @import "styles-imports/full_view_status";
@@ -150,7 +151,7 @@ prm-browse-search-bar .search-scope {
 [class*=FT] > span,
 [class*=unavailable] > span,
 [class*=no_] > span,
-a,
+ui-view a,
 md-grid-tile .tile-header .header-link .arrow-icon,
 md-grid-tile .tile-header .header-link:focus,
 md-grid-tile .tile-header .header-link:hover,
@@ -733,4 +734,9 @@ prm-citation-linker .md-button.button-large.button-with-icon md-icon {
 
 prm-citation-linker md-input-container:not([md-no-float]) .md-select-placeholder span:first-child {
   margin-bottom: -3px;
+}
+
+#skipNavigation,
+.uq-header__container .menu-global ul a {
+  color: #fff !important;
 }
