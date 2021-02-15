@@ -53,17 +53,7 @@ function showFooter(isFooterRequired = true, isConnectFooterRequired = true) {
 }
 
 function loadReusableComponents() {
-    // insert elements, even before React is loaded
-
-    // first element of the original document
-    const firstElement = document.body.children[0];
-
-    // insert the react root for the react code to grab onto
-    const reactRoot = document.createElement('div');
-    reactRoot.setAttribute('id', 'headerfooter-react-root');
-    reactRoot.setAttribute('class', 'layout-fill');
-    reactRoot.setAttribute('style', 'height:auto');
-    document.body.insertBefore(reactRoot, firstElement);
+    // the react root is inserted via angular in the Primo custom.js file, within the Primo View Package
 
     showAskusButtonBlock();
 
