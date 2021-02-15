@@ -26,8 +26,29 @@ $paddingTiny: .25em;
 
 // colors
 
+//theme colours
+$theme-color: #51247A; // UQ purple 2018
+$theme-color-dark: #51247A; // UQ purple 2018
+$theme-color-lighter: #6B0C8A;
+$theme-color-light: #d2c1d7;
+
 $accent-color: #2377CB;
+$accent-color-light: #288BED;
+$accent-color-lighter: #D9EEFF;
+$accent-color-dark: #005EA5;
 $accent-color-half-opacity: rgba(35, 119, 203, .5);
+
+$secondary-color: #595959;
+$secondary-color-light: #f2f2f2;
+$secondary-color-dark: #333;
+
+$error-color: #FF3A11;
+
+//special elements colours
+$footer-background-color: #e5e5e5;
+$menu-background-color: #fff;
+$uq-emerald: hsl(113, 49%, 35%);
+
 
 $muteOrange: red;
 
