@@ -28,9 +28,9 @@ const useStyles = makeStyles(
             borderRadius: 4,
         },
         chatAction: {
-            position: 'absolute',
             bottom: theme.spacing(2),
             right: theme.spacing(2),
+            position: 'fixed',
         },
         chatIcon: {
             color: theme.palette.white.main,
