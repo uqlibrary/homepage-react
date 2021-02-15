@@ -57,6 +57,8 @@ function loadReusableComponents() {
 
     showAskusButtonBlock();
 
+    // no megamenu
+
     // no auth button
 
     showFooter(false); // no footer
