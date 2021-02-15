@@ -106,9 +106,9 @@ class CreateOffSiteApp {
             "    const locator = root + 'offSiteApps-js/';\n" +
             `    await insertScript(locator + 'vendor-${hash}.min.js');\n` +
             `    await insertScript(locator + 'main-${hash}.min.js');\n` +
-            `    await insertLink(root + 'main-${hash}.min.css');\n\n` +
+            `    await insertLink(locator + 'main-${hash}.min.css');\n\n` +
             `    await insertScript(locator + '${appname}-${hash}.min.js');\n` +
-            `    await insertLink(root + '${appname}-${hash}.min.css');\n` +
+            `    await insertLink(locator + '${appname}-${hash}.min.css');\n` +
             '}\n' +
             '\n' +
             'ready(loadReusableComponents);\n';
@@ -132,30 +132,33 @@ class CreateOffSiteApp {
 
 // per https://github.com/webpack-contrib/mini-css-extract-plugin/issues/45
 // one entry per application
-const siteCss = [
-    {
-        path: 'applications/uqlapp/',
-        name: 'uqlapp',
-        // primary: true, // unused
-    },
-    {
-        path: 'applications/primo/',
-        name: 'primo',
-        // primary: true, // unused
-    },
-    {
-        path: 'applications/rightnow/',
-        name: 'rightnow',
-        // primary: false, // unused
-    },
-];
-
 const entryPoints = {
     main: resolve(__dirname, './src/offSiteAppWrapper-index.js'),
     vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
 };
+function thirdPartySitesUsingHeader() {
+    const list = [];
+    const applicationsFolder = resolve(__dirname, './src/applications/');
+    fs.readdirSync(applicationsFolder).forEach(file => {
+        try {
+            if (fs.lstatSync(applicationsFolder + '/' + file).isDirectory() && file !== 'sample-site') {
+                list.push({
+                    path: `applications/${file}/`,
+                    name: `${file}`,
+                    // primary: true, // unused
+                });
+            }
+        } catch (e) {
+            // Handle error
+            console.log('thirdPartySitesUsingHeader error on ', file, ':', e); // Handle error
+            throw new Error(e);
+        }
+    });
+    return list;
+}
+
 const loadWrapper = {};
-siteCss.forEach(entry => {
+thirdPartySitesUsingHeader().forEach(entry => {
     entryPoints[entry.name] = [];
     const cssFile = resolve(__dirname, './src/' + entry.path + 'custom-styles.scss');
     // from https://stackoverflow.com/questions/40991518/webpack-check-file-exist-and-import-in-condition
@@ -232,7 +235,7 @@ const webpackConfig = {
         }),
         // new ExtractTextPlugin('[name]-[hash].min.css'),
         new MiniCssExtractPlugin({
-            filename: '[name]-[hash].min.css',
+            filename: 'offSiteApps-js/[name]-[hash].min.css',
         }),
         new CreateOffSiteApp({
             filenames: loadWrapper,
