@@ -229,7 +229,7 @@ export const UQSiteHeader = ({
                     className={classes.utility}
                     data-testid="mobile-megamenu"
                     id="mobile-megamenu"
-                    // style={{ display: 'none' }}
+                    style={{ display: 'none' }}
                 >
                     <Hidden lgUp>
                         <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
