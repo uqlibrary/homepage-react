@@ -50,6 +50,7 @@ class CreateOffSiteApp {
             // must be prod, or update list above
             liveLocation = 'https://www.library.uq.edu.au/';
         }
+        const fileLocation = this.options.fileLocation || '/';
         const allData = (hash, appname) =>
             'async function ready(fn) {\n' +
             "    if (document.readyState !== 'loading'){\n" +
@@ -103,7 +104,7 @@ class CreateOffSiteApp {
             liveLocation +
             "'" +
             ';\n' +
-            "    const locator = root + 'offSiteApps-js/';\n" +
+            `    const locator = root + '${fileLocation}';\n` +
             `    await insertScript(locator + 'vendor-${hash}.min.js');\n` +
             `    await insertScript(locator + 'main-${hash}.min.js');\n` +
             `    await insertLink(locator + 'main-${hash}.min.css');\n\n` +
@@ -157,6 +158,7 @@ function thirdPartySitesUsingHeader() {
     return list;
 }
 
+const offSiteAppsLocation = 'offSiteApps-js/';
 const loadWrapper = {};
 thirdPartySitesUsingHeader().forEach(entry => {
     entryPoints[entry.name] = [];
@@ -172,7 +174,8 @@ thirdPartySitesUsingHeader().forEach(entry => {
     if (entryPoints[entry.name].length === 0) {
         delete entryPoints[entry.name];
     } else {
-        loadWrapper[entry.name] = resolve(__dirname, './dist/') + '/' + config.basePath + entry.name + '.js';
+        loadWrapper[entry.name] =
+            resolve(__dirname, './dist/') + '/' + config.basePath + offSiteAppsLocation + entry.name + '.js';
     }
 });
 const webpackConfig = {
@@ -183,7 +186,7 @@ const webpackConfig = {
     // Where you want the output to go
     output: {
         path: resolve(__dirname, './dist/', config.basePath),
-        filename: 'offSiteApps-js/[name]-[hash].min.js',
+        filename: offSiteAppsLocation + '[name]-[hash].min.js',
         publicPath: config.publicPath,
     },
     devServer: {
@@ -235,11 +238,12 @@ const webpackConfig = {
         }),
         // new ExtractTextPlugin('[name]-[hash].min.css'),
         new MiniCssExtractPlugin({
-            filename: 'offSiteApps-js/[name]-[hash].min.css',
+            filename: offSiteAppsLocation + '[name]-[hash].min.css',
         }),
         new CreateOffSiteApp({
             filenames: loadWrapper,
             branch: branch,
+            fileLocation: offSiteAppsLocation,
         }),
 
         // plugin for passing in data to the js, like what NODE_ENV we are in.
