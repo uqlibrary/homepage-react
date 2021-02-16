@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { throttle } from 'throttle-debounce';
 import { PropTypes } from 'prop-types';
 
@@ -104,6 +104,28 @@ export const UQSiteHeader = ({
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(!menuOpen);
 
+    useEffect(() => {
+        // reinsert the elements that are auto hidden so they are optional on other sites
+        if (isLibraryWebsiteCall) {
+            const showMegaMenuDesktop = setInterval(() => {
+                const megamenu = document.getElementById('desktop-megamenu-block');
+                if (!!megamenu) {
+                    megamenu.style.display = 'flex';
+                    clearInterval(showMegaMenuDesktop);
+                }
+            }, 100); // check every 100ms
+
+            const showMegaMenuMobile = setInterval(() => {
+                const button = document.getElementById('mobile-megamenu');
+                if (!!button) {
+                    button.style.display = 'block';
+                    clearInterval(showMegaMenuMobile);
+                }
+            }, 100); // check every 100ms
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     const throttledAccountLoad = useRef(throttle(3100, () => loadCurrentAccount()));
     const throttledOpeningHoursLoad = useRef(throttle(3100, () => loadLibHours()));
     const throttledChatStatusLoad = useRef(throttle(3100, () => loadChatStatus()));
@@ -207,7 +229,7 @@ export const UQSiteHeader = ({
                     className={classes.utility}
                     data-testid="mobile-megamenu"
                     id="mobile-megamenu"
-                    style={{ display: 'none' }}
+                    // style={{ display: 'none' }}
                 >
                     <Hidden lgUp>
                         <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
