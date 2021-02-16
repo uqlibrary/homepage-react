@@ -177,6 +177,14 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 sameElse: 'D MMMM [at] h.mma',
             })
             .replace('.00', '');
+    // there is something strange happening that sometimes the api sends us an object
+    // convert to an array when it happens
+    const standardisedTrainingEvents =
+        !!trainingEvents && typeof trainingEvents === 'object' // && trainingEvents !== null
+            ? Object.keys(trainingEvents).map(key => {
+                  return trainingEvents[key];
+              })
+            : trainingEvents;
     return (
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
@@ -188,8 +196,8 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                     </Fade>
                 )}
                 {!trainingEventsError &&
-                    trainingEvents &&
-                    trainingEvents.length > 0 &&
+                    standardisedTrainingEvents &&
+                    standardisedTrainingEvents.length > 0 &&
                     !trainingEventsLoading &&
                     !eventDetail && (
                         <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
@@ -199,9 +207,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                 aria-live="assertive"
                                 aria-label="UQ training Events list"
                             >
-                                {trainingEvents &&
-                                    trainingEvents.length > 0 &&
-                                    trainingEvents.map((event, index) => {
+                                {standardisedTrainingEvents &&
+                                    standardisedTrainingEvents.length > 0 &&
+                                    standardisedTrainingEvents.map((event, index) => {
                                         return (
                                             <Grid container spacing={0} className={classes.row} key={index}>
                                                 <Grid item xs={12}>
@@ -355,7 +363,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
 };
 
 Training.propTypes = {
-    trainingEvents: PropTypes.array,
+    trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
 };
