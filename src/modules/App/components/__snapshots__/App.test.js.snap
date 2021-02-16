@@ -3852,6 +3852,11 @@ exports[`Application component should render for anon user 1`] = `
                                 data-testid="mobile-megamenu"
                                 id="mobile-megamenu"
                                 item={true}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
                                 xs="auto"
                               >
                                 <ForwardRef(Grid)
@@ -3966,12 +3971,22 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="mobile-megamenu"
                                   id="mobile-megamenu"
                                   item={true}
+                                  style={
+                                    Object {
+                                      "display": "none",
+                                    }
+                                  }
                                   xs="auto"
                                 >
                                   <div
                                     className="MuiGrid-root makeStyles-utility-115 MuiGrid-item MuiGrid-grid-xs-auto"
                                     data-testid="mobile-megamenu"
                                     id="mobile-megamenu"
+                                    style={
+                                      Object {
+                                        "display": "none",
+                                      }
+                                    }
                                   >
                                     <Hidden
                                       lgUp={true}
@@ -23234,6 +23249,11 @@ exports[`Application component should render loading screen while account is loa
                                 data-testid="mobile-megamenu"
                                 id="mobile-megamenu"
                                 item={true}
+                                style={
+                                  Object {
+                                    "display": "none",
+                                  }
+                                }
                                 xs="auto"
                               >
                                 <ForwardRef(Grid)
@@ -23348,12 +23368,22 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="mobile-megamenu"
                                   id="mobile-megamenu"
                                   item={true}
+                                  style={
+                                    Object {
+                                      "display": "none",
+                                    }
+                                  }
                                   xs="auto"
                                 >
                                   <div
                                     className="MuiGrid-root makeStyles-utility-115 MuiGrid-item MuiGrid-grid-xs-auto"
                                     data-testid="mobile-megamenu"
                                     id="mobile-megamenu"
+                                    style={
+                                      Object {
+                                        "display": "none",
+                                      }
+                                    }
                                   >
                                     <Hidden
                                       lgUp={true}
