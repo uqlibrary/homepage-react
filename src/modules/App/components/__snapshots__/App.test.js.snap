@@ -14516,13 +14516,7 @@ exports[`Application component should render for anon user 1`] = `
                                           className="ConnectFooter-connectFooter-402"
                                           container={true}
                                           data-testid="connect-footer"
-                                          id="connect-footer-block"
                                           justify="center"
-                                          style={
-                                            Object {
-                                              "display": "none",
-                                            }
-                                          }
                                         >
                                           <ForwardRef(Grid)
                                             alignItems="flex-start"
@@ -14636,23 +14630,11 @@ exports[`Application component should render for anon user 1`] = `
                                             }
                                             container={true}
                                             data-testid="connect-footer"
-                                            id="connect-footer-block"
                                             justify="center"
-                                            style={
-                                              Object {
-                                                "display": "none",
-                                              }
-                                            }
                                           >
                                             <div
                                               className="MuiGrid-root ConnectFooter-connectFooter-402 MuiGrid-container MuiGrid-align-items-xs-flex-start MuiGrid-justify-xs-center"
                                               data-testid="connect-footer"
-                                              id="connect-footer-block"
-                                              style={
-                                                Object {
-                                                  "display": "none",
-                                                }
-                                              }
                                             >
                                               <WithStyles(ForwardRef(Grid))
                                                 className="ConnectFooter-navigation-403"
@@ -34095,13 +34077,7 @@ exports[`Application component should render loading screen while account is loa
                                           className="ConnectFooter-connectFooter-402"
                                           container={true}
                                           data-testid="connect-footer"
-                                          id="connect-footer-block"
                                           justify="center"
-                                          style={
-                                            Object {
-                                              "display": "none",
-                                            }
-                                          }
                                         >
                                           <ForwardRef(Grid)
                                             alignItems="flex-start"
@@ -34215,23 +34191,11 @@ exports[`Application component should render loading screen while account is loa
                                             }
                                             container={true}
                                             data-testid="connect-footer"
-                                            id="connect-footer-block"
                                             justify="center"
-                                            style={
-                                              Object {
-                                                "display": "none",
-                                              }
-                                            }
                                           >
                                             <div
                                               className="MuiGrid-root ConnectFooter-connectFooter-402 MuiGrid-container MuiGrid-align-items-xs-flex-start MuiGrid-justify-xs-center"
                                               data-testid="connect-footer"
-                                              id="connect-footer-block"
-                                              style={
-                                                Object {
-                                                  "display": "none",
-                                                }
-                                              }
                                             >
                                               <WithStyles(ForwardRef(Grid))
                                                 className="ConnectFooter-navigation-403"
