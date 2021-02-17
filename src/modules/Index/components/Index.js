@@ -284,7 +284,7 @@ Index.propTypes = {
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
     computerAvailabilityError: PropTypes.bool,
-    trainingEvents: PropTypes.array,
+    trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
     printBalance: PropTypes.object,
