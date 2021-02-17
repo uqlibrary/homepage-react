@@ -164,7 +164,7 @@ export const UQSiteHeader = ({
         } else if (isSubpageOfHomepageReactApp) {
             return !!history && history.push(pathConfig.index);
         } else {
-            window.location.href(libraryHomepageUrl);
+            window.location.href = libraryHomepageUrl;
             return false;
         }
     };
