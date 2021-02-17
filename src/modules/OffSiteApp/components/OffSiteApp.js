@@ -115,7 +115,7 @@ export const OffSiteApp = ({
                     libHoursloading={libHoursLoading}
                     libHoursError={libHoursError}
                 />
-                <div role="region" aria-label="UQ Library Alerts">
+                <div role="region" aria-label="UQ Library Alerts" id="alert-container">
                     <AppAlertContainer />
                 </div>
                 <div>
