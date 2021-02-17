@@ -42,9 +42,7 @@ export const POSSIBLE_RECORDS_API = () => ({
             per_page: 20,
             sort: 'score',
             order_by: 'desc',
-            filters: {
-                stats_only: true,
-            },
+            'filters[stats_only]': true,
         },
     },
 });
@@ -60,9 +58,7 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
             per_page: 20,
             sort: 'score',
             order_by: 'desc',
-            filters: {
-                stats_only: true,
-            },
+            'filters[stats_only]': true,
         },
     },
 });
