@@ -26,9 +26,9 @@ const styles = theme => {
                 margin: 0,
                 paddingTop: 0,
                 paddingBottom: 0,
-                paddingLeft: 16,
+                paddingLeft: 0,
                 '& > span > div': {
-                    paddingRight: 12,
+                    paddingRight: 6,
                     paddingLeft: 0,
                 },
                 '& > span > div > div': {
@@ -37,17 +37,6 @@ const styles = theme => {
                 // remove the flash to grey when we mouse over a top menu
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
-                },
-                '& > div:first-child': {
-                    marginLeft: 28,
-                },
-                '& > div > div': {
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                },
-                // first menu item should be lined up with Library title
-                '& > div:first-child > div': {
-                    paddingLeft: 0,
                 },
             },
         },
@@ -92,7 +81,12 @@ const styles = theme => {
         menuItemContainer: {
             [theme.breakpoints.up('lg')]: {
                 '& > div': {
-                    paddingLeft: 0,
+                    paddingLeft: 6,
+                    paddingRight: 6,
+                    marginLeft: -6,
+                },
+                '& svg': {
+                    paddingLeft: 6,
                 },
             },
             [theme.breakpoints.down('md')]: {
@@ -113,16 +107,6 @@ const styles = theme => {
                 '& svg': {
                     border: '1px solid #e2e2e2',
                     padding: '1rem',
-                },
-            },
-        },
-        menuItem: {
-            [theme.breakpoints.up('lg')]: {
-                paddingTop: 0,
-                paddingBottom: 0,
-                '& div': {
-                    marginTop: 0,
-                    minHeight: 45,
                 },
             },
         },
@@ -293,7 +277,6 @@ export function Megamenu(props) {
                 key={`megamenu-group-${index}`}
                 data-testid={`megamenu-group-${index}`}
                 id={`megamenu-group-${index}`}
-                className={classes.verticalMenuList}
             >
                 {!!menuColumn &&
                     menuColumn.length > 0 &&

@@ -22,33 +22,8 @@ import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles(
     theme => ({
         siteHeader: {
-            width: '100%',
             backgroundColor: theme.palette.white.main,
             paddingBottom: '1rem',
-        },
-        siteHeaderTop: {
-            maxWidth: 1280,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            paddingTop: '0.5rem',
-            paddingBottom: 0,
-            paddingLeft: 46,
-            paddingRight: 44,
-            [theme.breakpoints.down('xs')]: {
-                paddingLeft: 12,
-                paddingRight: 12,
-            },
-            marginTop: 0,
-            marginBottom: 0,
-        },
-        siteHeaderBottom: {
-            maxWidth: 1280,
-            marginLeft: 'auto',
-            marginRight: 'auto',
-            marginTop: 0,
-            marginBottom: 0,
-            paddingLeft: 0,
-            paddingRight: 0,
         },
         title: {
             color: theme.palette.primary.main,
@@ -106,58 +81,66 @@ export const UQSiteHeader = ({
     };
     return (
         <div className={classes.siteHeader} id="uq-site-header" data-testid="uq-site-header">
-            <Grid container spacing={0} className={classes.siteHeaderTop}>
-                <Grid item xs={'auto'}>
-                    <Button
-                        onClick={() => history.push(pathConfig.index)}
-                        className={classes.title}
-                        id="uq-site-header-home-button"
-                        data-testid="uq-site-header-home-button"
-                    >
-                        {UQSiteHeaderLocale.title}
-                    </Button>
-                </Grid>
-                <Grid item xs />
-                {isAuthorizedUser && (
-                    <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
-                        <MyLibrary account={account} author={author} history={history} />
+            <div className="layout-card">
+                <Grid container spacing={0}>
+                    <Grid item xs={'auto'}>
+                        <Button
+                            onClick={() => history.push(pathConfig.index)}
+                            className={classes.title}
+                            id="uq-site-header-home-button"
+                            data-testid="uq-site-header-home-button"
+                        >
+                            {UQSiteHeaderLocale.title}
+                        </Button>
                     </Grid>
-                )}
-                <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
-                    <AskUs
-                        chatStatus={chatStatus}
-                        libHours={libHours}
-                        libHoursLoading={libHoursLoading}
-                        libHoursError={libHoursError}
-                    />
-                </Grid>
-                <Grid item xs={'auto'} className={classes.utility} id="auth" data-testid="auth">
-                    <AuthButton
-                        isAuthorizedUser={isAuthorizedUser}
-                        onClick={redirectUserToLogin(isAuthorizedUser, true)}
-                    />
-                </Grid>
-                <Grid item xs={'auto'} className={classes.utility} data-testid="mobile-megamenu" id="mobile-megamenu">
-                    <Hidden lgUp>
-                        <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
-                            <Tooltip title={locale.global.mainNavButton.tooltip}>
-                                <IconButton
-                                    aria-label={locale.global.mainNavButton.aria}
-                                    onClick={toggleMenu}
-                                    id="main-menu-button"
-                                    data-testid="main-menu-button"
-                                    classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
-                                >
-                                    {menuOpen ? <CloseIcon color={'primary'} /> : <MenuIcon color={'primary'} />}
-                                    <div>Menu</div>
-                                </IconButton>
-                            </Tooltip>
+                    <Grid item xs />
+                    {isAuthorizedUser && (
+                        <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary">
+                            <MyLibrary account={account} author={author} history={history} />
                         </Grid>
-                    </Hidden>
+                    )}
+                    <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
+                        <AskUs
+                            chatStatus={chatStatus}
+                            libHours={libHours}
+                            libHoursLoading={libHoursLoading}
+                            libHoursError={libHoursError}
+                        />
+                    </Grid>
+                    <Grid item xs={'auto'} className={classes.utility} id="auth" data-testid="auth">
+                        <AuthButton
+                            isAuthorizedUser={isAuthorizedUser}
+                            onClick={redirectUserToLogin(isAuthorizedUser, true)}
+                        />
+                    </Grid>
+                    <Grid
+                        item
+                        xs={'auto'}
+                        className={classes.utility}
+                        data-testid="mobile-megamenu"
+                        id="mobile-megamenu"
+                    >
+                        <Hidden lgUp>
+                            <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
+                                <Tooltip title={locale.global.mainNavButton.tooltip}>
+                                    <IconButton
+                                        aria-label={locale.global.mainNavButton.aria}
+                                        onClick={toggleMenu}
+                                        id="main-menu-button"
+                                        data-testid="main-menu-button"
+                                        classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
+                                    >
+                                        {menuOpen ? <CloseIcon color={'primary'} /> : <MenuIcon color={'primary'} />}
+                                        <div>Menu</div>
+                                    </IconButton>
+                                </Tooltip>
+                            </Grid>
+                        </Hidden>
+                    </Grid>
                 </Grid>
-            </Grid>
-            <Grid container>
-                <Hidden lgUp>
+            </div>
+            <Hidden lgUp>
+                <Grid container>
                     <Megamenu
                         history={history}
                         menuItems={menuItems}
@@ -165,22 +148,17 @@ export const UQSiteHeader = ({
                         toggleMenu={toggleMenu}
                         isMobile
                     />
-                </Hidden>
-            </Grid>
-            <Grid
-                container
-                spacing={0}
-                role="region"
-                aria-label="Main site navigation"
-                className={classes.siteHeaderBottom}
-                justify={'flex-start'}
-            >
-                <Hidden mdDown>
-                    <Grid item xs={12} id="desktop-megamenu">
-                        <Megamenu menuItems={menuItems} history={history} />
+                </Grid>
+            </Hidden>
+            <Hidden mdDown>
+                <div className="layout-card">
+                    <Grid container spacing={0} role="region" aria-label="Main site navigation" justify={'flex-start'}>
+                        <Grid item xs={12} id="desktop-megamenu">
+                            <Megamenu menuItems={menuItems} history={history} />
+                        </Grid>
                     </Grid>
-                </Hidden>
-            </Grid>
+                </div>
+            </Hidden>
             <span
                 id="after-navigation"
                 role="region"
