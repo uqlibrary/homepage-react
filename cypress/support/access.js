@@ -119,7 +119,7 @@ export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
         const entryname = `pp-${key}-menu-button`;
         const elementId = `button[data-testid="${entryname}"]`;
         const elementIdFound = `#personalisedPanel :not(div[class*="MuiCollapse-hidden-"]) ${elementId}`;
-        const elementIdMissing = `#personalisedPanel div[class*="MuiCollapse-hidden-"] ${elementId}`;
+        const elementIdMissing = `#personalisedPanel div[class*="MuiCollapse-hidden"] ${elementId}`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             cy.log(`checking personalisation line ${entryname} contains ${value}`);
             cy.get(elementIdFound).contains(value);
