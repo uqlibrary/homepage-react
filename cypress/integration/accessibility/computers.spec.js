@@ -7,7 +7,7 @@ context('ACCESSIBILITY', () => {
         cy.get('button[data-testid="computers-library-button-0"]').contains('Architecture & Music Library');
 
         cy.log('Computers list');
-        cy.checkA11y('div[data-testid="standard-card-training"]', {
+        cy.checkA11y('div[data-testid="standard-card-computers"]', {
             reportName: 'Computers',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
@@ -16,7 +16,7 @@ context('ACCESSIBILITY', () => {
         cy.log('Level displayed');
         cy.get('button[data-testid="computers-library-button-0"]').click();
         cy.wait(500);
-        cy.checkA11y('div[data-testid="standard-card-training"]', {
+        cy.checkA11y('div[data-testid="standard-card-computers"]', {
             reportName: 'Computers',
             scopeName: 'Level expanded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
