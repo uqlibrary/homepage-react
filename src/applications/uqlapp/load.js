@@ -6,6 +6,11 @@ function ready(fn) {
     }
 }
 
+// unfortunately, all these functions must repeat in every load.js - I couldnt get them to include from a common file
+function resetDocumentScrollBar() {
+    document.body.style.overflow = 'auto'; // the default homepage style blocks page scroll
+}
+
 function showElement(button) {
     button.style.display = 'block';
 }
@@ -56,24 +61,19 @@ function showConnectFooterBlock() {
     }, 100);
 }
 
-function showFooter(isFooterRequired = true, isConnectFooterRequired = true) {
+function showFooter() {
     const footerExists = setInterval(() => {
         const footer = document.getElementById('full-footer-block');
         if (!!footer) {
             clearInterval(footerExists);
 
-            if (!!isFooterRequired) {
-                document.body.append(footer.firstElementChild);
+            footer.style.display = 'block';
 
-                const footerChild = document.getElementById('full-footer-block-child');
-                !!footerChild && (footerChild.style.display = 'flex');
+            document.body.append(footer.firstElementChild);
 
-                !!isConnectFooterRequired && showConnectFooterBlock();
-            } else {
-                footer.style.display = 'none';
-            }
+            const footerChild = document.getElementById('full-footer-block-child');
+            !!footerChild && (footerChild.style.display = 'flex');
         }
-        document.body.style.overflow = 'auto'; // the default homepage style blocks page scroll
     }, 100);
 }
 
@@ -90,11 +90,16 @@ function loadReusableComponents() {
     reactRoot.setAttribute('style', 'height:auto');
     document.body.insertBefore(reactRoot, firstElement);
 
+    resetDocumentScrollBar();
+
     showAskusButtonBlock();
+
+    // no megamenu
 
     showAuthButtonBlock(); // auth button but no mylibrary
 
-    showFooter(); // show both Minimal (purple) and Connect (grey) Footers
+    showFooter();
+    showConnectFooterBlock();
 }
 
 ready(loadReusableComponents);

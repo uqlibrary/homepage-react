@@ -119,9 +119,15 @@ export const OffSiteApp = ({
                     <AppAlertContainer />
                 </div>
                 <div>
-                    <div id="full-footer-block">
+                    <div id="full-footer-block" style={{ display: 'none' }}>
                         <Grid container spacing={0} id="full-footer-block-child">
-                            <Grid item xs={12} className={classes.connectFooter}>
+                            <Grid
+                                item
+                                xs={12}
+                                className={classes.connectFooter}
+                                id="connect-footer-block"
+                                style={{ display: 'none' }}
+                            >
                                 <ConnectFooter history={history} />
                             </Grid>
                             <Grid item xs={12} className={classes.minimalFooter}>

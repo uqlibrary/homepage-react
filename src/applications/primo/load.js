@@ -96,15 +96,16 @@ function moveAlertsBelowPrimoLoginBar() {
             clearInterval(moveAlertsArea);
         }
         alertsCounter--;
+        console.log('alertsCounter = ', alertsCounter); // do we actually need this?
     }, 300); // check every 200ms
 }
 
 function loadReusableComponents() {
     // the react root is inserted via angular in the Primo custom.js file, within the Primo View Package
 
-    removeFooter();
-
     resetDocumentScrollBar();
+
+    removeFooter();
 
     mergeUtilityAreaAndPrimoLoginBar();
 
@@ -113,8 +114,6 @@ function loadReusableComponents() {
     // no auth button
 
     moveAlertsBelowPrimoLoginBar();
-
-    ready(loadReusableComponents);
 }
 
 ready(loadReusableComponents);
