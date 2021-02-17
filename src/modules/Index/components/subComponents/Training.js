@@ -180,7 +180,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     // there is something strange happening that sometimes the api sends us an object
     // convert to an array when it happens
     const standardisedTrainingEvents =
-        !!trainingEvents && typeof trainingEvents === 'object' // && trainingEvents !== null
+        !!trainingEvents && typeof trainingEvents === 'object'
             ? Object.keys(trainingEvents).map(key => {
                   return trainingEvents[key];
               })
