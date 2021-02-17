@@ -50,6 +50,7 @@ class CreateOffSiteApp {
             // must be prod, or update list above
             liveLocation = 'https://www.library.uq.edu.au/';
         }
+        // fallback for validity only - if we write to the root, the file may not be publically readable!!!
         const fileLocation = this.options.fileLocation || '/';
         const allData = (hash, appname) =>
             'async function ready(fn) {\n' +
