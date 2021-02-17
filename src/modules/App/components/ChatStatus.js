@@ -14,7 +14,7 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 const useStyles = makeStyles(
     theme => ({
         chatStatus: {
-            position: 'absolute',
+            position: 'fixed',
             bottom: theme.spacing(2),
             right: theme.spacing(2),
             backgroundColor: 'rgba(0,0,0,0.75)',
@@ -28,9 +28,9 @@ const useStyles = makeStyles(
             borderRadius: 4,
         },
         chatAction: {
-            position: 'absolute',
             bottom: theme.spacing(2),
             right: theme.spacing(2),
+            position: 'fixed',
         },
         chatIcon: {
             color: theme.palette.white.main,

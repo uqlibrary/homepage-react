@@ -5,14 +5,15 @@ import { routes } from 'config';
 import browserUpdate from 'browser-update';
 import { AccountContext } from 'context';
 import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import AppAlertContainer from '../containers/AppAlert';
-import * as pages from './pages';
+import AppAlertContainer from 'modules/App/containers/AppAlert';
+import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
-import UQHeader from './UQHeader';
-import ChatStatus from './ChatStatus';
+import UQHeader from 'modules/App/components/UQHeader';
+import ChatStatus from 'modules/App/components/ChatStatus';
 import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
-import UQSiteHeader from './UQSiteHeader';
+import UQSiteHeader from 'modules/App/components/UQSiteHeader';
 import { makeStyles } from '@material-ui/core/styles';
+import { isHdrStudent } from 'helpers/access';
 
 browserUpdate({
     required: {
@@ -92,22 +93,57 @@ export const App = ({
     libHoursError,
     history,
 }) => {
+    function showButton(button) {
+        button.style.display = 'block';
+    }
+
+    const showAuthButton = setInterval(() => {
+        const button = document.getElementById('auth-button-block');
+        if (!!button) {
+            showButton(button);
+            clearInterval(showAuthButton);
+        }
+    }, 100); // check every 100ms
+
+    const showMyLibraryButton = setInterval(() => {
+        const button = document.getElementById('mylibrary-button-block');
+        if (!!button) {
+            showButton(button);
+            clearInterval(showMyLibraryButton);
+        }
+    }, 100); // check every 100ms
+
+    const showAskUsButton = setInterval(() => {
+        const button = document.getElementById('askus-button-block');
+        if (!!button) {
+            showButton(button);
+            clearInterval(showAskUsButton);
+        }
+    }, 100); // check every 100ms
+
+    const showConnectFooter = setInterval(() => {
+        const elem = document.getElementById('connect-footer-block');
+        if (!!elem) {
+            elem.style.display = 'flex';
+            clearInterval(showConnectFooter);
+        }
+    }, 100); // check every 100ms
+
     useEffect(() => {
         actions.loadCurrentAccount();
         actions.loadAlerts();
         actions.loadChatStatus();
+
+        // reinsert the elements that are auto hidden so they are optional on other sites
+        showAskUsButton;
+        showAuthButton;
+        showMyLibraryButton;
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const classes = useStyles();
-    const isAuthorizedUser = accountLoading === false && account !== null;
     const isAccountLoading = accountLoading;
-    const isHdrStudent =
-        !isAccountLoading &&
-        !!account &&
-        account.class &&
-        account.class.indexOf('IS_CURRENT') >= 0 &&
-        account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         authorDetails: authorDetails,
@@ -125,8 +161,6 @@ export const App = ({
                     <UQHeader />
                 </div>
                 <UQSiteHeader
-                    isAuthorizedUser={isAuthorizedUser}
-                    isHdrStudent={isHdrStudent}
                     account={account}
                     accountLoading={isAccountLoading}
                     author={author}
@@ -136,6 +170,7 @@ export const App = ({
                     libHours={libHours}
                     libHoursloading={libHoursLoading}
                     libHoursError={libHoursError}
+                    isLibraryWebsiteCall
                 />
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
@@ -157,7 +192,7 @@ export const App = ({
                         </React.Suspense>
                     </AccountContext.Provider>
                 </div>
-                <div>
+                <div id="full-footer-block">
                     <Grid container spacing={0}>
                         <Grid item xs={12} className={classes.connectFooter}>
                             <ConnectFooter history={history} />

@@ -166,3 +166,9 @@ export const getUserServices = (account, serviceLocale = null) => {
         .map(service => allLibraryServices.find(i => (i.id || '') === service))
         .filter(i => i !== undefined);
 };
+
+export const isHdrStudent = account =>
+    !!account &&
+    account.class &&
+    account.class.indexOf('IS_CURRENT') >= 0 &&
+    account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;

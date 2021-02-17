@@ -1,6 +1,4 @@
 import { getCampusByCode, isRepeatingString, leftJoin, stripHtml, unescapeString } from './general';
-import { getUserServices } from './access';
-import { accounts } from '../mock/data';
 
 describe('general helpers', () => {
     it('leftJoin', () => {
@@ -47,47 +45,6 @@ describe('general helpers', () => {
         expect(isRepeatingString('sss')).toBe(false);
         expect(isRepeatingString('ssss')).toBe(false);
         expect(isRepeatingString('sssss')).toBe(true);
-    });
-
-    it('should show the correct services to the correct groups', () => {
-        // happy path
-        expect(getUserServices(accounts.s1111111).length).toEqual(3);
-
-        // coverage: various parameters invalid
-        expect(getUserServices(accounts.s1111111, {})).toEqual([]);
-
-        expect(
-            getUserServices(accounts.s1111111, {
-                LibraryServices: 'x',
-            }),
-        ).toEqual([]);
-
-        expect(
-            getUserServices({
-                id: 'dummy',
-                user_group: 'unknown',
-            }),
-        ).toEqual([]);
-
-        expect(
-            getUserServices({
-                user_group: 'unknown',
-            }),
-        ).toEqual([]);
-
-        expect(
-            getUserServices(accounts.s1111111, {
-                LibraryServices: {
-                    links: [
-                        {
-                            // missing id
-                            title: 'Title',
-                            url: 'https://blah',
-                        },
-                    ],
-                },
-            }),
-        ).toEqual([]);
     });
 
     it('should unescape a string', () => {

@@ -4,7 +4,7 @@ export default {
     notFound: {
         title: 'Page not found',
         content: (
-            <div className="layout-card">
+            <div className="layout-card" data-testid="page-not-found">
                 <p>The requested page could not be found.</p>
                 <p>Sorry about that, but here's what you can do next:</p>
                 <ul>
@@ -21,7 +21,7 @@ export default {
     authenticationRequired: {
         title: 'Authentication required',
         children: (
-            <div className="layout-card">
+            <div className="layout-card" data-testid="user-not-loggedin">
                 <p>The requested page is available to authenticated users only.</p>
                 <p>Please login to continue</p>
             </div>
@@ -29,7 +29,11 @@ export default {
     },
     permissionDenied: {
         title: 'Permission denied',
-        children: <div className="layout-card">The requested page is available to authorised users only.</div>,
+        children: (
+            <div className="layout-card" data-testid="permission-denied">
+                The requested page is available to authorised users only.
+            </div>
+        ),
     },
     accountError: {
         title: 'Error',
