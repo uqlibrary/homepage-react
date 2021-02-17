@@ -110,7 +110,7 @@ function loadReusableComponents() {
     resetDocumentScrollBar();
 
     // to have the Ask Us button appear, call this function
-    // showAskusButtonBlock();
+    showAskusButtonBlock();
 
     // to have the login/logout button appear, call this function;
     // to also have the My Library button appear (when logged in), pass a parameter of true

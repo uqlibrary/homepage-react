@@ -143,7 +143,7 @@ function thirdPartySitesUsingHeader() {
     const applicationsFolder = resolve(__dirname, './src/applications/');
     fs.readdirSync(applicationsFolder).forEach(file => {
         try {
-            if (fs.lstatSync(applicationsFolder + '/' + file).isDirectory() && file !== 'sample-site') {
+            if (fs.lstatSync(applicationsFolder + '/' + file).isDirectory()) {
                 list.push({
                     path: `applications/${file}/`,
                     name: `${file}`,
