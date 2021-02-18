@@ -30,14 +30,14 @@ function removeFooter() {
  * then remove the library utility area
  */
 function mergeUtilityAreaAndPrimoLoginBar() {
-    let utilityCounter = 20; // avoid 'maximum call stack size exceeded' if element never becomes available
-
     let homelinkComplete = false;
     let askusComplete = false;
     const mergeAreas = setInterval(() => {
+        // move the link-to-homepage into primo login bar
         const homeLinkButton = document.getElementById('uq-site-header-home-button');
         if (!!homeLinkButton && !homelinkComplete) {
-            // work out where to make the home link sit
+            // work out where to put the link-to-homepage (align with left border of content)
+            // this only makes it correct on load, not on redraw. Enough for most cases
             const box1 = document.getElementsByTagName('md-content')[0] || false;
             const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
             const box2 = box1.firstChild.nextSibling;
@@ -52,6 +52,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             homelinkComplete = true;
         }
 
+        // move the askus button into primo login bar
         const askusButton = document.getElementById('askus-button-block');
         if (!!askusButton && !askusComplete) {
             askusButton.style.display = 'block';
@@ -63,20 +64,17 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             askusComplete = true;
         }
 
+        // if _both_ have been moved, remove the original bar and stop looking
         if (!!homelinkComplete && !!askusComplete) {
             const nowEmptyHeader = document.getElementById('uq-site-header');
             !!nowEmptyHeader && (nowEmptyHeader.style.display = 'none');
-        }
 
-        if ((!!homelinkComplete && !!askusComplete) || !utilityCounter) {
             clearInterval(mergeAreas);
         }
-        utilityCounter--;
     }, 300); // check every 100ms
 }
 
 function moveAlertsBelowPrimoLoginBar() {
-    let alertsCounter = 20; // avoid 'maximum call stack size exceeded' if element never becomes available
     const moveAlertsArea = setInterval(() => {
         const libraryHeader = document.getElementById('content-container');
         const alertChild = document.getElementById('alert-container');
@@ -93,12 +91,9 @@ function moveAlertsBelowPrimoLoginBar() {
                 !!primoUtilityBar &&
                 !!alertsBlock &&
                 libraryHeader.insertBefore(primoUtilityBar, alertsBlock);
-        }
-        if ((!!alertChild && !!libraryHeader) || !alertsCounter) {
+
             clearInterval(moveAlertsArea);
         }
-        alertsCounter--;
-        console.log('alertsCounter = ', alertsCounter); // do we actually need this?
     }, 300); // check every 200ms
 }
 
