@@ -28,7 +28,17 @@ const useStyles = makeStyles(
     theme => ({
         siteHeader: {
             backgroundColor: theme.palette.white.main,
-            paddingBottom: '1rem',
+            paddingBottom: '0.3rem',
+            paddingTop: '0.3rem',
+        },
+        siteHeaderBottom: {
+            maxWidth: 1280,
+            marginLeft: 'auto',
+            marginRight: 'auto',
+            marginTop: 0,
+            marginBottom: 0,
+            paddingLeft: 0,
+            paddingRight: 0,
         },
         title: {
             color: theme.palette.primary.main,
@@ -139,7 +149,7 @@ export const UQSiteHeader = ({
         } else if (isSubpageOfHomepageReactApp) {
             return !!history && history.push(pathConfig.index);
         } else {
-            window.location.href(libraryHomepageUrl);
+            window.location.href = libraryHomepageUrl;
             return false;
         }
     };
@@ -150,7 +160,7 @@ export const UQSiteHeader = ({
                 <Grid container spacing={0}>
                     <Grid item xs={'auto'}>
                         <Button
-                            onClick={() => history.push(pathConfig.index)}
+                            onClick={() => visitHomepage()}
                             className={classes.title}
                             id="uq-site-header-home-button"
                             data-testid="uq-site-header-home-button"
@@ -160,11 +170,25 @@ export const UQSiteHeader = ({
                     </Grid>
                     <Grid item xs />
                     {isAuthorizedUser && (
-                        <Grid item xs={'auto'} className={classes.utility} id="mylibrary" data-testid="mylibrary" >
+                        <Grid
+                            item
+                            xs={'auto'}
+                            className={classes.utility}
+                            id="mylibrary-button-block"
+                            data-testid="mylibrary"
+                            style={{ display: 'none' }} // for foreign sites - immediate overwrite on homepage
+                        >
                             <MyLibrary account={account} author={author} history={history} />
                         </Grid>
                     )}
-                    <Grid item xs={'auto'} className={classes.utility} id="askus" data-testid="askus">
+                    <Grid
+                        item
+                        xs={'auto'}
+                        className={classes.utility}
+                        id="askus-button-block"
+                        data-testid="askus"
+                        style={{ display: 'none' }}
+                    >
                         <AskUs
                             chatStatus={chatStatus}
                             libHours={libHours}
@@ -172,7 +196,14 @@ export const UQSiteHeader = ({
                             libHoursError={libHoursError}
                         />
                     </Grid>
-                    <Grid item xs={'auto'} className={classes.utility} id="auth" data-testid="auth">
+                    <Grid
+                        item
+                        xs={'auto'}
+                        className={classes.utility}
+                        id="auth-button-block"
+                        data-testid="auth"
+                        style={{ display: 'none' }}
+                    >
                         <AuthButton
                             isAuthorizedUser={isAuthorizedUser}
                             onClick={redirectUserToLogin(isAuthorizedUser, true)}
@@ -184,6 +215,7 @@ export const UQSiteHeader = ({
                         className={classes.utility}
                         data-testid="mobile-megamenu"
                         id="mobile-megamenu"
+                        style={{ display: 'none' }}
                     >
                         <Hidden lgUp>
                             <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
@@ -203,133 +235,43 @@ export const UQSiteHeader = ({
                         </Hidden>
                     </Grid>
                 </Grid>
-            </div>
-            <Hidden lgUp>
                 <Grid container>
-            <Grid container spacing={0} className={classes.siteHeaderTop}>
-                <Grid item xs={'auto'}>
-                    <Button
-                        onClick={() => visitHomepage()}
-                        className={classes.title}
-                        id="uq-site-header-home-button"
-                        data-testid="uq-site-header-home-button"
-                    >
-                        {UQSiteHeaderLocale.title}
-                    </Button>
-                </Grid>
-                <Grid item xs />
-                {isAuthorizedUser && (
-                    <Grid
-                        item
-                        xs={'auto'}
-                        className={classes.utility}
-                        id="mylibrary-button-block"
-                        data-testid="mylibrary"
-                        style={{ display: 'none' }} // for foreign sites - immediate overwrite on homepage
-                    >
-                        <MyLibrary account={account} author={author} history={history} />
-                    </Grid>
-                )}
-                <Grid
-                    item
-                    xs={'auto'}
-                    className={classes.utility}
-                    id="askus-button-block"
-                    data-testid="askus"
-                    style={{ display: 'none' }}
-                >
-                    <AskUs
-                        chatStatus={chatStatus}
-                        libHours={libHours}
-                        libHoursLoading={libHoursLoading}
-                        libHoursError={libHoursError}
-                    />
-                </Grid>
-                <Grid
-                    item
-                    xs={'auto'}
-                    className={classes.utility}
-                    id="auth-button-block"
-                    data-testid="auth"
-                    style={{ display: 'none' }}
-                >
-                    <AuthButton
-                        isAuthorizedUser={isAuthorizedUser}
-                        onClick={redirectUserToLogin(isAuthorizedUser, true)}
-                    />
-                </Grid>
-                <Grid
-                    item
-                    xs={'auto'}
-                    className={classes.utility}
-                    data-testid="mobile-megamenu"
-                    id="mobile-megamenu"
-                    style={{ display: 'none' }}
-                >
                     <Hidden lgUp>
-                        <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
-                            <Tooltip title={locale.global.mainNavButton.tooltip}>
-                                <IconButton
-                                    aria-label={locale.global.mainNavButton.aria}
-                                    onClick={toggleMenu}
-                                    id="main-menu-button"
-                                    data-testid="main-menu-button"
-                                    classes={{ label: classes.utilityButtonLabel, root: classes.utilityButton }}
-                                >
-                                    {menuOpen ? <CloseIcon color={'primary'} /> : <MenuIcon color={'primary'} />}
-                                    <div>Menu</div>
-                                </IconButton>
-                            </Tooltip>
-                        </Grid>
+                        <Megamenu
+                            history={history}
+                            menuItems={menuItems}
+                            menuOpen={menuOpen}
+                            toggleMenu={toggleMenu}
+                            isMobile
+                        />
                     </Hidden>
                 </Grid>
-            </Grid>
-            <Grid container>
-                <Hidden lgUp>
-                    <Megamenu
-                        history={history}
-                        menuItems={menuItems}
-                        menuOpen={menuOpen}
-                        toggleMenu={toggleMenu}
-                        isMobile
-                    />
-                </Grid>
-            </Hidden>
-            <Hidden mdDown>
-                <div className="layout-card">
-                    <Grid container spacing={0} role="region" aria-label="Main site navigation" justify={'flex-start'}>
+                <Grid
+                    container
+                    id="desktop-megamenu-block"
+                    spacing={0}
+                    role="region"
+                    aria-label="Main site navigation"
+                    className={classes.siteHeaderBottom}
+                    justify={'flex-start'}
+                    style={{ display: 'none' }}
+                >
+                    <Hidden mdDown>
                         <Grid item xs={12} id="desktop-megamenu">
                             <Megamenu menuItems={menuItems} history={history} />
                         </Grid>
-                    </Grid>
-                </div>
-            </Hidden>
-            </Grid>
-            <Grid
-                container
-                id="desktop-megamenu-block"
-                spacing={0}
-                role="region"
-                aria-label="Main site navigation"
-                className={classes.siteHeaderBottom}
-                justify={'flex-start'}
-                style={{ display: 'none' }}
-            >
-                <Hidden mdDown>
-                    <Grid item xs={12} id="desktop-megamenu">
-                        <Megamenu menuItems={menuItems} history={history} />
-                    </Grid>
-                </Hidden>
-            </Grid>
-            <span
-                id="after-navigation"
-                role="region"
-                tabIndex="0"
-                aria-label="Start of content"
-                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
-            >
-                Start of content
-            </span>
+                    </Hidden>
+                </Grid>
+                <span
+                    id="after-navigation"
+                    role="region"
+                    tabIndex="0"
+                    aria-label="Start of content"
+                    style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+                >
+                    Start of content
+                </span>
+            </div>
         </div>
     );
 };

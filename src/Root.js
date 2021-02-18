@@ -11,7 +11,7 @@ const generateClassName = createGenerateClassName({
     productionPrefix: 'uq-lib-',
 });
 
-import { App } from 'modules/App';
+import { App } from 'modules/App/components';
 
 const Root = ({ history }) => {
     return (

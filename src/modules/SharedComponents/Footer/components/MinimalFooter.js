@@ -1,24 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
-import { withStyles } from '@material-ui/core/styles';
-
-const styles = () => {
-    return {
-        layout: {
-            maxWidth: 1200,
-            margin: '12px auto',
-            width: '90%',
-        },
-    };
-};
 
 // from https://github.com/uq-its-ss/design-system/blob/master/packages/storybook-html/src/components/footer/footer.html
-export function MinimalFooter(props) {
-    const { classes } = props;
+export function MinimalFooter() {
     return (
         <div className="uq-footer" data-gtm-category="Footer" data-testid="minimal-footer">
-            <div className={classNames(classes.layout, 'uq-footer__container')}>
+            <div className="uq-footer__container layout-card">
                 <div className="uq-footer__acknowledgement">
                     UQ acknowledges the Traditional Owners and their custodianship of the lands on which UQ is situated.
                     —{' '}
@@ -124,4 +111,4 @@ MinimalFooter.defaultProps = {
     classes: {},
 };
 
-export default withStyles(styles, { withTheme: true })(MinimalFooter);
+export default MinimalFooter;

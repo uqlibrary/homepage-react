@@ -7,7 +7,7 @@ exports[`Component MinimalFooter should render 1`] = `
   data-testid="minimal-footer"
 >
   <div
-    className="uq-footer__container"
+    className="uq-footer__container layout-card"
   >
     <div
       className="uq-footer__acknowledgement"
