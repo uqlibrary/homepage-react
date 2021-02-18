@@ -68,6 +68,16 @@
 @import "styles-imports/prm-user-area";
 @import "styles-imports/full_view_status";
 
+@import '../../../src/sass/UQds';
+
+// place the homepagelink
+#uq-site-header-home-button {
+  position: absolute;
+  top: 80px;
+  @media #{$screen-xl-up} {
+    top: 100px;
+  }
+}
 
 prm-user-area {
   .user-menu-button .user-name {

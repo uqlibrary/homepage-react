@@ -47,8 +47,6 @@ function placeHomepageLinkNicely() {
         console.log('homeLinkLeft = ', homeLinkLeft);
 
         !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
-        !!homeLinkButton && (homeLinkButton.style.top = '100px');
-        !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
     }
 }
 
