@@ -65,18 +65,13 @@ function mergeUtilityAreaAndPrimoLoginBar() {
         if (!!homeLinkButton && !homelinkComplete) {
             // move the link-to-homepage into primo login bar
             const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
-            mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
+            console.log('mainMenu = ', mainMenu);
+            !!mainMenu.firstChild && console.log('mainMenu.firstChild = ', mainMenu.firstChild);
+            !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
 
             placeHomepageLinkNicely();
 
             homelinkComplete = true;
-            /*
-             * manually checking this layout works:
-             * - load the homepage for any random search query. Does Library Homepage Link line up with
-             *   the left hand line of the content?
-             * - click on a search result. THEN RELOAD THE PAGE TO HAVE THE CONTENT REDRAW AS THE FULL PAGE
-             * Does Library Homepage Link line up with the left hand line of the content?
-             */
         }
 
         // move the askus button into primo login bar
@@ -86,8 +81,10 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             askusButton.style.display = 'block';
 
             const qrCodeScanner = document.getElementById('qrCodeScanner');
+            console.log('qrCodeScanner = ', qrCodeScanner);
             const parentDiv = !!qrCodeScanner && qrCodeScanner.parentNode;
-            parentDiv.insertBefore(askusButton, qrCodeScanner);
+            console.log('parentDiv = ', parentDiv);
+            !!parentDiv && !!qrCodeScanner && parentDiv.insertBefore(askusButton, qrCodeScanner);
 
             askusComplete = true;
         }
