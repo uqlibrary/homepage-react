@@ -11,6 +11,7 @@ function ready(fn) {
  */
 function resetDocumentScrollBar() {
     document.body.style.overflow = 'auto';
+    document.body.style.overflowY = 'auto';
 }
 
 function removeFooter() {
