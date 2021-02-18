@@ -345,10 +345,10 @@ const webpackConfig = {
                     },
                 ],
             },
-            {
-                test: /\.js$/,
-                loader: WebpackStrip.loader('console.log'),
-            },
+            // { // turn off for test
+            //     test: /\.js$/,
+            //     loader: WebpackStrip.loader('console.log'),
+            // },
         ],
     },
     resolve: {

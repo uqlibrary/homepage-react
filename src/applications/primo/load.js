@@ -30,11 +30,13 @@ function removeFooter() {
  * then remove the library utility area
  */
 function mergeUtilityAreaAndPrimoLoginBar() {
+    console.log('mergeUtilityAreaAndPrimoLoginBar');
     let homelinkComplete = false;
     let askusComplete = false;
     const mergeAreas = setInterval(() => {
         // move the link-to-homepage into primo login bar
         const homeLinkButton = document.getElementById('uq-site-header-home-button');
+        console.log('homeLinkButton = ', homeLinkButton);
         if (!!homeLinkButton && !homelinkComplete) {
             // work out where to put the link-to-homepage (align with left border of content)
             // this only makes it correct on load, not on redraw. Enough for most cases
@@ -54,6 +56,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
 
         // move the askus button into primo login bar
         const askusButton = document.getElementById('askus-button-block');
+        console.log('askusButton = ', askusButton);
         if (!!askusButton && !askusComplete) {
             askusButton.style.display = 'block';
 
@@ -67,6 +70,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
         // if _both_ have been moved, remove the original bar and stop looking
         if (!!homelinkComplete && !!askusComplete) {
             const nowEmptyHeader = document.getElementById('uq-site-header');
+            console.log('nowEmptyHeader = ', nowEmptyHeader);
             !!nowEmptyHeader && (nowEmptyHeader.style.display = 'none');
 
             clearInterval(mergeAreas);
