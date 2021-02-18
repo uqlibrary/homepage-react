@@ -10,6 +10,7 @@ function ready(fn) {
  * the default homepage style blocks page scroll
  */
 function resetDocumentScrollBar() {
+    console.log('reset document scroll');
     document.body.style.overflow = 'auto';
     document.body.style.overflowY = 'auto';
 }
@@ -23,6 +24,32 @@ function removeFooter() {
             clearInterval(footerExists);
         }
     }, 300);
+}
+
+function placeHomepageLinkNicely() {
+    const homeLinkButton = document.getElementById('uq-site-header-home-button');
+
+    if (!!homeLinkButton) {
+        // align the link-to-homepage with left border of content
+        const box1 = document.getElementsByTagName('md-content')[0] || false;
+        const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
+        console.log('box1Width = ', box1Width);
+        let box2 = box1.firstChild.nextSibling;
+        console.log('box2 = ', box2);
+        if (JSON.stringify(box2) === '{}') {
+            // a results page for an item will have <!----> as the next element
+            box2 = box2.nextSibling;
+            console.log('got comment - now box2 = ', box2);
+        }
+        const box2Width = !!box2 ? box2.offsetWidth : 0;
+        console.log('box2Width = ', box2Width);
+        const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
+        console.log('homeLinkLeft = ', homeLinkLeft);
+
+        !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
+        !!homeLinkButton && (homeLinkButton.style.top = '100px');
+        !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
+    }
 }
 
 /**
@@ -42,26 +69,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
             mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
 
-            // align the link-to-homepage with left border of content
-            // this only makes it correct on load, not on manual window resize. Enough for most cases
-            const box1 = document.getElementsByTagName('md-content')[0] || false;
-            const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
-            console.log('box1Width = ', box1Width);
-            let box2 = box1.firstChild.nextSibling;
-            console.log('box2 = ', box2);
-            if (JSON.stringify(box2) === '{}') {
-                // a results page for an item will have <!----> as the next element
-                box2 = box2.nextSibling;
-                console.log('got comment - now box2 = ', box2);
-            }
-            const box2Width = !!box2 ? box2.offsetWidth : 0;
-            console.log('box2Width = ', box2Width);
-            const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
-            console.log('homeLinkLeft = ', homeLinkLeft);
-
-            !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
-            !!homeLinkButton && (homeLinkButton.style.top = '100px');
-            !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
+            placeHomepageLinkNicely();
 
             homelinkComplete = true;
             /*
@@ -137,3 +145,7 @@ function loadReusableComponents() {
 }
 
 ready(loadReusableComponents);
+
+window.onresize = placeHomepageLinkNicely;
+
+window.onload = console.log('window onload event noted');
