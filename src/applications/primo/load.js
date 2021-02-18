@@ -34,24 +34,42 @@ function mergeUtilityAreaAndPrimoLoginBar() {
     let homelinkComplete = false;
     let askusComplete = false;
     const mergeAreas = setInterval(() => {
-        // move the link-to-homepage into primo login bar
         const homeLinkButton = document.getElementById('uq-site-header-home-button');
         console.log('homeLinkButton = ', homeLinkButton);
         if (!!homeLinkButton && !homelinkComplete) {
-            // work out where to put the link-to-homepage (align with left border of content)
-            // this only makes it correct on load, not on redraw. Enough for most cases
-            const box1 = document.getElementsByTagName('md-content')[0] || false;
-            const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
-            const box2 = box1.firstChild.nextSibling;
-            const homeLinkLeft = (!!box2 ? box2.offsetWidth : 0) + parseInt(box1Width.replace('px', ''), 10);
-
+            // move the link-to-homepage into primo login bar
             const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
             mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
 
+            // align the link-to-homepage with left border of content
+            // this only makes it correct on load, not on manual window resize. Enough for most cases
+            const box1 = document.getElementsByTagName('md-content')[0] || false;
+            const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
+            console.log('box1Width = ', box1Width);
+            let box2 = box1.firstChild.nextSibling;
+            console.log('box2 = ', box2);
+            if (JSON.stringify(box2) === '{}') {
+                // a results page for an item will have <!----> as the next element
+                box2 = box2.nextSibling;
+                console.log('got comment - now box2 = ', box2);
+            }
+            const box2Width = !!box2 ? box2.offsetWidth : 0;
+            console.log('box2Width = ', box2Width);
+            const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
+            console.log('homeLinkLeft = ', homeLinkLeft);
+
             !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
+            !!homeLinkButton && (homeLinkButton.style.top = '100px');
             !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
 
             homelinkComplete = true;
+            /*
+             * manually checking this layout works:
+             * - load the homepage for any random search query. Does Library Homepage Link line up with
+             *   the left hand line of the content?
+             * - click on a search result. THEN RELOAD THE PAGE TO HAVE THE CONTENT REDRAW AS THE FULL PAGE
+             * Does Library Homepage Link line up with the left hand line of the content?
+             */
         }
 
         // move the askus button into primo login bar
