@@ -54,6 +54,8 @@ function mergeUtilityAreaAndPrimoLoginBar() {
 
         const askusButton = document.getElementById('askus-button-block');
         if (!!askusButton && !askusComplete) {
+            askusButton.style.display = 'block';
+
             const qrCodeScanner = document.getElementById('qrCodeScanner');
             const parentDiv = !!qrCodeScanner && qrCodeScanner.parentNode;
             parentDiv.insertBefore(askusButton, qrCodeScanner);
