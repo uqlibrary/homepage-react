@@ -109,14 +109,17 @@ function moveAlertsBelowPrimoLoginBar() {
             // and can be used to get its parent, which doesnt have an id
             const primoLogo = document.getElementsByTagName('prm-logo')[0] || false;
             const primoUtilityBar = !!primoLogo && primoLogo.parentNode;
+            console.log('primoUtilityBar = ', primoUtilityBar);
             !!primoUtilityBar && (primoUtilityBar.style.backgroundColor = '#ffffff');
 
             const libraryHeader = document.getElementById('content-container');
+            console.log('libraryHeader = ', libraryHeader);
             const alertsBlock = document.getElementById('alert-container');
-            !!libraryHeader &&
-                !!primoUtilityBar &&
-                !!alertsBlock &&
-                libraryHeader.insertBefore(primoUtilityBar, alertsBlock);
+            console.log('alertsBlock = ', alertsBlock);
+            // !!libraryHeader &&
+            //     !!primoUtilityBar &&
+            //     !!alertsBlock &&
+            //     libraryHeader.insertBefore(primoUtilityBar, alertsBlock);
 
             clearInterval(moveAlertsArea);
         }
