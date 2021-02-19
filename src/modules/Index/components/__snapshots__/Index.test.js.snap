@@ -182,9 +182,9 @@ exports[`Index page should render placeholders 1`] = `
             },
             "palette": Object {
               "accent": Object {
-                "dark": "#2a557d",
-                "light": "#54acff",
-                "main": "#316799",
+                "dark": "#195794",
+                "light": "#3881cb",
+                "main": "#2377CB",
               },
               "action": Object {
                 "activatedOpacity": 0.12,
@@ -550,9 +550,9 @@ exports[`Index page should render placeholders 1`] = `
                       },
                       "palette": Object {
                         "accent": Object {
-                          "dark": "#2a557d",
-                          "light": "#54acff",
-                          "main": "#316799",
+                          "dark": "#195794",
+                          "light": "#3881cb",
+                          "main": "#2377CB",
                         },
                         "action": Object {
                           "activatedOpacity": 0.12,
@@ -1718,9 +1718,9 @@ exports[`Index page should render placeholders 1`] = `
                                                             },
                                                             "palette": Object {
                                                               "accent": Object {
-                                                                "dark": "#2a557d",
-                                                                "light": "#54acff",
-                                                                "main": "#316799",
+                                                                "dark": "#195794",
+                                                                "light": "#3881cb",
+                                                                "main": "#2377CB",
                                                               },
                                                               "action": Object {
                                                                 "activatedOpacity": 0.12,
@@ -6709,9 +6709,9 @@ exports[`Index page should render placeholders 1`] = `
                                                         },
                                                         "palette": Object {
                                                           "accent": Object {
-                                                            "dark": "#2a557d",
-                                                            "light": "#54acff",
-                                                            "main": "#316799",
+                                                            "dark": "#195794",
+                                                            "light": "#3881cb",
+                                                            "main": "#2377CB",
                                                           },
                                                           "action": Object {
                                                             "activatedOpacity": 0.12,
@@ -8180,9 +8180,9 @@ exports[`Index page should render placeholders 1`] = `
                                                         },
                                                         "palette": Object {
                                                           "accent": Object {
-                                                            "dark": "#2a557d",
-                                                            "light": "#54acff",
-                                                            "main": "#316799",
+                                                            "dark": "#195794",
+                                                            "light": "#3881cb",
+                                                            "main": "#2377CB",
                                                           },
                                                           "action": Object {
                                                             "activatedOpacity": 0.12,

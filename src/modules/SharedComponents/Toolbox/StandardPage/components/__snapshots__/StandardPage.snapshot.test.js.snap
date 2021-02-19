@@ -301,9 +301,9 @@ exports[`Snapshot tests for full mount StandardPage component renders StandardPa
             },
             "palette": Object {
               "accent": Object {
-                "dark": "#2a557d",
-                "light": "#54acff",
-                "main": "#316799",
+                "dark": "#195794",
+                "light": "#3881cb",
+                "main": "#2377CB",
               },
               "action": Object {
                 "activatedOpacity": 0.12,
@@ -695,9 +695,9 @@ exports[`Snapshot tests for full mount StandardPage component renders StandardPa
                     },
                     "palette": Object {
                       "accent": Object {
-                        "dark": "#2a557d",
-                        "light": "#54acff",
-                        "main": "#316799",
+                        "dark": "#195794",
+                        "light": "#3881cb",
+                        "main": "#2377CB",
                       },
                       "action": Object {
                         "activatedOpacity": 0.12,
