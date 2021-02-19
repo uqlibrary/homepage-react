@@ -7,6 +7,8 @@ function ready(fn) {
 }
 
 function removeFooter() {
+    // It looks like there is a weird thing happening where the footer appears as a shadow sometimes
+    // Rather than just hide the footer, delete it completely
     const footerExists = setInterval(() => {
         const footer = document.getElementById('full-footer-block');
         if (!!footer) {
@@ -14,10 +16,11 @@ function removeFooter() {
 
             clearInterval(footerExists);
         }
-    }, 300);
+    }, 300); // check for div periodically
 }
 
 function placeHomepageLinkNicely(calledonResize = false) {
+    // calledonResize temp for debugging
     console.log('placeHomepageLinkNicely called - calledonResize = ', calledonResize);
 
     const homeLinkButton = document.getElementById('uq-site-header-home-button');
@@ -33,7 +36,7 @@ function placeHomepageLinkNicely(calledonResize = false) {
         let box2 = box1.firstChild.nextSibling;
         console.log('placeHomepageLinkNicely: box2 = ', box2);
         if (JSON.stringify(box2) === '{}') {
-            // a results page for an item will have <!----> as the next element
+            // detect <!----> left by angular
             box2 = box2.nextSibling;
             console.log('placeHomepageLinkNicely: got comment - now box2 = ', box2);
         }
@@ -45,8 +48,9 @@ function placeHomepageLinkNicely(calledonResize = false) {
         console.log('placeHomepageLinkNicely: mainMenuLeft = ', mainMenuLeft);
 
         const homeLinkMarginLeft = mainMenuLeft - (box2Width + box1Width);
-        const homeLinkLeft = box2Width + box1Width;
-        console.log('placeHomepageLinkNicely: homeLinkLeft = ', homeLinkLeft);
+        console.log('placeHomepageLinkNicely: homeLinkMarginLeft = ', homeLinkMarginLeft);
+        // const homeLinkLeft = box2Width + box1Width;
+        // console.log('placeHomepageLinkNicely: homeLinkLeft = ', homeLinkLeft);
 
         // const uqheader = document.getElementById('uqheader');
         // const uqheaderheight =
@@ -129,14 +133,16 @@ function mergeUtilityAreaAndPrimoLoginBar() {
 
             clearInterval(mergeAreas);
         }
-    }, 300); // check every 100ms
+    }, 300); // check for div periodically
 }
 
 function moveAlertsBelowPrimoLoginBar() {
     const moveAlertsArea = setInterval(() => {
+        console.log('looking for alerts');
         const libraryHeader = document.getElementById('content-container');
         const alertChild = document.getElementById('alert-container');
         if (!!alertChild && !!libraryHeader) {
+            console.log('found alerts');
             // the primo uq logo is invisible, but still exist in the dom
             // and can be used to get its parent, which doesnt have an id
             const primoLogo = document.getElementsByTagName('prm-logo')[0] || false;
@@ -155,9 +161,17 @@ function moveAlertsBelowPrimoLoginBar() {
 
             placeHomepageLinkNicely();
 
+            // try putting the listeners on when the page is mostly done
+            window.onresize = placeHomepageLinkNicely(true);
+            // window.addEventListener('resize', placeHomepageLinkNicely(true));
+            console.log("window.addEventListener('resize', placeHomepageLinkNicely(true)); set");
+
+            window.onload = console.log('window onload event noted');
+            // check it is running with getEventListeners(document);
+
             clearInterval(moveAlertsArea);
         }
-    }, 300); // check every 200ms
+    }, 300); // check for div periodically
 }
 
 function loadReusableComponents() {
@@ -175,10 +189,3 @@ function loadReusableComponents() {
 }
 
 ready(loadReusableComponents);
-
-window.onresize = placeHomepageLinkNicely(true);
-// window.addEventListener('resize', placeHomepageLinkNicely(true));
-console.log("window.addEventListener('resize', placeHomepageLinkNicely(true)); set");
-window.onload = console.log('window onload event noted');
-
-// check it is running with getEventListeners(document);
