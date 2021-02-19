@@ -70,7 +70,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
             console.log('mainMenu = ', mainMenu);
             !!mainMenu.firstChild && console.log('mainMenu.firstChild = ', mainMenu.firstChild);
-            // !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
+            !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
 
             placeHomepageLinkNicely();
 
