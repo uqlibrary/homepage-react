@@ -40,22 +40,22 @@ function placeHomepageLinkNicely(testMode = false) {
         const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
         console.log('placeHomepageLinkNicely: homeLinkLeft = ', homeLinkLeft);
 
-        const uqheader = document.getElementById('uqheader');
-        const uqheaderheight =
-            !!uqheader && !!uqheader.getBoundingClientRect() ? uqheader.getBoundingClientRect().height : 0;
-        console.log('placeHomepageLinkNicely: uqheaderheight = ', uqheaderheight);
+        // const uqheader = document.getElementById('uqheader');
+        // const uqheaderheight =
+        //     !!uqheader && !!uqheader.getBoundingClientRect() ? uqheader.getBoundingClientRect().height : 0;
+        // console.log('placeHomepageLinkNicely: uqheaderheight = ', uqheaderheight);
 
-        const alertContainer = document.getElementById('alert-container');
-        const alertHeight =
-            !!alertContainer && !!alertContainer.getBoundingClientRect()
-                ? alertContainer.getBoundingClientRect().height
-                : 0;
-        console.log('placeHomepageLinkNicely: alertHeight = ', alertHeight);
-        const homeLinkTop = uqheaderheight + alertHeight + 6; // it needs a little offset within the div
-        console.log('placeHomepageLinkNicely: homeLinkTop = ', homeLinkTop);
+        // const alertContainer = document.getElementById('alert-container');
+        // const alertHeight =
+        //     !!alertContainer && !!alertContainer.getBoundingClientRect()
+        //         ? alertContainer.getBoundingClientRect().height
+        //         : 0;
+        // console.log('placeHomepageLinkNicely: alertHeight = ', alertHeight);
+        // const homeLinkTop = uqheaderheight + alertHeight + 6; // it needs a little offset within the div
+        // console.log('placeHomepageLinkNicely: homeLinkTop = ', homeLinkTop);
 
         !testMode && !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
-        !testMode && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
+        // !testMode && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
         !testMode && !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
     }
 }
@@ -77,7 +77,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             console.log('mergeUtilityAreaAndPrimoLoginBar: mainMenu = ', mainMenu);
 
             // put position relative on the  homepage button parent so button absolute is relative to it
-            !!mainMenu && (mainMenu.style.position = 'relative');
+            // !!mainMenu && (mainMenu.style.position = 'relative');
 
             // move the link-to-homepage into primo login bar
             let firstchild = mainMenu.firstChild;
