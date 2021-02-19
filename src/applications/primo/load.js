@@ -49,7 +49,21 @@ function placeHomepageLinkNicely(testMode = false) {
         const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
         console.log('homeLinkLeft = ', homeLinkLeft);
 
+        const uqheader = document.getElementById('uqheader');
+        const uqheaderheight =
+            !!uqheader && !!uqheader.getBoundingClientRect() ? uqheader.getBoundingClientRect().height : 0;
+
+        const alertContainer = document.getElementById('alert-container');
+        const alertHeight =
+            !!alertContainer && !!alertContainer.getBoundingClientRect()
+                ? alertContainer.getBoundingClientRect().height
+                : 0;
+        const homeLinkTop = uqheaderheight + alertHeight + 6; // it needs a little offset within the div
+        console.log('homeLinkTop = ', homeLinkTop);
+
         !testMode && !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
+        !testMode && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
+        !testMode && !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
     }
 }
 
