@@ -80,8 +80,14 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             !!mainMenu && (mainMenu.style.position = 'relative');
 
             // move the link-to-homepage into primo login bar
-            !!mainMenu.firstChild && console.log('mainMenu.firstChild = ', mainMenu.firstChild);
-            !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
+            let firstchild = mainMenu.firstChild;
+            if (JSON.stringify(firstchild) === '{}') {
+                // detect <!----> left by angular
+                firstchild = firstchild.nextSibling;
+                console.log('mergeUtilityAreaAndPrimoLoginBar: got comment - now firstchild = ', firstchild);
+            }
+            !!firstchild && console.log('mainMenu.firstChild = ', firstchild);
+            !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, firstchild);
 
             placeHomepageLinkNicely();
 
@@ -101,7 +107,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             console.log('mergeUtilityAreaAndPrimoLoginBar: parentDiv = ', parentDiv);
 
             // I think its this one that is problematic
-            !!parentDiv && !!qrCodeScanner && parentDiv.insertBefore(askusButton, qrCodeScanner);
+            // !!parentDiv && !!qrCodeScanner && parentDiv.insertBefore(askusButton, qrCodeScanner);
 
             askusComplete = true;
         }
