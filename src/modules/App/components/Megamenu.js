@@ -38,6 +38,19 @@ const styles = theme => {
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
                 },
+                '& > div > div': {
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                },
+                // first menu item should be lined up with Library title
+                '& > div:first-child > div': {
+                    paddingLeft: 0,
+                },
+            },
+        },
+        submenuheader: {
+            '& hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0)',
             },
         },
         ListItemTextPrimary: {
@@ -80,6 +93,8 @@ const styles = theme => {
         },
         menuItemContainer: {
             [theme.breakpoints.up('lg')]: {
+                paddingLeft: 12,
+                marginLeft: -8,
                 '& > div': {
                     paddingLeft: 6,
                     paddingRight: 6,
@@ -107,6 +122,16 @@ const styles = theme => {
                 '& svg': {
                     border: '1px solid #e2e2e2',
                     padding: '1rem',
+                },
+            },
+        },
+        menuItem: {
+            [theme.breakpoints.up('lg')]: {
+                paddingTop: 0,
+                paddingBottom: 0,
+                '& div': {
+                    marginTop: 0,
+                    minHeight: 45,
                 },
             },
         },
