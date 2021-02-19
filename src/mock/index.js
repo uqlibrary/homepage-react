@@ -25,7 +25,8 @@ import examSuggestions from './data/records/examSuggestions';
 import {
     libHours,
     computerAvailability,
-    training,
+    // training_array,
+    training_object,
     printBalance,
     loans,
     possibleRecords,
@@ -118,7 +119,8 @@ mock.onGet(routes.CHAT_API().apiUrl)
     .reply(withDelay([200, { online: true }]));
 
 mock.onGet(routes.TRAINING_API(10).apiUrl)
-    .reply(withDelay([200, training]));
+    .reply(withDelay([200, training_object]));
+    // .reply(withDelay([200, training_array]));
     // .reply(withDelay([500, {}]));
 
 mock.onGet(routes.PRINTING_API().apiUrl)

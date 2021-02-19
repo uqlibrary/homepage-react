@@ -26,9 +26,9 @@ const styles = theme => {
                 margin: 0,
                 paddingTop: 0,
                 paddingBottom: 0,
-                paddingLeft: 16,
+                paddingLeft: 0,
                 '& > span > div': {
-                    paddingRight: 12,
+                    paddingRight: 6,
                     paddingLeft: 0,
                 },
                 '& > span > div > div': {
@@ -38,9 +38,6 @@ const styles = theme => {
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
                 },
-                '& > div:first-child': {
-                    marginLeft: 28,
-                },
                 '& > div > div': {
                     paddingLeft: 8,
                     paddingRight: 8,
@@ -49,6 +46,11 @@ const styles = theme => {
                 '& > div:first-child > div': {
                     paddingLeft: 0,
                 },
+            },
+        },
+        submenuheader: {
+            '& hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0)',
             },
         },
         ListItemTextPrimary: {
@@ -91,8 +93,15 @@ const styles = theme => {
         },
         menuItemContainer: {
             [theme.breakpoints.up('lg')]: {
+                paddingLeft: 12,
+                marginLeft: -8,
                 '& > div': {
-                    paddingLeft: 0,
+                    paddingLeft: 6,
+                    paddingRight: 6,
+                    marginLeft: -6,
+                },
+                '& svg': {
+                    paddingLeft: 6,
                 },
             },
             [theme.breakpoints.down('md')]: {
@@ -293,7 +302,6 @@ export function Megamenu(props) {
                 key={`megamenu-group-${index}`}
                 data-testid={`megamenu-group-${index}`}
                 id={`megamenu-group-${index}`}
-                className={classes.verticalMenuList}
             >
                 {!!menuColumn &&
                     menuColumn.length > 0 &&
