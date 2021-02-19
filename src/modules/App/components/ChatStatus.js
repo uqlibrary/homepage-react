@@ -167,7 +167,7 @@ export const ChatStatus = ({ status }) => {
                 title={'Click to open online chat'}
                 placement="left"
                 TransitionProps={{ timeout: 300 }}
-                style={{ zIndex: 999 }}
+                style={{ zIndex: 99999 }}
             >
                 <Fab
                     color="secondary"

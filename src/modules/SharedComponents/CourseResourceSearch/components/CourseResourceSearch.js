@@ -54,7 +54,7 @@ const useStyles = makeStyles(
             },
         },
         fullForm: {
-            marginBottom: 50,
+            marginBottom: 0,
         },
         searchTitle: {
             marginBlockStart: '0.5rem',

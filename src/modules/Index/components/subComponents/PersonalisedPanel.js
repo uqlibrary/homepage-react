@@ -89,7 +89,7 @@ const useStyles = makeStyles(theme => ({
         textOverflow: 'ellipsis',
         whiteSpace: 'nowrap !important',
         paddingRight: 6,
-        color: theme.palette.accent.main,
+        color: theme.palette.accent.dark,
         '&:hover': {
             textDecoration: 'underline',
         },

@@ -573,7 +573,7 @@ context('Course Resources', () => {
         cy.viewport(1300, 1000);
 
         // enter a repeating string
-        cy.get('div[data-testid=full-courseresource-content] form input').type('AAAAA');
+        cy.get('input[data-testid="full-courseresource-autocomplete-input-wrapper"]').type('AAAAA');
         // and the drop down will not appear
         cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
     });
@@ -582,7 +582,7 @@ context('Course Resources', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
 
-        cy.get('div[data-testid=course-resources-panel] form input').type('FREN 1');
+        cy.get('input[data-testid="homepage-courseresource-autocomplete-input-wrapper"]').type('FREN 1');
         cy.get('ul#homepage-courseresource-autocomplete-popup')
             .children()
             .should('have.length', 1 + 1);
@@ -593,7 +593,7 @@ context('Course Resources', () => {
         cy.viewport(1300, 1000);
 
         // enter a repeating string
-        cy.get('div[data-testid=full-courseresource-content] form input').type('FREN 1');
+        cy.get('input[data-testid="full-courseresource-autocomplete-input-wrapper"]').type('FREN 1');
         // and the drop down will not appear
         cy.get('ul#full-courseresource-autocomplete-popup')
             .children()
