@@ -6,15 +6,6 @@ function ready(fn) {
     }
 }
 
-/**
- * the default homepage style blocks page scroll
- */
-function resetDocumentScrollBar() {
-    console.log('reset document scroll');
-    document.body.style.overflow = 'auto';
-    document.body.style.overflowY = 'auto';
-}
-
 function removeFooter() {
     const footerExists = setInterval(() => {
         const footer = document.getElementById('full-footer-block');
@@ -138,6 +129,8 @@ function moveAlertsBelowPrimoLoginBar() {
             //     !!alertsBlock &&
             //     libraryHeader.insertBefore(primoUtilityBar, alertsBlock);
 
+            placeHomepageLinkNicely();
+
             clearInterval(moveAlertsArea);
         }
     }, 300); // check every 200ms
@@ -145,8 +138,6 @@ function moveAlertsBelowPrimoLoginBar() {
 
 function loadReusableComponents() {
     // the react root is inserted via angular in the Primo custom.js file, within the Primo View Package
-
-    resetDocumentScrollBar();
 
     removeFooter();
 
