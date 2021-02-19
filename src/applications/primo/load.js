@@ -73,9 +73,13 @@ function mergeUtilityAreaAndPrimoLoginBar() {
         const homeLinkButton = document.getElementById('uq-site-header-home-button');
         console.log('mergeUtilityAreaAndPrimoLoginBar: homeLinkButton = ', homeLinkButton);
         if (!!homeLinkButton && !homelinkComplete) {
-            // move the link-to-homepage into primo login bar
             const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
             console.log('mergeUtilityAreaAndPrimoLoginBar: mainMenu = ', mainMenu);
+
+            // put position relative on the  homepage button parent so button absolute is relative to it
+            !!mainMenu && (mainMenu.style.position = 'relative');
+
+            // move the link-to-homepage into primo login bar
             !!mainMenu.firstChild && console.log('mainMenu.firstChild = ', mainMenu.firstChild);
             !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
 
@@ -92,8 +96,11 @@ function mergeUtilityAreaAndPrimoLoginBar() {
 
             const qrCodeScanner = document.getElementById('qrCodeScanner');
             console.log('mergeUtilityAreaAndPrimoLoginBar: qrCodeScanner = ', qrCodeScanner);
-            const parentDiv = !!qrCodeScanner && qrCodeScanner.parentNode;
+            // const parentDiv = !!qrCodeScanner && qrCodeScanner.parentNode;
+            const parentDiv = document.getElementsByTagName('prm-search-bookmark-filter')[0] || false;
             console.log('mergeUtilityAreaAndPrimoLoginBar: parentDiv = ', parentDiv);
+
+            // I think its this one that is problematic
             !!parentDiv && !!qrCodeScanner && parentDiv.insertBefore(askusButton, qrCodeScanner);
 
             askusComplete = true;
