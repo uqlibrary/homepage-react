@@ -26,8 +26,11 @@ function removeFooter() {
     }, 300);
 }
 
-function placeHomepageLinkNicely() {
+function placeHomepageLinkNicely(testMode = false) {
+    console.log('placeHomepageLinkNicely called - testMode = ', testMode);
+
     const homeLinkButton = document.getElementById('uq-site-header-home-button');
+    console.log('homeLinkButton = ', homeLinkButton);
 
     if (!!homeLinkButton) {
         // align the link-to-homepage with left border of content
@@ -46,7 +49,7 @@ function placeHomepageLinkNicely() {
         const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
         console.log('homeLinkLeft = ', homeLinkLeft);
 
-        !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
+        !testMode && !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
     }
 }
 
@@ -144,6 +147,5 @@ function loadReusableComponents() {
 
 ready(loadReusableComponents);
 
-// window.onresize = placeHomepageLinkNicely;
-
+window.onresize = placeHomepageLinkNicely(true);
 window.onload = console.log('window onload event noted');

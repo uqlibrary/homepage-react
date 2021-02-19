@@ -748,3 +748,14 @@ prm-citation-linker md-input-container:not([md-no-float]) .md-select-placeholder
 .uq-header__container .menu-global ul a {
   color: #fff !important;
 }
+
+// if we manually insert the home link, this should be the styling
+a.homelink {
+  font-size: 20px;
+  color: #51247A !important;
+  font-weight: 500;
+  position: absolute;
+  left: 147px; // nope, calculated
+  top: 110px;
+  box-shadow: none;
+}
