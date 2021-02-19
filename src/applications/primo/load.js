@@ -40,11 +40,11 @@ function placeHomepageLinkNicely(calledonResize = false) {
         const box2Width = !!box2 ? box2.offsetWidth : 0;
         console.log('placeHomepageLinkNicely: box2Width = ', box2Width);
 
-        // const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
-        // const mainMenuLeft = mainMenu.offsetLeft || 0;
-        // console.log('placeHomepageLinkNicely: mainMenuLeft = ', mainMenuLeft);
+        const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
+        const mainMenuLeft = mainMenu.offsetLeft || 0;
+        console.log('placeHomepageLinkNicely: mainMenuLeft = ', mainMenuLeft);
 
-        // const homeLinkMarginLeft = mainMenuLeft - (box2Width + box1Width);
+        const homeLinkMarginLeft = mainMenuLeft - (box2Width + box1Width);
         const homeLinkLeft = box2Width + box1Width;
         console.log('placeHomepageLinkNicely: homeLinkLeft = ', homeLinkLeft);
 
@@ -62,8 +62,8 @@ function placeHomepageLinkNicely(calledonResize = false) {
         // const homeLinkTop = uqheaderheight + alertHeight + 6; // it needs a little offset within the div
         // console.log('placeHomepageLinkNicely: homeLinkTop = ', homeLinkTop);
 
-        !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
-        // !!homeLinkButton && (homeLinkButton.style.marginLeft = `-${homeLinkMarginLeft}px`);
+        // !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
+        !!homeLinkButton && (homeLinkButton.style.marginLeft = `-${homeLinkMarginLeft}px`);
         // !calledonResize && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
         !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
     }
@@ -86,7 +86,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             console.log('mergeUtilityAreaAndPrimoLoginBar: mainMenu = ', mainMenu);
 
             // put position relative on the  homepage button parent so button absolute is relative to it
-            !!mainMenu && (mainMenu.style.position = 'relative');
+            // !!mainMenu && (mainMenu.style.position = 'relative');
 
             // move the link-to-homepage into primo login bar
             let firstchild = mainMenu.firstChild;
@@ -177,4 +177,5 @@ function loadReusableComponents() {
 ready(loadReusableComponents);
 
 window.addEventListener('resize', placeHomepageLinkNicely(true));
+console.log("window.addEventListener('resize', placeHomepageLinkNicely(true)); set");
 window.onload = console.log('window onload event noted');
