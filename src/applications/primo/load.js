@@ -21,36 +21,38 @@ function placeHomepageLinkNicely(testMode = false) {
     console.log('placeHomepageLinkNicely called - testMode = ', testMode);
 
     const homeLinkButton = document.getElementById('uq-site-header-home-button');
-    console.log('homeLinkButton = ', homeLinkButton);
+    console.log('placeHomepageLinkNicely: homeLinkButton = ', homeLinkButton);
 
     if (!!homeLinkButton) {
         // align the link-to-homepage with left border of content
         const box1 = document.getElementsByTagName('md-content')[0] || false;
         const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
-        console.log('box1Width = ', box1Width);
+        console.log('placeHomepageLinkNicely: box1Width = ', box1Width);
         let box2 = box1.firstChild.nextSibling;
-        console.log('box2 = ', box2);
+        console.log('placeHomepageLinkNicely: box2 = ', box2);
         if (JSON.stringify(box2) === '{}') {
             // a results page for an item will have <!----> as the next element
             box2 = box2.nextSibling;
-            console.log('got comment - now box2 = ', box2);
+            console.log('placeHomepageLinkNicely: got comment - now box2 = ', box2);
         }
         const box2Width = !!box2 ? box2.offsetWidth : 0;
-        console.log('box2Width = ', box2Width);
+        console.log('placeHomepageLinkNicely: box2Width = ', box2Width);
         const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
-        console.log('homeLinkLeft = ', homeLinkLeft);
+        console.log('placeHomepageLinkNicely: homeLinkLeft = ', homeLinkLeft);
 
         const uqheader = document.getElementById('uqheader');
         const uqheaderheight =
             !!uqheader && !!uqheader.getBoundingClientRect() ? uqheader.getBoundingClientRect().height : 0;
+        console.log('placeHomepageLinkNicely: uqheaderheight = ', uqheaderheight);
 
         const alertContainer = document.getElementById('alert-container');
         const alertHeight =
             !!alertContainer && !!alertContainer.getBoundingClientRect()
                 ? alertContainer.getBoundingClientRect().height
                 : 0;
+        console.log('placeHomepageLinkNicely: alertHeight = ', alertHeight);
         const homeLinkTop = uqheaderheight + alertHeight + 6; // it needs a little offset within the div
-        console.log('homeLinkTop = ', homeLinkTop);
+        console.log('placeHomepageLinkNicely: homeLinkTop = ', homeLinkTop);
 
         !testMode && !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
         !testMode && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
@@ -69,11 +71,11 @@ function mergeUtilityAreaAndPrimoLoginBar() {
     let askusComplete = false;
     const mergeAreas = setInterval(() => {
         const homeLinkButton = document.getElementById('uq-site-header-home-button');
-        console.log('homeLinkButton = ', homeLinkButton);
+        console.log('mergeUtilityAreaAndPrimoLoginBar: homeLinkButton = ', homeLinkButton);
         if (!!homeLinkButton && !homelinkComplete) {
             // move the link-to-homepage into primo login bar
             const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
-            console.log('mainMenu = ', mainMenu);
+            console.log('mergeUtilityAreaAndPrimoLoginBar: mainMenu = ', mainMenu);
             !!mainMenu.firstChild && console.log('mainMenu.firstChild = ', mainMenu.firstChild);
             !!mainMenu && !!mainMenu.firstChild && mainMenu.insertBefore(homeLinkButton, mainMenu.firstChild);
 
@@ -84,15 +86,15 @@ function mergeUtilityAreaAndPrimoLoginBar() {
 
         // move the askus button into primo login bar
         const askusButton = document.getElementById('askus-button-block');
-        console.log('askusButton = ', askusButton);
+        console.log('mergeUtilityAreaAndPrimoLoginBar: askusButton = ', askusButton);
         if (!!askusButton && !askusComplete) {
             askusButton.style.display = 'block';
 
             const qrCodeScanner = document.getElementById('qrCodeScanner');
-            console.log('qrCodeScanner = ', qrCodeScanner);
+            console.log('mergeUtilityAreaAndPrimoLoginBar: qrCodeScanner = ', qrCodeScanner);
             const parentDiv = !!qrCodeScanner && qrCodeScanner.parentNode;
-            console.log('parentDiv = ', parentDiv);
-            // !!parentDiv && !!qrCodeScanner && parentDiv.insertBefore(askusButton, qrCodeScanner);
+            console.log('mergeUtilityAreaAndPrimoLoginBar: parentDiv = ', parentDiv);
+            !!parentDiv && !!qrCodeScanner && parentDiv.insertBefore(askusButton, qrCodeScanner);
 
             askusComplete = true;
         }
@@ -100,7 +102,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
         // if _both_ have been moved, remove the original bar and stop looking
         if (!!homelinkComplete && !!askusComplete) {
             const nowEmptyHeader = document.getElementById('uq-site-header');
-            console.log('nowEmptyHeader = ', nowEmptyHeader);
+            console.log('mergeUtilityAreaAndPrimoLoginBar: nowEmptyHeader = ', nowEmptyHeader);
             !!nowEmptyHeader && (nowEmptyHeader.style.display = 'none');
 
             clearInterval(mergeAreas);
@@ -117,13 +119,13 @@ function moveAlertsBelowPrimoLoginBar() {
             // and can be used to get its parent, which doesnt have an id
             const primoLogo = document.getElementsByTagName('prm-logo')[0] || false;
             const primoUtilityBar = !!primoLogo && primoLogo.parentNode;
-            console.log('primoUtilityBar = ', primoUtilityBar);
+            console.log('moveAlertsBelowPrimoLoginBar: primoUtilityBar = ', primoUtilityBar);
             !!primoUtilityBar && (primoUtilityBar.style.backgroundColor = '#ffffff');
 
             const libraryHeader = document.getElementById('content-container');
-            console.log('libraryHeader = ', libraryHeader);
+            console.log('moveAlertsBelowPrimoLoginBar: libraryHeader = ', libraryHeader);
             const alertsBlock = document.getElementById('alert-container');
-            console.log('alertsBlock = ', alertsBlock);
+            console.log('moveAlertsBelowPrimoLoginBar: alertsBlock = ', alertsBlock);
             // !!libraryHeader &&
             //     !!primoUtilityBar &&
             //     !!alertsBlock &&
