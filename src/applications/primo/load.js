@@ -65,7 +65,7 @@ function placeHomepageLinkNicely(calledonResize = false) {
         // !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
         !!homeLinkButton && (homeLinkButton.style.marginLeft = `-${homeLinkMarginLeft}px`);
         // !calledonResize && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
-        !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
+        // !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
     }
 }
 
@@ -176,6 +176,9 @@ function loadReusableComponents() {
 
 ready(loadReusableComponents);
 
-window.addEventListener('resize', placeHomepageLinkNicely(true));
+window.onresize = placeHomepageLinkNicely(true);
+// window.addEventListener('resize', placeHomepageLinkNicely(true));
 console.log("window.addEventListener('resize', placeHomepageLinkNicely(true)); set");
 window.onload = console.log('window onload event noted');
+
+// check it is running with getEventListeners(document);
