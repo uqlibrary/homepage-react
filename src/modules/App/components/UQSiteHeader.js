@@ -3,7 +3,7 @@ import { throttle } from 'throttle-debounce';
 import { PropTypes } from 'prop-types';
 
 import { isHdrStudent } from 'helpers/access';
-import { loadChatStatus, loadCurrentAccount, loadLibHours } from 'actions';
+import { loadChatStatus, loadCurrentAccount } from 'actions';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, routes } from 'config';
 import locale from 'locale/global';
 import { pathConfig } from 'config/routes';
@@ -112,12 +112,12 @@ export const UQSiteHeader = ({
     }, []);
 
     const throttledAccountLoad = useRef(throttle(3100, () => loadCurrentAccount()));
-    const throttledOpeningHoursLoad = useRef(throttle(3100, () => loadLibHours()));
+    // const throttledOpeningHoursLoad = useRef(throttle(3100, () => loadLibHours()));
     const throttledChatStatusLoad = useRef(throttle(3100, () => loadChatStatus()));
     if (!isLibraryWebsiteCall) {
         // if the component is not inside our React app then these wont have been passed in
         !accountLoading && (!account || !author || !authorDetails) && throttledAccountLoad.current();
-        !libHoursLoading && !libHours && throttledOpeningHoursLoad.current();
+        // !libHoursLoading && !libHours && throttledOpeningHoursLoad.current();
         !chatStatus && throttledChatStatusLoad.current();
     }
 
