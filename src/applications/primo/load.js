@@ -17,8 +17,8 @@ function removeFooter() {
     }, 300);
 }
 
-function placeHomepageLinkNicely(testMode = false) {
-    console.log('placeHomepageLinkNicely called - testMode = ', testMode);
+function placeHomepageLinkNicely(calledonResize = false) {
+    console.log('placeHomepageLinkNicely called - calledonResize = ', calledonResize);
 
     const homeLinkButton = document.getElementById('uq-site-header-home-button');
     console.log('placeHomepageLinkNicely: homeLinkButton = ', homeLinkButton);
@@ -26,7 +26,9 @@ function placeHomepageLinkNicely(testMode = false) {
     if (!!homeLinkButton) {
         // align the link-to-homepage with left border of content
         const box1 = document.getElementsByTagName('md-content')[0] || false;
-        const box1Width = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
+        const box1WidthAttribute = !!box1 ? window.getComputedStyle(box1, null).getPropertyValue('padding-left') : 0;
+        console.log('placeHomepageLinkNicely: box1WidthAttribute = ', box1WidthAttribute);
+        const box1Width = parseInt(box1WidthAttribute.replace('px', ''), 10);
         console.log('placeHomepageLinkNicely: box1Width = ', box1Width);
         let box2 = box1.firstChild.nextSibling;
         console.log('placeHomepageLinkNicely: box2 = ', box2);
@@ -37,7 +39,13 @@ function placeHomepageLinkNicely(testMode = false) {
         }
         const box2Width = !!box2 ? box2.offsetWidth : 0;
         console.log('placeHomepageLinkNicely: box2Width = ', box2Width);
-        const homeLinkLeft = box2Width + parseInt(box1Width.replace('px', ''), 10);
+
+        // const mainMenu = document.getElementsByTagName('prm-main-menu')[0] || false;
+        // const mainMenuLeft = mainMenu.offsetLeft || 0;
+        // console.log('placeHomepageLinkNicely: mainMenuLeft = ', mainMenuLeft);
+
+        // const homeLinkMarginLeft = mainMenuLeft - (box2Width + box1Width);
+        const homeLinkLeft = box2Width + box1Width;
         console.log('placeHomepageLinkNicely: homeLinkLeft = ', homeLinkLeft);
 
         // const uqheader = document.getElementById('uqheader');
@@ -54,9 +62,10 @@ function placeHomepageLinkNicely(testMode = false) {
         // const homeLinkTop = uqheaderheight + alertHeight + 6; // it needs a little offset within the div
         // console.log('placeHomepageLinkNicely: homeLinkTop = ', homeLinkTop);
 
-        !testMode && !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
-        // !testMode && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
-        !testMode && !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
+        !!homeLinkButton && (homeLinkButton.style.left = `${homeLinkLeft}px`);
+        // !!homeLinkButton && (homeLinkButton.style.marginLeft = `-${homeLinkMarginLeft}px`);
+        // !calledonResize && !!homeLinkButton && (homeLinkButton.style.top = `${homeLinkTop}px`);
+        !!homeLinkButton && (homeLinkButton.style.position = 'absolute');
     }
 }
 
@@ -77,7 +86,7 @@ function mergeUtilityAreaAndPrimoLoginBar() {
             console.log('mergeUtilityAreaAndPrimoLoginBar: mainMenu = ', mainMenu);
 
             // put position relative on the  homepage button parent so button absolute is relative to it
-            // !!mainMenu && (mainMenu.style.position = 'relative');
+            !!mainMenu && (mainMenu.style.position = 'relative');
 
             // move the link-to-homepage into primo login bar
             let firstchild = mainMenu.firstChild;
@@ -167,5 +176,5 @@ function loadReusableComponents() {
 
 ready(loadReusableComponents);
 
-window.onresize = placeHomepageLinkNicely(true);
+window.addEventListener('resize', placeHomepageLinkNicely(true));
 window.onload = console.log('window onload event noted');
