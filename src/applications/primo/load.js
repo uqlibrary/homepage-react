@@ -150,14 +150,11 @@ function moveAlertsBelowPrimoLoginBar() {
             console.log('moveAlertsBelowPrimoLoginBar: primoUtilityBar = ', primoUtilityBar);
             !!primoUtilityBar && (primoUtilityBar.style.backgroundColor = '#ffffff');
 
-            const libraryHeader = document.getElementById('content-container');
             console.log('moveAlertsBelowPrimoLoginBar: libraryHeader = ', libraryHeader);
             const alertsBlock = document.getElementById('alert-container');
             console.log('moveAlertsBelowPrimoLoginBar: alertsBlock = ', alertsBlock);
-            // !!libraryHeader &&
-            //     !!primoUtilityBar &&
-            //     !!alertsBlock &&
-            //     libraryHeader.insertBefore(primoUtilityBar, alertsBlock);
+            !!primoUtilityBar && !!alertsBlock && libraryHeader.insertBefore(primoUtilityBar, alertsBlock);
+            console.log('moveAlertsBelowPrimoLoginBar: moved alertbar?');
 
             placeHomepageLinkNicely();
 
