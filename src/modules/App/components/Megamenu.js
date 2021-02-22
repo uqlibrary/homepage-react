@@ -144,6 +144,9 @@ const styles = theme => {
                     paddingRight: 6,
                     marginLeft: -6,
                 },
+                '& > div > div > span': {
+                    paddingLeft: 0,
+                },
                 '& svg': {
                     paddingLeft: 6,
                 },
