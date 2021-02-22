@@ -436,8 +436,12 @@ export function Megamenu(props) {
                                 primary={menuItem.primaryText}
                                 secondary={menuItem.secondaryText}
                             />
-                            hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="primary" />
-                            hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="primary" />
+                            {hasChildren && isSubMenuOpen[menuItem.id] && (
+                                <ExpandLess size={iconSize} color="primary" />
+                            )}
+                            {hasChildren && !isSubMenuOpen[menuItem.id] && (
+                                <ExpandMore size={iconSize} color="primary" />
+                            )}
                         </ListItem>
                         {hasChildren && renderSubMenu(menuItem, index, classes)}
                     </React.Fragment>
