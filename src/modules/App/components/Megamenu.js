@@ -90,7 +90,6 @@ const styles = theme => {
             whiteSpace: 'nowrap',
             fontWeight: 400,
             paddingLeft: 16,
-            paddingRight: 16,
             marginTop: 0,
             [theme.breakpoints.down('md')]: {
                 borderBottom: '1px solid #e2e2e2',
