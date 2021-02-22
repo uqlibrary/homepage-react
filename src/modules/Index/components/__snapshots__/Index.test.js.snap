@@ -9067,10 +9067,12 @@ exports[`Index page should render placeholders 1`] = `
                                                                               className="MuiGrid-root MuiGrid-container"
                                                                             >
                                                                               <WithStyles(ForwardRef(Grid))
+                                                                                className="makeStyles-actionButtonBlock-364"
                                                                                 item={true}
                                                                                 xs={12}
                                                                               >
                                                                                 <ForwardRef(Grid)
+                                                                                  className="makeStyles-actionButtonBlock-364"
                                                                                   classes={
                                                                                     Object {
                                                                                       "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -9182,153 +9184,16 @@ exports[`Index page should render placeholders 1`] = `
                                                                                   xs={12}
                                                                                 >
                                                                                   <div
-                                                                                    className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+                                                                                    className="MuiGrid-root makeStyles-actionButtonBlock-364 MuiGrid-item MuiGrid-grid-xs-12"
                                                                                   >
-                                                                                    <WithStyles(ForwardRef(Button))
-                                                                                      classes={
-                                                                                        Object {
-                                                                                          "root": "makeStyles-actionButtons-363",
-                                                                                        }
-                                                                                      }
-                                                                                      color="secondary"
+                                                                                    <a
+                                                                                      className="makeStyles-moreActionButton-365"
                                                                                       data-testid="training-event-detail-more-training-button"
-                                                                                      disableElevation={true}
-                                                                                      fullWidth={true}
+                                                                                      href="https://web.library.uq.edu.au/library-services/training"
                                                                                       id="training-event-detail-more-training-button"
-                                                                                      onClick={[Function]}
-                                                                                      size="small"
-                                                                                      variant="contained"
                                                                                     >
-                                                                                      <ForwardRef(Button)
-                                                                                        classes={
-                                                                                          Object {
-                                                                                            "colorInherit": "MuiButton-colorInherit",
-                                                                                            "contained": "MuiButton-contained",
-                                                                                            "containedPrimary": "MuiButton-containedPrimary",
-                                                                                            "containedSecondary": "MuiButton-containedSecondary",
-                                                                                            "containedSizeLarge": "MuiButton-containedSizeLarge",
-                                                                                            "containedSizeSmall": "MuiButton-containedSizeSmall",
-                                                                                            "disableElevation": "MuiButton-disableElevation",
-                                                                                            "disabled": "Mui-disabled",
-                                                                                            "endIcon": "MuiButton-endIcon",
-                                                                                            "focusVisible": "Mui-focusVisible",
-                                                                                            "fullWidth": "MuiButton-fullWidth",
-                                                                                            "iconSizeLarge": "MuiButton-iconSizeLarge",
-                                                                                            "iconSizeMedium": "MuiButton-iconSizeMedium",
-                                                                                            "iconSizeSmall": "MuiButton-iconSizeSmall",
-                                                                                            "label": "MuiButton-label",
-                                                                                            "outlined": "MuiButton-outlined",
-                                                                                            "outlinedPrimary": "MuiButton-outlinedPrimary",
-                                                                                            "outlinedSecondary": "MuiButton-outlinedSecondary",
-                                                                                            "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
-                                                                                            "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                            "root": "MuiButton-root makeStyles-actionButtons-363",
-                                                                                            "sizeLarge": "MuiButton-sizeLarge",
-                                                                                            "sizeSmall": "MuiButton-sizeSmall",
-                                                                                            "startIcon": "MuiButton-startIcon",
-                                                                                            "text": "MuiButton-text",
-                                                                                            "textPrimary": "MuiButton-textPrimary",
-                                                                                            "textSecondary": "MuiButton-textSecondary",
-                                                                                            "textSizeLarge": "MuiButton-textSizeLarge",
-                                                                                            "textSizeSmall": "MuiButton-textSizeSmall",
-                                                                                          }
-                                                                                        }
-                                                                                        color="secondary"
-                                                                                        data-testid="training-event-detail-more-training-button"
-                                                                                        disableElevation={true}
-                                                                                        fullWidth={true}
-                                                                                        id="training-event-detail-more-training-button"
-                                                                                        onClick={[Function]}
-                                                                                        size="small"
-                                                                                        variant="contained"
-                                                                                      >
-                                                                                        <WithStyles(ForwardRef(ButtonBase))
-                                                                                          className="MuiButton-root makeStyles-actionButtons-363 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                          component="button"
-                                                                                          data-testid="training-event-detail-more-training-button"
-                                                                                          disabled={false}
-                                                                                          focusRipple={true}
-                                                                                          focusVisibleClassName="Mui-focusVisible"
-                                                                                          id="training-event-detail-more-training-button"
-                                                                                          onClick={[Function]}
-                                                                                          type="button"
-                                                                                        >
-                                                                                          <ForwardRef(ButtonBase)
-                                                                                            className="MuiButton-root makeStyles-actionButtons-363 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                            classes={
-                                                                                              Object {
-                                                                                                "disabled": "Mui-disabled",
-                                                                                                "focusVisible": "Mui-focusVisible",
-                                                                                                "root": "MuiButtonBase-root",
-                                                                                              }
-                                                                                            }
-                                                                                            component="button"
-                                                                                            data-testid="training-event-detail-more-training-button"
-                                                                                            disabled={false}
-                                                                                            focusRipple={true}
-                                                                                            focusVisibleClassName="Mui-focusVisible"
-                                                                                            id="training-event-detail-more-training-button"
-                                                                                            onClick={[Function]}
-                                                                                            type="button"
-                                                                                          >
-                                                                                            <button
-                                                                                              className="MuiButtonBase-root MuiButton-root makeStyles-actionButtons-363 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                              data-testid="training-event-detail-more-training-button"
-                                                                                              disabled={false}
-                                                                                              id="training-event-detail-more-training-button"
-                                                                                              onBlur={[Function]}
-                                                                                              onClick={[Function]}
-                                                                                              onDragLeave={[Function]}
-                                                                                              onFocus={[Function]}
-                                                                                              onKeyDown={[Function]}
-                                                                                              onKeyUp={[Function]}
-                                                                                              onMouseDown={[Function]}
-                                                                                              onMouseLeave={[Function]}
-                                                                                              onMouseUp={[Function]}
-                                                                                              onTouchEnd={[Function]}
-                                                                                              onTouchMove={[Function]}
-                                                                                              onTouchStart={[Function]}
-                                                                                              tabIndex={0}
-                                                                                              type="button"
-                                                                                            >
-                                                                                              <span
-                                                                                                className="MuiButton-label"
-                                                                                              >
-                                                                                                More training events
-                                                                                              </span>
-                                                                                              <WithStyles(memo)
-                                                                                                center={false}
-                                                                                              >
-                                                                                                <ForwardRef(TouchRipple)
-                                                                                                  center={false}
-                                                                                                  classes={
-                                                                                                    Object {
-                                                                                                      "child": "MuiTouchRipple-child",
-                                                                                                      "childLeaving": "MuiTouchRipple-childLeaving",
-                                                                                                      "childPulsate": "MuiTouchRipple-childPulsate",
-                                                                                                      "ripple": "MuiTouchRipple-ripple",
-                                                                                                      "ripplePulsate": "MuiTouchRipple-ripplePulsate",
-                                                                                                      "rippleVisible": "MuiTouchRipple-rippleVisible",
-                                                                                                      "root": "MuiTouchRipple-root",
-                                                                                                    }
-                                                                                                  }
-                                                                                                >
-                                                                                                  <span
-                                                                                                    className="MuiTouchRipple-root"
-                                                                                                  >
-                                                                                                    <TransitionGroup
-                                                                                                      childFactory={[Function]}
-                                                                                                      component={null}
-                                                                                                      exit={true}
-                                                                                                    />
-                                                                                                  </span>
-                                                                                                </ForwardRef(TouchRipple)>
-                                                                                              </WithStyles(memo)>
-                                                                                            </button>
-                                                                                          </ForwardRef(ButtonBase)>
-                                                                                        </WithStyles(ForwardRef(ButtonBase))>
-                                                                                      </ForwardRef(Button)>
-                                                                                    </WithStyles(ForwardRef(Button))>
+                                                                                      More training events
+                                                                                    </a>
                                                                                   </div>
                                                                                 </ForwardRef(Grid)>
                                                                               </WithStyles(ForwardRef(Grid))>
