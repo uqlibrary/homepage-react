@@ -53,11 +53,55 @@ const styles = theme => {
                 backgroundColor: 'rgba(0, 0, 0, 0)',
             },
         },
+        menuItem: {
+            '&:hover': {
+                textDecoration: 'none',
+                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+            },
+            '& a': {
+                color: '#000',
+                display: 'block',
+            },
+            [theme.breakpoints.down('md')]: {
+                paddingBottom: 5,
+            },
+            [theme.breakpoints.up('lg')]: {
+                fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+                fontSize: 16,
+                letterSpacing: '0.15008px',
+                lineHeight: '24px',
+                paddingTop: 0,
+                paddingBottom: 3,
+                '& a': {
+                    minHeight: 45,
+                    '&:focus': {
+                        textDecoration: 'none',
+                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        outlineColor: 'rgba(0, 0, 0, 0.04)',
+                    },
+                    '&:hover': {
+                        textDecoration: 'none',
+                    },
+                },
+            },
+        },
         ListItemTextPrimary: {
+            display: 'block',
             whiteSpace: 'nowrap',
             fontWeight: 400,
+            paddingLeft: 16,
+            paddingRight: 16,
+            marginTop: 0,
+            [theme.breakpoints.down('md')]: {
+                borderBottom: '1px solid #e2e2e2',
+                padding: '0.7rem 1.5rem 0.7rem 2.5rem',
+            },
         },
         ListItemTextSecondary: {
+            display: 'block',
+            paddingLeft: 16,
+            paddingRight: 16,
+            marginTop: 0,
             ...theme.typography.caption,
         },
         menuDropdown: {
@@ -114,24 +158,9 @@ const styles = theme => {
                     border: '1px solid #e2e2e2',
                     padding: '1rem 1.5rem',
                 },
-                '& div > div:first-child div > span': {
-                    // primaryText of submenu items
-                    borderBottom: '1px solid #e2e2e2',
-                    padding: '0.7rem 1.5rem 0.7rem 2.5rem',
-                },
                 '& svg': {
                     border: '1px solid #e2e2e2',
                     padding: '1rem',
-                },
-            },
-        },
-        menuItem: {
-            [theme.breakpoints.up('lg')]: {
-                paddingTop: 0,
-                paddingBottom: 0,
-                '& div': {
-                    marginTop: 0,
-                    minHeight: 45,
                 },
             },
         },
@@ -308,23 +337,21 @@ export function Megamenu(props) {
                     menuColumn.map((submenuItem, index2) => {
                         const endItemClass = isLastColumn && index2 === menuColumn.length - 1 ? 'endmenuItem' : '';
                         return (
-                            <ListItem
-                                button
+                            <div
                                 data-testid={`megamenu-group-${index}-item-${index2}`}
                                 key={`megamenu-group-${index}-item-${index2}`}
                                 id={`megamenu-group-${index}-item-${index2}`}
-                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
                                 className={classNames(classes.menuItem, `${endItemClass}`)}
                             >
-                                <ListItemText
-                                    classes={{
-                                        primary: classes.ListItemTextPrimary,
-                                        secondary: classes.ListItemTextSecondary,
-                                    }}
-                                    primary={submenuItem.primaryText}
-                                    secondary={!isMobile && submenuItem.secondaryText}
-                                />
-                            </ListItem>
+                                <a href={submenuItem.linkTo || null} target={submenuItem.target || null}>
+                                    <span className={classes.ListItemTextPrimary}>{submenuItem.primaryText}</span>
+                                    {!isMobile && (
+                                        <span className={classes.ListItemTextSecondary}>
+                                            {submenuItem.secondaryText}
+                                        </span>
+                                    )}
+                                </a>
+                            </div>
                         );
                     })}
             </List>
