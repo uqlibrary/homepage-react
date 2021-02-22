@@ -13,48 +13,50 @@ exports[`Component Megamenu should display mobile correctly 1`] = `
     <div
       key="menucontainer-item-0"
     >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        className="submenuheader"
-        data-testid="megamenu-submenus-item-0"
-        id="megamenu-submenus-item-0"
-        key="megamenu-submenus-item-0"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-              "secondary": undefined,
+      <div>
+        <a
+          className="submenuheader"
+          data-testid="megamenu-submenus-item-0"
+          href="/"
+          id="megamenu-submenus-item-0"
+          key="megamenu-submenus-item-0"
+        >
+          <WithStyles(ForwardRef(ListItemText))
+            classes={
+              Object {
+                "primary": undefined,
+                "secondary": undefined,
+              }
             }
-          }
-          primary="Primary text 0"
-          secondary="secondary text 0"
-        />
-      </WithStyles(ForwardRef(ListItem))>
+            primary="Primary text 0"
+            secondary="secondary text 0"
+          />
+        </a>
+      </div>
     </div>
     <div
       key="menucontainer-item-1"
     >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        className="submenuheader"
-        data-testid="megamenu-submenus-item-1"
-        id="megamenu-submenus-item-1"
-        key="megamenu-submenus-item-1"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-              "secondary": undefined,
+      <div>
+        <a
+          className="submenuheader"
+          data-testid="megamenu-submenus-item-1"
+          href="/xyz"
+          id="megamenu-submenus-item-1"
+          key="megamenu-submenus-item-1"
+        >
+          <WithStyles(ForwardRef(ListItemText))
+            classes={
+              Object {
+                "primary": undefined,
+                "secondary": undefined,
+              }
             }
-          }
-          primary="Primary text 1"
-          secondary="secondary text 1"
-        />
-      </WithStyles(ForwardRef(ListItem))>
+            primary="Primary text 1"
+            secondary="secondary text 1"
+          />
+        </a>
+      </div>
     </div>
   </WithStyles(ForwardRef(List))>
 </div>
@@ -80,48 +82,50 @@ exports[`Component Megamenu should render opened drawer with menus 1`] = `
     <div
       key="menucontainer-item-0"
     >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        className="submenuheader"
-        data-testid="megamenu-submenus-item-0"
-        id="megamenu-submenus-item-0"
-        key="megamenu-submenus-item-0"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-              "secondary": undefined,
+      <div>
+        <a
+          className="submenuheader"
+          data-testid="megamenu-submenus-item-0"
+          href="/"
+          id="megamenu-submenus-item-0"
+          key="megamenu-submenus-item-0"
+        >
+          <WithStyles(ForwardRef(ListItemText))
+            classes={
+              Object {
+                "primary": undefined,
+                "secondary": undefined,
+              }
             }
-          }
-          primary="Primary text 0"
-          secondary="secondary text 0"
-        />
-      </WithStyles(ForwardRef(ListItem))>
+            primary="Primary text 0"
+            secondary="secondary text 0"
+          />
+        </a>
+      </div>
     </div>
     <div
       key="menucontainer-item-1"
     >
-      <WithStyles(ForwardRef(ListItem))
-        button={true}
-        className="submenuheader"
-        data-testid="megamenu-submenus-item-1"
-        id="megamenu-submenus-item-1"
-        key="megamenu-submenus-item-1"
-        onClick={[Function]}
-      >
-        <WithStyles(ForwardRef(ListItemText))
-          classes={
-            Object {
-              "primary": undefined,
-              "secondary": undefined,
+      <div>
+        <a
+          className="submenuheader"
+          data-testid="megamenu-submenus-item-1"
+          href="/xyz"
+          id="megamenu-submenus-item-1"
+          key="megamenu-submenus-item-1"
+        >
+          <WithStyles(ForwardRef(ListItemText))
+            classes={
+              Object {
+                "primary": undefined,
+                "secondary": undefined,
+              }
             }
-          }
-          primary="Primary text 1"
-          secondary="secondary text 1"
-        />
-      </WithStyles(ForwardRef(ListItem))>
+            primary="Primary text 1"
+            secondary="secondary text 1"
+          />
+        </a>
+      </div>
     </div>
   </WithStyles(ForwardRef(List))>
 </div>
