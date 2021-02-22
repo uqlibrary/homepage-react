@@ -309,8 +309,8 @@ export const CourseResources = ({
 
     return (
         <StandardPage title={locale.title} goBackFunc={() => history.back()}>
-            <section className="layout-card" style={{ margin: '0 auto 16px' }} aria-live="assertive">
-                <StandardCard noPadding noHeader customBackgroundColor="#F7F7F7" style={{ boxShadow: '0 0 black' }}>
+            <section aria-live="assertive">
+                <StandardCard noPadding noHeader>
                     <Grid container>
                         <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
                             <AppBar

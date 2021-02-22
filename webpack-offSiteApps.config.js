@@ -50,6 +50,7 @@ class CreateOffSiteApp {
             // must be prod, or update list above
             liveLocation = 'https://www.library.uq.edu.au/';
         }
+        // fallback for validity only - if we write to the root, the file may not be publically readable!!!
         const fileLocation = this.options.fileLocation || '/';
         const allData = (hash, appname) =>
             'async function ready(fn) {\n' +
@@ -142,7 +143,7 @@ function thirdPartySitesUsingHeader() {
     const applicationsFolder = resolve(__dirname, './src/applications/');
     fs.readdirSync(applicationsFolder).forEach(file => {
         try {
-            if (fs.lstatSync(applicationsFolder + '/' + file).isDirectory() && file !== 'sample-site') {
+            if (fs.lstatSync(applicationsFolder + '/' + file).isDirectory()) {
                 list.push({
                     path: `applications/${file}/`,
                     name: `${file}`,
@@ -344,10 +345,10 @@ const webpackConfig = {
                     },
                 ],
             },
-            {
-                test: /\.js$/,
-                loader: WebpackStrip.loader('console.log'),
-            },
+            // { // turn off for test
+            //     test: /\.js$/,
+            //     loader: WebpackStrip.loader('console.log'),
+            // },
         ],
     },
     resolve: {

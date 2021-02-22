@@ -30,9 +30,9 @@ export const mui1theme = createMuiTheme({
             dark: '#333333',
         },
         accent: {
-            light: '#54acff',
-            main: '#316799', // uqblue
-            dark: '#2a557d',
+            light: '#3881cb',
+            main: '#2377CB', // uqblue
+            dark: '#195794',
         },
         white: {
             main: '#FFFFFF',

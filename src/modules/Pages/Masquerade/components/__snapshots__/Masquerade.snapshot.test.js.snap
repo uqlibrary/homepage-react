@@ -6,75 +6,71 @@ exports[`Component Masquerade Should render form as expected 1`] = `
   goBackTooltip="Go back"
   title="Masquerade"
 >
-  <div
-    className="layout-card"
+  <StandardCard
+    noHeader={true}
   >
-    <StandardCard
-      noHeader={true}
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
     >
       <WithStyles(ForwardRef(Grid))
-        container={true}
-        spacing={1}
+        id="masquerade"
+        item={true}
+        xs={12}
       >
+        <WithStyles(ForwardRef(Typography))>
+          <span>
+            <strong>
+              WARNING!!
+            </strong>
+             When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
+          </span>
+        </WithStyles(ForwardRef(Typography))>
         <WithStyles(ForwardRef(Grid))
-          id="masquerade"
-          item={true}
-          xs={12}
-        >
-          <WithStyles(ForwardRef(Typography))>
-            <span>
-              <strong>
-                WARNING!!
-              </strong>
-               When masquerading as a user, you will effectively become that user, and changes you make will apply to the account!
-            </span>
-          </WithStyles(ForwardRef(Typography))>
-          <WithStyles(ForwardRef(Grid))
-            alignItems="flex-end"
-            container={true}
-            spacing={3}
-            style={
-              Object {
-                "marginTop": 12,
-              }
+          alignItems="flex-end"
+          container={true}
+          spacing={3}
+          style={
+            Object {
+              "marginTop": 12,
             }
+          }
+        >
+          <WithStyles(ForwardRef(Grid))
+            item={true}
+            xs={true}
           >
-            <WithStyles(ForwardRef(Grid))
-              item={true}
-              xs={true}
+            <WithStyles(ForwardRef(TextField))
+              data-testid="masquerade-userName"
+              fullWidth={true}
+              id="userName"
+              label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              value=""
+            />
+          </WithStyles(ForwardRef(Grid))>
+          <WithStyles(ForwardRef(Grid))
+            item={true}
+            sm="auto"
+            xs={12}
+          >
+            <WithStyles(ForwardRef(Button))
+              color="primary"
+              data-testid="masquerade-submit"
+              disabled={false}
+              fullWidth={true}
+              id="submitMasquerade"
+              onClick={[Function]}
+              variant="contained"
             >
-              <WithStyles(ForwardRef(TextField))
-                data-testid="masquerade-userName"
-                fullWidth={true}
-                id="userName"
-                label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
-                onChange={[Function]}
-                onKeyPress={[Function]}
-                value=""
-              />
-            </WithStyles(ForwardRef(Grid))>
-            <WithStyles(ForwardRef(Grid))
-              item={true}
-              sm="auto"
-              xs={12}
-            >
-              <WithStyles(ForwardRef(Button))
-                color="primary"
-                data-testid="masquerade-submit"
-                disabled={false}
-                fullWidth={true}
-                id="submitMasquerade"
-                onClick={[Function]}
-                variant="contained"
-              >
-                Masquerade
-              </WithStyles(ForwardRef(Button))>
-            </WithStyles(ForwardRef(Grid))>
+              Masquerade
+            </WithStyles(ForwardRef(Button))>
           </WithStyles(ForwardRef(Grid))>
         </WithStyles(ForwardRef(Grid))>
       </WithStyles(ForwardRef(Grid))>
-    </StandardCard>
-  </div>
+    </WithStyles(ForwardRef(Grid))>
+  </StandardCard>
 </StandardPage>
 `;
 
@@ -84,74 +80,70 @@ exports[`Component Masquerade Should render readonly description 1`] = `
   goBackTooltip="Go back"
   title="Masquerade"
 >
-  <div
-    className="layout-card"
+  <StandardCard
+    noHeader={true}
   >
-    <StandardCard
-      noHeader={true}
+    <WithStyles(ForwardRef(Grid))
+      container={true}
+      spacing={1}
     >
       <WithStyles(ForwardRef(Grid))
-        container={true}
-        spacing={1}
+        id="masquerade"
+        item={true}
+        xs={12}
       >
+        <WithStyles(ForwardRef(Typography))>
+          <span>
+            <strong>
+              NOTE:
+            </strong>
+             As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
+          </span>
+        </WithStyles(ForwardRef(Typography))>
         <WithStyles(ForwardRef(Grid))
-          id="masquerade"
-          item={true}
-          xs={12}
-        >
-          <WithStyles(ForwardRef(Typography))>
-            <span>
-              <strong>
-                NOTE:
-              </strong>
-               As a read-only masquerader, you can view all parts of the profile, but you are not able to make any changes to the account.
-            </span>
-          </WithStyles(ForwardRef(Typography))>
-          <WithStyles(ForwardRef(Grid))
-            alignItems="flex-end"
-            container={true}
-            spacing={3}
-            style={
-              Object {
-                "marginTop": 12,
-              }
+          alignItems="flex-end"
+          container={true}
+          spacing={3}
+          style={
+            Object {
+              "marginTop": 12,
             }
+          }
+        >
+          <WithStyles(ForwardRef(Grid))
+            item={true}
+            xs={true}
           >
-            <WithStyles(ForwardRef(Grid))
-              item={true}
-              xs={true}
+            <WithStyles(ForwardRef(TextField))
+              data-testid="masquerade-userName"
+              fullWidth={true}
+              id="userName"
+              label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              value=""
+            />
+          </WithStyles(ForwardRef(Grid))>
+          <WithStyles(ForwardRef(Grid))
+            item={true}
+            sm="auto"
+            xs={12}
+          >
+            <WithStyles(ForwardRef(Button))
+              color="primary"
+              data-testid="masquerade-submit"
+              disabled={false}
+              fullWidth={true}
+              id="submitMasquerade"
+              onClick={[Function]}
+              variant="contained"
             >
-              <WithStyles(ForwardRef(TextField))
-                data-testid="masquerade-userName"
-                fullWidth={true}
-                id="userName"
-                label="Enter a UQ staff or student username (eg. uqjsmith1 or s123456)"
-                onChange={[Function]}
-                onKeyPress={[Function]}
-                value=""
-              />
-            </WithStyles(ForwardRef(Grid))>
-            <WithStyles(ForwardRef(Grid))
-              item={true}
-              sm="auto"
-              xs={12}
-            >
-              <WithStyles(ForwardRef(Button))
-                color="primary"
-                data-testid="masquerade-submit"
-                disabled={false}
-                fullWidth={true}
-                id="submitMasquerade"
-                onClick={[Function]}
-                variant="contained"
-              >
-                Masquerade
-              </WithStyles(ForwardRef(Button))>
-            </WithStyles(ForwardRef(Grid))>
+              Masquerade
+            </WithStyles(ForwardRef(Button))>
           </WithStyles(ForwardRef(Grid))>
         </WithStyles(ForwardRef(Grid))>
       </WithStyles(ForwardRef(Grid))>
-    </StandardCard>
-  </div>
+    </WithStyles(ForwardRef(Grid))>
+  </StandardCard>
 </StandardPage>
 `;

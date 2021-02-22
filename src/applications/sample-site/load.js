@@ -7,6 +7,10 @@ function ready(fn) {
 }
 
 // unfortunately, all these functions must repeat in every load.js - I couldnt get them to include from a common file
+function resetDocumentScrollBar() {
+    document.body.style.overflow = 'auto'; // the default homepage style blocks page scroll
+}
+
 function showElement(button) {
     button.style.display = 'block';
 }
@@ -74,24 +78,19 @@ function showConnectFooterBlock() {
     }, 100);
 }
 
-function showFooter(isFooterRequired = true, isConnectFooterRequired = true) {
+function showFooter() {
     const footerExists = setInterval(() => {
         const footer = document.getElementById('full-footer-block');
         if (!!footer) {
             clearInterval(footerExists);
 
-            if (!!isFooterRequired) {
-                document.body.append(footer.firstElementChild);
+            footer.style.display = 'block';
 
-                const footerChild = document.getElementById('full-footer-block-child');
-                !!footerChild && (footerChild.style.display = 'flex');
+            document.body.append(footer.firstElementChild);
 
-                !!isConnectFooterRequired && showConnectFooterBlock();
-            } else {
-                footer.style.display = 'none';
-            }
+            const footerChild = document.getElementById('full-footer-block-child');
+            !!footerChild && (footerChild.style.display = 'flex');
         }
-        document.body.style.overflow = 'auto'; // the default homepage style blocks page scroll
     }, 100);
 }
 
@@ -108,8 +107,10 @@ function loadReusableComponents() {
     reactRoot.setAttribute('style', 'height:auto');
     document.body.insertBefore(reactRoot, firstElement);
 
+    resetDocumentScrollBar();
+
     // to have the Ask Us button appear, call this function
-    // showAskusButtonBlock();
+    showAskusButtonBlock();
 
     // to have the login/logout button appear, call this function;
     // to also have the My Library button appear (when logged in), pass a parameter of true
@@ -118,13 +119,8 @@ function loadReusableComponents() {
     // to have the mega menu appear, call this function;
     showMegaMenuBlock();
 
-    // always call this function - it fixes a scrolling issue with the page
-    // to have the footer NOT display, call this with a first parameter of false
-    // to have the minimal footer (purple) display, but the connect footer (grey) NOT appear, call this function
-    // with parameters (true, false)
-    showFooter(); // show both Minimal (purple) and Connect (grey) Footers
-    // showFooter(false); // no footer
-    // showFooter(true, false); // minimal (purple) footer only
+    showFooter();
+    showConnectFooterBlock(); // dont try to show the connect footer if you dont also show the main footer
 }
 
 ready(loadReusableComponents);

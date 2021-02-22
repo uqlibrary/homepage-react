@@ -166,106 +166,104 @@ export const Index = ({
     }, [accountLoading, account, author, incompleteNTRO, incompleteNTROLoading, dispatch]);
     return (
         <StandardPage>
-            <div className="layout-card">
-                <Grid container spacing={6}>
-                    {/* Search */}
-                    <Grid item xs={12}>
-                        <SearchPanel />
-                    </Grid>
-                    {accountLoading === false && !!account && (
-                        <Hidden mdUp>
-                            <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                        <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
-                    </Grid>
-                    {/* Personalisation panel or hours */}
-                    {!!accountLoading && (
-                        <Grid item xs={12} md={4}>
-                            <MyLoader />
-                        </Grid>
-                    )}
-                    {/* Personalisation panel, desktop */}
-                    {accountLoading === false && !!account && (
-                        <Hidden smDown>
-                            <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
-                                <PersonalisedPanel
-                                    account={account}
-                                    author={author}
-                                    loans={loans}
-                                    printBalance={printBalance}
-                                    possibleRecords={possibleRecords && possibleRecords.total}
-                                    incompleteNTRORecords={incompleteNTRO}
-                                    isNextToSpotlights
-                                />
-                            </Grid>
-                        </Hidden>
-                    )}
-                    {/* Hours panel, logged out */}
-                    {accountLoading === false && !account && (
-                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                libHoursError={libHoursError}
-                                account={account}
-                            />
-                        </Grid>
-                    )}
-                    <Grid item xs={12} md={4} data-testid="computer-availability-panel">
-                        <Computers
-                            computerAvailability={computerAvailability}
-                            computerAvailabilityLoading={computerAvailabilityLoading}
-                            computerAvailabilityError={computerAvailabilityError}
-                            height={classes.computersAvailHeight}
-                        />
-                    </Grid>
-                    {accountLoading === false && !!account && (
-                        <Grid item xs={12} md={4} data-testid="library-hours-panel">
-                            <Hours
-                                libHours={libHours}
-                                libHoursLoading={libHoursLoading}
-                                libHoursError={libHoursError}
-                                account={account}
-                            />
-                        </Grid>
-                    )}
-
-                    {seeCourseResources(account) && (
-                        <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                            <CourseResourcesPanel account={account} history={history} />
-                        </Grid>
-                    )}
-
-                    <Grid item xs={12} md={4} data-testid="training-panel">
-                        <Training
-                            trainingEvents={trainingEvents}
-                            trainingEventsLoading={trainingEventsLoading}
-                            trainingEventsError={trainingEventsError}
-                        />
-                    </Grid>
-
-                    {seeLibraryServices(account) && (
-                        <Grid item xs={12} md={4} data-testid="library-services-panel">
-                            <LibraryServices account={account} />
-                        </Grid>
-                    )}
-
-                    <Grid item xs={12} md={4}>
-                        <PromoPanel account={account} accountLoading={accountLoading} />
-                    </Grid>
+            <Grid container spacing={4}>
+                {/* Search */}
+                <Grid item xs={12} style={{ marginTop: 12 }}>
+                    <SearchPanel />
                 </Grid>
-            </div>
+                {accountLoading === false && !!account && (
+                    <Hidden mdUp>
+                        <Grid item xs={12} lg={4} id="personalisedPanel" data-testid="personalisedPanel">
+                            <PersonalisedPanel
+                                account={account}
+                                author={author}
+                                loans={loans}
+                                printBalance={printBalance}
+                                possibleRecords={possibleRecords && possibleRecords.total}
+                                incompleteNTRORecords={incompleteNTRO}
+                            />
+                        </Grid>
+                    </Hidden>
+                )}
+                <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
+                    <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
+                </Grid>
+                {/* Personalisation panel or hours */}
+                {!!accountLoading && (
+                    <Grid item xs={12} md={4}>
+                        <MyLoader />
+                    </Grid>
+                )}
+                {/* Personalisation panel, desktop */}
+                {accountLoading === false && !!account && (
+                    <Hidden smDown>
+                        <Grid item xs={12} md={4} id="personalisedPanel" data-testid="personalisedPanel">
+                            <PersonalisedPanel
+                                account={account}
+                                author={author}
+                                loans={loans}
+                                printBalance={printBalance}
+                                possibleRecords={possibleRecords && possibleRecords.total}
+                                incompleteNTRORecords={incompleteNTRO}
+                                isNextToSpotlights
+                            />
+                        </Grid>
+                    </Hidden>
+                )}
+                {/* Hours panel, logged out */}
+                {accountLoading === false && !account && (
+                    <Grid item xs={12} md={4} data-testid="library-hours-panel">
+                        <Hours
+                            libHours={libHours}
+                            libHoursLoading={libHoursLoading}
+                            libHoursError={libHoursError}
+                            account={account}
+                        />
+                    </Grid>
+                )}
+                <Grid item xs={12} md={4} data-testid="computer-availability-panel">
+                    <Computers
+                        computerAvailability={computerAvailability}
+                        computerAvailabilityLoading={computerAvailabilityLoading}
+                        computerAvailabilityError={computerAvailabilityError}
+                        height={classes.computersAvailHeight}
+                    />
+                </Grid>
+                {accountLoading === false && !!account && (
+                    <Grid item xs={12} md={4} data-testid="library-hours-panel">
+                        <Hours
+                            libHours={libHours}
+                            libHoursLoading={libHoursLoading}
+                            libHoursError={libHoursError}
+                            account={account}
+                        />
+                    </Grid>
+                )}
+
+                {seeCourseResources(account) && (
+                    <Grid item xs={12} md={4} data-testid="course-resources-panel">
+                        <CourseResourcesPanel account={account} history={history} />
+                    </Grid>
+                )}
+
+                <Grid item xs={12} md={4} data-testid="training-panel">
+                    <Training
+                        trainingEvents={trainingEvents}
+                        trainingEventsLoading={trainingEventsLoading}
+                        trainingEventsError={trainingEventsError}
+                    />
+                </Grid>
+
+                {seeLibraryServices(account) && (
+                    <Grid item xs={12} md={4} data-testid="library-services-panel">
+                        <LibraryServices account={account} />
+                    </Grid>
+                )}
+
+                <Grid item xs={12} md={4}>
+                    <PromoPanel account={account} accountLoading={accountLoading} />
+                </Grid>
+            </Grid>
         </StandardPage>
     );
 };
@@ -284,7 +282,7 @@ Index.propTypes = {
     computerAvailability: PropTypes.array,
     computerAvailabilityLoading: PropTypes.bool,
     computerAvailabilityError: PropTypes.bool,
-    trainingEvents: PropTypes.array,
+    trainingEvents: PropTypes.any,
     trainingEventsLoading: PropTypes.bool,
     trainingEventsError: PropTypes.bool,
     printBalance: PropTypes.object,

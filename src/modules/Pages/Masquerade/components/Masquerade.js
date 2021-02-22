@@ -49,42 +49,40 @@ export default class Masquerade extends PureComponent {
     render() {
         return (
             <StandardPage title={txt.title} goBackFunc={() => history.back()} goBackTooltip="Go back">
-                <div className="layout-card">
-                    <StandardCard noHeader>
-                        <Grid container spacing={1}>
-                            <Grid item xs={12} id="masquerade">
-                                <Typography>
-                                    {this.userCapabilityStatement(this.props.account.canMasqueradeType)}
-                                </Typography>
-                                <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
-                                    <Grid item xs>
-                                        <TextField
-                                            data-testid="masquerade-userName"
-                                            fullWidth
-                                            id="userName"
-                                            label={txt.labels.hint}
-                                            onChange={this._usernameChanged}
-                                            onKeyPress={this._masqueradeAs}
-                                            value={this.state.userName}
-                                        />
-                                    </Grid>
-                                    <Grid item xs={12} sm={'auto'}>
-                                        <Button
-                                            children={txt.labels.submit}
-                                            color="primary"
-                                            data-testid="masquerade-submit"
-                                            disabled={this.state.loading}
-                                            fullWidth
-                                            id="submitMasquerade"
-                                            onClick={this._masqueradeAs}
-                                            variant="contained"
-                                        />
-                                    </Grid>
+                <StandardCard noHeader>
+                    <Grid container spacing={1}>
+                        <Grid item xs={12} id="masquerade">
+                            <Typography>
+                                {this.userCapabilityStatement(this.props.account.canMasqueradeType)}
+                            </Typography>
+                            <Grid container spacing={3} alignItems={'flex-end'} style={{ marginTop: 12 }}>
+                                <Grid item xs>
+                                    <TextField
+                                        data-testid="masquerade-userName"
+                                        fullWidth
+                                        id="userName"
+                                        label={txt.labels.hint}
+                                        onChange={this._usernameChanged}
+                                        onKeyPress={this._masqueradeAs}
+                                        value={this.state.userName}
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={'auto'}>
+                                    <Button
+                                        children={txt.labels.submit}
+                                        color="primary"
+                                        data-testid="masquerade-submit"
+                                        disabled={this.state.loading}
+                                        fullWidth
+                                        id="submitMasquerade"
+                                        onClick={this._masqueradeAs}
+                                        variant="contained"
+                                    />
                                 </Grid>
                             </Grid>
                         </Grid>
-                    </StandardCard>
-                </div>
+                    </Grid>
+                </StandardCard>
             </StandardPage>
         );
     }

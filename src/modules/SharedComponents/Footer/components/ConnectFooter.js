@@ -13,13 +13,9 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     connectFooter: {
+        width: '100%',
         fontWeight: '300',
         lineHeight: '25px',
-        margin: '0 auto 0 auto',
-        maxWidth: '90%',
-        [theme.breakpoints.up('lg')]: {
-            maxWidth: '1200px',
-        },
         padding: '20px 0',
         position: 'relative',
         '& a': {
@@ -131,100 +127,105 @@ export function ConnectFooter(props) {
     );
 
     return (
-        <Grid
-            className={classes.connectFooter}
-            container
-            data-testid="connect-footer"
-            alignItems="flex-start"
-            justify="center"
-            id="connect-footer-block"
-            style={{ display: 'none' }}
-        >
-            <Grid item xs={12} md={4} className={classes.navigation}>
-                <ul>
-                    <li>
-                        <a data-testid="footermenu-homepage" href={menuLocale.menuhome.linkTo}>
-                            {menuLocale.menuhome.primaryText}
-                        </a>
-                        {separator()}
-                    </li>
-                    {menuLocale.publicmenu.map((linkProperties, index) => (
-                        <li key={`footerli-${index}`}>
-                            <a data-testid={linkProperties.dataTestid} href={linkProperties.linkTo}>
-                                {linkProperties.primaryText}
-                            </a>
-                            {index < menuLocale.publicmenu.length - 1 && separator()}
-                        </li>
-                    ))}
-                </ul>
-            </Grid>
-            <Grid item xs={12} md={4} className={classes.contacts}>
-                <Grid container>
-                    <Grid item xs={'auto'}>
-                        <Typography variant={'h6'} component={'h3'} style={{ marginTop: -4 }}>
-                            {locale.connectFooter.buttonSocialHeader}
-                        </Typography>
+        <div className={classes.connectFooter}>
+            <div className="layout-card">
+                <Grid
+                    container
+                    data-testid="connect-footer"
+                    alignItems="flex-start"
+                    justify="center"
+                    id="connect-footer-block"
+                    direction="row"
+                >
+                    <Grid item xs={12} md={4} className={classes.navigation}>
+                        <ul>
+                            <li>
+                                <a data-testid="footermenu-homepage" href={menuLocale.menuhome.linkTo}>
+                                    {menuLocale.menuhome.primaryText}
+                                </a>
+                                {separator()}
+                            </li>
+                            {menuLocale.publicmenu.map((linkProperties, index) => (
+                                <li key={`footerli-${index}`}>
+                                    <a data-testid={linkProperties.dataTestid} href={linkProperties.linkTo}>
+                                        {linkProperties.primaryText}
+                                    </a>
+                                    {index < menuLocale.publicmenu.length - 1 && separator()}
+                                </li>
+                            ))}
+                        </ul>
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.contacts}>
+                        <Grid container>
+                            <Grid item xs={'auto'}>
+                                <Typography variant={'h6'} component={'h3'} style={{ marginTop: -4 }}>
+                                    {locale.connectFooter.buttonSocialHeader}
+                                </Typography>
+                            </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                            {locale.connectFooter.buttonSocial.map((item, index) => (
+                                <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
+                                    <Tooltip
+                                        id={`auth-button-${index}`}
+                                        title={`${item.linkMouseOver}`}
+                                        placement="bottom"
+                                        TransitionProps={{ timeout: 300 }}
+                                    >
+                                        <Button
+                                            aria-label={item.linkMouseOver}
+                                            classes={{
+                                                root: classes.socialButtonClass,
+                                            }}
+                                            color="primary"
+                                            variant="contained"
+                                            data-testid={item.dataTestid}
+                                            id={`socialbutton-${index}`}
+                                            onClick={() => loadLinkToTarget(item.linkTo)}
+                                        >
+                                            {item.icon}
+                                        </Button>
+                                    </Tooltip>
+                                </Grid>
+                            ))}
+                        </Grid>
+                        <Grid className={classes.internal}>
+                            {locale.connectFooter.internalLinks.map((linkProperties, index) => {
+                                return (
+                                    <span key={`internallabel-${index}`}>
+                                        <a data-testid={linkProperties.dataTestid} href={linkProperties.linkTo}>
+                                            {linkProperties.linklabel}
+                                        </a>
+                                        {index < locale.connectFooter.internalLinks.length - 1 && (
+                                            <span>&nbsp;|&nbsp; </span>
+                                        )}
+                                    </span>
+                                );
+                            })}
+                        </Grid>
+                    </Grid>
+                    <Grid item xs={12} md={4} className={classes.giving}>
+                        <Grid container spacing={2}>
+                            {locale.connectFooter.givingLinks.map((item, index) => {
+                                return (
+                                    <Grid item xs={12} key={`givingLinks-${index}`} className={classes.givingBlock}>
+                                        <Button
+                                            fullWidth
+                                            children={item.label}
+                                            className={classes.givingButtonClass}
+                                            data-testid={item.dataTestid}
+                                            key={`givingLinks-${index}`}
+                                            onClick={() => loadLinkInSamePage(item.linkTo)}
+                                            variant="contained"
+                                        />
+                                    </Grid>
+                                );
+                            })}
+                        </Grid>
                     </Grid>
                 </Grid>
-                <Grid container spacing={1}>
-                    {locale.connectFooter.buttonSocial.map((item, index) => (
-                        <Grid item xs={'auto'} key={`buttonSocial-${index}`} id={`buttonSocial-${index}`}>
-                            <Tooltip
-                                id={`auth-button-${index}`}
-                                title={`${item.linkMouseOver}`}
-                                placement="bottom"
-                                TransitionProps={{ timeout: 300 }}
-                            >
-                                <Button
-                                    aria-label={item.linkMouseOver}
-                                    classes={{
-                                        root: classes.socialButtonClass,
-                                    }}
-                                    color="primary"
-                                    variant="contained"
-                                    data-testid={item.dataTestid}
-                                    id={`socialbutton-${index}`}
-                                    onClick={() => loadLinkToTarget(item.linkTo)}
-                                >
-                                    {item.icon}
-                                </Button>
-                            </Tooltip>
-                        </Grid>
-                    ))}
-                </Grid>
-                <Grid className={classes.internal}>
-                    {locale.connectFooter.internalLinks.map((linkProperties, index) => {
-                        return (
-                            <span key={`internallabel-${index}`}>
-                                <a data-testid={linkProperties.dataTestid} href={linkProperties.linkTo}>
-                                    {linkProperties.linklabel}
-                                </a>
-                                {index < locale.connectFooter.internalLinks.length - 1 && <span>&nbsp;|&nbsp; </span>}
-                            </span>
-                        );
-                    })}
-                </Grid>
-            </Grid>
-            <Grid item xs={12} md={4} className={classes.giving}>
-                <Grid container spacing={2}>
-                    {locale.connectFooter.givingLinks.map((item, index) => {
-                        return (
-                            <Grid item xs={12} key={`givingLinks-${index}`} className={classes.givingBlock}>
-                                <Button
-                                    fullWidth
-                                    children={item.label}
-                                    className={classes.givingButtonClass}
-                                    data-testid={item.dataTestid}
-                                    key={`givingLinks-${index}`}
-                                    onClick={() => loadLinkInSamePage(item.linkTo)}
-                                    variant="contained"
-                                />
-                            </Grid>
-                        );
-                    })}
-                </Grid>
-            </Grid>
-        </Grid>
+            </div>
+        </div>
     );
 }
 

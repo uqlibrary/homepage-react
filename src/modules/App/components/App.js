@@ -121,14 +121,6 @@ export const App = ({
         }
     }, 100); // check every 100ms
 
-    const showConnectFooter = setInterval(() => {
-        const elem = document.getElementById('connect-footer-block');
-        if (!!elem) {
-            elem.style.display = 'flex';
-            clearInterval(showConnectFooter);
-        }
-    }, 100); // check every 100ms
-
     useEffect(() => {
         actions.loadCurrentAccount();
         actions.loadAlerts();

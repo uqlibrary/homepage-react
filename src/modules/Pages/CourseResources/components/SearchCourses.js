@@ -1,15 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-
 import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
 import { default as locale } from '../courseResources.locale';
 import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
-
 import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
-
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
@@ -228,7 +223,7 @@ export const SearchCourses = ({
     };
 
     return (
-        <StandardCard noPadding noHeader standardCardId="full-courseresource" style={{ boxShadow: 'none' }}>
+        <Grid container spacing={3} id={'full-courseresource'} data-testid={'full-courseresource'}>
             <Grid item xs={12} id="courseresource-search">
                 <CourseResourceSearch
                     displayType="full"
@@ -249,7 +244,7 @@ export const SearchCourses = ({
                     {renderSearchResults(listSearchedSubjects)}
                 </Grid>
             )}
-        </StandardCard>
+        </Grid>
     );
 };
 

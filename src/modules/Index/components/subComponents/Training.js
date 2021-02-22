@@ -123,6 +123,37 @@ const useStyles = makeStyles(theme => ({
     actionButtons: {
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
+        width: '100%',
+    },
+    actionButtonBlock: {
+        '& a': {
+            borderBottomLeftRadius: 4,
+            borderBottomRightRadius: 4,
+            color: '#fff',
+            display: 'block',
+            fontSize: 13,
+            fontWeight: 400,
+            padding: 6,
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            width: '100%',
+            '&:hover': {
+                textDecoration: 'none',
+                boxShadow: 'none',
+            },
+        },
+    },
+    moreActionButton: {
+        backgroundColor: theme.palette.secondary.main,
+        '&:hover': {
+            backgroundColor: theme.palette.secondary.dark,
+        },
+    },
+    bookActionButton: {
+        backgroundColor: theme.palette.primary.main,
+        '&:hover': {
+            backgroundColor: theme.palette.primary.dark,
+        },
     },
     detailHeader: {
         backgroundColor: theme.palette.primary.dark,
@@ -160,12 +191,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         }, 300);
         setEventDetail(null);
     };
-    const openEvent = id => {
-        window.location.href = `https://studenthub.uq.edu.au/students/events/detail/${id}`;
-    };
-    const openMoreTraining = () => {
-        window.location.href = 'https://web.library.uq.edu.au/library-services/training';
-    };
     const eventTime = eventTime =>
         moment(eventTime)
             .calendar(null, {
@@ -180,7 +205,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
     // there is something strange happening that sometimes the api sends us an object
     // convert to an array when it happens
     const standardisedTrainingEvents =
-        !!trainingEvents && typeof trainingEvents === 'object' // && trainingEvents !== null
+        !!trainingEvents && typeof trainingEvents === 'object'
             ? Object.keys(trainingEvents).map(key => {
                   return trainingEvents[key];
               })
@@ -324,35 +349,25 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 <div className={classes.flexFooter}>
                     {/* Buttons */}
                     <Grid container spacing={0}>
-                        <Grid item xs={12}>
+                        <Grid item xs={12} className={classes.actionButtonBlock}>
                             {!eventDetail ? (
-                                <Button
-                                    classes={{ root: classes.actionButtons }}
-                                    size="small"
-                                    variant="contained"
-                                    color="secondary"
-                                    disableElevation
-                                    fullWidth
-                                    onClick={() => openMoreTraining()}
+                                <a
+                                    className={classes.moreActionButton}
+                                    href="https://web.library.uq.edu.au/library-services/training"
                                     id="training-event-detail-more-training-button"
                                     data-testid="training-event-detail-more-training-button"
                                 >
                                     More training events
-                                </Button>
+                                </a>
                             ) : (
-                                <Button
-                                    classes={{ root: classes.actionButtons }}
-                                    size="small"
-                                    variant="contained"
-                                    color="primary"
-                                    disableElevation
-                                    fullWidth
-                                    onClick={() => openEvent(eventDetail.entityId)}
+                                <a
+                                    className={classes.bookActionButton}
+                                    href={`https://studenthub.uq.edu.au/students/events/detail/${eventDetail.entityId}`}
                                     id="training-event-detail-training-login-button"
                                     data-testid="training-event-detail-training-login-button"
                                 >
                                     Log in and book now
-                                </Button>
+                                </a>
                             )}
                         </Grid>
                     </Grid>
