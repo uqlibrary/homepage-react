@@ -52,7 +52,7 @@ context('Megamenu', () => {
         cy.get('[data-testid=megamenu-submenus-item-0]')
             .contains(menu.publicmenu[0].primaryText)
             .click();
-        cy.get('[data-testid=megamenu-group-1-item-0] p').contains(menu.publicmenu[0].submenuItems[0].secondaryText);
+        cy.get('[data-testid=megamenu-group-1-item-0] span').contains(menu.publicmenu[0].submenuItems[0].secondaryText);
         cy.get('[data-testid=megamenu-group-1-item-0]')
             .contains(menu.publicmenu[0].submenuItems[0].primaryText)
             .click();

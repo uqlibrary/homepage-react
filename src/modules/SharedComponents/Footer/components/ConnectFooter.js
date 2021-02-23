@@ -136,7 +136,6 @@ export function ConnectFooter(props) {
                     justify="center"
                     id="connect-footer-block"
                     direction="row"
-                    style={{ display: 'none' }}
                 >
                     <Grid item xs={12} md={4} className={classes.navigation}>
                         <ul>

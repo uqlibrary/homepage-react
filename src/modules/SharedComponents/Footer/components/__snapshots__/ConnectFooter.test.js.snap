@@ -12,11 +12,6 @@ exports[`Component ConnectFooter should render 1`] = `
       direction="row"
       id="connect-footer-block"
       justify="center"
-      style={
-        Object {
-          "display": "none",
-        }
-      }
     >
       <WithStyles(ForwardRef(Grid))
         item={true}

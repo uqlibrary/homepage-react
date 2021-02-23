@@ -84,7 +84,6 @@ export const App = ({
     account,
     author,
     authorDetails,
-    accountLoading,
     accountAuthorDetailsLoading,
     actions,
     chatStatus,
@@ -93,49 +92,14 @@ export const App = ({
     libHoursError,
     history,
 }) => {
-    function showButton(button) {
-        button.style.display = 'block';
-    }
-
-    const showAuthButton = setInterval(() => {
-        const button = document.getElementById('auth-button-block');
-        if (!!button) {
-            showButton(button);
-            clearInterval(showAuthButton);
-        }
-    }, 100); // check every 100ms
-
-    const showMyLibraryButton = setInterval(() => {
-        const button = document.getElementById('mylibrary-button-block');
-        if (!!button) {
-            showButton(button);
-            clearInterval(showMyLibraryButton);
-        }
-    }, 100); // check every 100ms
-
-    const showAskUsButton = setInterval(() => {
-        const button = document.getElementById('askus-button-block');
-        if (!!button) {
-            showButton(button);
-            clearInterval(showAskUsButton);
-        }
-    }, 100); // check every 100ms
-
     useEffect(() => {
         actions.loadCurrentAccount();
         actions.loadAlerts();
         actions.loadChatStatus();
-
-        // reinsert the elements that are auto hidden so they are optional on other sites
-        showAskUsButton;
-        showAuthButton;
-        showMyLibraryButton;
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const classes = useStyles();
-    const isAccountLoading = accountLoading;
     const routesConfig = routes.getRoutesConfig({
         components: pages,
         authorDetails: authorDetails,
@@ -154,7 +118,6 @@ export const App = ({
                 </div>
                 <UQSiteHeader
                     account={account}
-                    accountLoading={isAccountLoading}
                     author={author}
                     authorDetails={authorDetails}
                     history={history}
@@ -162,7 +125,6 @@ export const App = ({
                     libHours={libHours}
                     libHoursloading={libHoursLoading}
                     libHoursError={libHoursError}
-                    isLibraryWebsiteCall
                 />
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
@@ -201,7 +163,6 @@ export const App = ({
 
 App.propTypes = {
     account: PropTypes.object,
-    accountLoading: PropTypes.bool,
     accountAuthorDetailsLoading: PropTypes.bool,
     author: PropTypes.object,
     authorDetails: PropTypes.object,

@@ -68,7 +68,6 @@
 @import "styles-imports/prm-user-area";
 @import "styles-imports/full_view_status";
 
-
 prm-user-area {
   .user-menu-button .user-name {
     color: $accent-color;
@@ -739,4 +738,15 @@ prm-citation-linker md-input-container:not([md-no-float]) .md-select-placeholder
 #skipNavigation,
 .uq-header__container .menu-global ul a {
   color: #fff !important;
+}
+
+// if we manually insert the home link, this should be the styling
+a.homelink {
+  font-size: 20px;
+  color: #51247A !important;
+  font-weight: 500;
+  position: absolute;
+  left: 147px; // nope, calculated
+  top: 110px;
+  box-shadow: none;
 }

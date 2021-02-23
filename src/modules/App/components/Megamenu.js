@@ -53,11 +53,54 @@ const styles = theme => {
                 backgroundColor: 'rgba(0, 0, 0, 0)',
             },
         },
+        menuItem: {
+            '&:hover': {
+                textDecoration: 'none',
+                backgroundColor: 'rgba(0, 0, 0, 0.04)',
+            },
+            '& a': {
+                color: '#000',
+                display: 'block',
+            },
+            [theme.breakpoints.down('md')]: {
+                paddingBottom: 5,
+            },
+            [theme.breakpoints.up('lg')]: {
+                fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+                fontSize: 16,
+                letterSpacing: '0.15008px',
+                lineHeight: '24px',
+                paddingTop: 0,
+                paddingBottom: 3,
+                '& a': {
+                    minHeight: 45,
+                    '&:focus': {
+                        textDecoration: 'none',
+                        backgroundColor: 'rgba(0, 0, 0, 0.04)',
+                        outlineColor: 'rgba(0, 0, 0, 0.04)',
+                    },
+                    '&:hover': {
+                        textDecoration: 'none',
+                    },
+                },
+            },
+        },
         ListItemTextPrimary: {
+            display: 'block',
             whiteSpace: 'nowrap',
             fontWeight: 400,
+            paddingLeft: 16,
+            marginTop: 0,
+            [theme.breakpoints.down('md')]: {
+                borderBottom: '1px solid #e2e2e2',
+                padding: '0.7rem 1.5rem 0.7rem 2.5rem',
+            },
         },
         ListItemTextSecondary: {
+            display: 'block',
+            paddingLeft: 16,
+            paddingRight: 16,
+            marginTop: 0,
             ...theme.typography.caption,
         },
         menuDropdown: {
@@ -100,6 +143,9 @@ const styles = theme => {
                     paddingRight: 6,
                     marginLeft: -6,
                 },
+                '& > div > div > span': {
+                    paddingLeft: 0,
+                },
                 '& svg': {
                     paddingLeft: 6,
                 },
@@ -114,24 +160,38 @@ const styles = theme => {
                     border: '1px solid #e2e2e2',
                     padding: '1rem 1.5rem',
                 },
-                '& div > div:first-child div > span': {
-                    // primaryText of submenu items
-                    borderBottom: '1px solid #e2e2e2',
-                    padding: '0.7rem 1.5rem 0.7rem 2.5rem',
-                },
                 '& svg': {
                     border: '1px solid #e2e2e2',
                     padding: '1rem',
                 },
             },
         },
-        menuItem: {
+        anchorHolder: {
+            '& a': {
+                color: '#000',
+            },
+            [theme.breakpoints.down('md')]: {
+                // top level of menu under hamburger
+                border: '1px solid #e2e2e2',
+                '& span': {
+                    padding: '1rem 1.5rem',
+                },
+            },
             [theme.breakpoints.up('lg')]: {
-                paddingTop: 0,
-                paddingBottom: 0,
-                '& div': {
-                    marginTop: 0,
-                    minHeight: 45,
+                transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
+                paddingTop: 8,
+                paddingBottom: 8,
+                '& a': {
+                    '&:hover': {
+                        textDecoration: 'none',
+                    },
+                },
+                '& span': {
+                    paddingLeft: '0 !important',
+                },
+                '&:hover': {
+                    textDecoration: 'none',
+                    backgroundColor: 'rgba(0, 0, 0, 0.04)',
                 },
             },
         },
@@ -288,12 +348,6 @@ export function Megamenu(props) {
         }
     };
 
-    function clickMenuItem(menuItem) {
-        return !!menuItem.submenuItems && menuItem.submenuItems.length > 0
-            ? setParticularSubMenuOpen(menuItem.id, !isSubMenuOpen[menuItem.id])
-            : navigateToLink(menuItem.linkTo, menuItem.target || null);
-    }
-
     function renderSingleColumn(index, classes, menuColumn, isLastColumn) {
         return (
             <List
@@ -308,23 +362,21 @@ export function Megamenu(props) {
                     menuColumn.map((submenuItem, index2) => {
                         const endItemClass = isLastColumn && index2 === menuColumn.length - 1 ? 'endmenuItem' : '';
                         return (
-                            <ListItem
-                                button
+                            <div
                                 data-testid={`megamenu-group-${index}-item-${index2}`}
                                 key={`megamenu-group-${index}-item-${index2}`}
                                 id={`megamenu-group-${index}-item-${index2}`}
-                                onClick={() => navigateToLink(submenuItem.linkTo, submenuItem.target || null)}
                                 className={classNames(classes.menuItem, `${endItemClass}`)}
                             >
-                                <ListItemText
-                                    classes={{
-                                        primary: classes.ListItemTextPrimary,
-                                        secondary: classes.ListItemTextSecondary,
-                                    }}
-                                    primary={submenuItem.primaryText}
-                                    secondary={!isMobile && submenuItem.secondaryText}
-                                />
-                            </ListItem>
+                                <a href={submenuItem.linkTo || null} target={submenuItem.target || null}>
+                                    <span className={classes.ListItemTextPrimary}>{submenuItem.primaryText}</span>
+                                    {!isMobile && (
+                                        <span className={classes.ListItemTextSecondary}>
+                                            {submenuItem.secondaryText}
+                                        </span>
+                                    )}
+                                </a>
+                            </div>
                         );
                     })}
             </List>
@@ -363,29 +415,59 @@ export function Megamenu(props) {
         const iconSize = isMobile ? 'default' : 'small';
         return (
             <div className={classes.menuItemContainer} key={`menucontainer-item-${index}`} id={menuItem.id}>
-                <ListItem
-                    button
-                    className={classNames(
-                        menuItem.linkTo === window.location.href ? classes.currentPage : '',
-                        'submenuheader',
-                    )}
-                    data-testid={`megamenu-submenus-item-${index}`}
-                    key={`megamenu-submenus-item-${index}`}
-                    id={`megamenu-submenus-item-${index}`}
-                    onClick={() => clickMenuItem(menuItem)}
-                >
-                    <ListItemText
-                        classes={{
-                            primary: classes.ListItemTextPrimary,
-                            secondary: classes.ListItemTextSecondary,
-                        }}
-                        primary={menuItem.primaryText}
-                        secondary={menuItem.secondaryText}
-                    />
-                    {hasChildren && isSubMenuOpen[menuItem.id] && <ExpandLess size={iconSize} color="primary" />}
-                    {hasChildren && !isSubMenuOpen[menuItem.id] && <ExpandMore size={iconSize} color="primary" />}
-                </ListItem>
-                {hasChildren && renderSubMenu(menuItem, index, classes)}
+                {!!menuItem.submenuItems && menuItem.submenuItems.length > 0 ? (
+                    <React.Fragment>
+                        <ListItem
+                            button
+                            className={classNames(
+                                menuItem.linkTo === window.location.href ? classes.currentPage : '',
+                                'submenuheader',
+                            )}
+                            data-testid={`megamenu-submenus-item-${index}`}
+                            key={`megamenu-submenus-item-${index}`}
+                            id={`megamenu-submenus-item-${index}`}
+                            onClick={() => setParticularSubMenuOpen(menuItem.id, !isSubMenuOpen[menuItem.id])}
+                        >
+                            <ListItemText
+                                classes={{
+                                    primary: classes.ListItemTextPrimary,
+                                    secondary: classes.ListItemTextSecondary,
+                                }}
+                                primary={menuItem.primaryText}
+                                secondary={menuItem.secondaryText}
+                            />
+                            {hasChildren && isSubMenuOpen[menuItem.id] && (
+                                <ExpandLess size={iconSize} color="primary" />
+                            )}
+                            {hasChildren && !isSubMenuOpen[menuItem.id] && (
+                                <ExpandMore size={iconSize} color="primary" />
+                            )}
+                        </ListItem>
+                        {hasChildren && renderSubMenu(menuItem, index, classes)}
+                    </React.Fragment>
+                ) : (
+                    <div className={classes.anchorHolder}>
+                        <a
+                            className={classNames(
+                                menuItem.linkTo === window.location.href ? classes.currentPage : '',
+                                'submenuheader',
+                            )}
+                            data-testid={`megamenu-submenus-item-${index}`}
+                            key={`megamenu-submenus-item-${index}`}
+                            id={`megamenu-submenus-item-${index}`}
+                            href={menuItem.linkTo || null}
+                        >
+                            <ListItemText
+                                classes={{
+                                    primary: classes.ListItemTextPrimary,
+                                    secondary: classes.ListItemTextSecondary,
+                                }}
+                                primary={menuItem.primaryText}
+                                secondary={menuItem.secondaryText}
+                            />
+                        </a>
+                    </div>
+                )}
             </div>
         );
     };

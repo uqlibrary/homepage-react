@@ -73,6 +73,15 @@ const useStyles = makeStyles(theme => ({
         marginLeft: -16,
         marginRight: -16,
     },
+    menuItemAnchor: {
+        marginRight: -16,
+        '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.04)',
+        },
+    },
+    anchorBadge: {
+        marginLeft: -42,
+    },
     menuItemRoot: {
         paddingTop: 0,
         paddingBottom: 0,
@@ -81,6 +90,18 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: 16,
         paddingRight: 0,
         marginTop: 2,
+    },
+    menuItemRootAnchor: {
+        paddingTop: 0,
+        paddingBottom: 0,
+        textTransform: 'none',
+        textAlign: 'left',
+        paddingRight: 0,
+        marginTop: 2,
+        width: '100%',
+        '& > span > div': {
+            fontWeight: 400,
+        },
     },
     menuItemLabel: {
         fontSize: 14,
@@ -264,11 +285,8 @@ const PersonalisedPanel = ({
     };
     const Loans = () => {
         const id = tag => `pp-loans${tag ? '-' + tag : ''}`;
-        const navigateToLoans = () => {
-            window.location.href = ppLocale.items.loans.url;
-        };
         return (
-            <Grid item xs={12} className={classes.menuItem}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={id('tooltip')}
                     data-testid={id('tooltip')}
@@ -276,44 +294,42 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <Button
-                        fullWidth
-                        classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToLoans()}
+                    <a
+                        className={classes.menuItemRootAnchor}
+                        href={ppLocale.items.loans.url}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
-                        <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.loans.label.replace(
-                                    '[loans]',
-                                    loans && loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
-                                )}
+                        <span className="MuiButton-label">
+                            <Grid container spacing={0}>
+                                <Grid item xs className={classes.menuItemLabel}>
+                                    {ppLocale.items.loans.label.replace(
+                                        '[loans]',
+                                        loans && loans.total_loans_count > 0 ? `(${loans.total_loans_count})` : '',
+                                    )}
+                                </Grid>
+                                <Grid item xs="auto" className={classes.anchorBadge}>
+                                    <div className={classes.itemButton}>
+                                        <Badge
+                                            badgeContent={loans && loans.total_loans_count}
+                                            color="primary"
+                                            classes={{ badge: classes.ppBadgeInfo }}
+                                        >
+                                            <MenuBookIcon className={classes.icon} />
+                                        </Badge>
+                                    </div>
+                                </Grid>
                             </Grid>
-                            <Grid item xs="auto">
-                                <div className={classes.itemButton}>
-                                    <Badge
-                                        badgeContent={loans && loans.total_loans_count}
-                                        color="primary"
-                                        classes={{ badge: classes.ppBadgeInfo }}
-                                    >
-                                        <MenuBookIcon className={classes.icon} />
-                                    </Badge>
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Button>
+                        </span>
+                    </a>
                 </Tooltip>
             </Grid>
         );
     };
     const Fines = () => {
         const id = tag => `pp-fines${tag ? '-' + tag : ''}`;
-        const navigateToFines = () => {
-            window.location.href = ppLocale.items.fines.url;
-        };
         return (
-            <Grid item xs={12} className={classes.menuItem}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={id('tooltip')}
                     data-testid={id('tooltip')}
@@ -321,41 +337,39 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <Button
-                        fullWidth
-                        classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToFines()}
+                    <a
+                        className={classes.menuItemRootAnchor}
+                        href={ppLocale.items.fines.url}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
-                        <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.fines.label.replace('[fines]', loans && loans.total_fines_sum)}
+                        <span className="MuiButton-label">
+                            <Grid container spacing={0}>
+                                <Grid item xs className={classes.menuItemLabel}>
+                                    {ppLocale.items.fines.label.replace('[fines]', loans && loans.total_fines_sum)}
+                                </Grid>
+                                <Grid item xs="auto" className={classes.anchorBadge}>
+                                    <div className={classes.itemButton}>
+                                        <Badge
+                                            badgeContent={loans && loans.total_fines_count}
+                                            color="primary"
+                                            classes={{ badge: classes.ppBadgeError }}
+                                        >
+                                            <MonetizationOnIcon className={classes.icon} />
+                                        </Badge>
+                                    </div>
+                                </Grid>
                             </Grid>
-                            <Grid item xs="auto">
-                                <div className={classes.itemButton}>
-                                    <Badge
-                                        badgeContent={loans && loans.total_fines_count}
-                                        color="primary"
-                                        classes={{ badge: classes.ppBadgeError }}
-                                    >
-                                        <MonetizationOnIcon className={classes.icon} />
-                                    </Badge>
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Button>
+                        </span>
+                    </a>
                 </Tooltip>
             </Grid>
         );
     };
     const EspacePossible = () => {
         const id = tag => `pp-espace-possible${tag ? '-' + tag : ''}`;
-        const navigateToeSpaceDashboard = () => {
-            window.location.href = ppLocale.items.eSpacePossible.url;
-        };
         return (
-            <Grid item xs={12} className={classes.menuItem}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={id('tooltip')}
                     data-testid={id('tooltip')}
@@ -363,41 +377,39 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <Button
-                        fullWidth
-                        classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToeSpaceDashboard()}
+                    <a
+                        className={classes.menuItemRootAnchor}
+                        href={ppLocale.items.eSpacePossible.url}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
-                        <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.eSpacePossible.label.replace('[totalRecords]', possibleRecords)}
+                        <span className="MuiButton-label">
+                            <Grid container spacing={0}>
+                                <Grid item xs className={classes.menuItemLabel}>
+                                    {ppLocale.items.eSpacePossible.label.replace('[totalRecords]', possibleRecords)}
+                                </Grid>
+                                <Grid item xs="auto" className={classes.anchorBadge}>
+                                    <div className={classes.itemButton}>
+                                        <Badge
+                                            badgeContent={possibleRecords}
+                                            color="primary"
+                                            classes={{ badge: classes.ppBadgeInfo }}
+                                        >
+                                            <AssignmentIndIcon className={classes.icon} />
+                                        </Badge>
+                                    </div>
+                                </Grid>
                             </Grid>
-                            <Grid item xs="auto">
-                                <div className={classes.itemButton}>
-                                    <Badge
-                                        badgeContent={possibleRecords}
-                                        color="primary"
-                                        classes={{ badge: classes.ppBadgeInfo }}
-                                    >
-                                        <AssignmentIndIcon className={classes.icon} />
-                                    </Badge>
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Button>
+                        </span>
+                    </a>
                 </Tooltip>
             </Grid>
         );
     };
     const EspaceOrcid = () => {
         const id = tag => `pp-espace-orcid${tag ? '-' + tag : ''}`;
-        const navigateToeSpaceDashboard = () => {
-            window.location.href = ppLocale.items.eSpaceOrcid.url;
-        };
         return (
-            <Grid item xs={12} className={classes.menuItem}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={id('tooltip')}
                     data-testid={id('tooltip')}
@@ -405,41 +417,39 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <Button
-                        fullWidth
-                        classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToeSpaceDashboard()}
+                    <a
+                        className={classes.menuItemRootAnchor}
+                        href={ppLocale.items.eSpaceOrcid.url}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
-                        <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel}>
-                                {ppLocale.items.eSpaceOrcid.label}
+                        <span className="MuiButton-label">
+                            <Grid container spacing={0}>
+                                <Grid item xs className={classes.menuItemLabel}>
+                                    {ppLocale.items.eSpaceOrcid.label}
+                                </Grid>
+                                <Grid item xs="auto" className={classes.anchorBadge}>
+                                    <div className={classes.itemButton}>
+                                        <Badge
+                                            badgeContent={'!'}
+                                            color="primary"
+                                            classes={{ badge: classes.ppBadgeWarning }}
+                                        >
+                                            <LinkIcon className={classes.icon} />
+                                        </Badge>
+                                    </div>
+                                </Grid>
                             </Grid>
-                            <Grid item xs="auto">
-                                <div className={classes.itemButton}>
-                                    <Badge
-                                        badgeContent={'!'}
-                                        color="primary"
-                                        classes={{ badge: classes.ppBadgeWarning }}
-                                    >
-                                        <LinkIcon className={classes.icon} />
-                                    </Badge>
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Button>
+                        </span>
+                    </a>
                 </Tooltip>
             </Grid>
         );
     };
     const EspaceNTROs = () => {
         const id = tag => `pp-espace-ntro${tag ? '-' + tag : ''}`;
-        const navigateToeSpaceDashboard = () => {
-            window.location.href = ppLocale.items.eSpaceNTRO.url;
-        };
         return (
-            <Grid item xs={12} className={classes.menuItem}>
+            <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
                     id={id('tooltip')}
                     data-testid={id('tooltip')}
@@ -447,32 +457,33 @@ const PersonalisedPanel = ({
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
                 >
-                    <Button
-                        fullWidth
-                        classes={{ root: classes.menuItemRoot }}
-                        onClick={() => navigateToeSpaceDashboard()}
+                    <a
+                        className={classes.menuItemRootAnchor}
+                        href={ppLocale.items.eSpaceNTRO.url}
                         id={id('menu-button')}
                         data-testid={id('menu-button')}
                     >
-                        <Grid container spacing={0}>
-                            <Grid item xs className={classes.menuItemLabel}>
-                                {incompleteNTRORecords &&
-                                    incompleteNTRORecords.total &&
-                                    ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
+                        <span className="MuiButton-label">
+                            <Grid container spacing={0}>
+                                <Grid item xs className={classes.menuItemLabel}>
+                                    {incompleteNTRORecords &&
+                                        incompleteNTRORecords.total &&
+                                        ppLocale.items.eSpaceNTRO.label.replace('[total]', incompleteNTRORecords.total)}
+                                </Grid>
+                                <Grid item xs="auto" className={classes.anchorBadge}>
+                                    <div className={classes.itemButton}>
+                                        <Badge
+                                            badgeContent={incompleteNTRORecords && incompleteNTRORecords.total}
+                                            color="primary"
+                                            classes={{ badge: classes.ppBadgeWarning }}
+                                        >
+                                            <PostAddIcon className={classes.icon} />
+                                        </Badge>
+                                    </div>
+                                </Grid>
                             </Grid>
-                            <Grid item xs="auto">
-                                <div className={classes.itemButton}>
-                                    <Badge
-                                        badgeContent={incompleteNTRORecords && incompleteNTRORecords.total}
-                                        color="primary"
-                                        classes={{ badge: classes.ppBadgeWarning }}
-                                    >
-                                        <PostAddIcon className={classes.icon} />
-                                    </Badge>
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </Button>
+                        </span>
+                    </a>
                 </Tooltip>
             </Grid>
         );

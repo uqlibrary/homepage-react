@@ -978,14 +978,12 @@ exports[`Application component should render for anon user 1`] = `
                     </div>
                     <UQSiteHeader
                       account={null}
-                      accountLoading={false}
                       chatStatus={false}
                       history={
                         Object {
                           "location": Object {},
                         }
                       }
-                      isLibraryWebsiteCall={true}
                     >
                       <div
                         className="makeStyles-siteHeader-111"
@@ -1491,11 +1489,6 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="askus"
                                   id="askus-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -1610,22 +1603,12 @@ exports[`Application component should render for anon user 1`] = `
                                     data-testid="askus"
                                     id="askus-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="askus"
                                       id="askus-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AskUs
                                         chatStatus={false}
@@ -3547,11 +3530,6 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="auth"
                                   id="auth-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -3666,22 +3644,12 @@ exports[`Application component should render for anon user 1`] = `
                                     data-testid="auth"
                                     id="auth-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="auth"
                                       id="auth-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AuthButton
                                         isAuthorizedUser={false}
@@ -3853,11 +3821,6 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="mobile-megamenu"
                                   id="mobile-megamenu"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -3972,22 +3935,12 @@ exports[`Application component should render for anon user 1`] = `
                                     data-testid="mobile-megamenu"
                                     id="mobile-megamenu"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="mobile-megamenu"
                                       id="mobile-megamenu"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <Hidden
                                         lgUp={true}
@@ -4154,11 +4107,6 @@ exports[`Application component should render for anon user 1`] = `
                             justify="flex-start"
                             role="region"
                             spacing={0}
-                            style={
-                              Object {
-                                "display": "none",
-                              }
-                            }
                           >
                             <ForwardRef(Grid)
                               aria-label="Main site navigation"
@@ -4275,22 +4223,12 @@ exports[`Application component should render for anon user 1`] = `
                               justify="flex-start"
                               role="region"
                               spacing={0}
-                              style={
-                                Object {
-                                  "display": "none",
-                                }
-                              }
                             >
                               <div
                                 aria-label="Main site navigation"
                                 className="MuiGrid-root makeStyles-siteHeaderBottom-112 MuiGrid-container"
                                 id="desktop-megamenu-block"
                                 role="region"
-                                style={
-                                  Object {
-                                    "display": "none",
-                                  }
-                                }
                               >
                                 <Hidden
                                   mdDown={true}
@@ -13385,10 +13323,12 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                     className="MuiGrid-root MuiGrid-container"
                                                                                                   >
                                                                                                     <WithStyles(ForwardRef(Grid))
+                                                                                                      className="makeStyles-actionButtonBlock-397"
                                                                                                       item={true}
                                                                                                       xs={12}
                                                                                                     >
                                                                                                       <ForwardRef(Grid)
+                                                                                                        className="makeStyles-actionButtonBlock-397"
                                                                                                         classes={
                                                                                                           Object {
                                                                                                             "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -13500,153 +13440,16 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                         xs={12}
                                                                                                       >
                                                                                                         <div
-                                                                                                          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+                                                                                                          className="MuiGrid-root makeStyles-actionButtonBlock-397 MuiGrid-item MuiGrid-grid-xs-12"
                                                                                                         >
-                                                                                                          <WithStyles(ForwardRef(Button))
-                                                                                                            classes={
-                                                                                                              Object {
-                                                                                                                "root": "makeStyles-actionButtons-396",
-                                                                                                              }
-                                                                                                            }
-                                                                                                            color="secondary"
+                                                                                                          <a
+                                                                                                            className="makeStyles-moreActionButton-398"
                                                                                                             data-testid="training-event-detail-more-training-button"
-                                                                                                            disableElevation={true}
-                                                                                                            fullWidth={true}
+                                                                                                            href="https://web.library.uq.edu.au/library-services/training"
                                                                                                             id="training-event-detail-more-training-button"
-                                                                                                            onClick={[Function]}
-                                                                                                            size="small"
-                                                                                                            variant="contained"
                                                                                                           >
-                                                                                                            <ForwardRef(Button)
-                                                                                                              classes={
-                                                                                                                Object {
-                                                                                                                  "colorInherit": "MuiButton-colorInherit",
-                                                                                                                  "contained": "MuiButton-contained",
-                                                                                                                  "containedPrimary": "MuiButton-containedPrimary",
-                                                                                                                  "containedSecondary": "MuiButton-containedSecondary",
-                                                                                                                  "containedSizeLarge": "MuiButton-containedSizeLarge",
-                                                                                                                  "containedSizeSmall": "MuiButton-containedSizeSmall",
-                                                                                                                  "disableElevation": "MuiButton-disableElevation",
-                                                                                                                  "disabled": "Mui-disabled",
-                                                                                                                  "endIcon": "MuiButton-endIcon",
-                                                                                                                  "focusVisible": "Mui-focusVisible",
-                                                                                                                  "fullWidth": "MuiButton-fullWidth",
-                                                                                                                  "iconSizeLarge": "MuiButton-iconSizeLarge",
-                                                                                                                  "iconSizeMedium": "MuiButton-iconSizeMedium",
-                                                                                                                  "iconSizeSmall": "MuiButton-iconSizeSmall",
-                                                                                                                  "label": "MuiButton-label",
-                                                                                                                  "outlined": "MuiButton-outlined",
-                                                                                                                  "outlinedPrimary": "MuiButton-outlinedPrimary",
-                                                                                                                  "outlinedSecondary": "MuiButton-outlinedSecondary",
-                                                                                                                  "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
-                                                                                                                  "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                                                  "root": "MuiButton-root makeStyles-actionButtons-396",
-                                                                                                                  "sizeLarge": "MuiButton-sizeLarge",
-                                                                                                                  "sizeSmall": "MuiButton-sizeSmall",
-                                                                                                                  "startIcon": "MuiButton-startIcon",
-                                                                                                                  "text": "MuiButton-text",
-                                                                                                                  "textPrimary": "MuiButton-textPrimary",
-                                                                                                                  "textSecondary": "MuiButton-textSecondary",
-                                                                                                                  "textSizeLarge": "MuiButton-textSizeLarge",
-                                                                                                                  "textSizeSmall": "MuiButton-textSizeSmall",
-                                                                                                                }
-                                                                                                              }
-                                                                                                              color="secondary"
-                                                                                                              data-testid="training-event-detail-more-training-button"
-                                                                                                              disableElevation={true}
-                                                                                                              fullWidth={true}
-                                                                                                              id="training-event-detail-more-training-button"
-                                                                                                              onClick={[Function]}
-                                                                                                              size="small"
-                                                                                                              variant="contained"
-                                                                                                            >
-                                                                                                              <WithStyles(ForwardRef(ButtonBase))
-                                                                                                                className="MuiButton-root makeStyles-actionButtons-396 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                                                component="button"
-                                                                                                                data-testid="training-event-detail-more-training-button"
-                                                                                                                disabled={false}
-                                                                                                                focusRipple={true}
-                                                                                                                focusVisibleClassName="Mui-focusVisible"
-                                                                                                                id="training-event-detail-more-training-button"
-                                                                                                                onClick={[Function]}
-                                                                                                                type="button"
-                                                                                                              >
-                                                                                                                <ForwardRef(ButtonBase)
-                                                                                                                  className="MuiButton-root makeStyles-actionButtons-396 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                                                  classes={
-                                                                                                                    Object {
-                                                                                                                      "disabled": "Mui-disabled",
-                                                                                                                      "focusVisible": "Mui-focusVisible",
-                                                                                                                      "root": "MuiButtonBase-root",
-                                                                                                                    }
-                                                                                                                  }
-                                                                                                                  component="button"
-                                                                                                                  data-testid="training-event-detail-more-training-button"
-                                                                                                                  disabled={false}
-                                                                                                                  focusRipple={true}
-                                                                                                                  focusVisibleClassName="Mui-focusVisible"
-                                                                                                                  id="training-event-detail-more-training-button"
-                                                                                                                  onClick={[Function]}
-                                                                                                                  type="button"
-                                                                                                                >
-                                                                                                                  <button
-                                                                                                                    className="MuiButtonBase-root MuiButton-root makeStyles-actionButtons-396 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                                                    data-testid="training-event-detail-more-training-button"
-                                                                                                                    disabled={false}
-                                                                                                                    id="training-event-detail-more-training-button"
-                                                                                                                    onBlur={[Function]}
-                                                                                                                    onClick={[Function]}
-                                                                                                                    onDragLeave={[Function]}
-                                                                                                                    onFocus={[Function]}
-                                                                                                                    onKeyDown={[Function]}
-                                                                                                                    onKeyUp={[Function]}
-                                                                                                                    onMouseDown={[Function]}
-                                                                                                                    onMouseLeave={[Function]}
-                                                                                                                    onMouseUp={[Function]}
-                                                                                                                    onTouchEnd={[Function]}
-                                                                                                                    onTouchMove={[Function]}
-                                                                                                                    onTouchStart={[Function]}
-                                                                                                                    tabIndex={0}
-                                                                                                                    type="button"
-                                                                                                                  >
-                                                                                                                    <span
-                                                                                                                      className="MuiButton-label"
-                                                                                                                    >
-                                                                                                                      More training events
-                                                                                                                    </span>
-                                                                                                                    <WithStyles(memo)
-                                                                                                                      center={false}
-                                                                                                                    >
-                                                                                                                      <ForwardRef(TouchRipple)
-                                                                                                                        center={false}
-                                                                                                                        classes={
-                                                                                                                          Object {
-                                                                                                                            "child": "MuiTouchRipple-child",
-                                                                                                                            "childLeaving": "MuiTouchRipple-childLeaving",
-                                                                                                                            "childPulsate": "MuiTouchRipple-childPulsate",
-                                                                                                                            "ripple": "MuiTouchRipple-ripple",
-                                                                                                                            "ripplePulsate": "MuiTouchRipple-ripplePulsate",
-                                                                                                                            "rippleVisible": "MuiTouchRipple-rippleVisible",
-                                                                                                                            "root": "MuiTouchRipple-root",
-                                                                                                                          }
-                                                                                                                        }
-                                                                                                                      >
-                                                                                                                        <span
-                                                                                                                          className="MuiTouchRipple-root"
-                                                                                                                        >
-                                                                                                                          <TransitionGroup
-                                                                                                                            childFactory={[Function]}
-                                                                                                                            component={null}
-                                                                                                                            exit={true}
-                                                                                                                          />
-                                                                                                                        </span>
-                                                                                                                      </ForwardRef(TouchRipple)>
-                                                                                                                    </WithStyles(memo)>
-                                                                                                                  </button>
-                                                                                                                </ForwardRef(ButtonBase)>
-                                                                                                              </WithStyles(ForwardRef(ButtonBase))>
-                                                                                                            </ForwardRef(Button)>
-                                                                                                          </WithStyles(ForwardRef(Button))>
+                                                                                                            More training events
+                                                                                                          </a>
                                                                                                         </div>
                                                                                                       </ForwardRef(Grid)>
                                                                                                     </WithStyles(ForwardRef(Grid))>
@@ -14117,15 +13920,15 @@ exports[`Application component should render for anon user 1`] = `
                                       <ConnectFooter
                                         classes={
                                           Object {
-                                            "connectFooter": "ConnectFooter-connectFooter-402",
-                                            "contacts": "ConnectFooter-contacts-410",
-                                            "giving": "ConnectFooter-giving-407",
-                                            "givingBlock": "ConnectFooter-givingBlock-408",
-                                            "givingButtonClass": "ConnectFooter-givingButtonClass-409",
-                                            "internal": "ConnectFooter-internal-406",
-                                            "navigation": "ConnectFooter-navigation-403",
-                                            "separator": "ConnectFooter-separator-404",
-                                            "socialButtonClass": "ConnectFooter-socialButtonClass-405",
+                                            "connectFooter": "ConnectFooter-connectFooter-405",
+                                            "contacts": "ConnectFooter-contacts-413",
+                                            "giving": "ConnectFooter-giving-410",
+                                            "givingBlock": "ConnectFooter-givingBlock-411",
+                                            "givingButtonClass": "ConnectFooter-givingButtonClass-412",
+                                            "internal": "ConnectFooter-internal-409",
+                                            "navigation": "ConnectFooter-navigation-406",
+                                            "separator": "ConnectFooter-separator-407",
+                                            "socialButtonClass": "ConnectFooter-socialButtonClass-408",
                                           }
                                         }
                                         history={
@@ -14526,7 +14329,7 @@ exports[`Application component should render for anon user 1`] = `
                                         }
                                       >
                                         <div
-                                          className="ConnectFooter-connectFooter-402"
+                                          className="ConnectFooter-connectFooter-405"
                                         >
                                           <div
                                             className="layout-card"
@@ -14538,11 +14341,6 @@ exports[`Application component should render for anon user 1`] = `
                                               direction="row"
                                               id="connect-footer-block"
                                               justify="center"
-                                              style={
-                                                Object {
-                                                  "display": "none",
-                                                }
-                                              }
                                             >
                                               <ForwardRef(Grid)
                                                 alignItems="flex-start"
@@ -14658,30 +14456,20 @@ exports[`Application component should render for anon user 1`] = `
                                                 direction="row"
                                                 id="connect-footer-block"
                                                 justify="center"
-                                                style={
-                                                  Object {
-                                                    "display": "none",
-                                                  }
-                                                }
                                               >
                                                 <div
                                                   className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-flex-start MuiGrid-justify-xs-center"
                                                   data-testid="connect-footer"
                                                   id="connect-footer-block"
-                                                  style={
-                                                    Object {
-                                                      "display": "none",
-                                                    }
-                                                  }
                                                 >
                                                   <WithStyles(ForwardRef(Grid))
-                                                    className="ConnectFooter-navigation-403"
+                                                    className="ConnectFooter-navigation-406"
                                                     item={true}
                                                     md={4}
                                                     xs={12}
                                                   >
                                                     <ForwardRef(Grid)
-                                                      className="ConnectFooter-navigation-403"
+                                                      className="ConnectFooter-navigation-406"
                                                       classes={
                                                         Object {
                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -14794,7 +14582,7 @@ exports[`Application component should render for anon user 1`] = `
                                                       xs={12}
                                                     >
                                                       <div
-                                                        className="MuiGrid-root ConnectFooter-navigation-403 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                                                        className="MuiGrid-root ConnectFooter-navigation-406 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
                                                       >
                                                         <ul>
                                                           <li>
@@ -14805,11 +14593,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               Library home
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -14833,11 +14621,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               Library services
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -14861,11 +14649,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               Research tools & techniques
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -14889,11 +14677,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               Collections
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -14917,11 +14705,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               Borrowing & requesting
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -14945,11 +14733,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               Locations & hours
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -14973,11 +14761,11 @@ exports[`Application component should render for anon user 1`] = `
                                                               About
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -15006,13 +14794,13 @@ exports[`Application component should render for anon user 1`] = `
                                                     </ForwardRef(Grid)>
                                                   </WithStyles(ForwardRef(Grid))>
                                                   <WithStyles(ForwardRef(Grid))
-                                                    className="ConnectFooter-contacts-410"
+                                                    className="ConnectFooter-contacts-413"
                                                     item={true}
                                                     md={4}
                                                     xs={12}
                                                   >
                                                     <ForwardRef(Grid)
-                                                      className="ConnectFooter-contacts-410"
+                                                      className="ConnectFooter-contacts-413"
                                                       classes={
                                                         Object {
                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -15125,7 +14913,7 @@ exports[`Application component should render for anon user 1`] = `
                                                       xs={12}
                                                     >
                                                       <div
-                                                        className="MuiGrid-root ConnectFooter-contacts-410 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                                                        className="MuiGrid-root ConnectFooter-contacts-413 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
                                                       >
                                                         <WithStyles(ForwardRef(Grid))
                                                           container={true}
@@ -15712,7 +15500,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -15754,7 +15542,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -15781,7 +15569,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library Blog"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-blog-link"
                                                                               disabled={false}
@@ -15801,7 +15589,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library Blog"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -15828,7 +15616,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library Blog"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-blog-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-0"
@@ -15920,7 +15708,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library Blog"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-blog-link"
                                                                               id="socialbutton-0"
                                                                               tabindex="0"
@@ -16130,7 +15918,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -16172,7 +15960,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -16199,7 +15987,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on Twitter"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-twitter-link"
                                                                               disabled={false}
@@ -16219,7 +16007,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on Twitter"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -16246,7 +16034,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on Twitter"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-twitter-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-1"
@@ -16338,7 +16126,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on Twitter"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-twitter-link"
                                                                               id="socialbutton-1"
                                                                               tabindex="0"
@@ -16548,7 +16336,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -16590,7 +16378,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -16617,7 +16405,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on Facebook"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-facebook-link"
                                                                               disabled={false}
@@ -16637,7 +16425,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on Facebook"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -16664,7 +16452,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on Facebook"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-facebook-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-2"
@@ -16756,7 +16544,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on Facebook"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-facebook-link"
                                                                               id="socialbutton-2"
                                                                               tabindex="0"
@@ -16966,7 +16754,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -17008,7 +16796,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -17035,7 +16823,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on Instagram"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-instagram-link"
                                                                               disabled={false}
@@ -17055,7 +16843,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on Instagram"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -17082,7 +16870,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on Instagram"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-instagram-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-3"
@@ -17174,7 +16962,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on Instagram"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-instagram-link"
                                                                               id="socialbutton-3"
                                                                               tabindex="0"
@@ -17384,7 +17172,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -17426,7 +17214,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -17453,7 +17241,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on YouTube"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-youtube-link"
                                                                               disabled={false}
@@ -17473,7 +17261,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on YouTube"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -17500,7 +17288,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on YouTube"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-youtube-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-4"
@@ -17592,7 +17380,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on YouTube"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-youtube-link"
                                                                               id="socialbutton-4"
                                                                               tabindex="0"
@@ -17643,10 +17431,10 @@ exports[`Application component should render for anon user 1`] = `
                                                           </ForwardRef(Grid)>
                                                         </WithStyles(ForwardRef(Grid))>
                                                         <WithStyles(ForwardRef(Grid))
-                                                          className="ConnectFooter-internal-406"
+                                                          className="ConnectFooter-internal-409"
                                                         >
                                                           <ForwardRef(Grid)
-                                                            className="ConnectFooter-internal-406"
+                                                            className="ConnectFooter-internal-409"
                                                             classes={
                                                               Object {
                                                                 "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -17756,7 +17544,7 @@ exports[`Application component should render for anon user 1`] = `
                                                             }
                                                           >
                                                             <div
-                                                              className="MuiGrid-root ConnectFooter-internal-406"
+                                                              className="MuiGrid-root ConnectFooter-internal-409"
                                                             >
                                                               <span
                                                                 key="internallabel-0"
@@ -17801,13 +17589,13 @@ exports[`Application component should render for anon user 1`] = `
                                                     </ForwardRef(Grid)>
                                                   </WithStyles(ForwardRef(Grid))>
                                                   <WithStyles(ForwardRef(Grid))
-                                                    className="ConnectFooter-giving-407"
+                                                    className="ConnectFooter-giving-410"
                                                     item={true}
                                                     md={4}
                                                     xs={12}
                                                   >
                                                     <ForwardRef(Grid)
-                                                      className="ConnectFooter-giving-407"
+                                                      className="ConnectFooter-giving-410"
                                                       classes={
                                                         Object {
                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -17920,7 +17708,7 @@ exports[`Application component should render for anon user 1`] = `
                                                       xs={12}
                                                     >
                                                       <div
-                                                        className="MuiGrid-root ConnectFooter-giving-407 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                                                        className="MuiGrid-root ConnectFooter-giving-410 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
                                                       >
                                                         <WithStyles(ForwardRef(Grid))
                                                           container={true}
@@ -18041,13 +17829,13 @@ exports[`Application component should render for anon user 1`] = `
                                                               className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
                                                             >
                                                               <WithStyles(ForwardRef(Grid))
-                                                                className="ConnectFooter-givingBlock-408"
+                                                                className="ConnectFooter-givingBlock-411"
                                                                 item={true}
                                                                 key="givingLinks-0"
                                                                 xs={12}
                                                               >
                                                                 <ForwardRef(Grid)
-                                                                  className="ConnectFooter-givingBlock-408"
+                                                                  className="ConnectFooter-givingBlock-411"
                                                                   classes={
                                                                     Object {
                                                                       "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -18159,10 +17947,10 @@ exports[`Application component should render for anon user 1`] = `
                                                                   xs={12}
                                                                 >
                                                                   <div
-                                                                    className="MuiGrid-root ConnectFooter-givingBlock-408 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                    className="MuiGrid-root ConnectFooter-givingBlock-411 MuiGrid-item MuiGrid-grid-xs-12"
                                                                   >
                                                                     <WithStyles(ForwardRef(Button))
-                                                                      className="ConnectFooter-givingButtonClass-409"
+                                                                      className="ConnectFooter-givingButtonClass-412"
                                                                       data-testid="connect-friends-link"
                                                                       fullWidth={true}
                                                                       key="givingLinks-0"
@@ -18170,7 +17958,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                       variant="contained"
                                                                     >
                                                                       <ForwardRef(Button)
-                                                                        className="ConnectFooter-givingButtonClass-409"
+                                                                        className="ConnectFooter-givingButtonClass-412"
                                                                         classes={
                                                                           Object {
                                                                             "colorInherit": "MuiButton-colorInherit",
@@ -18210,7 +17998,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                         variant="contained"
                                                                       >
                                                                         <WithStyles(ForwardRef(ButtonBase))
-                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                           component="button"
                                                                           data-testid="connect-friends-link"
                                                                           disabled={false}
@@ -18220,7 +18008,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           type="button"
                                                                         >
                                                                           <ForwardRef(ButtonBase)
-                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                             classes={
                                                                               Object {
                                                                                 "disabled": "Mui-disabled",
@@ -18237,7 +18025,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             type="button"
                                                                           >
                                                                             <button
-                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                               data-testid="connect-friends-link"
                                                                               disabled={false}
                                                                               onBlur={[Function]}
@@ -18297,13 +18085,13 @@ exports[`Application component should render for anon user 1`] = `
                                                                 </ForwardRef(Grid)>
                                                               </WithStyles(ForwardRef(Grid))>
                                                               <WithStyles(ForwardRef(Grid))
-                                                                className="ConnectFooter-givingBlock-408"
+                                                                className="ConnectFooter-givingBlock-411"
                                                                 item={true}
                                                                 key="givingLinks-1"
                                                                 xs={12}
                                                               >
                                                                 <ForwardRef(Grid)
-                                                                  className="ConnectFooter-givingBlock-408"
+                                                                  className="ConnectFooter-givingBlock-411"
                                                                   classes={
                                                                     Object {
                                                                       "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -18415,10 +18203,10 @@ exports[`Application component should render for anon user 1`] = `
                                                                   xs={12}
                                                                 >
                                                                   <div
-                                                                    className="MuiGrid-root ConnectFooter-givingBlock-408 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                    className="MuiGrid-root ConnectFooter-givingBlock-411 MuiGrid-item MuiGrid-grid-xs-12"
                                                                   >
                                                                     <WithStyles(ForwardRef(Button))
-                                                                      className="ConnectFooter-givingButtonClass-409"
+                                                                      className="ConnectFooter-givingButtonClass-412"
                                                                       data-testid="connect-give-link"
                                                                       fullWidth={true}
                                                                       key="givingLinks-1"
@@ -18426,7 +18214,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                       variant="contained"
                                                                     >
                                                                       <ForwardRef(Button)
-                                                                        className="ConnectFooter-givingButtonClass-409"
+                                                                        className="ConnectFooter-givingButtonClass-412"
                                                                         classes={
                                                                           Object {
                                                                             "colorInherit": "MuiButton-colorInherit",
@@ -18466,7 +18254,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                         variant="contained"
                                                                       >
                                                                         <WithStyles(ForwardRef(ButtonBase))
-                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                           component="button"
                                                                           data-testid="connect-give-link"
                                                                           disabled={false}
@@ -18476,7 +18264,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                           type="button"
                                                                         >
                                                                           <ForwardRef(ButtonBase)
-                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                             classes={
                                                                               Object {
                                                                                 "disabled": "Mui-disabled",
@@ -18493,7 +18281,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             type="button"
                                                                           >
                                                                             <button
-                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                               data-testid="connect-give-link"
                                                                               disabled={false}
                                                                               onBlur={[Function]}
@@ -19859,14 +19647,12 @@ exports[`Application component should render loading screen while account is loa
                     </div>
                     <UQSiteHeader
                       account={null}
-                      accountLoading={true}
                       chatStatus={false}
                       history={
                         Object {
                           "location": Object {},
                         }
                       }
-                      isLibraryWebsiteCall={true}
                     >
                       <div
                         className="makeStyles-siteHeader-111"
@@ -20372,11 +20158,6 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="askus"
                                   id="askus-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -20491,22 +20272,12 @@ exports[`Application component should render loading screen while account is loa
                                     data-testid="askus"
                                     id="askus-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="askus"
                                       id="askus-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AskUs
                                         chatStatus={false}
@@ -22610,11 +22381,6 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="auth"
                                   id="auth-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -22729,22 +22495,12 @@ exports[`Application component should render loading screen while account is loa
                                     data-testid="auth"
                                     id="auth-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="auth"
                                       id="auth-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AuthButton
                                         isAuthorizedUser={false}
@@ -22916,11 +22672,6 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="mobile-megamenu"
                                   id="mobile-megamenu"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -23035,22 +22786,12 @@ exports[`Application component should render loading screen while account is loa
                                     data-testid="mobile-megamenu"
                                     id="mobile-megamenu"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="mobile-megamenu"
                                       id="mobile-megamenu"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <Hidden
                                         lgUp={true}
@@ -23217,11 +22958,6 @@ exports[`Application component should render loading screen while account is loa
                             justify="flex-start"
                             role="region"
                             spacing={0}
-                            style={
-                              Object {
-                                "display": "none",
-                              }
-                            }
                           >
                             <ForwardRef(Grid)
                               aria-label="Main site navigation"
@@ -23338,22 +23074,12 @@ exports[`Application component should render loading screen while account is loa
                               justify="flex-start"
                               role="region"
                               spacing={0}
-                              style={
-                                Object {
-                                  "display": "none",
-                                }
-                              }
                             >
                               <div
                                 aria-label="Main site navigation"
                                 className="MuiGrid-root makeStyles-siteHeaderBottom-112 MuiGrid-container"
                                 id="desktop-megamenu-block"
                                 role="region"
-                                style={
-                                  Object {
-                                    "display": "none",
-                                  }
-                                }
                               >
                                 <Hidden
                                   mdDown={true}
@@ -32630,10 +32356,12 @@ exports[`Application component should render loading screen while account is loa
                                                                                                     className="MuiGrid-root MuiGrid-container"
                                                                                                   >
                                                                                                     <WithStyles(ForwardRef(Grid))
+                                                                                                      className="makeStyles-actionButtonBlock-397"
                                                                                                       item={true}
                                                                                                       xs={12}
                                                                                                     >
                                                                                                       <ForwardRef(Grid)
+                                                                                                        className="makeStyles-actionButtonBlock-397"
                                                                                                         classes={
                                                                                                           Object {
                                                                                                             "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -32745,153 +32473,16 @@ exports[`Application component should render loading screen while account is loa
                                                                                                         xs={12}
                                                                                                       >
                                                                                                         <div
-                                                                                                          className="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+                                                                                                          className="MuiGrid-root makeStyles-actionButtonBlock-397 MuiGrid-item MuiGrid-grid-xs-12"
                                                                                                         >
-                                                                                                          <WithStyles(ForwardRef(Button))
-                                                                                                            classes={
-                                                                                                              Object {
-                                                                                                                "root": "makeStyles-actionButtons-396",
-                                                                                                              }
-                                                                                                            }
-                                                                                                            color="secondary"
+                                                                                                          <a
+                                                                                                            className="makeStyles-moreActionButton-398"
                                                                                                             data-testid="training-event-detail-more-training-button"
-                                                                                                            disableElevation={true}
-                                                                                                            fullWidth={true}
+                                                                                                            href="https://web.library.uq.edu.au/library-services/training"
                                                                                                             id="training-event-detail-more-training-button"
-                                                                                                            onClick={[Function]}
-                                                                                                            size="small"
-                                                                                                            variant="contained"
                                                                                                           >
-                                                                                                            <ForwardRef(Button)
-                                                                                                              classes={
-                                                                                                                Object {
-                                                                                                                  "colorInherit": "MuiButton-colorInherit",
-                                                                                                                  "contained": "MuiButton-contained",
-                                                                                                                  "containedPrimary": "MuiButton-containedPrimary",
-                                                                                                                  "containedSecondary": "MuiButton-containedSecondary",
-                                                                                                                  "containedSizeLarge": "MuiButton-containedSizeLarge",
-                                                                                                                  "containedSizeSmall": "MuiButton-containedSizeSmall",
-                                                                                                                  "disableElevation": "MuiButton-disableElevation",
-                                                                                                                  "disabled": "Mui-disabled",
-                                                                                                                  "endIcon": "MuiButton-endIcon",
-                                                                                                                  "focusVisible": "Mui-focusVisible",
-                                                                                                                  "fullWidth": "MuiButton-fullWidth",
-                                                                                                                  "iconSizeLarge": "MuiButton-iconSizeLarge",
-                                                                                                                  "iconSizeMedium": "MuiButton-iconSizeMedium",
-                                                                                                                  "iconSizeSmall": "MuiButton-iconSizeSmall",
-                                                                                                                  "label": "MuiButton-label",
-                                                                                                                  "outlined": "MuiButton-outlined",
-                                                                                                                  "outlinedPrimary": "MuiButton-outlinedPrimary",
-                                                                                                                  "outlinedSecondary": "MuiButton-outlinedSecondary",
-                                                                                                                  "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
-                                                                                                                  "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                                                  "root": "MuiButton-root makeStyles-actionButtons-396",
-                                                                                                                  "sizeLarge": "MuiButton-sizeLarge",
-                                                                                                                  "sizeSmall": "MuiButton-sizeSmall",
-                                                                                                                  "startIcon": "MuiButton-startIcon",
-                                                                                                                  "text": "MuiButton-text",
-                                                                                                                  "textPrimary": "MuiButton-textPrimary",
-                                                                                                                  "textSecondary": "MuiButton-textSecondary",
-                                                                                                                  "textSizeLarge": "MuiButton-textSizeLarge",
-                                                                                                                  "textSizeSmall": "MuiButton-textSizeSmall",
-                                                                                                                }
-                                                                                                              }
-                                                                                                              color="secondary"
-                                                                                                              data-testid="training-event-detail-more-training-button"
-                                                                                                              disableElevation={true}
-                                                                                                              fullWidth={true}
-                                                                                                              id="training-event-detail-more-training-button"
-                                                                                                              onClick={[Function]}
-                                                                                                              size="small"
-                                                                                                              variant="contained"
-                                                                                                            >
-                                                                                                              <WithStyles(ForwardRef(ButtonBase))
-                                                                                                                className="MuiButton-root makeStyles-actionButtons-396 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                                                component="button"
-                                                                                                                data-testid="training-event-detail-more-training-button"
-                                                                                                                disabled={false}
-                                                                                                                focusRipple={true}
-                                                                                                                focusVisibleClassName="Mui-focusVisible"
-                                                                                                                id="training-event-detail-more-training-button"
-                                                                                                                onClick={[Function]}
-                                                                                                                type="button"
-                                                                                                              >
-                                                                                                                <ForwardRef(ButtonBase)
-                                                                                                                  className="MuiButton-root makeStyles-actionButtons-396 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                                                  classes={
-                                                                                                                    Object {
-                                                                                                                      "disabled": "Mui-disabled",
-                                                                                                                      "focusVisible": "Mui-focusVisible",
-                                                                                                                      "root": "MuiButtonBase-root",
-                                                                                                                    }
-                                                                                                                  }
-                                                                                                                  component="button"
-                                                                                                                  data-testid="training-event-detail-more-training-button"
-                                                                                                                  disabled={false}
-                                                                                                                  focusRipple={true}
-                                                                                                                  focusVisibleClassName="Mui-focusVisible"
-                                                                                                                  id="training-event-detail-more-training-button"
-                                                                                                                  onClick={[Function]}
-                                                                                                                  type="button"
-                                                                                                                >
-                                                                                                                  <button
-                                                                                                                    className="MuiButtonBase-root MuiButton-root makeStyles-actionButtons-396 MuiButton-contained MuiButton-containedSecondary MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation MuiButton-fullWidth"
-                                                                                                                    data-testid="training-event-detail-more-training-button"
-                                                                                                                    disabled={false}
-                                                                                                                    id="training-event-detail-more-training-button"
-                                                                                                                    onBlur={[Function]}
-                                                                                                                    onClick={[Function]}
-                                                                                                                    onDragLeave={[Function]}
-                                                                                                                    onFocus={[Function]}
-                                                                                                                    onKeyDown={[Function]}
-                                                                                                                    onKeyUp={[Function]}
-                                                                                                                    onMouseDown={[Function]}
-                                                                                                                    onMouseLeave={[Function]}
-                                                                                                                    onMouseUp={[Function]}
-                                                                                                                    onTouchEnd={[Function]}
-                                                                                                                    onTouchMove={[Function]}
-                                                                                                                    onTouchStart={[Function]}
-                                                                                                                    tabIndex={0}
-                                                                                                                    type="button"
-                                                                                                                  >
-                                                                                                                    <span
-                                                                                                                      className="MuiButton-label"
-                                                                                                                    >
-                                                                                                                      More training events
-                                                                                                                    </span>
-                                                                                                                    <WithStyles(memo)
-                                                                                                                      center={false}
-                                                                                                                    >
-                                                                                                                      <ForwardRef(TouchRipple)
-                                                                                                                        center={false}
-                                                                                                                        classes={
-                                                                                                                          Object {
-                                                                                                                            "child": "MuiTouchRipple-child",
-                                                                                                                            "childLeaving": "MuiTouchRipple-childLeaving",
-                                                                                                                            "childPulsate": "MuiTouchRipple-childPulsate",
-                                                                                                                            "ripple": "MuiTouchRipple-ripple",
-                                                                                                                            "ripplePulsate": "MuiTouchRipple-ripplePulsate",
-                                                                                                                            "rippleVisible": "MuiTouchRipple-rippleVisible",
-                                                                                                                            "root": "MuiTouchRipple-root",
-                                                                                                                          }
-                                                                                                                        }
-                                                                                                                      >
-                                                                                                                        <span
-                                                                                                                          className="MuiTouchRipple-root"
-                                                                                                                        >
-                                                                                                                          <TransitionGroup
-                                                                                                                            childFactory={[Function]}
-                                                                                                                            component={null}
-                                                                                                                            exit={true}
-                                                                                                                          />
-                                                                                                                        </span>
-                                                                                                                      </ForwardRef(TouchRipple)>
-                                                                                                                    </WithStyles(memo)>
-                                                                                                                  </button>
-                                                                                                                </ForwardRef(ButtonBase)>
-                                                                                                              </WithStyles(ForwardRef(ButtonBase))>
-                                                                                                            </ForwardRef(Button)>
-                                                                                                          </WithStyles(ForwardRef(Button))>
+                                                                                                            More training events
+                                                                                                          </a>
                                                                                                         </div>
                                                                                                       </ForwardRef(Grid)>
                                                                                                     </WithStyles(ForwardRef(Grid))>
@@ -33362,15 +32953,15 @@ exports[`Application component should render loading screen while account is loa
                                       <ConnectFooter
                                         classes={
                                           Object {
-                                            "connectFooter": "ConnectFooter-connectFooter-402",
-                                            "contacts": "ConnectFooter-contacts-410",
-                                            "giving": "ConnectFooter-giving-407",
-                                            "givingBlock": "ConnectFooter-givingBlock-408",
-                                            "givingButtonClass": "ConnectFooter-givingButtonClass-409",
-                                            "internal": "ConnectFooter-internal-406",
-                                            "navigation": "ConnectFooter-navigation-403",
-                                            "separator": "ConnectFooter-separator-404",
-                                            "socialButtonClass": "ConnectFooter-socialButtonClass-405",
+                                            "connectFooter": "ConnectFooter-connectFooter-405",
+                                            "contacts": "ConnectFooter-contacts-413",
+                                            "giving": "ConnectFooter-giving-410",
+                                            "givingBlock": "ConnectFooter-givingBlock-411",
+                                            "givingButtonClass": "ConnectFooter-givingButtonClass-412",
+                                            "internal": "ConnectFooter-internal-409",
+                                            "navigation": "ConnectFooter-navigation-406",
+                                            "separator": "ConnectFooter-separator-407",
+                                            "socialButtonClass": "ConnectFooter-socialButtonClass-408",
                                           }
                                         }
                                         history={
@@ -33771,7 +33362,7 @@ exports[`Application component should render loading screen while account is loa
                                         }
                                       >
                                         <div
-                                          className="ConnectFooter-connectFooter-402"
+                                          className="ConnectFooter-connectFooter-405"
                                         >
                                           <div
                                             className="layout-card"
@@ -33783,11 +33374,6 @@ exports[`Application component should render loading screen while account is loa
                                               direction="row"
                                               id="connect-footer-block"
                                               justify="center"
-                                              style={
-                                                Object {
-                                                  "display": "none",
-                                                }
-                                              }
                                             >
                                               <ForwardRef(Grid)
                                                 alignItems="flex-start"
@@ -33903,30 +33489,20 @@ exports[`Application component should render loading screen while account is loa
                                                 direction="row"
                                                 id="connect-footer-block"
                                                 justify="center"
-                                                style={
-                                                  Object {
-                                                    "display": "none",
-                                                  }
-                                                }
                                               >
                                                 <div
                                                   className="MuiGrid-root MuiGrid-container MuiGrid-align-items-xs-flex-start MuiGrid-justify-xs-center"
                                                   data-testid="connect-footer"
                                                   id="connect-footer-block"
-                                                  style={
-                                                    Object {
-                                                      "display": "none",
-                                                    }
-                                                  }
                                                 >
                                                   <WithStyles(ForwardRef(Grid))
-                                                    className="ConnectFooter-navigation-403"
+                                                    className="ConnectFooter-navigation-406"
                                                     item={true}
                                                     md={4}
                                                     xs={12}
                                                   >
                                                     <ForwardRef(Grid)
-                                                      className="ConnectFooter-navigation-403"
+                                                      className="ConnectFooter-navigation-406"
                                                       classes={
                                                         Object {
                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -34039,7 +33615,7 @@ exports[`Application component should render loading screen while account is loa
                                                       xs={12}
                                                     >
                                                       <div
-                                                        className="MuiGrid-root ConnectFooter-navigation-403 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                                                        className="MuiGrid-root ConnectFooter-navigation-406 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
                                                       >
                                                         <ul>
                                                           <li>
@@ -34050,11 +33626,11 @@ exports[`Application component should render loading screen while account is loa
                                                               Library home
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34078,11 +33654,11 @@ exports[`Application component should render loading screen while account is loa
                                                               Library services
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34106,11 +33682,11 @@ exports[`Application component should render loading screen while account is loa
                                                               Research tools & techniques
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34134,11 +33710,11 @@ exports[`Application component should render loading screen while account is loa
                                                               Collections
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34162,11 +33738,11 @@ exports[`Application component should render loading screen while account is loa
                                                               Borrowing & requesting
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34190,11 +33766,11 @@ exports[`Application component should render loading screen while account is loa
                                                               Locations & hours
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34218,11 +33794,11 @@ exports[`Application component should render loading screen while account is loa
                                                               About
                                                             </a>
                                                             <Hidden
-                                                              className="ConnectFooter-separator-404"
+                                                              className="ConnectFooter-separator-407"
                                                               mdUp={true}
                                                             >
                                                               <WithWidth(HiddenJs)
-                                                                className="ConnectFooter-separator-404"
+                                                                className="ConnectFooter-separator-407"
                                                                 lgDown={false}
                                                                 lgUp={false}
                                                                 mdDown={false}
@@ -34251,13 +33827,13 @@ exports[`Application component should render loading screen while account is loa
                                                     </ForwardRef(Grid)>
                                                   </WithStyles(ForwardRef(Grid))>
                                                   <WithStyles(ForwardRef(Grid))
-                                                    className="ConnectFooter-contacts-410"
+                                                    className="ConnectFooter-contacts-413"
                                                     item={true}
                                                     md={4}
                                                     xs={12}
                                                   >
                                                     <ForwardRef(Grid)
-                                                      className="ConnectFooter-contacts-410"
+                                                      className="ConnectFooter-contacts-413"
                                                       classes={
                                                         Object {
                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -34370,7 +33946,7 @@ exports[`Application component should render loading screen while account is loa
                                                       xs={12}
                                                     >
                                                       <div
-                                                        className="MuiGrid-root ConnectFooter-contacts-410 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                                                        className="MuiGrid-root ConnectFooter-contacts-413 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
                                                       >
                                                         <WithStyles(ForwardRef(Grid))
                                                           container={true}
@@ -34957,7 +34533,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -34999,7 +34575,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -35026,7 +34602,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library Blog"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-blog-link"
                                                                               disabled={false}
@@ -35046,7 +34622,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library Blog"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -35073,7 +34649,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library Blog"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-blog-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-0"
@@ -35165,7 +34741,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library Blog"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-blog-link"
                                                                               id="socialbutton-0"
                                                                               tabindex="0"
@@ -35375,7 +34951,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -35417,7 +34993,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -35444,7 +35020,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on Twitter"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-twitter-link"
                                                                               disabled={false}
@@ -35464,7 +35040,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on Twitter"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -35491,7 +35067,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on Twitter"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-twitter-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-1"
@@ -35583,7 +35159,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on Twitter"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-twitter-link"
                                                                               id="socialbutton-1"
                                                                               tabindex="0"
@@ -35793,7 +35369,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -35835,7 +35411,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -35862,7 +35438,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on Facebook"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-facebook-link"
                                                                               disabled={false}
@@ -35882,7 +35458,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on Facebook"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -35909,7 +35485,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on Facebook"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-facebook-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-2"
@@ -36001,7 +35577,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on Facebook"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-facebook-link"
                                                                               id="socialbutton-2"
                                                                               tabindex="0"
@@ -36211,7 +35787,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -36253,7 +35829,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -36280,7 +35856,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on Instagram"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-instagram-link"
                                                                               disabled={false}
@@ -36300,7 +35876,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on Instagram"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -36327,7 +35903,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on Instagram"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-instagram-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-3"
@@ -36419,7 +35995,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on Instagram"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-instagram-link"
                                                                               id="socialbutton-3"
                                                                               tabindex="0"
@@ -36629,7 +36205,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           className=""
                                                                           classes={
                                                                             Object {
-                                                                              "root": "ConnectFooter-socialButtonClass-405",
+                                                                              "root": "ConnectFooter-socialButtonClass-408",
                                                                             }
                                                                           }
                                                                           color="primary"
@@ -36671,7 +36247,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "outlinedSecondary": "MuiButton-outlinedSecondary",
                                                                                 "outlinedSizeLarge": "MuiButton-outlinedSizeLarge",
                                                                                 "outlinedSizeSmall": "MuiButton-outlinedSizeSmall",
-                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-405",
+                                                                                "root": "MuiButton-root ConnectFooter-socialButtonClass-408",
                                                                                 "sizeLarge": "MuiButton-sizeLarge",
                                                                                 "sizeSmall": "MuiButton-sizeSmall",
                                                                                 "startIcon": "MuiButton-startIcon",
@@ -36698,7 +36274,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             <WithStyles(ForwardRef(ButtonBase))
                                                                               aria-describedby={null}
                                                                               aria-label="Library on YouTube"
-                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               component="button"
                                                                               data-testid="connect-youtube-link"
                                                                               disabled={false}
@@ -36718,7 +36294,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               <ForwardRef(ButtonBase)
                                                                                 aria-describedby={null}
                                                                                 aria-label="Library on YouTube"
-                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                className="MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                 classes={
                                                                                   Object {
                                                                                     "disabled": "Mui-disabled",
@@ -36745,7 +36321,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <button
                                                                                   aria-describedby={null}
                                                                                   aria-label="Library on YouTube"
-                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                                  className="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                                   data-testid="connect-youtube-link"
                                                                                   disabled={false}
                                                                                   id="socialbutton-4"
@@ -36837,7 +36413,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           anchorEl={
                                                                             <button
                                                                               aria-label="Library on YouTube"
-                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-405 MuiButton-contained MuiButton-containedPrimary"
+                                                                              class="MuiButtonBase-root MuiButton-root ConnectFooter-socialButtonClass-408 MuiButton-contained MuiButton-containedPrimary"
                                                                               data-testid="connect-youtube-link"
                                                                               id="socialbutton-4"
                                                                               tabindex="0"
@@ -36888,10 +36464,10 @@ exports[`Application component should render loading screen while account is loa
                                                           </ForwardRef(Grid)>
                                                         </WithStyles(ForwardRef(Grid))>
                                                         <WithStyles(ForwardRef(Grid))
-                                                          className="ConnectFooter-internal-406"
+                                                          className="ConnectFooter-internal-409"
                                                         >
                                                           <ForwardRef(Grid)
-                                                            className="ConnectFooter-internal-406"
+                                                            className="ConnectFooter-internal-409"
                                                             classes={
                                                               Object {
                                                                 "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -37001,7 +36577,7 @@ exports[`Application component should render loading screen while account is loa
                                                             }
                                                           >
                                                             <div
-                                                              className="MuiGrid-root ConnectFooter-internal-406"
+                                                              className="MuiGrid-root ConnectFooter-internal-409"
                                                             >
                                                               <span
                                                                 key="internallabel-0"
@@ -37046,13 +36622,13 @@ exports[`Application component should render loading screen while account is loa
                                                     </ForwardRef(Grid)>
                                                   </WithStyles(ForwardRef(Grid))>
                                                   <WithStyles(ForwardRef(Grid))
-                                                    className="ConnectFooter-giving-407"
+                                                    className="ConnectFooter-giving-410"
                                                     item={true}
                                                     md={4}
                                                     xs={12}
                                                   >
                                                     <ForwardRef(Grid)
-                                                      className="ConnectFooter-giving-407"
+                                                      className="ConnectFooter-giving-410"
                                                       classes={
                                                         Object {
                                                           "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -37165,7 +36741,7 @@ exports[`Application component should render loading screen while account is loa
                                                       xs={12}
                                                     >
                                                       <div
-                                                        className="MuiGrid-root ConnectFooter-giving-407 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                                                        className="MuiGrid-root ConnectFooter-giving-410 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
                                                       >
                                                         <WithStyles(ForwardRef(Grid))
                                                           container={true}
@@ -37286,13 +36862,13 @@ exports[`Application component should render loading screen while account is loa
                                                               className="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
                                                             >
                                                               <WithStyles(ForwardRef(Grid))
-                                                                className="ConnectFooter-givingBlock-408"
+                                                                className="ConnectFooter-givingBlock-411"
                                                                 item={true}
                                                                 key="givingLinks-0"
                                                                 xs={12}
                                                               >
                                                                 <ForwardRef(Grid)
-                                                                  className="ConnectFooter-givingBlock-408"
+                                                                  className="ConnectFooter-givingBlock-411"
                                                                   classes={
                                                                     Object {
                                                                       "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -37404,10 +36980,10 @@ exports[`Application component should render loading screen while account is loa
                                                                   xs={12}
                                                                 >
                                                                   <div
-                                                                    className="MuiGrid-root ConnectFooter-givingBlock-408 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                    className="MuiGrid-root ConnectFooter-givingBlock-411 MuiGrid-item MuiGrid-grid-xs-12"
                                                                   >
                                                                     <WithStyles(ForwardRef(Button))
-                                                                      className="ConnectFooter-givingButtonClass-409"
+                                                                      className="ConnectFooter-givingButtonClass-412"
                                                                       data-testid="connect-friends-link"
                                                                       fullWidth={true}
                                                                       key="givingLinks-0"
@@ -37415,7 +36991,7 @@ exports[`Application component should render loading screen while account is loa
                                                                       variant="contained"
                                                                     >
                                                                       <ForwardRef(Button)
-                                                                        className="ConnectFooter-givingButtonClass-409"
+                                                                        className="ConnectFooter-givingButtonClass-412"
                                                                         classes={
                                                                           Object {
                                                                             "colorInherit": "MuiButton-colorInherit",
@@ -37455,7 +37031,7 @@ exports[`Application component should render loading screen while account is loa
                                                                         variant="contained"
                                                                       >
                                                                         <WithStyles(ForwardRef(ButtonBase))
-                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                           component="button"
                                                                           data-testid="connect-friends-link"
                                                                           disabled={false}
@@ -37465,7 +37041,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           type="button"
                                                                         >
                                                                           <ForwardRef(ButtonBase)
-                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                             classes={
                                                                               Object {
                                                                                 "disabled": "Mui-disabled",
@@ -37482,7 +37058,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             type="button"
                                                                           >
                                                                             <button
-                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                               data-testid="connect-friends-link"
                                                                               disabled={false}
                                                                               onBlur={[Function]}
@@ -37542,13 +37118,13 @@ exports[`Application component should render loading screen while account is loa
                                                                 </ForwardRef(Grid)>
                                                               </WithStyles(ForwardRef(Grid))>
                                                               <WithStyles(ForwardRef(Grid))
-                                                                className="ConnectFooter-givingBlock-408"
+                                                                className="ConnectFooter-givingBlock-411"
                                                                 item={true}
                                                                 key="givingLinks-1"
                                                                 xs={12}
                                                               >
                                                                 <ForwardRef(Grid)
-                                                                  className="ConnectFooter-givingBlock-408"
+                                                                  className="ConnectFooter-givingBlock-411"
                                                                   classes={
                                                                     Object {
                                                                       "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -37660,10 +37236,10 @@ exports[`Application component should render loading screen while account is loa
                                                                   xs={12}
                                                                 >
                                                                   <div
-                                                                    className="MuiGrid-root ConnectFooter-givingBlock-408 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                    className="MuiGrid-root ConnectFooter-givingBlock-411 MuiGrid-item MuiGrid-grid-xs-12"
                                                                   >
                                                                     <WithStyles(ForwardRef(Button))
-                                                                      className="ConnectFooter-givingButtonClass-409"
+                                                                      className="ConnectFooter-givingButtonClass-412"
                                                                       data-testid="connect-give-link"
                                                                       fullWidth={true}
                                                                       key="givingLinks-1"
@@ -37671,7 +37247,7 @@ exports[`Application component should render loading screen while account is loa
                                                                       variant="contained"
                                                                     >
                                                                       <ForwardRef(Button)
-                                                                        className="ConnectFooter-givingButtonClass-409"
+                                                                        className="ConnectFooter-givingButtonClass-412"
                                                                         classes={
                                                                           Object {
                                                                             "colorInherit": "MuiButton-colorInherit",
@@ -37711,7 +37287,7 @@ exports[`Application component should render loading screen while account is loa
                                                                         variant="contained"
                                                                       >
                                                                         <WithStyles(ForwardRef(ButtonBase))
-                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                          className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                           component="button"
                                                                           data-testid="connect-give-link"
                                                                           disabled={false}
@@ -37721,7 +37297,7 @@ exports[`Application component should render loading screen while account is loa
                                                                           type="button"
                                                                         >
                                                                           <ForwardRef(ButtonBase)
-                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                            className="MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                             classes={
                                                                               Object {
                                                                                 "disabled": "Mui-disabled",
@@ -37738,7 +37314,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             type="button"
                                                                           >
                                                                             <button
-                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-409 MuiButton-fullWidth"
+                                                                              className="MuiButtonBase-root MuiButton-root MuiButton-contained ConnectFooter-givingButtonClass-412 MuiButton-fullWidth"
                                                                               data-testid="connect-give-link"
                                                                               disabled={false}
                                                                               onBlur={[Function]}
