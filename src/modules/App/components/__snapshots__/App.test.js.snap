@@ -978,14 +978,12 @@ exports[`Application component should render for anon user 1`] = `
                     </div>
                     <UQSiteHeader
                       account={null}
-                      accountLoading={false}
                       chatStatus={false}
                       history={
                         Object {
                           "location": Object {},
                         }
                       }
-                      isLibraryWebsiteCall={true}
                     >
                       <div
                         className="makeStyles-siteHeader-111"
@@ -1491,11 +1489,6 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="askus"
                                   id="askus-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -1610,22 +1603,12 @@ exports[`Application component should render for anon user 1`] = `
                                     data-testid="askus"
                                     id="askus-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="askus"
                                       id="askus-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AskUs
                                         chatStatus={false}
@@ -3547,11 +3530,6 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="auth"
                                   id="auth-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -3666,22 +3644,12 @@ exports[`Application component should render for anon user 1`] = `
                                     data-testid="auth"
                                     id="auth-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="auth"
                                       id="auth-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AuthButton
                                         isAuthorizedUser={false}
@@ -3853,11 +3821,6 @@ exports[`Application component should render for anon user 1`] = `
                                   data-testid="mobile-megamenu"
                                   id="mobile-megamenu"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -3972,22 +3935,12 @@ exports[`Application component should render for anon user 1`] = `
                                     data-testid="mobile-megamenu"
                                     id="mobile-megamenu"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="mobile-megamenu"
                                       id="mobile-megamenu"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <Hidden
                                         lgUp={true}
@@ -4154,11 +4107,6 @@ exports[`Application component should render for anon user 1`] = `
                             justify="flex-start"
                             role="region"
                             spacing={0}
-                            style={
-                              Object {
-                                "display": "none",
-                              }
-                            }
                           >
                             <ForwardRef(Grid)
                               aria-label="Main site navigation"
@@ -4275,22 +4223,12 @@ exports[`Application component should render for anon user 1`] = `
                               justify="flex-start"
                               role="region"
                               spacing={0}
-                              style={
-                                Object {
-                                  "display": "none",
-                                }
-                              }
                             >
                               <div
                                 aria-label="Main site navigation"
                                 className="MuiGrid-root makeStyles-siteHeaderBottom-112 MuiGrid-container"
                                 id="desktop-megamenu-block"
                                 role="region"
-                                style={
-                                  Object {
-                                    "display": "none",
-                                  }
-                                }
                               >
                                 <Hidden
                                   mdDown={true}
@@ -19709,14 +19647,12 @@ exports[`Application component should render loading screen while account is loa
                     </div>
                     <UQSiteHeader
                       account={null}
-                      accountLoading={true}
                       chatStatus={false}
                       history={
                         Object {
                           "location": Object {},
                         }
                       }
-                      isLibraryWebsiteCall={true}
                     >
                       <div
                         className="makeStyles-siteHeader-111"
@@ -20222,11 +20158,6 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="askus"
                                   id="askus-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -20341,22 +20272,12 @@ exports[`Application component should render loading screen while account is loa
                                     data-testid="askus"
                                     id="askus-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="askus"
                                       id="askus-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AskUs
                                         chatStatus={false}
@@ -22460,11 +22381,6 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="auth"
                                   id="auth-button-block"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -22579,22 +22495,12 @@ exports[`Application component should render loading screen while account is loa
                                     data-testid="auth"
                                     id="auth-button-block"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="auth"
                                       id="auth-button-block"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <AuthButton
                                         isAuthorizedUser={false}
@@ -22766,11 +22672,6 @@ exports[`Application component should render loading screen while account is loa
                                   data-testid="mobile-megamenu"
                                   id="mobile-megamenu"
                                   item={true}
-                                  style={
-                                    Object {
-                                      "display": "none",
-                                    }
-                                  }
                                   xs="auto"
                                 >
                                   <ForwardRef(Grid)
@@ -22885,22 +22786,12 @@ exports[`Application component should render loading screen while account is loa
                                     data-testid="mobile-megamenu"
                                     id="mobile-megamenu"
                                     item={true}
-                                    style={
-                                      Object {
-                                        "display": "none",
-                                      }
-                                    }
                                     xs="auto"
                                   >
                                     <div
                                       className="MuiGrid-root makeStyles-utility-114 MuiGrid-item MuiGrid-grid-xs-auto"
                                       data-testid="mobile-megamenu"
                                       id="mobile-megamenu"
-                                      style={
-                                        Object {
-                                          "display": "none",
-                                        }
-                                      }
                                     >
                                       <Hidden
                                         lgUp={true}
@@ -23067,11 +22958,6 @@ exports[`Application component should render loading screen while account is loa
                             justify="flex-start"
                             role="region"
                             spacing={0}
-                            style={
-                              Object {
-                                "display": "none",
-                              }
-                            }
                           >
                             <ForwardRef(Grid)
                               aria-label="Main site navigation"
@@ -23188,22 +23074,12 @@ exports[`Application component should render loading screen while account is loa
                               justify="flex-start"
                               role="region"
                               spacing={0}
-                              style={
-                                Object {
-                                  "display": "none",
-                                }
-                              }
                             >
                               <div
                                 aria-label="Main site navigation"
                                 className="MuiGrid-root makeStyles-siteHeaderBottom-112 MuiGrid-container"
                                 id="desktop-megamenu-block"
                                 role="region"
-                                style={
-                                  Object {
-                                    "display": "none",
-                                  }
-                                }
                               >
                                 <Hidden
                                   mdDown={true}
