@@ -47,6 +47,12 @@ const styles = theme => {
                     paddingLeft: 0,
                 },
             },
+            [theme.breakpoints.up('lg')]: {
+                '& > div > div': {
+                    paddingLeft: 8,
+                    paddingRight: 8,
+                },
+            },
         },
         submenuheader: {
             '& hover': {
