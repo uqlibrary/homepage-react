@@ -30,7 +30,6 @@ const useStyles = makeStyles(
             paddingTop: '0.3rem',
         },
         siteHeaderBottom: {
-            maxWidth: 1280,
             marginLeft: 'auto',
             marginRight: 'auto',
             marginTop: 0,
@@ -158,7 +157,7 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Hidden lgUp>
+                    <Hidden mdUp>
                         <Megamenu
                             history={history}
                             menuItems={menuItems}
@@ -168,31 +167,31 @@ export const UQSiteHeader = ({
                         />
                     </Hidden>
                 </Grid>
-                <Grid
-                    container
-                    id="desktop-megamenu-block"
-                    spacing={0}
-                    role="region"
-                    aria-label="Main site navigation"
-                    className={classes.siteHeaderBottom}
-                    justify={'flex-start'}
-                >
-                    <Hidden mdDown>
-                        <Grid item xs={12} id="desktop-megamenu">
-                            <Megamenu menuItems={menuItems} history={history} />
-                        </Grid>
-                    </Hidden>
-                </Grid>
-                <span
-                    id="after-navigation"
-                    role="region"
-                    tabIndex="0"
-                    aria-label="Start of content"
-                    style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
-                >
-                    Start of content
-                </span>
             </div>
+            <Grid
+                container
+                id="desktop-megamenu-block"
+                spacing={0}
+                role="region"
+                aria-label="Main site navigation"
+                className={classes.siteHeaderBottom}
+                justify={'flex-start'}
+            >
+                <Hidden smDown>
+                    <Grid item xs={12} id="desktop-megamenu">
+                        <Megamenu menuItems={menuItems} history={history} />
+                    </Grid>
+                </Hidden>
+            </Grid>
+            <span
+                id="after-navigation"
+                role="region"
+                tabIndex="0"
+                aria-label="Start of content"
+                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+            >
+                Start of content
+            </span>
         </div>
     );
 };
