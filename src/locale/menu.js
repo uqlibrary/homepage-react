@@ -226,8 +226,8 @@ export default {
                     linkTo: 'https://web.library.uq.edu.au/collections/stories-from-collection',
                 },
                 {
-                    primaryText: 'Cultural & historical collections',
-                    linkTo: 'https://web.library.uq.edu.au/collections/cultural-historical-collections',
+                    primaryText: 'Cultural & heritage collections',
+                    linkTo: 'https://web.library.uq.edu.au/collections/cultural-heritage-collections',
                 },
                 {
                     primaryText: 'Collection management',
