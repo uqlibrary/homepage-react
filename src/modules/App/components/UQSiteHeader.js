@@ -66,6 +66,12 @@ const useStyles = makeStyles(
         icons: {
             marginRight: 6,
         },
+        buttonHolder: {
+            [theme.breakpoints.down('xs')]: {
+                // stop the buttons wrapping on the tiniest screen - they shrink instead
+                flexWrap: 'nowrap',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -94,7 +100,7 @@ export const UQSiteHeader = ({
     return (
         <div className={classes.siteHeader} id="uq-site-header" data-testid="uq-site-header">
             <div className="layout-card">
-                <Grid container spacing={0}>
+                <Grid container spacing={0} className={classes.buttonHolder}>
                     <Grid item xs={'auto'}>
                         <Button
                             onClick={() => history.push(pathConfig.index)}
