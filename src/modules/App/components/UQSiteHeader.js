@@ -143,7 +143,7 @@ export const UQSiteHeader = ({
                         data-testid="mobile-megamenu"
                         id="mobile-megamenu"
                     >
-                        <Hidden lgUp>
+                        <Hidden mdUp>
                             <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
                                 <Tooltip title={locale.global.mainNavButton.tooltip}>
                                     <IconButton
@@ -162,7 +162,7 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Hidden mdUp>
+                    <Hidden smUp>
                         <Megamenu
                             history={history}
                             menuItems={menuItems}
