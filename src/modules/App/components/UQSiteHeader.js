@@ -5,7 +5,6 @@ import { isHdrStudent } from 'helpers/access';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, routes } from 'config';
 import locale from 'locale/global';
 import { pathConfig } from 'config/routes';
-import { UQSiteHeaderLocale } from './UQSiteHeader.locale';
 import { mui1theme } from 'config';
 
 import { AskUs } from 'modules/App/components/AskUs';
@@ -108,7 +107,7 @@ export const UQSiteHeader = ({
                             id="uq-site-header-home-button"
                             data-testid="uq-site-header-home-button"
                         >
-                            {UQSiteHeaderLocale.title}
+                            {locale.global.pageTitle}
                         </Button>
                     </Grid>
                     <Grid item xs />
