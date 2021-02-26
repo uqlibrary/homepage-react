@@ -5541,7 +5541,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   5,
                                                                                 ],
                                                                                 "label": "Advanced search",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced",
+                                                                                "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&mode=advanced",
                                                                               },
                                                                               Object {
                                                                                 "display": Array [
@@ -5579,7 +5579,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   5,
                                                                                 ],
                                                                                 "label": "Browse search",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                               },
                                                                               Object {
                                                                                 "display": Array [
@@ -5587,7 +5587,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   8,
                                                                                 ],
                                                                                 "label": "Browse courses",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                               },
                                                                             ],
                                                                             "typeSelect": Object {
@@ -9194,7 +9194,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                           5,
                                                                                                                         ],
                                                                                                                         "label": "Advanced search",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced",
+                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&mode=advanced",
                                                                                                                       },
                                                                                                                       Object {
                                                                                                                         "display": Array [
@@ -9232,7 +9232,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                           5,
                                                                                                                         ],
                                                                                                                         "label": "Browse search",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                                                                       },
                                                                                                                       Object {
                                                                                                                         "display": Array [
@@ -9240,7 +9240,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                           8,
                                                                                                                         ],
                                                                                                                         "label": "Browse courses",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                                                                       },
                                                                                                                     ],
                                                                                                                     "typeSelect": Object {
@@ -10135,7 +10135,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                             data-testid="primo-search-links-1"
                                                                                                           >
                                                                                                             <a
-                                                                                                              href="https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced"
+                                                                                                              href="https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&mode=advanced"
                                                                                                               rel="noreferrer"
                                                                                                             >
                                                                                                               Advanced search
@@ -10401,7 +10401,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                             data-testid="primo-search-links-5"
                                                                                                           >
                                                                                                             <a
-                                                                                                              href="https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank"
+                                                                                                              href="https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ"
                                                                                                               rel="noreferrer"
                                                                                                             >
                                                                                                               Browse search
@@ -24394,7 +24394,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   5,
                                                                                 ],
                                                                                 "label": "Advanced search",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced",
+                                                                                "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&mode=advanced",
                                                                               },
                                                                               Object {
                                                                                 "display": Array [
@@ -24432,7 +24432,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   5,
                                                                                 ],
                                                                                 "label": "Browse search",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                               },
                                                                               Object {
                                                                                 "display": Array [
@@ -24440,7 +24440,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   8,
                                                                                 ],
                                                                                 "label": "Browse courses",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                               },
                                                                             ],
                                                                             "typeSelect": Object {
@@ -28229,7 +28229,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                           5,
                                                                                                                         ],
                                                                                                                         "label": "Advanced search",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced",
+                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&mode=advanced",
                                                                                                                       },
                                                                                                                       Object {
                                                                                                                         "display": Array [
@@ -28267,7 +28267,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                           5,
                                                                                                                         ],
                                                                                                                         "label": "Browse search",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                                                                       },
                                                                                                                       Object {
                                                                                                                         "display": Array [
@@ -28275,7 +28275,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                           8,
                                                                                                                         ],
                                                                                                                         "label": "Browse courses",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank",
+                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
                                                                                                                       },
                                                                                                                     ],
                                                                                                                     "typeSelect": Object {
@@ -29170,7 +29170,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                                             data-testid="primo-search-links-1"
                                                                                                           >
                                                                                                             <a
-                                                                                                              href="https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&sortby=rank&mode=advanced"
+                                                                                                              href="https://search.library.uq.edu.au/primo-explore/search?vid=61UQ&mode=advanced"
                                                                                                               rel="noreferrer"
                                                                                                             >
                                                                                                               Advanced search
@@ -29436,7 +29436,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                                             data-testid="primo-search-links-5"
                                                                                                           >
                                                                                                             <a
-                                                                                                              href="https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ&sortby=rank"
+                                                                                                              href="https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ"
                                                                                                               rel="noreferrer"
                                                                                                             >
                                                                                                               Browse search
