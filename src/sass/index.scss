@@ -168,3 +168,23 @@ abbr {
   outline-offset: -4px;
   top: auto;
 }
+
+// make the mega menu sit nicely on the left margin - until it cant fit the whole thing anymore, and goes left
+.megamenuLayout {
+  margin-left: 1rem;
+  @media (min-width: 58rem) {
+    margin-left: 0.5rem;
+  }
+  @media (min-width: 65rem) {
+    margin-left: 4rem;
+  }
+  @media (min-width: 69.25rem) {
+    margin-left: auto;
+  }
+  @media (min-width: 80rem) {
+    margin-left: 9.4rem;
+  }
+  @media (min-width: 90rem) {
+    margin-left: auto;
+  }
+}

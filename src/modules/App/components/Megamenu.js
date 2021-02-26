@@ -17,10 +17,6 @@ const styles = theme => {
         megamenublock: {
             backgroundColor: theme.palette.white.main,
             width: '100%',
-            [theme.breakpoints.up('md')]: {
-                display: 'flex',
-                justifyContent: 'center',
-            },
         },
         mainMenu: {
             outline: 'none',
@@ -198,10 +194,7 @@ const styles = theme => {
             },
             [theme.breakpoints.up('md')]: {
                 transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                paddingTop: 8,
-                paddingBottom: 8,
-                paddingLeft: 8,
-                paddingRight: 8,
+                padding: 8,
                 '& a': {
                     '&:hover': {
                         textDecoration: 'none',

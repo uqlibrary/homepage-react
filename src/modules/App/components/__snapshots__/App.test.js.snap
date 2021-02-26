@@ -3945,13 +3945,13 @@ exports[`Application component should render for anon user 1`] = `
                                       id="mobile-megamenu"
                                     >
                                       <Hidden
-                                        lgUp={true}
+                                        mdUp={true}
                                       >
                                         <WithWidth(HiddenJs)
                                           lgDown={false}
-                                          lgUp={true}
+                                          lgUp={false}
                                           mdDown={false}
-                                          mdUp={false}
+                                          mdUp={true}
                                           smDown={false}
                                           smUp={false}
                                           xlDown={false}
@@ -4083,15 +4083,15 @@ exports[`Application component should render for anon user 1`] = `
                                 className="MuiGrid-root MuiGrid-container"
                               >
                                 <Hidden
-                                  mdUp={true}
+                                  smUp={true}
                                 >
                                   <WithWidth(HiddenJs)
                                     lgDown={false}
                                     lgUp={false}
                                     mdDown={false}
-                                    mdUp={true}
+                                    mdUp={false}
                                     smDown={false}
-                                    smUp={false}
+                                    smUp={true}
                                     xlDown={false}
                                     xlUp={false}
                                     xsDown={false}
@@ -4104,7 +4104,7 @@ exports[`Application component should render for anon user 1`] = `
                         </div>
                         <WithStyles(ForwardRef(Grid))
                           aria-label="Main site navigation"
-                          className="makeStyles-siteHeaderBottom-112"
+                          className="makeStyles-siteHeaderBottom-112 layout-card megamenuLayout"
                           container={true}
                           id="desktop-megamenu-block"
                           justify="flex-start"
@@ -4113,7 +4113,7 @@ exports[`Application component should render for anon user 1`] = `
                         >
                           <ForwardRef(Grid)
                             aria-label="Main site navigation"
-                            className="makeStyles-siteHeaderBottom-112"
+                            className="makeStyles-siteHeaderBottom-112 layout-card megamenuLayout"
                             classes={
                               Object {
                                 "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -4229,7 +4229,7 @@ exports[`Application component should render for anon user 1`] = `
                           >
                             <div
                               aria-label="Main site navigation"
-                              className="MuiGrid-root makeStyles-siteHeaderBottom-112 MuiGrid-container"
+                              className="MuiGrid-root makeStyles-siteHeaderBottom-112 layout-card megamenuLayout MuiGrid-container"
                               id="desktop-megamenu-block"
                               role="region"
                             >
@@ -22798,13 +22798,13 @@ exports[`Application component should render loading screen while account is loa
                                       id="mobile-megamenu"
                                     >
                                       <Hidden
-                                        lgUp={true}
+                                        mdUp={true}
                                       >
                                         <WithWidth(HiddenJs)
                                           lgDown={false}
-                                          lgUp={true}
+                                          lgUp={false}
                                           mdDown={false}
-                                          mdUp={false}
+                                          mdUp={true}
                                           smDown={false}
                                           smUp={false}
                                           xlDown={false}
@@ -22936,15 +22936,15 @@ exports[`Application component should render loading screen while account is loa
                                 className="MuiGrid-root MuiGrid-container"
                               >
                                 <Hidden
-                                  mdUp={true}
+                                  smUp={true}
                                 >
                                   <WithWidth(HiddenJs)
                                     lgDown={false}
                                     lgUp={false}
                                     mdDown={false}
-                                    mdUp={true}
+                                    mdUp={false}
                                     smDown={false}
-                                    smUp={false}
+                                    smUp={true}
                                     xlDown={false}
                                     xlUp={false}
                                     xsDown={false}
@@ -22957,7 +22957,7 @@ exports[`Application component should render loading screen while account is loa
                         </div>
                         <WithStyles(ForwardRef(Grid))
                           aria-label="Main site navigation"
-                          className="makeStyles-siteHeaderBottom-112"
+                          className="makeStyles-siteHeaderBottom-112 layout-card megamenuLayout"
                           container={true}
                           id="desktop-megamenu-block"
                           justify="flex-start"
@@ -22966,7 +22966,7 @@ exports[`Application component should render loading screen while account is loa
                         >
                           <ForwardRef(Grid)
                             aria-label="Main site navigation"
-                            className="makeStyles-siteHeaderBottom-112"
+                            className="makeStyles-siteHeaderBottom-112 layout-card megamenuLayout"
                             classes={
                               Object {
                                 "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -23082,7 +23082,7 @@ exports[`Application component should render loading screen while account is loa
                           >
                             <div
                               aria-label="Main site navigation"
-                              className="MuiGrid-root makeStyles-siteHeaderBottom-112 MuiGrid-container"
+                              className="MuiGrid-root makeStyles-siteHeaderBottom-112 layout-card megamenuLayout MuiGrid-container"
                               id="desktop-megamenu-block"
                               role="region"
                             >

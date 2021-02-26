@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
+import classNames from 'classnames';
 
 import { isHdrStudent } from 'helpers/access';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, routes } from 'config';
@@ -29,8 +30,6 @@ const useStyles = makeStyles(
             paddingTop: '0.3rem',
         },
         siteHeaderBottom: {
-            marginLeft: 'auto',
-            marginRight: 'auto',
             marginTop: 0,
             marginBottom: 0,
             paddingLeft: 0,
@@ -179,7 +178,7 @@ export const UQSiteHeader = ({
                 spacing={0}
                 role="region"
                 aria-label="Main site navigation"
-                className={classes.siteHeaderBottom}
+                className={classNames(classes.siteHeaderBottom, 'layout-card', 'megamenuLayout')}
                 justify={'flex-start'}
             >
                 <Hidden smDown>
