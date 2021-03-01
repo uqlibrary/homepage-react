@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
+import classNames from 'classnames';
 
 import { isHdrStudent } from 'helpers/access';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, routes } from 'config';
 import locale from 'locale/global';
 import { pathConfig } from 'config/routes';
-import { UQSiteHeaderLocale } from './UQSiteHeader.locale';
 import { mui1theme } from 'config';
 
 import { AskUs } from 'modules/App/components/AskUs';
@@ -30,9 +30,6 @@ const useStyles = makeStyles(
             paddingTop: '0.3rem',
         },
         siteHeaderBottom: {
-            maxWidth: 1280,
-            marginLeft: 'auto',
-            marginRight: 'auto',
             marginTop: 0,
             marginBottom: 0,
             paddingLeft: 0,
@@ -67,6 +64,12 @@ const useStyles = makeStyles(
         icons: {
             marginRight: 6,
         },
+        buttonHolder: {
+            [theme.breakpoints.down('xs')]: {
+                // stop the buttons wrapping on the tiniest screen - they shrink instead
+                flexWrap: 'nowrap',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -95,7 +98,7 @@ export const UQSiteHeader = ({
     return (
         <div className={classes.siteHeader} id="uq-site-header" data-testid="uq-site-header">
             <div className="layout-card">
-                <Grid container spacing={0}>
+                <Grid container spacing={0} className={classes.buttonHolder}>
                     <Grid item xs={'auto'}>
                         <Button
                             onClick={() => history.push(pathConfig.index)}
@@ -103,7 +106,7 @@ export const UQSiteHeader = ({
                             id="uq-site-header-home-button"
                             data-testid="uq-site-header-home-button"
                         >
-                            {UQSiteHeaderLocale.title}
+                            {locale.global.pageTitle}
                         </Button>
                     </Grid>
                     <Grid item xs />
@@ -139,7 +142,7 @@ export const UQSiteHeader = ({
                         data-testid="mobile-megamenu"
                         id="mobile-megamenu"
                     >
-                        <Hidden lgUp>
+                        <Hidden mdUp>
                             <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
                                 <Tooltip title={locale.global.mainNavButton.tooltip}>
                                     <IconButton
@@ -158,7 +161,7 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Hidden lgUp>
+                    <Hidden smUp>
                         <Megamenu
                             history={history}
                             menuItems={menuItems}
@@ -168,31 +171,31 @@ export const UQSiteHeader = ({
                         />
                     </Hidden>
                 </Grid>
-                <Grid
-                    container
-                    id="desktop-megamenu-block"
-                    spacing={0}
-                    role="region"
-                    aria-label="Main site navigation"
-                    className={classes.siteHeaderBottom}
-                    justify={'flex-start'}
-                >
-                    <Hidden mdDown>
-                        <Grid item xs={12} id="desktop-megamenu">
-                            <Megamenu menuItems={menuItems} history={history} />
-                        </Grid>
-                    </Hidden>
-                </Grid>
-                <span
-                    id="after-navigation"
-                    role="region"
-                    tabIndex="0"
-                    aria-label="Start of content"
-                    style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
-                >
-                    Start of content
-                </span>
             </div>
+            <Grid
+                container
+                id="desktop-megamenu-block"
+                spacing={0}
+                role="region"
+                aria-label="Main site navigation"
+                className={classNames(classes.siteHeaderBottom, 'layout-card', 'megamenuLayout')}
+                justify={'flex-start'}
+            >
+                <Hidden smDown>
+                    <Grid item xs={12} id="desktop-megamenu">
+                        <Megamenu menuItems={menuItems} history={history} />
+                    </Grid>
+                </Hidden>
+            </Grid>
+            <span
+                id="after-navigation"
+                role="region"
+                tabIndex="0"
+                aria-label="Start of content"
+                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+            >
+                Start of content
+            </span>
         </div>
     );
 };

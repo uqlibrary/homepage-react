@@ -28,6 +28,7 @@ export const EXPROXY_URL_PREFIX = 'http://ezproxy.library.uq.edu.au/login?url=';
 export default {
     global: {
         title: `UQ Library ${process.env.TITLE_SUFFIX || ''}`,
+        pageTitle: 'Library',
         appTitle: (
             <a
                 href={`${pathConfig.index}`}

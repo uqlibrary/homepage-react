@@ -92,8 +92,7 @@ export const myLibraryLocale = {
         {
             dataTestid: 'saved-searches',
             label: 'Saved searches',
-            link:
-                'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Ffavorites%3Fvid%3D61UQ%26lang%3Den_US%26section%3Dqueries',
+            link: 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries',
             icon: <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
             condition: seeSavedSearches,
             ariaLabel: '',

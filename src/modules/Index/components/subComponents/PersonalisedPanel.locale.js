@@ -17,14 +17,12 @@ export const ppLocale = {
         loans: {
             label: 'Manage your library loans [loans]',
             tooltip: 'Click to manage your library loans',
-            url:
-                'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
+            url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US',
         },
         fines: {
             label: 'Manage your library fines ($[fines])',
             tooltip: 'Click to manage your library fines',
-            url:
-                'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US&targetURL=https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview',
+            url: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=fines&lang=en_US',
         },
         eSpacePossible: {
             label: 'Claim [totalRecords] possible eSpace records',
