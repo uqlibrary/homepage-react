@@ -114,7 +114,10 @@ const styles = theme => {
             },
         },
         shiftLeft: {
+            // some of right most menus dont fit on a small screen when open
+            // there is a 'shiftleft' option in menu.json that controls which menus this applies to
             marginLeft: '-20rem',
+            right: 0,
         },
         submenus: {
             [theme.breakpoints.up('md')]: {
