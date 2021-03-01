@@ -161,7 +161,7 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Hidden smUp>
+                    <Hidden mdUp>
                         <Megamenu
                             history={history}
                             menuItems={menuItems}

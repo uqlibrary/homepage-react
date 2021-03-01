@@ -4083,15 +4083,15 @@ exports[`Application component should render for anon user 1`] = `
                                 className="MuiGrid-root MuiGrid-container"
                               >
                                 <Hidden
-                                  smUp={true}
+                                  mdUp={true}
                                 >
                                   <WithWidth(HiddenJs)
                                     lgDown={false}
                                     lgUp={false}
                                     mdDown={false}
-                                    mdUp={false}
+                                    mdUp={true}
                                     smDown={false}
-                                    smUp={true}
+                                    smUp={false}
                                     xlDown={false}
                                     xlUp={false}
                                     xsDown={false}
@@ -22936,15 +22936,15 @@ exports[`Application component should render loading screen while account is loa
                                 className="MuiGrid-root MuiGrid-container"
                               >
                                 <Hidden
-                                  smUp={true}
+                                  mdUp={true}
                                 >
                                   <WithWidth(HiddenJs)
                                     lgDown={false}
                                     lgUp={false}
                                     mdDown={false}
-                                    mdUp={false}
+                                    mdUp={true}
                                     smDown={false}
-                                    smUp={true}
+                                    smUp={false}
                                     xlDown={false}
                                     xlUp={false}
                                     xsDown={false}
