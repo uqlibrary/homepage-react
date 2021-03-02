@@ -1,13 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { throttle } from 'throttle-debounce';
+import React, { useState } from 'react';
 import { PropTypes } from 'prop-types';
+import classNames from 'classnames';
 
 import { isHdrStudent } from 'helpers/access';
-import { loadChatStatus, loadCurrentAccount } from 'actions';
 import { APP_URL, AUTH_URL_LOGIN, AUTH_URL_LOGOUT, routes } from 'config';
 import locale from 'locale/global';
 import { pathConfig } from 'config/routes';
-import { UQSiteHeaderLocale } from './UQSiteHeader.locale';
 import { mui1theme } from 'config';
 
 import { AskUs } from 'modules/App/components/AskUs';
@@ -32,9 +30,6 @@ const useStyles = makeStyles(
             paddingTop: '0.3rem',
         },
         siteHeaderBottom: {
-            maxWidth: 1280,
-            marginLeft: 'auto',
-            marginRight: 'auto',
             marginTop: 0,
             marginBottom: 0,
             paddingLeft: 0,
@@ -69,13 +64,18 @@ const useStyles = makeStyles(
         icons: {
             marginRight: 6,
         },
+        buttonHolder: {
+            [theme.breakpoints.down('xs')]: {
+                // stop the buttons wrapping on the tiniest screen - they shrink instead
+                flexWrap: 'nowrap',
+            },
+        },
     }),
     { withTheme: true },
 );
 
 export const UQSiteHeader = ({
     account,
-    accountLoading,
     author,
     authorDetails,
     history,
@@ -83,43 +83,10 @@ export const UQSiteHeader = ({
     libHours,
     libHoursLoading,
     libHoursError,
-    isLibraryWebsiteCall,
 }) => {
     const classes = useStyles(mui1theme);
     const [menuOpen, setMenuOpen] = useState(false);
     const toggleMenu = () => setMenuOpen(!menuOpen);
-
-    useEffect(() => {
-        // reinsert the elements that are auto hidden so they are optional on other sites
-        if (isLibraryWebsiteCall) {
-            const showMegaMenuDesktop = setInterval(() => {
-                const megamenu = document.getElementById('desktop-megamenu-block');
-                if (!!megamenu) {
-                    megamenu.style.display = 'flex';
-                    clearInterval(showMegaMenuDesktop);
-                }
-            }, 100); // check every 100ms
-
-            const showMegaMenuMobile = setInterval(() => {
-                const button = document.getElementById('mobile-megamenu');
-                if (!!button) {
-                    button.style.display = 'block';
-                    clearInterval(showMegaMenuMobile);
-                }
-            }, 100); // check every 100ms
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const throttledAccountLoad = useRef(throttle(3100, () => loadCurrentAccount()));
-    // const throttledOpeningHoursLoad = useRef(throttle(3100, () => loadLibHours()));
-    const throttledChatStatusLoad = useRef(throttle(3100, () => loadChatStatus()));
-    if (!isLibraryWebsiteCall) {
-        // if the component is not inside our React app then these wont have been passed in
-        !accountLoading && (!account || !author || !authorDetails) && throttledAccountLoad.current();
-        // !libHoursLoading && !libHours && throttledOpeningHoursLoad.current();
-        !chatStatus && throttledChatStatusLoad.current();
-    }
 
     const menuItems = routes.getMenuConfig(account, author, authorDetails, !!isHdrStudent(account), false);
     const isAuthorizedUser = !!account && !!account.id;
@@ -128,44 +95,18 @@ export const UQSiteHeader = ({
         const returnUrl = redirectToCurrentLocation || !isAuthorizedUser ? window.location.href : APP_URL;
         window.location.assign(`${redirectUrl}?url=${window.btoa(returnUrl)}`);
     };
-
-    const visitHomepage = () => {
-        const libraryHomepageUrl = 'https://www.library.uq.edu.au/';
-        const localhostHomepageUrl = 'http://localhost:2020/';
-        const isHomePage =
-            window.location.href === libraryHomepageUrl ||
-            window.location.href === localhostHomepageUrl ||
-            window.location.href.startsWith(`${localhostHomepageUrl}?`);
-        const isSubpageOfHomepageReactApp =
-            !isHomePage &&
-            (window.location.href.startsWith(libraryHomepageUrl) ||
-                window.location.href.startsWith(localhostHomepageUrl)) &&
-            typeof history === 'object' &&
-            history !== null;
-
-        if (isHomePage) {
-            // do nothing
-            return false;
-        } else if (isSubpageOfHomepageReactApp) {
-            return !!history && history.push(pathConfig.index);
-        } else {
-            window.location.href = libraryHomepageUrl;
-            return false;
-        }
-    };
-
     return (
         <div className={classes.siteHeader} id="uq-site-header" data-testid="uq-site-header">
             <div className="layout-card">
-                <Grid container spacing={0}>
+                <Grid container spacing={0} className={classes.buttonHolder}>
                     <Grid item xs={'auto'}>
                         <Button
-                            onClick={() => visitHomepage()}
+                            onClick={() => history.push(pathConfig.index)}
                             className={classes.title}
                             id="uq-site-header-home-button"
                             data-testid="uq-site-header-home-button"
                         >
-                            {UQSiteHeaderLocale.title}
+                            {locale.global.pageTitle}
                         </Button>
                     </Grid>
                     <Grid item xs />
@@ -176,19 +117,11 @@ export const UQSiteHeader = ({
                             className={classes.utility}
                             id="mylibrary-button-block"
                             data-testid="mylibrary"
-                            style={{ display: 'none' }} // for foreign sites - immediate overwrite on homepage
                         >
                             <MyLibrary account={account} author={author} history={history} />
                         </Grid>
                     )}
-                    <Grid
-                        item
-                        xs={'auto'}
-                        className={classes.utility}
-                        id="askus-button-block"
-                        data-testid="askus"
-                        style={{ display: 'none' }}
-                    >
+                    <Grid item xs={'auto'} className={classes.utility} id="askus-button-block" data-testid="askus">
                         <AskUs
                             chatStatus={chatStatus}
                             libHours={libHours}
@@ -196,14 +129,7 @@ export const UQSiteHeader = ({
                             libHoursError={libHoursError}
                         />
                     </Grid>
-                    <Grid
-                        item
-                        xs={'auto'}
-                        className={classes.utility}
-                        id="auth-button-block"
-                        data-testid="auth"
-                        style={{ display: 'none' }}
-                    >
+                    <Grid item xs={'auto'} className={classes.utility} id="auth-button-block" data-testid="auth">
                         <AuthButton
                             isAuthorizedUser={isAuthorizedUser}
                             onClick={redirectUserToLogin(isAuthorizedUser, true)}
@@ -215,9 +141,8 @@ export const UQSiteHeader = ({
                         className={classes.utility}
                         data-testid="mobile-megamenu"
                         id="mobile-megamenu"
-                        style={{ display: 'none' }}
                     >
-                        <Hidden lgUp>
+                        <Hidden mdUp>
                             <Grid item xs={'auto'} id="mobile-menu" data-testid="mobile-menu">
                                 <Tooltip title={locale.global.mainNavButton.tooltip}>
                                     <IconButton
@@ -236,7 +161,7 @@ export const UQSiteHeader = ({
                     </Grid>
                 </Grid>
                 <Grid container>
-                    <Hidden lgUp>
+                    <Hidden mdUp>
                         <Megamenu
                             history={history}
                             menuItems={menuItems}
@@ -246,39 +171,37 @@ export const UQSiteHeader = ({
                         />
                     </Hidden>
                 </Grid>
-                <Grid
-                    container
-                    id="desktop-megamenu-block"
-                    spacing={0}
-                    role="region"
-                    aria-label="Main site navigation"
-                    className={classes.siteHeaderBottom}
-                    justify={'flex-start'}
-                    style={{ display: 'none' }}
-                >
-                    <Hidden mdDown>
-                        <Grid item xs={12} id="desktop-megamenu">
-                            <Megamenu menuItems={menuItems} history={history} />
-                        </Grid>
-                    </Hidden>
-                </Grid>
-                <span
-                    id="after-navigation"
-                    role="region"
-                    tabIndex="0"
-                    aria-label="Start of content"
-                    style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
-                >
-                    Start of content
-                </span>
             </div>
+            <Grid
+                container
+                id="desktop-megamenu-block"
+                spacing={0}
+                role="region"
+                aria-label="Main site navigation"
+                className={classNames(classes.siteHeaderBottom, 'layout-card', 'megamenuLayout')}
+                justify={'flex-start'}
+            >
+                <Hidden smDown>
+                    <Grid item xs={12} id="desktop-megamenu">
+                        <Megamenu menuItems={menuItems} history={history} />
+                    </Grid>
+                </Hidden>
+            </Grid>
+            <span
+                id="after-navigation"
+                role="region"
+                tabIndex="0"
+                aria-label="Start of content"
+                style={{ position: 'fixed', top: '-2000px', left: '-2000px' }}
+            >
+                Start of content
+            </span>
         </div>
     );
 };
 
 UQSiteHeader.propTypes = {
     account: PropTypes.object,
-    accountLoading: PropTypes.bool,
     author: PropTypes.object,
     authorDetails: PropTypes.object,
     chatStatus: PropTypes.bool,
@@ -286,11 +209,8 @@ UQSiteHeader.propTypes = {
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,
-    isLibraryWebsiteCall: PropTypes.bool,
 };
 
-UQSiteHeader.defaultProps = {
-    isLibraryWebsiteCall: false,
-};
+UQSiteHeader.defaultProps = {};
 
 export default UQSiteHeader;

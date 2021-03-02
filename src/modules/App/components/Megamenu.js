@@ -21,7 +21,7 @@ const styles = theme => {
         mainMenu: {
             outline: 'none',
             paddingTop: 0,
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 display: 'flex',
                 margin: 0,
                 paddingTop: 0,
@@ -38,13 +38,15 @@ const styles = theme => {
                 '& span > div[role="button"]:hover': {
                     backgroundColor: 'initial',
                 },
-                '& > div > div': {
-                    paddingLeft: 8,
-                    paddingRight: 8,
-                },
                 // first menu item should be lined up with Library title
                 '& > div:first-child > div': {
                     paddingLeft: 0,
+                },
+            },
+            [theme.breakpoints.up('lg')]: {
+                '& > div > div': {
+                    paddingLeft: 8,
+                    paddingRight: 8,
                 },
             },
         },
@@ -62,10 +64,10 @@ const styles = theme => {
                 color: '#000',
                 display: 'block',
             },
-            [theme.breakpoints.down('md')]: {
+            [theme.breakpoints.down('sm')]: {
                 paddingBottom: 5,
             },
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
                 fontSize: 16,
                 letterSpacing: '0.15008px',
@@ -83,6 +85,9 @@ const styles = theme => {
                         textDecoration: 'none',
                     },
                 },
+                '& a span': {
+                    marginRight: 10,
+                },
             },
         },
         ListItemTextPrimary: {
@@ -91,7 +96,7 @@ const styles = theme => {
             fontWeight: 400,
             paddingLeft: 16,
             marginTop: 0,
-            [theme.breakpoints.down('md')]: {
+            [theme.breakpoints.down('sm')]: {
                 borderBottom: '1px solid #e2e2e2',
                 padding: '0.7rem 1.5rem 0.7rem 2.5rem',
             },
@@ -105,22 +110,25 @@ const styles = theme => {
         },
         menuDropdown: {
             backgroundColor: theme.palette.secondary.light,
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 // apply this to mobile as well and the submenu goes over the other menu headers
                 zIndex: 1000,
                 position: 'absolute',
             },
         },
         shiftLeft: {
+            // some of right most menus dont fit on a small screen when open
+            // there is a 'shiftleft' option in menu.json that controls which menus this applies to
             marginLeft: '-20rem',
+            right: '-85%',
         },
         submenus: {
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 flexDirection: 'row',
             },
         },
         menuColumns: {
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 display: 'flex',
             },
             '& > div': {
@@ -135,22 +143,36 @@ const styles = theme => {
             borderBottom: '2px solid #51247a',
         },
         menuItemContainer: {
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 paddingLeft: 12,
+                position: 'relative',
                 marginLeft: -8,
                 '& > div': {
-                    paddingLeft: 6,
-                    paddingRight: 6,
+                    paddingLeft: 0,
+                    paddingRight: 0,
                     marginLeft: -6,
                 },
                 '& > div > div > span': {
                     paddingLeft: 0,
+                    // otherwise the left and right menu items are cut in half by the edge of the screen at 1050 wide
+                    fontSize: 15,
+                },
+                '& > div > a span': {
+                    fontSize: 15,
                 },
                 '& svg': {
                     paddingLeft: 6,
                 },
             },
-            [theme.breakpoints.down('md')]: {
+            [theme.breakpoints.up('lg')]: {
+                '& > div > div > span': {
+                    fontSize: 'inherit',
+                },
+                '& > div > a span': {
+                    fontSize: 'inherit',
+                },
+            },
+            [theme.breakpoints.down('sm')]: {
                 '& div': {
                     margin: 0,
                     padding: 0,
@@ -170,17 +192,16 @@ const styles = theme => {
             '& a': {
                 color: '#000',
             },
-            [theme.breakpoints.down('md')]: {
+            [theme.breakpoints.down('sm')]: {
                 // top level of menu under hamburger
                 border: '1px solid #e2e2e2',
                 '& span': {
                     padding: '1rem 1.5rem',
                 },
             },
-            [theme.breakpoints.up('lg')]: {
+            [theme.breakpoints.up('md')]: {
                 transition: 'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms',
-                paddingTop: 8,
-                paddingBottom: 8,
+                padding: 8,
                 '& a': {
                     '&:hover': {
                         textDecoration: 'none',

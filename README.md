@@ -143,13 +143,7 @@ to keep initial load to a minimum following optimisation has been added to the p
 
 #### Including our components in other websites.
 
-A Web Components approach was not successful (couldnt make building the styles into a single .css file work with MUI)
-
-The Library Header and Footer components can be included on another website (if the site is whitelisted in nginx cors, in api).
-
-Locally, do a `npm run build` and then load public/dummywebsite.html in a browser to see an example.
-
-On other websites, follow the instructions in the [README](src/applications/sample-site/README.md). Each website should have its own load.js, deciding what header elements it should have.
+TBA
 
 ### Webpack
 

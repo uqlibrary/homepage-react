@@ -226,8 +226,8 @@ export default {
                     linkTo: 'https://web.library.uq.edu.au/collections/stories-from-collection',
                 },
                 {
-                    primaryText: 'Cultural & historical collections',
-                    linkTo: 'https://web.library.uq.edu.au/collections/cultural-historical-collections',
+                    primaryText: 'Cultural & heritage collections',
+                    linkTo: 'https://web.library.uq.edu.au/collections/cultural-heritage-collections',
                 },
                 {
                     primaryText: 'Collection management',
@@ -248,7 +248,7 @@ export default {
                 {
                     primaryText: 'View your loans & requests',
                     linkTo:
-                        'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Faccount%3Fvid%3D61UQ%26section%3Doverview%26lang%3Den_US',
+                        'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&lang=en_US',
                     column: 1,
                 },
                 {
@@ -433,7 +433,7 @@ export default {
                 },
                 {
                     primaryText: 'Give to the Library',
-                    linkTo: 'https://www.uq.edu.au/giving/organisations/university-queensland-library',
+                    linkTo: 'https://alumni.uq.edu.au/uq-library',
                     column: 1,
                 },
                 {
