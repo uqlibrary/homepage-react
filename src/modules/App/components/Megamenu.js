@@ -85,6 +85,9 @@ const styles = theme => {
                         textDecoration: 'none',
                     },
                 },
+                '& a span': {
+                    marginRight: 10,
+                },
             },
         },
         ListItemTextPrimary: {
@@ -117,7 +120,7 @@ const styles = theme => {
             // some of right most menus dont fit on a small screen when open
             // there is a 'shiftleft' option in menu.json that controls which menus this applies to
             marginLeft: '-20rem',
-            right: '-100%',
+            right: '-85%',
         },
         submenus: {
             [theme.breakpoints.up('md')]: {
