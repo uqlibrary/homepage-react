@@ -85,6 +85,9 @@ const styles = theme => {
                         textDecoration: 'none',
                     },
                 },
+                '& a span': {
+                    marginRight: 10,
+                },
             },
         },
         ListItemTextPrimary: {
@@ -103,6 +106,7 @@ const styles = theme => {
             paddingLeft: 16,
             paddingRight: 16,
             marginTop: 0,
+            whiteSpace: 'nowrap',
             ...theme.typography.caption,
         },
         menuDropdown: {
@@ -114,7 +118,10 @@ const styles = theme => {
             },
         },
         shiftLeft: {
+            // some of right most menus dont fit on a small screen when open
+            // there is a 'shiftleft' option in menu.json that controls which menus this applies to
             marginLeft: '-20rem',
+            right: '-85%',
         },
         submenus: {
             [theme.breakpoints.up('md')]: {
@@ -139,6 +146,7 @@ const styles = theme => {
         menuItemContainer: {
             [theme.breakpoints.up('md')]: {
                 paddingLeft: 12,
+                position: 'relative',
                 marginLeft: -8,
                 '& > div': {
                     paddingLeft: 0,
