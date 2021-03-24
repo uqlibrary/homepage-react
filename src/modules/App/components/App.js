@@ -8,10 +8,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from 'modules/App/containers/AppAlert';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
-import UQHeader from 'modules/App/components/UQHeader';
-import ChatStatus from 'modules/App/components/ChatStatus';
 import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
-import UQSiteHeader from 'modules/App/components/UQSiteHeader';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
 
@@ -80,22 +77,10 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const App = ({
-    account,
-    author,
-    authorDetails,
-    accountAuthorDetailsLoading,
-    actions,
-    chatStatus,
-    libHours,
-    libHoursLoading,
-    libHoursError,
-    history,
-}) => {
+export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actions, history }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
         actions.loadAlerts();
-        actions.loadChatStatus();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -109,23 +94,29 @@ export const App = ({
     });
     return (
         <Grid container className={classes.layoutFill}>
-            {chatStatus && (chatStatus.online === true || chatStatus.online === false) && (
-                <ChatStatus status={chatStatus} />
-            )}
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
-                <div className="content-header" role="region" aria-label="Site header">
-                    <UQHeader />
-                </div>
-                <UQSiteHeader
-                    account={account}
-                    author={author}
-                    authorDetails={authorDetails}
-                    history={history}
-                    chatStatus={!!chatStatus && chatStatus.online}
-                    libHours={libHours}
-                    libHoursloading={libHoursLoading}
-                    libHoursError={libHoursError}
+                <uq-header
+                    hidelibrarymenuitem="true"
+                    searchlabel="library.uq.edu.au"
+                    searchurl="http://library.uq.edu.au"
                 />
+                <uq-site-header
+                    sitetitle="Library Test"
+                    siteurl="http://www.library.uq.edu.au"
+                    showmenu
+                    showloginbutton
+                >
+                    <slot name="site-utilities" />
+                    <span slot="site-utilities">
+                        <div id="mylibraryslot" />
+                    </span>
+                    <span slot="site-utilities">
+                        <askus-button />
+                    </span>
+                    <span slot="site-utilities">
+                        <auth-button />
+                    </span>
+                </uq-site-header>
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
                 </div>
@@ -164,13 +155,9 @@ export const App = ({
 App.propTypes = {
     account: PropTypes.object,
     accountAuthorDetailsLoading: PropTypes.bool,
-    author: PropTypes.object,
     authorDetails: PropTypes.object,
     actions: PropTypes.any,
     history: PropTypes.any,
-    libHours: PropTypes.object,
-    libHoursLoading: PropTypes.bool,
-    libHoursError: PropTypes.bool,
     chatStatus: PropTypes.object,
     isSessionExpired: PropTypes.any,
 };
