@@ -8,7 +8,7 @@ import { ContentLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import AppAlertContainer from 'modules/App/containers/AppAlert';
 import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
-import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
+// import { ConnectFooter, MinimalFooter } from 'modules/SharedComponents/Footer';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
 
@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actions, history }) => {
+export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actions }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
         actions.loadAlerts();
@@ -135,14 +135,16 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                     </AccountContext.Provider>
                 </div>
                 <div id="full-footer-block">
-                    <Grid container spacing={0}>
-                        <Grid item xs={12} className={classes.connectFooter}>
-                            <ConnectFooter history={history} />
-                        </Grid>
-                        <Grid item xs={12} className={classes.minimalFooter}>
-                            <MinimalFooter />
-                        </Grid>
-                    </Grid>
+                    {/* <Grid container spacing={0}>*/}
+                    {/*    <Grid item xs={12} className={classes.connectFooter}>*/}
+                    {/*        <ConnectFooter history={history} />*/}
+                    {/*    </Grid>*/}
+                    {/*    <Grid item xs={12} className={classes.minimalFooter}>*/}
+                    {/*        <MinimalFooter />*/}
+                    {/*    </Grid>*/}
+                    {/* </Grid>*/}
+                    <connect-footer />
+                    <uq-footer loginurl="http://library.uq.edu.au" />
                 </div>
             </div>
         </Grid>
