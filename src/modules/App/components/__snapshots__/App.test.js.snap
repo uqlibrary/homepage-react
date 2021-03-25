@@ -674,12 +674,9 @@ exports[`Application component should render for anon user 1`] = `
                     <uq-site-header
                       showloginbutton={true}
                       showmenu={true}
-                      sitetitle="Library Test"
+                      sitetitle="Library"
                       siteurl="http://www.library.uq.edu.au"
                     >
-                      <slot
-                        name="site-utilities"
-                      />
                       <span
                         slot="site-utilities"
                       >
@@ -754,6 +751,9 @@ exports[`Application component should render for anon user 1`] = `
                         }
                       }
                     >
+                      <a
+                        name="content"
+                      />
                       <Suspense
                         fallback={
                           <ContentLoader
@@ -15589,12 +15589,9 @@ exports[`Application component should render loading screen while account is loa
                     <uq-site-header
                       showloginbutton={true}
                       showmenu={true}
-                      sitetitle="Library Test"
+                      sitetitle="Library"
                       siteurl="http://www.library.uq.edu.au"
                     >
-                      <slot
-                        name="site-utilities"
-                      />
                       <span
                         slot="site-utilities"
                       >
@@ -15669,6 +15666,9 @@ exports[`Application component should render loading screen while account is loa
                         }
                       }
                     >
+                      <a
+                        name="content"
+                      />
                       <Suspense
                         fallback={
                           <ContentLoader
