@@ -102,13 +102,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                 >
                     <span slot="default" />
                 </uq-header>
-                <uq-site-header
-                    sitetitle="Library Test"
-                    siteurl="http://www.library.uq.edu.au"
-                    showmenu
-                    showloginbutton
-                >
-                    <slot name="site-utilities" />
+                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu showloginbutton>
                     <span slot="site-utilities">
                         <div id="mylibraryslot" />
                     </span>
@@ -123,6 +117,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                     <AppAlertContainer />
                 </div>
                 <div style={{ flexGrow: 1, marginTop: 16 }}>
+                    <a name="content" />
                     <AccountContext.Provider
                         value={{
                             account: {
