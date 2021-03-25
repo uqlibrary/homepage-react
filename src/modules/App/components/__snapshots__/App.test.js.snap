@@ -666,7 +666,11 @@ exports[`Application component should render for anon user 1`] = `
                       hidelibrarymenuitem="true"
                       searchlabel="library.uq.edu.au"
                       searchurl="http://library.uq.edu.au"
-                    />
+                    >
+                      <span
+                        slot="default"
+                      />
+                    </uq-header>
                     <uq-site-header
                       showloginbutton={true}
                       showmenu={true}
@@ -15577,7 +15581,11 @@ exports[`Application component should render loading screen while account is loa
                       hidelibrarymenuitem="true"
                       searchlabel="library.uq.edu.au"
                       searchurl="http://library.uq.edu.au"
-                    />
+                    >
+                      <span
+                        slot="default"
+                      />
+                    </uq-header>
                     <uq-site-header
                       showloginbutton={true}
                       showmenu={true}
