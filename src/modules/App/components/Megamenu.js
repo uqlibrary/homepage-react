@@ -106,6 +106,7 @@ const styles = theme => {
             paddingLeft: 16,
             paddingRight: 16,
             marginTop: 0,
+            whiteSpace: 'nowrap',
             ...theme.typography.caption,
         },
         menuDropdown: {
