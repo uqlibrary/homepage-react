@@ -141,6 +141,7 @@
         "@material-ui/lab": "^4.0.0-alpha.45",
         "@material-ui/pickers": "^3.2.10",
         "@material-ui/styles": "^4.9.0",
+        "@webcomponents/webcomponentsjs": "^2.5.0",
         "axios": "^0.21.1",
         "axios-cache-adapter": "^2.5.0",
         "babel-loader": "^8.0.6",
@@ -176,7 +177,8 @@
         "redux": "4.0.0",
         "redux-immutable": "^4.0.0",
         "redux-thunk": "^2.2.0",
-        "throttle-debounce": "^2.1.0"
+        "throttle-debounce": "^2.1.0",
+        "vendor-copy": "^2.0.0"
     },
     "scripts": {
         "analyse": "webpack --config=./webpack-dist.config --profile --json > stats.json",
@@ -221,7 +223,8 @@
         "test:unit:ci1:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --testPathIgnorePatterns=SharedComponents",
         "test:unit:ci2:skipcoverage": "npm run test:unit -- --ci --runInBand --no-coverage --passWithNoTests SharedComponents",
         "test:unit:update": "npm run test:unit -- --updateSnapshot",
-        "test:unit:watch": "npm run test:unit -- --watch --onlyChanged"
+        "test:unit:watch": "npm run test:unit -- --watch --onlyChanged",
+        "postinstall": "vendor-copy"
     },
     "engines": {
         "npm": "^6",
@@ -415,5 +418,15 @@
             "src/**/containers/*.{js,jsx}"
         ],
         "all": true
-    }
+    },
+    "vendorCopy": [
+        {
+            "from": "node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
+            "to": "public/vendor/custom-elements-es5-adapter.js"
+        },
+        {
+            "from": "node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
+            "to": "public/vendor/webcomponents-bundle.js"
+        }
+    ]
 }
