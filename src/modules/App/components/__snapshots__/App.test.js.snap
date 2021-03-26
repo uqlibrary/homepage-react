@@ -676,25 +676,7 @@ exports[`Application component should render for anon user 1`] = `
                       showmenu={true}
                       sitetitle="Library"
                       siteurl="http://www.library.uq.edu.au"
-                    >
-                      <span
-                        slot="site-utilities"
-                      >
-                        <div
-                          id="mylibraryslot"
-                        />
-                      </span>
-                      <span
-                        slot="site-utilities"
-                      >
-                        <askus-button />
-                      </span>
-                      <span
-                        slot="site-utilities"
-                      >
-                        <auth-button />
-                      </span>
-                    </uq-site-header>
+                    />
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
@@ -10558,25 +10540,7 @@ exports[`Application component should render loading screen while account is loa
                       showmenu={true}
                       sitetitle="Library"
                       siteurl="http://www.library.uq.edu.au"
-                    >
-                      <span
-                        slot="site-utilities"
-                      >
-                        <div
-                          id="mylibraryslot"
-                        />
-                      </span>
-                      <span
-                        slot="site-utilities"
-                      >
-                        <askus-button />
-                      </span>
-                      <span
-                        slot="site-utilities"
-                      >
-                        <auth-button />
-                      </span>
-                    </uq-site-header>
+                    />
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
