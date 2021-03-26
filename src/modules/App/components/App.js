@@ -102,17 +102,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                 >
                     <span slot="default" />
                 </uq-header>
-                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu showloginbutton>
-                    <span slot="site-utilities">
-                        <div id="mylibraryslot" />
-                    </span>
-                    <span slot="site-utilities">
-                        <askus-button />
-                    </span>
-                    <span slot="site-utilities">
-                        <auth-button />
-                    </span>
-                </uq-site-header>
+                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu showloginbutton />
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
                 </div>
