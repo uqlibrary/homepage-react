@@ -38,6 +38,9 @@ context('Homepage Search Panel', () => {
         // course resources
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-8"]').click();
+        cy.get('div[data-testid="primo-search-links-7"] a')
+            .should('have.attr', 'href')
+            .and('include', 'talis.com');
         cy.get('div[data-testid="primo-search-links"]')
             .find('div')
             .its('length')
@@ -62,6 +65,9 @@ context('Homepage Search Panel', () => {
         // exams
         cy.get('div[data-testid="primo-search-select"]').click();
         cy.get('li[data-testid="primo-search-item-7"]').click();
+        cy.get('div[data-testid="primo-search-links-6"] a')
+            .should('have.attr', 'href')
+            .and('include', 'exams');
         cy.get('button[data-testid="primo-search-autocomplete-voice-clear"]').click();
         cy.get('input[data-testid="primo-search-autocomplete-input"]').type('acct', 100);
         cy.get('ul[data-testid="primo-search-autocomplete-listbox"]')

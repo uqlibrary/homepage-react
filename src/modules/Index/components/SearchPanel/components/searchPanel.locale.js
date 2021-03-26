@@ -12,6 +12,9 @@ import StorageIcon from '@material-ui/icons/Storage';
 
 const primoPrefix = '&tab=61uq_all&search_scope=61UQ_All&sortby=rank&vid=61UQ&offset=0';
 
+const READING_LISTS = 8;
+const EXAMS = 7;
+const DATABASES = 6;
 export const searchPanelLocale = {
     typeSelect: {
         label: 'Search',
@@ -111,12 +114,12 @@ export const searchPanelLocale = {
             label: 'Database help',
             link:
                 'https://web.library.uq.edu.au/research-tools-techniques/search-techniques/where-and-how-search/searching-databases',
-            display: [6],
+            display: [DATABASES],
         },
         {
             label: 'Browse databases',
             link: 'https://search.library.uq.edu.au/primo-explore/dbsearch?vid=61UQ',
-            display: [6],
+            display: [DATABASES],
         },
         {
             label: 'Browse search',
@@ -125,8 +128,13 @@ export const searchPanelLocale = {
         },
         {
             label: 'Browse courses',
-            link: 'https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ',
-            display: [7, 8],
+            link: 'https://www.library.uq.edu.au/exams/',
+            display: [EXAMS],
+        },
+        {
+            label: 'Browse courses',
+            link: 'https://uq.rl.talis.com/index.html',
+            display: [READING_LISTS],
         },
     ],
 };
