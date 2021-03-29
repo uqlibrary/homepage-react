@@ -26,18 +26,8 @@ exports[`Application component should render for anon user 1`] = `
           Array [],
           Array [],
           Array [],
-          Array [],
-          Array [],
         ],
         "results": Array [
-          Object {
-            "type": "return",
-            "value": Immutable.Map {},
-          },
-          Object {
-            "type": "return",
-            "value": Immutable.Map {},
-          },
           Object {
             "type": "return",
             "value": Immutable.Map {},
@@ -76,15 +66,8 @@ exports[`Application component should render for anon user 1`] = `
           Array [
             [Function],
           ],
-          Array [
-            [Function],
-          ],
         ],
         "results": Array [
-          Object {
-            "type": "return",
-            "value": undefined,
-          },
           Object {
             "type": "return",
             "value": undefined,
@@ -681,49 +664,7 @@ exports[`Application component should render for anon user 1`] = `
                       aria-label="UQ Library Alerts"
                       role="region"
                     >
-                      <Connect(AppAlert)>
-                        <AppAlert
-                          actions={
-                            Object {
-                              "checkSession": [Function],
-                              "clearCourseResourceSuggestions": [Function],
-                              "clearExams": [Function],
-                              "clearGuides": [Function],
-                              "clearPrimoSuggestions": [Function],
-                              "clearReadingLists": [Function],
-                              "clearRedirectPath": [Function],
-                              "clearSessionExpiredFlag": [Function],
-                              "dismissAppAlert": [Function],
-                              "getClassNumberFromPieces": [Function],
-                              "getSemesterStringByTermNumber": [Function],
-                              "hidePossiblyYourPublicationsLure": [Function],
-                              "loadAlerts": [Function],
-                              "loadChatStatus": [Function],
-                              "loadCompAvail": [Function],
-                              "loadCourseReadingListsSuggestions": [Function],
-                              "loadCurrentAccount": [Function],
-                              "loadExamPaperSuggestions": [Function],
-                              "loadExams": [Function],
-                              "loadGuides": [Function],
-                              "loadHomepageCourseReadingListsSuggestions": [Function],
-                              "loadLibHours": [Function],
-                              "loadLoans": [Function],
-                              "loadPrimoSuggestions": [Function],
-                              "loadPrintBalance": [Function],
-                              "loadReadingLists": [Function],
-                              "loadSpotlights": [Function],
-                              "loadTrainingEvents": [Function],
-                              "logout": [Function],
-                              "searcheSpaceIncompleteNTROPublications": [Function],
-                              "searcheSpacePossiblePublications": [Function],
-                              "setRedirectPath": [Function],
-                              "showAppAlert": [Function],
-                            }
-                          }
-                          appAlert={null}
-                          customAlert={null}
-                        />
-                      </Connect(AppAlert)>
+                      <alert-list />
                     </div>
                     <div
                       style={
@@ -9895,18 +9836,8 @@ exports[`Application component should render loading screen while account is loa
           Array [],
           Array [],
           Array [],
-          Array [],
-          Array [],
         ],
         "results": Array [
-          Object {
-            "type": "return",
-            "value": Immutable.Map {},
-          },
-          Object {
-            "type": "return",
-            "value": Immutable.Map {},
-          },
           Object {
             "type": "return",
             "value": Immutable.Map {},
@@ -9945,15 +9876,8 @@ exports[`Application component should render loading screen while account is loa
           Array [
             [Function],
           ],
-          Array [
-            [Function],
-          ],
         ],
         "results": Array [
-          Object {
-            "type": "return",
-            "value": undefined,
-          },
           Object {
             "type": "return",
             "value": undefined,
@@ -10545,49 +10469,7 @@ exports[`Application component should render loading screen while account is loa
                       aria-label="UQ Library Alerts"
                       role="region"
                     >
-                      <Connect(AppAlert)>
-                        <AppAlert
-                          actions={
-                            Object {
-                              "checkSession": [Function],
-                              "clearCourseResourceSuggestions": [Function],
-                              "clearExams": [Function],
-                              "clearGuides": [Function],
-                              "clearPrimoSuggestions": [Function],
-                              "clearReadingLists": [Function],
-                              "clearRedirectPath": [Function],
-                              "clearSessionExpiredFlag": [Function],
-                              "dismissAppAlert": [Function],
-                              "getClassNumberFromPieces": [Function],
-                              "getSemesterStringByTermNumber": [Function],
-                              "hidePossiblyYourPublicationsLure": [Function],
-                              "loadAlerts": [Function],
-                              "loadChatStatus": [Function],
-                              "loadCompAvail": [Function],
-                              "loadCourseReadingListsSuggestions": [Function],
-                              "loadCurrentAccount": [Function],
-                              "loadExamPaperSuggestions": [Function],
-                              "loadExams": [Function],
-                              "loadGuides": [Function],
-                              "loadHomepageCourseReadingListsSuggestions": [Function],
-                              "loadLibHours": [Function],
-                              "loadLoans": [Function],
-                              "loadPrimoSuggestions": [Function],
-                              "loadPrintBalance": [Function],
-                              "loadReadingLists": [Function],
-                              "loadSpotlights": [Function],
-                              "loadTrainingEvents": [Function],
-                              "logout": [Function],
-                              "searcheSpaceIncompleteNTROPublications": [Function],
-                              "searcheSpacePossiblePublications": [Function],
-                              "setRedirectPath": [Function],
-                              "showAppAlert": [Function],
-                            }
-                          }
-                          appAlert={null}
-                          customAlert={null}
-                        />
-                      </Connect(AppAlert)>
+                      <alert-list />
                     </div>
                     <div
                       style={
