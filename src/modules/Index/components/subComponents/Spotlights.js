@@ -114,7 +114,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 position: 'absolute',
                                 top: 4,
                                 left: 4,
-                                zIndex: 101,
+                                zIndex: 10,
                             }}
                         >
                             <ButtonBack
@@ -134,7 +134,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 position: 'absolute',
                                 top: 4,
                                 right: 0,
-                                zIndex: 101,
+                                zIndex: 10,
                             }}
                         >
                             <ButtonNext
@@ -153,7 +153,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 position: 'absolute',
                                 top: 4,
                                 left: 32,
-                                zIndex: 101,
+                                zIndex: 10,
                             }}
                         >
                             <ButtonPlay
@@ -173,7 +173,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                                 position: 'absolute',
                                 top: 0,
                                 left: '50%',
-                                zIndex: 101,
+                                zIndex: 10,
                                 textAlign: 'center',
                             }}
                         >
@@ -182,7 +182,7 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                     )}
                     <div
                         style={{
-                            zIndex: 99,
+                            zIndex: 9,
                         }}
                     >
                         <Slider trayTag="div" aria-label="UQ Spotlights" aria-live="off">
