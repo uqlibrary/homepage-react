@@ -97,9 +97,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                     hidelibrarymenuitem="true"
                     searchlabel="library.uq.edu.au"
                     searchurl="http://library.uq.edu.au"
-                >
-                    <span slot="default" />
-                </uq-header>
+                />
                 <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu showloginbutton />
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list />
