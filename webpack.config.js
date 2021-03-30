@@ -1,5 +1,5 @@
 const chalk = require('chalk');
-const path = require('path');
+const { resolve, join } = require('path');
 const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -14,17 +14,18 @@ const publicPath = '';
 
 module.exports = {
     mode: 'development',
-    context: path.resolve(__dirname),
+    context: resolve(__dirname),
     devtool: 'source-map',
-    entry: [
-        'react-hot-loader/patch',
-        `webpack-dev-server/client?http://${url}:${port}`,
-        'webpack/hot/only-dev-server',
-        path.join(__dirname, 'src', 'index.js'),
-    ],
+    entry: {
+        browserUpdate: join(__dirname, 'public', 'browser-update.js'),
+        patch: 'react-hot-loader/patch',
+        webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,
+        webPackDevServer: 'webpack/hot/only-dev-server',
+        index: join(__dirname, 'src', 'index.js'),
+    },
     output: {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname),
+        filename: '[name].js',
+        path: resolve(__dirname),
         pathinfo: true,
         publicPath: `http://${url}:${port}/${publicPath}`,
     },
@@ -58,7 +59,7 @@ module.exports = {
             },
             {
                 test: /\.js?$/,
-                include: [path.resolve(__dirname, 'src')],
+                include: [resolve(__dirname, 'src')],
                 exclude: [/node_modules/, /custom_modules/, '/src/mocks/'],
                 use: {
                     loader: 'babel-loader',
@@ -84,7 +85,7 @@ module.exports = {
             },
             {
                 test: /\.scss|\.styl/,
-                include: [path.resolve(__dirname, 'src')],
+                include: [resolve(__dirname, 'src')],
                 use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
             },
             {
@@ -103,10 +104,10 @@ module.exports = {
     },
     plugins: [
         new HtmlWebpackPlugin({
-            favicon: path.join(__dirname, 'public', 'favicon.ico'),
+            favicon: join(__dirname, 'public', 'favicon.ico'),
             filename: 'index.html',
             inject: true,
-            template: path.join(__dirname, 'public', 'index.html'),
+            template: join(__dirname, 'public', 'index.html'),
         }),
         new ProgressBarPlugin({
             format: `  building webpack... [:bar] ${chalk.green.bold(
@@ -121,7 +122,7 @@ module.exports = {
         new webpack.LoaderOptionsPlugin({
             options: {
                 sassLoader: {
-                    includePaths: [path.resolve(__dirname, './src')],
+                    includePaths: [resolve(__dirname, './src')],
                     outputStyle: 'expanded',
                     sourceMap: true,
                 },
@@ -131,7 +132,7 @@ module.exports = {
                     failOnError: true,
                 },
                 postcss: {},
-                context: path.join(__dirname),
+                context: join(__dirname),
             },
         }),
         new webpack.DefinePlugin({
@@ -156,7 +157,7 @@ module.exports = {
         extensions: ['.jsx', '.js', '.json'],
         modules: ['src', 'node_modules', 'custom_modules'],
         alias: {
-            '@material-ui/styles': path.resolve(__dirname, 'node_modules', '@material-ui/styles'),
+            '@material-ui/styles': resolve(__dirname, 'node_modules', '@material-ui/styles'),
         },
     },
     optimization: {
