@@ -28,7 +28,8 @@ export const myLibraryLocale = {
         {
             dataTestid: 'borrowing',
             label: 'Borrowing',
-            link: 'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=loans&lang=en_US',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Faccount%3Fvid%3D61UQ%26lang%3Den_US%26section%3Dloans',
             icon: <ImportContactsIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
             condition: seeLoans,
             ariaLabel: '',
@@ -84,7 +85,8 @@ export const myLibraryLocale = {
         {
             dataTestid: 'saved-items',
             label: 'Saved items',
-            link: 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=items',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Ffavorites%3Fvid%3D61UQ%26lang%3Den_US%26section%3Ditems',
             icon: <FavoriteIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
             condition: seeSavedItems,
             ariaLabel: '',
@@ -92,7 +94,8 @@ export const myLibraryLocale = {
         {
             dataTestid: 'saved-searches',
             label: 'Saved searches',
-            link: 'https://search.library.uq.edu.au/primo-explore/favorites?vid=61UQ&lang=en_US&section=queries',
+            link:
+                'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Ffavorites%3Fvid%3D61UQ%26lang%3Den_US%26section%3Dqueries',
             icon: <YoutubeSearchedForIcon color={'secondary'} style={{ marginRight: 6, marginBottom: -6 }} />,
             condition: seeSavedSearches,
             ariaLabel: '',
