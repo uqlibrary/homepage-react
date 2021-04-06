@@ -248,7 +248,7 @@ export default {
                 {
                     primaryText: 'View your loans & requests',
                     linkTo:
-                        'https://search.library.uq.edu.au/primo-explore/account?vid=61UQ&section=overview&lang=en_US',
+                        'https://search.library.uq.edu.au/primo-explore/login?vid=61UQ&targetURL=https%3A%2F%2Fsearch.library.uq.edu.au%2Fprimo-explore%2Faccount%3Fvid%3D61UQ%26lang%3Den_US%26section%3Doverview',
                     column: 1,
                 },
                 {
