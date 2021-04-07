@@ -95,14 +95,10 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
     return (
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
-                <uq-header
-                    hidelibrarymenuitem="true"
-                    searchlabel="library.uq.edu.au"
-                    searchurl="http://library.uq.edu.au"
-                >
-                    <span slot="default" />
-                </uq-header>
-                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu showloginbutton />
+                <uq-header hidelibrarymenuitem />
+                <uq-site-header showmenu showloginbutton>
+                    <span slot="site-utilities" />
+                </uq-site-header>
                 <div role="region" aria-label="UQ Library Alerts">
                     <AppAlertContainer />
                 </div>

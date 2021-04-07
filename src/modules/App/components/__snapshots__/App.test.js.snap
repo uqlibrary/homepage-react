@@ -663,20 +663,16 @@ exports[`Application component should render for anon user 1`] = `
                     role="region"
                   >
                     <uq-header
-                      hidelibrarymenuitem="true"
-                      searchlabel="library.uq.edu.au"
-                      searchurl="http://library.uq.edu.au"
-                    >
-                      <span
-                        slot="default"
-                      />
-                    </uq-header>
+                      hidelibrarymenuitem={true}
+                    />
                     <uq-site-header
                       showloginbutton={true}
                       showmenu={true}
-                      sitetitle="Library"
-                      siteurl="http://www.library.uq.edu.au"
-                    />
+                    >
+                      <span
+                        slot="site-utilities"
+                      />
+                    </uq-site-header>
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
@@ -10539,20 +10535,16 @@ exports[`Application component should render loading screen while account is loa
                     role="region"
                   >
                     <uq-header
-                      hidelibrarymenuitem="true"
-                      searchlabel="library.uq.edu.au"
-                      searchurl="http://library.uq.edu.au"
-                    >
-                      <span
-                        slot="default"
-                      />
-                    </uq-header>
+                      hidelibrarymenuitem={true}
+                    />
                     <uq-site-header
                       showloginbutton={true}
                       showmenu={true}
-                      sitetitle="Library"
-                      siteurl="http://www.library.uq.edu.au"
-                    />
+                    >
+                      <span
+                        slot="site-utilities"
+                      />
+                    </uq-site-header>
                     <div
                       aria-label="UQ Library Alerts"
                       role="region"
