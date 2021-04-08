@@ -97,6 +97,9 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                 <uq-site-header showmenu showloginbutton>
                     <span slot="site-utilities" />
                 </uq-site-header>
+                <div role="region" aria-label="UQ Library Alerts">
+                    <alert-list />
+                </div>
                 <div style={{ flexGrow: 1, marginTop: 16 }}>
                     <a name="content" />
                     <AccountContext.Provider
