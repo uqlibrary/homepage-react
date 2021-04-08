@@ -28,18 +28,13 @@ function insertScript(url) {
 const isDev =
     window.location.hostname === 'homepage-development.library.uq.edu.au' || window.location.hostname === 'localhost';
 // list of valid branches found in AWS pipeline deployments (if not in AWS you will get a 404)
-const branchList = [
-    '/feature-leadegroot',
-    '/feature-drupal',
-    '/primo-prod-dev',
-    '/primo-sandbox',
-    '/primo-sandbox-dev',
-];
+const branchList = ['feature-leadegroot', 'feature-drupal', 'primo-prod-dev', 'primo-sandbox', 'primo-sandbox-dev'];
 const devBranch = branchList.filter(branchName => {
-    const regex = new RegExp(`branch=${branchName}`);
-    if (window.location.pathname.startsWith(branchName)) {
+    console.log('test branchname ', branchName);
+    if (window.location.pathname.startsWith(`/${branchName}`)) {
         console.log(`pathname has ${branchName}`); // #dev
     }
+    const regex = new RegExp(`branch=${branchName}`);
     if (regex.test(window.location.search)) {
         console.log(`param has ${branchName}`); // #dev
     }
