@@ -649,12 +649,28 @@ exports[`Application component should render for anon user 1`] = `
                       hidelibrarymenuitem={true}
                     />
                     <uq-site-header
-                      showloginbutton={true}
                       showmenu={true}
                     >
+                      <slot
+                        name="site-utilities"
+                      />
                       <span
                         slot="site-utilities"
-                      />
+                      >
+                        <askus-button />
+                      </span>
+                      <span
+                        slot="site-utilities"
+                      >
+                        <div
+                          id="mylibrarystub"
+                        />
+                      </span>
+                      <span
+                        slot="site-utilities"
+                      >
+                        <auth-button />
+                      </span>
                     </uq-site-header>
                     <div
                       aria-label="UQ Library Alerts"
@@ -10462,12 +10478,28 @@ exports[`Application component should render loading screen while account is loa
                       hidelibrarymenuitem={true}
                     />
                     <uq-site-header
-                      showloginbutton={true}
                       showmenu={true}
                     >
+                      <slot
+                        name="site-utilities"
+                      />
                       <span
                         slot="site-utilities"
-                      />
+                      >
+                        <askus-button />
+                      </span>
+                      <span
+                        slot="site-utilities"
+                      >
+                        <div
+                          id="mylibrarystub"
+                        />
+                      </span>
+                      <span
+                        slot="site-utilities"
+                      >
+                        <auth-button />
+                      </span>
                     </uq-site-header>
                     <div
                       aria-label="UQ Library Alerts"

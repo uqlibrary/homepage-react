@@ -94,8 +94,17 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
         <Grid container className={classes.layoutFill}>
             <div className="content-container" id="content-container" role="region" aria-label="Site content">
                 <uq-header hidelibrarymenuitem />
-                <uq-site-header showmenu showloginbutton>
-                    <span slot="site-utilities" />
+                <uq-site-header showmenu>
+                    <slot name="site-utilities" />
+                    <span slot="site-utilities">
+                        <askus-button />
+                    </span>
+                    <span slot="site-utilities">
+                        <div id="mylibrarystub" />
+                    </span>
+                    <span slot="site-utilities">
+                        <auth-button />
+                    </span>
                 </uq-site-header>
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list />

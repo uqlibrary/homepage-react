@@ -25,19 +25,14 @@ function insertScript(url) {
  * https://www.library.uq.edu.au/ loads https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js
  */
 
-const isDev =
-    window.location.hostname === 'homepage-development.library.uq.edu.au' || window.location.hostname === 'localhost';
-// list of valid branches found in AWS pipeline deployments (if not in AWS you will get a 404)
+const isLocal = window.location.hostname === 'localhost';
+const localPath = 'http://localhost:8080/uq-lib-reusable.min.js';
+
+const isDev = window.location.hostname === 'homepage-development.library.uq.edu.au';
+// list of valid branches found in reusable-webcomponents AWS pipeline deployments (if not in AWS you will get a 404)
 const branchList = ['feature-leadegroot', 'feature-drupal', 'primo-prod-dev', 'primo-sandbox', 'primo-sandbox-dev'];
 const devBranch = branchList.filter(branchName => {
-    console.log('test branchname ', branchName);
-    if (window.location.pathname.startsWith(`/${branchName}`)) {
-        console.log(`pathname has ${branchName}`); // #dev
-    }
     const regex = new RegExp(`branch=${branchName}`);
-    if (regex.test(window.location.search)) {
-        console.log(`param has ${branchName}`); // #dev
-    }
     return window.location.pathname.startsWith(`/${branchName}`) || regex.test(window.location.search);
 });
 const branch = devBranch.length === 1 ? devBranch.pop() : 'master';
@@ -53,6 +48,5 @@ const prodPath = 'reusable-webcomponents-production';
 const path = isDev ? devPath : isStaging ? stagingPath : prodPath;
 const assetRoot = 'https://assets.library.uq.edu.au';
 
-const scriptUrl = `${assetRoot}/${path}/uq-lib-reusable.min.js`;
-console.log('scriptUrl = ', scriptUrl);
+const scriptUrl = isLocal ? localPath : `${assetRoot}/${path}/uq-lib-reusable.min.js`;
 insertScript(scriptUrl);
