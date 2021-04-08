@@ -19,7 +19,7 @@ function insertScript(url) {
  * valid paths:
  * http://localhost:2020/ will load https://assets.library.uq.edu.au/reusable-webcomponents-development/master/uq-lib-reusable.min.js
  * http://localhost:2020/?branch=feature-leadegroot will load https://assets.library.uq.edu.au/reusable-webcomponents-development/feature-leadegroot/uq-lib-reusable.min.js
- * https://homepage-development.library.uq.edu.au/feature-drupal/#/ will load https://assets.library.uq.edu.au/reusable-webcomponents-development/drupal/uq-lib-reusable.min.js
+ * https://homepage-development.library.uq.edu.au/feature-drupal/#/ will load https://assets.library.uq.edu.au/reusable-webcomponents-development/feature-drupal/uq-lib-reusable.min.js
  * https://homepage-development.library.uq.edu.au/feature-leadegroot-1/#/?branch=primo-prod-dev will load https://assets.library.uq.edu.au/reusable-webcomponents-development/primo-prod-dev/uq-lib-reusable.min.js
  * https://homepage-staging.library.uq.edu.au/ loads https://assets.library.uq.edu.au/reusable-webcomponents-staging/uq-lib-reusable.min.js
  * https://www.library.uq.edu.au/ loads https://assets.library.uq.edu.au/reusable-webcomponents/uq-lib-reusable.min.js
