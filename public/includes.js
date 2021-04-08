@@ -38,7 +38,7 @@ const devBranch = branchList.filter(branchName => {
     if (regex.test(window.location.search)) {
         console.log(`param has ${branchName}`); // #dev
     }
-    return window.location.href.startsWith(branchName) || regex.test(window.location.search);
+    return window.location.pathname.startsWith(`/${branchName}`) || regex.test(window.location.search);
 });
 const branch = devBranch.length === 1 ? devBranch.pop() : 'master';
 
