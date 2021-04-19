@@ -48,6 +48,7 @@ export const Location = ({ idLabel }) => {
     const classes = useStyles();
     const [cookies, setCookie] = useCookies();
     const [anchorEl, setAnchorEl] = React.useState(null);
+
     const handleLocationClick = event => {
         setAnchorEl(event.currentTarget);
     };
@@ -65,6 +66,7 @@ export const Location = ({ idLabel }) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
     let thisLocation = null;
     if (!cookies.location || cookies.location === 'null') {
         thisLocation = locale.noLocationSet;
