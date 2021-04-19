@@ -1947,10 +1947,16 @@ exports[`Application component should render for anon user 1`] = `
                                                                               Object {
                                                                                 "display": Array [
                                                                                   7,
+                                                                                ],
+                                                                                "label": "Browse courses",
+                                                                                "link": "https://www.library.uq.edu.au/exams/",
+                                                                              },
+                                                                              Object {
+                                                                                "display": Array [
                                                                                   8,
                                                                                 ],
                                                                                 "label": "Browse courses",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
+                                                                                "link": "https://uq.rl.talis.com/index.html",
                                                                               },
                                                                             ],
                                                                             "typeSelect": Object {
@@ -5415,10 +5421,16 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                                       Object {
                                                                                                                         "display": Array [
                                                                                                                           7,
+                                                                                                                        ],
+                                                                                                                        "label": "Browse courses",
+                                                                                                                        "link": "https://www.library.uq.edu.au/exams/",
+                                                                                                                      },
+                                                                                                                      Object {
+                                                                                                                        "display": Array [
                                                                                                                           8,
                                                                                                                         ],
                                                                                                                         "label": "Browse courses",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
+                                                                                                                        "link": "https://uq.rl.talis.com/index.html",
                                                                                                                       },
                                                                                                                     ],
                                                                                                                     "typeSelect": Object {
@@ -11763,10 +11775,16 @@ exports[`Application component should render loading screen while account is loa
                                                                               Object {
                                                                                 "display": Array [
                                                                                   7,
+                                                                                ],
+                                                                                "label": "Browse courses",
+                                                                                "link": "https://www.library.uq.edu.au/exams/",
+                                                                              },
+                                                                              Object {
+                                                                                "display": Array [
                                                                                   8,
                                                                                 ],
                                                                                 "label": "Browse courses",
-                                                                                "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
+                                                                                "link": "https://uq.rl.talis.com/index.html",
                                                                               },
                                                                             ],
                                                                             "typeSelect": Object {
@@ -15231,10 +15249,16 @@ exports[`Application component should render loading screen while account is loa
                                                                                                                       Object {
                                                                                                                         "display": Array [
                                                                                                                           7,
+                                                                                                                        ],
+                                                                                                                        "label": "Browse courses",
+                                                                                                                        "link": "https://www.library.uq.edu.au/exams/",
+                                                                                                                      },
+                                                                                                                      Object {
+                                                                                                                        "display": Array [
                                                                                                                           8,
                                                                                                                         ],
                                                                                                                         "label": "Browse courses",
-                                                                                                                        "link": "https://search.library.uq.edu.au/primo-explore/browse?vid=61UQ",
+                                                                                                                        "link": "https://uq.rl.talis.com/index.html",
                                                                                                                       },
                                                                                                                     ],
                                                                                                                     "typeSelect": Object {
