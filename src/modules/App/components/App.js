@@ -98,7 +98,17 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                     searchlabel="library.uq.edu.au"
                     searchurl="http://library.uq.edu.au"
                 />
-                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu showloginbutton />
+                <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu>
+                    <span slot="site-utilities">
+                        <mylibrary-button />
+                    </span>
+                    <span slot="site-utilities">
+                        <askus-button />
+                    </span>
+                    <span slot="site-utilities">
+                        <auth-button />
+                    </span>
+                </uq-site-header>
                 <div role="region" aria-label="UQ Library Alerts">
                     <alert-list />
                 </div>
