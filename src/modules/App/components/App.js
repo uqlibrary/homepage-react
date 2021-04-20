@@ -132,7 +132,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                 </div>
                 <div id="full-footer-block">
                     <connect-footer />
-                    <uq-footer loginurl="http://library.uq.edu.au" />
+                    <uq-footer />
                 </div>
             </div>
         </Grid>
