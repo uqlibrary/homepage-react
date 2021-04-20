@@ -100,10 +100,10 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                 />
                 <uq-site-header sitetitle="Library" siteurl="http://www.library.uq.edu.au" showmenu>
                     <span slot="site-utilities">
-                        <mylibrary-button />
+                        <askus-button />
                     </span>
                     <span slot="site-utilities">
-                        <askus-button />
+                        <div id="mylibrarystub" />
                     </span>
                     <span slot="site-utilities">
                         <auth-button />
