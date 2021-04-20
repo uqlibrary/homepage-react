@@ -9817,9 +9817,7 @@ exports[`Application component should render for anon user 1`] = `
                       id="full-footer-block"
                     >
                       <connect-footer />
-                      <uq-footer
-                        loginurl="http://library.uq.edu.au"
-                      />
+                      <uq-footer />
                     </div>
                   </div>
                 </div>
@@ -19645,9 +19643,7 @@ exports[`Application component should render loading screen while account is loa
                       id="full-footer-block"
                     >
                       <connect-footer />
-                      <uq-footer
-                        loginurl="http://library.uq.edu.au"
-                      />
+                      <uq-footer />
                     </div>
                   </div>
                 </div>
