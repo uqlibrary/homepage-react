@@ -11,5 +11,4 @@ describe('SearchCourses component', () => {
         };
         expect(isEnrolledInSubject('test subject number', accountWithInvalidClass)).toBe(false);
     });
-
 });

@@ -158,8 +158,8 @@ export const UQHeader = ({}) => {
                                             id="edit-as_sitesearch-on"
                                             name="as_sitesearch"
                                             value="https://library.uq.edu.au"
-                                            defaultChecked
                                             className="form-radio"
+                                            defaultChecked
                                             tabIndex="-1"
                                         />
                                         <label htmlFor="edit-as_sitesearch-on" className="option">

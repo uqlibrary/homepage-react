@@ -48,6 +48,16 @@ module.exports = {
         stats: 'errors-only',
         watchContentBase: false,
         disableHostCheck: true,
+        proxy: {
+            '/api/staging': {
+                target: 'https://api.library.uq.edu.au',
+                secure: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/api': '',
+                },
+            },
+        },
     },
     module: {
         rules: [
