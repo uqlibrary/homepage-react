@@ -59,7 +59,7 @@ const webpackConfig = {
     // The entry file. All your app roots from here.
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
-        includes: join(__dirname, 'public', 'includes.js'),
+        // includes: join(__dirname, 'public', 'includes.js'),
         main: resolve(__dirname, './src/index.js'),
         vendor: ['react', 'react-dom', 'react-router-dom', 'redux', 'react-redux', 'moment'],
     },
