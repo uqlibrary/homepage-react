@@ -658,12 +658,14 @@ exports[`Application component should render for anon user 1`] = `
                       <span
                         slot="site-utilities"
                       >
-                        <mylibrary-button />
+                        <askus-button />
                       </span>
                       <span
                         slot="site-utilities"
                       >
-                        <askus-button />
+                        <div
+                          id="mylibrarystub"
+                        />
                       </span>
                       <span
                         slot="site-utilities"
@@ -10484,12 +10486,14 @@ exports[`Application component should render loading screen while account is loa
                       <span
                         slot="site-utilities"
                       >
-                        <mylibrary-button />
+                        <askus-button />
                       </span>
                       <span
                         slot="site-utilities"
                       >
-                        <askus-button />
+                        <div
+                          id="mylibrarystub"
+                        />
                       </span>
                       <span
                         slot="site-utilities"
