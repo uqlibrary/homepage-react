@@ -93,6 +93,8 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         focusOnSearchInput();
     };
 
+    const primoSearchTypes = [0, 1, 2, 3, 4, 5];
+    // const isPrimoDatabaseSearch = searchType === 6;
     const isExamSearch = searchType === 7;
     const isCourseResourceSearch = searchType === 8;
 
@@ -139,7 +141,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         (event, typedText) => {
             setSearchKeyword(typedText);
             if (typedText.length > 3 && !isRepeatingString(typedText)) {
-                if ([0, 1, 3, 4, 5].includes(searchType)) {
+                if (primoSearchTypes.includes(searchType)) {
                     throttledPrimoLoadSuggestions.current(typedText);
                 } else if (isExamSearch) {
                     throttledExamLoadSuggestions.current(typedText);
