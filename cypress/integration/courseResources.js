@@ -362,7 +362,7 @@ context('Course Resources', () => {
      * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
      * ---------+-----------------------------------+---------------+----------------+
      */
-    it('User with classes sees their classes', () => {
+    it('User with classes sees their classes (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s1111111');
         cy.viewport(1300, 1000);
 
@@ -396,7 +396,7 @@ context('Course Resources', () => {
         the_user_sees_the_search_form();
     });
 
-    it('User without classes sees the search field', () => {
+    it('User without classes sees the search field (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -408,7 +408,7 @@ context('Course Resources', () => {
         a_user_with_no_classes_sees_notice_of_same_in_courses_list();
     });
 
-    it('A user who has arrived by clicking on the homepage own course gets the course they requested', () => {
+    it('A user who has arrived by clicking on the homepage own course gets the course they requested (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020');
         cy.viewport(1300, 1000);
 
@@ -417,7 +417,7 @@ context('Course Resources', () => {
         FREN1010_loads_properly_for_s111111_user();
     });
 
-    it('A user who has arrived by searching for a course on the homepage gets the course they requested', () => {
+    it('A user who has arrived by searching for a course on the homepage gets the course they requested (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020');
         cy.viewport(1300, 1000);
 
@@ -435,7 +435,7 @@ context('Course Resources', () => {
         course_links_panel_loads_correctly_for_a_subject(ACCT1101ReadingList);
     });
 
-    it('A user who searches for a subject they are enrolled in will be changed to the mycourses tab', () => {
+    it('A user who searches for a subject they are enrolled in will be changed to the mycourses tab (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s1111111');
         cy.viewport(1300, 1000);
 
@@ -448,7 +448,7 @@ context('Course Resources', () => {
         FREN1010_loads_properly_for_s111111_user();
     });
 
-    it('The Course resources panel links correctly and the back button works', () => {
+    it('The Course resources panel links correctly and the back button works (Homepage Course Resource Panel)', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         const currentClasses = accounts.s1111111.current_classes;
@@ -482,7 +482,7 @@ context('Course Resources', () => {
         cy.url().should('eq', 'http://localhost:2020/?user=s1111111'); // homepage
     });
 
-    it('The Course resources panel searches correctly', () => {
+    it('The Course resources panel searches correctly (Homepage Course Resource Panel)', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
@@ -501,6 +501,7 @@ context('Course Resources', () => {
         // user enters a invalid course code and see the error
         cy.get('div[data-testid=course-resources-panel] form input').type('FREX');
         cy.get('[data-testid="noCoursesFound"]').contains(locale.search.noResultsText);
+        cy.get('div[data-testid=course-resources-panel] form input').clear();
 
         // user enters ACCT
         cy.get('div[data-testid=course-resources-panel] form input').type('ACCT11');
@@ -523,19 +524,19 @@ context('Course Resources', () => {
         cy.get(`div[data-testid=${classPanelId}] h4`).contains('ACCT1101');
     });
 
-    it('The non-loggedin user cannot access Course Resources', () => {
+    it('The non-loggedin user cannot access Course Resources (Course Resources Page)', () => {
         cy.visit('/courseresources?user=public');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authenticated users only.');
     });
 
-    it('The loggedin user without course resource privs cannot access Course Resources', () => {
+    it('The loggedin user without course resource privs cannot access Course Resources (Course Resources Page)', () => {
         cy.visit('/courseresources?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
 
-    it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
+    it('A user who searches for multiple subjects can switch between the tabs for each one (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -579,7 +580,7 @@ context('Course Resources', () => {
         );
     });
 
-    it('A repeating string is handled correctly', () => {
+    it('A repeating string is handled correctly (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -589,7 +590,7 @@ context('Course Resources', () => {
         cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
     });
 
-    it('A user putting a space in a search still gets their result on the homepage', () => {
+    it('A user putting a space in a search still gets their result on the homepage (Homepage Course Resource Panel)', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
 
@@ -599,7 +600,7 @@ context('Course Resources', () => {
             .should('have.length', 1 + 1);
     });
 
-    it('A user putting a space in a search still gets their result on the full page', () => {
+    it('A user putting a space in a search still gets their result on the full page (Course Resources Page)', () => {
         cy.visit('/courseresources?user=s3333333');
         cy.viewport(1300, 1000);
 
