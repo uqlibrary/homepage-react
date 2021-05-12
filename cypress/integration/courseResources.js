@@ -227,7 +227,14 @@ context('Course Resources', () => {
 
         cy.get('div[data-testid=full-courseresource-autocomplete] input')
             .should('exist')
-            .type(typeChar);
+            .type('WXYZ');
+        cy.get('[data-testid="noCoursesFound"]').contains(locale.search.noResultsText);
+
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').clear();
+        cy.get('[data-testid="noCoursesFound"]').should('not.contain', locale.search.noResultsText);
+
+        cy.get('div[data-testid=full-courseresource-autocomplete] input').type(typeChar);
+        cy.get('[data-testid="noCoursesFound"]').should('not.contain', locale.search.noResultsText);
 
         cy.get('ul#full-courseresource-autocomplete-popup')
             .children()
@@ -491,6 +498,10 @@ context('Course Resources', () => {
             'placeholder',
             locale.search.placeholder,
         );
+        // user enters a invalid course code and see the error
+        cy.get('div[data-testid=course-resources-panel] form input').type('FREX');
+        cy.get('[data-testid="noCoursesFound"]').contains(locale.search.noResultsText);
+
         // user enters ACCT
         cy.get('div[data-testid=course-resources-panel] form input').type('ACCT11');
         const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
