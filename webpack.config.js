@@ -18,7 +18,6 @@ module.exports = {
     devtool: 'source-map',
     entry: {
         browserUpdate: join(__dirname, 'public', 'browser-update.js'),
-        // includes: join(__dirname, 'public', 'includes.js'),
         patch: 'react-hot-loader/patch',
         webpackDevClient: `webpack-dev-server/client?http://${url}:${port}`,
         webPackDevServer: 'webpack/hot/only-dev-server',

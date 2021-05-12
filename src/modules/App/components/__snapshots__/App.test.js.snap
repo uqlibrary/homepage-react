@@ -655,9 +655,6 @@ exports[`Application component should render for anon user 1`] = `
                       sitetitle="Library"
                       siteurl="http://www.library.uq.edu.au"
                     >
-                      <slot
-                        name="site-utilities"
-                      />
                       <span
                         slot="site-utilities"
                       >
@@ -10486,9 +10483,6 @@ exports[`Application component should render loading screen while account is loa
                       sitetitle="Library"
                       siteurl="http://www.library.uq.edu.au"
                     >
-                      <slot
-                        name="site-utilities"
-                      />
                       <span
                         slot="site-utilities"
                       >
