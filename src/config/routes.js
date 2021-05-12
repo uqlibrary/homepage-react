@@ -11,6 +11,7 @@ export const pathConfig = {
     admin: {
         masquerade: '/admin/masquerade',
     },
+    bookExamBooth: '/book-exam-booth',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
 };
 
@@ -21,6 +22,7 @@ export const flattedPathConfig = [
     '/courseresources',
     '/payment-receipt',
     '/admin/masquerade',
+    '/book-exam-booth',
     'https://www.library.uq.edu.au/404.js',
 ];
 
@@ -49,6 +51,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.SecureCollection,
             exact: true,
             pageTitle: locale.pages.secureCollection.title,
+        },
+        {
+            path: pathConfig.bookExamBooth,
+            component: components.BookExamBooth,
+            exact: false,
+            pageTitle: locale.pages.bookExamBooth.title,
         },
     ];
 
