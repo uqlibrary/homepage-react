@@ -10,7 +10,7 @@ export default {
         title: 'Course search',
         autocompleteResultsTitle: 'Matching courses',
         noOptionsText: 'Enter a course code to find a course',
-        noResultsText: 'No matching courses found"',
+        noResultsText: 'No matching courses found',
         placeholder: 'Search by course code or keyword',
         unavailableText: 'Course Resource suggestions unavailable',
     },
