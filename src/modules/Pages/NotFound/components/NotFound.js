@@ -47,7 +47,7 @@ export const NotFound = ({ account, accountLoading }) => {
             process.env.NODE_ENV !== 'cc' &&
             process.env.NODE_ENV !== 'development'
         ) {
-            window.location.assign(`${AUTH_URL_LOGIN}?url=${window.btoa(window.location.href)}`);
+            window.location.assign(`${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`);
         }
         return (
             <StandardPage
