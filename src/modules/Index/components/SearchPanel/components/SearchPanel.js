@@ -156,7 +156,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                 actions.clearPrimoSuggestions();
             }
         },
-        [actions, searchType, isExamSearch, isCourseResourceSearch],
+        [actions, searchType, isExamSearch, isCourseResourceSearch, primoSearchTypes],
     );
     return (
         <StandardCard noPadding noHeader standardCardId="primo-search">
