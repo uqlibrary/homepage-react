@@ -2,7 +2,7 @@ import React from 'react';
 
 import { AUTH_URL_LOGIN } from 'config';
 
-const loginUrl = `${AUTH_URL_LOGIN}?url=${window.btoa(window.location.href)}`;
+const loginUrl = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
 
 export const promoPanel = {
     loggedout: {

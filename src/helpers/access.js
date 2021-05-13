@@ -48,6 +48,7 @@ const EXTRAMURAL_HONORARY = 'HON';
 const EXTRAMURAL_PROXY = 'PROXY';
 
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
+// (this means if an option changes from everyone to logged in, we only need to change the call internally here)
 const everyoneCanSee = account => true || /* istanbul ignore next */ !!account;
 
 const loggedinCanSee = account => !!account && !!account.id;
@@ -116,6 +117,7 @@ export const seeLibraryServices = account => loggedinCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);
 
+// what is displayed in the User Services panel on the homepage, determined per group
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
     [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
