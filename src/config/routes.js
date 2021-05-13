@@ -5,6 +5,7 @@ export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.libra
 
 export const pathConfig = {
     index: '/',
+    secureCollection: '/collection',
     courseresources: '/courseresources',
     paymentReceipt: '/payment-receipt',
     admin: {
@@ -16,6 +17,7 @@ export const pathConfig = {
 // a duplicate list of routes for checking validity easily
 export const flattedPathConfig = [
     '/',
+    '/collection',
     '/courseresources',
     '/payment-receipt',
     '/admin/masquerade',
@@ -40,6 +42,13 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.PaymentReceipt,
             exact: true,
             pageTitle: locale.pages.paymentReceipt.title,
+        },
+        {
+            // some collections are public and some arent - let the app decide
+            path: pathConfig.secureCollection,
+            component: components.SecureCollection,
+            exact: true,
+            pageTitle: locale.pages.secureCollection.title,
         },
     ];
 
