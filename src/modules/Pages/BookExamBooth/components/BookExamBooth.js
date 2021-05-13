@@ -14,6 +14,8 @@ import {
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
+import locale from '../bookExamBooth.locale';
+
 const BookExamBooth = () => {
     const yesterday = moment()
         .subtract(1, 'days')
@@ -240,12 +242,9 @@ const BookExamBooth = () => {
                 </Grid>
                 {isProctorU === 'no' && (
                     <Grid item xs={12}>
-                        {' '}
-                        Please use one of the locations available{' '}
-                        <a href="https://web.library.uq.edu.au/library-services/students/find-study-and-non-invigilated-exam-space">
-                            around campus
-                        </a>{' '}
-                        - no booking necessary.
+                        <StandardCard title={locale.noBookingMessage.title}>
+                            {locale.noBookingMessage.message}
+                        </StandardCard>
                     </Grid>
                 )}
 
