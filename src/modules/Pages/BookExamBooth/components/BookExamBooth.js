@@ -1,15 +1,7 @@
 import React from 'react';
 import moment from 'moment';
-import {
-    Button,
-    FormControl,
-    FormControlLabel,
-    Grid,
-    NativeSelect,
-    Radio,
-    RadioGroup,
-    TextField,
-} from '@material-ui/core';
+import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@material-ui/core';
+import { DatePicker } from '@material-ui/pickers';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -17,9 +9,11 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import locale from '../bookExamBooth.locale';
 
 const BookExamBooth = () => {
+    const dateFormat = 'YYYY-MM-DD';
+
     const yesterday = moment()
         .subtract(1, 'days')
-        .format('YYYY-MM-DD');
+        .format(dateFormat);
 
     // the exam type is either byod (bring your own device) or uq (use a uq provided device)
     const [isProctorU, setIsProctorU] = React.useState('unset');
@@ -36,7 +30,7 @@ const BookExamBooth = () => {
     // the student chooses when their exam is
     const [startDate, setStartDate] = React.useState(yesterday);
     const handleStartDateChange = e => {
-        setStartDate(e.target.value);
+        setStartDate(e.format(dateFormat));
     };
 
     const defaultHour = 8;
@@ -47,12 +41,12 @@ const BookExamBooth = () => {
 
     const defaultMinute = 15;
     const listMinutes = [
-        { value: 0, label: ':00', aria: 'booking on the hour' },
-        { value: 15, label: ':15', aria: 'booking at quarter past the hour' },
-        { value: 30, label: ':30', aria: 'booking at half past the hour' },
+        { value: 0, label: '00', aria: 'booking on the hour' },
+        { value: 15, label: '15', aria: 'booking at quarter past the hour' },
+        { value: 30, label: '30', aria: 'booking at half past the hour' },
         {
             value: 45,
-            label: ':45',
+            label: '45',
             aria: 'booking at three quarters past the hour',
         },
     ];
@@ -65,22 +59,22 @@ const BookExamBooth = () => {
     const defaultExamLength = 30; // minutes
     const listHours = [
         // yes, we could do something clever here, but we're working to a deadline...
-        { value: 7, label: '7am' },
-        { value: defaultHour, label: '8am' },
-        { value: 9, label: '9am' },
-        { value: 10, label: '10am' },
-        { value: 11, label: '11am' },
-        { value: 12, label: '12pm' },
-        { value: 13, label: '1pm' },
-        { value: 14, label: '2pm' },
-        { value: 15, label: '3pm' },
-        { value: 16, label: '4pm' },
-        { value: 17, label: '5pm' },
-        { value: 18, label: '6pm' },
-        { value: 19, label: '7pm' },
-        { value: 20, label: '8pm' },
-        { value: 21, label: '9pm' },
-        { value: 22, label: '10pm' },
+        { value: 7, label: '7 am' },
+        { value: defaultHour, label: '8 am' },
+        { value: 9, label: '9 am' },
+        { value: 10, label: '10 am' },
+        { value: 11, label: '11 am' },
+        { value: 12, label: '12 pm' },
+        { value: 13, label: '1 pm' },
+        { value: 14, label: '2 pm' },
+        { value: 15, label: '3 pm' },
+        { value: 16, label: '4 pm' },
+        { value: 17, label: '5 pm' },
+        { value: 18, label: '6 pm' },
+        { value: 19, label: '7 pm' },
+        { value: 20, label: '8 pm' },
+        { value: 21, label: '9 pm' },
+        { value: 22, label: '10 pm' },
     ];
 
     const startTimeHoursListByExamLength = examLength => {
@@ -196,27 +190,15 @@ const BookExamBooth = () => {
     };
 
     return (
-        <StandardPage title="Book an exam booth in the Biological Sciences Library">
+        <StandardPage title={locale.title}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
-                    <p>
-                        Please use this form to find an available booth in which to sit your exam at the{' '}
-                        <a
-                            href="https://use.mazemap.com/#v=1&config=uq&zlevel=1&center=153.013203,-27.497685&zoom=15.6&sharepoitype=poi&sharepoi=1000013772&campuses=uq&campusid=406"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        >
-                            Biological Sciences Library
-                        </a>
-                        .
-                    </p>
+                    {locale.intro}
                 </Grid>
                 <Grid item xs={12}>
-                    <StandardCard title="Booking options">
+                    <StandardCard title={locale.displayDecider.heading}>
                         <div className="displayDecider">
-                            <label htmlFor="displayDecider" className="sectionLabel">
-                                Are you booking this booth to sit a scheduled ProctorU exam?
-                            </label>
+                            <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
                             <br />
                             <FormControl component="fieldset" required>
                                 <RadioGroup
@@ -228,12 +210,12 @@ const BookExamBooth = () => {
                                     <FormControlLabel
                                         value="yes"
                                         control={<Radio color="primary" />}
-                                        label="Yes, I am sitting a ProctorU exam"
+                                        label={locale.displayDecider.yesText}
                                     />
                                     <FormControlLabel
                                         value="no"
                                         control={<Radio color="primary" />}
-                                        label="No, I am NOT sitting a ProctorU exam"
+                                        label={locale.displayDecider.noText}
                                     />
                                 </RadioGroup>
                             </FormControl>
@@ -250,83 +232,71 @@ const BookExamBooth = () => {
 
                 {isProctorU === 'yes' && (
                     <Grid item xs={12}>
-                        <StandardCard title="Booking details">
+                        <StandardCard title={locale.detailsSectionHeading}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
-                                    <label className="sectionLabel" htmlFor="examType">
-                                        Are you bringing your own computer?
-                                    </label>
+                                    <label htmlFor="examType">{locale.examType.label}</label>
                                     <br />
                                     <FormControl component="fieldset">
                                         <RadioGroup
-                                            name="examType"
                                             id="examType"
-                                            value={isBYOD}
+                                            name="examType"
                                             onChange={handleExamTypeChange}
+                                            value={isBYOD}
                                         >
                                             <FormControlLabel
-                                                value="no"
-                                                control={<Radio color="primary" />}
-                                                label="No, I need a UQ computer"
                                                 checked={isBYOD === false}
+                                                control={<Radio color="primary" />}
+                                                label={locale.examType.noText}
+                                                value="no"
                                             />
                                             <FormControlLabel
-                                                value="yes"
-                                                control={<Radio color="primary" />}
-                                                label="Yes (each laptop booth has one power point)"
                                                 checked={isBYOD === true}
+                                                control={<Radio color="primary" />}
+                                                label={locale.examType.yesText}
+                                                value="yes"
                                             />
                                         </RadioGroup>
                                     </FormControl>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <label className="sectionLabel" htmlFor="sessionLength" id="sessionLength">
-                                        What is the duration of your exam, as shown on your personal exam timetable?
-                                    </label>
+                                    <label htmlFor="sessionLength">{locale.sessionLength.label}</label>
                                     <br />
-                                    <NativeSelect
+                                    <Select
                                         className="sessionLength"
-                                        defaultValue={sessionLengthList[0]}
-                                        name="sessionLength"
+                                        defaultValue={sessionLengthList[0].value}
                                         id="sessionLength"
+                                        name="sessionLength"
                                         onChange={_handleSessionLengthChange}
                                         options={sessionLengthList}
                                     >
                                         {sessionLengthList.map((item, index) => {
                                             return (
-                                                <option key={`sessionLength${index})`} value={item.value}>
+                                                <MenuItem key={`sessionLength${index})`} value={item.value}>
                                                     {item.label}
-                                                </option>
+                                                </MenuItem>
                                             );
                                         })}
-                                    </NativeSelect>
+                                    </Select>
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <label className="sectionLabel" htmlFor="startDate">
-                                        What is the date of your exam, as shown on your personal exam timetable?
-                                    </label>
+                                    <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
-                                    <TextField
-                                        className="startDate"
-                                        defaultValue={yesterday}
+                                    <DatePicker
+                                        format={dateFormat}
                                         id="startDate"
-                                        InputLabelProps={{
-                                            shrink: true,
-                                        }}
+                                        minDate={yesterday}
                                         name="startDate"
                                         onChange={handleStartDateChange}
                                         type="date"
+                                        value={yesterday}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
-                                    <label className="sectionLabel" htmlFor="startTimeHours">
-                                        What is your registered ProctorU appointment time? - Select the nearest possible
-                                        time
-                                    </label>
+                                    <label htmlFor="startTimeHours">{locale.startTimeHours.label}</label>
                                     <br />
-                                    <NativeSelect
-                                        aria-label="Select the nearest hour"
-                                        className="startTimeHours"
+                                    <Select
+                                        aria-label={locale.startTimeHours.aria}
                                         defaultValue={defaultHour}
                                         id="startTimeHours"
                                         name="startTimeHours"
@@ -334,67 +304,47 @@ const BookExamBooth = () => {
                                     >
                                         {startTimeHoursList.map((item, index) => {
                                             return (
-                                                <option key={`startTimeHours${index})`} value={item.value}>
+                                                <MenuItem key={`startTimeHours${index})`} value={item.value}>
                                                     {item.label}
-                                                </option>
+                                                </MenuItem>
                                             );
                                         })}
-                                    </NativeSelect>
-
-                                    <NativeSelect
-                                        aria-label="Select the nearest minute value"
-                                        className="startTimeMinutes"
-                                        id="startTimeMinutes"
-                                        options={listMinutes}
+                                    </Select>
+                                    :
+                                    <Select
+                                        aria-label={locale.startTimeMinutes.aria}
                                         defaultValue={defaultMinute}
+                                        id="startTimeMinutes"
                                         name="startTimeMinutes"
                                         onChange={handleStartTimeMinutesChange}
+                                        options={listMinutes}
                                     >
                                         {listMinutes.map((item, index) => {
                                             return (
-                                                <option
+                                                <MenuItem
                                                     key={`startTimeMinutes${index})`}
                                                     value={item.value}
                                                     aria-label={item.aria}
                                                 >
                                                     {item.label}
-                                                </option>
+                                                </MenuItem>
                                             );
                                         })}
-                                    </NativeSelect>
+                                    </Select>
                                 </Grid>
                                 <Grid item xs={12}>
                                     <fieldset>
-                                        <p>
-                                            Submit this form to proceed to UQ Book It. Log in with your student ID and
-                                            password. You will see a list of available exam booths based on your choices
-                                            above, for example <strong>A01 - Exam Computer Booth - Building 94</strong>.
-                                        </p>
-                                        <ol>
-                                            <li>
-                                                Select any booth. A booking form will appear.
-                                                <br />
-                                                <strong>Do not adjust the date or times</strong>, they have been
-                                                prefilled for you and include additional time for you to get setup.
-                                            </li>
-                                            <li>
-                                                Enter your course code in the <strong>Booking Title</strong>
-                                            </li>
-                                            <li>
-                                                Click <strong>Book</strong>
-                                            </li>
-                                        </ol>
-                                        <p>You will receive a confirmation email.</p>
+                                        {locale.submissionInstructions}
                                         <Button
+                                            aria-label={locale.submitButton.aria}
                                             color="primary"
+                                            data-testid={'booth-search-submit-button'}
+                                            id={'booth-search-submit-button'}
+                                            onClick={_getAddress}
                                             size="large"
                                             variant="contained"
-                                            onClick={_getAddress}
-                                            id={'booth-search-submit-button'}
-                                            data-testid={'booth-search-submit-button'}
-                                            aria-label="You will be sent to UQ BookIt system to complete your booking. Select an exam booth but do not adjust the time or date. After you book, you will receive a confirmation mail"
                                         >
-                                            Submit and go to UQ BookIt
+                                            {locale.submitButton.label}
                                         </Button>
                                     </fieldset>
                                 </Grid>
