@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { SECURE_COLLECTION_API, SECURE_COLLECTION_CHECK_API } from '../repositories/routes';
+import { SECURE_COLLECTION_API, SECURE_COLLECTION_CHECK_API } from 'repositories/routes';
 // import { throwFetchErrors } from 'helpers/general';
 
 export function loadSecureCollectionCheck(path) {
@@ -8,9 +8,7 @@ export function loadSecureCollectionCheck(path) {
     return dispatch => {
         dispatch({ type: actions.SECURE_COLLECTION_CHECK_LOADING });
         const api = SECURE_COLLECTION_CHECK_API({ path });
-        console.log('api = ', api);
         return get(api)
-            .then(response => response.json())
             .then(data => {
                 dispatch({
                     type: actions.SECURE_COLLECTION_CHECK_LOADED,
