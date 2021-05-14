@@ -246,6 +246,11 @@ mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
     })
+    // secure collection check
+    .onGet('/file/collection/testlogin/exams/phil1010.pdf')
+    .reply(() => {
+        return [200, { contents: 'exists but tbd' }];
+    })
     .onAny()
     .reply(config => {
         console.log('url not mocked...', config);
