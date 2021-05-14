@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import moment from 'moment';
 
 import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@material-ui/core';
@@ -12,9 +11,9 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import locale from '../bookExamBooth.locale';
 
 const BookExamBooth = ({
-    calculateBookingCode,
-    calculateEndTime,
-    calculateStartTime,
+    getBookingUrl,
+    getEndTime,
+    getStartTime,
     minutesList,
     sessionLengthList,
     startTimeHoursListByExamLength,
@@ -22,6 +21,8 @@ const BookExamBooth = ({
     const dateFormat = 'YYYY-MM-DD';
     const defaultHour = 8;
     const defaultMinute = 15;
+    const defaultExamLength = 30; // minutes
+    const setupAllowance = 30; // the number of minutes they can arrive and setup before their exam time starts
 
     const yesterday = moment()
         .subtract(1, 'days')
@@ -57,7 +58,6 @@ const BookExamBooth = ({
 
     const [startTimeHoursList, setStartTimeHoursList] = React.useState(startTimeHoursListByExamLength(20));
 
-    const defaultExamLength = 30; // minutes
     // the student nominates how long their exam is supposed to run for
     const [sessionLength, setSessionLength] = React.useState(defaultExamLength);
     const _handleSessionLengthChange = e => {
@@ -69,18 +69,13 @@ const BookExamBooth = ({
         setSessionLength(newExamLength);
     };
 
+    const encodeTime = momentObj => encodeURIComponent(momentObj.format('HH:mm'));
     const _getAddress = () => {
-        const urlRoot = 'https://uqbookit.uq.edu.au//#/app/booking-types/';
-        // const urlRoot = 'https://uqbookit-dev.uq.edu.au/#/app/booking-types/';
+        const bookingUrl = getBookingUrl(isBYOD);
+        const startTimeStr = encodeTime(getStartTime(startDate, startTimeHours, startTimeMinutes, setupAllowance));
+        const endTimeStr = encodeTime(getEndTime(startDate, startTimeHours, startTimeMinutes, sessionLength));
 
-        const bookingCode = calculateBookingCode(isBYOD);
-
-        const startTime = calculateStartTime(startDate, startTimeHours, startTimeMinutes);
-
-        const endTime = calculateEndTime(startTimeHours, startTimeMinutes, sessionLength, startDate);
-
-        const address =
-            urlRoot + bookingCode + '?firstDay=' + startDate + '&fromTime=' + startTime + '&toTime=' + endTime;
+        const address = bookingUrl + '?firstDay=' + startDate + '&fromTime=' + startTimeStr + '&toTime=' + endTimeStr;
 
         // alert('we would visit ' + address);
         window.location.assign(address);
@@ -255,9 +250,9 @@ const BookExamBooth = ({
 };
 
 BookExamBooth.propTypes = {
-    calculateBookingCode: PropTypes.func,
-    calculateEndTime: PropTypes.func,
-    calculateStartTime: PropTypes.func,
+    getBookingUrl: PropTypes.func,
+    getEndTime: PropTypes.func,
+    getStartTime: PropTypes.func,
     minutesList: PropTypes.array,
     sessionLengthList: PropTypes.array,
     startTimeHoursListByExamLength: PropTypes.func,

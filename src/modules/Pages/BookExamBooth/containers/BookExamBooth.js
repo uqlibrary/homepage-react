@@ -4,84 +4,79 @@ import moment from 'moment';
 import BookExamBooth from '../components/BookExamBooth';
 
 const BookExamBoothContainer = () => {
-    const setupAllowance = 30; // the number of minutes they can arrive and setup before their exam time starts
+    /**
+     * Return booking url based on whether student needs UQ computer
+     *
+     * @param bool isBYOD
+     * @returns string
+     */
+    const getBookingUrl = isBYOD => {
+        const urlRoot = 'https://uqbookit.uq.edu.au//#/app/booking-types/';
+        // const urlRoot = 'https://uqbookit-dev.uq.edu.au/#/app/booking-types/';
 
-    const standardiseTime = time => {
-        return time < 10 ? '0' + time : time;
-    };
-
-    const calculateBookingCode = isBYOD => {
-        const examType = isBYOD ? 'byod' : 'uq';
-        const result = {
+        const bookingCodes = {
             byod: 'ae12d42e-faae-4553-8c6a-be2fcddb4b26',
             uq: 'f30fe4d2-bb58-4426-9c38-843c40b2cd3c',
         };
-        if (!!result[examType]) {
-            return result[examType];
-        }
-        return 'code not found';
+        const bookingCode = isBYOD ? bookingCodes.byod : bookingCodes.uq;
+        return urlRoot + bookingCode;
     };
 
-    const calculateStartTime = (startDate, startTimeHours, startTimeMinutes) => {
-        const startTimeHoursFinal = standardiseTime(startTimeHours);
-        const startTimeMinutesFinal = standardiseTime(startTimeMinutes);
-        const startDateTime = moment(startDate + ' ' + startTimeHoursFinal + ':' + startTimeMinutesFinal).subtract({
-            minutes: setupAllowance,
-        });
+    /**
+     * Calculate and return booking start time
+     *
+     * @param string startDate
+     * @param number startTimeHours
+     * @param number startTimeMinutes
+     * @param number setupAllowance - Number of minutes
+     * @returns moment
+     */
+    const getStartTime = (startDate, startTimeHours, startTimeMinutes, setupAllowance) =>
+        moment(startDate)
+            .hour(startTimeHours)
+            .minute(startTimeMinutes)
+            .subtract(setupAllowance, 'minutes');
 
-        const finalStartTimeHours = startDateTime.format('HH');
-        const finalStartTimeMinutes = startDateTime.format('mm');
-
-        return finalStartTimeHours + '%3A' + finalStartTimeMinutes;
+    /**
+     * Calculate and return booking end time
+     *
+     * @param string startDate
+     * @param number startTimeHours
+     * @param number startTimeMinutes
+     * @param number sessionLength - Number of minutes
+     * @returns moment
+     */
+    const getEndTime = (startDate, startTimeHours, startTimeMinutes, sessionLength) => {
+        const startDateTime = moment(startDate)
+            .hour(startTimeHours)
+            .minute(startTimeMinutes);
+        const vacateAllowance = startDateTime.isBefore('2020-06-22') ? 180 : 90;
+        return startDateTime.add(sessionLength, 'minutes').add(vacateAllowance, 'minutes');
     };
 
-    const calculateEndTime = (startTimeHours, startTimeMinutes, sessionLength, startDate) => {
-        const splitCharacter = '%3A'; // we send the encoding to uqbookit
-        const timeDividingColon = ':';
-        const numberofMinutesInHour = 60;
+    const getListHours = (firstHour, lastHour) => {
+        const momentNow = moment();
 
-        // the amount of time they have to vacate the exam location and then the site is cleaned for the next student
-        // for reasons unknown to me, they need much more cleaning time for the medical students?!?!
-        const vacateAllowance = moment(startDate).isBefore('2020-06-22') ? 180 : 90;
-        const vacateAllowanceHours = vacateAllowance / numberofMinutesInHour;
-
-        const sessionLengthHours = sessionLength / numberofMinutesInHour;
-
-        const startTimeHoursFinal = standardiseTime(startTimeHours);
-        const startTimeMinutesFinal = standardiseTime(startTimeMinutes);
-
-        const arbitraryDate = '2019-12-01';
-        const startDateTimeFinal = arbitraryDate + ' ' + startTimeHoursFinal + ':' + startTimeMinutesFinal;
-        const addToStartHours = sessionLengthHours + vacateAllowanceHours;
-        const endDate = moment(startDateTimeFinal)
-            .add(addToStartHours, 'hours')
-            .format('HH:mm');
-
-        return endDate.replace(timeDividingColon, splitCharacter);
+        return Array(lastHour - firstHour + 1)
+            .fill()
+            .map((x, i) => {
+                const hour = i + firstHour;
+                const hourLabel = momentNow.hour(hour).format('h a');
+                return {
+                    value: hour,
+                    label: hourLabel,
+                };
+            });
     };
 
-    const listHours = [
-        // yes, we could do something clever here, but we're working to a deadline...
-        { value: 7, label: '7 am' },
-        { value: 8, label: '8 am' },
-        { value: 9, label: '9 am' },
-        { value: 10, label: '10 am' },
-        { value: 11, label: '11 am' },
-        { value: 12, label: '12 pm' },
-        { value: 13, label: '1 pm' },
-        { value: 14, label: '2 pm' },
-        { value: 15, label: '3 pm' },
-        { value: 16, label: '4 pm' },
-        { value: 17, label: '5 pm' },
-        { value: 18, label: '6 pm' },
-        { value: 19, label: '7 pm' },
-        { value: 20, label: '8 pm' },
-        { value: 21, label: '9 pm' },
-        { value: 22, label: '10 pm' },
-    ];
-
+    /**
+     * Remove start time hours which won't accommodate given exam length
+     *
+     * @param number examLength - The number of minutes the exam will run for
+     * @returns array
+     */
     const startTimeHoursListByExamLength = examLength => {
-        const output = listHours;
+        const output = getListHours(7, 22);
 
         if (examLength >= 180) {
             output.pop();
@@ -119,9 +114,9 @@ const BookExamBoothContainer = () => {
     return (
         <BookExamBooth
             {...{
-                calculateBookingCode,
-                calculateEndTime,
-                calculateStartTime,
+                getBookingUrl,
+                getEndTime,
+                getStartTime,
                 minutesList,
                 sessionLengthList,
                 startTimeHoursListByExamLength,
