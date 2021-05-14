@@ -93,10 +93,15 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         focusOnSearchInput();
     };
 
-    const primoSearchTypes = [0, 1, 2, 3, 4, 5];
-    // const isPrimoDatabaseSearch = searchType === 6;
-    const isExamSearch = searchType === 7;
-    const isCourseResourceSearch = searchType === 8;
+    const PRIMO_LIBRARY_SEARCH = 0;
+    const PRIMO_BOOKS_SEARCH = 1;
+    const PRIMO_JOURNAL_ARTICLES_SEARCH = 2;
+    const PRIMO_VIDEO_AUDIO_SEARCH = 3;
+    const PRIMO_JOURNALS_SEARCH = 4;
+    const PRIMO_PHYSICAL_ITEMS_SEARCH = 5;
+    // const PRIMO_DATABASE_SEARCH = 6;
+    const EXAM_SEARCH_TYPE = 7;
+    const COURSE_RESOURCE_SEARCH_TYPE = 8;
 
     /**
      * get the characters in the string before the specified character
@@ -119,7 +124,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         console.log(searchKeyword);
         if (!!searchKeyword) {
             let keyword = searchKeyword;
-            if (isCourseResourceSearch || isExamSearch) {
+            if ([COURSE_RESOURCE_SEARCH_TYPE, EXAM_SEARCH_TYPE].includes(searchType)) {
                 // because the display text in the dropdown has the descriptors in it, that text reaches here.
                 // trim down to the course code only
                 keyword = charactersBefore(searchKeyword, ' ');
@@ -141,11 +146,19 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
         (event, typedText) => {
             setSearchKeyword(typedText);
             if (typedText.length > 3 && !isRepeatingString(typedText)) {
-                if (primoSearchTypes.includes(searchType)) {
+                const PRIMO_SEARCH_TYPES = [
+                    PRIMO_LIBRARY_SEARCH,
+                    PRIMO_BOOKS_SEARCH,
+                    PRIMO_JOURNAL_ARTICLES_SEARCH,
+                    PRIMO_VIDEO_AUDIO_SEARCH,
+                    PRIMO_JOURNALS_SEARCH,
+                    PRIMO_PHYSICAL_ITEMS_SEARCH,
+                ];
+                if (PRIMO_SEARCH_TYPES.includes(searchType)) {
                     throttledPrimoLoadSuggestions.current(typedText);
-                } else if (isExamSearch) {
+                } else if (searchType === EXAM_SEARCH_TYPE) {
                     throttledExamLoadSuggestions.current(typedText);
-                } else if (isCourseResourceSearch) {
+                } else if (searchType === COURSE_RESOURCE_SEARCH_TYPE) {
                     // on the first pass we only get what they type;
                     // on the second pass we get the full description string
                     const coursecode = charactersBefore(typedText, ' ');
@@ -156,7 +169,7 @@ export const SearchPanel = ({ locale, suggestions, suggestionsLoading, suggestio
                 actions.clearPrimoSuggestions();
             }
         },
-        [actions, searchType, isExamSearch, isCourseResourceSearch],
+        [actions, searchType],
     );
     return (
         <StandardCard noPadding noHeader standardCardId="primo-search">
