@@ -11,7 +11,7 @@ const BookExamBoothContainer = () => {
      * @returns string
      */
     const getBookingUrl = isBYOD => {
-        const urlRoot = 'https://uqbookit.uq.edu.au//#/app/booking-types/';
+        const urlRoot = 'https://uqbookit.uq.edu.au/#/app/booking-types/';
         // const urlRoot = 'https://uqbookit-dev.uq.edu.au/#/app/booking-types/';
 
         const bookingCodes = {

@@ -100,14 +100,16 @@ const BookExamBooth = ({
                                     onChange={_handleDisplayDeciderChange}
                                 >
                                     <FormControlLabel
-                                        value="yes"
                                         control={<Radio color="primary" />}
+                                        data-testid="display-decider-option-yes"
                                         label={locale.displayDecider.yesText}
+                                        value="yes"
                                     />
                                     <FormControlLabel
-                                        value="no"
                                         control={<Radio color="primary" />}
+                                        data-testid="display-decider-option-no"
                                         label={locale.displayDecider.noText}
+                                        value="no"
                                     />
                                 </RadioGroup>
                             </FormControl>
@@ -139,12 +141,14 @@ const BookExamBooth = ({
                                             <FormControlLabel
                                                 checked={isBYOD === false}
                                                 control={<Radio color="primary" />}
+                                                data-testid="exam-type-option-uq"
                                                 label={locale.examType.noText}
                                                 value="no"
                                             />
                                             <FormControlLabel
                                                 checked={isBYOD === true}
                                                 control={<Radio color="primary" />}
+                                                data-testid="exam-type-option-byod"
                                                 label={locale.examType.yesText}
                                                 value="yes"
                                             />
@@ -156,6 +160,7 @@ const BookExamBooth = ({
                                     <br />
                                     <Select
                                         className="sessionLength"
+                                        data-testid="session-length-select"
                                         defaultValue={sessionLengthList[0].value}
                                         id="sessionLength"
                                         name="sessionLength"
@@ -164,7 +169,11 @@ const BookExamBooth = ({
                                     >
                                         {sessionLengthList.map((item, index) => {
                                             return (
-                                                <MenuItem key={`sessionLength${index})`} value={item.value}>
+                                                <MenuItem
+                                                    data-testid={`session-length-option-${item.value}`}
+                                                    key={`sessionLength${index})`}
+                                                    value={item.value}
+                                                >
                                                     {item.label}
                                                 </MenuItem>
                                             );
@@ -175,6 +184,7 @@ const BookExamBooth = ({
                                     <label htmlFor="startDate">{locale.startDate.label}</label>
                                     <br />
                                     <DatePicker
+                                        data-testid="start-date"
                                         format={dateFormat}
                                         id="startDate"
                                         minDate={yesterday}
@@ -189,6 +199,7 @@ const BookExamBooth = ({
                                     <br />
                                     <Select
                                         aria-label={locale.startTimeHours.aria}
+                                        data-testid="start-time-hours"
                                         defaultValue={defaultHour}
                                         id="startTimeHours"
                                         name="startTimeHours"
@@ -196,7 +207,11 @@ const BookExamBooth = ({
                                     >
                                         {startTimeHoursList.map((item, index) => {
                                             return (
-                                                <MenuItem key={`startTimeHours${index})`} value={item.value}>
+                                                <MenuItem
+                                                    data-testid={`start-time-hours-option-${item.value}`}
+                                                    key={`startTimeHours${index})`}
+                                                    value={item.value}
+                                                >
                                                     {item.label}
                                                 </MenuItem>
                                             );
@@ -205,6 +220,7 @@ const BookExamBooth = ({
                                     :
                                     <Select
                                         aria-label={locale.startTimeMinutes.aria}
+                                        data-testid="start-time-minutes"
                                         defaultValue={defaultMinute}
                                         id="startTimeMinutes"
                                         name="startTimeMinutes"
@@ -214,9 +230,10 @@ const BookExamBooth = ({
                                         {minutesList.map((item, index) => {
                                             return (
                                                 <MenuItem
+                                                    aria-label={item.aria}
+                                                    data-testid={`start-time-minutes-option-${item.value}`}
                                                     key={`startTimeMinutes${index})`}
                                                     value={item.value}
-                                                    aria-label={item.aria}
                                                 >
                                                     {item.label}
                                                 </MenuItem>
