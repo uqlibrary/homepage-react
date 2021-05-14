@@ -120,6 +120,10 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
 };
 
 // confirm the user's login, when needed
-export const SECURE_COLLECTION_CHECK_API = ({ path }) => ({ apiUrl: `/file/collection/testlogin/${path}` });
+export const SECURE_COLLECTION_CHECK_API = ({ path }) => {
+    const newVar = { apiUrl: `/file/collection/testlogin/${path}` };
+    console.log('get: ', newVar);
+    return newVar;
+};
 // get file & folder details file/collection/{folder}/{filePath}
 export const SECURE_COLLECTION_API = ({ path }) => ({ apiUrl: `/file/collection/${path}` });
