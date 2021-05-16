@@ -5,6 +5,9 @@ import PropTypes from 'prop-types';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+
 import { AUTH_URL_LOGIN } from 'config';
 
 export const SecureCollection = ({
@@ -94,19 +97,35 @@ export const SecureCollection = ({
         }
     };
 
+    const wrapSegmentInStandardPage = (title, Segment) => {
+        return (
+            <StandardPage title="Secure Collection" goBackFunc={() => history.back()}>
+                <section aria-live="assertive">
+                    <StandardCard title={title}>
+                        <Grid container>
+                            <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
+                                {Segment}
+                            </Grid>
+                        </Grid>
+                    </StandardCard>
+                </section>
+            </StandardPage>
+        );
+    };
+
     console.log('displayPanel = ', displayPanel);
 
     const fileExtension = !!finalLink && getFileExtension(finalLink);
     switch (displayPanel) {
         case 'error':
-            return (
-                <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
-                    <h2>System temporarily unavailable</h2>
+            return wrapSegmentInStandardPage(
+                'System temporarily unavailable',
+                <React.Fragment>
                     <p>
                         We're working on the issue and will have service restored as soon as possible. Please try again
                         later.
                     </p>
-                </Grid>
+                </React.Fragment>,
             );
         case 'loading':
             return (
@@ -131,19 +150,19 @@ export const SecureCollection = ({
             };
             const emailLink = `mailto:${emailAddress}?Subject=${emailSubject}&body=${getEmailBody()}`;
 
-            return (
+            return wrapSegmentInStandardPage(
+                'This file does not exist or is unavailable.',
                 <React.Fragment>
-                    <h2>This file does not exist or is unavailable.</h2>
                     <p>Please check the link you have used.</p>
                     <p>
                         Email us at <a href={emailLink}>{emailAddress}</a> to report broken links.
                     </p>
-                </React.Fragment>
+                </React.Fragment>,
             );
         case 'commercialCopyright':
-            return (
+            return wrapSegmentInStandardPage(
+                'Copyright Notice',
                 <React.Fragment>
-                    <h2>Copyright Notice</h2>
                     <p className={'copyrightsubhead'}>
                         This file is provided to support teaching and learning for the staff and students of the
                         University of Queensland
@@ -173,12 +192,12 @@ export const SecureCollection = ({
                         Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to open
                         it.
                     </p>
-                </React.Fragment>
+                </React.Fragment>,
             );
         case 'statutoryCopyright':
-            return (
+            return wrapSegmentInStandardPage(
+                'WARNING',
                 <React.Fragment>
-                    <h2>WARNING</h2>
                     <p>
                         This material has been reproduced and communicated to you by or on behalf of The University of
                         Queensland in accordance with section 113P of the Copyright Act 1968 (Act). The material in this
@@ -199,10 +218,11 @@ export const SecureCollection = ({
                         Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to open
                         it.
                     </p>
-                </React.Fragment>
+                </React.Fragment>,
             );
         case 'invalidUser':
-            return (
+            return wrapSegmentInStandardPage(
+                '',
                 <React.Fragment>
                     <p>Access to this file is only available to UQ staff and students.</p>
                     <ul>
@@ -218,10 +238,11 @@ export const SecureCollection = ({
                     <p>
                         Return to the <a href="https://www.library.uq.edu.au/">Library Home Page</a>.
                     </p>
-                </React.Fragment>
+                </React.Fragment>,
             );
         case 'redirect':
-            return (
+            return wrapSegmentInStandardPage(
+                '',
                 <React.Fragment>
                     <p>We are preparing the file, you should be redirected shortly.</p>
                     <p>
@@ -229,7 +250,7 @@ export const SecureCollection = ({
                     </p>
 
                     <Redirect to={finalLink} />
-                </React.Fragment>
+                </React.Fragment>,
             );
         default:
             break;
