@@ -196,11 +196,6 @@ fetchMock.mock(
     learningResourceSearchSuggestions,
 );
 
-// secure collection check
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, exams_FREN1010];

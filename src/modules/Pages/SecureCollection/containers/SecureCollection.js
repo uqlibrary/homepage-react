@@ -14,10 +14,18 @@ const mapStateToProps = state => {
 };
 
 function mapDispatchToProps(dispatch) {
+    console.log('mapDispatchToProps');
+    console.log(actions);
     return {
         actions: bindActionCreators(actions, dispatch),
     };
 }
+/*
+const mapDispatchToProps = dispatch => ({
+    loadSecureCollectionCheck: props => dispatch(loadSecureCollectionCheck(props)),
+});
+
+ */
 
 let SecureCollectionContainer = connect(mapStateToProps, mapDispatchToProps)(SecureCollection);
 SecureCollectionContainer = withRouter(SecureCollectionContainer);
