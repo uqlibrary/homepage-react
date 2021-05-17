@@ -83,6 +83,7 @@ export const SecureCollection = ({
 
     let displayPanel;
     let finalLink;
+    let loadActualResponse = false;
     if (!secureCollectionCheckError && !secureCollectionCheckLoading && !secureCollectionCheck) {
         // but secureCollectionCheck should not be falsey if secureCollectionCheckError = false
         console.log('displayPanel set error: !secureCollectionCheck', secureCollectionCheck);
@@ -108,8 +109,7 @@ export const SecureCollection = ({
             displayPanel = 'loading';
             console.log('user is logged in: ', account);
             console.log('; load next api ', extractPathFromParams(window.location.search));
-            !!actions.loadSecureCollectionFile &&
-                actions.loadSecureCollectionFile(extractPathFromParams(window.location.search));
+            loadActualResponse = true;
         }
     } else if (
         !secureCollectionCheckError &&
@@ -376,6 +376,12 @@ export const SecureCollection = ({
             </React.Fragment>,
         );
     }
+
+    React.useEffect(() => {
+        if (!!loadActualResponse && !!actions.loadSecureCollectionFile) {
+            actions.loadSecureCollectionFile(extractPathFromParams(window.location.search));
+        }
+    }, [loadActualResponse, actions]);
 
     switch (displayPanel) {
         case 'error':
