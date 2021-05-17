@@ -4,11 +4,46 @@ import PropTypes from 'prop-types';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { AUTH_URL_LOGIN } from 'config';
+
+const useStyles = makeStyles(
+    () => ({
+        followLink: {
+            alignItems: 'center',
+            backgroundColor: '#0e62eb',
+            border: '1px solid #0e62eb',
+            borderRadius: '3px',
+            boxSizing: 'border-box',
+            color: '#fff',
+            display: 'flex',
+            fontFamily: 'Roboto, Noto, sans-serif',
+            fontSize: '16px',
+            fontVariantCaps: 'normal',
+            justifyContent: 'center',
+            margin: '0 auto',
+            maxWidth: '30em',
+            outlineWidth: 0,
+            padding: '0.7em 0.57em',
+            textAlign: 'center',
+            textTransform: 'uppercase',
+            transitionDelay: '0s',
+            transition: 'box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1)',
+            userSelect: 'none',
+            zIndex: 0,
+            '&:hover': {
+                color: '#0e62eb !important',
+                backgroundColor: '#fff',
+                textDecoration: 'none',
+            },
+        },
+    }),
+    { withTheme: true },
+);
 
 export const SecureCollection = ({
     actions,
@@ -18,9 +53,11 @@ export const SecureCollection = ({
     secureCollectionCheckError,
 }) => {
     console.log('SecureCollection - account = ', account);
-    console.log('SecureCollection - secureCollectionCheck = ', secureCollectionCheck);
     console.log('SecureCollection - secureCollectionCheckLoading = ', secureCollectionCheckLoading);
     console.log('SecureCollection - secureCollectionCheckError = ', secureCollectionCheckError);
+    console.log('SecureCollection - secureCollectionCheck = ', secureCollectionCheck);
+
+    const classes = useStyles();
 
     const extractPathFromParams = params => {
         const searchParams = new URLSearchParams(params);
@@ -38,7 +75,7 @@ export const SecureCollection = ({
         // error: {response: true, responseText: "An unknown error occurred"}
         // no such folder: {response: "No such collection"}
         // unauthorised user: {response: "Invalid User"}
-        // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displaypanel: 'redirect'}
+        // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
     }, [actions]);
 
     // TODO figure out 'acknowledged'
@@ -46,17 +83,17 @@ export const SecureCollection = ({
     let displayPanel;
     let finalLink;
     if (!!secureCollectionCheckError) {
-        console.log('displayPanel: error form api');
+        console.log('displayPanel: error from api');
         displayPanel = 'error';
     } else if (!secureCollectionCheckError && !!secureCollectionCheckLoading) {
         console.log('displayPanel: loading');
         displayPanel = 'loading';
-    } else if (!secureCollectionCheck || !secureCollectionCheck.response) {
-        console.log('displayPanel: !secureCollectionCheck.response');
+    } else if (!secureCollectionCheck) {
+        console.log('displayPanel: !secureCollectionCheck', secureCollectionCheck);
         displayPanel = 'error'; // shouldnt happen if Error = false
     } else if (secureCollectionCheck.response === 'No such collection') {
         console.log('displayPanel: received "No such collection" for ', window.location.href);
-        displayPanel = 'invalidRequest';
+        displayPanel = 'noSuchCollection';
     } else if (secureCollectionCheck.response === 'Invalid User') {
         console.log('displayPanel: received "Invalid User" for ', window.location.href);
         displayPanel = 'invalidUser';
@@ -67,44 +104,60 @@ export const SecureCollection = ({
     } else if (secureCollectionCheck.displayPanel === 'statutoryCopyright' && !!secureCollectionCheck.url) {
         console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
         finalLink = secureCollectionCheck.url;
+        console.log('setting finalLink = ', secureCollectionCheck.url);
         displayPanel = 'statutoryCopyright';
-    } else if (secureCollectionCheck.response === 'Login required') {
+    } else if (secureCollectionCheck === 'Login required') {
         console.log('displayPanel: received "Login required" for ', window.location.href);
 
         if (!account || !account.id) {
+            console.log('Login required: redirecting to auth');
             window.location.assign(`${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`);
         } else if (!!secureCollectionCheck.url) {
+            console.log('Login required: displayPanel: redirect ');
             displayPanel = 'redirect';
             finalLink = secureCollectionCheck.url;
+            console.log('finalLink=  ', finalLink);
         } else {
+            console.log('Login required: fallthrough displayPanel: error');
             displayPanel = 'error';
         }
     } else {
         // this shouldnt happen
+        console.log('this shouldnt happen');
         displayPanel = 'error';
     }
 
-    const getFileExtension = url => {
-        if (url === undefined) {
+    const getFileExtension = filename => {
+        if (filename === undefined) {
             return false;
         }
 
-        const dotPosition = url.lastIndexOf('.');
+        // remove any search param from the url so we can easily extract the file extension
+        const url = new URL(filename);
+        url.search = '';
+        const pathName = url.pathname;
+
+        const dotPosition = pathName.lastIndexOf('.');
         if (dotPosition !== undefined && dotPosition >= 0) {
-            return url.substr(dotPosition + 1);
-        } else {
-            return false;
+            return pathName.substr(dotPosition + 1);
         }
+
+        return false;
     };
 
-    const wrapSegmentInStandardPage = (title, Segment) => {
+    const wrapFragmentInStandardPage = (title, fragment) => {
         return (
             <StandardPage title="Secure Collection" goBackFunc={() => history.back()}>
                 <section aria-live="assertive">
-                    <StandardCard title={title}>
+                    <StandardCard title={title} noPadding>
                         <Grid container>
-                            <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
-                                {Segment}
+                            <Grid
+                                item
+                                xs={12}
+                                data-testid="secure-collection"
+                                style={{ marginBottom: 24, paddingLeft: 24, paddingRight: 24 }}
+                            >
+                                {fragment}
                             </Grid>
                         </Grid>
                     </StandardCard>
@@ -118,7 +171,7 @@ export const SecureCollection = ({
     const fileExtension = !!finalLink && getFileExtension(finalLink);
     switch (displayPanel) {
         case 'error':
-            return wrapSegmentInStandardPage(
+            return wrapFragmentInStandardPage(
                 'System temporarily unavailable',
                 <React.Fragment>
                     <p>
@@ -133,12 +186,12 @@ export const SecureCollection = ({
                     <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-check" />
                 </Grid>
             );
-        case 'invalidRequest':
+        case 'noSuchCollection':
             const emailAddress = 'webmaster@library.uq.edu.au';
             const emailSubject = 'Broken link to the Secure File Collection';
             const getEmailBody = () => {
-                let emailBody = 'Hi there!' + '\n';
-                emailBody += "I'd like to report a problem with the Secure File Collection." + '\n';
+                let emailBody = 'Hi there!' + '\n\n';
+                emailBody += "I'd like to report a problem with the Secure File Collection." + '\n\n';
                 if (document.referrer !== '') {
                     emailBody += 'I was visiting ' + document.referrer + ' and clicked a link.' + '\n';
                 }
@@ -150,7 +203,7 @@ export const SecureCollection = ({
             };
             const emailLink = `mailto:${emailAddress}?Subject=${emailSubject}&body=${getEmailBody()}`;
 
-            return wrapSegmentInStandardPage(
+            return wrapFragmentInStandardPage(
                 'This file does not exist or is unavailable.',
                 <React.Fragment>
                     <p>Please check the link you have used.</p>
@@ -160,7 +213,7 @@ export const SecureCollection = ({
                 </React.Fragment>,
             );
         case 'commercialCopyright':
-            return wrapSegmentInStandardPage(
+            return wrapFragmentInStandardPage(
                 'Copyright Notice',
                 <React.Fragment>
                     <p className={'copyrightsubhead'}>
@@ -169,7 +222,6 @@ export const SecureCollection = ({
                     </p>
                     <h3>COMMONWEALTH OF AUSTRALIA</h3>
                     <h4>Copyright Regulations 1969</h4>
-
                     <h5>WARNING</h5>
                     <p>
                         This material has been reproduced and communicated to you by or on behalf of the University of
@@ -180,22 +232,21 @@ export const SecureCollection = ({
                         reproduction or communication of this material by you may be the subject of copyright protection
                         under the Act.
                     </p>
-
                     <div id="download">
-                        <paper-button class="button-colored-accent">
-                            <a href={finalLink}>Acknowledge Copyright and Download</a>
-                        </paper-button>
+                        <a className={classes.followLink} href={finalLink}>
+                            Acknowledge Copyright and Download
+                        </a>
                     </div>
-
-                    {/* TODO add conditionally!!! */}
-                    <p>
-                        Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to open
-                        it.
-                    </p>
+                    {!!fileExtension && (
+                        <p data-testid={'fileExtension'}>
+                            Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to
+                            open it.
+                        </p>
+                    )}
                 </React.Fragment>,
             );
         case 'statutoryCopyright':
-            return wrapSegmentInStandardPage(
+            return wrapFragmentInStandardPage(
                 'WARNING',
                 <React.Fragment>
                     <p>
@@ -207,21 +258,21 @@ export const SecureCollection = ({
                         Any further reproduction or communication of this material by you may be the subject of
                         copyright protection under the Act.
                     </p>
-
                     <div id="download">
-                        <paper-button class="button-colored-accent">
-                            <a href="{finalLink}">Acknowledge Copyright and Download</a>
-                        </paper-button>
+                        <a className={classes.followLink} href={finalLink}>
+                            Acknowledge Copyright and Download
+                        </a>
                     </div>
-
-                    <p>
-                        Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to open
-                        it.
-                    </p>
+                    {!!fileExtension && (
+                        <p data-testid={'fileExtension'}>
+                            Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to
+                            open it.
+                        </p>
+                    )}
                 </React.Fragment>,
             );
         case 'invalidUser':
-            return wrapSegmentInStandardPage(
+            return wrapFragmentInStandardPage(
                 '',
                 <React.Fragment>
                     <p>Access to this file is only available to UQ staff and students.</p>
@@ -241,12 +292,12 @@ export const SecureCollection = ({
                 </React.Fragment>,
             );
         case 'redirect':
-            return wrapSegmentInStandardPage(
+            return wrapFragmentInStandardPage(
                 '',
                 <React.Fragment>
                     <p>We are preparing the file, you should be redirected shortly.</p>
                     <p>
-                        <a href="{finalLink}">Download the file</a> if the page does not redirect.
+                        <a href={finalLink}>Download the file</a> if the page does not redirect.
                     </p>
 
                     <Redirect to={finalLink} />

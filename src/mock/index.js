@@ -1,8 +1,7 @@
 /* eslint-disable */
-import { api, sessionApi } from 'config';
+import { api, SESSION_COOKIE_NAME, sessionApi } from 'config';
 import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
-import { SESSION_COOKIE_NAME } from 'config';
 import * as routes from 'repositories/routes';
 import * as mockData from './data';
 import { spotlights } from './data/spotlights';
@@ -23,16 +22,15 @@ import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT110
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
 import examSuggestions from './data/records/examSuggestions';
 import {
-    libHours,
     computerAvailability,
-    // training_array,
-    training_object,
-    printBalance,
+    incompleteNTROs,
+    libHours,
     loans,
     possibleRecords,
-    incompleteNTROs,
+    printBalance,
+    // training_array,
+    training_object,
 } from './data/account';
-import { POSSIBLE_RECORDS_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -195,6 +193,83 @@ fetchMock.mock(
     'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
 );
+
+// secure collection checks
+
+// http://localhost:2020/collection?user=s1111111&collection=exams&file=phil1010.pdf
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
+    return [200, { response: 'Login required' }];
+});
+
+// http://localhost:2020/collection?user=s1111111&collection=collection&file=doesntExist
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
+    return [200, { response: 'No such collection' }];
+});
+
+// http://localhost:2020/collection?user=s1111111&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
+// https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
+mock.onGet(
+    routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf' })
+        .apiUrl,
+).reply(() => {
+    return [
+        200,
+        {
+            url:
+                'https://files.library.uq.edu.au/secure/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf?Expires=1621059344&Signature=long_string&Key-Pair-Id=APKAJNDQICYW445PEOSA',
+            displayPanel: 'redirect',
+        },
+    ];
+});
+
+// https://files.library.uq.edu.au/coursebank/111111111111111.pdf
+// http://localhost:2020/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
+    console.log('return statutoryCopyright for 111111111111111');
+    return [
+        200,
+        {
+            url:
+                'https://files.library.uq.edu.au/secure/coursebank/111111111111111.pdf?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA"',
+            displayPanel: 'statutoryCopyright',
+            acknowledgementRequired: true,
+        },
+    ];
+});
+
+// https://files.library.uq.edu.au/coursebank/111111111111111.pdf
+// http://localhost:2020/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
+    console.log('return commercialCopyright for bom');
+    return [
+        200,
+        {
+            url:
+                'https://files.library.uq.edu.au/secure/bomdata/abcdef.zip?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA"',
+            displayPanel: 'commercialCopyright',
+            acknowledgementRequired: true,
+            hasList: true, // as yet unused
+        },
+    ];
+});
+
+// a link without a file extension
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
+    return [
+        200,
+        {
+            url:
+                'https://files.library.uq.edu.au/secure/coursebank/2222222?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA"',
+            displayPanel: 'statutoryCopyright',
+            acknowledgementRequired: true,
+        },
+    ];
+});
+
+// http://localhost:2020/collection?user=s1111111&collection=api&file=fails
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'api/fails' }).apiUrl).reply(() => {
+    return [500, {}];
+});
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
