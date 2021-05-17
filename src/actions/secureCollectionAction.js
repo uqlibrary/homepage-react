@@ -31,21 +31,20 @@ export function clearSecureCollectionCheck() {
 }
 
 export function loadSecureCollectionFile(path) {
-    console.log('will load Secure Collection File for ', path);
+    console.log('start of action: will load Secure Collection File for ', path);
     return dispatch => {
-        dispatch({ type: actions.SECURE_COLLECTION_FILE_LOADING });
+        dispatch({ type: actions.SECURE_COLLECTION_CHECK_LOADING });
         const api = SECURE_COLLECTION_API({ path });
         return get(api)
-            .then(response => response.json())
             .then(data => {
                 dispatch({
-                    type: actions.SECURE_COLLECTION_FILE_LOADED,
+                    type: actions.SECURE_COLLECTION_CHECK_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SECURE_COLLECTION_FILE_FAILED,
+                    type: actions.SECURE_COLLECTION_CHECK_FAILED,
                     payload: error.message,
                 });
             });
@@ -54,6 +53,6 @@ export function loadSecureCollectionFile(path) {
 
 export function clearSecureCollectionFile() {
     return dispatch => {
-        dispatch({ type: actions.SECURE_COLLECTION_FILE_CLEAR });
+        dispatch({ type: actions.SECURE_COLLECTION_CHECK_CLEAR });
     };
 }
