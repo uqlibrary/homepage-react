@@ -346,19 +346,18 @@ export const SecureCollection = ({
         );
     }
 
+    // the window is set to the auth url before this panel is displayed, so it should only blink up, if at all
     function displayLoginRequiredRedirectorPanel() {
         const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
         console.log('loginLink = ', loginLink);
         return wrapFragmentInStandardPage(
             'Redirecting',
             <React.Fragment>
-                <p>Login is required for this file.</p>
+                <p>Login is required for this file - please wait while you are redirected.</p>
 
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
                     <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-check" />
                 </Grid>
-
-                {/* <Redirect to={loginLink} /> */}
             </React.Fragment>,
         );
     }
@@ -376,6 +375,13 @@ export const SecureCollection = ({
             </React.Fragment>,
         );
     }
+
+    React.useEffect(() => {
+        if (displayPanel === 'loginRequired') {
+            const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+            window.location.assign(loginLink);
+        }
+    }, [displayPanel]);
 
     React.useEffect(() => {
         if (!!loadActualResponse && !!actions.loadSecureCollectionFile) {
