@@ -8,6 +8,10 @@ export default {
         dataTestid: 'close-action',
         primaryText: 'Close',
     },
+    contactus: {
+        // used in various spots - this should match the megamenu entry
+        link: 'https://web.library.uq.edu.au/contact-us',
+    },
     publicmenu: [
         // the parent items appears in the footer; the submenuItems appear in the megamenu
         {
