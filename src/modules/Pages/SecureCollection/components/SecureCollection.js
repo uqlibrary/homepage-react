@@ -9,7 +9,8 @@ import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
-import { AUTH_URL_LOGIN } from 'config';
+import { AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
+import { default as menuLocale } from 'locale/menu';
 
 const useStyles = makeStyles(
     () => ({
@@ -62,7 +63,7 @@ export const SecureCollection = ({
     const extractPathFromParams = params => {
         const searchParams = new URLSearchParams(params);
         if (!searchParams.has('collection') || !searchParams.has('file')) {
-            // force 'No such collection' response from the api
+            // if parameters are missing, force 'No such collection' response from the api
             return 'unknown/unknown';
         }
         return `${searchParams.get('collection')}/${searchParams.get('file')}`;
@@ -76,15 +77,16 @@ export const SecureCollection = ({
         // no such folder: {response: "No such collection"}
         // unauthorised user: {response: "Invalid User"}
         // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
-    }, [actions]);
+    }, []);
 
     // TODO figure out 'acknowledged'
 
     let displayPanel;
     let finalLink;
     if (!secureCollectionCheckError && !secureCollectionCheckLoading && !secureCollectionCheck) {
-        console.log('displayPanel: !secureCollectionCheck', secureCollectionCheck);
-        displayPanel = 'error'; // shouldnt happen if Error = false
+        // but secureCollectionCheck should not be falsey if secureCollectionCheckError = false
+        console.log('displayPanel set error: !secureCollectionCheck', secureCollectionCheck);
+        displayPanel = 'error';
     } else if (
         !secureCollectionCheckError &&
         !secureCollectionCheckLoading &&
@@ -126,7 +128,10 @@ export const SecureCollection = ({
             finalLink = secureCollectionCheck.url;
             displayPanel = 'commercialCopyright';
         } else {
-            console.log('secureCollectionCheck.url was missing for ', secureCollectionCheck.displayPanel);
+            console.log(
+                'displayPanel set error: secureCollectionCheck.url was missing for ',
+                secureCollectionCheck.displayPanel,
+            );
             displayPanel = 'error';
         }
     } else if (
@@ -139,7 +144,10 @@ export const SecureCollection = ({
             finalLink = secureCollectionCheck.url;
             displayPanel = 'commercialCopyright';
         } else {
-            console.log('secureCollectionCheck.url was missing for ', secureCollectionCheck.displayPanel);
+            console.log(
+                'displayPanel set error: secureCollectionCheck.url was missing for ',
+                secureCollectionCheck.displayPanel,
+            );
             displayPanel = 'error';
         }
     } else if (
@@ -153,18 +161,21 @@ export const SecureCollection = ({
             console.log('setting finalLink = ', secureCollectionCheck.url);
             displayPanel = 'statutoryCopyright';
         } else {
-            console.log('secureCollectionCheck.url was missing for ', secureCollectionCheck.displayPanel);
+            console.log(
+                'displayPanel set error: secureCollectionCheck.url was missing for ',
+                secureCollectionCheck.displayPanel,
+            );
             displayPanel = 'error';
         }
     } else if (!!secureCollectionCheckError) {
-        console.log('displayPanel: error from api');
+        console.log('displayPanel set error: error from api');
         displayPanel = 'error';
     } else if (!secureCollectionCheckError && !!secureCollectionCheckLoading) {
         console.log('displayPanel: loading');
         displayPanel = 'loading';
     } else {
         // this shouldnt happen
-        console.log('this shouldnt happen');
+        console.log('displayPanel set error: this shouldnt happen');
         displayPanel = 'error';
     }
 
@@ -315,17 +326,17 @@ export const SecureCollection = ({
     }
 
     function displayNoAccessPanel() {
+        const logoutLink = `${AUTH_URL_LOGOUT}?return=${window.btoa(window.location.href)}`;
         return wrapFragmentInStandardPage(
             'Access to this file is only available to UQ staff and students.',
             <React.Fragment>
                 <ul>
                     <li>
-                        If you have another UQ account,{' '}
-                        <a href="https://auth.library.uq.edu.au/logout">logout and switch accounts</a> to proceed.
+                        If you have another UQ account, <a href={logoutLink}>logout and switch accounts</a> to proceed.
                     </li>
                     <li>
-                        <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> if you should have file
-                        collection access with this account.
+                        <a href={menuLocale.contactus.link}>Contact us</a> if you should have file collection access
+                        with this account.
                     </li>
                 </ul>
                 <p>
@@ -335,7 +346,8 @@ export const SecureCollection = ({
         );
     }
 
-    function displayLoginRequiredRediectorPanel(loginLink) {
+    function displayLoginRequiredRedirectorPanel() {
+        const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
         console.log('loginLink = ', loginLink);
         return wrapFragmentInStandardPage(
             'Redirecting',
@@ -377,8 +389,7 @@ export const SecureCollection = ({
         case 'noSuchCollection':
             return displayUnknownCollectionPanel();
         case 'loginRequired':
-            const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-            return displayLoginRequiredRediectorPanel(loginLink);
+            return displayLoginRequiredRedirectorPanel();
         case 'commercialCopyright':
             return displayCommercialCopyrightAcknowledgementPanel();
         case 'statutoryCopyright':
