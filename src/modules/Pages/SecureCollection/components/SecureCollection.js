@@ -82,45 +82,86 @@ export const SecureCollection = ({
 
     let displayPanel;
     let finalLink;
-    if (!!secureCollectionCheckError) {
+    if (!secureCollectionCheckError && !secureCollectionCheckLoading && !secureCollectionCheck) {
+        console.log('displayPanel: !secureCollectionCheck', secureCollectionCheck);
+        displayPanel = 'error'; // shouldnt happen if Error = false
+    } else if (
+        !secureCollectionCheckError &&
+        !secureCollectionCheckLoading &&
+        secureCollectionCheck.response === 'No such collection'
+    ) {
+        console.log('displayPanel: received "No such collection" for ', window.location.href);
+        displayPanel = 'noSuchCollection';
+    } else if (
+        !secureCollectionCheckError &&
+        !secureCollectionCheckLoading &&
+        secureCollectionCheck.response === 'Login required'
+    ) {
+        console.log('displayPanel: received "Login required" for ', window.location.href);
+
+        if (!account || !account.id) {
+            console.log('Login required: redirecting to auth');
+            displayPanel = 'loginRequired';
+        } else {
+            displayPanel = 'loading';
+            console.log('user is logged in: ', account);
+            console.log('; load next api ', extractPathFromParams(window.location.search));
+            !!actions.loadSecureCollectionFile &&
+                actions.loadSecureCollectionFile(extractPathFromParams(window.location.search));
+        }
+    } else if (
+        !secureCollectionCheckError &&
+        !secureCollectionCheckLoading &&
+        secureCollectionCheck.response === 'Invalid User'
+    ) {
+        console.log('displayPanel: received "Invalid User" for ', window.location.href);
+        displayPanel = 'invalidUser';
+    } else if (
+        !secureCollectionCheckError &&
+        !secureCollectionCheckLoading &&
+        secureCollectionCheck.displayPanel === 'redirect'
+    ) {
+        if (!!secureCollectionCheck.url) {
+            console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
+            finalLink = secureCollectionCheck.url;
+            displayPanel = 'commercialCopyright';
+        } else {
+            console.log('secureCollectionCheck.url was missing for ', secureCollectionCheck.displayPanel);
+            displayPanel = 'error';
+        }
+    } else if (
+        !secureCollectionCheckError &&
+        !secureCollectionCheckLoading &&
+        secureCollectionCheck.displayPanel === 'commercialCopyright'
+    ) {
+        if (!!secureCollectionCheck.url) {
+            console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
+            finalLink = secureCollectionCheck.url;
+            displayPanel = 'commercialCopyright';
+        } else {
+            console.log('secureCollectionCheck.url was missing for ', secureCollectionCheck.displayPanel);
+            displayPanel = 'error';
+        }
+    } else if (
+        !secureCollectionCheckError &&
+        !secureCollectionCheckLoading &&
+        secureCollectionCheck.displayPanel === 'statutoryCopyright'
+    ) {
+        if (!!secureCollectionCheck.url) {
+            console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
+            finalLink = secureCollectionCheck.url;
+            console.log('setting finalLink = ', secureCollectionCheck.url);
+            displayPanel = 'statutoryCopyright';
+        } else {
+            console.log('secureCollectionCheck.url was missing for ', secureCollectionCheck.displayPanel);
+            displayPanel = 'error';
+        }
+    } else if (!!secureCollectionCheckError) {
         console.log('displayPanel: error from api');
         displayPanel = 'error';
     } else if (!secureCollectionCheckError && !!secureCollectionCheckLoading) {
         console.log('displayPanel: loading');
         displayPanel = 'loading';
-    } else if (!secureCollectionCheck) {
-        console.log('displayPanel: !secureCollectionCheck', secureCollectionCheck);
-        displayPanel = 'error'; // shouldnt happen if Error = false
-    } else if (secureCollectionCheck.response === 'No such collection') {
-        console.log('displayPanel: received "No such collection" for ', window.location.href);
-        displayPanel = 'noSuchCollection';
-    } else if (secureCollectionCheck.response === 'Invalid User') {
-        console.log('displayPanel: received "Invalid User" for ', window.location.href);
-        displayPanel = 'invalidUser';
-    } else if (secureCollectionCheck.displayPanel === 'commercialCopyright' && !!secureCollectionCheck.url) {
-        console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
-        finalLink = secureCollectionCheck.url;
-        displayPanel = 'commercialCopyright';
-    } else if (secureCollectionCheck.displayPanel === 'statutoryCopyright' && !!secureCollectionCheck.url) {
-        console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
-        finalLink = secureCollectionCheck.url;
-        console.log('setting finalLink = ', secureCollectionCheck.url);
-        displayPanel = 'statutoryCopyright';
-    } else if (secureCollectionCheck === 'Login required') {
-        console.log('displayPanel: received "Login required" for ', window.location.href);
-
-        if (!account || !account.id) {
-            console.log('Login required: redirecting to auth');
-            window.location.assign(`${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`);
-        } else if (!!secureCollectionCheck.url) {
-            console.log('Login required: displayPanel: redirect ');
-            displayPanel = 'redirect';
-            finalLink = secureCollectionCheck.url;
-            console.log('finalLink=  ', finalLink);
-        } else {
-            console.log('Login required: fallthrough displayPanel: error');
-            displayPanel = 'error';
-        }
     } else {
         // this shouldnt happen
         console.log('this shouldnt happen');
@@ -169,17 +210,164 @@ export const SecureCollection = ({
     console.log('displayPanel = ', displayPanel);
 
     const fileExtension = !!finalLink && getFileExtension(finalLink);
+
+    function displayCommercialCopyrightAcknowledgementPanel() {
+        return wrapFragmentInStandardPage(
+            'Copyright Notice',
+            <React.Fragment>
+                <p className={'copyrightsubhead'}>
+                    This file is provided to support teaching and learning for the staff and students of the University
+                    of Queensland
+                </p>
+                <h3>COMMONWEALTH OF AUSTRALIA</h3>
+                <h4>Copyright Regulations 1969</h4>
+                <h5>WARNING</h5>
+                <p>
+                    This material has been reproduced and communicated to you by or on behalf of the University of
+                    Queensland pursuant to Part VB of the Copyright Act 1968 (the Act).
+                </p>
+                <p>
+                    The material in this communication may be subject to copyright under the Act. Any further
+                    reproduction or communication of this material by you may be the subject of copyright protection
+                    under the Act.
+                </p>
+                <div id="download">
+                    <a className={classes.followLink} href={finalLink}>
+                        Acknowledge Copyright and Download
+                    </a>
+                </div>
+                {!!fileExtension && (
+                    <p data-testid={'fileExtension'}>
+                        Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to open
+                        it.
+                    </p>
+                )}
+            </React.Fragment>,
+        );
+    }
+
+    function displayStatutoryCopyrightAcknowledgementPanel() {
+        return wrapFragmentInStandardPage(
+            'WARNING',
+            <React.Fragment>
+                <p>
+                    This material has been reproduced and communicated to you by or on behalf of The University of
+                    Queensland in accordance with section 113P of the Copyright Act 1968 (Act). The material in this
+                    communication may be subject to copyright under the Act.
+                </p>
+                <p>
+                    Any further reproduction or communication of this material by you may be the subject of copyright
+                    protection under the Act.
+                </p>
+                <div id="download">
+                    <a className={classes.followLink} href={finalLink}>
+                        Acknowledge Copyright and Download
+                    </a>
+                </div>
+                {!!fileExtension && (
+                    <p data-testid={'fileExtension'}>
+                        Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to open
+                        it.
+                    </p>
+                )}
+            </React.Fragment>,
+        );
+    }
+
+    function displayUnknownCollectionPanel() {
+        const emailAddress = 'webmaster@library.uq.edu.au';
+        const emailSubject = 'Broken link to the Secure File Collection';
+        const getEmailBody = () => {
+            let emailBody = 'Hi there!' + '\n\n';
+            emailBody += "I'd like to report a problem with the Secure File Collection." + '\n\n';
+            if (document.referrer !== '') {
+                emailBody += 'I was visiting ' + document.referrer + ' and clicked a link.' + '\n';
+            }
+            emailBody += 'I landed on ' + window.location.href + ' but it said the link wasnt valid.' + '\n\n';
+            emailBody +=
+                '(You can also include any other detail that will help us provide the file here, ' +
+                'including where you were coming from)';
+            return encodeURIComponent(emailBody);
+        };
+        const emailLink = `mailto:${emailAddress}?Subject=${emailSubject}&body=${getEmailBody()}`;
+
+        return wrapFragmentInStandardPage(
+            'This file does not exist or is unavailable.',
+            <React.Fragment>
+                <p>Please check the link you have used.</p>
+                <p>
+                    Email us at <a href={emailLink}>{emailAddress}</a> to report broken links.
+                </p>
+            </React.Fragment>,
+        );
+    }
+
+    function displayApiErrorPanel() {
+        return wrapFragmentInStandardPage(
+            'System temporarily unavailable',
+            <React.Fragment>
+                <p>
+                    We're working on the issue and will have service restored as soon as possible. Please try again
+                    later.
+                </p>
+            </React.Fragment>,
+        );
+    }
+
+    function displayNoAccessPanel() {
+        return wrapFragmentInStandardPage(
+            'Access to this file is only available to UQ staff and students.',
+            <React.Fragment>
+                <ul>
+                    <li>
+                        If you have another UQ account,{' '}
+                        <a href="https://auth.library.uq.edu.au/logout">logout and switch accounts</a> to proceed.
+                    </li>
+                    <li>
+                        <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> if you should have file
+                        collection access with this account.
+                    </li>
+                </ul>
+                <p>
+                    Return to the <a href="https://www.library.uq.edu.au/">Library Home Page</a>.
+                </p>
+            </React.Fragment>,
+        );
+    }
+
+    function displayLoginRequiredRediectorPanel(loginLink) {
+        console.log('loginLink = ', loginLink);
+        return wrapFragmentInStandardPage(
+            'Redirecting',
+            <React.Fragment>
+                <p>Login is required for this file.</p>
+
+                <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
+                    <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-check" />
+                </Grid>
+
+                {/* <Redirect to={loginLink} /> */}
+            </React.Fragment>,
+        );
+    }
+
+    function displayRedirectingPanel() {
+        return wrapFragmentInStandardPage(
+            'Redirecting',
+            <React.Fragment>
+                <p>We are preparing the file, you should be redirected shortly.</p>
+                <p>
+                    <a href={finalLink}>Download the file</a> if the page does not redirect.
+                </p>
+
+                <Redirect to={finalLink} />
+            </React.Fragment>,
+        );
+    }
+
     switch (displayPanel) {
         case 'error':
-            return wrapFragmentInStandardPage(
-                'System temporarily unavailable',
-                <React.Fragment>
-                    <p>
-                        We're working on the issue and will have service restored as soon as possible. Please try again
-                        later.
-                    </p>
-                </React.Fragment>,
-            );
+            return displayApiErrorPanel();
         case 'loading':
             return (
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
@@ -187,127 +375,21 @@ export const SecureCollection = ({
                 </Grid>
             );
         case 'noSuchCollection':
-            const emailAddress = 'webmaster@library.uq.edu.au';
-            const emailSubject = 'Broken link to the Secure File Collection';
-            const getEmailBody = () => {
-                let emailBody = 'Hi there!' + '\n\n';
-                emailBody += "I'd like to report a problem with the Secure File Collection." + '\n\n';
-                if (document.referrer !== '') {
-                    emailBody += 'I was visiting ' + document.referrer + ' and clicked a link.' + '\n';
-                }
-                emailBody += 'I landed on ' + window.location.href + ' but it said the link wasnt valid.' + '\n\n';
-                emailBody +=
-                    '(You can also include any other detail that will help us provide the file here, ' +
-                    'including where you were coming from)';
-                return encodeURIComponent(emailBody);
-            };
-            const emailLink = `mailto:${emailAddress}?Subject=${emailSubject}&body=${getEmailBody()}`;
-
-            return wrapFragmentInStandardPage(
-                'This file does not exist or is unavailable.',
-                <React.Fragment>
-                    <p>Please check the link you have used.</p>
-                    <p>
-                        Email us at <a href={emailLink}>{emailAddress}</a> to report broken links.
-                    </p>
-                </React.Fragment>,
-            );
+            return displayUnknownCollectionPanel();
+        case 'loginRequired':
+            const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+            return displayLoginRequiredRediectorPanel(loginLink);
         case 'commercialCopyright':
-            return wrapFragmentInStandardPage(
-                'Copyright Notice',
-                <React.Fragment>
-                    <p className={'copyrightsubhead'}>
-                        This file is provided to support teaching and learning for the staff and students of the
-                        University of Queensland
-                    </p>
-                    <h3>COMMONWEALTH OF AUSTRALIA</h3>
-                    <h4>Copyright Regulations 1969</h4>
-                    <h5>WARNING</h5>
-                    <p>
-                        This material has been reproduced and communicated to you by or on behalf of the University of
-                        Queensland pursuant to Part VB of the Copyright Act 1968 (the Act).
-                    </p>
-                    <p>
-                        The material in this communication may be subject to copyright under the Act. Any further
-                        reproduction or communication of this material by you may be the subject of copyright protection
-                        under the Act.
-                    </p>
-                    <div id="download">
-                        <a className={classes.followLink} href={finalLink}>
-                            Acknowledge Copyright and Download
-                        </a>
-                    </div>
-                    {!!fileExtension && (
-                        <p data-testid={'fileExtension'}>
-                            Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to
-                            open it.
-                        </p>
-                    )}
-                </React.Fragment>,
-            );
+            return displayCommercialCopyrightAcknowledgementPanel();
         case 'statutoryCopyright':
-            return wrapFragmentInStandardPage(
-                'WARNING',
-                <React.Fragment>
-                    <p>
-                        This material has been reproduced and communicated to you by or on behalf of The University of
-                        Queensland in accordance with section 113P of the Copyright Act 1968 (Act). The material in this
-                        communication may be subject to copyright under the Act.
-                    </p>
-                    <p>
-                        Any further reproduction or communication of this material by you may be the subject of
-                        copyright protection under the Act.
-                    </p>
-                    <div id="download">
-                        <a className={classes.followLink} href={finalLink}>
-                            Acknowledge Copyright and Download
-                        </a>
-                    </div>
-                    {!!fileExtension && (
-                        <p data-testid={'fileExtension'}>
-                            Save the file with a name ending in <b>.{fileExtension}</b> so your system will know how to
-                            open it.
-                        </p>
-                    )}
-                </React.Fragment>,
-            );
+            return displayStatutoryCopyrightAcknowledgementPanel();
         case 'invalidUser':
-            return wrapFragmentInStandardPage(
-                '',
-                <React.Fragment>
-                    <p>Access to this file is only available to UQ staff and students.</p>
-                    <ul>
-                        <li>
-                            If you have another UQ account,{' '}
-                            <a href="https://auth.library.uq.edu.au/logout">logout and switch accounts</a> to proceed.
-                        </li>
-                        <li>
-                            <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> if you should have file
-                            collection access with this account.
-                        </li>
-                    </ul>
-                    <p>
-                        Return to the <a href="https://www.library.uq.edu.au/">Library Home Page</a>.
-                    </p>
-                </React.Fragment>,
-            );
+            return displayNoAccessPanel();
         case 'redirect':
-            return wrapFragmentInStandardPage(
-                '',
-                <React.Fragment>
-                    <p>We are preparing the file, you should be redirected shortly.</p>
-                    <p>
-                        <a href={finalLink}>Download the file</a> if the page does not redirect.
-                    </p>
-
-                    <Redirect to={finalLink} />
-                </React.Fragment>,
-            );
+            return displayRedirectingPanel();
         default:
-            break;
+            return wrapFragmentInStandardPage('', <div className="waiting empty">Something went wrong</div>);
     }
-
-    return <div className="waiting empty">Secure Collection output will go here</div>;
 };
 
 SecureCollection.propTypes = {

@@ -28,7 +28,6 @@ import {
     loans,
     possibleRecords,
     printBalance,
-    // training_array,
     training_object,
 } from './data/account';
 
@@ -201,16 +200,47 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/phil1010.pdf' }).ap
     return [200, { response: 'Login required' }];
 });
 
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
+    return [
+        200,
+        {
+            url:
+                'https://files.library.uq.edu.au/secure/exams/phil1010.pdf?Expires=1621059344&Signature=long_string&Key-Pair-Id=APKAJNDQICYW445PEOSA',
+            displayPanel: 'redirect',
+        },
+    ];
+});
+
 // http://localhost:2020/collection?user=s1111111&collection=collection&file=doesntExist
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
     return [200, { response: 'No such collection' }];
 });
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
+    return [200, { response: 'No such collection' }];
+});
+
+// http://localhost:2020/collection?user=s1111111&collection=unknown&file=unknown
+// https://files.library.uq.edu.au/testlogin/unknown/unknown
+mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'unknown/unknown' }).apiUrl).reply(() => {
+    return [200, { response: 'No such collection' }];
+});
+// https://files.library.uq.edu.au/unknown/unknown
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'unknown/unknown' }).apiUrl).reply(() => {
+    return [200, { response: 'No such collection' }];
+});
 
 // http://localhost:2020/collection?user=s1111111&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
+// https://files.library.uq.edu.au/testlogin/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
+const apiUrl = routes.SECURE_COLLECTION_CHECK_API({
+    path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf',
+}).apiUrl;
+mock.onGet(apiUrl).reply(() => {
+    console.log('getting check api ', apiUrl);
+    return [200, { response: 'Login required' }];
+});
 // https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
 mock.onGet(
-    routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf' })
-        .apiUrl,
+    routes.SECURE_COLLECTION_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf' }).apiUrl,
 ).reply(() => {
     return [
         200,
@@ -222,10 +252,30 @@ mock.onGet(
     ];
 });
 
+// http://localhost:2020/collection?user=emcommunity&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
+// https://files.library.uq.edu.au/testlogin/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
+mock.onGet(
+    routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf' })
+        .apiUrl,
+).reply(() => {
+    return [200, { response: 'Login required' }];
+});
+// https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
+mock.onGet(
+    routes.SECURE_COLLECTION_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf' })
+        .apiUrl,
+).reply(() => {
+    return [200, { response: 'Invalid User' }];
+});
+
 // https://files.library.uq.edu.au/coursebank/111111111111111.pdf
 // http://localhost:2020/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
-    console.log('return statutoryCopyright for 111111111111111');
+    console.log('return check api statutoryCopyright for 111111111111111: login required');
+    return [200, { response: 'Login required' }];
+});
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
+    console.log('return main api statutoryCopyright for 111111111111111');
     return [
         200,
         {
@@ -237,9 +287,13 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/11111111111111
     ];
 });
 
-// https://files.library.uq.edu.au/coursebank/111111111111111.pdf
-// http://localhost:2020/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf
+// https://files.library.uq.edu.au/bomdata/abcdef.zip
+// http://localhost:2020/collection?user=s1111111&collection=bomdata&file=abcdef.zip
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
+    console.log('return commercialCopyright for bom');
+    return [200, { response: 'Login required' }];
+});
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
     console.log('return commercialCopyright for bom');
     return [
         200,
@@ -255,6 +309,9 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'bomdata/abcdef.zip' }).ap
 
 // a link without a file extension
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
+    return [200, { response: 'Login required' }];
+});
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
     return [
         200,
         {
@@ -268,6 +325,9 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/2222222' }).ap
 
 // http://localhost:2020/collection?user=s1111111&collection=api&file=fails
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'api/fails' }).apiUrl).reply(() => {
+    return [500, {}];
+});
+mock.onGet(routes.SECURE_COLLECTION_API({ path: 'api/fails' }).apiUrl).reply(() => {
     return [500, {}];
 });
 

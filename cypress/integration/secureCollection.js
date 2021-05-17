@@ -76,4 +76,31 @@ context('Secure Collection', () => {
             .find('b')
             .contains('.zip');
     });
+
+    it('a link that is missing the appropriate parameters displays a missing page', () => {
+        cy.visit('/collection');
+        cy.viewport(1300, 1000);
+        cy.get('body')
+            .find('h3')
+            .contains('This file does not exist or is unavailable.');
+        cy.get('body')
+            .find('[data-testid="secure-collection"]')
+            .contains('Please check the link you have used.');
+    });
+
+    it('a link that requires certain user types will give an error', () => {
+        cy.visit(
+            '/collection?user=emcommunity&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf',
+        );
+        cy.injectAxe();
+        cy.viewport(1300, 1000);
+        cy.get('h2').contains('Secure Collection');
+        cy.checkA11y('[data-testid="secure-collection"]', {
+            reportName: 'Secure Collection',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+        cy.get('body').contains('Access to this file is only available to UQ staff and students');
+        cy.get('body').contains('If you have another UQ account');
+    });
 });
