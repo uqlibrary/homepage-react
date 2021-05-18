@@ -74,14 +74,14 @@ const currentSearchParams = extractPathFromParams(window.location.href);
 export const SecureCollection = ({
     actions,
     account,
-    secureCollectionCheck,
-    secureCollectionCheckLoading,
-    secureCollectionCheckError,
+    secureCollection,
+    secureCollectionLoading,
+    secureCollectionError,
 }) => {
     console.log('SecureCollection - account = ', account);
-    console.log('SecureCollection - secureCollectionCheckLoading = ', secureCollectionCheckLoading);
-    console.log('SecureCollection - secureCollectionCheckError = ', secureCollectionCheckError);
-    console.log('SecureCollection - secureCollectionCheck = ', secureCollectionCheck);
+    console.log('SecureCollection - secureCollectionLoading = ', secureCollectionLoading);
+    console.log('SecureCollection - secureCollectionError = ', secureCollectionError);
+    console.log('SecureCollection - secureCollection = ', secureCollection);
 
     const classes = useStyles();
 
@@ -91,31 +91,25 @@ export const SecureCollection = ({
         // error: {response: true, responseText: "An unknown error occurred"}
         // no such folder: {response: "No such collection"}
         // unauthorised user: {response: "Invalid User"}
-        // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
+        // ok, eg: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
     }, [actions]);
-
-    // TODO figure out 'acknowledged'
 
     let displayPanel;
     let finalLink = null;
     let loadFileApi = false;
     // unexpectedly, the api responses have attributes all in lower case,
-    // ie secureCollectionCheck.displaypanel NOT secureCollectionCheck.displayPanel
-    if (!secureCollectionCheckError && !secureCollectionCheckLoading && !secureCollectionCheck) {
-        console.log('displayPanel set error: !secureCollectionCheck', secureCollectionCheck);
+    // ie secureCollection.displaypanel NOT secureCollection.displayPanel
+    if (!secureCollectionError && !secureCollectionLoading && !secureCollection) {
+        console.log('displayPanel set error: !secureCollection', secureCollection);
         displayPanel = 'loading'; // initially
     } else if (
-        !secureCollectionCheckError &&
-        !secureCollectionCheckLoading &&
-        secureCollectionCheck.response === 'No such collection'
+        !secureCollectionError &&
+        !secureCollectionLoading &&
+        secureCollection.response === 'No such collection'
     ) {
         console.log('displayPanel: received "No such collection" for ', window.location.href);
         displayPanel = 'noSuchCollection';
-    } else if (
-        !secureCollectionCheckError &&
-        !secureCollectionCheckLoading &&
-        secureCollectionCheck.response === 'Login required'
-    ) {
+    } else if (!secureCollectionError && !secureCollectionLoading && secureCollection.response === 'Login required') {
         console.log('displayPanel: received "Login required" for ', window.location.href);
 
         if (!account || !account.id) {
@@ -127,69 +121,53 @@ export const SecureCollection = ({
             displayPanel = 'loading';
             console.log('user is logged in: ', account);
             console.log('; load next api ', extractPathFromParams(window.location.href));
+            // they are actually logged in! now we ask for the actual file they want
             loadFileApi = true;
         }
-    } else if (
-        !secureCollectionCheckError &&
-        !secureCollectionCheckLoading &&
-        secureCollectionCheck.response === 'Invalid User'
-    ) {
+    } else if (!secureCollectionError && !secureCollectionLoading && secureCollection.response === 'Invalid User') {
         console.log('displayPanel: received "Invalid User" for ', window.location.href);
         displayPanel = 'invalidUser';
-    } else if (
-        !secureCollectionCheckError &&
-        !secureCollectionCheckLoading &&
-        secureCollectionCheck.displaypanel === 'redirect'
-    ) {
-        if (!!secureCollectionCheck.url) {
+    } else if (!secureCollectionError && !secureCollectionLoading && secureCollection.displaypanel === 'redirect') {
+        if (!!secureCollection.url) {
             console.log('displayPanel: received "redirect" for ', window.location.href);
             displayPanel = 'redirect';
-            finalLink = secureCollectionCheck.url;
+            finalLink = secureCollection.url;
             console.log('redirect: finalLink = ', finalLink);
         } else {
-            console.log(
-                'displayPanel set error: secureCollectionCheck.url was missing for ',
-                secureCollectionCheck.displaypanel,
-            );
+            console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
     } else if (
-        !secureCollectionCheckError &&
-        !secureCollectionCheckLoading &&
-        secureCollectionCheck.displaypanel === 'commercialCopyright'
+        !secureCollectionError &&
+        !secureCollectionLoading &&
+        secureCollection.displaypanel === 'commercialCopyright'
     ) {
-        if (!!secureCollectionCheck.url) {
+        if (!!secureCollection.url) {
             console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
-            finalLink = secureCollectionCheck.url;
+            finalLink = secureCollection.url;
             displayPanel = 'commercialCopyright';
         } else {
-            console.log(
-                'displayPanel set error: secureCollectionCheck.url was missing for ',
-                secureCollectionCheck.displaypanel,
-            );
+            console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
     } else if (
-        !secureCollectionCheckError &&
-        !secureCollectionCheckLoading &&
-        secureCollectionCheck.displaypanel === 'statutoryCopyright'
+        !secureCollectionError &&
+        !secureCollectionLoading &&
+        secureCollection.displaypanel === 'statutoryCopyright'
     ) {
-        if (!!secureCollectionCheck.url) {
+        if (!!secureCollection.url) {
             console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
-            finalLink = secureCollectionCheck.url;
-            console.log('setting finalLink = ', secureCollectionCheck.url);
+            finalLink = secureCollection.url;
+            console.log('setting finalLink = ', secureCollection.url);
             displayPanel = 'statutoryCopyright';
         } else {
-            console.log(
-                'displayPanel set error: secureCollectionCheck.url was missing for ',
-                secureCollectionCheck.displaypanel,
-            );
+            console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
-    } else if (!!secureCollectionCheckError) {
+    } else if (!!secureCollectionError) {
         console.log('displayPanel set error: error from api');
         displayPanel = 'error';
-    } else if (!secureCollectionCheckError && !!secureCollectionCheckLoading) {
+    } else if (!secureCollectionError && !!secureCollectionLoading) {
         console.log('displayPanel: loading');
         displayPanel = 'loading';
     } else {
@@ -446,9 +424,9 @@ export const SecureCollection = ({
 SecureCollection.propTypes = {
     actions: PropTypes.object,
     account: PropTypes.object,
-    secureCollectionCheck: PropTypes.object,
-    secureCollectionCheckLoading: PropTypes.bool,
-    secureCollectionCheckError: PropTypes.any,
+    secureCollection: PropTypes.object,
+    secureCollectionLoading: PropTypes.bool,
+    secureCollectionError: PropTypes.any,
 };
 
 export default React.memo(SecureCollection);

@@ -30,6 +30,7 @@ import {
     printBalance,
     training_object,
 } from './data/account';
+import { SECURE_COLLECTION_FILE_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -200,7 +201,7 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/phil1010.pdf' }).ap
     return [200, { response: 'Login required' }];
 });
 
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
     return [
         200,
         {
@@ -215,7 +216,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'exams/phil1010.pdf' }).apiUrl).
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
     return [200, { response: 'No such collection' }];
 });
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
     return [200, { response: 'No such collection' }];
 });
 
@@ -225,7 +226,7 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'unknown/unknown' }).apiUr
     return [200, { response: 'No such collection' }];
 });
 // https://files.library.uq.edu.au/unknown/unknown
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'unknown/unknown' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'unknown/unknown' }).apiUrl).reply(() => {
     return [200, { response: 'No such collection' }];
 });
 
@@ -240,7 +241,8 @@ mock.onGet(apiUrl).reply(() => {
 });
 // https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
 mock.onGet(
-    routes.SECURE_COLLECTION_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf' }).apiUrl,
+    routes.SECURE_COLLECTION_FILE_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf' })
+        .apiUrl,
 ).reply(() => {
     return [
         200,
@@ -262,7 +264,7 @@ mock.onGet(
 });
 // https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
 mock.onGet(
-    routes.SECURE_COLLECTION_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf' })
+    routes.SECURE_COLLECTION_FILE_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf' })
         .apiUrl,
 ).reply(() => {
     return [200, { response: 'Invalid User' }];
@@ -274,7 +276,7 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/11111111111111
     console.log('return check api statutoryCopyright for 111111111111111: login required');
     return [200, { response: 'Login required' }];
 });
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
     console.log('return main api statutoryCopyright for 111111111111111');
     return [
         200,
@@ -293,7 +295,7 @@ mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'bomdata/abcdef.zip' }).ap
     console.log('return commercialCopyright for bom');
     return [200, { response: 'Login required' }];
 });
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
     console.log('return commercialCopyright for bom');
     return [
         200,
@@ -318,7 +320,8 @@ mock.onGet(
     return [200, { response: 'Login required' }];
 });
 mock.onGet(
-    routes.SECURE_COLLECTION_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' }).apiUrl,
+    routes.SECURE_COLLECTION_FILE_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' })
+        .apiUrl,
 ).reply(() => {
     console.log('return redirect for thomson');
     return [
@@ -337,7 +340,7 @@ mock.onGet(
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
     return [200, { response: 'Login required' }];
 });
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
     return [
         200,
         {
@@ -353,7 +356,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/2222222' }).apiUrl).
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'api/fails' }).apiUrl).reply(() => {
     return [500, {}];
 });
-mock.onGet(routes.SECURE_COLLECTION_API({ path: 'api/fails' }).apiUrl).reply(() => {
+mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'api/fails' }).apiUrl).reply(() => {
     return [500, {}];
 });
 

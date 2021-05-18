@@ -8,8 +8,7 @@ import SecureCollection from '../components/SecureCollection';
 const mapStateToProps = state => {
     return {
         ...state.get('accountReducer'),
-        ...state.get('secureCollectionFileReducer'),
-        ...state.get('secureCollectionCheckReducer'),
+        ...state.get('secureCollectionReducer'),
     };
 };
 
