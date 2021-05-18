@@ -206,7 +206,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'exams/phil1010.pdf' }).apiUrl).
         {
             url:
                 'https://files.library.uq.edu.au/secure/exams/phil1010.pdf?Expires=1621059344&Signature=long_string&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displayPanel: 'redirect',
+            displaypanel: 'redirect',
         },
     ];
 });
@@ -247,7 +247,7 @@ mock.onGet(
         {
             url:
                 'https://files.library.uq.edu.au/secure/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf?Expires=1621059344&Signature=long_string&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displayPanel: 'redirect',
+            displaypanel: 'redirect',
         },
     ];
 });
@@ -281,7 +281,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/111111111111111.pdf'
         {
             url:
                 'https://files.library.uq.edu.au/secure/coursebank/111111111111111.pdf?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displayPanel: 'statutoryCopyright',
+            displaypanel: 'statutoryCopyright',
             acknowledgementRequired: true,
         },
     ];
@@ -300,7 +300,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'bomdata/abcdef.zip' }).apiUrl).
         {
             url:
                 'https://files.library.uq.edu.au/secure/bomdata/abcdef.zip?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displayPanel: 'commercialCopyright',
+            displaypanel: 'commercialCopyright',
             acknowledgementRequired: true,
             hasList: true, // as yet unused
         },
@@ -326,7 +326,7 @@ mock.onGet(
         {
             url:
                 'https://files.library.uq.edu.au/secure/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf?Expires=1621380128&Signature=longstring&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displayPanel: 'redirect',
+            displaypanel: 'redirect',
             acknowledgementRequired: false,
             hasList: true, // as yet unused
         },
@@ -343,7 +343,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/2222222' }).apiUrl).
         {
             url:
                 'https://files.library.uq.edu.au/secure/coursebank/2222222?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displayPanel: 'statutoryCopyright',
+            displaypanel: 'statutoryCopyright',
             acknowledgementRequired: true,
         },
     ];
