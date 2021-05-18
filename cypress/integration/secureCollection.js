@@ -120,29 +120,21 @@ context('Secure Collection', () => {
     //     // then check redirection
     // });
 
-    // it('a link that does not require acknowledgement will show a redirection to the file', () => {
-    //     cy.visit(
-    // '/collection?user=s1111111&collection=thomson&file=classic_legal_texts/Thynne_Accountability_And_Control.pdf',
-    //     );
-    //     cy.injectAxe();
-    //     cy.viewport(1300, 1000);
-    //     // cy.intercept(
-    //     //     'GET',
-    //     //     'https://files.library.uq.edu.au/secure/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf?Expires=1621380128&Signature=longstring&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-    //     //     {
-    //     //         statusCode: 200,
-    //     //         body: 'it worked!',
-    //     //     },
-    //     // );
-    //     cy.get('h2').contains('Secure Collection');
-    //     cy.checkA11y('[data-testid="secure-collection"]', {
-    //         reportName: 'Secure Collection',
-    //         scopeName: 'Content',
-    //         includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-    //     });
-    //     cy.get('body').contains('We are preparing the file, you should be redirected shortly.');
-    //     // then check redirection
-    //     cy.wait(1500);
-    //     cy.get('body').contains('it worked!');
-    // });
+    it('a link that does not require acknowledgement will redirect to the file', () => {
+        cy.visit(
+            '/collection?user=s1111111&collection=thomson&file=classic_legal_texts/Thynne_Accountability_And_Control.pdf',
+        );
+        cy.viewport(1300, 1000);
+        cy.intercept(
+            'GET',
+            'https://files.library.uq.edu.au/secure/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf?Expires=1621380128&Signature=longstring&Key-Pair-Id=APKAJNDQICYW445PEOSA',
+            {
+                statusCode: 200,
+                body: 'it worked!',
+            },
+        );
+        // then check redirection
+        cy.wait(1500);
+        cy.get('body').contains('it worked!');
+    });
 });

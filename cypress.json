@@ -8,6 +8,10 @@
   "videoUploadOnPasses": false,
   "projectId": "d2f4io",
   "blockHosts": ["www.googletagmanager.com"],
+  "firefoxGcInterval": {
+    "runMode": 1,
+    "openMode": 1
+  },
   "numTestsKeptInMemory": 1,
   "retries": {
     "openMode": 0,
