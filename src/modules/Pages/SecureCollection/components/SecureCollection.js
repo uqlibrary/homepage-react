@@ -169,15 +169,6 @@ export const SecureCollection = ({
         displayPanel = 'error';
     }
 
-    // some files need to redirect to login, some redirect to the final file. Not all redirect.
-    React.useEffect(() => {
-        console.log('useEffect: redirectLink = ', redirectLink);
-        if (redirectLink !== null) {
-            console.log('redirecting to ', redirectLink);
-            window.location.assign(redirectLink);
-        }
-    }, [redirectLink]);
-
     React.useEffect(() => {
         if (!!loadFileApi && !!actions.loadSecureCollectionFile) {
             actions.loadSecureCollectionFile(extractPathFromParams(window.location.href));
@@ -352,9 +343,11 @@ export const SecureCollection = ({
     }
 
     // the window is set to the auth url before this panel is displayed, so it should only blink up, if at all
-    function displayLoginRequiredRedirectorPanel() {
-        // const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-        // console.log('loginLink = ', loginLink);
+    function displayLoginRequiredRedirectorPanel(redirectLink) {
+        if (redirectLink !== null) {
+            console.log('redirecting to auth: ', redirectLink);
+            window.location.assign(redirectLink);
+        }
         return wrapFragmentInStandardPage(
             'Redirecting',
             <React.Fragment>
@@ -371,7 +364,11 @@ export const SecureCollection = ({
         );
     }
 
-    function displayRedirectingPanel() {
+    function displayRedirectingPanel(redirectLink) {
+        if (redirectLink !== null) {
+            console.log('redirecting to file: ', redirectLink);
+            window.location.assign(redirectLink);
+        }
         return wrapFragmentInStandardPage(
             'Redirecting',
             <React.Fragment>
@@ -399,7 +396,7 @@ export const SecureCollection = ({
         case 'noSuchCollection':
             return displayUnknownCollectionPanel();
         case 'loginRequired':
-            return displayLoginRequiredRedirectorPanel();
+            return displayLoginRequiredRedirectorPanel(redirectLink);
         case 'commercialCopyright':
             return displayCommercialCopyrightAcknowledgementPanel();
         case 'statutoryCopyright':
@@ -407,7 +404,7 @@ export const SecureCollection = ({
         case 'invalidUser':
             return displayNoAccessPanel();
         case 'redirect':
-            return displayRedirectingPanel();
+            return displayRedirectingPanel(redirectLink);
         default:
             return wrapFragmentInStandardPage('', <div className="waiting empty">Something went wrong</div>);
     }
