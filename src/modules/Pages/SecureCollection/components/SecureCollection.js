@@ -71,6 +71,24 @@ export const extractPathFromParams = href => {
 
 const currentSearchParams = extractPathFromParams(window.location.href);
 
+export const getFileExtension = filename => {
+    if (filename === undefined) {
+        return false;
+    }
+
+    // remove any search param from the url so we can extract the file extension
+    const url = new URL(filename);
+    url.search = '';
+    const pathName = url.pathname;
+
+    const dotPosition = pathName.lastIndexOf('.');
+    if (dotPosition !== undefined && dotPosition >= 0) {
+        return pathName.substr(dotPosition + 1);
+    }
+
+    return false;
+};
+
 export const SecureCollection = ({
     actions,
     account,
@@ -135,6 +153,7 @@ export const SecureCollection = ({
         console.log('displayPanel: received "Invalid User" for ', window.location.href);
         displayPanel = 'invalidUser';
     } else if (secureCollection.displaypanel === 'redirect') {
+        /* istanbul ignore else */
         if (!!secureCollection.url) {
             console.log('displayPanel: received "redirect" for ', window.location.href);
             displayPanel = 'redirect';
@@ -145,6 +164,7 @@ export const SecureCollection = ({
             displayPanel = 'error';
         }
     } else if (secureCollection.displaypanel === 'commercialCopyright') {
+        /* istanbul ignore else */
         if (!!secureCollection.url) {
             console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
             clickLink = secureCollection.url;
@@ -154,6 +174,7 @@ export const SecureCollection = ({
             displayPanel = 'error';
         }
     } else if (secureCollection.displaypanel === 'statutoryCopyright') {
+        /* istanbul ignore else */
         if (!!secureCollection.url) {
             console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
             clickLink = secureCollection.url;
@@ -174,24 +195,6 @@ export const SecureCollection = ({
             actions.loadSecureCollectionFile(extractPathFromParams(window.location.href));
         }
     }, [loadFileApi, actions]);
-
-    const getFileExtension = filename => {
-        if (filename === undefined) {
-            return false;
-        }
-
-        // remove any search param from the url so we can extract the file extension
-        const url = new URL(filename);
-        url.search = '';
-        const pathName = url.pathname;
-
-        const dotPosition = pathName.lastIndexOf('.');
-        if (dotPosition !== undefined && dotPosition >= 0) {
-            return pathName.substr(dotPosition + 1);
-        }
-
-        return false;
-    };
 
     const wrapFragmentInStandardPage = (title, fragment) => {
         return (
