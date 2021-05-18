@@ -1,15 +1,12 @@
-import { extractPathFromParams, getUrlSearchParams } from './SecureCollection';
+import { extractPathFromParams, getFileExtension, getUrlSearchParams } from './SecureCollection';
 
 describe('filterProps helper', () => {
     it('should handle a standard window.location being passed in', () => {
-        console.log('classic: https://www.library.uq.edu.au/collection?collection=collection&file=doesntExist');
         const classicLocation = new URL(
             'https://www.library.uq.edu.au/collection?collection=collection&file=doesntExist',
         );
 
         const classicResult = getUrlSearchParams(classicLocation);
-        console.log('classicResult.search = ', classicResult.search);
-        // expect(classicResult.search).toBe('?collection=collection&file=doesntExist');
 
         expect(classicResult.has('collection')).toBe(true);
         expect(classicResult.get('collection')).toBe('collection');
@@ -34,5 +31,16 @@ describe('filterProps helper', () => {
         const result = extractPathFromParams('https://www.library.uq.edu.au/collection');
 
         expect(result).toBe('unknown/unknown');
+    });
+
+    it('should correctly work out the file extension', () => {
+        const result1 = getFileExtension();
+        expect(result1).toBe(false);
+
+        const result2 = getFileExtension('http://example.com/file.pdf');
+        expect(result2).toBe('pdf');
+
+        const result3 = getFileExtension('http://example.com/extentionlessfilename');
+        expect(result3).toBe(false);
     });
 });
