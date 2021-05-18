@@ -45,6 +45,32 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
+export const getUrlSearchParams = url => {
+    if (url.search.startsWith('?')) {
+        // prod and localhost
+        return new URLSearchParams(url.search);
+    }
+    if (url.hash.startsWith('#')) {
+        // staging has the search params inside the hash :(
+        // eg #/collection?collection=thomson&file=classic_legal_texts/Thynne_Accountability_And_Control.pdf
+        const search = url.hash.replace('#/collection', '');
+        return new URLSearchParams(search);
+    }
+    return new URLSearchParams(url);
+};
+
+export const extractPathFromParams = href => {
+    const url = new URL(href);
+    const searchParams = getUrlSearchParams(url);
+    if (!searchParams.has('collection') || !searchParams.has('file')) {
+        // if parameters are missing, force 'No such collection' response from the api
+        return 'unknown/unknown';
+    }
+    return `${searchParams.get('collection')}/${searchParams.get('file')}`;
+};
+
+const currentSearchParams = extractPathFromParams(window.location.href);
+
 export const SecureCollection = ({
     actions,
     account,
@@ -59,24 +85,14 @@ export const SecureCollection = ({
 
     const classes = useStyles();
 
-    const extractPathFromParams = params => {
-        const searchParams = new URLSearchParams(params);
-        if (!searchParams.has('collection') || !searchParams.has('file')) {
-            // if parameters are missing, force 'No such collection' response from the api
-            return 'unknown/unknown';
-        }
-        return `${searchParams.get('collection')}/${searchParams.get('file')}`;
-    };
-
     React.useEffect(() => {
-        !!actions.loadSecureCollectionCheck &&
-            actions.loadSecureCollectionCheck(extractPathFromParams(window.location.search));
+        !!actions.loadSecureCollectionCheck && actions.loadSecureCollectionCheck(currentSearchParams);
 
         // error: {response: true, responseText: "An unknown error occurred"}
         // no such folder: {response: "No such collection"}
         // unauthorised user: {response: "Invalid User"}
         // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
-    }, [actions]);
+    }, [actions, currentSearchParams]);
 
     // TODO figure out 'acknowledged'
 
@@ -108,7 +124,7 @@ export const SecureCollection = ({
         } else {
             displayPanel = 'loading';
             console.log('user is logged in: ', account);
-            console.log('; load next api ', extractPathFromParams(window.location.search));
+            console.log('; load next api ', extractPathFromParams(window.location.href));
             loadFileApi = true;
         }
     } else if (
@@ -192,7 +208,7 @@ export const SecureCollection = ({
 
     React.useEffect(() => {
         if (!!loadFileApi && !!actions.loadSecureCollectionFile) {
-            actions.loadSecureCollectionFile(extractPathFromParams(window.location.search));
+            actions.loadSecureCollectionFile(extractPathFromParams(window.location.href));
         }
     }, [loadFileApi, actions]);
 
