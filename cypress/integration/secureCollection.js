@@ -103,4 +103,46 @@ context('Secure Collection', () => {
         cy.get('body').contains('Access to this file is only available to UQ staff and students');
         cy.get('body').contains('If you have another UQ account');
     });
+
+    it('a link that requires login will show the redirection message', () => {
+        cy.visit(
+            '/collection?user=public&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf',
+        );
+        cy.injectAxe();
+        cy.viewport(1300, 1000);
+        cy.get('h2').contains('Secure Collection');
+        cy.checkA11y('[data-testid="secure-collection"]', {
+            reportName: 'Secure Collection',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+        cy.get('body').contains('Login is required for this file');
+        // then check redirection
+    });
+
+    // it('a link that does not require acknowledgement will show a redirection to the file', () => {
+    //     cy.visit(
+    // '/collection?user=s1111111&collection=thomson&file=classic_legal_texts/Thynne_Accountability_And_Control.pdf',
+    //     );
+    //     cy.injectAxe();
+    //     cy.viewport(1300, 1000);
+    //     // cy.intercept(
+    //     //     'GET',
+    //     //     'https://files.library.uq.edu.au/secure/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf?Expires=1621380128&Signature=longstring&Key-Pair-Id=APKAJNDQICYW445PEOSA',
+    //     //     {
+    //     //         statusCode: 200,
+    //     //         body: 'it worked!',
+    //     //     },
+    //     // );
+    //     cy.get('h2').contains('Secure Collection');
+    //     cy.checkA11y('[data-testid="secure-collection"]', {
+    //         reportName: 'Secure Collection',
+    //         scopeName: 'Content',
+    //         includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+    //     });
+    //     cy.get('body').contains('We are preparing the file, you should be redirected shortly.');
+    //     // then check redirection
+    //     cy.wait(1500);
+    //     cy.get('body').contains('it worked!');
+    // });
 });

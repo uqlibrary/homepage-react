@@ -280,7 +280,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/111111111111111.pdf'
         200,
         {
             url:
-                'https://files.library.uq.edu.au/secure/coursebank/111111111111111.pdf?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA"',
+                'https://files.library.uq.edu.au/secure/coursebank/111111111111111.pdf?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
             displayPanel: 'statutoryCopyright',
             acknowledgementRequired: true,
         },
@@ -299,9 +299,35 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'bomdata/abcdef.zip' }).apiUrl).
         200,
         {
             url:
-                'https://files.library.uq.edu.au/secure/bomdata/abcdef.zip?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA"',
+                'https://files.library.uq.edu.au/secure/bomdata/abcdef.zip?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
             displayPanel: 'commercialCopyright',
             acknowledgementRequired: true,
+            hasList: true, // as yet unused
+        },
+    ];
+});
+
+// (list: http://ezproxy.library.uq.edu.au/loggedin/UQ/resources/thomson_classic_legal.html )
+// https://files.library.uq.edu.au/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf
+// http://localhost:2020/collection?user=s1111111&collection=thomson&file=classic_legal_texts/Thynne_Accountability_And_Control.pdf
+mock.onGet(
+    routes.SECURE_COLLECTION_CHECK_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' })
+        .apiUrl,
+).reply(() => {
+    console.log('return redirect for thomson');
+    return [200, { response: 'Login required' }];
+});
+mock.onGet(
+    routes.SECURE_COLLECTION_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' }).apiUrl,
+).reply(() => {
+    console.log('return redirect for thomson');
+    return [
+        200,
+        {
+            url:
+                'https://files.library.uq.edu.au/secure/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf?Expires=1621380128&Signature=longstring&Key-Pair-Id=APKAJNDQICYW445PEOSA',
+            displayPanel: 'redirect',
+            acknowledgementRequired: false,
             hasList: true, // as yet unused
         },
     ];
@@ -316,7 +342,7 @@ mock.onGet(routes.SECURE_COLLECTION_API({ path: 'coursebank/2222222' }).apiUrl).
         200,
         {
             url:
-                'https://files.library.uq.edu.au/secure/coursebank/2222222?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA"',
+                'https://files.library.uq.edu.au/secure/coursebank/2222222?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
             displayPanel: 'statutoryCopyright',
             acknowledgementRequired: true,
         },

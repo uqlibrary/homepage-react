@@ -1,5 +1,4 @@
 import React from 'react';
-import { Redirect } from 'react-router';
 import PropTypes from 'prop-types';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -77,17 +76,16 @@ export const SecureCollection = ({
         // no such folder: {response: "No such collection"}
         // unauthorised user: {response: "Invalid User"}
         // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
-    }, []);
+    }, [actions]);
 
     // TODO figure out 'acknowledged'
 
     let displayPanel;
-    let finalLink;
-    let loadActualResponse = false;
+    let finalLink = null;
+    let loadFileApi = false;
     if (!secureCollectionCheckError && !secureCollectionCheckLoading && !secureCollectionCheck) {
-        // but secureCollectionCheck should not be falsey if secureCollectionCheckError = false
         console.log('displayPanel set error: !secureCollectionCheck', secureCollectionCheck);
-        displayPanel = 'error';
+        displayPanel = 'loading'; // initially
     } else if (
         !secureCollectionCheckError &&
         !secureCollectionCheckLoading &&
@@ -103,13 +101,15 @@ export const SecureCollection = ({
         console.log('displayPanel: received "Login required" for ', window.location.href);
 
         if (!account || !account.id) {
-            console.log('Login required: redirecting to auth');
+            console.log('Login required: redirecting to auth ; finalLink was ', finalLink);
             displayPanel = 'loginRequired';
+            finalLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+            console.log('loginRequired: finalLink = ', finalLink);
         } else {
             displayPanel = 'loading';
             console.log('user is logged in: ', account);
             console.log('; load next api ', extractPathFromParams(window.location.search));
-            loadActualResponse = true;
+            loadFileApi = true;
         }
     } else if (
         !secureCollectionCheckError &&
@@ -124,9 +124,10 @@ export const SecureCollection = ({
         secureCollectionCheck.displayPanel === 'redirect'
     ) {
         if (!!secureCollectionCheck.url) {
-            console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
+            console.log('displayPanel: received "redirect" for ', window.location.href);
+            displayPanel = 'redirect';
             finalLink = secureCollectionCheck.url;
-            displayPanel = 'commercialCopyright';
+            console.log('redirect: finalLink = ', finalLink);
         } else {
             console.log(
                 'displayPanel set error: secureCollectionCheck.url was missing for ',
@@ -178,6 +179,22 @@ export const SecureCollection = ({
         console.log('displayPanel set error: this shouldnt happen');
         displayPanel = 'error';
     }
+
+    // some files need to redirect to login, some redirect to the final file.
+    React.useEffect(() => {
+        console.log('useEffect: finalLink = ', finalLink);
+        console.log('useEffect: displayPanel = ', displayPanel);
+        if (finalLink !== null && (displayPanel === 'redirect' || displayPanel === 'loginRequired')) {
+            console.log('redirecting to ', finalLink);
+            window.location.assign(finalLink);
+        }
+    }, [finalLink, displayPanel]);
+
+    React.useEffect(() => {
+        if (!!loadFileApi && !!actions.loadSecureCollectionFile) {
+            actions.loadSecureCollectionFile(extractPathFromParams(window.location.search));
+        }
+    }, [loadFileApi, actions]);
 
     const getFileExtension = filename => {
         if (filename === undefined) {
@@ -348,16 +365,20 @@ export const SecureCollection = ({
 
     // the window is set to the auth url before this panel is displayed, so it should only blink up, if at all
     function displayLoginRequiredRedirectorPanel() {
-        const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-        console.log('loginLink = ', loginLink);
+        // const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+        // console.log('loginLink = ', loginLink);
         return wrapFragmentInStandardPage(
             'Redirecting',
             <React.Fragment>
                 <p>Login is required for this file - please wait while you are redirected.</p>
 
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                    <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-check" />
+                    <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-login" />
                 </Grid>
+
+                <p>
+                    You can <a href={finalLink}>click here</a> if you aren't redirected.
+                </p>
             </React.Fragment>,
         );
     }
@@ -368,26 +389,15 @@ export const SecureCollection = ({
             <React.Fragment>
                 <p>We are preparing the file, you should be redirected shortly.</p>
                 <p>
-                    <a href={finalLink}>Download the file</a> if the page does not redirect.
+                    You can <a href={finalLink}>download the file</a> if the page does not redirect.
                 </p>
 
-                <Redirect to={finalLink} />
+                <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
+                    <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-redirect" />
+                </Grid>
             </React.Fragment>,
         );
     }
-
-    React.useEffect(() => {
-        if (displayPanel === 'loginRequired') {
-            const loginLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-            window.location.assign(loginLink);
-        }
-    }, [displayPanel]);
-
-    React.useEffect(() => {
-        if (!!loadActualResponse && !!actions.loadSecureCollectionFile) {
-            actions.loadSecureCollectionFile(extractPathFromParams(window.location.search));
-        }
-    }, [loadActualResponse, actions]);
 
     switch (displayPanel) {
         case 'error':
@@ -395,7 +405,7 @@ export const SecureCollection = ({
         case 'loading':
             return (
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                    <CircularProgress color="primary" size={20} data-testid="loading-secure-collection-check" />
+                    <CircularProgress color="primary" size={20} data-testid="loading-secure-collection" />
                 </Grid>
             );
         case 'noSuchCollection':
