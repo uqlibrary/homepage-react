@@ -92,13 +92,15 @@ export const SecureCollection = ({
         // no such folder: {response: "No such collection"}
         // unauthorised user: {response: "Invalid User"}
         // ok: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
-    }, [actions, currentSearchParams]);
+    }, [actions]);
 
     // TODO figure out 'acknowledged'
 
     let displayPanel;
     let finalLink = null;
     let loadFileApi = false;
+    // unexpectedly, the api responses have attributes all in lower case,
+    // ie secureCollectionCheck.displaypanel NOT secureCollectionCheck.displayPanel
     if (!secureCollectionCheckError && !secureCollectionCheckLoading && !secureCollectionCheck) {
         console.log('displayPanel set error: !secureCollectionCheck', secureCollectionCheck);
         displayPanel = 'loading'; // initially
@@ -137,7 +139,7 @@ export const SecureCollection = ({
     } else if (
         !secureCollectionCheckError &&
         !secureCollectionCheckLoading &&
-        secureCollectionCheck.displayPanel === 'redirect'
+        secureCollectionCheck.displaypanel === 'redirect'
     ) {
         if (!!secureCollectionCheck.url) {
             console.log('displayPanel: received "redirect" for ', window.location.href);
@@ -147,14 +149,14 @@ export const SecureCollection = ({
         } else {
             console.log(
                 'displayPanel set error: secureCollectionCheck.url was missing for ',
-                secureCollectionCheck.displayPanel,
+                secureCollectionCheck.displaypanel,
             );
             displayPanel = 'error';
         }
     } else if (
         !secureCollectionCheckError &&
         !secureCollectionCheckLoading &&
-        secureCollectionCheck.displayPanel === 'commercialCopyright'
+        secureCollectionCheck.displaypanel === 'commercialCopyright'
     ) {
         if (!!secureCollectionCheck.url) {
             console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
@@ -163,14 +165,14 @@ export const SecureCollection = ({
         } else {
             console.log(
                 'displayPanel set error: secureCollectionCheck.url was missing for ',
-                secureCollectionCheck.displayPanel,
+                secureCollectionCheck.displaypanel,
             );
             displayPanel = 'error';
         }
     } else if (
         !secureCollectionCheckError &&
         !secureCollectionCheckLoading &&
-        secureCollectionCheck.displayPanel === 'statutoryCopyright'
+        secureCollectionCheck.displaypanel === 'statutoryCopyright'
     ) {
         if (!!secureCollectionCheck.url) {
             console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
@@ -180,7 +182,7 @@ export const SecureCollection = ({
         } else {
             console.log(
                 'displayPanel set error: secureCollectionCheck.url was missing for ',
-                secureCollectionCheck.displayPanel,
+                secureCollectionCheck.displaypanel,
             );
             displayPanel = 'error';
         }
