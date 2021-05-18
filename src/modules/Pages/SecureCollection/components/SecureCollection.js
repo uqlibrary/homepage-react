@@ -95,11 +95,18 @@ export const SecureCollection = ({
     }, [actions]);
 
     let displayPanel;
-    let finalLink = null;
+    let redirectLink = null;
+    let clickLink = null;
     let loadFileApi = false;
     // unexpectedly, the api responses have attributes all in lower case,
     // ie secureCollection.displaypanel NOT secureCollection.displayPanel
-    if (!secureCollectionError && !secureCollectionLoading && !secureCollection) {
+    if (!!secureCollectionError) {
+        console.log('displayPanel set error: error from api');
+        displayPanel = 'error';
+    } else if (!secureCollectionError && !!secureCollectionLoading) {
+        console.log('displayPanel: loading');
+        displayPanel = 'loading';
+    } else if (!secureCollection) {
         console.log('displayPanel set error: !secureCollection', secureCollection);
         displayPanel = 'loading'; // initially
     } else if (
@@ -109,14 +116,14 @@ export const SecureCollection = ({
     ) {
         console.log('displayPanel: received "No such collection" for ', window.location.href);
         displayPanel = 'noSuchCollection';
-    } else if (!secureCollectionError && !secureCollectionLoading && secureCollection.response === 'Login required') {
+    } else if (secureCollection.response === 'Login required') {
         console.log('displayPanel: received "Login required" for ', window.location.href);
 
         if (!account || !account.id) {
-            console.log('Login required: redirecting to auth ; finalLink was ', finalLink);
+            console.log('Login required: redirecting to auth ; redirectLink was ', redirectLink);
             displayPanel = 'loginRequired';
-            finalLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-            console.log('loginRequired: finalLink = ', finalLink);
+            redirectLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+            console.log('loginRequired: redirectLink = ', redirectLink);
         } else {
             displayPanel = 'loading';
             console.log('user is logged in: ', account);
@@ -124,67 +131,52 @@ export const SecureCollection = ({
             // they are actually logged in! now we ask for the actual file they want
             loadFileApi = true;
         }
-    } else if (!secureCollectionError && !secureCollectionLoading && secureCollection.response === 'Invalid User') {
+    } else if (secureCollection.response === 'Invalid User') {
         console.log('displayPanel: received "Invalid User" for ', window.location.href);
         displayPanel = 'invalidUser';
-    } else if (!secureCollectionError && !secureCollectionLoading && secureCollection.displaypanel === 'redirect') {
+    } else if (secureCollection.displaypanel === 'redirect') {
         if (!!secureCollection.url) {
             console.log('displayPanel: received "redirect" for ', window.location.href);
             displayPanel = 'redirect';
-            finalLink = secureCollection.url;
-            console.log('redirect: finalLink = ', finalLink);
+            redirectLink = secureCollection.url;
+            console.log('redirect: redirectLink = ', redirectLink);
         } else {
             console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
-    } else if (
-        !secureCollectionError &&
-        !secureCollectionLoading &&
-        secureCollection.displaypanel === 'commercialCopyright'
-    ) {
+    } else if (secureCollection.displaypanel === 'commercialCopyright') {
         if (!!secureCollection.url) {
             console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
-            finalLink = secureCollection.url;
+            clickLink = secureCollection.url;
             displayPanel = 'commercialCopyright';
         } else {
             console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
-    } else if (
-        !secureCollectionError &&
-        !secureCollectionLoading &&
-        secureCollection.displaypanel === 'statutoryCopyright'
-    ) {
+    } else if (secureCollection.displaypanel === 'statutoryCopyright') {
         if (!!secureCollection.url) {
             console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
-            finalLink = secureCollection.url;
-            console.log('setting finalLink = ', secureCollection.url);
+            clickLink = secureCollection.url;
+            console.log('setting clickLink = ', secureCollection.url);
             displayPanel = 'statutoryCopyright';
         } else {
             console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
-    } else if (!!secureCollectionError) {
-        console.log('displayPanel set error: error from api');
-        displayPanel = 'error';
-    } else if (!secureCollectionError && !!secureCollectionLoading) {
-        console.log('displayPanel: loading');
-        displayPanel = 'loading';
     } else {
         // this shouldnt happen
         console.log('displayPanel set error: this shouldnt happen');
         displayPanel = 'error';
     }
 
-    // some files need to redirect to login, some redirect to the final file.
+    // some files need to redirect to login, some redirect to the final file. Not all redirect.
     React.useEffect(() => {
-        console.log('useEffect: finalLink = ', finalLink);
-        console.log('useEffect: displayPanel = ', displayPanel);
-        if (finalLink !== null && (displayPanel === 'redirect' || displayPanel === 'loginRequired')) {
-            console.log('redirecting to ', finalLink);
-            window.location.assign(finalLink);
+        console.log('useEffect: redirectLink = ', redirectLink);
+        if (redirectLink !== null) {
+            console.log('redirecting to ', redirectLink);
+            window.location.assign(redirectLink);
         }
-    }, [finalLink, displayPanel]);
+    }, [redirectLink]);
 
     React.useEffect(() => {
         if (!!loadFileApi && !!actions.loadSecureCollectionFile) {
@@ -197,7 +189,7 @@ export const SecureCollection = ({
             return false;
         }
 
-        // remove any search param from the url so we can easily extract the file extension
+        // remove any search param from the url so we can extract the file extension
         const url = new URL(filename);
         url.search = '';
         const pathName = url.pathname;
@@ -233,7 +225,7 @@ export const SecureCollection = ({
 
     console.log('displayPanel = ', displayPanel);
 
-    const fileExtension = !!finalLink && getFileExtension(finalLink);
+    const fileExtension = !!clickLink && getFileExtension(clickLink);
 
     function displayCommercialCopyrightAcknowledgementPanel() {
         return wrapFragmentInStandardPage(
@@ -256,7 +248,7 @@ export const SecureCollection = ({
                     under the Act.
                 </p>
                 <div id="download">
-                    <a className={classes.followLink} href={finalLink}>
+                    <a className={classes.followLink} href={clickLink}>
                         Acknowledge Copyright and Download
                     </a>
                 </div>
@@ -284,7 +276,7 @@ export const SecureCollection = ({
                     protection under the Act.
                 </p>
                 <div id="download">
-                    <a className={classes.followLink} href={finalLink}>
+                    <a className={classes.followLink} href={clickLink}>
                         Acknowledge Copyright and Download
                     </a>
                 </div>
@@ -373,7 +365,7 @@ export const SecureCollection = ({
                 </Grid>
 
                 <p>
-                    You can <a href={finalLink}>click here</a> if you aren't redirected.
+                    You can <a href={redirectLink}>click here</a> if you aren't redirected.
                 </p>
             </React.Fragment>,
         );
@@ -385,7 +377,7 @@ export const SecureCollection = ({
             <React.Fragment>
                 <p>We are preparing the file, you should be redirected shortly.</p>
                 <p>
-                    You can <a href={finalLink}>download the file</a> if the page does not redirect.
+                    You can <a href={redirectLink}>download the file</a> if the page does not redirect.
                 </p>
 
                 <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
