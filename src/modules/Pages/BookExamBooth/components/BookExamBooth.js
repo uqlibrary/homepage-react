@@ -85,7 +85,7 @@ const BookExamBooth = ({
     };
 
     return (
-        <StandardPage title={locale.pageTitle}>
+        <StandardPage title={locale.pageTitle} goBackFunc={null}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     {locale.intro}
