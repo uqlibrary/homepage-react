@@ -7,6 +7,7 @@ import { DatePicker } from '@material-ui/pickers';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { useTitle } from 'hooks';
 
 import locale from '../bookExamBooth.locale';
 
@@ -18,6 +19,8 @@ const BookExamBooth = ({
     sessionLengthList,
     startTimeHoursListByExamLength,
 }) => {
+    useTitle(locale.title);
+
     const dateFormat = 'YYYY-MM-DD';
     const defaultHour = 8;
     const defaultMinute = 15;
@@ -82,7 +85,7 @@ const BookExamBooth = ({
     };
 
     return (
-        <StandardPage title={locale.title}>
+        <StandardPage title={locale.pageTitle}>
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     {locale.intro}
@@ -118,7 +121,7 @@ const BookExamBooth = ({
                 </Grid>
                 {isProctorU === 'no' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.noBookingMessage.title}>
+                        <StandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
                             {locale.noBookingMessage.message}
                         </StandardCard>
                     </Grid>
@@ -126,7 +129,7 @@ const BookExamBooth = ({
 
                 {isProctorU === 'yes' && (
                     <Grid item xs={12}>
-                        <StandardCard title={locale.detailsSectionHeading}>
+                        <StandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <label htmlFor="examType">{locale.examType.label}</label>
@@ -217,7 +220,7 @@ const BookExamBooth = ({
                                             );
                                         })}
                                     </Select>
-                                    :
+                                    :{' '}
                                     <Select
                                         aria-label={locale.startTimeMinutes.aria}
                                         data-testid="start-time-minutes"
