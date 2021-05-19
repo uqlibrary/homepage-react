@@ -63,7 +63,7 @@ export class Page extends Component {
             title,
             children,
             help,
-            goBackFunc = () => (!!history && history.back()) || window.back(),
+            goBackFunc = () => (!!history && history.back()) || window.history.back(),
             goBackTooltip = 'Go back',
         } = this.props;
         return (

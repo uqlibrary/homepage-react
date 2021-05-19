@@ -1,10 +1,11 @@
 import React from 'react';
 
 export default {
-    title: 'Book an exam booth in the Biological Sciences Library',
+    title: 'Book an exam booth - Library - The University of Queensland',
+    pageTitle: 'Book an exam booth in the Biological Sciences Library',
     intro: (
         <p>
-            Please use this form to find an available booth in which to sit your exam at the{' '}
+            Please use this form to find an available booth in which to sit your invigilated (ProctorU) exam at the{' '}
             <a
                 href="https://use.mazemap.com/#v=1&config=uq&zlevel=1&center=153.013203,-27.497685&zoom=15.6&sharepoitype=poi&sharepoi=1000013772&campuses=uq&campusid=406"
                 target="_blank"
@@ -22,14 +23,13 @@ export default {
         noText: 'No, I am NOT sitting a ProctorU exam',
     },
     noBookingMessage: {
-        title: 'No booking necessary',
+        title: 'Find or book a quiet space',
         message: (
             <React.Fragment>
-                Please use one of the locations available{' '}
-                <a href="https://web.library.uq.edu.au/library-services/students/find-study-and-non-invigilated-exam-space">
-                    around campus
-                </a>
-                .
+                <a href="https://uqbookit.uq.edu.au/#/app/booking-types/77b52dde-d704-4b6d-917e-e820f7df07cb">
+                    Book a library room (UQ login required)
+                </a>{' '}
+                or find a quiet location on-campus to sit your exam.
             </React.Fragment>
         ),
     },
@@ -47,7 +47,7 @@ export default {
     },
     startTimeHours: {
         aria: 'Select the nearest hour',
-        label: 'What is your registered ProctorU appointment time? - Select the nearest possible time',
+        label: 'What is your registered ProctorU appointment time? Select the nearest possible time.',
     },
     startTimeMinutes: {
         aria: 'Select the nearest minute value',

@@ -7,17 +7,17 @@ context('Book Exam Booth page', () => {
     });
 
     it('should show initial view', () => {
-        cy.get('[data-testid="StandardPage-title"]').contains(locale.title);
+        cy.get('[data-testid="StandardPage-title"]').contains(locale.pageTitle);
     });
 
     it('should show message on selecting "am not sitting a ProctorU exam"', () => {
         cy.get('[data-testid="display-decider-option-no"]').click();
-        cy.get('[data-testid="standard-card-no-booking-necessary"]').should('exist');
+        cy.get('[data-testid="no-booking-necessary"]').should('exist');
     });
 
     it('should display form for booking details on selecting "am sitting a ProctorU exam"', () => {
         cy.get('[data-testid="display-decider-option-yes"]').click();
-        cy.get('[data-testid="standard-card-booking-details"]')
+        cy.get('[data-testid="booking-details"]')
             .should('exist')
             .should('contain', locale.examType.label)
             .should('contain', locale.sessionLength.label)
