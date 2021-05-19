@@ -140,4 +140,14 @@ context('Secure Collection', () => {
         cy.wait(1500);
         cy.get('body').contains('I am a file resource delivered to the user');
     });
+
+    it('has a working back button', () => {
+        cy.visit('/?user=uqstaff'); // supply a page the back button can return to
+
+        cy.visit('/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf');
+        cy.get('body').contains('WARNING');
+
+        cy.get('button[data-testid=StandardPage-goback-button]').click();
+        cy.url().should('eq', 'http://localhost:2020/?user=uqstaff');
+    });
 });
