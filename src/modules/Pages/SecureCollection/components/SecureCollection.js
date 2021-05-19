@@ -112,7 +112,7 @@ export const SecureCollection = ({
         // ok, eg: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
     }, [actions]);
 
-    let displayPanel;
+    let displayPanel = 'error';
     let redirectLink = null;
     let clickLink = null;
     let loadFileApi = false;
@@ -173,6 +173,7 @@ export const SecureCollection = ({
             console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
+        /* istanbul ignore else */
     } else if (secureCollection.displaypanel === 'statutoryCopyright') {
         /* istanbul ignore else */
         if (!!secureCollection.url) {
@@ -184,10 +185,6 @@ export const SecureCollection = ({
             console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
-    } else {
-        // this shouldnt happen
-        console.log('displayPanel set error: this shouldnt happen');
-        displayPanel = 'error';
     }
 
     React.useEffect(() => {
@@ -290,6 +287,7 @@ export const SecureCollection = ({
         const getEmailBody = () => {
             let emailBody = 'Hi there!' + '\n\n';
             emailBody += "I'd like to report a problem with the Secure File Collection." + '\n\n';
+            /* istanbul ignore else */
             if (document.referrer !== '') {
                 emailBody += 'I was visiting ' + document.referrer + ' and clicked a link.' + '\n';
             }
@@ -347,6 +345,7 @@ export const SecureCollection = ({
 
     // the window is set to the auth url before this panel is displayed, so it should only blink up, if at all
     function displayLoginRequiredRedirectorPanel(redirectLink) {
+        /* istanbul ignore else */
         if (redirectLink !== null) {
             console.log('redirecting to auth: ', redirectLink);
             window.location.assign(redirectLink);
@@ -368,6 +367,7 @@ export const SecureCollection = ({
     }
 
     function displayRedirectingPanel(redirectLink) {
+        /* istanbul ignore else */
         if (redirectLink !== null) {
             console.log('redirecting to file: ', redirectLink);
             window.location.assign(redirectLink);
@@ -408,7 +408,9 @@ export const SecureCollection = ({
             return displayNoAccessPanel();
         case 'redirect':
             return displayRedirectingPanel(redirectLink);
+        /* istanbul ignore next */
         default:
+            // to satisfy switch syntax - shouldnt be possible
             return wrapFragmentInStandardPage('', <div className="waiting empty">Something went wrong</div>);
     }
 };
