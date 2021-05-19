@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useRecordContext, useAccountContext } from 'context';
 import { publicationTypes } from 'config';
 import { useTheme } from '@material-ui/core/styles';
@@ -53,3 +53,13 @@ export const useWidth = () => {
         }, null) || 'xs'
     );
 };
+
+export function useTitle(title) {
+    useEffect(() => {
+        const prevTitle = document.title;
+        document.title = title;
+        return () => {
+            document.title = prevTitle;
+        };
+    });
+}

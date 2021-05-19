@@ -87,6 +87,8 @@ export const CourseResourceSearch = ({
         event.preventDefault();
     };
 
+    const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
+
     const throttledCourseResourceLoadSuggestions = useRef(
         throttle(3100, newValue => actions.loadCourseReadingListsSuggestions(newValue)),
     );
@@ -103,13 +105,26 @@ export const CourseResourceSearch = ({
 
             if (newValue.length <= 3) {
                 actions.clearCourseResourceSuggestions();
+                noOptionsTextSetter(locale.search.noOptionsText);
             } else if (!isRepeatingString(newValue)) {
                 // if we pass a space in the search string, Autocomplete refuses to display a result
                 // but - api only returns anything for "multiple words" when they make up a course code
                 // (eg 'health economics' doesnt return anything, but 'FREN 1010' does)
                 // so spaces do nothing anyway
                 throttledCourseResourceLoadSuggestions.current(newValue.replace(' ', ''));
+
                 document.getElementById(`${elementId}-autocomplete`).focus();
+
+                // give time for the api to load before we display the error to avoid an unneeded flash of red.
+                // No, CRsuggestionsLoading === false didnt do it
+                const delayErrorDisplay = setInterval(() => {
+                    clearInterval(delayErrorDisplay);
+                    noOptionsTextSetter(
+                        <span data-testid="noCoursesFound" style={{ color: 'red' }}>
+                            {locale.search.noResultsText}
+                        </span>,
+                    );
+                }, 500);
             }
         },
         [actions, elementId],
@@ -170,7 +185,7 @@ export const CourseResourceSearch = ({
                         }}
                         inputValue={inputValue}
                         onInputChange={handleTypedKeywordChange}
-                        noOptionsText={locale.search.noOptionsText}
+                        noOptionsText={noOptionsText}
                         renderGroup={renderGroup}
                         groupBy={() => false}
                         renderInput={params => {

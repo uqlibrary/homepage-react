@@ -7,13 +7,10 @@
   "defaultCommandTimeout": 10000,
   "videoUploadOnPasses": false,
   "projectId": "d2f4io",
-  "blacklistHosts": ["www.googletagmanager.com"],
-  "firefoxGcInterval": {
-    "runMode": 1,
-    "openMode": 1
-  },
+  "blockHosts": ["www.googletagmanager.com"],
   "numTestsKeptInMemory": 1,
-  "env": {
-    "RETRIES": 5
+  "retries": {
+    "openMode": 0,
+    "runMode": 5
   }
 }

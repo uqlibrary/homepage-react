@@ -9,7 +9,7 @@ describe('Routes getMenuConfig method', () => {
     describe('Routes getRoutesConfig method', () => {
         it('should return a list of routes for anon user', () => {
             const testRoutes = routes.getRoutesConfig({ components: {}, account: null });
-            expect(testRoutes.length).toEqual(3);
+            expect(testRoutes.length).toEqual(4);
         });
     });
 });

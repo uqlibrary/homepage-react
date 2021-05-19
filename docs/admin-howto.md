@@ -24,25 +24,11 @@ Notes:
 
 ## To edit the Mega menu
 
-(This also covers, eg the list of services in the Connect Footer that matches the headers in the mega menu)
-
-Edit [menu.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/locale/menu.js) and then follow the steps above
-
-Please leave the datatestid elements in place
-
-* Note: the older reusable-elements json file still needs to be updated identically at the time of writing, to provide the same menu to Drupal... [see the README](https://github.com/uqlibrary/uqlibrary-reusable-components#updating-ia)
+Visit the [reusable webcomonents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
 
 ## To edit the Footer
 
-Edit [footer.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/SharedComponents/Footer/footer.locale.js) and then follow the steps above
-
-(Note that only the Connect Footer items are working - Minimal Footer is controlled by ITS markup)
-
-## To edit the Ask Us menu
-
-Edit [AskUs.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/App/components/AskUs.locale.js)
-
-Be sure not to touch the icons
+Visit the [reusable webcomonents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
 
 ## Viewing what each user type sees
 

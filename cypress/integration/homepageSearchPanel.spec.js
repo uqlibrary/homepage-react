@@ -38,6 +38,14 @@ describe('Homepage Search Panel', () => {
                 .find('li')
                 .its('length')
                 .should('eq', 10);
+
+            // there are 4 links below the books search text area
+            cy.get('div[data-testid="primo-search-select"]').click();
+            cy.get('li[data-testid="primo-search-item-1"]').click();
+            cy.get('div[data-testid="primo-search-links"]')
+                .find('div')
+                .its('length')
+                .should('eq', 4 + 1);
         });
 
         it('Journal articles search should have the expected items', () => {
@@ -70,6 +78,14 @@ describe('Homepage Search Panel', () => {
             cy.get('button[data-testid="primo-search-autocomplete-voice-clear"]').click();
             cy.get('input[data-testid="primo-search-autocomplete-input"]').type('history', 100);
             cy.get('ul[data-testid="primo-search-autocomplete-listbox"]').should('not.exist');
+
+            // there are 2 links below the books search text area
+            cy.get('div[data-testid="primo-search-select"]').click();
+            cy.get('li[data-testid="primo-search-item-6"]').click();
+            cy.get('div[data-testid="primo-search-links"]')
+                .find('div')
+                .its('length')
+                .should('eq', 2 + 1);
         });
 
         it('Exams should have the expected items', () => {
@@ -117,6 +133,14 @@ describe('Homepage Search Panel', () => {
                 .find('li')
                 .its('length')
                 .should('eq', 11);
+
+            // there is one link below the exams search text area
+            cy.get('div[data-testid="primo-search-select"]').click();
+            cy.get('li[data-testid="primo-search-item-7"]').click();
+            cy.get('div[data-testid="primo-search-links"]')
+                .find('div')
+                .its('length')
+                .should('eq', 1 + 1);
         });
     });
 });
