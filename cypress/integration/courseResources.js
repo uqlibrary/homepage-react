@@ -231,10 +231,10 @@ context('Course Resources', () => {
         cy.get('[data-testid="noCoursesFound"]').contains(locale.search.noResultsText);
 
         cy.get('div[data-testid=full-courseresource-autocomplete] input').clear();
-        cy.get('[data-testid="noCoursesFound"]').should('not.contain', locale.search.noResultsText);
+        cy.get('[data-testid="noCoursesFound"]').should('not.exist');
 
         cy.get('div[data-testid=full-courseresource-autocomplete] input').type(typeChar);
-        cy.get('[data-testid="noCoursesFound"]').should('not.contain', locale.search.noResultsText);
+        cy.get('[data-testid="noCoursesFound"]').should('not.exist');
 
         cy.get('ul#full-courseresource-autocomplete-popup')
             .children()
