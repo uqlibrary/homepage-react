@@ -96,11 +96,6 @@ export const SecureCollection = ({
     secureCollectionLoading,
     secureCollectionError,
 }) => {
-    console.log('SecureCollection - account = ', account);
-    console.log('SecureCollection - secureCollectionLoading = ', secureCollectionLoading);
-    console.log('SecureCollection - secureCollectionError = ', secureCollectionError);
-    console.log('SecureCollection - secureCollection = ', secureCollection);
-
     const classes = useStyles();
 
     React.useEffect(() => {
@@ -119,70 +114,51 @@ export const SecureCollection = ({
     // unexpectedly, the api responses have attributes all in lower case,
     // ie secureCollection.displaypanel NOT secureCollection.displayPanel
     if (!!secureCollectionError) {
-        console.log('displayPanel set error: error from api');
         displayPanel = 'error';
     } else if (!secureCollectionError && !!secureCollectionLoading) {
-        console.log('displayPanel: loading');
         displayPanel = 'loading';
     } else if (!secureCollection) {
-        console.log('displayPanel set error: !secureCollection', secureCollection);
         displayPanel = 'loading'; // initially
     } else if (
         !secureCollectionError &&
         !secureCollectionLoading &&
         secureCollection.response === 'No such collection'
     ) {
-        console.log('displayPanel: received "No such collection" for ', window.location.href);
         displayPanel = 'noSuchCollection';
     } else if (secureCollection.response === 'Login required') {
-        console.log('displayPanel: received "Login required" for ', window.location.href);
-
         if (!account || !account.id) {
-            console.log('Login required: redirecting to auth ; redirectLink was ', redirectLink);
             displayPanel = 'loginRequired';
             redirectLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-            console.log('loginRequired: redirectLink = ', redirectLink);
         } else {
             displayPanel = 'loading';
-            console.log('user is logged in: ', account);
-            console.log('; load next api ', extractPathFromParams(window.location.href));
             // they are actually logged in! now we ask for the actual file they want
             loadFileApi = true;
         }
     } else if (secureCollection.response === 'Invalid User') {
-        console.log('displayPanel: received "Invalid User" for ', window.location.href);
         displayPanel = 'invalidUser';
     } else if (secureCollection.displaypanel === 'redirect') {
         /* istanbul ignore else */
         if (!!secureCollection.url) {
-            console.log('displayPanel: received "redirect" for ', window.location.href);
             displayPanel = 'redirect';
             redirectLink = secureCollection.url;
-            console.log('redirect: redirectLink = ', redirectLink);
         } else {
-            console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
     } else if (secureCollection.displaypanel === 'commercialCopyright') {
         /* istanbul ignore else */
         if (!!secureCollection.url) {
-            console.log('displayPanel: received "commercialCopyright" for ', window.location.href);
             clickLink = secureCollection.url;
             displayPanel = 'commercialCopyright';
         } else {
-            console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
         /* istanbul ignore else */
     } else if (secureCollection.displaypanel === 'statutoryCopyright') {
         /* istanbul ignore else */
         if (!!secureCollection.url) {
-            console.log('displayPanel: received "statutoryCopyright" for ', window.location.href);
             clickLink = secureCollection.url;
-            console.log('setting clickLink = ', secureCollection.url);
             displayPanel = 'statutoryCopyright';
         } else {
-            console.log('displayPanel set error: secureCollection.url was missing for ', secureCollection.displaypanel);
             displayPanel = 'error';
         }
     }
@@ -213,8 +189,6 @@ export const SecureCollection = ({
             </StandardPage>
         );
     };
-
-    console.log('displayPanel = ', displayPanel);
 
     const fileExtension = !!clickLink && getFileExtension(clickLink);
 
@@ -347,7 +321,6 @@ export const SecureCollection = ({
     function displayLoginRequiredRedirectorPanel(redirectLink) {
         /* istanbul ignore else */
         if (redirectLink !== null) {
-            console.log('redirecting to auth: ', redirectLink);
             window.location.assign(redirectLink);
         }
         return wrapFragmentInStandardPage(
@@ -369,7 +342,6 @@ export const SecureCollection = ({
     function displayRedirectingPanel(redirectLink) {
         /* istanbul ignore else */
         if (redirectLink !== null) {
-            console.log('redirecting to file: ', redirectLink);
             window.location.assign(redirectLink);
         }
         return wrapFragmentInStandardPage(
