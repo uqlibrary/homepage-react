@@ -259,7 +259,7 @@ export const SecureCollection = ({
             <React.Fragment>
                 <p>
                     This material has been reproduced and communicated to you by or on behalf of The University of
-                    Queensland in accordance with section 113P of the Copyright Act 1968 (Act). The material in this
+                    Queensland in accordance with section 113P of the Copyright Act 1968 (the Act). The material in this
                     communication may be subject to copyright under the Act.
                 </p>
                 <p>
