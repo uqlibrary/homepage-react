@@ -1,12 +1,12 @@
 describe('Homepage Search Panel', () => {
     beforeEach(() => {
         cy.visit('/');
-        cy.viewport(1300, 1000);
-        cy.get('[data-testid="primo-search"]').contains('Search');
-        cy.wait(1000);
     });
     context('Homepage Search Panel', () => {
         it('the search dropdown has the expected children', () => {
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="primo-search"]').contains('Search');
+            cy.wait(1000);
             // on first load, the library drop down displays "Library"
             cy.get('div[data-testid="primo-search-select"]').contains('Library');
 
@@ -26,7 +26,30 @@ describe('Homepage Search Panel', () => {
                 .should('eq', 4 + 1);
         });
 
+        it('Homepage Search accessibility', () => {
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+            cy.get('div#primo-search').contains('Search');
+            cy.log('Primo Search - not yet touched');
+            cy.checkA11y('div#primo-search', {
+                reportName: 'Primo Search',
+                scopeName: 'Pristine',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+            cy.get('input[data-testid="primo-search-autocomplete-input"]').type('beard', 100);
+            cy.get('ul[data-testid="primo-search-autocomplete-listbox"]').contains('beard');
+            cy.log('Primo Search - with autosuggestions present');
+            cy.checkA11y('ul[data-testid="primo-search-autocomplete-listbox"]', {
+                reportName: 'Primo Search',
+                scopeName: 'Options list',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+
         it('Books search should have the expected items', () => {
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="primo-search"]').contains('Search');
+            cy.wait(1000);
             // main library search (choose Books)
             cy.get('div[data-testid="primo-search-select"]').click();
             cy.get('li[data-testid="primo-search-item-1"]').click();
@@ -49,6 +72,9 @@ describe('Homepage Search Panel', () => {
         });
 
         it('Journal articles search should have the expected items', () => {
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="primo-search"]').contains('Search');
+            cy.wait(1000);
             // main library search (choose Journal articles)
             cy.get('div[data-testid="primo-search-select"]').click();
             cy.get('li[data-testid="primo-search-item-2"]').click();
@@ -63,6 +89,9 @@ describe('Homepage Search Panel', () => {
         });
 
         it('Databases should have the expected items', () => {
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="primo-search"]').contains('Search');
+            cy.wait(1000);
             cy.get('div[data-testid="primo-search-select"]').click();
             cy.get('li[data-testid="primo-search-item-6"]').click();
 
@@ -89,6 +118,9 @@ describe('Homepage Search Panel', () => {
         });
 
         it('Exams should have the expected items', () => {
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="primo-search"]').contains('Search');
+            cy.wait(1000);
             // exams occurs in the dropdown
             cy.get('div[data-testid="primo-search-select"]').click();
             cy.get('li[data-testid="primo-search-item-7"]').click();
@@ -114,6 +146,9 @@ describe('Homepage Search Panel', () => {
         });
 
         it('Course resources should have the expected items', () => {
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="primo-search"]').contains('Search');
+            cy.wait(1000);
             // course resources occurs in the dropdown
             cy.get('div[data-testid="primo-search-select"]').click();
             cy.get('li[data-testid="primo-search-item-8"]').click();

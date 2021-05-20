@@ -118,3 +118,9 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
         apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list`,
     };
 };
+
+// confirm the user's login, when needed
+export const SECURE_COLLECTION_CHECK_API = ({ path }) => ({ apiUrl: `file/collection/testlogin/${path}` });
+
+// get file & folder details file/collection/{folder}/{filePath}
+export const SECURE_COLLECTION_FILE_API = ({ path }) => ({ apiUrl: `file/collection/${path}?acknowledged` });
