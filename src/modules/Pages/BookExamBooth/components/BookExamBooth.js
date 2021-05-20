@@ -194,7 +194,7 @@ const BookExamBooth = ({
                                         name="startDate"
                                         onChange={_handleStartDateChange}
                                         type="date"
-                                        value={yesterday}
+                                        value={startDate}
                                     />
                                 </Grid>
                                 <Grid item xs={12}>
