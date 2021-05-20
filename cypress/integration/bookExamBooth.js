@@ -43,7 +43,7 @@ context('Book Exam Booth page', () => {
         });
     });
 
-    it('should redirect to expected url on submit without changing values', () => {
+    it('should redirect to expected url on submit with updated values', () => {
         cy.intercept(/uqbookit/, 'done'); // Stub to block URL
         cy.get('[data-testid="display-decider-option-yes"]').click();
 
@@ -59,7 +59,10 @@ context('Book Exam Booth page', () => {
         const selectedDateTime = moment()
             .add(1, 'year')
             .date(10);
-        cy.get('[data-testid="start-date"] input').click();
+        cy.get('[data-testid="start-date"] input')
+            .as('date-input')
+
+            .click();
         cy.get('[role="dialog"] button')
             .contains(currentDateTime.year())
             .click();
@@ -72,6 +75,11 @@ context('Book Exam Booth page', () => {
         cy.get('[role="dialog"] button')
             .contains('OK')
             .click();
+        cy.get('@date-input')
+            .invoke('val')
+            .then(text => {
+                expect(text).to.equal(selectedDateTime.format('YYYY-MM-DD'));
+            });
 
         // Choose a custom time
         cy.get('[data-testid="start-time-hours"]').click();
