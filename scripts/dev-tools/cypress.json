@@ -5,5 +5,5 @@
   "video": false,
   "chromeWebSecurity": false,
   "videoUploadOnPasses": false,
-  "blacklistHosts": ["www.googletagmanager.com"]
+  "blockHosts": ["www.googletagmanager.com"]
 }
