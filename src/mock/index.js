@@ -236,7 +236,6 @@ const apiUrl = routes.SECURE_COLLECTION_CHECK_API({
     path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf',
 }).apiUrl;
 mock.onGet(apiUrl).reply(() => {
-    console.log('getting check api ', apiUrl);
     return [200, { response: 'Login required' }];
 });
 // https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
@@ -273,11 +272,9 @@ mock.onGet(
 // https://files.library.uq.edu.au/coursebank/111111111111111.pdf
 // http://localhost:2020/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
-    console.log('return check api statutoryCopyright for 111111111111111: login required');
     return [200, { response: 'Login required' }];
 });
 mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
-    console.log('return main api statutoryCopyright for 111111111111111');
     return [
         200,
         {
@@ -292,11 +289,9 @@ mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'coursebank/111111111111111
 // https://files.library.uq.edu.au/bomdata/abcdef.zip
 // http://localhost:2020/collection?user=s1111111&collection=bomdata&file=abcdef.zip
 mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
-    console.log('return commercialCopyright for bom');
     return [200, { response: 'Login required' }];
 });
 mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
-    console.log('return commercialCopyright for bom');
     return [
         200,
         {
@@ -316,14 +311,12 @@ mock.onGet(
     routes.SECURE_COLLECTION_CHECK_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' })
         .apiUrl,
 ).reply(() => {
-    console.log('return redirect for thomson');
     return [200, { response: 'Login required' }];
 });
 mock.onGet(
     routes.SECURE_COLLECTION_FILE_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' })
         .apiUrl,
 ).reply(() => {
-    console.log('return redirect for thomson');
     return [
         200,
         {
