@@ -5,7 +5,8 @@ export default {
     pageTitle: 'Book an exam booth in the Biological Sciences Library',
     intro: (
         <p>
-            Please use this form to find an available booth in which to sit your invigilated (ProctorU) exam at the{' '}
+            Please use this form to find an available booth in which to sit your online invigilated (ProctorU) exam at
+            the{' '}
             <a
                 href="https://use.mazemap.com/#v=1&config=uq&zlevel=1&center=153.013203,-27.497685&zoom=15.6&sharepoitype=poi&sharepoi=1000013772&campuses=uq&campusid=406"
                 target="_blank"
