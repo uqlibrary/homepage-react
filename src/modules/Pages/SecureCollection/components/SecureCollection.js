@@ -119,12 +119,6 @@ export const SecureCollection = ({
         displayPanel = 'loading';
     } else if (!secureCollection) {
         displayPanel = 'loading'; // initially
-    } else if (
-        !secureCollectionError &&
-        !secureCollectionLoading &&
-        secureCollection.response === 'No such collection'
-    ) {
-        displayPanel = 'noSuchCollection';
     } else if (secureCollection.response === 'Login required') {
         if (!account || !account.id) {
             displayPanel = 'loginRequired';
@@ -152,7 +146,6 @@ export const SecureCollection = ({
         } else {
             displayPanel = 'error';
         }
-        /* istanbul ignore else */
     } else if (secureCollection.displaypanel === 'statutoryCopyright') {
         /* istanbul ignore else */
         if (!!secureCollection.url) {
@@ -161,6 +154,10 @@ export const SecureCollection = ({
         } else {
             displayPanel = 'error';
         }
+    } else {
+        // should mean secureCollection.response === 'No such collection',
+        // but at any rate it isnt one of the recognised types, so display 'no such'
+        displayPanel = 'noSuchCollection';
     }
 
     React.useEffect(() => {
