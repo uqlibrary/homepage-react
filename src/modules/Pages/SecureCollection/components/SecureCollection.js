@@ -167,7 +167,8 @@ export const SecureCollection = ({
         if (!!loadFileApi && !!actions.loadSecureCollectionFile) {
             actions.loadSecureCollectionFile(extractPathFromParams(window.location.href));
         }
-    }, [loadFileApi, actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadFileApi]);
 
     const wrapFragmentInStandardPage = (title, fragment) => {
         return (
