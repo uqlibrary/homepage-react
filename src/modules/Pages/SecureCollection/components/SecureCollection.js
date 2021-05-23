@@ -99,13 +99,16 @@ export const SecureCollection = ({
     const classes = useStyles();
 
     React.useEffect(() => {
-        !!actions.loadSecureCollectionCheck && actions.loadSecureCollectionCheck(currentSearchParams);
+        actions.loadSecureCollectionCheck(currentSearchParams);
 
-        // error: {response: true, responseText: "An unknown error occurred"}
-        // no such folder: {response: "No such collection"}
-        // unauthorised user: {response: "Invalid User"}
-        // ok, eg: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
-    }, [actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // example api responses:
+    // error: {response: true, responseText: "An unknown error occurred"}
+    // no such folder: {response: "No such collection"}
+    // unauthorised user: {response: "Invalid User"}
+    // ok, eg: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
 
     let displayPanel = 'error';
     let redirectLink = null;
