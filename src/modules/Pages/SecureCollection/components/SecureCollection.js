@@ -99,13 +99,16 @@ export const SecureCollection = ({
     const classes = useStyles();
 
     React.useEffect(() => {
-        !!actions.loadSecureCollectionCheck && actions.loadSecureCollectionCheck(currentSearchParams);
+        actions.loadSecureCollectionCheck(currentSearchParams);
 
-        // error: {response: true, responseText: "An unknown error occurred"}
-        // no such folder: {response: "No such collection"}
-        // unauthorised user: {response: "Invalid User"}
-        // ok, eg: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
-    }, [actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    // example api responses:
+    // error: {response: true, responseText: "An unknown error occurred"}
+    // no such folder: {response: "No such collection"}
+    // unauthorised user: {response: "Invalid User"}
+    // ok, eg: {url: "https://dddnk7oxlhhax.cloudfront.net/secure/exams/0001/3e201.pdf?...", displayPanel: 'redirect'}
 
     let displayPanel = 'error';
     let redirectLink = null;
@@ -119,12 +122,6 @@ export const SecureCollection = ({
         displayPanel = 'loading';
     } else if (!secureCollection) {
         displayPanel = 'loading'; // initially
-    } else if (
-        !secureCollectionError &&
-        !secureCollectionLoading &&
-        secureCollection.response === 'No such collection'
-    ) {
-        displayPanel = 'noSuchCollection';
     } else if (secureCollection.response === 'Login required') {
         if (!account || !account.id) {
             displayPanel = 'loginRequired';
@@ -152,7 +149,6 @@ export const SecureCollection = ({
         } else {
             displayPanel = 'error';
         }
-        /* istanbul ignore else */
     } else if (secureCollection.displaypanel === 'statutoryCopyright') {
         /* istanbul ignore else */
         if (!!secureCollection.url) {
@@ -161,13 +157,18 @@ export const SecureCollection = ({
         } else {
             displayPanel = 'error';
         }
+    } else {
+        // should mean secureCollection.response === 'No such collection',
+        // but at any rate it isnt one of the recognised types, so display 'no such'
+        displayPanel = 'noSuchCollection';
     }
 
     React.useEffect(() => {
         if (!!loadFileApi && !!actions.loadSecureCollectionFile) {
             actions.loadSecureCollectionFile(extractPathFromParams(window.location.href));
         }
-    }, [loadFileApi, actions]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [loadFileApi]);
 
     const wrapFragmentInStandardPage = (title, fragment) => {
         return (
