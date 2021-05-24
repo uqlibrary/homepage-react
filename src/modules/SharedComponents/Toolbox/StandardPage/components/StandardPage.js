@@ -1,4 +1,5 @@
 import React from 'react';
+import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -51,14 +52,31 @@ export const useStyles = makeStyles(
     { withTheme: true },
 );
 
+export const getBackNavFunc = history => {
+    if (!document.referrer) {
+        return null;
+    }
+    if (!!history && typeof history.goBack === 'function') {
+        return () => {
+            history.goBack();
+        };
+    }
+    return () => {
+        window.history.back();
+    };
+};
+
 export const StandardPage = ({
     title,
     children,
     help,
-    goBackFunc = () => (!!history && history.back()) || window.history.back(),
+    goBackFunc: customGoBackFunc = false,
     goBackTooltip = 'Go back',
 }) => {
+    const history = useHistory();
     const classes = useStyles();
+
+    const goBackFunc = customGoBackFunc !== false ? customGoBackFunc : getBackNavFunc(history);
 
     const renderBackButton = () =>
         !!goBackFunc && (

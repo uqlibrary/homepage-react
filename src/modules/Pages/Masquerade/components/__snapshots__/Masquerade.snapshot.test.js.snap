@@ -2,7 +2,6 @@
 
 exports[`Component Masquerade Should render form as expected 1`] = `
 <StandardPage
-  goBackFunc={[Function]}
   goBackTooltip="Go back"
   title="Masquerade"
 >
@@ -76,7 +75,6 @@ exports[`Component Masquerade Should render form as expected 1`] = `
 
 exports[`Component Masquerade Should render readonly description 1`] = `
 <StandardPage
-  goBackFunc={[Function]}
   goBackTooltip="Go back"
   title="Masquerade"
 >
