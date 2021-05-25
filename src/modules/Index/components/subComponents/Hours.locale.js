@@ -1,6 +1,19 @@
 export const hoursLocale = {
     title: 'Library hours',
-    header: ['Location', 'Study space', 'Ask Us desk'],
+    header: [
+        {
+            name: 'Location',
+            width: 5,
+        },
+        {
+            name: 'Study space',
+            width: 4,
+        },
+        {
+            name: 'AskUs desk',
+            width: 3,
+        },
+    ],
     campusMap: {
         'Arch Music': 'St Lucia',
         AskUs: 'Online',
@@ -19,7 +32,7 @@ export const hoursLocale = {
         Rockhampton: 'Other',
         Toowoomba: 'Other',
     },
-    departmentsMap: ['Service', 'Study space'],
+    departmentsMap: ['AskUs desk', 'Collections & space', 'Study space'],
     noDepartments: 'See location',
     locationTooltip: 'Your preferred campus has been updated',
     actionButtons: [
