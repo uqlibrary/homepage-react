@@ -280,6 +280,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             role="region"
                             aria-label={`UQ Library training event detail for ${eventDetail.name}`}
                             autoFocus
+                            data-testid={`training-events-detail-${eventDetail.entityId}`}
                         >
                             <Grid container spacing={1} direction="column">
                                 <Grid item xs={12}>
@@ -334,9 +335,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={classes.detailMeta}>
-                                            {eventDetail.bookingSettings.placesRemaining > 0
-                                                ? 'Places still available'
-                                                : 'Event is fully booked'}
+                                            {eventDetail.bookingSettings.placesRemaining === 0
+                                                ? 'Event is fully booked'
+                                                : 'Places still available'}
                                         </Grid>
                                     </Grid>
                                 </Grid>
