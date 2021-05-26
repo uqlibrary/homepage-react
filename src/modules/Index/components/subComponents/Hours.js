@@ -86,6 +86,7 @@ const useStyles = makeStyles(theme => ({
     },
     flexHeader: {
         height: 'auto',
+        whiteSpace: 'nowrap',
     },
     flexContent: {
         flexGrow: 1,
@@ -292,8 +293,8 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <Grid container spacing={1} className={classes.listHeader}>
                             {hoursLocale.header.map((item, index) => {
                                 return (
-                                    <Grid item xs={4} key={index}>
-                                        {item}
+                                    <Grid item xs={item.width} key={index}>
+                                        {item.name}
                                     </Grid>
                                 );
                             })}
@@ -322,9 +323,9 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                             key={index}
                                             className={classes.row}
                                             alignItems={'flex-start'}
-                                            style={{ marginLeft: 8 }}
+                                            style={{ marginLeft: 8, width: '98%' }}
                                         >
-                                            <Grid item xs={4}>
+                                            <Grid item xs={5}>
                                                 <a
                                                     aria-label={ariaLabelForLocation(item)}
                                                     href={item.url}

@@ -24,7 +24,7 @@ import examSuggestions from './data/records/examSuggestions';
 import {
     computerAvailability,
     incompleteNTROs,
-    libHours,
+    libHours, libHoursNew,
     loans,
     possibleRecords,
     printBalance,

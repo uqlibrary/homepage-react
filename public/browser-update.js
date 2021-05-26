@@ -21,8 +21,9 @@ function configureBu() {
         required: { e: -2, i: 12, f: -2, o: -2, s: -1, c: -2, samsung: 7.0, vivaldi: 1.2 },
         insecure: true,
         style: 'top',
-        shift_page_down: false,
+        shift_page_down: true,
         api: 2021.03,
+        notify_esr: true,
         onshow: function f(buObj) {
             var browserDesc = 'This version of your browser (' + buObj.browser.t + ')';
             if (buObj.browser.t.indexOf('Internet Explorer') > -1) {
