@@ -172,7 +172,7 @@ export const SecureCollection = ({
 
     const wrapFragmentInStandardPage = (title, fragment) => {
         return (
-            <StandardPage title="Secure Collection" goBackFunc={() => history.back()}>
+            <StandardPage title="Secure Collection">
                 <section aria-live="assertive">
                     <StandardCard title={title} noPadding>
                         <Grid container>

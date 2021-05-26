@@ -308,7 +308,7 @@ export const CourseResources = ({
     };
 
     return (
-        <StandardPage title={locale.title} goBackFunc={() => history.back()}>
+        <StandardPage title={locale.title}>
             <section aria-live="assertive">
                 <StandardCard noPadding noHeader>
                     <Grid container>
