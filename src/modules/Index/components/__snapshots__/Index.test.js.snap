@@ -1392,8 +1392,6 @@ exports[`Index page should render placeholders 1`] = `
                                                       "getClassNumberFromPieces": [Function],
                                                       "getSemesterStringByTermNumber": [Function],
                                                       "hidePossiblyYourPublicationsLure": [Function],
-                                                      "loadAlerts": [Function],
-                                                      "loadChatStatus": [Function],
                                                       "loadCompAvail": [Function],
                                                       "loadCourseReadingListsSuggestions": [Function],
                                                       "loadCurrentAccount": [Function],

@@ -1,9 +1,7 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
-    ALERT_API,
     AUTHOR_DETAILS_API,
-    CHAT_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
     LIB_HOURS_API,
@@ -271,54 +269,6 @@ export function loadTrainingEvents() {
             .catch(error => {
                 dispatch({
                     type: actions.TRAINING_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
-/**
- * Loads the chat status data
- * @returns {function(*)}
- */
-export function loadChatStatus() {
-    console.log('Loading Chat Status');
-    return dispatch => {
-        dispatch({ type: actions.CHAT_STATUS_LOADING });
-        return get(CHAT_API())
-            .then(chatResponse => {
-                dispatch({
-                    type: actions.CHAT_STATUS_LOADED,
-                    payload: chatResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.CHAT_STATUS_FAILED,
-                    payload: error.message,
-                });
-            });
-    };
-}
-
-/**
- * Loads the alerts data
- * @returns {function(*)}
- */
-export function loadAlerts() {
-    console.log('Loading Alerts');
-    return dispatch => {
-        dispatch({ type: actions.ALERT_STATUS_LOADING });
-        return get(ALERT_API())
-            .then(alertResponse => {
-                dispatch({
-                    type: actions.ALERT_STATUS_LOADED,
-                    payload: alertResponse,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.ALERT_STATUS_FAILED,
                     payload: error.message,
                 });
             });

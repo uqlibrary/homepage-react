@@ -5,8 +5,6 @@ import * as repositories from 'repositories';
 import * as accountActions from './account';
 import {
     getSemesterStringByTermNumber,
-    loadAlerts,
-    loadChatStatus,
     loadCompAvail,
     loadLibHours,
     loadLoans,
@@ -301,24 +299,6 @@ describe('Account action creators', () => {
         const expectedActions = [actions.TRAINING_LOADING, actions.TRAINING_FAILED];
 
         await mockActionsStore.dispatch(loadTrainingEvents());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading chat status fails', async () => {
-        mockApi.onGet(repositories.routes.CHAT_STATUS_API).reply(500);
-
-        const expectedActions = [actions.CHAT_STATUS_LOADING, actions.CHAT_STATUS_FAILED];
-
-        await mockActionsStore.dispatch(loadChatStatus());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('dispatches expected actions when loading alerts fails', async () => {
-        mockApi.onGet(repositories.routes.ALERTS_API).reply(500);
-
-        const expectedActions = [actions.ALERT_STATUS_LOADING, actions.ALERT_STATUS_FAILED];
-
-        await mockActionsStore.dispatch(loadAlerts());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 

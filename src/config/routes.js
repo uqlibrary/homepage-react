@@ -88,16 +88,3 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 };
-
-export const getMenuConfig = (account, author, authorDetails, disabled) => {
-    const publicPages = [];
-    locale.publicmenu.map(item => {
-        publicPages.push(item);
-    });
-
-    if (disabled) {
-        return [...publicPages];
-    }
-
-    return [...publicPages];
-};
