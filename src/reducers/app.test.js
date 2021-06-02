@@ -45,15 +45,6 @@ describe('app reducer', () => {
         expect(test).toEqual(initialState);
     });
 
-    it('should set alert to null when failed loading', () => {
-        const test = appReducer(emptyState, { type: actions.ALERT_STATUS_FAILED });
-        expect(test).toEqual({
-            ...emptyState,
-            alertStatusLoading: false,
-            alertStatus: null,
-        });
-    });
-
     it('returns the redirect location we are setting', () => {
         const test = appReducer(initialState, {
             type: actions.SET_REDIRECT_PATH,
