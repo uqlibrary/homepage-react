@@ -1,50 +1,50 @@
 import React from 'react';
 
-import { AUTH_URL_LOGIN } from 'config';
-
-const loginUrl = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+// import { AUTH_URL_LOGIN } from 'config';
+// const loginUrl = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
 
 export const promoPanel = {
     loggedout: {
-        title: 'New home page!',
+        title: 'Exams',
         content: (
             <div>
-                <span>We have updated the home page with a great new look and feel.</span>
                 <p>
-                    <a href={loginUrl}>Log in now</a> for a brand new personalised experience:
+                    <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support.
+                    The service is available 7am-9pm on exam days between 5 and 18 June.
                 </p>
-                <ul>
-                    <li>Set your campus</li>
-                    <li>Top-up your print balance</li>
-                    <li>Get your course resources &amp; more</li>
-                </ul>
-                <span>
-                    <a href="https://web.library.uq.edu.au/blog/2021/01/discover-new-library-home-page">
-                        Discover the new home page!
-                    </a>
-                </span>
+                <p>
+                    <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
+                    on-campus.
+                </p>
+                <p>
+                    <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                        Past exam papers
+                    </a>{' '}
+                    are also available.
+                </p>
+                <p>Good luck with your exams!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'New home page!',
+        title: 'Exams',
         content: (
             <div>
-                <span>
-                    We have personalised your home page just for you. Your page may contain additional features
-                    depending on who you are.
-                </span>
-                <ul>
-                    <li>Get your course resources (UQ students)</li>
-                    <li>Set your campus to sort library hours &amp; computer availability</li>
-                    <li>Top-up your print balance</li>
-                    <li>Click the My Library button for links to library services</li>
-                </ul>
-                <span>
-                    <a href="https://web.library.uq.edu.au/blog/2021/01/discover-new-library-home-page">
-                        More about your new home page!
-                    </a>
-                </span>
+                <p>
+                    <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support.
+                    The service is available 7am-9pm on exam days between 5 and 18 June.
+                </p>
+                <p>
+                    <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
+                    on-campus.
+                </p>
+                <p>
+                    <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                        Past exam papers
+                    </a>{' '}
+                    are also available.
+                </p>
+                <p>Good luck with your exams!</p>
             </div>
         ),
     },
