@@ -16,12 +16,13 @@ export const promoPanel = {
                     <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
                     on-campus.
                 </p>
+                <p>Past exam papers are also available.</p>
                 <p>Good luck with your exams!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'New home page!',
+        title: 'Exams',
         content: (
             <div>
                 <p>
@@ -32,6 +33,7 @@ export const promoPanel = {
                     <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
                     on-campus.
                 </p>
+                <p>Past exam papers are also available.</p>
                 <p>Good luck with your exams!</p>
             </div>
         ),
