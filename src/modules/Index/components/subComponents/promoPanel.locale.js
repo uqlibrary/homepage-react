@@ -16,7 +16,12 @@ export const promoPanel = {
                     <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
                     on-campus.
                 </p>
-                <p>Past exam papers are also available.</p>
+                <p>
+                    <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                        Past exam papers
+                    </a>{' '}
+                    are also available.
+                </p>
                 <p>Good luck with your exams!</p>
             </div>
         ),
@@ -33,7 +38,12 @@ export const promoPanel = {
                     <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
                     on-campus.
                 </p>
-                <p>Past exam papers are also available.</p>
+                <p>
+                    <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                        Past exam papers
+                    </a>{' '}
+                    are also available.
+                </p>
                 <p>Good luck with your exams!</p>
             </div>
         ),
