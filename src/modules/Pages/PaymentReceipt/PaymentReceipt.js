@@ -12,11 +12,7 @@ export const PaymentReceipt = () => {
     const success = querystring.Success === '1' ? 'successful' : 'unsuccessful';
     if (!querystring.AmountPaid || !querystring.Receipt || !querystring.Success) {
         return (
-            <StandardPage
-                goBackFunc={() => history.back()}
-                standardPageId="payment-receipt"
-                title={locale.failed.title}
-            >
+            <StandardPage standardPageId="payment-receipt" title={locale.failed.title}>
                 <section className="layout-card">
                     <b>{locale.failed.message}</b>
                 </section>

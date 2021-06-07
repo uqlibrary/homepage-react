@@ -415,7 +415,8 @@
         ],
         "exclude": [
             "src/**/{index,locale,config}.js",
-            "src/**/containers/*.{js,jsx}"
+            "src/**/containers/*.{js,jsx}",
+            "src/**/*.{test,locale}.{js,jsx}"
         ],
         "all": true
     },
