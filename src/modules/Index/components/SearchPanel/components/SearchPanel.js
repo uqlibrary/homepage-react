@@ -37,6 +37,7 @@ const useStyles = makeStyles(
             textOverflow: 'ellipsis !important',
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
+            marginRight: 55,
             '&::placeholder': {
                 textOverflow: 'ellipsis !important',
                 overflow: 'hidden !important',
