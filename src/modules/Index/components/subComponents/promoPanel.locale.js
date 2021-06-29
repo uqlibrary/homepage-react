@@ -5,46 +5,32 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Exams',
+        title: 'Library access',
         content: (
             <div>
-                <p>
-                    <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support.
-                    The service is available 7am-9pm on exam days between 5 and 18 June.
-                </p>
-                <p>
-                    <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
-                    on-campus.
-                </p>
-                <p>
-                    <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
-                        Past exam papers
+                <p>For students enrolled to study in Semester Two your library membership is active, and you can use it through the mid-year break.</p>
+                <p>Congratulations to our graduating students! You can apply for an alumni membership. The first year is free.</p>
+                <p>Visit{' '}
+                    <a href="https://web.library.uq.edu.au/library-services/services-uq-alumni">
+                        services for alumni
                     </a>{' '}
-                    are also available.
+                    for more information.
                 </p>
-                <p>Good luck with your exams!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Exams',
+        title: 'Library access',
         content: (
             <div>
-                <p>
-                    <a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support.
-                    The service is available 7am-9pm on exam days between 5 and 18 June.
-                </p>
-                <p>
-                    <a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and
-                    on-campus.
-                </p>
-                <p>
-                    <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
-                        Past exam papers
+                <p>For students enrolled to study in Semester Two your library membership is active, and you can use it through the mid-year break.</p>
+                <p>Congratulations to our graduating students! You can apply for an alumni membership. The first year is free.</p>
+                <p>Visit{' '}
+                    <a href="https://web.library.uq.edu.au/library-services/services-uq-alumni">
+                        services for alumni
                     </a>{' '}
-                    are also available.
+                    for more information.
                 </p>
-                <p>Good luck with your exams!</p>
             </div>
         ),
     },
