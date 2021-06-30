@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
 const InjectPreloader = require('preloader-html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const port = 2020;
 const url = process.env.URL || 'localhost';
@@ -160,6 +161,9 @@ module.exports = {
             'process.env.SESSION_COOKIE_NAME': JSON.stringify(process.env.SESSION_COOKIE_NAME),
         }),
         new Dotenv(),
+        new MomentTimezoneDataPlugin({
+            matchZones: /^Australia\/Brisbane/,
+        }),
     ],
     resolve: {
         descriptionFiles: ['package.json'],
