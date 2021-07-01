@@ -6,6 +6,7 @@ export const SecureCollection = React.lazy(() => import('modules/Pages/SecureCol
 export const CourseResources = React.lazy(() => import('modules/Pages/CourseResources/containers/CourseResources'));
 export const PaymentReceipt = React.lazy(() => import('modules/Pages/PaymentReceipt/PaymentReceipt'));
 export const BookExamBooth = React.lazy(() => import('modules/Pages/BookExamBooth/containers/BookExamBooth'));
+export const AlertsAdmin = React.lazy(() => import('modules/Pages/AlertsAdmin/containers/AlertsAdmin'));
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';
