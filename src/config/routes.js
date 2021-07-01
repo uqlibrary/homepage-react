@@ -1,5 +1,5 @@
 import { locale } from 'locale';
-import { seeCourseResources } from 'helpers/access';
+import { seeCourseResources, seeAlertsAdmin } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -9,6 +9,7 @@ export const pathConfig = {
     courseresources: '/courseresources',
     paymentReceipt: '/payment-receipt',
     admin: {
+        alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
     },
     bookExamBooth: '/book-exam-booth',
@@ -21,6 +22,7 @@ export const flattedPathConfig = [
     '/collection',
     '/courseresources',
     '/payment-receipt',
+    '/admin/alerts',
     '/admin/masquerade',
     '/book-exam-booth',
     'https://www.library.uq.edu.au/404.js',
@@ -69,9 +71,19 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const alertsDisplay = [
+        {
+            path: pathConfig.admin.alerts,
+            component: components.AlertsAdmin,
+            // exact: true,
+            pageTitle: locale.pages.admin.alerts.title,
+        },
+    ];
+
     return [
         ...publicPages,
         ...(account && seeCourseResources(account) ? courseResoures : []),
+        ...(account && seeAlertsAdmin(account) ? alertsDisplay : []),
         ...(account && account.canMasquerade
             ? [
                   {
@@ -79,7 +91,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
                       component: components.Masquerade,
                       exact: true,
                       access: [roles.admin],
-                      pageTitle: locale.pages.masquerade.title,
+                      pageTitle: locale.pages.admin.masquerade.title,
                   },
               ]
             : []),

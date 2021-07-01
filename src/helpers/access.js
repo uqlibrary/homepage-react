@@ -117,6 +117,18 @@ export const seeLibraryServices = account => loggedinCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);
 
+// there is an intention to make a non-hard coded access system. Perhaps a table, and an update screen?
+export const seeAlertsAdmin = account =>
+    !!account &&
+    !!account.id &&
+    [
+        'uqldegro',
+        'uqjtilse',
+        'uqamartl',
+        // all devs should be here
+        'uqstaff', // mock
+    ].includes(account.id);
+
 // what is displayed in the User Services panel on the homepage, determined per group
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],

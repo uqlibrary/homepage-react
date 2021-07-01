@@ -810,6 +810,8 @@ exports[`Application component should render for anon user 1`] = `
                                   actions={
                                     Object {
                                       "checkSession": [Function],
+                                      "clearAlerts": [Function],
+                                      "clearAnAlert": [Function],
                                       "clearCourseResourceSuggestions": [Function],
                                       "clearExams": [Function],
                                       "clearGuides": [Function],
@@ -823,6 +825,8 @@ exports[`Application component should render for anon user 1`] = `
                                       "getClassNumberFromPieces": [Function],
                                       "getSemesterStringByTermNumber": [Function],
                                       "hidePossiblyYourPublicationsLure": [Function],
+                                      "loadAllAlerts": [Function],
+                                      "loadAnAlert": [Function],
                                       "loadCompAvail": [Function],
                                       "loadCourseReadingListsSuggestions": [Function],
                                       "loadCurrentAccount": [Function],
@@ -1445,6 +1449,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                     actions={
                                                                       Object {
                                                                         "checkSession": [Function],
+                                                                        "clearAlerts": [Function],
+                                                                        "clearAnAlert": [Function],
                                                                         "clearCourseResourceSuggestions": [Function],
                                                                         "clearExams": [Function],
                                                                         "clearGuides": [Function],
@@ -1458,6 +1464,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                         "getClassNumberFromPieces": [Function],
                                                                         "getSemesterStringByTermNumber": [Function],
                                                                         "hidePossiblyYourPublicationsLure": [Function],
+                                                                        "loadAllAlerts": [Function],
+                                                                        "loadAnAlert": [Function],
                                                                         "loadCompAvail": [Function],
                                                                         "loadCourseReadingListsSuggestions": [Function],
                                                                         "loadCurrentAccount": [Function],
@@ -10266,6 +10274,8 @@ exports[`Application component should render loading screen while account is loa
                                   actions={
                                     Object {
                                       "checkSession": [Function],
+                                      "clearAlerts": [Function],
+                                      "clearAnAlert": [Function],
                                       "clearCourseResourceSuggestions": [Function],
                                       "clearExams": [Function],
                                       "clearGuides": [Function],
@@ -10279,6 +10289,8 @@ exports[`Application component should render loading screen while account is loa
                                       "getClassNumberFromPieces": [Function],
                                       "getSemesterStringByTermNumber": [Function],
                                       "hidePossiblyYourPublicationsLure": [Function],
+                                      "loadAllAlerts": [Function],
+                                      "loadAnAlert": [Function],
                                       "loadCompAvail": [Function],
                                       "loadCourseReadingListsSuggestions": [Function],
                                       "loadCurrentAccount": [Function],
@@ -10901,6 +10913,8 @@ exports[`Application component should render loading screen while account is loa
                                                                     actions={
                                                                       Object {
                                                                         "checkSession": [Function],
+                                                                        "clearAlerts": [Function],
+                                                                        "clearAnAlert": [Function],
                                                                         "clearCourseResourceSuggestions": [Function],
                                                                         "clearExams": [Function],
                                                                         "clearGuides": [Function],
@@ -10914,6 +10928,8 @@ exports[`Application component should render loading screen while account is loa
                                                                         "getClassNumberFromPieces": [Function],
                                                                         "getSemesterStringByTermNumber": [Function],
                                                                         "hidePossiblyYourPublicationsLure": [Function],
+                                                                        "loadAllAlerts": [Function],
+                                                                        "loadAnAlert": [Function],
                                                                         "loadCompAvail": [Function],
                                                                         "loadCourseReadingListsSuggestions": [Function],
                                                                         "loadCurrentAccount": [Function],

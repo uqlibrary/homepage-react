@@ -1016,6 +1016,8 @@ exports[`Index page should render placeholders 1`] = `
                                               actions={
                                                 Object {
                                                   "checkSession": [Function],
+                                                  "clearAlerts": [Function],
+                                                  "clearAnAlert": [Function],
                                                   "clearCourseResourceSuggestions": [Function],
                                                   "clearExams": [Function],
                                                   "clearGuides": [Function],
@@ -1029,6 +1031,8 @@ exports[`Index page should render placeholders 1`] = `
                                                   "getClassNumberFromPieces": [Function],
                                                   "getSemesterStringByTermNumber": [Function],
                                                   "hidePossiblyYourPublicationsLure": [Function],
+                                                  "loadAllAlerts": [Function],
+                                                  "loadAnAlert": [Function],
                                                   "loadCompAvail": [Function],
                                                   "loadCourseReadingListsSuggestions": [Function],
                                                   "loadCurrentAccount": [Function],
