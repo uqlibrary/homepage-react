@@ -7,16 +7,15 @@ import AlertsAdmin from '../components/AlertsAdmin';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('accountReducer'),
         ...state.get('alertsReducer'),
     };
 };
 
-function mapDispatchToProps(dispatch) {
+const mapDispatchToProps = dispatch => {
     return {
         actions: bindActionCreators(actions, dispatch),
     };
-}
+};
 
 let AlertsAdminContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsAdmin);
 AlertsAdminContainer = withRouter(AlertsAdminContainer);
