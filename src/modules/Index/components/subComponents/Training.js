@@ -13,7 +13,7 @@ import EventIcon from '@material-ui/icons/Event';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { trainingLocale } from './Training.locale';
-const moment = require('moment');
+import moment from 'moment-timezone';
 import ContentLoader from 'react-content-loader';
 
 const MyLoader = props => (
@@ -191,6 +191,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         }, 300);
         setEventDetail(null);
     };
+    moment.tz.setDefault('Australia/Brisbane');
     const eventTime = eventTime =>
         moment(eventTime)
             .calendar(null, {
