@@ -1,6 +1,5 @@
 import * as actions from 'actions/actionTypes';
 import accountReducer from './account';
-import chatReducer from './chat';
 import { initialState, initSavingState } from './account';
 
 describe('account reducer', () => {
@@ -175,38 +174,6 @@ describe('account reducer', () => {
         expect(test).toEqual({
             ...emptyState,
             isSessionExpired: null,
-        });
-    });
-
-    it('should set chat status loading flags to true when loading account', () => {
-        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_LOADING });
-        expect(test).toEqual({
-            ...emptyState,
-            chatStatus: null,
-        });
-    });
-
-    it('should set chat status online when chat available', () => {
-        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: true } });
-        expect(test).toEqual({
-            ...emptyState,
-            chatStatus: { online: true },
-        });
-    });
-
-    it('should set chat status offline when chat offline', () => {
-        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_LOADED, payload: { online: false } });
-        expect(test).toEqual({
-            ...emptyState,
-            chatStatus: { online: false },
-        });
-    });
-
-    it('should set chat status to null when failed loading', () => {
-        const test = chatReducer(emptyState, { type: actions.CHAT_STATUS_FAILED });
-        expect(test).toEqual({
-            ...emptyState,
-            chatStatus: { online: 'failed' },
         });
     });
 

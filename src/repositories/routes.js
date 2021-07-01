@@ -86,9 +86,6 @@ export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
 });
 
-// Chat availability API
-export const CHAT_API = () => ({ apiUrl: 'chat_status', options: { params: { ts: `${new Date().getTime()}` } } });
-
 // Library hours
 export const LIB_HOURS_API = () => ({
     apiUrl: 'library_hours/day',
@@ -100,9 +97,6 @@ export const COMP_AVAIL_API = () => ({
     apiUrl: 'computer_availability',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
-
-// Alerts API
-export const ALERT_API = () => ({ apiUrl: 'alerts/current', options: { params: { ts: `${new Date().getTime()}` } } });
 
 // file uploading apis
 export const FILE_UPLOAD_API = () => ({ apiUrl: 'file/upload/presigned' });
