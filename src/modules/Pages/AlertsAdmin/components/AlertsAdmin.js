@@ -1,5 +1,8 @@
+// import React, { useState } from 'react';
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import moment from 'moment';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
@@ -7,26 +10,24 @@ import Grid from '@material-ui/core/Grid';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-
-import { AUTH_URL_LOGIN, AUTH_URL_LOGOUT } from 'config';
-import { default as menuLocale } from 'locale/menu';
+import AlertsListAsTable from './AlertsListAsTable';
 
 // const useStyles = makeStyles(
 //     () => ({
-//         followLink: {},
+//         editButton: {
+//             backgroundColor: '#0e62eb',
+//             color: '#fff',
+//             padding: '1em',
+//         },
 //     }),
 //     { withTheme: true },
 // );
 
-export const AlertsAdmin = ({ actions, account, alerts, alertsLoading, alertsError }) => {
+export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => {
     // const classes = useStyles();
 
     let displayPanel = 'error';
-    let redirectLink = null;
-    if (!account || !account.id) {
-        displayPanel = 'loginRequired';
-        redirectLink = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
-    } else if (!!alertsError) {
+    if (!!alertsError) {
         displayPanel = 'error';
     } else if (!alertsError && !!alertsLoading) {
         displayPanel = 'loading';
@@ -38,13 +39,13 @@ export const AlertsAdmin = ({ actions, account, alerts, alertsLoading, alertsErr
     }
 
     React.useEffect(() => {
-        if (!!account && !alertsError && !alertsLoading && !alerts) {
+        if (!alertsError && !alertsLoading && !alerts) {
             actions.loadAllAlerts();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    const wrapFragmentInStandardPage = (title, fragment) => {
+    const wrapFragmentInStandardPage = (fragment, title = '') => {
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
@@ -54,7 +55,13 @@ export const AlertsAdmin = ({ actions, account, alerts, alertsLoading, alertsErr
                                 item
                                 xs={12}
                                 data-testid="admin-alerts"
-                                style={{ marginBottom: 24, paddingLeft: 24, paddingRight: 24 }}
+                                style={{
+                                    marginBottom: 24,
+                                    paddingLeft: 24,
+                                    paddingRight: 24,
+                                    minHeight: '10em',
+                                    minWidth: '80%',
+                                }}
                             >
                                 {fragment}
                             </Grid>
@@ -67,55 +74,37 @@ export const AlertsAdmin = ({ actions, account, alerts, alertsLoading, alertsErr
 
     function displayApiErrorPanel() {
         return wrapFragmentInStandardPage(
-            'System temporarily unavailable',
             <React.Fragment>
                 <p>
                     We're working on the issue and will have service restored as soon as possible. Please try again
                     later.
                 </p>
             </React.Fragment>,
+            'System temporarily unavailable',
         );
     }
 
-    function displayNoAccessPanel() {
-        const logoutLink = `${AUTH_URL_LOGOUT}?return=${window.btoa(window.location.href)}`;
+    function displayAllAlerts() {
+        const currentAlerts = [];
+        const futureAlerts = [];
+        const pastAlerts = [];
+        alerts.forEach(alert => {
+            if (moment(alert.end).isBefore(moment())) {
+                pastAlerts.push(alert);
+            } else if (moment(alert.start).isAfter(moment())) {
+                futureAlerts.push(alert);
+            } else {
+                currentAlerts.push(alert);
+            }
+        });
         return wrapFragmentInStandardPage(
-            'Access to this file is only available to UQ staff and students.',
             <React.Fragment>
-                <ul>
-                    <li>
-                        If you have another UQ account, <a href={logoutLink}>logout and switch accounts</a> to proceed.
-                    </li>
-                    <li>
-                        <a href={menuLocale.contactus.link}>Contact us</a> if you should have file collection access
-                        with this account.
-                    </li>
-                </ul>
-                <p>
-                    Return to the <a href="https://www.library.uq.edu.au/">Library Home Page</a>.
-                </p>
-            </React.Fragment>,
-        );
-    }
-
-    // the window is set to the auth url before this panel is displayed, so it should only blink up, if at all
-    function displayLoginRequiredRedirectorPanel(redirectLink) {
-        /* istanbul ignore else */
-        if (redirectLink !== null) {
-            window.location.assign(redirectLink);
-        }
-        return wrapFragmentInStandardPage(
-            'Redirecting',
-            <React.Fragment>
-                <p>Login is required for this page - please wait while you are redirected.</p>
-
-                <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                    <CircularProgress color="primary" size={20} data-testid="loading-admin-alerts-login" />
-                </Grid>
-
-                <p>
-                    You can <a href={redirectLink}>click here</a> if you aren't redirected.
-                </p>
+                <h3>Current Alerts</h3>
+                {AlertsListAsTable(currentAlerts, alertsLoading)}
+                <h3>Scheduled Alerts</h3>
+                {AlertsListAsTable(futureAlerts, alertsLoading)}
+                <h3>Past Alerts</h3>
+                {AlertsListAsTable(pastAlerts, alertsLoading, true)}
             </React.Fragment>,
         );
     }
@@ -125,27 +114,32 @@ export const AlertsAdmin = ({ actions, account, alerts, alertsLoading, alertsErr
         case 'error':
             return displayApiErrorPanel();
         case 'loading':
-            console.log('here');
             return wrapFragmentInStandardPage(
-                <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
+                <Grid
+                    item
+                    xs={'auto'}
+                    style={{
+                        width: 80,
+                        marginRight: 20,
+                        marginBottom: 6,
+                        opacity: 0.3,
+                    }}
+                >
                     <CircularProgress color="primary" size={20} data-testid="loading-admin-alerts" />
                 </Grid>,
             );
-        case 'loginRequired':
-            return displayLoginRequiredRedirectorPanel(redirectLink);
-        case 'invalidUser':
-            return displayNoAccessPanel();
+        case 'listall':
+            return displayAllAlerts();
         /* istanbul ignore next */
         default:
             // to satisfy switch syntax - shouldnt be possible
-            return wrapFragmentInStandardPage('', <div className="waiting empty">Something went wrong</div>);
+            return wrapFragmentInStandardPage(<div className="waiting empty">Something went wrong</div>, '');
     }
 };
 
 AlertsAdmin.propTypes = {
     actions: PropTypes.object,
-    account: PropTypes.object,
-    alerts: PropTypes.object,
+    alerts: PropTypes.array,
     alertsLoading: PropTypes.bool,
     alertsError: PropTypes.any,
 };
