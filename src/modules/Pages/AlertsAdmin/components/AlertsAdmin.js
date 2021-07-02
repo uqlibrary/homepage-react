@@ -1,10 +1,8 @@
-// import React, { useState } from 'react';
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import moment from 'moment';
 
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 // import { makeStyles } from '@material-ui/styles';
 
@@ -26,14 +24,12 @@ import AlertsListAsTable from './AlertsListAsTable';
 export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => {
     // const classes = useStyles();
 
+    const [currentAlerts, setCurrentAlerts] = useState([]);
+    const [futureAlerts, setFutureAlerts] = useState([]);
+    const [pastAlerts, setPastAlerts] = useState([]);
     let displayPanel = 'error';
     if (!!alertsError) {
         displayPanel = 'error';
-    } else if (!alertsError && !!alertsLoading) {
-        displayPanel = 'loading';
-    } else if (!alertsError && !alertsLoading && !alerts) {
-        // does this actually happen?
-        displayPanel = 'loading';
     } else {
         displayPanel = 'listall';
     }
@@ -45,6 +41,33 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    React.useEffect(() => {
+        !!alerts &&
+            alerts.forEach(alert => {
+                alert.startDate =
+                    moment(alert.start).format('m') === '0'
+                        ? moment(alert.start).format('dddd D/MMM/YYYY ha')
+                        : moment(alert.start).format('dddd D/MMM/YYYY h.mma');
+                alert.endDate =
+                    moment(alert.end).format('m') === '0'
+                        ? moment(alert.end).format('dddd D/MMM/YYYY ha')
+                        : moment(alert.end).format('dddd D/MMM/YYYY h.mma');
+                // Strip markdown from the body
+                const linkRegex = alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
+                alert.message = alert.body;
+                if (!!linkRegex && linkRegex.length === 3) {
+                    alert.message = alert.message.replace(linkRegex[0], '').replace('  ', ' ');
+                }
+                if (moment(alert.end).isBefore(moment())) {
+                    setPastAlerts(pastAlerts => [...pastAlerts, alert]);
+                } else if (moment(alert.start).isAfter(moment())) {
+                    setFutureAlerts(futureAlerts => [...futureAlerts, alert]);
+                } else {
+                    setCurrentAlerts(currentAlerts => [...currentAlerts, alert]);
+                }
+            });
+    }, [alerts]);
+
     const wrapFragmentInStandardPage = (fragment, title = '') => {
         return (
             <StandardPage title="Alerts Management">
@@ -54,7 +77,7 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
                             <Grid
                                 item
                                 xs={12}
-                                data-testid="admin-alerts"
+                                data-testid="admin-alerts-list"
                                 style={{
                                     marginBottom: 24,
                                     paddingLeft: 24,
@@ -85,62 +108,30 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
     }
 
     function displayAllAlerts() {
-        const currentAlerts = [];
-        const futureAlerts = [];
-        const pastAlerts = [];
-        alerts.forEach(alert => {
-            if (moment(alert.end).isBefore(moment())) {
-                pastAlerts.push(alert);
-            } else if (moment(alert.start).isAfter(moment())) {
-                futureAlerts.push(alert);
-            } else {
-                currentAlerts.push(alert);
-            }
-        });
         return wrapFragmentInStandardPage(
             <React.Fragment>
-                <div data-testid="current-list">
+                <div data-testid="admin-alerts-list-current-list">
                     <h3>Current Alerts</h3>
-                    {AlertsListAsTable(currentAlerts, alertsLoading)}
+                    {AlertsListAsTable(currentAlerts)}
                 </div>
-                <div data-testid="future-list">
+                <div data-testid="admin-alerts-list-future-list">
                     <h3>Scheduled Alerts</h3>
-                    {AlertsListAsTable(futureAlerts, alertsLoading)}
+                    {AlertsListAsTable(futureAlerts)}
                 </div>
-                <div data-testid="past-list">
+                <div data-testid="admin-alerts-list-past-list">
                     <h3>Past Alerts</h3>
-                    {AlertsListAsTable(pastAlerts, alertsLoading, true)}
+                    {AlertsListAsTable(pastAlerts, true)}
                 </div>
             </React.Fragment>,
-            'List of all Alerts',
+            'All Alerts',
         );
     }
 
-    console.log('displayPanel = ', displayPanel);
     switch (displayPanel) {
         case 'error':
             return displayApiErrorPanel();
-        case 'loading':
-            return wrapFragmentInStandardPage(
-                <Grid
-                    item
-                    xs={'auto'}
-                    style={{
-                        width: 80,
-                        marginRight: 20,
-                        marginBottom: 6,
-                        opacity: 0.3,
-                    }}
-                >
-                    <CircularProgress color="primary" size={20} data-testid="loading-admin-alerts" />
-                </Grid>,
-            );
-        case 'listall':
-            return displayAllAlerts();
-        /* istanbul ignore next */
         default:
-            // to satisfy switch syntax - shouldnt be possible
-            return wrapFragmentInStandardPage(<div className="waiting empty">Something went wrong</div>, '');
+            return displayAllAlerts();
     }
 };
 

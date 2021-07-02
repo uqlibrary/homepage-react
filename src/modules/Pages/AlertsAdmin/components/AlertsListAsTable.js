@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import moment from 'moment';
-
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
+import Grid from '@material-ui/core/Grid';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -95,7 +95,7 @@ const useStyles2 = makeStyles({
     },
 });
 
-export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) {
+export default function AlertsListAsTable(rows, hasFooter = false) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -108,6 +108,23 @@ export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) 
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    if (!rows || rows.length === 0) {
+        return (
+            <Grid
+                item
+                xs={'auto'}
+                style={{
+                    width: 80,
+                    marginRight: 20,
+                    marginBottom: 6,
+                    opacity: 0.3,
+                }}
+            >
+                <CircularProgress color="primary" size={20} data-testid="loading-admin-alerts" />
+            </Grid>
+        );
+    }
 
     return (
         <TableContainer component={Paper}>
@@ -128,22 +145,8 @@ export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) 
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {(rowsPerPage > 0 ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) : rows).map(
-                        alert => {
-                            const startDate =
-                                moment(alert.start).format('m') === '0'
-                                    ? moment(alert.start).format('dddd D/MMM/YYYY ha')
-                                    : moment(alert.start).format('dddd D/MMM/YYYY h.mma');
-                            const endDate =
-                                moment(alert.end).format('m') === '0'
-                                    ? moment(alert.end).format('dddd D/MMM/YYYY ha')
-                                    : moment(alert.end).format('dddd D/MMM/YYYY h.mma');
-                            // Strip markdown from the body
-                            const linkRegex = alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-                            let message = alert.body;
-                            if (!!linkRegex && linkRegex.length === 3) {
-                                message = message.replace(linkRegex[0], '').replace('  ', ' ');
-                            }
+                    {rowsPerPage > 0 && rows.length > 0 ? (
+                        rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
                             return (
                                 <TableRow key={alert.id} id={alert.id}>
                                     <TableCell component="td">
@@ -153,19 +156,19 @@ export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) 
                                     </TableCell>
                                     <TableCell component="td">
                                         <b id={`alert-list-item-title-${alert.id}`}>{`${alert.title}`}</b>{' '}
-                                        {`${message}`}
+                                        {`${alert.message}`}
                                     </TableCell>
                                     <TableCell component="td" align="center">
-                                        {startDate}
+                                        {alert.startDate}
                                     </TableCell>
                                     <TableCell component="td" align="center">
-                                        {endDate}
+                                        {alert.endDate}
                                     </TableCell>
                                     <TableCell component="td">
                                         <a
-                                            className={classes.editButton}
+                                            // className={classes.editButton}
+                                            style={{ backgroundColor: '#0e62eb', color: '#fff', padding: '1em' }}
                                             data-testid={`alert-list-item-edit-${alert.id}`}
-                                            disabled={dataLoading}
                                             id={`alert-list-item-edit-${alert.id}`}
                                             href={`/admin/alerts/edit/${alert.id}`}
                                         >
@@ -174,16 +177,19 @@ export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) 
                                     </TableCell>
                                 </TableRow>
                             );
-                        },
+                        })
+                    ) : (
+                        <p>No alerts</p>
                     )}
                 </TableBody>
-                {!!hasFooter && (
+                {!!hasFooter && rows.length > 0 && (
                     <TableFooter>
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={3}
                                 count={rows.length}
+                                id="alert-list-footer"
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{

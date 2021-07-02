@@ -57,6 +57,7 @@ user = user || 'vanilla';
 
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 1; // Change these values to delay mock API
+    // const randomTime = 5000;
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
