@@ -3,30 +3,70 @@ import PropTypes from 'prop-types';
 
 import moment from 'moment';
 
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
-// import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
+import Modal from '@material-ui/core/Modal';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import AlertsListAsTable from './AlertsListAsTable';
 
-// const useStyles = makeStyles(
-//     () => ({
-//         editButton: {
-//             backgroundColor: '#0e62eb',
-//             color: '#fff',
-//             padding: '1em',
-//         },
-//     }),
-//     { withTheme: true },
-// );
+import AlertsListAsTable from './AlertsListAsTable';
+import { default as locale } from './alertsadmin.locale';
+
+const useStyles = makeStyles(
+    theme => ({
+        pageLayout: {
+            marginBottom: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
+            minHeight: '10em',
+            minWidth: '80%',
+        },
+        modal: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflowY: 'scroll',
+        },
+        paper: {
+            backgroundColor: theme.palette.background.paper,
+            border: '2px solid #000',
+            boxShadow: theme.shadows[5],
+            padding: theme.spacing(2, 4, 3),
+            maxWidth: '75%',
+            marginTop: 64,
+            marginBottom: 64,
+        },
+        helpbutton: {
+            backgroundColor: theme.palette.accent.main,
+            padding: 8,
+            color: '#fff',
+            textTransform: 'uppercase',
+            borderWidth: 0,
+        },
+        helpButtonPlacer: {
+            float: 'right',
+            marginTop: 16,
+            marginRight: 16,
+        },
+        helpButtonWrapper: {
+            position: 'relative',
+        },
+    }),
+    { withTheme: true },
+);
 
 export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => {
-    // const classes = useStyles();
+    const classes = useStyles();
 
     const [currentAlerts, setCurrentAlerts] = useState([]);
     const [futureAlerts, setFutureAlerts] = useState([]);
     const [pastAlerts, setPastAlerts] = useState([]);
+
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+
     let displayPanel = 'error';
     if (!!alertsError) {
         displayPanel = 'error';
@@ -68,71 +108,87 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
             });
     }, [alerts]);
 
-    const wrapFragmentInStandardPage = (fragment, title = '') => {
+    const openHelpLightbox = () => {
+        setLightboxOpen(true);
+    };
+
+    const closeHelpLightbox = () => {
+        setLightboxOpen(false);
+    };
+
+    function displayApiErrorPanel() {
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <StandardCard title={title} noPadding>
+                    <StandardCard title="System temporarily unavailable" noPadding>
                         <Grid container>
-                            <Grid
-                                item
-                                xs={12}
-                                data-testid="admin-alerts-list"
-                                style={{
-                                    marginBottom: 24,
-                                    paddingLeft: 24,
-                                    paddingRight: 24,
-                                    minHeight: '10em',
-                                    minWidth: '80%',
-                                }}
-                            >
-                                {fragment}
+                            <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
+                                <p>
+                                    We're working on the issue and will have service restored as soon as possible.
+                                    Please try again later.
+                                </p>
                             </Grid>
                         </Grid>
                     </StandardCard>
                 </section>
             </StandardPage>
         );
-    };
-
-    function displayApiErrorPanel() {
-        return wrapFragmentInStandardPage(
-            <React.Fragment>
-                <p>
-                    We're working on the issue and will have service restored as soon as possible. Please try again
-                    later.
-                </p>
-            </React.Fragment>,
-            'System temporarily unavailable',
-        );
     }
 
     function displayAllAlerts() {
-        return wrapFragmentInStandardPage(
-            <React.Fragment>
-                <div data-testid="admin-alerts-list-current-list">
-                    <h3>Current Alerts</h3>
-                    {AlertsListAsTable(currentAlerts, alertsLoading)}
-                </div>
-                <div data-testid="admin-alerts-list-future-list">
-                    <h3>Scheduled Alerts</h3>
-                    {AlertsListAsTable(futureAlerts, alertsLoading)}
-                </div>
-                <div data-testid="admin-alerts-list-past-list">
-                    <h3>Past Alerts</h3>
-                    {AlertsListAsTable(pastAlerts, alertsLoading, true)}
-                </div>
-            </React.Fragment>,
-            'All Alerts',
+        return (
+            <StandardPage title="Alerts Management">
+                <section aria-live="assertive" className={classes.helpButtonWrapper}>
+                    <div className={classes.helpButtonPlacer}>
+                        <button
+                            className={classes.helpbutton}
+                            onClick={openHelpLightbox}
+                            data-testid="admin-alerts-list-help-button"
+                        >
+                            Help / Info
+                        </button>
+                    </div>
+                    <Modal
+                        aria-labelledby="transition-modal-title"
+                        aria-describedby="transition-modal-description"
+                        className={classes.modal}
+                        open={lightboxOpen}
+                        onClose={closeHelpLightbox}
+                        closeAfterTransition
+                        BackdropComponent={Backdrop}
+                        BackdropProps={{
+                            timeout: 500,
+                        }}
+                        disableScrollLock
+                    >
+                        <Fade in={lightboxOpen}>
+                            <div className={classes.paper}>{locale.helpPopupText}</div>
+                        </Fade>
+                    </Modal>
+                    <StandardCard title="All Alerts" noPadding>
+                        <Grid container>
+                            <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
+                                <div data-testid="admin-alerts-list-current-list">
+                                    <h3>Current Alerts</h3>
+                                    {AlertsListAsTable(currentAlerts, alertsLoading)}
+                                </div>
+                                <div data-testid="admin-alerts-list-future-list">
+                                    <h3>Scheduled Alerts</h3>
+                                    {AlertsListAsTable(futureAlerts, alertsLoading)}
+                                </div>
+                                <div data-testid="admin-alerts-list-past-list">
+                                    <h3>Past Alerts</h3>
+                                    {AlertsListAsTable(pastAlerts, alertsLoading, true)}
+                                </div>
+                            </Grid>
+                        </Grid>
+                    </StandardCard>
+                </section>
+            </StandardPage>
         );
     }
 
-    switch (displayPanel) {
-        case 'error':
-            return displayApiErrorPanel();
-        default:
-            return displayAllAlerts();
-    }
+    return displayPanel === 'error' ? displayApiErrorPanel() : displayAllAlerts();
 };
 
 AlertsAdmin.propTypes = {

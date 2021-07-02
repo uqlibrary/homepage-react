@@ -84,16 +84,19 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-const useStyles2 = makeStyles({
-    table: {
-        minWidth: 500,
-    },
-    editButton: {
-        backgroundColor: '#0e62eb',
-        color: '#fff',
-        padding: '1em',
-    },
-});
+const useStyles2 = makeStyles(
+    theme => ({
+        table: {
+            minWidth: 500,
+        },
+        editButton: {
+            backgroundColor: theme.palette.accent.main,
+            color: theme.palette.white.main,
+            padding: '1em',
+        },
+    }),
+    { withTheme: true },
+);
 
 export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false) {
     const classes = useStyles2();
@@ -166,8 +169,7 @@ export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false
                                     </TableCell>
                                     <TableCell component="td">
                                         <a
-                                            // className={classes.editButton}
-                                            style={{ backgroundColor: '#0e62eb', color: '#fff', padding: '1em' }}
+                                            className={classes.editButton}
                                             data-testid={`alert-list-item-edit-${alert.id}`}
                                             id={`alert-list-item-edit-${alert.id}`}
                                             href={`/admin/alerts/edit/${alert.id}`}

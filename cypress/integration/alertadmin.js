@@ -40,6 +40,14 @@ context('Alert Admin', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
+    it('has a working help button on the List page', () => {
+        cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+        cy.viewport(1300, 1000);
+        cy.get('[data-testid="admin-alerts-list-help-example"]').should('not.exist');
+        cy.get('[data-testid="admin-alerts-list-help-button"]').should('be.visible');
+        cy.get('[data-testid="admin-alerts-list-help-button"]').click();
+        cy.get('[data-testid="admin-alerts-list-help-example"]').should('be.visible');
+    });
 
     it.skip('Works as expected', () => {
         // tbd
