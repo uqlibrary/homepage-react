@@ -147,10 +147,13 @@ export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) 
                             return (
                                 <TableRow key={alert.id} id={alert.id}>
                                     <TableCell component="td">
-                                        <Checkbox />
+                                        <Checkbox
+                                            inputProps={{ 'aria-labelledby': `alert-list-item-title-${alert.id}` }}
+                                        />
                                     </TableCell>
                                     <TableCell component="td">
-                                        <b>{`${alert.title}`}</b> {`${message}`}
+                                        <b id={`alert-list-item-title-${alert.id}`}>{`${alert.title}`}</b>{' '}
+                                        {`${message}`}
                                     </TableCell>
                                     <TableCell component="td" align="center">
                                         {startDate}
@@ -161,9 +164,9 @@ export default function AlertsListAsTable(rows, dataLoading, hasFooter = false) 
                                     <TableCell component="td">
                                         <a
                                             className={classes.editButton}
-                                            data-testid="alert-list-edit"
+                                            data-testid={`alert-list-item-edit-${alert.id}`}
                                             disabled={dataLoading}
-                                            id="alert-list-edit-button"
+                                            id={`alert-list-item-edit-${alert.id}`}
                                             href={`/admin/alerts/edit/${alert.id}`}
                                         >
                                             Edit

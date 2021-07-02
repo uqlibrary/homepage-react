@@ -99,13 +99,20 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
         });
         return wrapFragmentInStandardPage(
             <React.Fragment>
-                <h3>Current Alerts</h3>
-                {AlertsListAsTable(currentAlerts, alertsLoading)}
-                <h3>Scheduled Alerts</h3>
-                {AlertsListAsTable(futureAlerts, alertsLoading)}
-                <h3>Past Alerts</h3>
-                {AlertsListAsTable(pastAlerts, alertsLoading, true)}
+                <div data-testid="current-list">
+                    <h3>Current Alerts</h3>
+                    {AlertsListAsTable(currentAlerts, alertsLoading)}
+                </div>
+                <div data-testid="future-list">
+                    <h3>Scheduled Alerts</h3>
+                    {AlertsListAsTable(futureAlerts, alertsLoading)}
+                </div>
+                <div data-testid="past-list">
+                    <h3>Past Alerts</h3>
+                    {AlertsListAsTable(pastAlerts, alertsLoading, true)}
+                </div>
             </React.Fragment>,
+            'List of all Alerts',
         );
     }
 
