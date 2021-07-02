@@ -29,6 +29,8 @@ const useStyles = makeStyles(
             alignItems: 'center',
             justifyContent: 'center',
             overflowY: 'scroll',
+            maxHeight: '75%',
+            paddingTop: '30%',
         },
         paper: {
             backgroundColor: theme.palette.background.paper,
