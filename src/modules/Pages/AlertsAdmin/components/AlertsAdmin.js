@@ -112,15 +112,15 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
             <React.Fragment>
                 <div data-testid="admin-alerts-list-current-list">
                     <h3>Current Alerts</h3>
-                    {AlertsListAsTable(currentAlerts)}
+                    {AlertsListAsTable(currentAlerts, alertsLoading)}
                 </div>
                 <div data-testid="admin-alerts-list-future-list">
                     <h3>Scheduled Alerts</h3>
-                    {AlertsListAsTable(futureAlerts)}
+                    {AlertsListAsTable(futureAlerts, alertsLoading)}
                 </div>
                 <div data-testid="admin-alerts-list-past-list">
                     <h3>Past Alerts</h3>
-                    {AlertsListAsTable(pastAlerts, true)}
+                    {AlertsListAsTable(pastAlerts, alertsLoading, true)}
                 </div>
             </React.Fragment>,
             'All Alerts',

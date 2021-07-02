@@ -95,7 +95,7 @@ const useStyles2 = makeStyles({
     },
 });
 
-export default function AlertsListAsTable(rows, hasFooter = false) {
+export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -109,7 +109,7 @@ export default function AlertsListAsTable(rows, hasFooter = false) {
         setPage(0);
     };
 
-    if (!rows || rows.length === 0) {
+    if (!!alertsLoading) {
         return (
             <Grid
                 item
@@ -179,7 +179,11 @@ export default function AlertsListAsTable(rows, hasFooter = false) {
                             );
                         })
                     ) : (
-                        <p>No alerts</p>
+                        <TableRow id="no-alerts">
+                            <TableCell component="td">
+                                <p>No alerts</p>
+                            </TableCell>
+                        </TableRow>
                     )}
                 </TableBody>
                 {!!hasFooter && rows.length > 0 && (
