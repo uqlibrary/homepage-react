@@ -138,10 +138,10 @@ export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false
                         <TableCell component="th" scope="row">
                             Alert
                         </TableCell>
-                        <TableCell component="th" scope="row">
+                        <TableCell component="th" scope="row" align="center">
                             Publish Date
                         </TableCell>
-                        <TableCell component="th" scope="row">
+                        <TableCell component="th" scope="row" align="center">
                             Unpublish Date
                         </TableCell>
                         <TableCell component="th" scope="row" />
