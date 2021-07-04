@@ -41,19 +41,19 @@ const useStyles = makeStyles(
             marginTop: 64,
             marginBottom: 64,
         },
-        helpbutton: {
+        actionbutton: {
             backgroundColor: theme.palette.accent.main,
             padding: 8,
             color: '#fff',
             textTransform: 'uppercase',
             borderWidth: 0,
         },
-        helpButtonPlacer: {
+        actionButtonPlacer: {
             float: 'right',
             marginTop: 16,
             marginRight: 16,
         },
-        helpButtonWrapper: {
+        actionButtonWrapper: {
             position: 'relative',
         },
     }),
@@ -118,6 +118,11 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
         setLightboxOpen(false);
     };
 
+    const navigateToAddPage = () => {
+        alert('I will load the "add an alert" page');
+        // window.location.href = '/admin/alerts/add';
+    };
+
     function displayApiErrorPanel() {
         return (
             <StandardPage title="Alerts Management">
@@ -141,13 +146,22 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive" className={classes.helpButtonWrapper}>
-                    <div className={classes.helpButtonPlacer}>
+                    <div className={classes.actionButtonPlacer}>
                         <button
-                            className={classes.helpbutton}
+                            className={classes.actionbutton}
                             onClick={openHelpLightbox}
                             data-testid="admin-alerts-list-help-button"
                         >
                             Help / Info
+                        </button>
+                    </div>
+                    <div className={classes.actionButtonPlacer}>
+                        <button
+                            className={classes.actionbutton}
+                            onClick={() => navigateToAddPage()}
+                            data-testid="admin-alerts-list-add-button"
+                        >
+                            Add alert
                         </button>
                     </div>
                     <Modal

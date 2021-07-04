@@ -120,5 +120,10 @@ export const SECURE_COLLECTION_CHECK_API = ({ path }) => ({ apiUrl: `file/collec
 export const SECURE_COLLECTION_FILE_API = ({ path }) => ({ apiUrl: `file/collection/${path}?acknowledged` });
 
 // alerts
-export const ALERTS_ALL_API = () => ({ apiUrl: '/alerts?noCache=1' });
+export const ALERTS_ALL_API = (requestNonCachedData = true) => {
+    const param = requestNonCachedData ? '?noCache=1' : '';
+    return {
+        apiUrl: `/alerts${param}`,
+    };
+};
 export const ALERTS_BY_ID_API = ({ id }) => ({ apiUrl: `alerts/${id}?noCache=1` });
