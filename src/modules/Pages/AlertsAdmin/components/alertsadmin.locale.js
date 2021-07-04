@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import React, { Fragment } from 'react';
 
 export default {

@@ -7,3 +7,4 @@ cypress/screenshots/
 *.json
 **/mock/data/**/*.js
 src/modules/Index/components/subComponents/promoPanel.locale.js
+src/modules/Pages/AlertsAdmin/components/alertsadmin.locale.js
