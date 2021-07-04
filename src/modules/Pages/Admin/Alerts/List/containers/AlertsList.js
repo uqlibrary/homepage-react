@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import AlertsAdmin from '../components/AlertsAdmin';
+import AlertsList from '../components/AlertsList';
 
 const mapStateToProps = state => {
     return {
@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let AlertsAdminContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsAdmin);
+let AlertsAdminContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsList);
 AlertsAdminContainer = withRouter(AlertsAdminContainer);
 
 export default AlertsAdminContainer;

@@ -60,7 +60,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => {
+export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const classes = useStyles();
 
     const [currentAlerts, setCurrentAlerts] = useState([]);
@@ -193,11 +193,11 @@ export const AlertsAdmin = ({ actions, alerts, alertsLoading, alertsError }) => 
     return displayPanel === 'error' ? displayApiErrorPanel() : displayAllAlerts();
 };
 
-AlertsAdmin.propTypes = {
+AlertsList.propTypes = {
     actions: PropTypes.object,
     alerts: PropTypes.array,
     alertsLoading: PropTypes.bool,
     alertsError: PropTypes.any,
 };
 
-export default React.memo(AlertsAdmin);
+export default React.memo(AlertsList);
