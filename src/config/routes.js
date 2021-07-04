@@ -74,7 +74,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     const alertsDisplay = [
         {
             path: pathConfig.admin.alerts,
-            component: components.AlertsAdmin,
+            component: components.AlertsList,
             // exact: true,
             pageTitle: locale.pages.admin.alerts.title,
         },
