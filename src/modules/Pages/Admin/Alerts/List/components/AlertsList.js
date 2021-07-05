@@ -13,7 +13,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import AlertsListAsTable from './AlertsListAsTable';
-import { default as locale } from './alertsadmin.locale';
+import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(
     theme => ({
@@ -119,8 +119,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     };
 
     const navigateToAddPage = () => {
-        alert('I will load the "add an alert" page');
-        // window.location.href = '/admin/alerts/add';
+        window.location.href = '/admin/alerts/add';
     };
 
     function displayApiErrorPanel() {

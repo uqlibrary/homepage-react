@@ -9,6 +9,7 @@ export const pathConfig = {
     courseresources: '/courseresources',
     paymentReceipt: '/payment-receipt',
     admin: {
+        alertsadd: '/admin/alerts/add',
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
     },
@@ -22,6 +23,7 @@ export const flattedPathConfig = [
     '/collection',
     '/courseresources',
     '/payment-receipt',
+    '/admin/alerts/add',
     '/admin/alerts',
     '/admin/masquerade',
     '/book-exam-booth',
@@ -71,7 +73,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const alertsDisplay = [
+    const alertsListDisplay = [
         {
             path: pathConfig.admin.alerts,
             component: components.AlertsList,
@@ -80,21 +82,31 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const alertAddDisplay = [
+        {
+            path: pathConfig.admin.alerts,
+            component: components.AlertsAdd,
+            // exact: true,
+            pageTitle: locale.pages.admin.alerts.title,
+        },
+    ];
+
+    const masqueradeDisplay = [
+        {
+            path: pathConfig.admin.masquerade,
+            component: components.Masquerade,
+            exact: true,
+            access: [roles.admin],
+            pageTitle: locale.pages.admin.masquerade.title,
+        },
+    ];
+
     return [
         ...publicPages,
         ...(account && seeCourseResources(account) ? courseResoures : []),
-        ...(account && seeAlertsAdmin(account) ? alertsDisplay : []),
-        ...(account && account.canMasquerade
-            ? [
-                  {
-                      path: pathConfig.admin.masquerade,
-                      component: components.Masquerade,
-                      exact: true,
-                      access: [roles.admin],
-                      pageTitle: locale.pages.admin.masquerade.title,
-                  },
-              ]
-            : []),
+        ...(account && seeAlertsAdmin(account) ? alertAddDisplay : []),
+        ...(account && seeAlertsAdmin(account) ? alertsListDisplay : []),
+        ...(account && account.canMasquerade ? masqueradeDisplay : []),
         {
             component: components.NotFound,
         },
