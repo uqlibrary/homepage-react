@@ -13,6 +13,7 @@ const WebpackStrip = require('strip-loader');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
 const options = {
     policy: [
@@ -159,6 +160,9 @@ const webpackConfig = {
             openAnalyzer: !process.env.CI_BRANCH,
         }),
         new RobotstxtPlugin(options),
+        new MomentTimezoneDataPlugin({
+            matchZones: /^Australia\/Brisbane/,
+        }),
     ],
     optimization: {
         splitChunks: {

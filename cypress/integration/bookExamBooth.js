@@ -55,20 +55,24 @@ context('Book Exam Booth page', () => {
         cy.get('[data-testid="session-length-option-90"]').click();
 
         // Choose a custom date
-        const currentDateTime = moment();
-        const selectedDateTime = moment()
-            .add(1, 'year')
+        const bookingDate = moment()
+            .add(1, 'month')
             .date(10);
         cy.get('[data-testid="start-date"] input')
             .as('date-input')
-
+            .should($input => {
+                const defaultDate = $input.val();
+                const yesterday = moment().subtract(1, 'day');
+                expect(defaultDate).to.equal(yesterday.format('YYYY-MM-DD'));
+            })
             .click();
-        cy.get('[role="dialog"] button')
-            .contains(currentDateTime.year())
+        cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
+            .as('next-month-button')
             .click();
-        cy.get('[role="dialog"]')
-            .contains(selectedDateTime.year())
-            .click();
+        if (moment().date() === 1) {
+            // The field defaults to the previous day, which can be in the previous month.
+            cy.get('@next-month-button').click();
+        }
         cy.get('[role="dialog"]')
             .contains('10')
             .click();
@@ -78,7 +82,7 @@ context('Book Exam Booth page', () => {
         cy.get('@date-input')
             .invoke('val')
             .then(text => {
-                expect(text).to.equal(selectedDateTime.format('YYYY-MM-DD'));
+                expect(text).to.equal(bookingDate.format('YYYY-MM-DD'));
             });
 
         // Choose a custom time
@@ -92,7 +96,7 @@ context('Book Exam Booth page', () => {
         cy.hash().should(hash => {
             expect(hash)
                 .contains('#/app/booking-types/ae12d42e-faae-4553-8c6a-be2fcddb4b26')
-                .contains(`firstDay=${selectedDateTime.format('YYYY-MM-DD')}`)
+                .contains(`firstDay=${bookingDate.format('YYYY-MM-DD')}`)
                 .contains('fromTime=10%3A00')
                 .contains('toTime=13%3A30');
         });
