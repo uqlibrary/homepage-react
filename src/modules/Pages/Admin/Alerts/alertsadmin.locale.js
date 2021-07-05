@@ -83,4 +83,7 @@ export default {
             </p>
         </Fragment>
     ),
+    addForm: {
+        help: {},
+    },
 };
