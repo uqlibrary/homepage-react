@@ -7,7 +7,6 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
-// import TextareaAutosize from '@material-ui/core/TextareaAutosize';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
@@ -17,8 +16,6 @@ const moment = require('moment');
 
 export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
     console.log('props = ', actions, alerts, alertsLoading, alertsError);
-
-    // const [linkRequired, setLinkRequired] = useState(false);
 
     const [isFormValid, setFormValidity] = useState(false);
     const [showPreview, setPreviewOpen] = useState(false);
@@ -40,8 +37,6 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         linkUrl: '',
     });
 
-    // console.log('values = ', values);
-
     const defaultStartTime = moment().format('YYYY-MM-DDTHH:mm');
     const defaultEndTime = moment()
         .endOf('day')
@@ -58,11 +53,10 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
 
         const newLinkTitle = values.linkTitle || '';
         const newLinkUrl = values.linkUrl || '';
+
         const permanentAlert = values.permanentAlert ? '[permanent]' : '';
         const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
         const newBody = `${values.enteredbody}${link}${permanentAlert}`;
-
-        console.log({ ...values, ['alertTitle']: newAlertTitle, ['body']: newBody });
 
         setValues({
             ...values,
@@ -72,17 +66,14 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
             ['linkUrl']: newLinkUrl,
         });
 
-        console.log('alertTitle = ', values.alertTitle);
-        console.log('body = ', values.body);
-
         return values;
     }
 
     const saveAlert = () => {};
 
     const displayPreview = () => {
-        const displayValues = expandValues(values);
-        console.log(displayValues);
+        // const displayValues = expandValues(values);
+        // console.log(displayValues);
         setPreviewOpen(true);
 
         // oddly hardcoding the alert with attributes tied to values doesnt work, so insert it this way
@@ -92,8 +83,9 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         if (!!alert) {
             alert.setAttribute('id', 'alert-preview');
             alert.setAttribute('alerttitle', values.alertTitle);
+            alert.setAttribute('alerttype', !!values.urgent ? '1' : '0');
             // when the alert body has the square bracket for 'permanent',
-            // that enclosed string is parsed out by setattribute
+            // that enclosed string is not accepted by setattribute
             // something to do with XSS blocking for special char?
             // so we have to handle it manually :(
             if (!!values.permanentAlert) {
@@ -104,14 +96,13 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                     const alertShadowRoot = document.getElementById('alert-preview').shadowRoot;
                     const closeButton = !!alertShadowRoot && alertShadowRoot.getElementById('alert-close');
                     if (!!closeButton) {
-                        !!closeButton && closeButton.remove();
+                        closeButton.remove();
                         clearInterval(changeMessage);
                     }
                 }, 100);
             } else {
                 alert.setAttribute('alertmessage', values.body);
             }
-            alert.setAttribute('alerttype', !!values.urgent ? '1' : '0');
             alertWrapper.appendChild(alert);
         }
     };
@@ -222,7 +213,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                     </Grid>
                                 </Grid>
                                 <Grid container spacing={2} style={{ marginTop: 12 }}>
-                                    <Grid item xs={6}>
+                                    <Grid item md={6} xs={12}>
                                         {/* https://material-ui.com/components/pickers/ */}
                                         <TextField
                                             id="startDate"
@@ -237,7 +228,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             }}
                                         />
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item md={6} xs={12}>
                                         <TextField
                                             id="endDate"
                                             InputLabelProps={{ shrink: true }}
@@ -304,7 +295,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                         border: '1px solid rgb(211, 211, 211)',
                                     }}
                                 >
-                                    <Grid item xs={6}>
+                                    <Grid item md={6} xs={12}>
                                         <FormControl fullWidth>
                                             <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
                                             <Input
@@ -315,7 +306,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             />
                                         </FormControl>
                                     </Grid>
-                                    <Grid item xs={6}>
+                                    <Grid item md={6} xs={12}>
                                         <FormControl fullWidth>
                                             <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
                                             <Input
