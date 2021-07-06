@@ -221,7 +221,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2}>
+                                <Grid container spacing={2} style={{ marginTop: 12 }}>
                                     <Grid item xs={6}>
                                         {/* https://material-ui.com/components/pickers/ */}
                                         <TextField
