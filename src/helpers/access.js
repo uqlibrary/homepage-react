@@ -122,11 +122,24 @@ export const seeAlertsAdmin = account =>
     !!account &&
     !!account.id &&
     [
-        'uqldegro',
-        'uqjtilse',
-        'uqamartl',
-        // all devs should be here
         'uqstaff', // mock
+        // Staff who will use the form
+        'uqjtilse', // jake Tilse
+        'uqsvangr', // Stacey van Groll
+        'uqtziebe', // Tanya Ziebell
+        'uqnfitt', // nick Fitt
+        'uqrbowen', // Rob Bowen
+        'uqehorns', // Eric Hornsby
+        'uqdcall1', // Dan Callan
+        'uqtscho1', // Tristan Schoonens
+        // devs
+        'uqldegro', // Lea de Groot
+        'uqamartl', // Andrew Martlew
+        'uqklane1', // Ky Lane
+        'uqawil42', // Ashley Wilson
+        'uqclien1', // Cliff Lien
+        'uqmmoise', // Marcelo Perez Moises
+        // all devs should be here
     ].includes(account.id);
 
 // what is displayed in the User Services panel on the homepage, determined per group

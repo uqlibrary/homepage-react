@@ -1,4 +1,4 @@
-describe('Homepage Search Panel', () => {
+describe('Alerts Admin Pages', () => {
     context('Alert Admin List page', () => {
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaffnonpriv');
@@ -54,7 +54,7 @@ describe('Homepage Search Panel', () => {
             // tbd
         });
     });
-    context.only('Alert Admin Add page', () => {
+    context('Alert Admin Add page', () => {
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
