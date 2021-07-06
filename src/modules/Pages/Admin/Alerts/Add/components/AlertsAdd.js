@@ -1,8 +1,5 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-
-const moment = require('moment');
-
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
@@ -11,11 +8,12 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
 // import TextareaAutosize from '@material-ui/core/TextareaAutosize';
-
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import { default as locale } from '../../alertsadmin.locale';
+
+const moment = require('moment');
 
 export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
     console.log('props = ', actions, alerts, alertsLoading, alertsError);
@@ -55,8 +53,9 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
 
     function expandValues(values) {
         console.log('expandValues, values = ', values);
-        const newAlertTitle = values.alertTitle || 'Read more';
         // because otherwise we see 'false' when we clear the field
+        const newAlertTitle = values.alertTitle || '';
+
         const newLinkTitle = values.linkTitle || '';
         const newLinkUrl = values.linkUrl || '';
         const permanentAlert = values.permanentAlert ? '[permanent]' : '';
@@ -91,9 +90,27 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         alertWrapper.innerHTML = '';
         const alert = document.createElement('uq-alert');
         if (!!alert) {
-            !alert.setAttribute('id', 'alert-preview');
-            !!values.body && alert.setAttribute('alertmessage', values.body);
-            !!values.alertTitle && alert.setAttribute('alerttitle', values.alertTitle);
+            alert.setAttribute('id', 'alert-preview');
+            alert.setAttribute('alerttitle', values.alertTitle);
+            // when the alert body has the square bracket for 'permanent',
+            // that enclosed string is parsed out by setattribute
+            // something to do with XSS blocking for special char?
+            // so we have to handle it manually :(
+            if (!!values.permanentAlert) {
+                alert.setAttribute('alertmessage', values.body.replace('[permanent]', ''));
+                // manually remove the 'non-permanent' button
+                const changeMessage = setInterval(() => {
+                    // its a moment before it is available
+                    const alertShadowRoot = document.getElementById('alert-preview').shadowRoot;
+                    const closeButton = !!alertShadowRoot && alertShadowRoot.getElementById('alert-close');
+                    if (!!closeButton) {
+                        !!closeButton && closeButton.remove();
+                        clearInterval(changeMessage);
+                    }
+                }, 100);
+            } else {
+                alert.setAttribute('alertmessage', values.body);
+            }
             alert.setAttribute('alerttype', !!values.urgent ? '1' : '0');
             alertWrapper.appendChild(alert);
         }
@@ -110,25 +127,23 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
             currentValues.enteredbody,
             !!currentValues.enteredbody && currentValues.enteredbody.length > 0,
         );
-        const devlinkValid =
-            !currentValues.linkRequired || (currentValues.linkTitle.length > 0 && currentValues.linkUrl.length > 0);
         console.log(
             'validateValues check: linkRequired = ',
             currentValues.linkRequired,
             `[${currentValues.linkTitle}](${currentValues.linkUrl})`,
-            devlinkValid,
+            !currentValues.linkRequired || currentValues.linkUrl.length > 0,
         );
-        const b =
+        const isValid =
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
-            (!currentValues.linkRequired || (currentValues.linkTitle.length > 0 && currentValues.linkUrl.length > 0));
-        console.log('validvalues: ', b);
+            (!currentValues.linkRequired || currentValues.linkUrl.length > 0);
+        console.log('validvalues: ', isValid);
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
-        !b && !!showPreview && setPreviewOpen(false);
+        !isValid && !!showPreview && setPreviewOpen(false);
 
-        return b;
+        return isValid;
     };
 
     // const notValidValues = () => {
@@ -165,19 +180,8 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
 
     return (
         <Fragment>
-            <Grid
-                container
-                // spacing={2}
-                style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}
-            >
-                <Grid item id="previewWrapper">
-                    <uq-alert
-                        id="alert-bc2f8d60-dd2c-11eb-87e7-33ba75ed085f"
-                        alertmessage="In line with Queensland Government directions, you must wear a face mask when visiting UQ libraries.[UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)"
-                        alerttitle="Face masks in the Library:"
-                        alerttype="0"
-                    />
-                </Grid>
+            <Grid container style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}>
+                <Grid item id="previewWrapper" />
             </Grid>
             <StandardPage title="Create Alert">
                 <form>
@@ -190,6 +194,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             <InputLabel htmlFor="alertTitle">Title *</InputLabel>
                                             <Input
                                                 id="alertTitle"
+                                                data-testid="admin-alerts-add-title"
                                                 value={values.alertTitle}
                                                 onChange={handleChange('alertTitle')}
                                             />
@@ -202,17 +207,11 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             <InputLabel htmlFor="alertBody">Message *</InputLabel>
                                             <TextField
                                                 id="alertBody"
+                                                data-testid="admin-alerts-add-body"
                                                 value={values.enteredbody}
                                                 onChange={handleChange('enteredbody')}
                                                 multiline
                                                 rows={2}
-                                                // style={{
-                                                //     padding: '0.5rem',
-                                                //     borderLeftWidth: 0,
-                                                //     borderTopWidth: 0,
-                                                //     borderRightWidth: 0,
-                                                //     borderColor: 'rgba(0, 0, 0, 0.87)',
-                                                // }}
                                             />
                                         </FormControl>
                                     </Grid>
@@ -245,6 +244,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
                                             <Checkbox
                                                 checked={values.linkRequired}
+                                                data-testid="admin-alerts-add-checkbox-linkrequired"
                                                 onChange={handleChange('linkRequired')}
                                             />
                                             Add link?
@@ -254,6 +254,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
                                             <Checkbox
                                                 checked={values.urgent}
+                                                data-testid="admin-alerts-add-checkbox-urgent"
                                                 onChange={handleChange('urgent')}
                                                 name="urgent"
                                             />
@@ -263,6 +264,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                     <Grid item xs={4}>
                                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
                                             <Checkbox
+                                                data-testid="admin-alerts-add-checkbox-permanent"
                                                 checked={values.permanentAlert}
                                                 onChange={handleChange('permanentAlert')}
                                                 name="permanentAlert"
@@ -281,7 +283,9 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             <InputLabel htmlFor="linkTitle">Link Title *</InputLabel>
                                             <Input
                                                 id="linkTitle"
+                                                data-testid="admin-alerts-add-link-title"
                                                 value={values.linkTitle}
+                                                placeholder="Read more"
                                                 onChange={handleChange('linkTitle')}
                                             />
                                         </FormControl>
@@ -291,6 +295,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
                                             <Input
                                                 id="linkUrl"
+                                                data-testid="admin-alerts-add-link-url"
                                                 value={values.linkUrl}
                                                 onChange={handleChange('linkUrl')}
                                             />
@@ -307,6 +312,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                     </Grid>
                                     <Grid item xs={9} align="right">
                                         <Button
+                                            data-testid="admin-alerts-add-button-preview"
                                             color="secondary"
                                             children="Preview"
                                             disabled={!isFormValid}
