@@ -21,7 +21,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
     const [showPreview, setPreviewOpen] = useState(false);
 
     const [values, setValues] = useState({
-        id: '',
+        // id: '',
         startDate: '',
         endDate: '',
         alertTitle: '',
@@ -30,8 +30,8 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         enteredbody: '',
         linkRequired: false,
         urgent: false,
-        created: '',
-        updated: '',
+        // created: '',
+        // updated: '',
         permanentAlert: false,
         linkTitle: '',
         linkUrl: '',
@@ -46,17 +46,28 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         window.location.href = '/admin/alerts';
     };
 
+    const getBody = () => {
+        const permanentAlert = values.permanentAlert ? '[permanent]' : '';
+        const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
+        return `${values.enteredbody}${permanentAlert}${link}`;
+    };
+
     function expandValues(values) {
-        console.log('expandValues, values = ', values);
+        console.log('expandValues before, values = ', values);
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = values.alertTitle || '';
+
+        const newStartDate = values.startDate || defaultStartTime;
+        const newEndDate = values.endDate || defaultEndTime;
 
         const newLinkTitle = values.linkTitle || '';
         const newLinkUrl = values.linkUrl || '';
 
-        const permanentAlert = values.permanentAlert ? '[permanent]' : '';
-        const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
-        const newBody = `${values.enteredbody}${link}${permanentAlert}`;
+        // const permanentAlert = values.permanentAlert ? '[permanent]' : '';
+        // const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
+        // const newBody = `${values.enteredbody}${permanentAlert}${link}`;
+        const newBody = getBody();
+        console.log('newBody = ', newBody);
 
         setValues({
             ...values,
@@ -64,16 +75,30 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
             ['body']: newBody,
             ['linkTitle']: newLinkTitle,
             ['linkUrl']: newLinkUrl,
+            ['startDate']: newStartDate,
+            ['endDate']: newEndDate,
         });
 
         return values;
     }
 
-    const saveAlert = () => {};
+    const saveAlert = () => {
+        expandValues(values);
+        // console.log('saveAlert 1: ', values);
+        // expandValues(values);
+        // console.log('saveAlert 2: ', values);
+        console.log('will save: title = ', values.alertTitle || '');
+        console.log('will save: body = ', values.body); // getBody());
+        console.log('will save: startDate = ', values.startDate || defaultStartTime);
+        console.log('will save: endDate = ', values.endDate || defaultEndTime);
+        console.log('will save: urgent = ', values.urgent);
+    };
 
     const displayPreview = () => {
+        expandValues(values);
         // const displayValues = expandValues(values);
         // console.log(displayValues);
+        console.log('displayPreview: ', values);
         setPreviewOpen(true);
 
         // oddly hardcoding the alert with attributes tied to values doesnt work, so insert it this way
@@ -146,6 +171,15 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
 
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
+
+        // if (prop === 'enteredbody') {
+        //     console.log('got ', newValue, ' for ', prop);
+        //     const permanentAlert = values.permanentAlert ? '[permanent]' : '';
+        //     const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
+        //     const newBody = getBody();
+        //     console.log('newBody = ', newBody);
+        //     setValues({ ...values, ['body']: newBody });
+        // }
 
         expandValues({ ...values, [prop]: newValue });
 
@@ -333,6 +367,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             children="Preview"
                                             disabled={!isFormValid}
                                             onClick={displayPreview}
+                                            style={{ marginRight: '0.5rem' }}
                                         />
                                         <Button
                                             color="primary"
