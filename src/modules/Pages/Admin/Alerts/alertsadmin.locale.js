@@ -85,5 +85,7 @@ export default {
     ),
     addForm: {
         help: {},
+        urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',
+        permanentTooltip: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
     },
 };

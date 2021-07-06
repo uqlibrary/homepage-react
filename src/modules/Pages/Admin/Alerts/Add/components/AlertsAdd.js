@@ -153,26 +153,31 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
     const handleChange = prop => event => {
         // setPreviewOpen(false);
 
-        !!event.target.checked && console.log('event.target.checked = ', event.target.checked);
-        !!event.target.value && console.log('event.target.vaue = ', event.target.value);
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
 
         expandValues({ ...values, [prop]: newValue });
 
+        // console.log('values.endDate = ', values.endDate);
+        // console.log('event.target.value = ', event.target.value);
+        // console.log('before ', values.endDate < event.target.value);
         // if (
         //     prop === 'startDate' &&
         //     event.target.value !== defaultStartTime &&
         //     event.target.value !== '' &&
-        //     (values.endDate === defaultEndTime || values.endDate === '')
+        //     // (values.endDate === defaultEndTime || values.endDate === '')
+        //     values.endDate < event.target.value
         // ) {
         //     const newEndDate = moment(event.target.value, 'YYYY-MM-DDTHH:MM')
         //         .set({ H: 23, m: 59 })
         //         .format('YYYY-MM-DDTHH:mm');
         //     console.log('newEndDate = ', newEndDate);
-        //     console.log('update end date to ',
-        //     { ...values, ['startDate']: event.target.value, ['endDate']: newEndDate });
-        //     setValues({ ...values, ['endDate']: newEndDate1 });
+        //     console.log('update end date to ', {
+        //         ...values,
+        //         ['startDate']: event.target.value,
+        //         ['endDate']: newEndDate,
+        //     });
+        //     setValues({ ...values, ['endDate']: newEndDate });
         // }
 
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
@@ -203,9 +208,9 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                 </Grid>
                                 <Grid container spacing={2}>
                                     <Grid item xs={12}>
-                                        <FormControl fullWidth style={{ padding: '3rem 0 0 0' }}>
+                                        <FormControl fullWidth>
                                             <InputLabel htmlFor="alertBody">Message *</InputLabel>
-                                            <TextField
+                                            <Input
                                                 id="alertBody"
                                                 data-testid="admin-alerts-add-body"
                                                 value={values.enteredbody}
@@ -226,6 +231,10 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             onChange={handleChange('startDate')}
                                             type="datetime-local"
                                             value={values.startDate || defaultStartTime}
+                                            inputProps={{
+                                                min: defaultStartTime,
+                                                required: true,
+                                            }}
                                         />
                                     </Grid>
                                     <Grid item xs={6}>
@@ -236,6 +245,10 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                             onChange={handleChange('endDate')}
                                             type="datetime-local"
                                             value={values.endDate || defaultEndTime}
+                                            inputProps={{
+                                                min: values.startDate,
+                                                required: true,
+                                            }}
                                         />
                                     </Grid>
                                 </Grid>
@@ -247,45 +260,57 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                                 data-testid="admin-alerts-add-checkbox-linkrequired"
                                                 onChange={handleChange('linkRequired')}
                                             />
-                                            Add link?
+                                            Add link
                                         </InputLabel>
                                     </Grid>
                                     <Grid item xs={4}>
-                                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+                                        <InputLabel
+                                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                            title={locale.addForm.urgentTooltip}
+                                        >
                                             <Checkbox
                                                 checked={values.urgent}
                                                 data-testid="admin-alerts-add-checkbox-urgent"
                                                 onChange={handleChange('urgent')}
                                                 name="urgent"
+                                                title={locale.addForm.urgentTooltip}
                                             />
-                                            Urgent?
+                                            Urgent
                                         </InputLabel>
                                     </Grid>
                                     <Grid item xs={4}>
-                                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+                                        <InputLabel
+                                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                            title={locale.addForm.permanentTooltip}
+                                        >
                                             <Checkbox
                                                 data-testid="admin-alerts-add-checkbox-permanent"
                                                 checked={values.permanentAlert}
                                                 onChange={handleChange('permanentAlert')}
                                                 name="permanentAlert"
+                                                title={locale.addForm.permanentTooltip}
                                             />
-                                            Permanent?
+                                            Permanent
                                         </InputLabel>
                                     </Grid>
                                 </Grid>
                                 <Grid
                                     container
                                     spacing={2}
-                                    style={{ paddingBottom: '1em', display: values.linkRequired ? 'flex' : 'none' }}
+                                    style={{
+                                        paddingBottom: '1em',
+                                        marginTop: '1em',
+                                        display: values.linkRequired ? 'flex' : 'none',
+                                        border: '1px solid rgb(211, 211, 211)',
+                                    }}
                                 >
                                     <Grid item xs={6}>
                                         <FormControl fullWidth>
-                                            <InputLabel htmlFor="linkTitle">Link Title *</InputLabel>
+                                            <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
                                             <Input
                                                 id="linkTitle"
                                                 data-testid="admin-alerts-add-link-title"
                                                 value={values.linkTitle}
-                                                placeholder="Read more"
                                                 onChange={handleChange('linkTitle')}
                                             />
                                         </FormControl>
@@ -302,7 +327,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                                         </FormControl>
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2}>
+                                <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                                     <Grid item xs={3} align="left">
                                         <Button
                                             color="secondary"
