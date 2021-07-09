@@ -348,6 +348,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                         />
                                         <Button
                                             color="primary"
+                                            data-testid="admin-alerts-add-button-save"
                                             variant="contained"
                                             children="Save"
                                             disabled={!isFormValid}
