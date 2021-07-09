@@ -129,5 +129,19 @@ describe('Alerts Admin Pages', () => {
                     ).should('have.attr', 'title', 'Click here');
                 });
         });
+        it('can save an alert', () => {
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-add-title"]').type('alert title 3');
+            cy.get('[data-testid="admin-alerts-add-body"]').type('body 3');
+            cy.get('[data-testid="admin-alerts-add-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('An alert has been added');
+            cy.get('[data-testid="confirm-alert-add-succeeded"]').click();
+            cy.on('url:changed', newUrl => {
+                // this page displays an error because the user isnt inserted in the url
+                expect(newUrl).to.contain('http://localhost:2020/admin/alerts/add');
+            });
+        });
     });
 });
