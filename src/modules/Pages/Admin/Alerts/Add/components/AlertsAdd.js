@@ -72,12 +72,17 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
         return `${values.enteredbody}${permanentAlert}${link}`;
     };
 
+    function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
+        const newMoment = new moment(dateString);
+        return newMoment.format(dateFormat);
+    }
+
     function expandValues(values) {
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = values.alertTitle || '';
 
-        const newStartDate = values.startDate || defaultStartTime;
-        const newEndDate = values.endDate || defaultEndTime;
+        const newStartDate = formatDate(values.startDate || defaultStartTime);
+        const newEndDate = formatDate(values.endDate || defaultEndTime);
 
         const newLinkTitle = values.linkTitle || '';
         const newLinkUrl = values.linkUrl || '';
@@ -102,13 +107,13 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
 
         console.log('will save: title = ', values.alertTitle || '');
         console.log('will save: body = ', values.body); // getBody());
-        console.log('will save: startDate = ', values.startDate || defaultStartTime);
-        console.log('will save: endDate = ', values.endDate || defaultEndTime);
-        console.log('will save: urgent = ', values.urgent);
+        console.log('will save: startDate = ', values.startDate);
+        console.log('will save: endDate = ', values.endDate);
+        console.log('will save: urgent = ', !!values.urgent ? '1' : '0');
         actions.createAlert({
             title: values.alertTitle,
             body: values.body,
-            urgent: values.urgent,
+            urgent: !!values.urgent ? '1' : '0',
             start: values.startDate,
             end: values.endDate,
         });
