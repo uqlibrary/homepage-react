@@ -148,5 +148,12 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="confirm-alert-add-succeeded"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqstaff');
         });
+        it('the cancel button returns to the list page', () => {
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-add-button-cancel"]').click();
+            cy.wait(50);
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts?user=uqstaff');
+        });
     });
 });

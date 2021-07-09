@@ -85,7 +85,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
 
     function expandValues(values) {
         // because otherwise we see 'false' when we clear the field
-        const newAlertTitle = values.alertTitle || '';
+        const newAlertTitle = values.alertTitle || /* istanbul ignore next */ '';
 
         const newStartDate = formatDate(values.startDate || defaultStartTime);
         const newEndDate = formatDate(values.endDate || defaultEndTime);
@@ -111,7 +111,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
     const saveAlert = () => {
         expandValues(values);
 
-        console.log('will save: title = ', values.alertTitle || '');
+        console.log('will save: title = ', values.alertTitle || /* istanbul ignore next */ '');
         console.log('will save: body = ', values.body); // getBody());
         console.log('will save: startDate = ', values.startDate);
         console.log('will save: endDate = ', values.endDate);
@@ -134,6 +134,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
         const alertWrapper = document.getElementById('previewWrapper');
         alertWrapper.innerHTML = '';
         const alert = document.createElement('uq-alert');
+        /* istanbul ignore else */
         if (!!alert) {
             alert.setAttribute('id', 'alert-preview');
             alert.setAttribute('alerttitle', values.alertTitle);
@@ -183,6 +184,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
     };
 
+    /* istanbul ignore next */
     const _handleDefaultSubmit = event => {
         event && event.preventDefault();
     };
@@ -345,6 +347,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                         <Button
                                             color="secondary"
                                             children="Cancel"
+                                            data-testid="admin-alerts-add-button-cancel"
                                             onClick={() => navigateToListPage()}
                                         />
                                     </Grid>
