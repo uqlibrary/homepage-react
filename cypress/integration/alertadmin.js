@@ -23,10 +23,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
                 .should('have.length', 5);
-            // cy.get('[data-testid="admin-alerts-list-past-list"] [id="alert-list-footer"] div div:nth-child(2) p')
-            // .contains(
-            //     '81',
-            // );
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
@@ -50,8 +47,14 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-help-example"]').should('be.visible');
         });
 
-        it.skip('Works as expected', () => {
-            // tbd
+        it('Works as expected', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('tr[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').within(() => {
+                cy.get('td.alertText h4').contains('Important update:');
+                cy.get('td.startDate').contains('Tuesday 29/Jun/2021 3pm'); // check formating
+                cy.get('td.endDate').contains('Wednesday 2/Jul/2031 6.30pm');
+            });
         });
     });
     context('Alert Admin Add page', () => {
