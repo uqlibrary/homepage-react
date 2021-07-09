@@ -16,6 +16,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../../alertsadmin.locale';
+import { getUserPostfix } from 'helpers/general';
+import { fullPath } from 'config/routes';
 
 export const AlertsAdd = ({ actions, alerts, alertsError }) => {
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -59,11 +61,15 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
     }, [showConfirmation, alertsError]);
 
     const navigateToListPage = () => {
-        window.location.href = '/admin/alerts';
+        const userString = getUserPostfix();
+        console.log('navigateToListPage: go to ', `${fullPath}/admin/alerts${userString}`);
+        window.location.href = `${fullPath}/admin/alerts${userString}`;
     };
 
     const reloadAddAlertPage = () => {
-        window.location.href = '/admin/alerts/add';
+        const userString = getUserPostfix();
+        console.log('reloadAddAlertPage: go to ', `${fullPath}/admin/alerts${userString}`);
+        window.location.href = `${fullPath}/admin/alerts/add${userString}`;
     };
 
     const getBody = values => {

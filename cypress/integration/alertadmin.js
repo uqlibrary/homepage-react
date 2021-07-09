@@ -44,13 +44,21 @@ describe('Alerts Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('has a working help button on the List page', () => {
+        it('has a working Help button on the List page', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-list-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-list-help-button"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-help-button"]').click();
             cy.get('[data-testid="admin-alerts-list-help-example"]').should('be.visible');
+        });
+
+        it('has a working Add button on the List page', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-list-add-button"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-list-add-button"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqstaff');
         });
 
         it('Works as expected', () => {
@@ -138,10 +146,7 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('An alert has been added');
             cy.get('[data-testid="confirm-alert-add-succeeded"]').click();
-            cy.on('url:changed', newUrl => {
-                // this page displays an error because the user isnt inserted in the url
-                expect(newUrl).to.contain('http://localhost:2020/admin/alerts/add');
-            });
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqstaff');
         });
     });
 });

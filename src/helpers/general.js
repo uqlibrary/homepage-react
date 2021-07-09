@@ -75,3 +75,20 @@ export const throwFetchErrors = response => {
     }
     return response;
 };
+
+/**
+ * extract the username from the url
+ * return prefixed by the correct character, which should be either '?' or '&'
+ * @param appendType
+ * @returns {string}
+ */
+export function getUserPostfix(appendType = '?') {
+    let userString = '';
+    if (window.location.hostname === 'localhost') {
+        const queryString = require('query-string');
+        // Get user from query string
+        const user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
+        userString = !!user ? `${appendType}user=${user}` : '';
+    }
+    return userString;
+}

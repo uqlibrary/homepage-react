@@ -14,6 +14,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import AlertsListAsTable from './AlertsListAsTable';
 import { default as locale } from '../../alertsadmin.locale';
+import { getUserPostfix } from 'helpers/general';
+import { fullPath } from 'config/routes';
 
 const useStyles = makeStyles(
     theme => ({
@@ -119,7 +121,12 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     };
 
     const navigateToAddPage = () => {
-        window.location.href = '/admin/alerts/add';
+        const userString = getUserPostfix();
+        console.log(
+            'navigateToListPage: go to ',
+            fullPath + window.location.pathname.replace('/alerts', `/alerts/add${userString}`),
+        );
+        window.location.href = fullPath + window.location.pathname.replace('/alerts', `/alerts/add${userString}`);
     };
 
     function displayApiErrorPanel() {
