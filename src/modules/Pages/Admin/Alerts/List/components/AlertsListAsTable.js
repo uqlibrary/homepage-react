@@ -151,20 +151,28 @@ export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false
                     {rowsPerPage > 0 && rows.length > 0 ? (
                         rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
                             return (
-                                <TableRow key={alert.id} id={alert.id}>
+                                <TableRow
+                                    key={alert.id}
+                                    // id={`row-${alert.id}`}
+                                    data-testid={`alert-list-row-${alert.id}`}
+                                >
                                     <TableCell component="td">
                                         <Checkbox
+                                            classes={{ root: classes.checkbox }}
                                             inputProps={{ 'aria-labelledby': `alert-list-item-title-${alert.id}` }}
                                         />
                                     </TableCell>
-                                    <TableCell component="td">
-                                        <b id={`alert-list-item-title-${alert.id}`}>{`${alert.title}`}</b>{' '}
+                                    <TableCell component="td" className="alertText">
+                                        <h4
+                                            style={{ display: 'inline' }}
+                                            id={`alert-list-item-title-${alert.id}`}
+                                        >{`${alert.title}`}</h4>{' '}
                                         {`${alert.message}`}
                                     </TableCell>
-                                    <TableCell component="td" align="center">
+                                    <TableCell component="td" align="center" className="startDate">
                                         {alert.startDate}
                                     </TableCell>
-                                    <TableCell component="td" align="center">
+                                    <TableCell component="td" align="center" className="endDate">
                                         {alert.endDate}
                                     </TableCell>
                                     <TableCell component="td">
@@ -195,7 +203,7 @@ export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={3}
                                 count={rows.length}
-                                id="alert-list-footer"
+                                // id="alert-list-footer"
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{
