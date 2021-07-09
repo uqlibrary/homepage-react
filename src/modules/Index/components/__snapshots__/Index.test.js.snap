@@ -1027,6 +1027,7 @@ exports[`Index page should render placeholders 1`] = `
                                                   "clearSecureCollectionCheck": [Function],
                                                   "clearSecureCollectionFile": [Function],
                                                   "clearSessionExpiredFlag": [Function],
+                                                  "createAlert": [Function],
                                                   "dismissAppAlert": [Function],
                                                   "getClassNumberFromPieces": [Function],
                                                   "getSemesterStringByTermNumber": [Function],

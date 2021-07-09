@@ -87,5 +87,15 @@ export default {
         help: {},
         urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',
         permanentTooltip: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
+        addAlertConfirmation: {
+            confirmationTitle: 'An alert has been added',
+            confirmationMessage: '',
+            cancelButtonLabel: 'View alert list',
+            confirmButtonLabel: 'Add another alert',
+        },
+        addAlertError: {
+            confirmationTitle: 'An error occurred while saving',
+            confirmButtonLabel: 'OK',
+        },
     },
 };

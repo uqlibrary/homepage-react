@@ -127,3 +127,5 @@ export const ALERTS_ALL_API = (requestNonCachedData = true) => {
     };
 };
 export const ALERTS_BY_ID_API = ({ id }) => ({ apiUrl: `alerts/${id}?noCache=1` });
+
+export const ALERT_ADD = () => ({ apiUrl: 'alert' });
