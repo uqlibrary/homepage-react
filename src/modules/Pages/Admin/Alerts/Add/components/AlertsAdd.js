@@ -259,18 +259,8 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                         />
                                     </Grid>
                                 </Grid>
-                                <Grid container spacing={2} style={{ height: '4rem', paddingTop: '1rem' }}>
-                                    <Grid item xs={4}>
-                                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
-                                            <Checkbox
-                                                checked={values.linkRequired}
-                                                data-testid="admin-alerts-add-checkbox-linkrequired"
-                                                onChange={handleChange('linkRequired')}
-                                            />
-                                            Add link
-                                        </InputLabel>
-                                    </Grid>
-                                    <Grid item xs={4}>
+                                <Grid container spacing={2} style={{ minHeight: '4rem', paddingTop: '1rem' }}>
+                                    <Grid item sm={4} xs={12}>
                                         <InputLabel
                                             style={{ color: 'rgba(0, 0, 0, 0.87)' }}
                                             title={locale.addForm.urgentTooltip}
@@ -285,7 +275,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                             Urgent
                                         </InputLabel>
                                     </Grid>
-                                    <Grid item xs={4}>
+                                    <Grid item sm={4} xs={12}>
                                         <InputLabel
                                             style={{ color: 'rgba(0, 0, 0, 0.87)' }}
                                             title={locale.addForm.permanentTooltip}
@@ -298,6 +288,16 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                                 title={locale.addForm.permanentTooltip}
                                             />
                                             Permanent
+                                        </InputLabel>
+                                    </Grid>
+                                    <Grid item sm={4} xs={12}>
+                                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+                                            <Checkbox
+                                                checked={values.linkRequired}
+                                                data-testid="admin-alerts-add-checkbox-linkrequired"
+                                                onChange={handleChange('linkRequired')}
+                                            />
+                                            Add link
                                         </InputLabel>
                                     </Grid>
                                 </Grid>
