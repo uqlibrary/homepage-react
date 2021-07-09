@@ -1,5 +1,7 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+const moment = require('moment');
+
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
@@ -7,15 +9,16 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import TextField from '@material-ui/core/TextField';
+
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../../alertsadmin.locale';
 
-const moment = require('moment');
-
-export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
-    console.log('props = ', actions, alerts, alertsLoading, alertsError);
+export const AlertsAdd = ({ actions, alerts, alertsError }) => {
+    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false);
     const [showPreview, setPreviewOpen] = useState(false);
@@ -42,18 +45,34 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         .endOf('day')
         .format('YYYY-MM-DDTHH:mm');
 
+    useEffect(() => {
+        if (!!alerts && !!alerts.id) {
+            showConfirmation();
+        }
+    }, [showConfirmation, alerts]);
+
+    useEffect(() => {
+        if (!!alertsError) {
+            console.log('There was an error while saving a new alert: ', alertsError);
+            showConfirmation();
+        }
+    }, [showConfirmation, alertsError]);
+
     const navigateToListPage = () => {
         window.location.href = '/admin/alerts';
     };
 
-    const getBody = () => {
+    const reloadAddAlertPage = () => {
+        window.location.href = '/admin/alerts/add';
+    };
+
+    const getBody = values => {
         const permanentAlert = values.permanentAlert ? '[permanent]' : '';
         const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
         return `${values.enteredbody}${permanentAlert}${link}`;
     };
 
     function expandValues(values) {
-        console.log('expandValues before, values = ', values);
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = values.alertTitle || '';
 
@@ -63,11 +82,7 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         const newLinkTitle = values.linkTitle || '';
         const newLinkUrl = values.linkUrl || '';
 
-        // const permanentAlert = values.permanentAlert ? '[permanent]' : '';
-        // const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
-        // const newBody = `${values.enteredbody}${permanentAlert}${link}`;
-        const newBody = getBody();
-        console.log('newBody = ', newBody);
+        const newBody = getBody(values);
 
         setValues({
             ...values,
@@ -84,21 +99,24 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
 
     const saveAlert = () => {
         expandValues(values);
-        // console.log('saveAlert 1: ', values);
-        // expandValues(values);
-        // console.log('saveAlert 2: ', values);
+
         console.log('will save: title = ', values.alertTitle || '');
         console.log('will save: body = ', values.body); // getBody());
         console.log('will save: startDate = ', values.startDate || defaultStartTime);
         console.log('will save: endDate = ', values.endDate || defaultEndTime);
         console.log('will save: urgent = ', values.urgent);
+        actions.createAlert({
+            title: values.alertTitle,
+            body: values.body,
+            urgent: values.urgent,
+            start: values.startDate,
+            end: values.endDate,
+        });
     };
 
     const displayPreview = () => {
         expandValues(values);
-        // const displayValues = expandValues(values);
-        // console.log(displayValues);
-        console.log('displayPreview: ', values);
+
         setPreviewOpen(true);
 
         // oddly hardcoding the alert with attributes tied to values doesnt work, so insert it this way
@@ -133,28 +151,11 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
     };
 
     const validateValues = currentValues => {
-        console.log(
-            'validateValues check: alertTitle = ',
-            currentValues.alertTitle,
-            currentValues.alertTitle.length > 0,
-        );
-        console.log(
-            'validateValues check: enteredbody = ',
-            currentValues.enteredbody,
-            !!currentValues.enteredbody && currentValues.enteredbody.length > 0,
-        );
-        console.log(
-            'validateValues check: linkRequired = ',
-            currentValues.linkRequired,
-            `[${currentValues.linkTitle}](${currentValues.linkUrl})`,
-            !currentValues.linkRequired || currentValues.linkUrl.length > 0,
-        );
         const isValid =
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
             (!currentValues.linkRequired || currentValues.linkUrl.length > 0);
-        console.log('validvalues: ', isValid);
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
         !isValid && !!showPreview && setPreviewOpen(false);
@@ -162,50 +163,17 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
         return isValid;
     };
 
-    // const notValidValues = () => {
-    //     return !validateValues();
-    // };
-
     const handleChange = prop => event => {
-        // setPreviewOpen(false);
-
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
 
-        // if (prop === 'enteredbody') {
-        //     console.log('got ', newValue, ' for ', prop);
-        //     const permanentAlert = values.permanentAlert ? '[permanent]' : '';
-        //     const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
-        //     const newBody = getBody();
-        //     console.log('newBody = ', newBody);
-        //     setValues({ ...values, ['body']: newBody });
-        // }
-
         expandValues({ ...values, [prop]: newValue });
 
-        // console.log('values.endDate = ', values.endDate);
-        // console.log('event.target.value = ', event.target.value);
-        // console.log('before ', values.endDate < event.target.value);
-        // if (
-        //     prop === 'startDate' &&
-        //     event.target.value !== defaultStartTime &&
-        //     event.target.value !== '' &&
-        //     // (values.endDate === defaultEndTime || values.endDate === '')
-        //     values.endDate < event.target.value
-        // ) {
-        //     const newEndDate = moment(event.target.value, 'YYYY-MM-DDTHH:MM')
-        //         .set({ H: 23, m: 59 })
-        //         .format('YYYY-MM-DDTHH:mm');
-        //     console.log('newEndDate = ', newEndDate);
-        //     console.log('update end date to ', {
-        //         ...values,
-        //         ['startDate']: event.target.value,
-        //         ['endDate']: newEndDate,
-        //     });
-        //     setValues({ ...values, ['endDate']: newEndDate });
-        // }
-
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
+    };
+
+    const _handleDefaultSubmit = event => {
+        event && event.preventDefault();
     };
 
     return (
@@ -214,8 +182,17 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
                 <Grid item id="previewWrapper" />
             </Grid>
             <StandardPage title="Create Alert">
-                <form>
+                <form onSubmit={_handleDefaultSubmit}>
                     <Grid container spacing={2}>
+                        <ConfirmationBox
+                            confirmationBoxId="alert-add-succeeded"
+                            onAction={!alertsError ? reloadAddAlertPage : hideConfirmation}
+                            onClose={hideConfirmation}
+                            onCancelAction={navigateToListPage}
+                            hideCancelButton={!!alertsError}
+                            isOpen={isOpen}
+                            locale={!!alerts ? locale.addForm.addAlertConfirmation : locale.addForm.addAlertError}
+                        />
                         <Grid item xs={12}>
                             <StandardCard help={locale.addForm.help}>
                                 <Grid container spacing={2}>
@@ -388,9 +365,8 @@ export const AlertsAdd = ({ actions, alerts, alertsLoading, alertsError }) => {
 };
 
 AlertsAdd.propTypes = {
-    actions: PropTypes.object,
-    alerts: PropTypes.array,
-    alertsLoading: PropTypes.bool,
+    actions: PropTypes.any,
+    alerts: PropTypes.any,
     alertsError: PropTypes.any,
 };
 

@@ -207,7 +207,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
 };
 
 AlertsList.propTypes = {
-    actions: PropTypes.object,
+    actions: PropTypes.any,
     alerts: PropTypes.array,
     alertsLoading: PropTypes.bool,
     alertsError: PropTypes.any,

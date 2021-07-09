@@ -2,9 +2,17 @@
 
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllAlerts, clearAlerts, loadAnAlert, clearAnAlert } from './alertsActions';
+import { loadAllAlerts, clearAlerts, loadAnAlert, clearAnAlert, createAlert } from './alertsActions';
 
 jest.mock('raven-js');
+
+const newAlertRecord = {
+    start: '2022-10-12 09:58:02',
+    end: '2022-11-22 09:58:02',
+    title: 'title add',
+    body: 'body add',
+    urgent: 1,
+};
 
 describe('Account action creators', () => {
     const MockDate = require('mockdate');
@@ -62,7 +70,7 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('handles an alert', async () => {
+    it('handles an alert get request', async () => {
         mockApi
             .onGet(
                 repositories.routes.ALERTS_BY_ID_API({
@@ -94,7 +102,7 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('dispatches expected actions when an alert call fails', async () => {
+    it('dispatches expected actions when an alert get fails', async () => {
         mockApi
             .onGet(
                 repositories.routes.ALERTS_BY_ID_API({
@@ -106,6 +114,27 @@ describe('Account action creators', () => {
         const expectedActions = [actions.ALERTS_LOADING, actions.APP_ALERT_SHOW, actions.ALERTS_FAILED];
 
         await mockActionsStore.dispatch(loadAnAlert('e895b270-d62b-11e7-954e-57c2cc19d151'));
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('dispatches expected actions when alert create call fails', async () => {
+        mockApi.onAny(repositories.routes.ALERT_ADD().apiUrl).reply(500);
+
+        const expectedActions = [actions.ALERTS_LOADING, actions.APP_ALERT_SHOW, actions.ALERTS_FAILED];
+
+        await mockActionsStore.dispatch(createAlert(newAlertRecord));
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('handles an alert creation request', async () => {
+        mockApi.onAny(repositories.routes.ALERT_ADD().apiUrl).reply(200, {
+            id: '88888-d62b-11e7-954e-57c2cc19d151',
+            ...newAlertRecord,
+        });
+
+        const expectedActions = [actions.ALERTS_LOADING, actions.ALERTS_LOADED];
+
+        await mockActionsStore.dispatch(createAlert(newAlertRecord));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 });

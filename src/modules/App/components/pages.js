@@ -6,7 +6,7 @@ export const SecureCollection = React.lazy(() => import('modules/Pages/SecureCol
 export const CourseResources = React.lazy(() => import('modules/Pages/CourseResources/containers/CourseResources'));
 export const PaymentReceipt = React.lazy(() => import('modules/Pages/PaymentReceipt/PaymentReceipt'));
 export const BookExamBooth = React.lazy(() => import('modules/Pages/BookExamBooth/containers/BookExamBooth'));
-export const AlertsAdd = React.lazy(() => import('modules/Pages/Admin/Alerts/Add/components/AlertsAdd'));
+export const AlertsAdd = React.lazy(() => import('modules/Pages/Admin/Alerts/Add/containers/AlertsAdd'));
 export const AlertsList = React.lazy(() => import('modules/Pages/Admin/Alerts/List/containers/AlertsList'));
 
 // always load components
