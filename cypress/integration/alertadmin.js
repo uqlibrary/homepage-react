@@ -1,5 +1,11 @@
 describe('Alerts Admin Pages', () => {
     context('Alert Admin List page', () => {
+        it('displays an "unauthorised" page to public users', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('Authentication required');
+        });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
@@ -58,6 +64,12 @@ describe('Alerts Admin Pages', () => {
         });
     });
     context('Alert Admin Add page', () => {
+        it('displays an "unauthorised" page to public users', () => {
+            cy.visit('http://localhost:2020/admin/alerts/add?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('Authentication required');
+        });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
