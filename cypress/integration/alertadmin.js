@@ -137,7 +137,7 @@ describe('Alerts Admin Pages', () => {
                     ).should('have.attr', 'title', 'Click here');
                 });
         });
-        it('can save an alert', () => {
+        it('can save an alert (simple)', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-add-title"]').type('alert title 3');
@@ -147,6 +147,28 @@ describe('Alerts Admin Pages', () => {
             cy.get('.MuiDialog-container').contains('An alert has been added');
             cy.get('[data-testid="confirm-alert-add-succeeded"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqstaff');
+        });
+        it('can save an alert (more complex)', () => {
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-add-title"]').type('alert title 4');
+            cy.get('[data-testid="admin-alerts-add-body"]').type('body 4');
+            cy.get('[data-testid="admin-alerts-add-checkbox-urgent"] input').check();
+            cy.get('[data-testid="admin-alerts-add-checkbox-permanent"] input').check();
+
+            cy.get('[data-testid="admin-alerts-add-link-title"]').should('not.be.visible');
+            cy.get('[data-testid="admin-alerts-add-link-url"]').should('not.be.visible');
+            cy.get('[data-testid="admin-alerts-add-checkbox-linkrequired"] input').check();
+            cy.get('[data-testid="admin-alerts-add-link-title"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-add-link-url"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-add-link-title"] input').type('Read more');
+            cy.get('[data-testid="admin-alerts-add-link-url"] input').type('http://example.com/');
+
+            cy.get('[data-testid="admin-alerts-add-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('An alert has been added');
+            cy.get('[data-testid="cancel-alert-add-succeeded"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts?user=uqstaff');
         });
         it('the cancel button returns to the list page', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
