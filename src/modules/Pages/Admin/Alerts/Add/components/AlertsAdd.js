@@ -62,13 +62,11 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
 
     const navigateToListPage = () => {
         const userString = getUserPostfix();
-        console.log('navigateToListPage: go to ', `${fullPath}/admin/alerts${userString}`);
         window.location.href = `${fullPath}/admin/alerts${userString}`;
     };
 
     const reloadAddAlertPage = () => {
         const userString = getUserPostfix();
-        console.log('reloadAddAlertPage: go to ', `${fullPath}/admin/alerts${userString}`);
         window.location.href = `${fullPath}/admin/alerts/add${userString}`;
     };
 
@@ -87,9 +85,6 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = values.alertTitle || /* istanbul ignore next */ '';
 
-        const newStartDate = formatDate(values.startDate || defaultStartTime);
-        const newEndDate = formatDate(values.endDate || defaultEndTime);
-
         const newLinkTitle = values.linkTitle || '';
         const newLinkUrl = values.linkUrl || '';
 
@@ -101,8 +96,8 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
             ['body']: newBody,
             ['linkTitle']: newLinkTitle,
             ['linkUrl']: newLinkUrl,
-            ['startDate']: newStartDate,
-            ['endDate']: newEndDate,
+            // ['startDate']: newStartDate,
+            // ['endDate']: newEndDate,
         });
 
         return values;
@@ -120,8 +115,8 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
             title: values.alertTitle,
             body: values.body,
             urgent: !!values.urgent ? '1' : '0',
-            start: values.startDate,
-            end: values.endDate,
+            start: formatDate(values.startDate || defaultStartTime),
+            end: formatDate(values.endDate || defaultEndTime),
         });
     };
 
