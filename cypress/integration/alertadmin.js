@@ -164,6 +164,18 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-add-link-title"] input').type('Read more');
             cy.get('[data-testid="admin-alerts-add-link-url"] input').type('http://example.com/');
 
+            // TODO we dont seem to have access to the date field?
+            // from https://github.com/cypress-io/cypress/issues/1366
+            // cy.get('[data-testid="admin-alerts-add-start-date"] input')
+            //     .click()
+            //     .then(input => {
+            //         input[0].dispatchEvent(new Event('input', { bubbles: true }));
+            //         input.val('2031-04-30T13:00');
+            //     })
+            //     .click();
+            // cy.get('[data-testid="admin-alerts-add-end-date"] label')
+            //      .should('have.attr', 'style', 'color: #c80000;');
+
             cy.get('[data-testid="admin-alerts-add-button-save"]').click();
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('An alert has been added');

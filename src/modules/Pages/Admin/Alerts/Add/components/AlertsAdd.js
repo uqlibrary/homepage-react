@@ -159,6 +159,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
 
     const validateValues = currentValues => {
         const isValid =
+            currentValues.endDate >= currentValues.startDate &&
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
@@ -236,6 +237,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                         {/* https://material-ui.com/components/pickers/ */}
                                         <TextField
                                             id="startDate"
+                                            data-testid="admin-alerts-add-start-date"
                                             InputLabelProps={{ shrink: true }}
                                             label="Start date"
                                             onChange={handleChange('startDate')}
@@ -250,11 +252,13 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                     <Grid item md={6} xs={12}>
                                         <TextField
                                             id="endDate"
+                                            data-testid="admin-alerts-add-end-date"
                                             InputLabelProps={{ shrink: true }}
                                             label="End date"
                                             onChange={handleChange('endDate')}
                                             type="datetime-local"
                                             value={values.endDate || defaultEndTime}
+                                            error={values.endDate < values.startDate && values.startDate !== ''}
                                             inputProps={{
                                                 min: values.startDate,
                                                 required: true,
