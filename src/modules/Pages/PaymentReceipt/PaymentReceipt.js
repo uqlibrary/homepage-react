@@ -20,7 +20,7 @@ export const PaymentReceipt = () => {
         );
     }
     return (
-        <StandardPage goBackFunc={null} standardPageId="payment-receipt" title={locale.title}>
+        <StandardPage standardPageId="payment-receipt" title={locale.title}>
             <section className="layout-card">
                 <StandardCard noHeader>
                     <p>
