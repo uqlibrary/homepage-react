@@ -521,7 +521,7 @@ context('The Course Resources Page', () => {
 });
 
 context('The Homepage Course Resource Panel', () => {
-    it('The Course resources panel links correctly and the back button works', () => {
+    it('The Course resources panel links correctly', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         const currentClasses = accounts.s1111111.current_classes;
