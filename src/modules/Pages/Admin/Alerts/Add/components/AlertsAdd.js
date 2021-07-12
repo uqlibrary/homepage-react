@@ -18,6 +18,7 @@ import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
 import { getUserPostfix } from 'helpers/general';
 import { fullPath } from 'config/routes';
+import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 
 export const AlertsAdd = ({ actions, alerts, alertsError }) => {
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -190,19 +191,20 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
             <Grid container style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}>
                 <Grid item id="previewWrapper" />
             </Grid>
-            <StandardPage title="Create Alert">
-                <form onSubmit={_handleDefaultSubmit}>
-                    <Grid container spacing={2}>
-                        <ConfirmationBox
-                            confirmationBoxId="alert-add-succeeded"
-                            onAction={!alertsError ? reloadAddAlertPage : hideConfirmation}
-                            onClose={hideConfirmation}
-                            onCancelAction={navigateToListPage}
-                            hideCancelButton={!!alertsError}
-                            isOpen={isOpen}
-                            locale={!!alerts ? locale.addForm.addAlertConfirmation : locale.addForm.addAlertError}
-                        />
-                        <Grid item xs={12}>
+            <StandardPage title="Alerts Management">
+                <section aria-live="assertive">
+                    <AlertHelpModal />
+                    <StandardCard title="Create Alert" noPadding>
+                        <form onSubmit={_handleDefaultSubmit}>
+                            <ConfirmationBox
+                                confirmationBoxId="alert-add-succeeded"
+                                onAction={!alertsError ? reloadAddAlertPage : hideConfirmation}
+                                onClose={hideConfirmation}
+                                onCancelAction={navigateToListPage}
+                                hideCancelButton={!!alertsError}
+                                isOpen={isOpen}
+                                locale={!!alerts ? locale.addForm.addAlertConfirmation : locale.addForm.addAlertError}
+                            />
                             <StandardCard help={locale.addForm.help}>
                                 <Grid container spacing={2}>
                                     <Grid item xs={12}>
@@ -370,9 +372,9 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                     </Grid>
                                 </Grid>
                             </StandardCard>
-                        </Grid>
-                    </Grid>
-                </form>
+                        </form>
+                    </StandardCard>
+                </section>
             </StandardPage>
         </Fragment>
     );

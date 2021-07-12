@@ -3,64 +3,24 @@ import PropTypes from 'prop-types';
 
 import moment from 'moment';
 
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
-import Modal from '@material-ui/core/Modal';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 import AlertsListAsTable from './AlertsListAsTable';
-import { default as locale } from '../../alertsadmin.locale';
-import { getUserPostfix } from 'helpers/general';
-import { fullPath } from 'config/routes';
+import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 
-const useStyles = makeStyles(
-    theme => ({
-        pageLayout: {
-            marginBottom: 24,
-            paddingLeft: 24,
-            paddingRight: 24,
-            minHeight: '10em',
-            minWidth: '80%',
-        },
-        modal: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflowY: 'scroll',
-            maxHeight: '75%',
-            paddingTop: '30%',
-        },
-        paper: {
-            backgroundColor: theme.palette.background.paper,
-            border: '2px solid #000',
-            boxShadow: theme.shadows[5],
-            padding: theme.spacing(2, 4, 3),
-            maxWidth: '75%',
-            marginTop: 64,
-            marginBottom: 64,
-        },
-        actionbutton: {
-            backgroundColor: theme.palette.accent.main,
-            padding: 8,
-            color: '#fff',
-            textTransform: 'uppercase',
-            borderWidth: 0,
-        },
-        actionButtonPlacer: {
-            float: 'right',
-            marginTop: 16,
-            marginRight: 16,
-        },
-        actionButtonWrapper: {
-            position: 'relative',
-        },
-    }),
-    { withTheme: true },
-);
+const useStyles = makeStyles(() => ({
+    pageLayout: {
+        marginBottom: 24,
+        paddingLeft: 24,
+        paddingRight: 24,
+        minHeight: '10em',
+        minWidth: '80%',
+    },
+}));
 
 export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const classes = useStyles();
@@ -68,8 +28,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     const [currentAlerts, setCurrentAlerts] = useState([]);
     const [futureAlerts, setFutureAlerts] = useState([]);
     const [pastAlerts, setPastAlerts] = useState([]);
-
-    const [lightboxOpen, setLightboxOpen] = useState(false);
 
     let displayPanel = 'error';
     if (!!alertsError) {
@@ -112,23 +70,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
             });
     }, [alerts]);
 
-    const openHelpLightbox = () => {
-        setLightboxOpen(true);
-    };
-
-    const closeHelpLightbox = () => {
-        setLightboxOpen(false);
-    };
-
-    const navigateToAddPage = () => {
-        const userString = getUserPostfix();
-        console.log(
-            'navigateToListPage: go to ',
-            fullPath + window.location.pathname.replace('/alerts', `/alerts/add${userString}`),
-        );
-        window.location.href = fullPath + window.location.pathname.replace('/alerts', `/alerts/add${userString}`);
-    };
-
     function displayApiErrorPanel() {
         return (
             <StandardPage title="Alerts Management">
@@ -151,42 +92,8 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
     function displayAllAlerts() {
         return (
             <StandardPage title="Alerts Management">
-                <section aria-live="assertive" className={classes.helpButtonWrapper}>
-                    <div className={classes.actionButtonPlacer}>
-                        <button
-                            className={classes.actionbutton}
-                            onClick={openHelpLightbox}
-                            data-testid="admin-alerts-list-help-button"
-                        >
-                            Help / Info
-                        </button>
-                    </div>
-                    <div className={classes.actionButtonPlacer}>
-                        <button
-                            className={classes.actionbutton}
-                            onClick={navigateToAddPage}
-                            data-testid="admin-alerts-list-add-button"
-                        >
-                            Add alert
-                        </button>
-                    </div>
-                    <Modal
-                        aria-labelledby="transition-modal-title"
-                        aria-describedby="transition-modal-description"
-                        className={classes.modal}
-                        open={lightboxOpen}
-                        onClose={closeHelpLightbox}
-                        closeAfterTransition
-                        BackdropComponent={Backdrop}
-                        BackdropProps={{
-                            timeout: 500,
-                        }}
-                        disableScrollLock
-                    >
-                        <Fade in={lightboxOpen}>
-                            <div className={classes.paper}>{locale.helpPopupText}</div>
-                        </Fade>
-                    </Modal>
+                <section aria-live="assertive">
+                    <AlertHelpModal showAddButton />
                     <StandardCard title="All Alerts" noPadding>
                         <Grid container>
                             <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
