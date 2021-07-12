@@ -164,7 +164,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
                     <div className={classes.actionButtonPlacer}>
                         <button
                             className={classes.actionbutton}
-                            onClick={() => navigateToAddPage()}
+                            onClick={navigateToAddPage}
                             data-testid="admin-alerts-list-add-button"
                         >
                             Add alert
