@@ -67,8 +67,17 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
     };
 
     const reloadAddAlertPage = () => {
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/alerts/add${userString}`;
+        setValues({
+            ['alertTitle']: '',
+            ['enteredbody']: '',
+            ['startDate']: defaultStartTime,
+            ['endDate']: defaultEndTime,
+            ['urgent']: false,
+            ['permanentAlert']: false,
+            ['linkRequired']: false,
+            ['linkTitle']: '',
+            ['linkUrl']: '',
+        });
     };
 
     const getBody = values => {

@@ -59,11 +59,8 @@ export const AlertHelpModal = ({ showAddButton = false }) => {
 
     const navigateToAddPage = () => {
         const userString = getUserPostfix();
-        console.log(
-            'navigateToListPage: go to ',
-            fullPath + window.location.pathname.replace('/alerts', `/alerts/add${userString}`),
-        );
-        window.location.href = fullPath + window.location.pathname.replace('/alerts', `/alerts/add${userString}`);
+        console.log('navigateToListPage: go to ', `${fullPath}/admin/alerts/add${userString}`);
+        window.location.href = `${fullPath}/admin/alerts/add${userString}`;
     };
 
     return (
