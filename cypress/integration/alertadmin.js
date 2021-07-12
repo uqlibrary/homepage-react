@@ -47,10 +47,10 @@ describe('Alerts Admin Pages', () => {
         it('has a working Help button on the List page', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="admin-alerts-list-help-example"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-list-help-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-list-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-list-help-example"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-help-button"]').click();
+            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
         });
 
         it('has a working Add button on the List page', () => {
@@ -88,8 +88,8 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Create Alert');
+            cy.get('h3').should('be.visible');
+            cy.get('h3').contains('Create Alert');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Add',
@@ -188,6 +188,14 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-add-button-cancel"]').click();
             cy.wait(50);
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts?user=uqstaff');
+        });
+        it('has a working Help button on the Add page', () => {
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-help-button"]').click();
+            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
         });
     });
 });

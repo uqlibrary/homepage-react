@@ -16,7 +16,7 @@ export default {
                 and "Past Alerts".
             </p>
 
-            <h2 id="adding-alert" data-testid="admin-alerts-list-help-example">
+            <h2 id="adding-alert" data-testid="admin-alerts-help-example">
                 Adding an alert
             </h2>
             <p>
