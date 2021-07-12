@@ -45,6 +45,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
 
     React.useEffect(() => {
         !!alerts &&
+            alerts.length > 0 &&
             alerts.forEach(alert => {
                 alert.startDate =
                     moment(alert.start).format('m') === '0'
