@@ -48,7 +48,7 @@ export default class Masquerade extends PureComponent {
 
     render() {
         return (
-            <StandardPage title={txt.title} goBackTooltip="Go back">
+            <StandardPage title={txt.title}>
                 <StandardCard noHeader>
                     <Grid container spacing={1}>
                         <Grid item xs={12} id="masquerade">

@@ -1,15 +1,10 @@
 import React from 'react';
-import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import { HelpIcon } from 'modules/SharedComponents/Toolbox/HelpDrawer';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
-import Tooltip from '@material-ui/core/Tooltip';
-import IconButton from '@material-ui/core/IconButton';
 
 export const useStyles = makeStyles(
     theme => ({
@@ -52,52 +47,8 @@ export const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const getBackNavFunc = history => {
-    if (!document.referrer) {
-        return null;
-    }
-    if (!!history && typeof history.goBack === 'function') {
-        return () => {
-            history.goBack();
-        };
-    }
-    return () => {
-        window.history.back();
-    };
-};
-
-export const StandardPage = ({
-    title,
-    children,
-    help,
-    goBackFunc: customGoBackFunc = false,
-    goBackTooltip = 'Go back',
-}) => {
-    const history = useHistory();
+export const StandardPage = ({ title, children, help }) => {
     const classes = useStyles();
-
-    const goBackFunc = customGoBackFunc !== false ? customGoBackFunc : getBackNavFunc(history);
-
-    const renderBackButton = () =>
-        !!goBackFunc && (
-            <Hidden xsDown>
-                <Tooltip
-                    id="StandardPage-goback-tooltip"
-                    data-testid="StandardPage-goback-tooltip"
-                    title={goBackTooltip}
-                    TransitionProps={{ timeout: 300 }}
-                >
-                    <IconButton
-                        className={classes.arrowBack}
-                        onClick={goBackFunc}
-                        id="StandardPage-goback-button"
-                        data-testid="StandardPage-goback-button"
-                    >
-                        <ArrowBackIcon color="secondary" />
-                    </IconButton>
-                </Tooltip>
-            </Hidden>
-        );
 
     return (
         <div className="layout-card">
@@ -111,7 +62,6 @@ export const StandardPage = ({
                             data-testid="StandardPage-title"
                             variant={'h4'}
                         >
-                            {renderBackButton()}
                             {title}
                         </Typography>
                     </Grid>
@@ -131,8 +81,6 @@ export const StandardPage = ({
 
 StandardPage.propTypes = {
     title: PropTypes.any,
-    goBackFunc: PropTypes.func,
-    goBackTooltip: PropTypes.string,
     help: PropTypes.object,
     children: PropTypes.any,
 };

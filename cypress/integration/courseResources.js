@@ -448,7 +448,7 @@ context('Course Resources', () => {
         FREN1010_loads_properly_for_s111111_user();
     });
 
-    it('The Course resources panel links correctly and the back button works (Homepage Course Resource Panel)', () => {
+    it('The Course resources panel links correctly (Homepage Course Resource Panel)', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         const currentClasses = accounts.s1111111.current_classes;
@@ -477,9 +477,6 @@ context('Course Resources', () => {
         );
         const classPanelId = 'classpanel-1';
         cy.get(`div[data-testid=${classPanelId}] h3`).contains(secondClass.SUBJECT);
-
-        cy.get('button[data-testid=StandardPage-goback-button]').click();
-        cy.url().should('eq', 'http://localhost:2020/?user=s1111111'); // homepage
     });
 
     it('The Course resources panel searches correctly (Homepage Course Resource Panel)', () => {
