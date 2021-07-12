@@ -215,6 +215,8 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                                 data-testid="admin-alerts-add-title"
                                                 value={values.alertTitle}
                                                 onChange={handleChange('alertTitle')}
+                                                inputProps={{ maxLength: 255 }}
+                                                title="Alert lead text. Appears in bold. Field length of 255 characters."
                                             />
                                         </FormControl>
                                     </Grid>
