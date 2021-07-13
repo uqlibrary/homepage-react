@@ -132,7 +132,7 @@ describe('Account action creators', () => {
             ...newAlertRecord,
         });
 
-        const expectedActions = [actions.ALERTS_LOADING, actions.ALERTS_LOADED];
+        const expectedActions = [actions.ALERTS_LOADING, actions.ALERT_LOADED];
 
         await mockActionsStore.dispatch(createAlert(newAlertRecord));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
