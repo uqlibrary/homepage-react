@@ -33,7 +33,7 @@ export const createAlert = request => {
             .then(data => {
                 console.log('createAlert action, returned data = ', data);
                 dispatch({
-                    type: actions.ALERTS_LOADED,
+                    type: actions.ALERT_LOADED,
                     payload: data,
                 });
             })
@@ -49,7 +49,9 @@ export const createAlert = request => {
 
 export function clearAlerts() {
     return dispatch => {
-        dispatch({ type: actions.ALERTS_CLEAR });
+        dispatch({
+            type: actions.ALERTS_CLEAR,
+        });
     };
 }
 

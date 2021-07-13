@@ -7,8 +7,6 @@ import { makeStyles } from '@material-ui/styles';
 import Modal from '@material-ui/core/Modal';
 
 import { default as locale } from './alertsadmin.locale';
-import { getUserPostfix } from 'helpers/general';
-import { fullPath } from 'config/routes';
 
 const useStyles = makeStyles(
     theme => ({
@@ -44,7 +42,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ showAddButton = false }) => {
+export const AlertHelpModal = ({ showAddButton = false, history }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -58,9 +56,7 @@ export const AlertHelpModal = ({ showAddButton = false }) => {
     };
 
     const navigateToAddPage = () => {
-        const userString = getUserPostfix();
-        console.log('navigateToListPage: go to ', `${fullPath}/admin/alerts/add${userString}`);
-        window.location.href = `${fullPath}/admin/alerts/add${userString}`;
+        history.push('/admin/alerts/add');
     };
 
     return (
@@ -78,7 +74,7 @@ export const AlertHelpModal = ({ showAddButton = false }) => {
                 <div className={classes.actionButtonPlacer}>
                     <button
                         className={classes.actionbutton}
-                        onClick={navigateToAddPage}
+                        onClick={() => navigateToAddPage()}
                         data-testid="admin-alerts-list-add-button"
                     >
                         Add alert
@@ -107,5 +103,6 @@ export const AlertHelpModal = ({ showAddButton = false }) => {
 };
 
 AlertHelpModal.propTypes = {
+    history: PropTypes.object,
     showAddButton: PropTypes.bool,
 };

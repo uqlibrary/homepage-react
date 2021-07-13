@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
+export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, history }) => {
     const classes = useStyles();
 
     const [currentAlerts, setCurrentAlerts] = useState([]);
@@ -94,7 +94,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError }) => {
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal showAddButton />
+                    <AlertHelpModal showAddButton history={history} />
                     <StandardCard title="All Alerts" noPadding>
                         <Grid container>
                             <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
@@ -126,6 +126,7 @@ AlertsList.propTypes = {
     alerts: PropTypes.array,
     alertsLoading: PropTypes.bool,
     alertsError: PropTypes.any,
+    history: PropTypes.object,
 };
 
 export default React.memo(AlertsList);

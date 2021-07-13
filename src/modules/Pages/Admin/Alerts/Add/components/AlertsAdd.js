@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useDispatch } from 'react-redux';
 const moment = require('moment');
 
 import Button from '@material-ui/core/Button';
@@ -16,11 +17,10 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { useConfirmationState } from 'hooks';
 
 import { default as locale } from '../../alertsadmin.locale';
-import { getUserPostfix } from 'helpers/general';
-import { fullPath } from 'config/routes';
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 
-export const AlertsAdd = ({ actions, alerts, alertsError }) => {
+export const AlertsAdd = ({ actions, alert, alertsError, history }) => {
+    const dispatch = useDispatch();
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false);
@@ -49,10 +49,10 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
         .format('YYYY-MM-DDTHH:mm');
 
     useEffect(() => {
-        if (!!alerts && !!alerts.id) {
+        if (!!alert && !!alert.id) {
             showConfirmation();
         }
-    }, [showConfirmation, alerts]);
+    }, [showConfirmation, alert]);
 
     useEffect(() => {
         if (!!alertsError) {
@@ -60,11 +60,6 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
             showConfirmation();
         }
     }, [showConfirmation, alertsError]);
-
-    const navigateToListPage = () => {
-        const userString = getUserPostfix();
-        window.location.href = `${fullPath}/admin/alerts${userString}`;
-    };
 
     const reloadAddAlertPage = () => {
         setValues({
@@ -78,6 +73,14 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
             ['linkTitle']: '',
             ['linkUrl']: '',
         });
+    };
+
+    const abandonChanges = () => {
+        reloadAddAlertPage();
+
+        () => dispatch(actions.clearAlerts());
+
+        history.push('/admin/alerts');
     };
 
     const getBody = values => {
@@ -207,7 +210,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal />
+                    <AlertHelpModal history={history} />
                     <StandardCard title="Create Alert" noPadding>
                         <form onSubmit={_handleDefaultSubmit}>
                             <ConfirmationBox
@@ -220,10 +223,10 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                     // allowing the user to correct and try again
                                 }
                                 onClose={hideConfirmation}
-                                onCancelAction={() => navigateToListPage()}
+                                onCancelAction={() => abandonChanges()}
                                 hideCancelButton={!!alertsError}
                                 isOpen={isOpen}
-                                locale={!!alerts ? locale.addForm.addAlertConfirmation : addAlertError}
+                                locale={!!alert ? locale.addForm.addAlertConfirmation : addAlertError}
                             />
                             <StandardCard help={locale.addForm.help}>
                                 <Grid container spacing={2}>
@@ -371,7 +374,7 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                                             color="secondary"
                                             children="Cancel"
                                             data-testid="admin-alerts-add-button-cancel"
-                                            onClick={() => navigateToListPage()}
+                                            onClick={() => abandonChanges()}
                                         />
                                     </Grid>
                                     <Grid item xs={9} align="right">
@@ -404,8 +407,9 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
 
 AlertsAdd.propTypes = {
     actions: PropTypes.any,
-    alerts: PropTypes.any,
+    alert: PropTypes.any,
     alertsError: PropTypes.any,
+    history: PropTypes.object,
 };
 
 export default AlertsAdd;

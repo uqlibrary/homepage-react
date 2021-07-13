@@ -1,6 +1,7 @@
 import * as actions from 'actions/actionTypes';
 
 export const initialState = {
+    alert: null,
     alerts: null,
     alertsLoading: false,
     alertsError: null,
@@ -13,12 +14,21 @@ const handlers = {
         alertsLoading: true,
         alertsError: false,
     }),
+    [actions.ALERT_LOADED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        alertsLoading: false,
+        alertsError: false,
+        alert: action.payload,
+        alerts: null,
+    }),
     [actions.ALERTS_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
         alertsLoading: false,
         alertsError: false,
         alerts: action.payload,
+        alert: null,
     }),
     [actions.ALERTS_FAILED]: (state, action) => ({
         ...initialState,
