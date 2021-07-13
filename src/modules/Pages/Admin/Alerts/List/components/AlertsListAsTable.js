@@ -98,7 +98,7 @@ const useStyles2 = makeStyles(
     { withTheme: true },
 );
 
-export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false) {
+export default function AlertsListAsTable(rows, alertsLoading, history, hasFooter = false) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -128,6 +128,10 @@ export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false
             </Grid>
         );
     }
+
+    const navigateToEditForm = alertid => {
+        history.push(`/admin/alerts/edit/${alertid}`);
+    };
 
     return (
         <TableContainer component={Paper}>
@@ -181,6 +185,7 @@ export default function AlertsListAsTable(rows, alertsLoading, hasFooter = false
                                             data-testid={`alert-list-item-edit-${alert.id}`}
                                             id={`alert-list-item-edit-${alert.id}`}
                                             href={`/admin/alerts/edit/${alert.id}`}
+                                            onClick={() => navigateToEditForm()}
                                         >
                                             Edit
                                         </a>

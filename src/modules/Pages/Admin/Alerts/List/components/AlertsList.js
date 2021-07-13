@@ -100,15 +100,15 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                             <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
                                 <div data-testid="admin-alerts-list-current-list">
                                     <h3>Current Alerts</h3>
-                                    {AlertsListAsTable(currentAlerts, alertsLoading)}
+                                    {AlertsListAsTable(currentAlerts, alertsLoading, history)}
                                 </div>
                                 <div data-testid="admin-alerts-list-future-list">
                                     <h3>Scheduled Alerts</h3>
-                                    {AlertsListAsTable(futureAlerts, alertsLoading)}
+                                    {AlertsListAsTable(futureAlerts, alertsLoading, history)}
                                 </div>
                                 <div data-testid="admin-alerts-list-past-list">
                                     <h3>Past Alerts</h3>
-                                    {AlertsListAsTable(pastAlerts, alertsLoading, true)}
+                                    {AlertsListAsTable(pastAlerts, alertsLoading, history, true)}
                                 </div>
                             </Grid>
                         </Grid>
