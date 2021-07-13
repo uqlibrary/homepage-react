@@ -195,6 +195,11 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
         event && event.preventDefault();
     };
 
+    const addAlertError = {
+        ...locale.addForm.addAlertError,
+        confirmationTitle: `An error occurred while saving: ${alertsError}`,
+    };
+
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}>
@@ -207,12 +212,18 @@ export const AlertsAdd = ({ actions, alerts, alertsError }) => {
                         <form onSubmit={_handleDefaultSubmit}>
                             <ConfirmationBox
                                 confirmationBoxId="alert-add-succeeded"
-                                onAction={!alertsError ? reloadAddAlertPage : hideConfirmation}
+                                onAction={
+                                    !alertsError
+                                        ? reloadAddAlertPage // on success, the main button reloads the page
+                                        : hideConfirmation
+                                    // on error, the main button just closes the notification dialog,
+                                    // allowing the user to correct and try again
+                                }
                                 onClose={hideConfirmation}
-                                onCancelAction={navigateToListPage}
+                                onCancelAction={() => navigateToListPage()}
                                 hideCancelButton={!!alertsError}
                                 isOpen={isOpen}
-                                locale={!!alerts ? locale.addForm.addAlertConfirmation : locale.addForm.addAlertError}
+                                locale={!!alerts ? locale.addForm.addAlertConfirmation : addAlertError}
                             />
                             <StandardCard help={locale.addForm.help}>
                                 <Grid container spacing={2}>
