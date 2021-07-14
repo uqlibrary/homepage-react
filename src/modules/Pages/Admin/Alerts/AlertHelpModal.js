@@ -2,6 +2,7 @@ import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Backdrop from '@material-ui/core/Backdrop';
+import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
 import Modal from '@material-ui/core/Modal';
@@ -28,9 +29,9 @@ const useStyles = makeStyles(
             marginBottom: 64,
         },
         actionbutton: {
-            backgroundColor: theme.palette.accent.main,
+            // backgroundColor: theme.palette.accent.main,
             padding: 8,
-            color: '#fff',
+            // color: '#fff',
             textTransform: 'uppercase',
             borderWidth: 0,
         },
@@ -42,7 +43,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ showAddButton = false, history }) => {
+export const AlertHelpModal = ({ actions, showAddButton = false, history }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -56,29 +57,34 @@ export const AlertHelpModal = ({ showAddButton = false, history }) => {
     };
 
     const navigateToAddPage = () => {
+        console.log('navigateToAddPage');
+        // console.log('navigateToAddPage actions.clearAlert() = ', actions.clearAlert());
+        actions.clearAlert();
+        // () => dispatch(actions.clearAlert());
         history.push('/admin/alerts/add');
     };
 
     return (
         <Fragment>
             <div className={classes.actionButtonPlacer}>
-                <button
+                <Button
                     className={classes.actionbutton}
                     onClick={openHelpLightbox}
                     data-testid="admin-alerts-help-button"
-                >
-                    Help / Info
-                </button>
+                    color="secondary"
+                    children="About alerts"
+                />
             </div>
             {!!showAddButton && (
                 <div className={classes.actionButtonPlacer}>
-                    <button
+                    <Button
                         className={classes.actionbutton}
                         onClick={() => navigateToAddPage()}
                         data-testid="admin-alerts-list-add-button"
-                    >
-                        Add alert
-                    </button>
+                        color="primary"
+                        children="Add alert"
+                        variant="contained"
+                    />
                 </div>
             )}
             <Modal
@@ -103,6 +109,7 @@ export const AlertHelpModal = ({ showAddButton = false, history }) => {
 };
 
 AlertHelpModal.propTypes = {
+    actions: PropTypes.any,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
 };

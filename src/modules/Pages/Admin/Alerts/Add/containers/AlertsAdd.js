@@ -7,7 +7,7 @@ import AlertsAdd from '../components/AlertsAdd';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('alertsReducer'),
+        ...state.get('alertReducer'),
     };
 };
 

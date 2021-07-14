@@ -126,7 +126,7 @@ mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleR
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
-mock.onAny(routes.ALERT_ADD().apiUrl).reply(
+mock.onAny(routes.ALERT_SAVE_API().apiUrl).reply(
     withDelay([
         200,
         {
@@ -139,9 +139,9 @@ mock.onAny(routes.ALERT_ADD().apiUrl).reply(
         },
     ]),
 );
-// mock.onAny(routes.ALERT_ADD().apiUrl).reply(withDelay([500, {}]));
+// mock.onAny(routes.ALERT_SAVE_API().apiUrl).reply(withDelay([500, {}]));
 
-mock.onGet(routes.ALERTS_BY_ID_API({ id: 'e895b270-d62b-11e7-954e-57c2cc19d151' }).apiUrl).reply(
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'e895b270-d62b-11e7-954e-57c2cc19d151' }).apiUrl).reply(
     withDelay([
         200,
         {

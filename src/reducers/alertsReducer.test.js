@@ -1,7 +1,7 @@
 import alertsReducer, { initialState } from './alertsReducer';
 import * as actions from '../actions/actionTypes';
 
-describe('account reducer', () => {
+describe('alerts reducer', () => {
     let emptyState;
     let mockAlertList;
 
@@ -12,7 +12,7 @@ describe('account reducer', () => {
         };
     });
 
-    it('should set alerts loading flags to true when loading alerts', () => {
+    it('should set alerts Status flags to loading when loading alerts', () => {
         const test = alertsReducer(emptyState, { type: actions.ALERTS_LOADING });
         expect(test).toEqual({
             ...emptyState,

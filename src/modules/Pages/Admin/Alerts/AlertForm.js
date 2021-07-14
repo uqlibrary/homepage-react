@@ -1,7 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
-const moment = require('moment');
 
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -16,55 +15,43 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useConfirmationState } from 'hooks';
 
 import { default as locale } from './alertsadmin.locale';
+import { formatDate } from './alerthelpers';
 
-export const AlertForm = ({ actions, alert, alertsError, history }) => {
+export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, history }) => {
+    console.log('AlertForm: alert = ', alert);
+    console.log('AlertForm: alertStatus = ', alertStatus);
     const dispatch = useDispatch();
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false);
     const [showPreview, setPreviewOpen] = useState(false);
 
-    const [values, setValues] = useState({
-        // id: '',
-        startDate: '',
-        endDate: '',
-        alertTitle: '',
-        // url: '',
-        body: '',
-        enteredbody: '',
-        linkRequired: false,
-        urgent: false,
-        // created: '',
-        // updated: '',
-        permanentAlert: false,
-        linkTitle: '',
-        linkUrl: '',
-    });
+    console.log('AlertForm: defaults = ', defaults);
+    const [values, setValues] = useState(defaults);
 
-    const defaultStartTime = moment().format('YYYY-MM-DDTHH:mm');
-    const defaultEndTime = moment()
-        .endOf('day')
-        .format('YYYY-MM-DDTHH:mm');
-
+    console.log('AlertForm defaults.type = ', defaults.type);
+    console.log('AlertForm alert = ', alert);
     useEffect(() => {
-        if (!!alert && !!alert.id) {
+        if (!!alert && !!alert.id && alertStatus === 'saved') {
+            console.log('show conf after saving: ', alert);
             showConfirmation();
         }
-    }, [showConfirmation, alert]);
+    }, [showConfirmation, alert, defaults.type, alertStatus]);
 
     useEffect(() => {
-        if (!!alertsError) {
-            console.log('There was an error while saving a new alert: ', alertsError);
+        if (!!alertError || alertStatus === 'error') {
+            console.log('There was an error while saving a new alert: ', alertError);
             showConfirmation();
         }
-    }, [showConfirmation, alertsError]);
+    }, [showConfirmation, alertError, defaults.type, alertStatus]);
 
-    const reloadAddAlertPage = () => {
+    // or should this reset to defaults?
+    const clearForm = () => {
         setValues({
             ['alertTitle']: '',
             ['enteredbody']: '',
-            ['startDate']: defaultStartTime,
-            ['endDate']: defaultEndTime,
+            ['startDate']: values.startDate,
+            ['endDate']: values.endDate,
             ['urgent']: false,
             ['permanentAlert']: false,
             ['linkRequired']: false,
@@ -74,9 +61,15 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
     };
 
     const abandonChanges = () => {
-        reloadAddAlertPage();
+        clearForm();
+        // setTimeout(() => {
+        //     console.log('post clearForm, values = ', values);
+        // }, 300);
 
         () => dispatch(actions.clearAlerts());
+        console.log('abandonChanges before');
+        () => dispatch(actions.clearAlert());
+        console.log('abandonChanges after');
 
         history.push('/admin/alerts');
     };
@@ -86,11 +79,6 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
         const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
         return `${values.enteredbody}${permanentAlert}${link}`;
     };
-
-    function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
-        const newMoment = new moment(dateString);
-        return newMoment.format(dateFormat);
-    }
 
     function expandValues(values) {
         // because otherwise we see 'false' when we clear the field
@@ -122,13 +110,16 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
         console.log('will save: startDate = ', values.startDate);
         console.log('will save: endDate = ', values.endDate);
         console.log('will save: urgent = ', !!values.urgent ? '1' : '0');
-        actions.createAlert({
+        const newValues = {
+            id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
             body: values.body,
             urgent: !!values.urgent ? '1' : '0',
-            start: formatDate(values.startDate || defaultStartTime),
-            end: formatDate(values.endDate || defaultEndTime),
-        });
+            start: formatDate(values.startDate),
+            end: formatDate(values.endDate),
+        };
+        console.log('will save ', newValues);
+        actions.createAlert(newValues);
     };
 
     const displayPreview = () => {
@@ -198,9 +189,12 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
 
     const addAlertError = {
         ...locale.addForm.addAlertError,
-        confirmationTitle: `An error occurred while saving: ${alertsError}`,
+        confirmationTitle: `An error occurred while saving: ${alertError}`,
     };
 
+    const confirmationLocale = locale.addForm.addAlertConfirmation;
+
+    console.log('values in form: ', values);
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}>
@@ -210,17 +204,17 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
                 <ConfirmationBox
                     confirmationBoxId="alert-add-succeeded"
                     onAction={
-                        !alertsError
-                            ? reloadAddAlertPage // on success, the main button reloads the page
+                        !alertError
+                            ? clearForm // on success, the main button reloads the page
                             : hideConfirmation
                         // on error, the main button just closes the notification dialog,
                         // allowing the user to correct and try again
                     }
                     onClose={hideConfirmation}
                     onCancelAction={() => abandonChanges()}
-                    hideCancelButton={!!alertsError}
+                    hideCancelButton={!!alertError}
                     isOpen={isOpen}
-                    locale={!!alert ? locale.addForm.addAlertConfirmation : addAlertError}
+                    locale={!!alert ? confirmationLocale : addAlertError}
                 />
                 <StandardCard help={locale.addForm.help}>
                     <Grid container spacing={2}>
@@ -263,9 +257,9 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
                                 label="Start date"
                                 onChange={handleChange('startDate')}
                                 type="datetime-local"
-                                value={values.startDate || defaultStartTime}
+                                value={values.startDate}
                                 inputProps={{
-                                    min: defaultStartTime,
+                                    min: values.startDate,
                                     required: true,
                                 }}
                             />
@@ -278,7 +272,7 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
                                 label="End date"
                                 onChange={handleChange('endDate')}
                                 type="datetime-local"
-                                value={values.endDate || defaultEndTime}
+                                value={values.endDate}
                                 error={values.endDate < values.startDate && values.startDate !== ''}
                                 inputProps={{
                                     min: values.startDate,
@@ -396,7 +390,9 @@ export const AlertForm = ({ actions, alert, alertsError, history }) => {
 AlertForm.propTypes = {
     actions: PropTypes.any,
     alert: PropTypes.any,
-    alertsError: PropTypes.any,
+    alertError: PropTypes.any,
+    alertStatus: PropTypes.any,
+    defaults: PropTypes.object,
     history: PropTypes.object,
 };
 

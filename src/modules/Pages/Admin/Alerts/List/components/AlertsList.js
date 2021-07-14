@@ -94,7 +94,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal showAddButton history={history} />
+                    <AlertHelpModal actions={actions} showAddButton history={history} />
                     <StandardCard title="All Alerts" noPadding>
                         <Grid container>
                             <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
@@ -124,7 +124,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
 AlertsList.propTypes = {
     actions: PropTypes.any,
     alerts: PropTypes.array,
-    alertsLoading: PropTypes.bool,
+    alertsLoading: PropTypes.any,
     alertsError: PropTypes.any,
     history: PropTypes.object,
 };

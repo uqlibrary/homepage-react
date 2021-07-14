@@ -1,5 +1,6 @@
 export { default as accountReducer } from './account';
 export { default as alertsReducer } from './alertsReducer';
+export { default as alertReducer } from './alertReducer';
 export { default as homeReducer } from './homeIndex';
 export { default as appReducer } from './app';
 export { default as courseResourceSuggestionsReducer } from './courseResourceSuggestionsReducer';

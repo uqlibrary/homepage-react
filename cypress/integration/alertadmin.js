@@ -185,12 +185,19 @@ describe('Alerts Admin Pages', () => {
             cy.get('.MuiDialog-container').contains('An alert has been added');
             // click 'View alert list' button in dialog
             cy.get('[data-testid="cancel-alert-add-succeeded"]').click();
+            // reloads list page (sadly it is mock data so we cant test for the presence of the new alert)
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
-            // reloads list page (sadly its mock data so we cant test for the presence of the new alert
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
                 .should('have.length', 2);
+            // then we click the add button and the form is cleared
+            cy.get('[data-testid="admin-alerts-list-add-button"]').click();
+            cy.wait(500);
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
+            cy.get('[data-testid="admin-alerts-add-title"]').should('have.value', '');
+            cy.get('[data-testid="admin-alerts-add-body"] textarea').should('have.value', '');
+            cy.get('[data-testid="confirm-alert-add-succeeded"]').should('not.exist');
         });
         it('the cancel button returns to the list page', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');

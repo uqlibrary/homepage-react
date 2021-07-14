@@ -2,16 +2,6 @@ export const getActionSuffix = action => action.substring(action.indexOf('@') + 
 /* istanbul ignore next */
 export const getAction = action => action.substring(0, action.indexOf('@') + 1);
 
-// CHAT
-// export const CHAT_STATUS_LOADING = 'CHAT_STATUS_LOADING';
-// export const CHAT_STATUS_FAILED = 'CHAT_STATUS_FAILED';
-// export const CHAT_STATUS_LOADED = 'CHAT_STATUS_LOADED';
-
-// ALERTS
-// export const ALERT_STATUS_LOADING = 'ALERT_STATUS_LOADING';
-// export const ALERT_STATUS_FAILED = 'ALERT_STATUS_FAILED';
-// export const ALERT_STATUS_LOADED = 'ALERT_STATUS_LOADED';
-
 // HOURS
 export const LIB_HOURS_LOADING = 'LIB_HOURS_LOADING';
 export const LIB_HOURS_FAILED = 'LIB_HOURS_FAILED';
@@ -270,6 +260,11 @@ export const SECURE_COLLECTION_CLEAR = 'SECURE_COLLECTION_CLEAR';
 // ALERTS
 export const ALERTS_LOADING = 'ALERTS_LOADING';
 export const ALERTS_FAILED = 'ALERTS_FAILED';
-export const ALERT_LOADED = 'ALERT_LOADED';
 export const ALERTS_LOADED = 'ALERTS_LOADED';
 export const ALERTS_CLEAR = 'ALERTS_CLEAR';
+
+export const ALERT_FAILED = 'ALERT_FAILED';
+export const ALERT_LOADING = 'ALERT_LOADING';
+export const ALERT_LOADED = 'ALERT_LOADED';
+export const ALERT_SAVED = 'ALERT_SAVED';
+export const ALERT_CLEAR = 'ALERT_CLEAR';
