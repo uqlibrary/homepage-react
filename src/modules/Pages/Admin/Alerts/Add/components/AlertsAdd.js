@@ -47,7 +47,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertHelpModal actions={actions} history={history} />
-                    <StandardCard title="Create Alert" noPadding>
+                    <StandardCard title="Create alert" noPadding>
                         <AlertForm
                             actions={actions}
                             alert={alert}

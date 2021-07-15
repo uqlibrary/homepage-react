@@ -95,7 +95,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertHelpModal actions={actions} showAddButton history={history} />
-                    <StandardCard title="All Alerts" noPadding>
+                    <StandardCard title="All alerts" noPadding>
                         <Grid container>
                             <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
                                 <div data-testid="admin-alerts-list-current-list">

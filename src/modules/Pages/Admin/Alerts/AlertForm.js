@@ -8,6 +8,7 @@ import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -17,7 +18,21 @@ import { useConfirmationState } from 'hooks';
 import { default as locale } from './alertsadmin.locale';
 import { formatDate } from './alerthelpers';
 
+const useStyles = makeStyles(
+    theme => ({
+        checkboxes: {
+            // on mobile layouts reverse the order of the checkboxes so the 'add link' appears with the link text fields
+            [theme.breakpoints.down('sm')]: {
+                display: 'flex',
+                flexDirection: 'column-reverse',
+            },
+        },
+    }),
+    { withTheme: true },
+);
+
 export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, history }) => {
+    const classes = useStyles();
     console.log('AlertForm: alert = ', alert);
     console.log('AlertForm: alertStatus = ', alertStatus);
     const dispatch = useDispatch();
@@ -261,6 +276,8 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                     onChange={handleChange('enteredbody')}
                                     multiline
                                     rows={2}
+                                    inputProps={{ maxLength: 550 }}
+                                    title="Regular body text. Field length of 550 characters."
                                 />
                             </FormControl>
                         </Grid>
@@ -299,17 +316,20 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             />
                         </Grid>
                     </Grid>
-                    <Grid container spacing={2} style={{ minHeight: '4rem', paddingTop: '1rem' }}>
+                    <Grid
+                        container
+                        spacing={2}
+                        style={{ minHeight: '4rem', paddingTop: '1rem' }}
+                        className={classes.checkboxes}
+                    >
                         <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.addForm.urgentTooltip}>
+                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
                                 <Checkbox
-                                    checked={values.urgent}
-                                    data-testid="admin-alerts-form-checkbox-urgent"
-                                    onChange={handleChange('urgent')}
-                                    name="urgent"
-                                    title={locale.addForm.urgentTooltip}
+                                    checked={values.linkRequired}
+                                    data-testid="admin-alerts-form-checkbox-linkrequired"
+                                    onChange={handleChange('linkRequired')}
                                 />
-                                Urgent
+                                Add link
                             </InputLabel>
                         </Grid>
                         <Grid item sm={4} xs={12}>
@@ -328,13 +348,15 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             </InputLabel>
                         </Grid>
                         <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.addForm.urgentTooltip}>
                                 <Checkbox
-                                    checked={values.linkRequired}
-                                    data-testid="admin-alerts-form-checkbox-linkrequired"
-                                    onChange={handleChange('linkRequired')}
+                                    checked={values.urgent}
+                                    data-testid="admin-alerts-form-checkbox-urgent"
+                                    onChange={handleChange('urgent')}
+                                    name="urgent"
+                                    title={locale.addForm.urgentTooltip}
                                 />
-                                Add link
+                                Urgent
                             </InputLabel>
                         </Grid>
                     </Grid>

@@ -37,7 +37,7 @@ describe('Alerts Admin Pages', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h3').should('be.visible');
-            cy.get('h3').contains('All Alerts');
+            cy.get('h3').contains('All alerts');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin',
@@ -90,7 +90,7 @@ describe('Alerts Admin Pages', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h3').should('be.visible');
-            cy.get('h3').contains('Create Alert');
+            cy.get('h3').contains('Create alert');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Add',
@@ -246,7 +246,7 @@ describe('Alerts Admin Pages', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h3').should('be.visible');
-            cy.get('h3').contains('Edit Alert');
+            cy.get('h3').contains('Edit alert');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Edit',
