@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+/* eslint-disable no-trailing-spaces */
 import React from 'react';
 
 // import { AUTH_URL_LOGIN } from 'config';
@@ -10,7 +11,7 @@ export const promoPanel = {
         content: (
             <div>
                 <p>
-                    <a href="https://life.uq.edu.au/orientation">   
+                    <a href="https://life.uq.edu.au/orientation">
                         Celebrate Orientation 
                     </a>{' '}
                     during O-Week (19-23 July) and Connect Week (26-30 July).
