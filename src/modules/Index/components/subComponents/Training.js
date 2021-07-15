@@ -297,7 +297,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </IconButton>
                                         </Grid>
                                         <Grid item xs>
-                                            <Typography className={classes.detailTitle} variant={'h6'} component={'h4'}>
+                                            <Typography className={classes.detailTitle} variant={'h6'} component={'h3'}>
                                                 {eventDetail.name}
                                             </Typography>
                                         </Grid>

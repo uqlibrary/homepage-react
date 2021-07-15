@@ -497,7 +497,7 @@ const PersonalisedPanel = ({
                 data-testid="personalised-panel"
             >
                 <div className={classes.flexHeader}>
-                    <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
+                    <Typography variant={'h5'} component={'h2'} color={'primary'} className={classes.greeting}>
                         {greeting()} {account.firstName || ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>

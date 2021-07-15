@@ -6780,7 +6780,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             titleTypographyProps={
                                                               Object {
                                                                 "color": "inherit",
-                                                                "component": "h3",
+                                                                "component": "h2",
                                                                 "data-testid": "standard-card-computers-header",
                                                                 "variant": "h5",
                                                               }
@@ -6832,7 +6832,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               titleTypographyProps={
                                                                 Object {
                                                                   "color": "inherit",
-                                                                  "component": "h3",
+                                                                  "component": "h2",
                                                                   "data-testid": "standard-card-computers-header",
                                                                   "variant": "h5",
                                                                 }
@@ -6853,7 +6853,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                   <WithStyles(ForwardRef(Typography))
                                                                     className="MuiCardHeader-title"
                                                                     color="inherit"
-                                                                    component="h3"
+                                                                    component="h2"
                                                                     data-testid="standard-card-computers-header"
                                                                     display="block"
                                                                     variant="h5"
@@ -6895,12 +6895,12 @@ exports[`Index page should render placeholders 1`] = `
                                                                         }
                                                                       }
                                                                       color="inherit"
-                                                                      component="h3"
+                                                                      component="h2"
                                                                       data-testid="standard-card-computers-header"
                                                                       display="block"
                                                                       variant="h5"
                                                                     >
-                                                                      <h3
+                                                                      <h2
                                                                         className="MuiTypography-root MuiCardHeader-title MuiTypography-h5 MuiTypography-colorInherit MuiTypography-displayBlock"
                                                                         data-testid="standard-card-computers-header"
                                                                       >
@@ -7289,7 +7289,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                             </div>
                                                                           </ForwardRef(Grid)>
                                                                         </WithStyles(ForwardRef(Grid))>
-                                                                      </h3>
+                                                                      </h2>
                                                                     </ForwardRef(Typography)>
                                                                   </WithStyles(ForwardRef(Typography))>
                                                                 </div>
@@ -8203,7 +8203,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             titleTypographyProps={
                                                               Object {
                                                                 "color": "inherit",
-                                                                "component": "h3",
+                                                                "component": "h2",
                                                                 "data-testid": "standard-card-training-header",
                                                                 "variant": "h5",
                                                               }
@@ -8231,7 +8231,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               titleTypographyProps={
                                                                 Object {
                                                                   "color": "inherit",
-                                                                  "component": "h3",
+                                                                  "component": "h2",
                                                                   "data-testid": "standard-card-training-header",
                                                                   "variant": "h5",
                                                                 }
@@ -8252,7 +8252,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                   <WithStyles(ForwardRef(Typography))
                                                                     className="MuiCardHeader-title"
                                                                     color="inherit"
-                                                                    component="h3"
+                                                                    component="h2"
                                                                     data-testid="standard-card-training-header"
                                                                     display="block"
                                                                     variant="h5"
@@ -8294,17 +8294,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                         }
                                                                       }
                                                                       color="inherit"
-                                                                      component="h3"
+                                                                      component="h2"
                                                                       data-testid="standard-card-training-header"
                                                                       display="block"
                                                                       variant="h5"
                                                                     >
-                                                                      <h3
+                                                                      <h2
                                                                         className="MuiTypography-root MuiCardHeader-title MuiTypography-h5 MuiTypography-colorInherit MuiTypography-displayBlock"
                                                                         data-testid="standard-card-training-header"
                                                                       >
                                                                         Training
-                                                                      </h3>
+                                                                      </h2>
                                                                     </ForwardRef(Typography)>
                                                                   </WithStyles(ForwardRef(Typography))>
                                                                 </div>

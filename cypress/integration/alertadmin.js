@@ -3,14 +3,14 @@ describe('Alerts Admin Pages', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=public');
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Authentication required');
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
         });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Permission denied');
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
         });
         it('displays a list of alerts to the authorised user', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
@@ -36,8 +36,8 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.get('h3').should('be.visible');
-            cy.get('h3').contains('All alerts');
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('All alerts');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin',
@@ -76,21 +76,21 @@ describe('Alerts Admin Pages', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=public');
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Authentication required');
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
         });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Permission denied');
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.get('h3').should('be.visible');
-            cy.get('h3').contains('Create alert');
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('Create alert');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Add',
@@ -230,23 +230,23 @@ describe('Alerts Admin Pages', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=public');
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Authentication required');
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
         });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit(
                 'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaffnonpriv',
             );
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Permission denied');
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.get('h3').should('be.visible');
-            cy.get('h3').contains('Edit alert');
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('Edit alert');
             cy.wait(500);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Edit',

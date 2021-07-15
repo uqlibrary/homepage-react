@@ -3,7 +3,7 @@ context('Secure Collection', () => {
         cy.visit('/collection?user=s1111111&collection=collection&file=doesntExist');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('h2').contains('Secure Collection');
+        cy.get('h1').contains('Secure Collection');
         cy.checkA11y('[data-testid="secure-collection"]', {
             reportName: 'Secure Collection',
             scopeName: 'Content',
@@ -17,7 +17,7 @@ context('Secure Collection', () => {
         cy.visit('/collection?user=s1111111&collection=api&file=fails');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('h2').contains('Secure Collection');
+        cy.get('h1').contains('Secure Collection');
         cy.checkA11y('[data-testid="secure-collection"]', {
             reportName: 'Secure Collection',
             scopeName: 'Content',
@@ -33,7 +33,7 @@ context('Secure Collection', () => {
         cy.visit('/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('h2').contains('Secure Collection');
+        cy.get('h1').contains('Secure Collection');
         cy.checkA11y('[data-testid="secure-collection"]', {
             reportName: 'Secure Collection',
             scopeName: 'Content',
@@ -62,7 +62,7 @@ context('Secure Collection', () => {
         cy.visit('/collection?user=s1111111&collection=bomdata&file=abcdef.zip');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('h2').contains('Secure Collection');
+        cy.get('h1').contains('Secure Collection');
         cy.checkA11y('[data-testid="secure-collection"]', {
             reportName: 'Secure Collection',
             scopeName: 'Content',
@@ -81,7 +81,7 @@ context('Secure Collection', () => {
         cy.visit('/collection');
         cy.viewport(1300, 1000);
         cy.get('body')
-            .find('h3')
+            .find('h2')
             .contains('This file does not exist or is unavailable.');
         cy.get('body')
             .find('[data-testid="secure-collection"]')
@@ -94,7 +94,7 @@ context('Secure Collection', () => {
         );
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('h2').contains('Secure Collection');
+        cy.get('h1').contains('Secure Collection');
         cy.checkA11y('[data-testid="secure-collection"]', {
             reportName: 'Secure Collection',
             scopeName: 'Content',
