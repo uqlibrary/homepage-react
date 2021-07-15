@@ -12,15 +12,23 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 
-const useStyles = makeStyles(() => ({
-    pageLayout: {
-        marginBottom: 24,
-        paddingLeft: 24,
-        paddingRight: 24,
-        minHeight: '10em',
-        minWidth: '80%',
-    },
-}));
+const useStyles = makeStyles(
+    theme => ({
+        pageLayout: {
+            marginBottom: 24,
+            paddingLeft: 24,
+            paddingRight: 24,
+            minHeight: '10em',
+            minWidth: '80%',
+        },
+        mobileOnly: {
+            [theme.breakpoints.up('sm')]: {
+                display: 'none',
+            },
+        },
+    }),
+    { withTheme: true },
+);
 
 export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, history }) => {
     const classes = useStyles();
@@ -94,6 +102,11 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
+                    <Grid container>
+                        <Grid item xs={12} className={classes.mobileOnly}>
+                            <p>Mobile? You might want to turn your phone sideways!</p>
+                        </Grid>
+                    </Grid>
                     <AlertHelpModal actions={actions} showAddButton history={history} />
                     <StandardCard title="All alerts" noPadding>
                         <Grid container>
