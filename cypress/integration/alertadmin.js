@@ -126,6 +126,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-link-title"] input').type('Click here');
             cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http://example.com');
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
@@ -137,6 +138,11 @@ describe('Alerts Admin Pages', () => {
                         '[data-testid="alert-alert-preview"] [data-testid="alert-alert-preview-action-button"]',
                     ).should('have.attr', 'title', 'Click here');
                 });
+            // user can toggle the Preview
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
         it('can save an alert (simple)', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
@@ -256,6 +262,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
             cy.wait(500);
             cy.get('[data-testid="confirm-dialogbox"] h2').contains('The alert has been updated');
+            // can't do much checking here that it saves properly
         });
         it('has a working Help button on the Edit page', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
@@ -265,6 +272,29 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-help-button"]').click();
             cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
+        });
+        it('can show a preview', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-title"] input')
+                .focus()
+                .clear();
+            cy.get('[data-testid="admin-alerts-form-title"] input').type('Updated alert');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-title"]').should('have.text', 'Updated alert');
+                });
+            // user can toggle the Preview
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
     });
 });

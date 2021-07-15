@@ -36,9 +36,10 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         if (!isFormValid) {
             return;
         }
-        if (!!showPreview) {
-            alertWrapper.parentElement.style.display = !!showPreview ? 'block' : 'none';
-        }
+
+        alertWrapper.parentElement.style.visibility = !!showPreview ? 'visible' : 'hidden';
+        alertWrapper.parentElement.style.opacity = !!showPreview ? '1' : '0';
+
         setPreviewOpen(showPreview);
     };
 
@@ -136,13 +137,17 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     };
 
     const displayPreview = () => {
-        expandValues(values);
-
-        handlePreview(true);
-
-        // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alertWrapper = document.getElementById('previewWrapper');
         alertWrapper.innerHTML = '';
+        if (!!showPreview) {
+            handlePreview(false);
+            return;
+        }
+
+        handlePreview(true);
+        expandValues(values);
+
+        // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alert = document.createElement('uq-alert');
         /* istanbul ignore else */
         if (!!alert) {

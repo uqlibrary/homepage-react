@@ -4,6 +4,7 @@ import { useParams } from 'react-router';
 const moment = require('moment');
 
 import Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -13,7 +14,14 @@ import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
 import { formatDate } from '../../alerthelpers';
 
+const useStyles = makeStyles(() => ({
+    previewWrapper: {
+        transition: 'visibility 0s, opacity 0.5s linear',
+    },
+}));
+
 export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history }) => {
+    const classes = useStyles();
     const { alertid } = useParams();
     console.log('AlertsEdit alertid = ', alertid);
     console.log('AlertsEdit props actions = ', actions);
@@ -66,8 +74,8 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
 
     return (
         <Fragment>
-            <Grid container style={{ paddingBottom: '1em', display: 'none' }}>
-                <Grid item id="previewWrapper" />
+            <Grid container style={{ paddingBottom: '1em', display: 'block' }}>
+                <Grid item id="previewWrapper" className={classes.previewWrapper} />
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
