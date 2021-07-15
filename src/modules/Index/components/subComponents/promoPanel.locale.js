@@ -6,31 +6,41 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Library access',
+        title: 'Welcome to UQ!',
         content: (
             <div>
-                <p>For students enrolled to study in Semester Two your library membership is active, and you can use it through the mid-year break.</p>
-                <p>Congratulations to our graduating students! You can apply for an alumni membership. The first year is free.</p>
-                <p>Visit{' '}
-                    <a href="https://web.library.uq.edu.au/library-services/services-uq-alumni">
-                        services for alumni
+                <p>
+                    <a href="https://life.uq.edu.au/orientation">   
+                        Celebrate Orientation 
                     </a>{' '}
-                    for more information.
+                    during O-Week (19-23 July) and Connect Week (26-30 July).
+                </p>
+                <p>Plan your orientation experience, attend great events, get to know your campus (and Library) and get connected to your UQ Life!</p>
+                <p>Get involved in{' '} 
+                    <a href="https://web.library.uq.edu.au/blog/2021/07/get-involved-o-week?utm_source=homepage&utm_medium=promobox&utm_campaign=orientation-sem2-21">   
+                       O-Week at the Library  
+                    </a>{' '}
+                    for library tours, training sessions, Koala Competition and more!
                 </p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Library access',
+        title: 'Welcome to UQ!',
         content: (
             <div>
-                <p>For students enrolled to study in Semester Two your library membership is active, and you can use it through the mid-year break.</p>
-                <p>Congratulations to our graduating students! You can apply for an alumni membership. The first year is free.</p>
-                <p>Visit{' '}
-                    <a href="https://web.library.uq.edu.au/library-services/services-uq-alumni">
-                        services for alumni
+                <p>
+                    <a href="https://life.uq.edu.au/orientation">   
+                        Celebrate Orientation 
                     </a>{' '}
-                    for more information.
+                    during O-Week (19-23 July) and Connect Week (26-30 July).
+                </p>
+                <p>Plan your orientation experience, attend great events, get to know your campus (and Library) and get connected to your UQ Life!</p>
+                <p>Get involved in{' '} 
+                    <a href="https://web.library.uq.edu.au/blog/2021/07/get-involved-o-week?utm_source=homepage&utm_medium=promobox&utm_campaign=orientation-sem2-21">   
+                       O-Week at the Library  
+                    </a>{' '}
+                    for library tours, training sessions, Koala Competition and more!
                 </p>
             </div>
         ),
