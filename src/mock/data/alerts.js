@@ -585,7 +585,7 @@ export const alertList = [
         "start": "2021-06-29 15:00:34",
         "end": "2031-07-02 18:30:34",
         "title": "Important update:",
-        "body": "access to UQ sites is restricted from 6pm, Tuesday 29 June until 6pm, Friday 2 July. Our services are available online and Library staff are available on live chat Mon to Fri 8am to 5pm. You must wear a face mask if visiting UQ libraries for essential study purposes.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
+        "body": "Alert can be edited in localhost. access to UQ sites is restricted from 6pm, Tuesday 29 June until 6pm, Friday 2 July. Our services are available online and Library staff are available on live chat Mon to Fri 8am to 5pm. You must wear a face mask if visiting UQ libraries for essential study purposes.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
         "urgent": 1
     },
 ];

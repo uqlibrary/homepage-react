@@ -126,32 +126,48 @@ mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleR
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
 
 mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
-mock.onAny(routes.ALERT_SAVE_API().apiUrl).reply(
+mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
     withDelay([
         200,
         {
-            id: '999999-d62b-11e7-954e-57c2cc19d151',
-            start: '2022-10-12 09:58:02',
-            end: '2022-11-22 09:58:02',
-            title: 'title add',
-            body: 'body add',
-            urgent: 1,
+            id: '99999-d897-11eb-a27e-df4e46db7245',
+            start: '2020-06-07 02:00:03',
+            end: '2020-06-07 03:00:03',
+            title: 'Updated alert',
+            body:
+                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+            urgent: 0,
         },
     ]),
 );
-// mock.onAny(routes.ALERT_SAVE_API().apiUrl).reply(withDelay([500, {}]));
-
-mock.onGet(routes.ALERT_BY_ID_API({ id: 'e895b270-d62b-11e7-954e-57c2cc19d151' }).apiUrl).reply(
+// mock.onAny(routes.ALERT_CREATE_API('id').apiUrl).reply(withDelay([500, {}]));
+mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([
         200,
         {
-            id: 'e895b270-d62b-11e7-954e-57c2cc19d151',
-            start: '2022-10-12 09:58:02',
-            end: '2022-11-22 09:58:02',
-            title: 'Test urgent alert 2',
+            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
+            start: '2020-06-07 02:00:03',
+            end: '2020-06-07 03:00:03',
+            title: 'Updated alert',
             body:
-                '[urgent link description](http://www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-            urgent: 1,
+                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+            urgent: 0,
+        },
+    ]),
+);
+// mock.onAny(routes.ALERT_SAVE_API('id').apiUrl).reply(withDelay([500, {}]));
+
+mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
+            start: '2020-06-07 02:00:03',
+            end: '2020-06-07 03:00:03',
+            title: 'Library Search maintenance tonight (2am - 3am AEST):',
+            body:
+                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+            urgent: 0,
         },
     ]),
 );

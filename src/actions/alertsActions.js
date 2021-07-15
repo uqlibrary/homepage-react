@@ -1,7 +1,6 @@
 import * as actions from './actionTypes';
 import { get, post } from 'repositories/generic';
-import { ALERT_SAVE_API, ALERTS_ALL_API, ALERT_BY_ID_API } from 'repositories/routes';
-// import { throwFetchErrors } from 'helpers/general';
+import { ALERT_SAVE_API, ALERT_CREATE_API, ALERTS_ALL_API, ALERT_BY_ID_API } from 'repositories/routes';
 
 export function loadAllAlerts() {
     console.log('Loading Alerts');
@@ -28,8 +27,8 @@ export const createAlert = request => {
 
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        console.log('createAlert action, ALERT_SAVE_API() = ', ALERT_SAVE_API());
-        return post(ALERT_SAVE_API(), request)
+        console.log('createAlert action, ALERT_CREATE_API() = ', ALERT_CREATE_API());
+        return post(ALERT_CREATE_API(), request)
             .then(data => {
                 console.log('createAlert action, returned data = ', data);
                 dispatch({
@@ -48,12 +47,10 @@ export const createAlert = request => {
 };
 
 export const saveAlertChange = request => {
-    console.log('saveAlertChange, request to save: ', request);
-
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        console.log('saveAlertChange action, ALERT_SAVE_API() = ', ALERT_SAVE_API());
-        return post(ALERT_SAVE_API(), request)
+        console.log('saveAlertChange action, ALERT_SAVE_API() = ', ALERT_SAVE_API(request.id));
+        return post(ALERT_SAVE_API({ id: request.id }), request)
             .then(data => {
                 console.log('saveAlertChange action, returned data = ', data);
                 dispatch({
@@ -101,7 +98,7 @@ export function loadAnAlert(alertId) {
                 });
             })
             .catch(error => {
-                console.log('error = ', error);
+                console.log('loadAnAlert error = ', error);
                 dispatch({
                     type: actions.ALERT_FAILED,
                     payload: error.message,

@@ -27,6 +27,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
         linkTitle: '',
         linkUrl: '',
         type: 'add',
+        minimumDate: defaultStartTime,
     };
     return (
         <Fragment>

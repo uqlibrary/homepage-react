@@ -9,7 +9,7 @@ import AlertsEdit from '../components/AlertsEdit';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('alertsReducer'),
+        ...state.get('alertReducer'),
     };
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -84,19 +85,11 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-const useStyles2 = makeStyles(
-    theme => ({
-        table: {
-            minWidth: 500,
-        },
-        editButton: {
-            backgroundColor: theme.palette.accent.main,
-            color: theme.palette.white.main,
-            padding: '1em',
-        },
-    }),
-    { withTheme: true },
-);
+const useStyles2 = makeStyles(() => ({
+    table: {
+        minWidth: 500,
+    },
+}));
 
 export default function AlertsListAsTable(rows, alertsLoading, history, hasFooter = false) {
     const classes = useStyles2();
@@ -180,15 +173,14 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                                         {alert.endDate}
                                     </TableCell>
                                     <TableCell component="td">
-                                        <a
-                                            className={classes.editButton}
+                                        <Button
+                                            children="Edit"
+                                            color="primary"
                                             data-testid={`alert-list-item-edit-${alert.id}`}
                                             id={`alert-list-item-edit-${alert.id}`}
-                                            href={`/admin/alerts/edit/${alert.id}`}
-                                            onClick={() => navigateToEditForm()}
-                                        >
-                                            Edit
-                                        </a>
+                                            onClick={() => navigateToEditForm(alert.id)}
+                                            variant="contained"
+                                        />
                                     </TableCell>
                                 </TableRow>
                             );

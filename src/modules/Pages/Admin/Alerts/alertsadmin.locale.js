@@ -83,6 +83,14 @@ export default {
             </p>
         </Fragment>
     ),
+    editForm: {
+        editAlertConfirmation: {
+            confirmationTitle: 'The alert has been updated',
+            confirmationMessage: '',
+            cancelButtonLabel: 'View alert list',
+            confirmButtonLabel: 'Add a new alert',
+        },
+    },
     addForm: {
         help: {},
         urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',

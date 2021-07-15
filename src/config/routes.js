@@ -3,6 +3,8 @@ import { seeCourseResources, seeAlertsAdmin } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
+export const adminEditRegexConfig = new RegExp(/\/admin\/alerts\/edit\/(.*)/i);
+
 export const pathConfig = {
     index: '/',
     secureCollection: '/collection',

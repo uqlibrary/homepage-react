@@ -2,7 +2,7 @@
 
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllAlerts, clearAlerts, loadAnAlert, clearAnAlert, createAlert } from './alertsActions';
+import { loadAllAlerts, clearAlerts, loadAnAlert, clearAnAlert, createAlert, saveAlertChange } from './alertsActions';
 
 jest.mock('raven-js');
 
@@ -14,7 +14,7 @@ const newAlertRecord = {
     urgent: 1,
 };
 
-describe('Alert actions', () => {
+describe('Alert list actions', () => {
     const MockDate = require('mockdate');
     beforeEach(() => {
         MockDate.set('2020-01-01T00:00:00.000Z', 10);
@@ -123,7 +123,7 @@ describe('Alert actions', () => {
         });
 
         it('dispatches expected actions when alert create call fails', async () => {
-            mockApi.onAny(repositories.routes.ALERT_SAVE_API().apiUrl).reply(500);
+            mockApi.onAny(repositories.routes.ALERT_CREATE_API().apiUrl).reply(500);
 
             const expectedActions = [actions.ALERT_LOADING, actions.APP_ALERT_SHOW, actions.ALERT_FAILED];
 
@@ -131,8 +131,17 @@ describe('Alert actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
+        it('dispatches expected actions when alert save call fails', async () => {
+            mockApi.onAny(repositories.routes.ALERT_SAVE_API('id').apiUrl).reply(500);
+
+            const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
+
+            await mockActionsStore.dispatch(createAlert(newAlertRecord));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
         it('handles an alert creation request', async () => {
-            mockApi.onAny(repositories.routes.ALERT_SAVE_API().apiUrl).reply(200, {
+            mockApi.onAny(repositories.routes.ALERT_CREATE_API().apiUrl).reply(200, {
                 id: '88888-d62b-11e7-954e-57c2cc19d151',
                 ...newAlertRecord,
             });
@@ -140,6 +149,25 @@ describe('Alert actions', () => {
             const expectedActions = [actions.ALERT_LOADING, actions.ALERT_SAVED];
 
             await mockActionsStore.dispatch(createAlert(newAlertRecord));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles an alert save request', async () => {
+            mockApi
+                .onAny(repositories.routes.ALERT_SAVE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
+                .reply(200, {
+                    id: '88888-d62b-11e7-954e-57c2cc19d151',
+                    ...newAlertRecord,
+                });
+
+            const expectedActions = [actions.ALERT_LOADING, actions.ALERT_SAVED];
+
+            await mockActionsStore.dispatch(
+                saveAlertChange({
+                    id: '88888-d62b-11e7-954e-57c2cc19d151',
+                    ...newAlertRecord,
+                }),
+            );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

@@ -62,14 +62,8 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
 
     const abandonChanges = () => {
         clearForm();
-        // setTimeout(() => {
-        //     console.log('post clearForm, values = ', values);
-        // }, 300);
 
-        () => dispatch(actions.clearAlerts());
-        console.log('abandonChanges before');
         () => dispatch(actions.clearAlert());
-        console.log('abandonChanges after');
 
         history.push('/admin/alerts');
     };
@@ -119,7 +113,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
             end: formatDate(values.endDate),
         };
         console.log('will save ', newValues);
-        actions.createAlert(newValues);
+        defaults.type === 'add' ? actions.createAlert(newValues) : actions.saveAlertChange(newValues);
     };
 
     const displayPreview = () => {
@@ -127,7 +121,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
 
         setPreviewOpen(true);
 
-        // oddly hardcoding the alert with attributes tied to values doesnt work, so insert it this way
+        // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alertWrapper = document.getElementById('previewWrapper');
         alertWrapper.innerHTML = '';
         const alert = document.createElement('uq-alert');
@@ -192,9 +186,12 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         confirmationTitle: `An error occurred while saving: ${alertError}`,
     };
 
-    const confirmationLocale = locale.addForm.addAlertConfirmation;
+    const confirmationLocale =
+        defaults.type === 'add' ? locale.addForm.addAlertConfirmation : locale.editForm.editAlertConfirmation;
 
     console.log('values in form: ', values);
+    console.log('final error = ', alertError);
+    console.log('final status = ', alertStatus);
     return (
         <Fragment>
             <Grid container style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}>
@@ -212,9 +209,9 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                     }
                     onClose={hideConfirmation}
                     onCancelAction={() => abandonChanges()}
-                    hideCancelButton={!!alertError}
+                    hideCancelButton={alertStatus === 'error'}
                     isOpen={isOpen}
-                    locale={!!alert ? confirmationLocale : addAlertError}
+                    locale={alertStatus === 'error' ? addAlertError : confirmationLocale}
                 />
                 <StandardCard help={locale.addForm.help}>
                     <Grid container spacing={2}>
@@ -223,7 +220,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 <InputLabel htmlFor="alertTitle">Title *</InputLabel>
                                 <Input
                                     id="alertTitle"
-                                    data-testid="admin-alerts-add-title"
+                                    data-testid="admin-alerts-form-title"
                                     value={values.alertTitle}
                                     onChange={handleChange('alertTitle')}
                                     inputProps={{ maxLength: 255 }}
@@ -238,7 +235,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 <InputLabel htmlFor="alertBody">Message *</InputLabel>
                                 <Input
                                     id="alertBody"
-                                    data-testid="admin-alerts-add-body"
+                                    data-testid="admin-alerts-form-body"
                                     value={values.enteredbody}
                                     onChange={handleChange('enteredbody')}
                                     multiline
@@ -252,14 +249,14 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             {/* https://material-ui.com/components/pickers/ */}
                             <TextField
                                 id="startDate"
-                                data-testid="admin-alerts-add-start-date"
+                                data-testid="admin-alerts-form-start-date"
                                 InputLabelProps={{ shrink: true }}
                                 label="Start date"
                                 onChange={handleChange('startDate')}
                                 type="datetime-local"
                                 value={values.startDate}
                                 inputProps={{
-                                    min: values.startDate,
+                                    min: defaults.minimumDate,
                                     required: true,
                                 }}
                             />
@@ -267,7 +264,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                         <Grid item md={6} xs={12}>
                             <TextField
                                 id="endDate"
-                                data-testid="admin-alerts-add-end-date"
+                                data-testid="admin-alerts-form-end-date"
                                 InputLabelProps={{ shrink: true }}
                                 label="End date"
                                 onChange={handleChange('endDate')}
@@ -286,7 +283,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.addForm.urgentTooltip}>
                                 <Checkbox
                                     checked={values.urgent}
-                                    data-testid="admin-alerts-add-checkbox-urgent"
+                                    data-testid="admin-alerts-form-checkbox-urgent"
                                     onChange={handleChange('urgent')}
                                     name="urgent"
                                     title={locale.addForm.urgentTooltip}
@@ -300,7 +297,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 title={locale.addForm.permanentTooltip}
                             >
                                 <Checkbox
-                                    data-testid="admin-alerts-add-checkbox-permanent"
+                                    data-testid="admin-alerts-form-checkbox-permanent"
                                     checked={values.permanentAlert}
                                     onChange={handleChange('permanentAlert')}
                                     name="permanentAlert"
@@ -313,7 +310,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
                                 <Checkbox
                                     checked={values.linkRequired}
-                                    data-testid="admin-alerts-add-checkbox-linkrequired"
+                                    data-testid="admin-alerts-form-checkbox-linkrequired"
                                     onChange={handleChange('linkRequired')}
                                 />
                                 Add link
@@ -335,7 +332,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
                                 <Input
                                     id="linkTitle"
-                                    data-testid="admin-alerts-add-link-title"
+                                    data-testid="admin-alerts-form-link-title"
                                     value={values.linkTitle}
                                     onChange={handleChange('linkTitle')}
                                 />
@@ -346,7 +343,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
                                 <Input
                                     id="linkUrl"
-                                    data-testid="admin-alerts-add-link-url"
+                                    data-testid="admin-alerts-form-link-url"
                                     value={values.linkUrl}
                                     onChange={handleChange('linkUrl')}
                                 />
@@ -358,13 +355,13 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             <Button
                                 color="secondary"
                                 children="Cancel"
-                                data-testid="admin-alerts-add-button-cancel"
+                                data-testid="admin-alerts-form-button-cancel"
                                 onClick={() => abandonChanges()}
                             />
                         </Grid>
                         <Grid item xs={9} align="right">
                             <Button
-                                data-testid="admin-alerts-add-button-preview"
+                                data-testid="admin-alerts-form-button-preview"
                                 color="secondary"
                                 children="Preview"
                                 disabled={!isFormValid}
@@ -373,7 +370,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             />
                             <Button
                                 color="primary"
-                                data-testid="admin-alerts-add-button-save"
+                                data-testid="admin-alerts-form-button-save"
                                 variant="contained"
                                 children="Save"
                                 disabled={!isFormValid}

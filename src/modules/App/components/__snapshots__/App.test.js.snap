@@ -810,6 +810,7 @@ exports[`Application component should render for anon user 1`] = `
                                   actions={
                                     Object {
                                       "checkSession": [Function],
+                                      "clearAlert": [Function],
                                       "clearAlerts": [Function],
                                       "clearAnAlert": [Function],
                                       "clearCourseResourceSuggestions": [Function],
@@ -845,6 +846,7 @@ exports[`Application component should render for anon user 1`] = `
                                       "loadSpotlights": [Function],
                                       "loadTrainingEvents": [Function],
                                       "logout": [Function],
+                                      "saveAlertChange": [Function],
                                       "searcheSpaceIncompleteNTROPublications": [Function],
                                       "searcheSpacePossiblePublications": [Function],
                                       "setRedirectPath": [Function],
@@ -1450,6 +1452,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                     actions={
                                                                       Object {
                                                                         "checkSession": [Function],
+                                                                        "clearAlert": [Function],
                                                                         "clearAlerts": [Function],
                                                                         "clearAnAlert": [Function],
                                                                         "clearCourseResourceSuggestions": [Function],
@@ -1485,6 +1488,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                         "loadSpotlights": [Function],
                                                                         "loadTrainingEvents": [Function],
                                                                         "logout": [Function],
+                                                                        "saveAlertChange": [Function],
                                                                         "searcheSpaceIncompleteNTROPublications": [Function],
                                                                         "searcheSpacePossiblePublications": [Function],
                                                                         "setRedirectPath": [Function],
@@ -10276,6 +10280,7 @@ exports[`Application component should render loading screen while account is loa
                                   actions={
                                     Object {
                                       "checkSession": [Function],
+                                      "clearAlert": [Function],
                                       "clearAlerts": [Function],
                                       "clearAnAlert": [Function],
                                       "clearCourseResourceSuggestions": [Function],
@@ -10311,6 +10316,7 @@ exports[`Application component should render loading screen while account is loa
                                       "loadSpotlights": [Function],
                                       "loadTrainingEvents": [Function],
                                       "logout": [Function],
+                                      "saveAlertChange": [Function],
                                       "searcheSpaceIncompleteNTROPublications": [Function],
                                       "searcheSpacePossiblePublications": [Function],
                                       "setRedirectPath": [Function],
@@ -10916,6 +10922,7 @@ exports[`Application component should render loading screen while account is loa
                                                                     actions={
                                                                       Object {
                                                                         "checkSession": [Function],
+                                                                        "clearAlert": [Function],
                                                                         "clearAlerts": [Function],
                                                                         "clearAnAlert": [Function],
                                                                         "clearCourseResourceSuggestions": [Function],
@@ -10951,6 +10958,7 @@ exports[`Application component should render loading screen while account is loa
                                                                         "loadSpotlights": [Function],
                                                                         "loadTrainingEvents": [Function],
                                                                         "logout": [Function],
+                                                                        "saveAlertChange": [Function],
                                                                         "searcheSpaceIncompleteNTROPublications": [Function],
                                                                         "searcheSpacePossiblePublications": [Function],
                                                                         "setRedirectPath": [Function],
