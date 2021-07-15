@@ -76,8 +76,11 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         });
     };
 
-    const abandonChanges = () => {
+    const navigateToListPage = () => {
         clearForm();
+
+        // force the list page to reload after save
+        () => dispatch(actions.clearAlerts());
 
         () => dispatch(actions.clearAlert());
 
@@ -221,7 +224,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                         // allowing the user to correct and try again
                     }
                     onClose={hideConfirmation}
-                    onCancelAction={() => abandonChanges()}
+                    onCancelAction={() => navigateToListPage()}
                     hideCancelButton={alertStatus === 'error'}
                     isOpen={isOpen}
                     locale={alertStatus === 'error' ? addAlertError : confirmationLocale}
@@ -369,7 +372,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 color="secondary"
                                 children="Cancel"
                                 data-testid="admin-alerts-form-button-cancel"
-                                onClick={() => abandonChanges()}
+                                onClick={() => navigateToListPage()}
                             />
                         </Grid>
                         <Grid item xs={9} align="right">
