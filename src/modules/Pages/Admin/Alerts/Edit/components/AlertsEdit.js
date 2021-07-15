@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 const moment = require('moment');
 
+import Grid from '@material-ui/core/Grid';
+
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
@@ -64,6 +66,9 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
 
     return (
         <Fragment>
+            <Grid container style={{ paddingBottom: '1em', display: 'none' }}>
+                <Grid item id="previewWrapper" />
+            </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertHelpModal actions={actions} history={history} />

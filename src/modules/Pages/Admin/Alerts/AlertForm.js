@@ -26,6 +26,22 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     const [isFormValid, setFormValidity] = useState(false);
     const [showPreview, setPreviewOpen] = useState(false);
 
+    const handlePreview = showPreview => {
+        const alertWrapper = document.getElementById('previewWrapper');
+        /* istanbul ignore next */
+        if (!alertWrapper) {
+            return;
+        }
+        /* istanbul ignore next */
+        if (!isFormValid) {
+            return;
+        }
+        if (!!showPreview) {
+            alertWrapper.parentElement.style.display = !!showPreview ? 'block' : 'none';
+        }
+        setPreviewOpen(showPreview);
+    };
+
     console.log('AlertForm: defaults = ', defaults);
     const [values, setValues] = useState(defaults);
 
@@ -119,7 +135,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     const displayPreview = () => {
         expandValues(values);
 
-        setPreviewOpen(true);
+        handlePreview(true);
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alertWrapper = document.getElementById('previewWrapper');
@@ -162,7 +178,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
             (!currentValues.linkRequired || currentValues.linkUrl.length > 0);
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
-        !isValid && !!showPreview && setPreviewOpen(false);
+        !isValid && !!showPreview && handlePreview(false);
 
         return isValid;
     };
@@ -194,9 +210,6 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     console.log('final status = ', alertStatus);
     return (
         <Fragment>
-            <Grid container style={{ paddingBottom: '1em', display: isFormValid && showPreview ? 'block' : 'none' }}>
-                <Grid item id="previewWrapper" />
-            </Grid>
             <form onSubmit={_handleDefaultSubmit}>
                 <ConfirmationBox
                     confirmationBoxId="alert-add-succeeded"

@@ -2,11 +2,13 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 const moment = require('moment');
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import Grid from '@material-ui/core/Grid';
 
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
+
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 
 export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) => {
     const defaultStartTime = moment().format('YYYY-MM-DDTHH:mm');
@@ -31,6 +33,9 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
     };
     return (
         <Fragment>
+            <Grid container style={{ paddingBottom: '1em', display: 'none' }}>
+                <Grid item id="previewWrapper" />
+            </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertHelpModal actions={actions} history={history} />
