@@ -153,7 +153,7 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('An alert has been added');
             // click 'add another alert' button in dialog
-            cy.get('[data-testid="confirm-alert-add-succeeded"]').click();
+            cy.get('[data-testid="cancel-alert-add-succeeded"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqstaff');
             // the alert page reloads with a blank form
             cy.get('[data-testid="admin-alerts-form-title"]').should('have.value', '');
@@ -191,20 +191,20 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('An alert has been added');
             // click 'View alert list' button in dialog
-            cy.get('[data-testid="cancel-alert-add-succeeded"]').click();
+            cy.get('[data-testid="confirm-alert-add-succeeded"]').click();
             // reloads list page (sadly it is mock data so we cant test for the presence of the new alert)
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
                 .should('have.length', 2);
-            // then we click the add button and the form is cleared
+            // then we click the add button and see an empty form
             cy.get('[data-testid="admin-alerts-list-add-button"]').click();
             cy.wait(500);
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
             cy.get('[data-testid="admin-alerts-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-alerts-form-body"] textarea').should('have.value', '');
-            cy.get('[data-testid="confirm-alert-add-succeeded"]').should('not.exist');
+            cy.get('[data-testid="cancel-alert-add-succeeded"]').should('not.exist');
         });
         it('the cancel button returns to the list page', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');

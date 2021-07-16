@@ -87,8 +87,7 @@ export default {
         editAlertConfirmation: {
             confirmationTitle: 'The alert has been updated',
             confirmationMessage: '',
-            cancelButtonLabel: 'View alert list',
-            confirmButtonLabel: 'Add a new alert',
+            confirmButtonLabel: 'View alert list',
         },
     },
     addForm: {
@@ -98,8 +97,8 @@ export default {
         addAlertConfirmation: {
             confirmationTitle: 'An alert has been added',
             confirmationMessage: '',
-            cancelButtonLabel: 'View alert list',
-            confirmButtonLabel: 'Add another alert',
+            cancelButtonLabel: 'Add another alert',
+            confirmButtonLabel: 'View alert list',
         },
         addAlertError: {
             confirmationTitle: 'An error occurred while saving',
