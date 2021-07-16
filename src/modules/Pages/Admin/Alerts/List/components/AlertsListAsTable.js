@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+const moment = require('moment');
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -115,6 +116,12 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
         setPage(0);
     };
 
+    let userows = rows;
+    // anything which is planning to show a footer should be reversed into 'show newest first' order
+    if (!!hasFooter && !!rows && rows.length > 0) {
+        userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
+    }
+
     if (!!alertsLoading) {
         return (
             <Grid
@@ -155,8 +162,8 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                     </TableRow>
                 </TableHead>
                 <TableBody>
-                    {rowsPerPage > 0 && rows.length > 0 ? (
-                        rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
+                    {rowsPerPage > 0 && userows.length > 0 ? (
+                        userows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
                             return (
                                 <TableRow
                                     key={alert.id}
@@ -204,13 +211,13 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                         </TableRow>
                     )}
                 </TableBody>
-                {!!hasFooter && rows.length > 0 && (
+                {!!hasFooter && userows.length > 0 && (
                     <TableFooter>
                         <TableRow>
                             <TablePagination
                                 rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
                                 colSpan={3}
-                                count={rows.length}
+                                count={userows.length}
                                 // id="alert-list-footer"
                                 rowsPerPage={rowsPerPage}
                                 page={page}
