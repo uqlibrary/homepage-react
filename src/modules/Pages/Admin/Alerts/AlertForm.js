@@ -247,7 +247,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         <Fragment>
             <form onSubmit={_handleDefaultSubmit}>
                 <ConfirmationBox
-                    confirmationBoxId="alert-add-succeeded"
+                    confirmationBoxId="alert-save-succeeded"
                     onAction={() => navigateToListPage()}
                     onClose={hideConfirmation}
                     onCancelAction={
@@ -279,7 +279,9 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <FormControl fullWidth>
-                                <InputLabel htmlFor="alertBody">Message *</InputLabel>
+                                <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
+                                    Message *
+                                </InputLabel>
                                 <Input
                                     id="alertBody"
                                     data-testid="admin-alerts-form-body"
