@@ -4,6 +4,7 @@ const moment = require('moment');
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
+import Chip from '@material-ui/core/Chip';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -181,7 +182,30 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                                             style={{ display: 'inline' }}
                                             id={`alert-list-item-title-${alert.id}`}
                                         >{`${alert.title}`}</h4>{' '}
-                                        {`${alert.message}`}
+                                        {`${alert.message.replace('[permanent]', '')}`}
+                                        <div>
+                                            {!!alert.urgent && (
+                                                <Chip
+                                                    data-testid={`alert-list-urgent-chip-${alert.id}`}
+                                                    label="Urgent"
+                                                    title="This is an urgent alert"
+                                                />
+                                            )}{' '}
+                                            {alert.body.includes('](') && (
+                                                <Chip
+                                                    data-testid={`alert-list-link-chip-${alert.id}`}
+                                                    label="Link"
+                                                    title="This alert has a link out"
+                                                />
+                                            )}{' '}
+                                            {alert.body.includes('[permanent]') && (
+                                                <Chip
+                                                    data-testid={`alert-list-permanent-chip-${alert.id}`}
+                                                    label="Permanent"
+                                                    title="This alert cannot be dismissed"
+                                                />
+                                            )}
+                                        </div>
                                     </TableCell>
                                     <TableCell component="td" align="center" className="startDate">
                                         {alert.startDate}
