@@ -85,11 +85,21 @@ TablePaginationActions.propTypes = {
     rowsPerPage: PropTypes.number.isRequired,
 };
 
-const useStyles2 = makeStyles(() => ({
-    table: {
-        minWidth: 500,
-    },
-}));
+const useStyles2 = makeStyles(
+    theme => ({
+        table: {
+            minWidth: 500,
+        },
+        editButton: {
+            backgroundColor: theme.palette.accent.main,
+            color: '#fff',
+            '&:hover': {
+                backgroundColor: theme.palette.accent.dark,
+            },
+        },
+    }),
+    { withTheme: true },
+);
 
 export default function AlertsListAsTable(rows, alertsLoading, history, hasFooter = false) {
     const classes = useStyles2();
@@ -179,6 +189,7 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                                             data-testid={`alert-list-item-edit-${alert.id}`}
                                             id={`alert-list-item-edit-${alert.id}`}
                                             onClick={() => navigateToEditForm(alert.id)}
+                                            className={classes.editButton}
                                             variant="contained"
                                         />
                                     </TableCell>

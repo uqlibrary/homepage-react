@@ -28,17 +28,17 @@ const useStyles = makeStyles(
             marginTop: 64,
             marginBottom: 64,
         },
-        actionbutton: {
-            // backgroundColor: theme.palette.accent.main,
-            padding: 8,
-            // color: '#fff',
-            textTransform: 'uppercase',
-            borderWidth: 0,
-        },
         actionButtonPlacer: {
             float: 'right',
             marginTop: 16,
             marginRight: 16,
+        },
+        addButton: {
+            backgroundColor: theme.palette.accent.main,
+            color: '#fff',
+            '&:hover': {
+                backgroundColor: theme.palette.accent.dark,
+            },
         },
     }),
     { withTheme: true },
@@ -68,7 +68,6 @@ export const AlertHelpModal = ({ actions, showAddButton = false, history }) => {
         <Fragment>
             <div className={classes.actionButtonPlacer}>
                 <Button
-                    className={classes.actionbutton}
                     onClick={openHelpLightbox}
                     data-testid="admin-alerts-help-button"
                     color="secondary"
@@ -78,11 +77,11 @@ export const AlertHelpModal = ({ actions, showAddButton = false, history }) => {
             {!!showAddButton && (
                 <div className={classes.actionButtonPlacer}>
                     <Button
-                        className={classes.actionbutton}
-                        onClick={() => navigateToAddPage()}
-                        data-testid="admin-alerts-list-add-button"
-                        color="primary"
                         children="Add alert"
+                        className={classes.addButton}
+                        color="primary"
+                        data-testid="admin-alerts-list-add-button"
+                        onClick={() => navigateToAddPage()}
                         variant="contained"
                     />
                 </div>

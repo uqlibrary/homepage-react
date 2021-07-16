@@ -27,6 +27,18 @@ const useStyles = makeStyles(
                 flexDirection: 'column-reverse',
             },
         },
+        saveButton: {
+            backgroundColor: theme.palette.accent.main,
+            color: '#fff',
+            '&:hover': {
+                backgroundColor: theme.palette.accent.dark,
+            },
+            '&:disabled': {
+                color: 'rgba(0, 0, 0, 0.26)',
+                boxShadow: 'none',
+                backgroundColor: 'rgba(0, 0, 0, 0.12)',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -418,6 +430,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 children="Save"
                                 disabled={!isFormValid}
                                 onClick={saveAlert}
+                                className={classes.saveButton}
                             />
                         </Grid>
                     </Grid>
