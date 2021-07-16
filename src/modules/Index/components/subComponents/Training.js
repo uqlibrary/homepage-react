@@ -211,6 +211,19 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                   return trainingEvents[key];
               })
             : trainingEvents;
+    !!standardisedTrainingEvents &&
+        standardisedTrainingEvents.length > 0 &&
+        standardisedTrainingEvents.map(event => {
+            let placesRemainingText = 'Booking is not required';
+            if (event.bookingSettings !== null) {
+                placesRemainingText = 'Event is fully booked';
+
+                if (event.bookingSettings.placesRemaining > 0) {
+                    placesRemainingText = 'Places still available';
+                }
+            }
+            event.placesRemainingText = placesRemainingText;
+        });
     return (
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
@@ -336,9 +349,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={classes.detailMeta}>
-                                            {eventDetail.bookingSettings.placesRemaining === 0
-                                                ? 'Event is fully booked'
-                                                : 'Places still available'}
+                                            {eventDetail.placesRemainingText}
                                         </Grid>
                                     </Grid>
                                 </Grid>

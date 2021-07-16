@@ -38,8 +38,8 @@ context('', () => {
         cy.get('button[data-testid="training-event-detail-button-1"]').contains('Advanced Adobe Illustrator');
         cy.get('button[data-testid="training-event-detail-button-1"]').click();
         cy.wait(500);
-        // when placesRemaining is null we see 'places available' (null means there is no limit)
-        cy.get('div[data-testid="training-events-detail-2870806"]').contains('Places still available');
+        // when placesRemaining is not null we see 'full' (null means there is no limit)
+        cy.get('div[data-testid="training-events-detail-2870806"]').contains('Event is fully booked');
         // close it
         cy.get('button[data-testid="training-event-detail-close-button"]').click();
         cy.wait(500);
@@ -50,6 +50,6 @@ context('', () => {
         cy.get('button[data-testid="training-event-detail-button-2"]').click();
         cy.wait(500);
         // when placesRemaining is 0 we see 'Event is fully booked'
-        cy.get('div[data-testid="training-events-detail-2873532"]').contains('Event is fully booked');
+        cy.get('div[data-testid="training-events-detail-2873532"]').contains('Booking is not required');
     });
 });
