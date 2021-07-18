@@ -33,8 +33,11 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
 
             // this alert has all 3 chips
+            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
             cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Urgent');
+            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
             cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Link');
+            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
             cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains(
                 'Permanent',
             );
