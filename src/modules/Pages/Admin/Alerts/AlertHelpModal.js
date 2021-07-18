@@ -80,7 +80,7 @@ export const AlertHelpModal = ({ actions, showAddButton = false, history }) => {
                         children="Add alert"
                         className={classes.addButton}
                         color="primary"
-                        data-testid="admin-alerts-list-add-button"
+                        data-testid="admin-alerts-help-display-button"
                         onClick={() => navigateToAddPage()}
                         variant="contained"
                     />

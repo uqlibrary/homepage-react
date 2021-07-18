@@ -106,7 +106,8 @@ const useStyles2 = makeStyles(
 export default function AlertsListAsTable(rows, alertsLoading, history, hasFooter = false) {
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const defaultNumberOfRowsToDisplay = 5;
+    const [rowsPerPage, setRowsPerPage] = React.useState(defaultNumberOfRowsToDisplay);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -239,14 +240,17 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                     <TableFooter>
                         <TableRow>
                             <TablePagination
-                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+                                rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
                                 colSpan={3}
                                 count={userows.length}
                                 // id="alert-list-footer"
                                 rowsPerPage={rowsPerPage}
                                 page={page}
                                 SelectProps={{
-                                    inputProps: { 'aria-label': 'rows per page' },
+                                    inputProps: {
+                                        'aria-label': 'rows per page',
+                                        'data-testid': 'admin-alerts-list-paginator-select',
+                                    },
                                     native: true,
                                 }}
                                 onChangePage={handleChangePage}

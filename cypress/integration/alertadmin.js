@@ -73,8 +73,8 @@ describe('Alerts Admin Pages', () => {
         it('has a working Add button on the List page', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="admin-alerts-list-add-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-list-add-button"]').click();
+            cy.get('[data-testid="admin-alerts-help-display-button"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-help-display-button"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
         });
 
@@ -215,7 +215,7 @@ describe('Alerts Admin Pages', () => {
                 .children()
                 .should('have.length', 2);
             // then we click the add button and see an empty form
-            cy.get('[data-testid="admin-alerts-list-add-button"]').click();
+            cy.get('[data-testid="admin-alerts-help-display-button"]').click();
             cy.wait(500);
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
             cy.get('[data-testid="admin-alerts-form-title"]').should('have.value', '');
@@ -275,6 +275,20 @@ describe('Alerts Admin Pages', () => {
             // complete to a valid url and the buttons are enabled
             cy.get('[data-testid="admin-alerts-form-link-url"] input').type('://example.com');
             buttonsAreNOTDisabled();
+        });
+        it('the footer paginator shows all links when "all" is selected', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get(
+                '[data-testid="admin-alerts-list-past-list"] [data-testid="admin-alerts-list-paginator-select"]',
+            ).select('All');
+            cy.get(
+                '[data-testid="admin-alerts-list-past-list"] [data-testid="admin-alerts-list-paginator-select"]',
+            ).should('have.value', 81);
+            cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
+                .children()
+                .should('have.length', 81);
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-81 of 81');
         });
     });
     context('Alert Admin Edit page', () => {
