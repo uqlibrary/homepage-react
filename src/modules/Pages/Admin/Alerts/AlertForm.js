@@ -39,6 +39,11 @@ const useStyles = makeStyles(
                 backgroundColor: 'rgba(0, 0, 0, 0.12)',
             },
         },
+        linkTitleWrapper: {
+            border: '1px solid rgb(211, 211, 211)',
+            marginTop: '1em',
+            paddingBottom: '1em',
+        },
     }),
     { withTheme: true },
 );
@@ -204,13 +209,31 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         }
     };
 
+    const isValidUrl = testurl => {
+        try {
+            // eslint-disable-next-line no-new
+            const x = new URL(testurl);
+            console.log('new url = ', x);
+        } catch (_) {
+            console.log('new url NOT valid');
+            return false;
+        }
+        // while technically an url doesn't need a TLD - in practice it does
+        if (!testurl.includes('.')) {
+            return false;
+        }
+        console.log('new url IS valid');
+        return true;
+    };
+
     const validateValues = currentValues => {
         const isValid =
             currentValues.endDate >= currentValues.startDate &&
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
-            (!currentValues.linkRequired || currentValues.linkUrl.length > 0);
+            (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
+            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
         !isValid && !!showPreview && handlePreview(false);
@@ -240,9 +263,6 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     const confirmationLocale =
         defaults.type === 'add' ? locale.addForm.addAlertConfirmation : locale.editForm.editAlertConfirmation;
 
-    console.log('values in form: ', values);
-    console.log('final error = ', alertError);
-    console.log('final status = ', alertStatus);
     return (
         <Fragment>
             <form onSubmit={_handleDefaultSubmit}>
@@ -376,11 +396,9 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                     <Grid
                         container
                         spacing={2}
+                        className={classes.linkTitleWrapper}
                         style={{
-                            paddingBottom: '1em',
-                            marginTop: '1em',
                             display: values.linkRequired ? 'flex' : 'none',
-                            border: '1px solid rgb(211, 211, 211)',
                         }}
                     >
                         <Grid item md={6} xs={12}>
@@ -391,6 +409,10 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                     data-testid="admin-alerts-form-link-title"
                                     value={values.linkTitle}
                                     onChange={handleChange('linkTitle')}
+                                    title="Use destination page title or clear call to action. Minimise length; max length 55 characters."
+                                    inputProps={{
+                                        maxLength: 55,
+                                    }}
                                 />
                             </FormControl>
                         </Grid>
@@ -398,10 +420,13 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                             <FormControl fullWidth>
                                 <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
                                 <Input
+                                    type="url"
                                     id="linkUrl"
                                     data-testid="admin-alerts-form-link-url"
                                     value={values.linkUrl}
                                     onChange={handleChange('linkUrl')}
+                                    error={values.linkUrl !== '' && !isValidUrl(values.linkUrl)}
+                                    title="Please enter a valid URL"
                                 />
                             </FormControl>
                         </Grid>

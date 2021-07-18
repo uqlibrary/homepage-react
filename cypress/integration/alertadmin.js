@@ -238,6 +238,41 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-help-button"]').click();
             cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
         });
+        it('buttons are disabled unless the form is valid', () => {
+            function buttonsAreDisabled() {
+                cy.get('[data-testid="admin-alerts-form-button-preview"]').should('be.disabled');
+                cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
+            }
+
+            function buttonsAreNOTDisabled() {
+                cy.get('[data-testid="admin-alerts-form-button-preview"]').should('not.be.disabled');
+                cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
+            }
+
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            buttonsAreDisabled();
+
+            cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 5');
+            buttonsAreDisabled();
+
+            cy.get('[data-testid="admin-alerts-form-body"]').type('body 5');
+            buttonsAreNOTDisabled();
+
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
+            buttonsAreDisabled();
+
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').type('read more');
+            buttonsAreDisabled();
+
+            // start an url, but button are disabled while it isnt valid
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http');
+            buttonsAreDisabled();
+
+            // complete to a valid url and the buttons are enabled
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').type('://example.com');
+            buttonsAreNOTDisabled();
+        });
     });
     context('Alert Admin Edit page', () => {
         it('displays an "unauthorised" page to public users', () => {
