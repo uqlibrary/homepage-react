@@ -20,18 +20,6 @@ describe('Alerts Admin Pages', () => {
                 .children()
                 .should('have.length', 1);
 
-            cy.wait(500);
-            cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
-            cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
-                .children()
-                .should('have.length', 2);
-
-            cy.get('[data-testid="admin-alerts-list-past-list"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
-                .children()
-                .should('have.length', 5);
-            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
-
             // this alert has all 3 chips
             cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
             cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Urgent');
@@ -41,12 +29,27 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains(
                 'Permanent',
             );
+
+            cy.wait(500);
+            cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
+            cy.get('[data-testid="admin-alerts-list-future-list"] tbody').scrollIntoView();
+            cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
+                .children()
+                .should('have.length', 2);
+
             // this alert has no chips
             cy.get('[data-testid="alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').should('not.exist');
             cy.get('[data-testid="alert-list-link-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').should('not.exist');
             cy.get('[data-testid="alert-list-permanent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').should(
                 'not.exist',
             );
+
+            cy.get('[data-testid="admin-alerts-list-past-list"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-list-past-list"] tbody').scrollIntoView();
+            cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
+                .children()
+                .should('have.length', 5);
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
