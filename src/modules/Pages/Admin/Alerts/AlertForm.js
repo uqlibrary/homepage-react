@@ -268,14 +268,14 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
             <form onSubmit={_handleDefaultSubmit}>
                 <ConfirmationBox
                     confirmationBoxId="alert-save-succeeded"
-                    onAction={() => navigateToListPage()}
-                    onClose={hideConfirmation}
-                    onCancelAction={
+                    onAction={
                         // on error, the main button just closes the notification dialog,
                         // allowing the user to correct and try again
                         // on success, the main button starts a new 'add' form
                         !!alertError ? hideConfirmation : clearForm
                     }
+                    onClose={hideConfirmation}
+                    onCancelAction={() => navigateToListPage()}
                     hideCancelButton={alertStatus === 'error' || defaults.type !== 'add'}
                     isOpen={isOpen}
                     locale={alertStatus === 'error' ? addAlertError : confirmationLocale}

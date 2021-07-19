@@ -98,8 +98,8 @@ export default {
         addAlertConfirmation: {
             confirmationTitle: 'An alert has been added',
             confirmationMessage: '',
-            cancelButtonLabel: 'Add another alert',
-            confirmButtonLabel: 'View alert list',
+            cancelButtonLabel: 'View alert list',
+            confirmButtonLabel: 'Add another alert',
         },
         addAlertError: {
             confirmationTitle: 'An error occurred while saving',
