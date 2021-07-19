@@ -99,6 +99,12 @@ const useStyles2 = makeStyles(
                 backgroundColor: theme.palette.accent.dark,
             },
         },
+        startDate: {
+            whiteSpace: 'pre', // makes moment format able to take a carriage return
+        },
+        endDate: {
+            whiteSpace: 'pre',
+        },
     }),
     { withTheme: true },
 );
@@ -208,11 +214,11 @@ export default function AlertsListAsTable(rows, alertsLoading, history, hasFoote
                                             )}
                                         </div>
                                     </TableCell>
-                                    <TableCell component="td" align="center" className="startDate">
-                                        {alert.startDate}
+                                    <TableCell component="td" align="center" className={classes.startDate}>
+                                        <span title={alert.startDateLong}>{alert.startDateDisplay}</span>
                                     </TableCell>
-                                    <TableCell component="td" align="center" className="endDate">
-                                        {alert.endDate}
+                                    <TableCell component="td" align="center" className={classes.endDate}>
+                                        <span title={alert.endDateLong}>{alert.endDateDisplay}</span>
                                     </TableCell>
                                     <TableCell component="td">
                                         <Button

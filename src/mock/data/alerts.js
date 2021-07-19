@@ -449,8 +449,8 @@ export const alertList = [
         "urgent": 0
     }, {
         "id": "0aa12a30-996a-11eb-b009-3f6ded4fdb35",
-        "start": "2031-07-04 02:00:55",
-        "end": "2031-07-04 03:00:55",
+        "start": "2031-09-04 02:00:55",
+        "end": "2032-09-04 03:00:55",
         "title": "Library Search maintenance tonight (2am - 3am AEST):",
         "body": "There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.",
         "urgent": 0
@@ -576,7 +576,7 @@ export const alertList = [
     }, {
         "id": "d23f2e10-d7d6-11eb-a928-71f3ef9d35d9",
         "start": "2021-06-28 16:02:54",
-        "end": "2021-06-29 15:01:54",
+        "end": "2021-06-29 15:00:54",
         "title": "Face masks in the Library:",
         "body": "in line with Queensland Government directions, you must wear a face mask when visiting UQ libraries. These requirements will be reviewed on Tuesday 13 July 2021.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
         "urgent": 0

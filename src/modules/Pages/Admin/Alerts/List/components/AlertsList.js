@@ -55,14 +55,29 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         !!alerts &&
             alerts.length > 0 &&
             alerts.forEach(alert => {
-                alert.startDate =
-                    moment(alert.start).format('m') === '0'
-                        ? moment(alert.start).format('dddd D/MMM/YYYY ha')
-                        : moment(alert.start).format('dddd D/MMM/YYYY h.mma');
-                alert.endDate =
-                    moment(alert.end).format('m') === '0'
-                        ? moment(alert.end).format('dddd D/MMM/YYYY ha')
-                        : moment(alert.end).format('dddd D/MMM/YYYY h.mma');
+                const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
+                const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
+                const currentDateOnTheHour = pastDateOnTheHour.replace(' YYYY', '');
+                const currentDateDuringTheHour = pastDateDuringHour.replace(' YYYY', '');
+                if (moment(alert.end).isBefore(moment())) {
+                    alert.startDateDisplay = moment(alert.start).format(
+                        moment(alert.start).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
+                    );
+                    alert.endDateDisplay = moment(alert.end).format(
+                        moment(alert.end).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
+                    );
+                } else {
+                    alert.startDateDisplay = moment(alert.start).format(
+                        moment(alert.start).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
+                    );
+                    alert.endDateDisplay = moment(alert.end).format(
+                        moment(alert.end).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
+                    );
+                }
+                // we provide a mousover with the complete data for clarity
+                const fullDateFormat = 'dddd D MMMM YYYY h.mma';
+                alert.startDateLong = moment(alert.start).format(fullDateFormat);
+                alert.endDateLong = moment(alert.end).format(fullDateFormat);
                 // Strip markdown from the body
                 const linkRegex = alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
                 alert.message = alert.body;

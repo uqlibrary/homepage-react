@@ -81,13 +81,24 @@ describe('Alerts Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
         });
 
-        it('Works as expected', () => {
+        it('has alert dates formatted as expected', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
+            // non-past dates dont have the year' time is formatted as expected
             cy.get('tr[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').within(() => {
                 cy.get('td.alertText h4').contains('Important update:');
-                cy.get('td.startDate').contains('Tuesday 29/Jun/2021 3pm'); // check formating
-                cy.get('td.endDate').contains('Wednesday 2/Jul/2031 6.30pm');
+                cy.get('td:nth-child(3)').contains('Tue 29 Jun');
+                cy.get('td:nth-child(3)').contains('3pm');
+                cy.get('td:nth-child(4)').contains('Wed 2 Jul');
+                cy.get('td:nth-child(4)').contains('6.30pm');
+            });
+            // past dates do have the year and a line break
+            cy.get('tr[data-testid="alert-list-row-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"').within(() => {
+                cy.get('td.alertText h4').contains('Face masks in the Library:');
+                cy.get('td:nth-child(3)').contains('Mon 28 Jun 2021');
+                cy.get('td:nth-child(3)').contains('4.02pm');
+                cy.get('td:nth-child(4)').contains('Tue 29 Jun 2021');
+                cy.get('td:nth-child(4)').contains('3pm');
             });
         });
     });
