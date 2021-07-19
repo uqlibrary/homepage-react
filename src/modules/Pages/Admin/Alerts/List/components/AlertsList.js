@@ -100,7 +100,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                 <section aria-live="assertive">
                     <StandardCard title="System temporarily unavailable" noPadding>
                         <Grid container>
-                            <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
+                            <Grid item xs={12} data-testid="admin-alerts-list-error" className={classes.pageLayout}>
                                 <p>
                                     We're working on the issue and will have service restored as soon as possible.
                                     Please try again later.
@@ -125,18 +125,21 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                     <AlertHelpModal actions={actions} showAddButton history={history} />
                     <StandardCard title="All alerts" noPadding>
                         <Grid container>
-                            <Grid item xs={12} data-testid="admin-alerts-list" className={classes.pageLayout}>
+                            <Grid
+                                item
+                                xs={12}
+                                id="admin-alerts-list"
+                                data-testid="admin-alerts-list"
+                                className={classes.pageLayout}
+                            >
                                 <div data-testid="admin-alerts-list-current-list">
-                                    <h3>Current alerts</h3>
-                                    {AlertsListAsTable(currentAlerts, alertsLoading, history)}
+                                    {AlertsListAsTable(currentAlerts, 'Current alerts', alertsLoading, history)}
                                 </div>
                                 <div data-testid="admin-alerts-list-future-list">
-                                    <h3>Scheduled alerts</h3>
-                                    {AlertsListAsTable(futureAlerts, alertsLoading, history)}
+                                    {AlertsListAsTable(futureAlerts, 'Scheduled alerts', alertsLoading, history)}
                                 </div>
                                 <div data-testid="admin-alerts-list-past-list">
-                                    <h3>Past alerts</h3>
-                                    {AlertsListAsTable(pastAlerts, alertsLoading, history, true)}
+                                    {AlertsListAsTable(pastAlerts, 'Past alerts', alertsLoading, history, true)}
                                 </div>
                             </Grid>
                         </Grid>

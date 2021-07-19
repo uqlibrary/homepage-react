@@ -15,6 +15,7 @@ export default {
                 Alerts are listed on the main page and are split into three tables: "Current Alerts", "Scheduled Alerts"
                 and "Past Alerts".
             </p>
+            <p>Full dates can be seen by mousing over the short date display.</p>
 
             <h2 id="adding-alert" data-testid="admin-alerts-help-example">
                 Adding an alert
@@ -103,6 +104,20 @@ export default {
         addAlertError: {
             confirmationTitle: 'An error occurred while saving',
             confirmButtonLabel: 'OK',
+        },
+    },
+    listPage: {
+        confirmDelete: {
+            confirmationTitle: 'Remove [N] alerts?',
+            confirmationMessage: (
+                <div>
+                    Are you sure you want to remove the selected alerts?
+                    <br />
+                    Removed alerts cannot be brought back.
+                </div>
+            ),
+            cancelButtonLabel: 'Cancel',
+            confirmButtonLabel: 'Yes',
         },
     },
 };

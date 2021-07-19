@@ -101,6 +101,35 @@ describe('Alerts Admin Pages', () => {
                 cy.get('td:nth-child(4)').contains('3pm');
             });
         });
+
+        it('the user can select an alert to delete', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            // select one alert and every thing looks right
+            cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
+            cy.get('[data-testid="headerRow-current"] span').should('not.exist');
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
+            cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgb(35, 119, 203)');
+            cy.get('[data-testid="headerRow-current"] span span').contains('1 alert selected');
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').uncheck();
+            cy.get('[data-testid="headerRow-current"] span').should('not.exist');
+
+            // select two alerts and every thing looks right
+            cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
+            cy.get('[data-testid="alert-list-item-checkbox-232d6880-996a-11eb-8a79-e7fddae87baf"]').check();
+            cy.get('[data-testid="headerRow-scheduled"] span span').contains('2 alerts selected');
+
+            // back down to one alert selected and every thing looks right
+            cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').uncheck();
+            cy.get('[data-testid="headerRow-scheduled"] span span').contains('1 alert selected');
+
+            // click the delete button and the delete dialog appears
+            cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
+            cy.get('[data-testid="cancel-alert-delete-dialog"').should('exist');
+            cy.get('[data-testid="cancel-alert-delete-dialog"').contains('Cancel');
+            cy.get('[data-testid="cancel-alert-delete-dialog"').click();
+            cy.get('[data-testid="cancel-alert-delete-dialog"').should('not.exist');
+        });
     });
     context('Alert Admin Add page', () => {
         it('displays an "unauthorised" page to public users', () => {
