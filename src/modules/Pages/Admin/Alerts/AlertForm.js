@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useDispatch } from 'react-redux';
 
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -52,7 +51,6 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     const classes = useStyles();
     console.log('AlertForm: alert = ', alert);
     console.log('AlertForm: alertStatus = ', alertStatus);
-    const dispatch = useDispatch();
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false);
@@ -113,9 +111,10 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         clearForm();
 
         // force the list page to reload after save
-        () => dispatch(actions.clearAlerts());
+        actions.clearAlerts();
 
-        () => dispatch(actions.clearAlert());
+        // make the form clear for the next use
+        actions.clearAlert();
 
         history.push('/admin/alerts');
     };
