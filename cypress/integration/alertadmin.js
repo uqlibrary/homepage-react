@@ -81,12 +81,36 @@ describe('Alerts Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
         });
 
+        it('has a working Edit button on the List page', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'be.visible',
+            );
+            cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245',
+            );
+
+            // back to the list page
+            cy.get('[data-testid="admin-alerts-form-button-cancel"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+
+            // this alert doesnt exist in mock
+            cy.get('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').click();
+            cy.get('button[data-testid="confirm-alert-error"]').should('exist');
+            // the ok button on the error returns to the list page
+            cy.get('button[data-testid="confirm-alert-error"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+        });
+
         it('has alert dates formatted as expected', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             // non-past dates dont have the year' time is formatted as expected
             cy.get('tr[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').within(() => {
-                cy.get('td.alertText h4').contains('Important update:');
+                cy.get('td.alertText h4').contains('Example alert:');
                 cy.get('td:nth-child(3)').contains('Tue 29 Jun');
                 cy.get('td:nth-child(3)').contains('3pm');
                 cy.get('td:nth-child(4)').contains('Wed 2 Jul');
@@ -285,8 +309,9 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
         });
         it('buttons are disabled unless the form is valid', () => {
-            function buttonsAreDisabled() {
-                cy.get('[data-testid="admin-alerts-form-button-preview"]').should('be.disabled');
+            function PreviewButtonAvailableAndSaveDisabled() {
+                // preview button is always available
+                cy.get('[data-testid="admin-alerts-form-button-preview"]').should('not.be.disabled');
                 cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             }
 
@@ -297,23 +322,23 @@ describe('Alerts Admin Pages', () => {
 
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
-            buttonsAreDisabled();
+            PreviewButtonAvailableAndSaveDisabled();
 
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 5');
-            buttonsAreDisabled();
+            PreviewButtonAvailableAndSaveDisabled();
 
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 5');
             buttonsAreNOTDisabled();
 
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
-            buttonsAreDisabled();
+            PreviewButtonAvailableAndSaveDisabled();
 
             cy.get('[data-testid="admin-alerts-form-link-title"] input').type('read more');
-            buttonsAreDisabled();
+            PreviewButtonAvailableAndSaveDisabled();
 
             // start an url, but button are disabled while it isnt valid
             cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http');
-            buttonsAreDisabled();
+            PreviewButtonAvailableAndSaveDisabled();
 
             // complete to a valid url and the buttons are enabled
             cy.get('[data-testid="admin-alerts-form-link-url"] input').type('://example.com');

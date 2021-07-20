@@ -255,30 +255,39 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         event && event.preventDefault();
     };
 
-    const addAlertError = {
+    const errorLocale = {
         ...locale.addForm.addAlertError,
-        confirmationTitle: `An error occurred while saving: ${alertError}`,
+        confirmationTitle:
+            defaults.type === 'add' ? `An error occurred while saving: ${alertError}` : 'We could not load this alert',
     };
 
     const confirmationLocale =
         defaults.type === 'add' ? locale.addForm.addAlertConfirmation : locale.editForm.editAlertConfirmation;
 
+    const handleConfirmation = () => {
+        if (!!alertError && defaults.type !== 'add') {
+            // if the edited alert doesnt exist the ok button returns to the list page
+            navigateToListPage();
+        } else if (!!alertError) {
+            // On error on add, the button just closes the notification dialog,
+            // allowing the user to correct and try again
+            hideConfirmation(); // form remains loaded
+        } else {
+            clearForm();
+        }
+    };
+
     return (
         <Fragment>
             <form onSubmit={_handleDefaultSubmit}>
                 <ConfirmationBox
-                    confirmationBoxId="alert-save-succeeded"
-                    onAction={
-                        // on error, the main button just closes the notification dialog,
-                        // allowing the user to correct and try again
-                        // on success, the main button starts a new 'add' form
-                        !!alertError ? hideConfirmation : clearForm
-                    }
+                    confirmationBoxId={alertStatus === 'error' ? 'alert-error' : 'alert-save-succeeded'}
+                    onAction={handleConfirmation}
                     onClose={hideConfirmation}
                     onCancelAction={() => navigateToListPage()}
                     hideCancelButton={alertStatus === 'error' || defaults.type !== 'add'}
                     isOpen={isOpen}
-                    locale={alertStatus === 'error' ? addAlertError : confirmationLocale}
+                    locale={alertStatus === 'error' ? errorLocale : confirmationLocale}
                 />
                 <StandardCard help={locale.addForm.help}>
                     <Grid container spacing={2}>
@@ -445,7 +454,6 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                                 data-testid="admin-alerts-form-button-preview"
                                 color="secondary"
                                 children="Preview"
-                                disabled={!isFormValid}
                                 onClick={displayPreview}
                                 style={{ marginRight: '0.5rem' }}
                             />

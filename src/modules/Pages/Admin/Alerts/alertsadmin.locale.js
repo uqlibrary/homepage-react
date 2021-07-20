@@ -105,6 +105,10 @@ export default {
             confirmationTitle: 'An error occurred while saving',
             confirmButtonLabel: 'OK',
         },
+        editAlertError: {
+            confirmationTitle: 'We could not load this alert',
+            confirmButtonLabel: 'OK',
+        },
     },
     listPage: {
         confirmDelete: {
