@@ -173,6 +173,9 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
 
     const navigateToEditForm = alertid => {
         history.push(`/admin/alerts/edit/${alertid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const handleCheckboxChange = e => {

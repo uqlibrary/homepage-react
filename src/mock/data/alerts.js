@@ -437,8 +437,8 @@ export const alertList = [
         "id": "dc64fde0-9969-11eb-8dc3-1d415ccc50ec",
         "start": "2021-06-06 00:45:34",
         "end": "2021-06-06 05:00:34",
-        "title": "Library Search maintenance tonight (1am - 5am AEST):",
-        "body": "There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.",
+        "title": "Sample alert 2:",
+        "body": "Has mock data.",
         "urgent": 0
     }, {
         "id": "f41294e0-9969-11eb-a862-4f8fe8f026ce",

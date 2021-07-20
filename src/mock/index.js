@@ -155,6 +155,19 @@ mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' })
         },
     ]),
 );
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec',
+            start: '2021-06-06 00:45:34',
+            end: '2021-06-06 05:00:34',
+            title: 'Sample alert 2:',
+            body: 'Has mock data.',
+            urgent: 0,
+        },
+    ]),
+);
 // mock.onAny(routes.ALERT_SAVE_API('id').apiUrl).reply(withDelay([500, {}]));
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(

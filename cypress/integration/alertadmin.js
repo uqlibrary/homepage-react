@@ -103,6 +103,14 @@ describe('Alerts Admin Pages', () => {
             // the ok button on the error returns to the list page
             cy.get('button[data-testid="confirm-alert-error"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+
+            // a alert form way down the list loads so that the form is in view
+            cy.get('button[data-testid="alert-list-item-edit-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec',
+            );
+            cy.isInViewport('[data-testid="StandardPage"]');
         });
 
         it('has alert dates formatted as expected', () => {
