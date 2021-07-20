@@ -396,6 +396,8 @@ describe('Alerts Admin Pages', () => {
             cy.wait(500);
             cy.get('[data-testid="confirm-dialogbox"] h2').contains('The alert has been updated');
             // can't do much checking here that it saves properly
+            cy.get('button[data-testid="confirm-alert-save-succeeded"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('has a working Help button on the Edit page', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');

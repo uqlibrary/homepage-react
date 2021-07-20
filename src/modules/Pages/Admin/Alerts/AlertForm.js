@@ -265,8 +265,8 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         defaults.type === 'add' ? locale.addForm.addAlertConfirmation : locale.editForm.editAlertConfirmation;
 
     const handleConfirmation = () => {
-        if (!!alertError && defaults.type !== 'add') {
-            // if the edited alert doesnt exist the ok button returns to the list page
+        if (defaults.type !== 'add') {
+            // the action on edit page is always 'return to list'
             navigateToListPage();
         } else if (!!alertError) {
             // On error on add, the button just closes the notification dialog,
