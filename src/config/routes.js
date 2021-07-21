@@ -5,7 +5,6 @@ export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.libra
 
 export const pathConfig = {
     index: '/',
-    secureCollection: '/collection',
     courseresources: '/courseresources',
     paymentReceipt: '/payment-receipt',
     admin: {
@@ -44,13 +43,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.PaymentReceipt,
             exact: true,
             pageTitle: locale.pages.paymentReceipt.title,
-        },
-        {
-            // some collections are public and some arent - let the app decide
-            path: pathConfig.secureCollection,
-            component: components.SecureCollection,
-            exact: true,
-            pageTitle: locale.pages.secureCollection.title,
         },
         {
             path: pathConfig.bookExamBooth,
