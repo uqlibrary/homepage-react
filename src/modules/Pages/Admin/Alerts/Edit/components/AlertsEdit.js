@@ -28,6 +28,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
     console.log('AlertsEdit props alert = ', alert);
     console.log('AlertsEdit props alertError = ', alertError);
     console.log('AlertsEdit props alertStatus = ', alertStatus);
+    console.log('AlertsEdit props history = ', history);
 
     React.useEffect(() => {
         console.log('useEffect alertid = ', alertid);
@@ -40,7 +41,11 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
     console.log('alert = ', alert);
 
     if (alertStatus === 'loading') {
-        return <InlineLoader message="Loading" />;
+        return (
+            <div style={{ minHeight: 600 }}>
+                <InlineLoader message="Loading" />
+            </div>
+        );
     }
 
     // Strip markdown from the body

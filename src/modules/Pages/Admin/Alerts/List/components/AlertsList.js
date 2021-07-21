@@ -6,9 +6,9 @@ import moment from 'moment';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
+// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-
 import AlertsListAsTable from './AlertsListAsTable';
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 
@@ -36,13 +36,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
     const [currentAlerts, setCurrentAlerts] = useState([]);
     const [futureAlerts, setFutureAlerts] = useState([]);
     const [pastAlerts, setPastAlerts] = useState([]);
-
-    let displayPanel = 'error';
-    if (!!alertsError) {
-        displayPanel = 'error';
-    } else {
-        displayPanel = 'listall';
-    }
 
     React.useEffect(() => {
         if (!alertsError && !alertsLoading && !alerts) {
@@ -94,7 +87,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
             });
     }, [alerts]);
 
-    function displayApiErrorPanel() {
+    if (!!alertsError) {
         return (
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
@@ -113,43 +106,47 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         );
     }
 
-    function displayAllAlerts() {
-        return (
-            <StandardPage title="Alerts Management">
-                <section aria-live="assertive">
+    // if (!alertsError && !!alertsLoading) {
+    //     return (
+    //         <div style={{ minHeight: 600 }}>
+    //             <InlineLoader message="Loading" />
+    //         </div>
+    //     );
+    // }
+
+    return (
+        <StandardPage title="Alerts Management">
+            <section aria-live="assertive">
+                <Grid container>
+                    <Grid item xs={12} className={classes.mobileOnly}>
+                        <p>Mobile? You might want to turn your phone sideways!</p>
+                    </Grid>
+                </Grid>
+                <AlertHelpModal actions={actions} history={history} showAddButton />
+                <StandardCard title="All alerts" noPadding>
                     <Grid container>
-                        <Grid item xs={12} className={classes.mobileOnly}>
-                            <p>Mobile? You might want to turn your phone sideways!</p>
+                        <Grid
+                            item
+                            xs={12}
+                            id="admin-alerts-list"
+                            data-testid="admin-alerts-list"
+                            className={classes.pageLayout}
+                        >
+                            <div data-testid="admin-alerts-list-current-list">
+                                {AlertsListAsTable(currentAlerts, 'Current alerts', alertsLoading, history)}
+                            </div>
+                            <div data-testid="admin-alerts-list-future-list">
+                                {AlertsListAsTable(futureAlerts, 'Scheduled alerts', alertsLoading, history)}
+                            </div>
+                            <div data-testid="admin-alerts-list-past-list">
+                                {AlertsListAsTable(pastAlerts, 'Past alerts', alertsLoading, history, true)}
+                            </div>
                         </Grid>
                     </Grid>
-                    <AlertHelpModal actions={actions} showAddButton history={history} />
-                    <StandardCard title="All alerts" noPadding>
-                        <Grid container>
-                            <Grid
-                                item
-                                xs={12}
-                                id="admin-alerts-list"
-                                data-testid="admin-alerts-list"
-                                className={classes.pageLayout}
-                            >
-                                <div data-testid="admin-alerts-list-current-list">
-                                    {AlertsListAsTable(currentAlerts, 'Current alerts', alertsLoading, history)}
-                                </div>
-                                <div data-testid="admin-alerts-list-future-list">
-                                    {AlertsListAsTable(futureAlerts, 'Scheduled alerts', alertsLoading, history)}
-                                </div>
-                                <div data-testid="admin-alerts-list-past-list">
-                                    {AlertsListAsTable(pastAlerts, 'Past alerts', alertsLoading, history, true)}
-                                </div>
-                            </Grid>
-                        </Grid>
-                    </StandardCard>
-                </section>
-            </StandardPage>
-        );
-    }
-
-    return displayPanel === 'error' ? displayApiErrorPanel() : displayAllAlerts();
+                </StandardCard>
+            </section>
+        </StandardPage>
+    );
 };
 
 AlertsList.propTypes = {

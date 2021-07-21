@@ -43,7 +43,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ actions, showAddButton = false, history }) => {
+export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);

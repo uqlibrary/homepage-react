@@ -121,7 +121,7 @@ export default {
                 </div>
             ),
             cancelButtonLabel: 'Cancel',
-            confirmButtonLabel: 'Yes',
+            confirmButtonLabel: 'Proceed',
         },
     },
 };

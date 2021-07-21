@@ -117,6 +117,9 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         actions.clearAlert();
 
         history.push('/admin/alerts');
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const getBody = values => {
@@ -165,6 +168,13 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         };
         console.log('will save ', newValues);
         defaults.type === 'add' ? actions.createAlert(newValues) : actions.saveAlertChange(newValues);
+
+        // // force to the top of the page, because otherwise it looks a bit weird
+        window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+        });
     };
 
     const displayPreview = () => {
@@ -260,9 +270,6 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
             defaults.type === 'add' ? `An error occurred while saving: ${alertError}` : 'We could not load this alert',
     };
 
-    const confirmationLocale =
-        defaults.type === 'add' ? locale.addForm.addAlertConfirmation : locale.editForm.editAlertConfirmation;
-
     const handleConfirmation = () => {
         if (defaults.type !== 'add') {
             // the action on edit page is always 'return to list'
@@ -279,15 +286,36 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     return (
         <Fragment>
             <form onSubmit={_handleDefaultSubmit}>
-                <ConfirmationBox
-                    confirmationBoxId={alertStatus === 'error' ? 'alert-error' : 'alert-save-succeeded'}
-                    onAction={handleConfirmation}
-                    onClose={hideConfirmation}
-                    onCancelAction={() => navigateToListPage()}
-                    hideCancelButton={alertStatus === 'error' || defaults.type !== 'add'}
-                    isOpen={isOpen}
-                    locale={alertStatus === 'error' ? errorLocale : confirmationLocale}
-                />
+                {alertStatus === 'error' && (
+                    <ConfirmationBox
+                        confirmationBoxId="alert-error"
+                        onAction={() => navigateToListPage()}
+                        onClose={hideConfirmation}
+                        hideCancelButton
+                        isOpen={isOpen}
+                        locale={errorLocale}
+                    />
+                )}
+                {alertStatus !== 'error' && defaults.type !== 'add' && (
+                    <ConfirmationBox
+                        confirmationBoxId="alert-edit-save-succeeded"
+                        onAction={handleConfirmation}
+                        onClose={hideConfirmation}
+                        hideCancelButton
+                        isOpen={isOpen}
+                        locale={locale.editForm.editAlertConfirmation}
+                    />
+                )}
+                {alertStatus !== 'error' && defaults.type === 'add' && (
+                    <ConfirmationBox
+                        confirmationBoxId="alert-add-save-succeeded"
+                        onAction={handleConfirmation}
+                        onClose={hideConfirmation}
+                        onCancelAction={() => navigateToListPage()}
+                        isOpen={isOpen}
+                        locale={locale.addForm.addAlertConfirmation}
+                    />
+                )}
                 <StandardCard help={locale.addForm.help}>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>

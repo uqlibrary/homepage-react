@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -164,9 +164,10 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
                     marginRight: 20,
                     marginBottom: 6,
                     opacity: 0.3,
+                    height: 200,
                 }}
             >
-                <CircularProgress color="primary" size={20} data-testid="loading-admin-alerts" />
+                <InlineLoader message="Loading" />
             </Grid>
         );
     }
