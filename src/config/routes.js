@@ -17,7 +17,6 @@ export const pathConfig = {
 // a duplicate list of routes for checking validity easily
 export const flattedPathConfig = [
     '/',
-    '/collection',
     '/courseresources',
     '/payment-receipt',
     '/admin/masquerade',
