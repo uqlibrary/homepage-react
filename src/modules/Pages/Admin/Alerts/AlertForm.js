@@ -56,14 +56,13 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     const [isFormValid, setFormValidity] = useState(false);
     const [showPreview, setPreviewOpen] = useState(false);
 
+    console.log('AlertForm: defaults = ', defaults);
+    const [values, setValues] = useState(defaults);
+
     const handlePreview = showPreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
         if (!alertWrapper) {
-            return;
-        }
-        /* istanbul ignore next */
-        if (!isFormValid) {
             return;
         }
 
@@ -72,9 +71,6 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
 
         setPreviewOpen(showPreview);
     };
-
-    console.log('AlertForm: defaults = ', defaults);
-    const [values, setValues] = useState(defaults);
 
     console.log('AlertForm defaults.type = ', defaults.type);
     console.log('AlertForm alert = ', alert);
@@ -179,7 +175,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
 
     const displayPreview = () => {
         const alertWrapper = document.getElementById('previewWrapper');
-        alertWrapper.innerHTML = '';
+        !!alertWrapper && (alertWrapper.innerHTML = '');
         if (!!showPreview) {
             handlePreview(false);
             return;
@@ -190,32 +186,35 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alert = document.createElement('uq-alert');
-        /* istanbul ignore else */
-        if (!!alert) {
-            alert.setAttribute('id', 'alert-preview');
-            alert.setAttribute('alerttitle', values.alertTitle);
-            alert.setAttribute('alerttype', !!values.urgent ? '1' : '0');
-            // when the alert body has the square bracket for 'permanent',
-            // that enclosed string is not accepted by setattribute
-            // something to do with XSS blocking for special char?
-            // so we have to handle it manually :(
-            if (!!values.permanentAlert) {
-                alert.setAttribute('alertmessage', values.body.replace('[permanent]', ''));
-                // manually remove the 'non-permanent' button
-                const changeMessage = setInterval(() => {
-                    // its a moment before it is available
-                    const alertShadowRoot = document.getElementById('alert-preview').shadowRoot;
-                    const closeButton = !!alertShadowRoot && alertShadowRoot.getElementById('alert-close');
-                    if (!!closeButton) {
-                        closeButton.remove();
-                        clearInterval(changeMessage);
-                    }
-                }, 100);
-            } else {
-                alert.setAttribute('alertmessage', values.body);
-            }
-            alertWrapper.appendChild(alert);
+        /* istanbul ignore next */
+        if (!alert) {
+            return;
         }
+        alert.setAttribute('id', 'alert-preview');
+        alert.setAttribute('alerttitle', values.alertTitle);
+        alert.setAttribute('alerttype', !!values.urgent ? '1' : '0');
+        const body = (!!values.body && getBody(values)) || getBody(defaults);
+        // when the alert body has the square bracket for 'permanent',
+        // that enclosed string is not accepted by setattribute
+        // something to do with XSS blocking for special char?
+        // so we have to handle it manually :(
+        if (!!values.permanentAlert) {
+            alert.setAttribute('alertmessage', body.replace('[permanent]', ''));
+            // manually remove the 'non-permanent' button
+            const changeMessage = setInterval(() => {
+                // its a moment before it is available
+                const preview = document.getElementById('alert-preview');
+                const previewShadowRoot = !!preview && preview.shadowRoot;
+                const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
+                if (!!closeButton) {
+                    closeButton.remove();
+                    clearInterval(changeMessage);
+                }
+            }, 100);
+        } else {
+            alert.setAttribute('alertmessage', body);
+        }
+        alertWrapper.appendChild(alert);
     };
 
     const isValidUrl = testurl => {

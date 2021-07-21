@@ -29,7 +29,6 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
         startDate: defaultStartTime,
         endDate: defaultEndTime,
         alertTitle: '',
-        body: '',
         enteredbody: '',
         linkRequired: false,
         urgent: false,

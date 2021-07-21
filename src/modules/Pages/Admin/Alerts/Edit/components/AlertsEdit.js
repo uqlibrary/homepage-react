@@ -66,7 +66,6 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
         startDate: alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '',
         endDate: alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '',
         alertTitle: alert?.title || '',
-        body: '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
         urgent: alert?.urgent === '1' || false,

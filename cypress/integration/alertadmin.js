@@ -189,6 +189,26 @@ describe('Alerts Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('can show a preview of the initial blank alert', () => {
+            // this one is more about making sure nothing bad happens rather than checking it looks ok
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-title"]').should('have.text', 'No title supplied');
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'No message supplied');
+                    cy.get('[data-testid="alert-close"]').should('exist');
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-close"] svg').should(
+                        'have.attr',
+                        'aria-label',
+                        'Dismiss this alert for 24 hours',
+                    );
+                });
+        });
         it('can show a preview of an urgent non-permanent alert without link', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
@@ -416,7 +436,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-help-button"]').click();
             cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
         });
-        it('can show a preview', () => {
+        it('can show a preview of a change', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
@@ -432,6 +452,35 @@ describe('Alerts Admin Pages', () => {
                 .within(() => {
                     cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
                     cy.get('[data-testid="alert-title"]').should('have.text', 'Updated alert');
+                });
+            // user can toggle the Preview
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+        });
+        it('can show a preview of the original alert', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-title"]').contains('Example alert:');
+                    cy.get('[data-testid="alert-message"]').contains('This alert can be edited in mock.');
+                    cy.get('[data-testid="alert-alert-preview-action-button"]').contains(
+                        'UQ community COVID-19 advice',
+                    );
+                    // this version of reusable isnt quite live yet
+                    // cy.get('[data-testid="alert-alert-preview-action-button"]').should(
+                    //     'have.attr',
+                    //     'href',
+                    //     'https://about.uq.edu.au/coronavirus',
+                    // );
                 });
             // user can toggle the Preview
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
