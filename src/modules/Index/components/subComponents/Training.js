@@ -203,6 +203,17 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 sameElse: 'D MMMM [at] h.mma',
             })
             .replace('.00', '');
+    const bookingText = ev => {
+        let placesRemainingText = 'Booking is not required';
+        if (ev.bookingSettings !== null) {
+            placesRemainingText = 'Event is fully booked';
+
+            if (ev.bookingSettings.placesRemaining > 0) {
+                placesRemainingText = 'Places still available';
+            }
+        }
+        return placesRemainingText;
+    };
     // there is something strange happening that sometimes the api sends us an object
     // convert to an array when it happens
     const standardisedTrainingEvents =
@@ -211,19 +222,6 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                   return trainingEvents[key];
               })
             : trainingEvents;
-    !!standardisedTrainingEvents &&
-        standardisedTrainingEvents.length > 0 &&
-        standardisedTrainingEvents.map(event => {
-            let placesRemainingText = 'Booking is not required';
-            if (event.bookingSettings !== null) {
-                placesRemainingText = 'Event is fully booked';
-
-                if (event.bookingSettings.placesRemaining > 0) {
-                    placesRemainingText = 'Places still available';
-                }
-            }
-            event.placesRemainingText = placesRemainingText;
-        });
     return (
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
@@ -349,7 +347,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={classes.detailMeta}>
-                                            {eventDetail.placesRemainingText}
+                                            {bookingText(eventDetail)}
                                         </Grid>
                                     </Grid>
                                 </Grid>
