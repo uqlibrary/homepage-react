@@ -32,6 +32,16 @@ describe('alert reducer', () => {
         });
     });
 
+    it('should set alerts value when successfully saved', () => {
+        const test = alertReducer(emptyState, { type: actions.ALERT_DELETED, payload: [] });
+        expect(test).toEqual({
+            ...emptyState,
+            alert: [],
+            alertStatus: 'deleted',
+            alertError: false,
+        });
+    });
+
     it('should handle a failing Alert API call', () => {
         const test = alertReducer(emptyState, {
             type: actions.ALERT_FAILED,

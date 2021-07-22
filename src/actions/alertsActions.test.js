@@ -2,7 +2,15 @@
 
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
-import { loadAllAlerts, clearAlerts, loadAnAlert, clearAnAlert, createAlert, saveAlertChange } from './alertsActions';
+import {
+    clearAlerts,
+    clearAnAlert,
+    createAlert,
+    deleteAlert,
+    loadAllAlerts,
+    loadAnAlert,
+    saveAlertChange,
+} from './alertsActions';
 
 jest.mock('raven-js');
 
@@ -140,6 +148,19 @@ describe('Alert list actions', () => {
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
+        it('dispatches expected actions when alert delete call fails', async () => {
+            mockApi.onAny(repositories.routes.ALERT_DELETE_API('id').apiUrl).reply(500);
+
+            const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
+
+            await mockActionsStore.dispatch(
+                deleteAlert({
+                    id: 'e895b270-d62b-11e7-954e-57c2cc19d151',
+                }),
+            );
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
         it('handles an alert creation request', async () => {
             mockApi.onAny(repositories.routes.ALERT_CREATE_API().apiUrl).reply(200, {
                 id: '88888-d62b-11e7-954e-57c2cc19d151',
@@ -166,6 +187,21 @@ describe('Alert list actions', () => {
                 saveAlertChange({
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
                     ...newAlertRecord,
+                }),
+            );
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles an alert delete request', async () => {
+            mockApi
+                .onAny(repositories.routes.ALERT_DELETE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
+                .reply(200, []);
+
+            const expectedActions = [actions.ALERT_LOADING, actions.ALERT_DELETED];
+
+            await mockActionsStore.dispatch(
+                deleteAlert({
+                    id: '88888-d62b-11e7-954e-57c2cc19d151',
                 }),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

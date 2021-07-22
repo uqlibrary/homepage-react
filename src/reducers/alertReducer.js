@@ -27,6 +27,13 @@ const handlers = {
         alert: action.payload,
         alertStatus: 'saved',
     }),
+    [actions.ALERT_DELETED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        alertError: false,
+        alert: action.payload,
+        alertStatus: 'deleted',
+    }),
     [actions.ALERT_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
@@ -43,6 +50,15 @@ export default function alertReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('alertReducer: ', action.type, ' - state = ', state, '; action = ', action);
+    console.log(
+        'alertReducer: ',
+        action.type,
+        ' - state = ',
+        state,
+        '; action = ',
+        action,
+        '; handler = ',
+        handler(state, action),
+    );
     return handler(state, action);
 }

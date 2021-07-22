@@ -131,3 +131,5 @@ export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}?noCache=1` })
 export const ALERT_CREATE_API = () => ({ apiUrl: 'alert' });
 
 export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
+
+export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });

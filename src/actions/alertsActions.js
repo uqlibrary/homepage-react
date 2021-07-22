@@ -1,6 +1,12 @@
 import * as actions from './actionTypes';
-import { get, post } from 'repositories/generic';
-import { ALERT_SAVE_API, ALERT_CREATE_API, ALERTS_ALL_API, ALERT_BY_ID_API } from 'repositories/routes';
+import { get, post, destroy } from 'repositories/generic';
+import {
+    ALERT_SAVE_API,
+    ALERT_CREATE_API,
+    ALERTS_ALL_API,
+    ALERT_BY_ID_API,
+    ALERT_DELETE_API,
+} from 'repositories/routes';
 
 export function loadAllAlerts() {
     console.log('Loading Alerts');
@@ -60,6 +66,28 @@ export const saveAlertChange = request => {
             })
             .catch(error => {
                 console.log('saveAlertChange action error = ', error);
+                dispatch({
+                    type: actions.ALERT_FAILED,
+                    payload: error.message,
+                });
+            });
+    };
+};
+
+export const deleteAlert = request => {
+    return async dispatch => {
+        dispatch({ type: actions.ALERT_LOADING });
+        console.log('deleteAlert action, ALERT_DELETE_API() = ', ALERT_DELETE_API(request.id));
+        return destroy(ALERT_DELETE_API({ id: request.id }), request)
+            .then(data => {
+                console.log('deleteAlert action, returned data = ', data);
+                dispatch({
+                    type: actions.ALERT_DELETED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                console.log('deleteAlert action error = ', error);
                 dispatch({
                     type: actions.ALERT_FAILED,
                     payload: error.message,

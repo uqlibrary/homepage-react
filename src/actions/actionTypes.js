@@ -267,4 +267,5 @@ export const ALERT_FAILED = 'ALERT_FAILED';
 export const ALERT_LOADING = 'ALERT_LOADING';
 export const ALERT_LOADED = 'ALERT_LOADED';
 export const ALERT_SAVED = 'ALERT_SAVED';
+export const ALERT_DELETED = 'ALERT_DELETED';
 export const ALERT_CLEAR = 'ALERT_CLEAR';
