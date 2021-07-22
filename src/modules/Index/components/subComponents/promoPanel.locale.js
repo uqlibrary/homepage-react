@@ -1,50 +1,48 @@
+/* eslint-disable max-len */
+/* eslint-disable no-trailing-spaces */
 import React from 'react';
 
-import { AUTH_URL_LOGIN } from 'config';
-
-const loginUrl = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
+// import { AUTH_URL_LOGIN } from 'config';
+// const loginUrl = `${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`;
 
 export const promoPanel = {
     loggedout: {
-        title: 'New home page!',
+        title: 'Welcome to UQ!',
         content: (
             <div>
-                <span>We have updated the home page with a great new look and feel.</span>
                 <p>
-                    <a href={loginUrl}>Log in now</a> for a brand new personalised experience:
+                    <a href="https://life.uq.edu.au/orientation">
+                        Celebrate Orientation 
+                    </a>{' '}
+                    during O-Week (19-23 July) and Connect Week (26-30 July).
                 </p>
-                <ul>
-                    <li>Set your campus</li>
-                    <li>Top-up your print balance</li>
-                    <li>Get your course resources &amp; more</li>
-                </ul>
-                <span>
-                    <a href="https://web.library.uq.edu.au/blog/2021/01/discover-new-library-home-page">
-                        Discover the new home page!
-                    </a>
-                </span>
+                <p>Plan your orientation experience, attend great events, get to know your campus (and Library) and get connected to your UQ Life!</p>
+                <p>Get involved in{' '} 
+                    <a href="https://web.library.uq.edu.au/blog/2021/07/get-involved-o-week?utm_source=homepage&utm_medium=promobox&utm_campaign=orientation-sem2-21">   
+                       O-Week at the Library  
+                    </a>{' '}
+                    for library tours, training sessions, Koala Competition and more!
+                </p>
             </div>
         ),
     },
     loggedin: {
-        title: 'New home page!',
+        title: 'Welcome to UQ!',
         content: (
             <div>
-                <span>
-                    We have personalised your home page just for you. Your page may contain additional features
-                    depending on who you are.
-                </span>
-                <ul>
-                    <li>Get your course resources (UQ students)</li>
-                    <li>Set your campus to sort library hours &amp; computer availability</li>
-                    <li>Top-up your print balance</li>
-                    <li>Click the My Library button for links to library services</li>
-                </ul>
-                <span>
-                    <a href="https://web.library.uq.edu.au/blog/2021/01/discover-new-library-home-page">
-                        More about your new home page!
-                    </a>
-                </span>
+                <p>
+                    <a href="https://life.uq.edu.au/orientation">   
+                        Celebrate Orientation 
+                    </a>{' '}
+                    during O-Week (19-23 July) and Connect Week (26-30 July).
+                </p>
+                <p>Plan your orientation experience, attend great events, get to know your campus (and Library) and get connected to your UQ Life!</p>
+                <p>Get involved in{' '} 
+                    <a href="https://web.library.uq.edu.au/blog/2021/07/get-involved-o-week?utm_source=homepage&utm_medium=promobox&utm_campaign=orientation-sem2-21">   
+                       O-Week at the Library  
+                    </a>{' '}
+                    for library tours, training sessions, Koala Competition and more!
+                </p>
             </div>
         ),
     },

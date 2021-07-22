@@ -25,12 +25,12 @@ import {
     computerAvailability,
     incompleteNTROs,
     libHours,
+    libHoursNew,
     loans,
     possibleRecords,
     printBalance,
     training_object,
 } from './data/account';
-import { SECURE_COLLECTION_FILE_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -107,8 +107,6 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
 
 mock.onGet(routes.SPOTLIGHTS_API().apiUrl).reply(withDelay([200, [...spotlights]]));
 
-mock.onGet(routes.CHAT_API().apiUrl).reply(withDelay([200, { online: true }]));
-
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
@@ -123,32 +121,6 @@ mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleRecords]));
 
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
-
-mock.onGet(routes.ALERT_API().apiUrl).reply(
-    withDelay([
-        200,
-        [
-            {
-                id: 'e895b270-d62b-11e7-954e-57c2cc19d151',
-                start: '2022-10-12 09:58:02',
-                end: '2022-11-22 09:58:02',
-                title: 'Test urgent alert 2',
-                body:
-                    '[urgent link description](http://www.somelink.com) Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                urgent: 1,
-            },
-            {
-                id: 'b1739480-4ef4-11eb-91a1-6d3f07452c24',
-                start: '2022-01-12 00:00:00',
-                end: '2022-02-12 00:00:00',
-                title: 'The new Library home page is live!',
-                body:
-                    'However, you are seeing the previous version. You can refresh your browser cache to get the new home page now.[More about the new home page](https://web.library.uq.edu.au/blog/2021/01/discover-new-library-home-page)',
-                urgent: 0,
-            },
-        ],
-    ]),
-);
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailability]));
 // .reply(withDelay([500, {}]));
@@ -193,165 +165,6 @@ fetchMock.mock(
     'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
 );
-
-// secure collection checks
-
-// http://localhost:2020/collection?user=s1111111&collection=exams&file=phil1010.pdf
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'exams/phil1010.pdf' }).apiUrl).reply(() => {
-    return [
-        200,
-        {
-            url:
-                'https://files.library.uq.edu.au/secure/exams/phil1010.pdf?Expires=1621059344&Signature=long_string&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displaypanel: 'redirect',
-        },
-    ];
-});
-
-// http://localhost:2020/collection?user=s1111111&collection=collection&file=doesntExist
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
-    return [200, { response: 'No such collection' }];
-});
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'collection/doesntExist' }).apiUrl).reply(() => {
-    return [200, { response: 'No such collection' }];
-});
-
-// http://localhost:2020/collection?user=s1111111&collection=unknown&file=unknown
-// https://files.library.uq.edu.au/testlogin/unknown/unknown
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'unknown/unknown' }).apiUrl).reply(() => {
-    return [200, { response: 'No such collection' }];
-});
-// https://files.library.uq.edu.au/unknown/unknown
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'unknown/unknown' }).apiUrl).reply(() => {
-    return [200, { response: 'No such collection' }];
-});
-
-// http://localhost:2020/collection?user=s1111111&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
-// https://files.library.uq.edu.au/testlogin/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
-const apiUrl = routes.SECURE_COLLECTION_CHECK_API({
-    path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf',
-}).apiUrl;
-mock.onGet(apiUrl).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-// https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf
-mock.onGet(
-    routes.SECURE_COLLECTION_FILE_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf' })
-        .apiUrl,
-).reply(() => {
-    return [
-        200,
-        {
-            url:
-                'https://files.library.uq.edu.au/secure/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_281.pdf?Expires=1621059344&Signature=long_string&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displaypanel: 'redirect',
-        },
-    ];
-});
-
-// http://localhost:2020/collection?user=emcommunity&collection=exams&file=2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
-// https://files.library.uq.edu.au/testlogin/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
-mock.onGet(
-    routes.SECURE_COLLECTION_CHECK_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf' })
-        .apiUrl,
-).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-// https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf
-mock.onGet(
-    routes.SECURE_COLLECTION_FILE_API({ path: 'exams/2018/Semester_Two_Final_Examinations__2018_PHIL2011_EMuser.pdf' })
-        .apiUrl,
-).reply(() => {
-    return [200, { response: 'Invalid User' }];
-});
-
-// https://files.library.uq.edu.au/coursebank/111111111111111.pdf
-// http://localhost:2020/collection?user=s1111111&collection=coursebank&file=111111111111111.pdf
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'coursebank/111111111111111.pdf' }).apiUrl).reply(() => {
-    return [
-        200,
-        {
-            url:
-                'https://files.library.uq.edu.au/secure/coursebank/111111111111111.pdf?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displaypanel: 'statutoryCopyright',
-            acknowledgementRequired: true,
-        },
-    ];
-});
-
-// https://files.library.uq.edu.au/bomdata/abcdef.zip
-// http://localhost:2020/collection?user=s1111111&collection=bomdata&file=abcdef.zip
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'bomdata/abcdef.zip' }).apiUrl).reply(() => {
-    return [
-        200,
-        {
-            url:
-                'https://files.library.uq.edu.au/secure/bomdata/abcdef.zip?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displaypanel: 'commercialCopyright',
-            acknowledgementRequired: true,
-            hasList: true, // as yet unused
-        },
-    ];
-});
-
-// (list: http://ezproxy.library.uq.edu.au/loggedin/UQ/resources/thomson_classic_legal.html )
-// https://files.library.uq.edu.au/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf
-// http://localhost:2020/collection?user=s1111111&collection=thomson&file=classic_legal_texts/Thynne_Accountability_And_Control.pdf
-mock.onGet(
-    routes.SECURE_COLLECTION_CHECK_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' })
-        .apiUrl,
-).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-mock.onGet(
-    routes.SECURE_COLLECTION_FILE_API({ path: 'thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf' })
-        .apiUrl,
-).reply(() => {
-    return [
-        200,
-        {
-            url:
-                'https://files.library.uq.edu.au/secure/thomson/classic_legal_texts/Thynne_Accountability_And_Control.pdf?Expires=1621380128&Signature=longstring&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displaypanel: 'redirect',
-            acknowledgementRequired: false,
-            hasList: true, // as yet unused
-        },
-    ];
-});
-
-// a link without a file extension
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
-    return [200, { response: 'Login required' }];
-});
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'coursebank/2222222' }).apiUrl).reply(() => {
-    return [
-        200,
-        {
-            url:
-                'https://files.library.uq.edu.au/secure/coursebank/2222222?Expires=1621060025&Signature=longString&Key-Pair-Id=APKAJNDQICYW445PEOSA',
-            displaypanel: 'statutoryCopyright',
-            acknowledgementRequired: true,
-        },
-    ];
-});
-
-// http://localhost:2020/collection?user=s1111111&collection=api&file=fails
-mock.onGet(routes.SECURE_COLLECTION_CHECK_API({ path: 'api/fails' }).apiUrl).reply(() => {
-    return [500, {}];
-});
-mock.onGet(routes.SECURE_COLLECTION_FILE_API({ path: 'api/fails' }).apiUrl).reply(() => {
-    return [500, {}];
-});
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {

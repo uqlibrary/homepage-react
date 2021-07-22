@@ -15,7 +15,7 @@ export const NotFound = ({ account, accountLoading }) => {
     // if not known page, standard 404
     if (!isValidRoute) {
         return (
-            <StandardPage goBackFunc={() => history.back()} standardPageId="not-found" title={locale.notFound.title}>
+            <StandardPage standardPageId="not-found" title={locale.notFound.title}>
                 <ScriptTag
                     type="text/javascript"
                     src={`/404.js?requri=${window.location.pathname}&requester=${
@@ -29,13 +29,7 @@ export const NotFound = ({ account, accountLoading }) => {
     // the page must require admin to land here when they are logged in
     const isLoggedIn = accountLoading === false && !!account && !!account.id;
     if (isLoggedIn) {
-        return (
-            <StandardPage
-                goBackFunc={() => history.back()}
-                standardPageId="permission-denied"
-                {...locale.permissionDenied}
-            />
-        );
+        return <StandardPage standardPageId="permission-denied" {...locale.permissionDenied} />;
     }
 
     // the page must require them to be logged in to land here
@@ -49,13 +43,7 @@ export const NotFound = ({ account, accountLoading }) => {
         ) {
             window.location.assign(`${AUTH_URL_LOGIN}?return=${window.btoa(window.location.href)}`);
         }
-        return (
-            <StandardPage
-                goBackFunc={() => history.back()}
-                standardPageId="authentication-required"
-                {...locale.authenticationRequired}
-            />
-        );
+        return <StandardPage standardPageId="authentication-required" {...locale.authenticationRequired} />;
     }
 
     return <div className="waiting empty" />;

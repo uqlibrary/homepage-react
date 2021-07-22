@@ -13,7 +13,7 @@ import EventIcon from '@material-ui/icons/Event';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import { trainingLocale } from './Training.locale';
-const moment = require('moment');
+import moment from 'moment-timezone';
 import ContentLoader from 'react-content-loader';
 
 const MyLoader = props => (
@@ -191,6 +191,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         }, 300);
         setEventDetail(null);
     };
+    moment.tz.setDefault('Australia/Brisbane');
     const eventTime = eventTime =>
         moment(eventTime)
             .calendar(null, {
@@ -202,6 +203,17 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                 sameElse: 'D MMMM [at] h.mma',
             })
             .replace('.00', '');
+    const bookingText = ev => {
+        let placesRemainingText = 'Booking is not required';
+        if (ev.bookingSettings !== null) {
+            placesRemainingText = 'Event is fully booked';
+
+            if (ev.bookingSettings.placesRemaining > 0) {
+                placesRemainingText = 'Places still available';
+            }
+        }
+        return placesRemainingText;
+    };
     // there is something strange happening that sometimes the api sends us an object
     // convert to an array when it happens
     const standardisedTrainingEvents =
@@ -280,6 +292,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             role="region"
                             aria-label={`UQ Library training event detail for ${eventDetail.name}`}
                             autoFocus
+                            data-testid={`training-events-detail-${eventDetail.entityId}`}
                         >
                             <Grid container spacing={1} direction="column">
                                 <Grid item xs={12}>
@@ -334,9 +347,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={classes.detailMeta}>
-                                            {eventDetail.bookingSettings.placesRemaining > 0
-                                                ? 'Places still available'
-                                                : 'Event is fully booked'}
+                                            {bookingText(eventDetail)}
                                         </Grid>
                                     </Grid>
                                 </Grid>

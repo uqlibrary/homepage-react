@@ -38,9 +38,6 @@ export default {
         masquerade: {
             title: 'Masquerade',
         },
-        secureCollection: {
-            title: 'Secure File Collection',
-        },
         courseresources: {
             title: 'Course resources',
         },

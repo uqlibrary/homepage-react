@@ -8,7 +8,6 @@ function setup(testProps = {}, args = { isShallow: false }) {
         actions: testProps.actions || {
             loadCurrentAccount: jest.fn(),
             searchAuthorPublications: jest.fn(),
-            loadAlerts: testProps.loadAlerts || jest.fn(),
             loadChatStatus: testProps.loadChatStatus || jest.fn(),
             showAppAlert: testProps.showAppAlert || jest.fn(),
         },
@@ -56,7 +55,6 @@ describe('Application component', () => {
         setup({
             actions: {
                 loadCurrentAccount: testMethod,
-                loadAlerts: jest.fn(),
                 loadChatStatus: jest.fn(),
             },
         });

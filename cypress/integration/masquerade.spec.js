@@ -18,20 +18,11 @@ context('Masquerade', () => {
     it('admin users can masquerade', () => {
         cy.visit('/admin/masquerade/?user=uqstaff');
         cy.viewport(1300, 1000);
+        cy.get('body').contains('When masquerading');
         cy.get('#userName').type('s1111111');
         cy.get('button')
             .contains('Masquerade')
             .click();
         cy.url().should('include', 'https://auth.library.uq.edu.au/masquerade?user=s1111111');
-    });
-
-    it('has a working back button', () => {
-        cy.visit('/?user=uqstaff'); // supply a page the back button can return to
-
-        cy.visit('/admin/masquerade/?user=uqstaff');
-        cy.get('body').contains('When masquerading');
-
-        cy.get('button[data-testid=StandardPage-goback-button]').click();
-        cy.url().should('eq', 'http://localhost:2020/?user=uqstaff');
     });
 });
