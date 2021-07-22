@@ -47,9 +47,9 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, history }) => {
+export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
-    console.log('AlertForm: alert = ', alert);
+    console.log('AlertForm: alert = ', alertResponse);
     console.log('AlertForm: alertStatus = ', alertStatus);
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
@@ -73,20 +73,20 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
     };
 
     console.log('AlertForm defaults.type = ', defaults.type);
-    console.log('AlertForm alert = ', alert);
+    console.log('AlertForm alert = ', alertResponse);
     useEffect(() => {
-        if (!!alert && !!alert.id && alertStatus === 'saved') {
-            console.log('show conf after saving: ', alert);
+        if (!!alertResponse && !!alertResponse.id && alertStatus === 'saved') {
+            console.log('show conf after saving: ', alertResponse);
             showConfirmation();
         }
-    }, [showConfirmation, alert, defaults.type, alertStatus]);
+    }, [showConfirmation, alertResponse, alertStatus]);
 
     useEffect(() => {
         if (!!alertError || alertStatus === 'error') {
             console.log('There was an error while saving a new alert: ', alertError);
             showConfirmation();
         }
-    }, [showConfirmation, alertError, defaults.type, alertStatus]);
+    }, [showConfirmation, alertError, alertStatus]);
 
     // or should this reset to defaults?
     const clearForm = () => {
@@ -185,21 +185,21 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
         expandValues(values);
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
-        const alert = document.createElement('uq-alert');
+        const alertWebComponent = document.createElement('uq-alert');
         /* istanbul ignore next */
-        if (!alert) {
+        if (!alertWebComponent) {
             return;
         }
-        alert.setAttribute('id', 'alert-preview');
-        alert.setAttribute('alerttitle', values.alertTitle);
-        alert.setAttribute('alerttype', !!values.urgent ? '1' : '0');
+        alertWebComponent.setAttribute('id', 'alert-preview');
+        alertWebComponent.setAttribute('alerttitle', values.alertTitle);
+        alertWebComponent.setAttribute('alerttype', !!values.urgent ? '1' : '0');
         const body = (!!values.body && getBody(values)) || getBody(defaults);
         // when the alert body has the square bracket for 'permanent',
         // that enclosed string is not accepted by setattribute
         // something to do with XSS blocking for special char?
         // so we have to handle it manually :(
         if (!!values.permanentAlert) {
-            alert.setAttribute('alertmessage', body.replace('[permanent]', ''));
+            alertWebComponent.setAttribute('alertmessage', body.replace('[permanent]', ''));
             // manually remove the 'non-permanent' button
             const changeMessage = setInterval(() => {
                 // its a moment before it is available
@@ -212,9 +212,29 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                 }
             }, 100);
         } else {
-            alert.setAttribute('alertmessage', body);
+            alertWebComponent.setAttribute('alertmessage', body);
         }
-        alertWrapper.appendChild(alert);
+        // so the user doesnt lose their work by clicking on the preview button,
+        // change the href to an alert of what the click would be
+        const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
+        if (!!values.linkRequired) {
+            const changeLink = setInterval(() => {
+                // its a moment before it is available
+                const preview = document.getElementById('alert-preview');
+                const previewShadowRoot = !!preview && preview.shadowRoot;
+                const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
+                if (!!link) {
+                    link.setAttribute('href', '#');
+                    link.setAttribute('title', popuptext);
+                    link.onclick = () => {
+                        alert(popuptext);
+                        return false;
+                    };
+                    clearInterval(changeLink);
+                }
+            }, 100);
+        }
+        alertWrapper.appendChild(alertWebComponent);
     };
 
     const isValidUrl = testurl => {
@@ -393,13 +413,16 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
                         className={classes.checkboxes}
                     >
                         <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }}>
+                            <InputLabel
+                                style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                title="Check to add button to alert linking to more information. Displays extra form fields."
+                            >
                                 <Checkbox
                                     checked={values.linkRequired}
                                     data-testid="admin-alerts-form-checkbox-linkrequired"
                                     onChange={handleChange('linkRequired')}
                                 />
-                                Add link
+                                Add info link
                             </InputLabel>
                         </Grid>
                         <Grid item sm={4} xs={12}>
@@ -504,7 +527,7 @@ export const AlertForm = ({ actions, alert, alertStatus, defaults, alertError, h
 
 AlertForm.propTypes = {
     actions: PropTypes.any,
-    alert: PropTypes.any,
+    alertResponse: PropTypes.any,
     alertError: PropTypes.any,
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,

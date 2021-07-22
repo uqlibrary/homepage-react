@@ -87,7 +87,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
                     <StandardCard title="Edit alert" noPadding>
                         <AlertForm
                             actions={actions}
-                            alert={alert}
+                            alertResponse={alert}
                             alertError={alertError}
                             alertStatus={alertStatus}
                             defaults={defaults}

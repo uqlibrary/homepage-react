@@ -48,7 +48,11 @@ export default {
                     </div>
                 </li>
                 <li>
-                    Add link?
+                    Permanent
+                    <div className="description">The alert cannot be dismissed</div>
+                </li>
+                <li>
+                    Add info link
                     <div className="description">Shows/hides the URL fields</div>
                 </li>
                 <li>

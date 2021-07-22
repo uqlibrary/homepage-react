@@ -247,7 +247,11 @@ describe('Alerts Admin Pages', () => {
                     cy.get('[data-testid="alert-close"]').should('not.exist');
                     cy.get(
                         '[data-testid="alert-alert-preview"] [data-testid="alert-alert-preview-action-button"]',
-                    ).should('have.attr', 'title', 'Click here');
+                    ).should(
+                        'have.attr',
+                        'title',
+                        'On the live website, this button will visit http://example.com when clicked',
+                    );
                 });
             // user can toggle the Preview
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
