@@ -133,13 +133,35 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                             className={classes.pageLayout}
                         >
                             <div data-testid="admin-alerts-list-current-list">
-                                {AlertsListAsTable(currentAlerts, 'Current alerts', alertsLoading, history)}
+                                {AlertsListAsTable(
+                                    currentAlerts,
+                                    'Current alerts',
+                                    alertsLoading,
+                                    alertsError,
+                                    history,
+                                    actions,
+                                )}
                             </div>
                             <div data-testid="admin-alerts-list-future-list">
-                                {AlertsListAsTable(futureAlerts, 'Scheduled alerts', alertsLoading, history)}
+                                {AlertsListAsTable(
+                                    futureAlerts,
+                                    'Scheduled alerts',
+                                    alertsLoading,
+                                    alertsError,
+                                    history,
+                                    actions,
+                                )}
                             </div>
                             <div data-testid="admin-alerts-list-past-list">
-                                {AlertsListAsTable(pastAlerts, 'Past alerts', alertsLoading, history, true)}
+                                {AlertsListAsTable(
+                                    pastAlerts,
+                                    'Past alerts',
+                                    alertsLoading,
+                                    alertsError,
+                                    history,
+                                    actions,
+                                    true,
+                                )}
                             </div>
                         </Grid>
                     </Grid>

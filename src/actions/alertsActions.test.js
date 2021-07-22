@@ -199,11 +199,7 @@ describe('Alert list actions', () => {
 
             const expectedActions = [actions.ALERT_LOADING, actions.ALERT_DELETED];
 
-            await mockActionsStore.dispatch(
-                deleteAlert({
-                    id: '88888-d62b-11e7-954e-57c2cc19d151',
-                }),
-            );
+            await mockActionsStore.dispatch(deleteAlert('88888-d62b-11e7-954e-57c2cc19d151'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

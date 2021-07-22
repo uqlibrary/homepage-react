@@ -118,11 +118,11 @@ export default {
         confirmDelete: {
             confirmationTitle: 'Remove [N] alerts?',
             confirmationMessage: (
-                <div>
+                <Fragment>
                     Are you sure you want to remove the selected alerts?
                     <br />
                     Removed alerts cannot be brought back.
-                </div>
+                </Fragment>
             ),
             cancelButtonLabel: 'Cancel',
             confirmButtonLabel: 'Proceed',

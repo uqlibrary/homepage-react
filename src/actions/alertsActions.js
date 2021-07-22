@@ -55,7 +55,7 @@ export const createAlert = request => {
 export const saveAlertChange = request => {
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        console.log('saveAlertChange action, ALERT_SAVE_API() = ', ALERT_SAVE_API(request.id));
+        console.log('saveAlertChange action, ALERT_SAVE_API() = ', ALERT_SAVE_API({ id: request.id }));
         return post(ALERT_SAVE_API({ id: request.id }), request)
             .then(data => {
                 console.log('saveAlertChange action, returned data = ', data);
@@ -74,29 +74,52 @@ export const saveAlertChange = request => {
     };
 };
 
-export const deleteAlert = request => {
+export const deleteAlert = alertID => {
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        console.log('deleteAlert action, ALERT_DELETE_API() = ', ALERT_DELETE_API(request.id));
-        return destroy(ALERT_DELETE_API({ id: request.id }), request)
-            .then(data => {
-                console.log('deleteAlert action, returned data = ', data);
-                dispatch({
-                    type: actions.ALERT_DELETED,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                console.log('deleteAlert action error = ', error);
-                dispatch({
-                    type: actions.ALERT_FAILED,
-                    payload: error.message,
-                });
+
+        try {
+            const response = await destroy(ALERT_DELETE_API({ id: alertID }));
+            console.log('deleteAlert action, returned response = ', response);
+            dispatch({
+                type: actions.ALERT_DELETED,
+                payload: [],
             });
+
+            return Promise.resolve(response.data);
+        } catch (e) {
+            console.log('deleteAlert action error = ', e);
+            dispatch({
+                type: actions.ALERT_FAILED,
+                payload: e,
+            });
+
+            return Promise.reject(e);
+        }
     };
+    // return async dispatch => {
+    //     dispatch({ type: actions.ALERT_LOADING });
+    //     console.log('deleteAlert action, ALERT_DELETE_API() = ', ALERT_DELETE_API({ id: alertID }));
+    //     return destroy(ALERT_DELETE_API({ id: alertID }))
+    //         .then(data => {
+    //             console.log('deleteAlert action, returned data = ', data);
+    //             dispatch({
+    //                 type: actions.ALERT_DELETED,
+    //                 payload: data,
+    //             });
+    //         })
+    //         .catch(error => {
+    //             console.log('deleteAlert action error = ', error);
+    //             dispatch({
+    //                 type: actions.ALERT_FAILED,
+    //                 payload: error.message,
+    //             });
+    //         });
+    // };
 };
 
 export function clearAlerts() {
+    console.log('refreshingAlerts');
     return dispatch => {
         dispatch({
             type: actions.ALERTS_CLEAR,
@@ -104,13 +127,13 @@ export function clearAlerts() {
     };
 }
 
-export function clearAlert() {
-    return dispatch => {
-        dispatch({
-            type: actions.ALERT_CLEAR,
-        });
-    };
-}
+// export function clearAlert() {
+//     return dispatch => {
+//         dispatch({
+//             type: actions.ALERT_CLEAR,
+//         });
+//     };
+// }
 
 export function loadAnAlert(alertId) {
     console.log('load an Alert for ', alertId);

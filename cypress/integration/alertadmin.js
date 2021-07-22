@@ -157,10 +157,35 @@ describe('Alerts Admin Pages', () => {
 
             // click the delete button and the delete dialog appears
             cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
-            cy.get('[data-testid="cancel-alert-delete-dialog"').should('exist');
-            cy.get('[data-testid="cancel-alert-delete-dialog"').contains('Cancel');
-            cy.get('[data-testid="cancel-alert-delete-dialog"').click();
-            cy.get('[data-testid="cancel-alert-delete-dialog"').should('not.exist');
+            cy.get('[data-testid="cancel-alert-delete-dialog"]').should('exist');
+            // close dialog
+            cy.get('[data-testid="cancel-alert-delete-dialog"]').click();
+            cy.get('[data-testid="confirm-dialogbox"]').should('not.exist');
+        });
+
+        it('the user can delete an alert', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
+            cy.get('[data-testid="headerRow-current"] span span').contains('1 alert selected');
+
+            // click the Proceed button and the alert is deleted
+            cy.get('[data-testid="training-list-current-delete-button"]').click();
+            cy.get('[data-testid="confirm-alert-delete-dialog"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-dialog"]').contains('Proceed');
+            cy.get('[data-testid="confirm-alert-delete-dialog"]').click();
+            // dialog disappears
+            cy.get('[data-testid="confirm-dialogbox"]').should('not.exist');
+            // alert is deleted on screen
+            cy.get('[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('not.exist');
+            // because there was only one alert, that is now deleted, the 'no alerts' row appears
+            cy.get('[data-testid="alert-list-current"] thead').should('not.exist');
+            cy.get('[data-testid="alert-list-no-alerts-current"]').should('exist');
+            cy.get('[data-testid="alert-list-no-alerts-current"]').should(
+                'have.attr',
+                'style',
+                'display: inline-table;',
+            );
         });
     });
     context('Alert Admin Add page', () => {

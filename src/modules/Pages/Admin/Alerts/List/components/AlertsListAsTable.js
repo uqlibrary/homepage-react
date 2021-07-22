@@ -126,7 +126,16 @@ const useStyles2 = makeStyles(
     { withTheme: true },
 );
 
-export default function AlertsListAsTable(rows, headertag, alertsLoading, history, hasFooter = false) {
+export default function AlertsListAsTable(
+    rows,
+    headertag,
+    alertsLoading,
+    alertsError,
+    history,
+    actions,
+    hasFooter = false,
+) {
+    console.log('AlertsListAsTable alertsError = ', alertsError);
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [deleteActive, setDeleteActive] = React.useState(false);
@@ -140,6 +149,8 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
     };
+
+    const checkBoxIdPrefix = 'checkbox-';
 
     const handleChangeRowsPerPage = event => {
         setRowsPerPage(parseInt(event.target.value, 10));
@@ -209,10 +220,43 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
         showConfirmation();
     };
 
-    // for next phase
     const deleteSelectedAlerts = () => {
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
-        console.log('checkboxes = ', checkboxes);
+        if (!!checkboxes && checkboxes.length > 0) {
+            checkboxes.forEach(c => {
+                const alertID = c.value.replace(checkBoxIdPrefix, '');
+                console.log('deleting alert with id ', alertID);
+                actions.deleteAlert(alertID).then(response => {
+                    console.log('response was ', response);
+                    console.log('deleted error status: ', alertsError);
+                    console.log('deleted: ', `alert-list-row-${alertID}`);
+
+                    if (!alertsError) {
+                        setAlertNotice('');
+                        setDeleteActive(false);
+
+                        // remove the alert
+                        const alertRow = document.getElementById(`alert-list-row-${alertID}`);
+                        !!alertRow && alertRow.remove();
+
+                        const listTable = document.getElementById(`alert-list-${tableType}`);
+                        const listBody = !!listTable && listTable.querySelector('tbody');
+                        if (!!listBody && listBody.childElementCount <= 1) {
+                            // 0 alerts left, only the 'no alerts' row
+                            // remove header block
+                            const listHead = listTable.querySelector('thead');
+                            !!listHead && listHead.remove();
+                            // show 'no alerts'
+                            const noAlert = document.getElementById(`alert-list-no-alerts-${tableType}`);
+                            !!noAlert && (noAlert.style.display = 'inline-table');
+                        }
+                    } else {
+                        console.log(' there was an error deleting');
+                    }
+                });
+            });
+            // actions.clearAlerts(); // force the list to reload
+        }
     };
 
     const numberOfCheckedBoxes = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
@@ -259,7 +303,7 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
                     </span>
                 )}
             </div>
-            <TableContainer component={Paper}>
+            <TableContainer id={`alert-list-${tableType}`} data-testid={`alert-list-${tableType}`} component={Paper}>
                 <Table className={classes.table} aria-label="custom pagination table">
                     <TableHead>
                         <TableRow md-row="" className="md-row">
@@ -277,12 +321,13 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {rowsPerPage > 0 && userows.length > 0 ? (
+                        {rowsPerPage > 0 &&
+                            userows.length > 0 &&
                             userows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
                                 return (
                                     <TableRow
                                         key={alert.id}
-                                        // id={`row-${alert.id}`}
+                                        id={`alert-list-row-${alert.id}`}
                                         data-testid={`alert-list-row-${alert.id}`}
                                     >
                                         <TableCell component="td">
@@ -294,7 +339,7 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
                                                     'data-testid': `alert-list-item-checkbox-${alert.id}`,
                                                 }}
                                                 onChange={handleCheckboxChange}
-                                                value={`checkbox-${alert.id}`}
+                                                value={`${checkBoxIdPrefix}${alert.id}`}
                                             />
                                         </TableCell>
                                         <TableCell component="td" className="alertText">
@@ -346,14 +391,18 @@ export default function AlertsListAsTable(rows, headertag, alertsLoading, histor
                                         </TableCell>
                                     </TableRow>
                                 );
-                            })
-                        ) : (
-                            <TableRow id="no-alerts">
-                                <TableCell component="td">
-                                    <p>No alerts</p>
-                                </TableCell>
-                            </TableRow>
-                        )}
+                            })}
+                        <TableRow
+                            id={`alert-list-no-alerts-${tableType}`}
+                            data-testid={`alert-list-no-alerts-${tableType}`}
+                            style={
+                                rowsPerPage > 0 && userows.length > 0 ? { display: 'none' } : { display: 'table-row' }
+                            }
+                        >
+                            <TableCell component="td">
+                                <p>No alerts</p>
+                            </TableCell>
+                        </TableRow>
                     </TableBody>
                     {!!hasFooter && userows.length > 0 && (
                         <TableFooter>

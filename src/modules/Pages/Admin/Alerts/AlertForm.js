@@ -106,11 +106,9 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const navigateToListPage = () => {
         clearForm();
 
-        // force the list page to reload after save
-        actions.clearAlerts();
+        actions.clearAlerts(); // force the list page to reload after save
 
-        // make the form clear for the next use
-        actions.clearAlert();
+        actions.clearAnAlert(); // make the form clear for the next use
 
         history.push('/admin/alerts');
 
@@ -165,7 +163,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         console.log('will save ', newValues);
         defaults.type === 'add' ? actions.createAlert(newValues) : actions.saveAlertChange(newValues);
 
-        // // force to the top of the page, because otherwise it looks a bit weird
+        // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
             top: 0,
             left: 0,

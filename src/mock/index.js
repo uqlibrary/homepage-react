@@ -156,21 +156,11 @@ mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' })
     ]),
 );
 // mock.onAny(routes.ALERT_SAVE_API('id').apiUrl).reply(withDelay([500, {}]));
-mock.onAny(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
-    withDelay([
-        200,
-        {
-            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2020-06-07 02:00:03',
-            end: '2020-06-07 03:00:03',
-            title: 'Updated alert',
-            body:
-                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
-            urgent: 0,
-        },
-    ]),
+console.log('delete mock url = ', routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl);
+mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+    withDelay([200, []]),
 );
-// mock.onAny(routes.ALERT_DELETE_API('id').apiUrl).reply(withDelay([500, {}]));
+// mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(
     withDelay([
         200,

@@ -58,9 +58,9 @@ export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
 
     const navigateToAddPage = () => {
         console.log('navigateToAddPage');
-        // console.log('navigateToAddPage actions.clearAlert() = ', actions.clearAlert());
-        actions.clearAlert();
-        // () => dispatch(actions.clearAlert());
+        // console.log('navigateToAddPage actions.clearAnAlert() = ', actions.clearAnAlert());
+        actions.clearAnAlert();
+        // () => dispatch(actions.clearAnAlert());
         history.push('/admin/alerts/add');
     };
 
