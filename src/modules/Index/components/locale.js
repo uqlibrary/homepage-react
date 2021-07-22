@@ -2,10 +2,8 @@ import React from 'react';
 import AccessTimeIcon from '@material-ui/icons/AccessTime';
 import ImportantDevicesIcon from '@material-ui/icons/ImportantDevices';
 import InfoOutlined from '@material-ui/icons/InfoOutlined';
-import { searchPanelLocale } from 'modules/Index/components/SearchPanel/components/searchPanel.locale';
 
 export default {
-    homePageSearch: searchPanelLocale,
     LibraryServices: {
         links: [
             {
