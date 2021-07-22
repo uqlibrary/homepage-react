@@ -14,7 +14,6 @@ import {
     loadCompAvail,
     loadTrainingEvents,
 } from 'actions';
-import SearchPanel from 'modules/Index/components/SearchPanel/containers/SearchPanel';
 import { seeCourseResources, seeLibraryServices } from 'helpers/access';
 import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
@@ -169,7 +168,7 @@ export const Index = ({
             <Grid container spacing={4}>
                 {/* Search */}
                 <Grid item xs={12} style={{ marginTop: 12 }}>
-                    <SearchPanel />
+                    <search-portal />
                 </Grid>
                 {accountLoading === false && !!account && (
                     <Hidden mdUp>
