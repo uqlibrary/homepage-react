@@ -129,7 +129,7 @@ export default {
         },
         deleteError: {
             confirmationTitle: 'Record Deletion was not successful',
-            confirmationMessage: <p>Please try again later</p>,
+            confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
         },
     },

@@ -451,8 +451,8 @@ export const alertList = [
         "id": "0aa12a30-996a-11eb-b009-3f6ded4fdb35",
         "start": "2031-09-04 02:00:55",
         "end": "2032-09-04 03:00:55",
-        "title": "Library Search maintenance tonight (2am - 3am AEST):",
-        "body": "There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.",
+        "title": "Example alert:",
+        "body": "This alert will return an error if deleted in mock",
         "urgent": 0
     }, {
         "id": "232d6880-996a-11eb-8a79-e7fddae87baf",

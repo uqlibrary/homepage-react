@@ -75,13 +75,17 @@ export const AlertsListAsTable = ({
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [deleteActive, setDeleteActive] = React.useState(false);
-    const [deleteErrorActive, setDeleteErrorActive] = React.useState(false);
     const [alertNotice, setAlertNotice] = React.useState('');
 
     const defaultNumberOfRowsToDisplay = 5;
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultNumberOfRowsToDisplay);
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [
+        isDeleteFailureConfirmationOpen,
+        showDeleteFailureConfirmation,
+        hideDeleteFailureConfirmation,
+    ] = useConfirmationState();
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -152,38 +156,41 @@ export const AlertsListAsTable = ({
     };
 
     const confirmDelete = () => {
-        // const checkboxes0 = document.querySelectorAll('input[type="checkbox"]');
-        // const checkboxes = document.querySelectorAll('#admin-alerts-list :checked');
-        console.log('confirmDelete');
         showConfirmation();
     };
+
+    function handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, numRequests) {
+        if (numRequestsActual === numRequests && numRequestsSuccess < numRequests) {
+            console.log('count: numRequestsSuccess = ', numRequestsSuccess, '; numRequests = ', numRequests);
+            showDeleteFailureConfirmation();
+        }
+    }
 
     const deleteSelectedAlerts = () => {
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
         if (!!checkboxes && checkboxes.length > 0) {
+            let numRequestsActual = 0;
+            let numRequestsSuccess = 0;
             checkboxes.forEach(c => {
                 const alertID = c.value.replace(checkBoxIdPrefix, '');
                 console.log('deleting alert with id ', alertID);
+                numRequestsActual++;
                 deleteAlert(alertID)
                     .then(response => {
+                        numRequestsSuccess++;
                         console.log('response was ', response);
                         console.log('then deleted error status: ', alertsError);
                         console.log('deleted: ', `alert-list-row-${alertID}`);
 
-                        // if (!alertsError) {
                         setAlertNotice('');
                         setDeleteActive(false);
                         actions.loadAllAlerts();
-                        // } else {
-                        //     console.log('1 there was an error deleting');
-                        // }
+
+                        handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, checkboxes.length);
                     })
                     .catch(x => {
-                        console.log('catch deleted error status: ', alertsError);
-                        console.log('2 there was an error deleting ', x);
-                        setAlertNotice('');
-                        setDeleteActive(false);
-                        setDeleteErrorActive(true);
+                        console.log('There was an error deleting ', x);
+                        handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, checkboxes.length);
                     });
             });
         }
@@ -200,7 +207,6 @@ export const AlertsListAsTable = ({
         };
     };
 
-    console.log('deleteErrorActive = ', deleteErrorActive);
     return (
         <React.Fragment>
             {!!deleteActive && (
@@ -213,18 +219,15 @@ export const AlertsListAsTable = ({
                     locale={confirmDeleteLocale(numberOfCheckedBoxes)}
                 />
             )}
-            {!!deleteErrorActive && (
-                <ConfirmationBox
-                    confirmationBoxId="alert-delete-error-dialog"
-                    onAction={hideConfirmation}
-                    onClose={hideConfirmation}
-                    hideCancelButton
-                    isOpen={isOpen}
-                    locale={locale.listPage.deleteError}
-                />
-            )}
+            <ConfirmationBox
+                confirmationBoxId="alert-delete-error-dialog"
+                onAction={hideDeleteFailureConfirmation}
+                onClose={hideDeleteFailureConfirmation}
+                hideCancelButton
+                isOpen={isDeleteFailureConfirmationOpen}
+                locale={locale.listPage.deleteError}
+            />
             <div
-                // id={`headerRow-${tableType}`}
                 data-testid={`headerRow-${tableType}`}
                 className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
             >
