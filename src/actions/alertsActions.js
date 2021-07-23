@@ -76,6 +76,7 @@ export const saveAlertChange = request => {
 };
 
 export const deleteAlert = alertID => {
+    console.log('ALERT_DELETE_API({ id: alertID }) = ', ALERT_DELETE_API({ id: alertID }));
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
 

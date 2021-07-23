@@ -1016,7 +1016,6 @@ exports[`Index page should render placeholders 1`] = `
                                               actions={
                                                 Object {
                                                   "checkSession": [Function],
-                                                  "clearAlert": [Function],
                                                   "clearAlerts": [Function],
                                                   "clearAnAlert": [Function],
                                                   "clearCourseResourceSuggestions": [Function],

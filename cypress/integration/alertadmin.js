@@ -1,4 +1,5 @@
 describe('Alerts Admin Pages', () => {
+    const numRowsHiddenAsNoDatainfo = 1;
     context('Alert Admin List page', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=public');
@@ -16,9 +17,10 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-list-current-list"]').should('be.visible');
+            cy.wait(100);
             cy.get('[data-testid="admin-alerts-list-current-list"] tbody')
                 .children()
-                .should('have.length', 1 + 1);
+                .should('have.length', 1 + numRowsHiddenAsNoDatainfo);
 
             // this alert has all 3 chips
             cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
@@ -35,7 +37,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2 + 1);
+                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
 
             // this alert has no chips
             cy.get('[data-testid="alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').should('not.exist');
@@ -48,7 +50,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
-                .should('have.length', 5 + 1);
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
         });
         it('is accessible', () => {
@@ -157,10 +159,10 @@ describe('Alerts Admin Pages', () => {
 
             // click the delete button and the delete dialog appears
             cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
-            cy.get('[data-testid="cancel-alert-delete-confirm-dialog"]').should('exist');
+            cy.get('[data-testid="cancel-alert-delete-confirm"]').should('exist');
             // close dialog
-            cy.get('[data-testid="cancel-alert-delete-confirm-dialog"]').click();
-            cy.get('[data-testid="confirm-dialogbox"]').should('not.exist');
+            cy.get('[data-testid="cancel-alert-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
         });
 
         it('the user can delete an alert', () => {
@@ -171,21 +173,36 @@ describe('Alerts Admin Pages', () => {
 
             // click the Proceed button and the alert is deleted
             cy.get('[data-testid="training-list-current-delete-button"]').click();
-            cy.get('[data-testid="confirm-alert-delete-confirm-dialog"]').should('exist');
-            cy.get('[data-testid="confirm-alert-delete-confirm-dialog"]').contains('Proceed');
-            cy.get('[data-testid="confirm-alert-delete-confirm-dialog"]').click();
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
             // dialog disappears
-            cy.get('[data-testid="confirm-dialogbox"]').should('not.exist');
-            // alert is deleted on screen
-            cy.get('[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('not.exist');
-            // because there was only one alert, that is now deleted, the 'no alerts' row appears
-            cy.get('[data-testid="alert-list-current"] thead').should('not.exist');
-            cy.get('[data-testid="alert-list-no-alerts-current"]').should('exist');
-            cy.get('[data-testid="alert-list-no-alerts-current"]').should(
-                'have.attr',
-                'style',
-                'display: inline-table;',
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
+            // cant test display further as mock data doesnt actually delete
+        });
+
+        it('reports when a delete fails', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
+            cy.get('[data-testid="headerRow-scheduled"] span span').contains('1 alert selected');
+            // click bin icon
+            cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
+            // a confirm dialog popsup
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
+            // click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
+            // failure is reported in a dialog
+            cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('exist');
+            cy.get('[data-testid="dialogbox-alert-delete-error-dialog"] h2').contains(
+                'Record Deletion was not successful',
             );
+            // dialog can be closed
+            cy.get('[data-testid="confirm-alert-delete-error-dialog"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-error-dialog"]').click();
+            cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
         });
     });
     context('Alert Admin Add page', () => {
@@ -337,7 +354,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2 + 1);
+                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
             // then we click the add button and see an empty form
             cy.get('[data-testid="admin-alerts-help-display-button"]').click();
             cy.wait(500);
@@ -355,7 +372,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2 + 1);
+                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
         });
         it('has a working Help button on the Add page', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
@@ -412,7 +429,7 @@ describe('Alerts Admin Pages', () => {
             ).should('have.value', 81);
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
-                .should('have.length', 81 + 1);
+                .should('have.length', 81 + numRowsHiddenAsNoDatainfo);
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-81 of 81');
         });
     });
@@ -451,7 +468,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-title"]').type('Updated alert');
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
             cy.wait(500);
-            cy.get('[data-testid="confirm-dialogbox"] h2').contains('The alert has been updated');
+            cy.get('[data-testid="dialogbox-alert-edit-save-succeeded"] h2').contains('The alert has been updated');
             // can't do much checking here that it saves properly
             cy.get('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');

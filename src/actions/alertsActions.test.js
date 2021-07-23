@@ -41,7 +41,7 @@ describe('Alert list actions', () => {
         it('dispatches expected actions when all alerts call fails', async () => {
             mockApi.onGet(repositories.routes.ALERTS_ALL_API()).reply(500);
 
-            const expectedActions = [actions.ALERTS_LOADING, actions.ALERTS_FAILED];
+            const expectedActions = [actions.ALERTS_CLEAR, actions.ALERTS_LOADING, actions.ALERTS_FAILED];
 
             await mockActionsStore.dispatch(loadAllAlerts());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -57,7 +57,7 @@ describe('Alert list actions', () => {
         it('handles alerts list', async () => {
             mockApi.onGet(repositories.routes.ALERTS_ALL_API().apiUrl).reply(200, []);
 
-            const expectedActions = [actions.ALERTS_LOADING, actions.ALERTS_LOADED];
+            const expectedActions = [actions.ALERTS_CLEAR, actions.ALERTS_LOADING, actions.ALERTS_LOADED];
 
             await mockActionsStore.dispatch(loadAllAlerts());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -66,7 +66,12 @@ describe('Alert list actions', () => {
         it('dispatches expected actions when alert list call fails', async () => {
             mockApi.onGet(repositories.routes.ALERTS_ALL_API().apiUrl).reply(500);
 
-            const expectedActions = [actions.ALERTS_LOADING, actions.APP_ALERT_SHOW, actions.ALERTS_FAILED];
+            const expectedActions = [
+                actions.ALERTS_CLEAR,
+                actions.ALERTS_LOADING,
+                actions.APP_ALERT_SHOW,
+                actions.ALERTS_FAILED,
+            ];
 
             await mockActionsStore.dispatch(loadAllAlerts());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -140,7 +145,7 @@ describe('Alert list actions', () => {
         });
 
         it('dispatches expected actions when alert save call fails', async () => {
-            mockApi.onAny(repositories.routes.ALERT_SAVE_API('id').apiUrl).reply(500);
+            mockApi.onAny(repositories.routes.ALERT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
 
             const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
 
@@ -149,16 +154,20 @@ describe('Alert list actions', () => {
         });
 
         it('dispatches expected actions when alert delete call fails', async () => {
-            mockApi.onAny(repositories.routes.ALERT_DELETE_API('id').apiUrl).reply(500);
+            mockApi.onDelete(repositories.routes.ALERT_DELETE_API({ id: 'id' }).apiUrl).reply(403);
 
-            const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
-
-            await mockActionsStore.dispatch(
-                deleteAlert({
-                    id: 'e895b270-d62b-11e7-954e-57c2cc19d151',
-                }),
-            );
-            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+            try {
+                const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
+                await mockActionsStore.dispatch(deleteAlert('id'));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+            } catch (e) {
+                const expectedActions = [
+                    actions.ALERT_LOADING,
+                    actions.CURRENT_ACCOUNT_ANONYMOUS,
+                    actions.ALERT_FAILED,
+                ];
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+            }
         });
 
         it('handles an alert creation request', async () => {

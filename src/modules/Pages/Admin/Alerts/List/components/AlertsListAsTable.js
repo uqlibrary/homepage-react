@@ -209,16 +209,14 @@ export const AlertsListAsTable = ({
 
     return (
         <React.Fragment>
-            {!!deleteActive && (
-                <ConfirmationBox
-                    confirmationBoxId="alert-delete-confirm-dialog"
-                    onAction={() => deleteSelectedAlerts()}
-                    onClose={hideConfirmation}
-                    onCancelAction={hideConfirmation}
-                    isOpen={isOpen}
-                    locale={confirmDeleteLocale(numberOfCheckedBoxes)}
-                />
-            )}
+            <ConfirmationBox
+                confirmationBoxId="alert-delete-confirm"
+                onAction={() => deleteSelectedAlerts()}
+                onClose={hideConfirmation}
+                onCancelAction={hideConfirmation}
+                isOpen={isOpen}
+                locale={confirmDeleteLocale(numberOfCheckedBoxes)}
+            />
             <ConfirmationBox
                 confirmationBoxId="alert-delete-error-dialog"
                 onAction={hideDeleteFailureConfirmation}
