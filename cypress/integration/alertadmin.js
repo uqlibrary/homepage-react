@@ -18,7 +18,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-current-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-current-list"] tbody')
                 .children()
-                .should('have.length', 1);
+                .should('have.length', 1 + 1);
 
             // this alert has all 3 chips
             cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
@@ -35,7 +35,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 2 + 1);
 
             // this alert has no chips
             cy.get('[data-testid="alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').should('not.exist');
@@ -48,7 +48,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
-                .should('have.length', 5);
+                .should('have.length', 5 + 1);
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
         });
         it('is accessible', () => {
@@ -157,9 +157,9 @@ describe('Alerts Admin Pages', () => {
 
             // click the delete button and the delete dialog appears
             cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
-            cy.get('[data-testid="cancel-alert-delete-dialog"]').should('exist');
+            cy.get('[data-testid="cancel-alert-delete-confirm-dialog"]').should('exist');
             // close dialog
-            cy.get('[data-testid="cancel-alert-delete-dialog"]').click();
+            cy.get('[data-testid="cancel-alert-delete-confirm-dialog"]').click();
             cy.get('[data-testid="confirm-dialogbox"]').should('not.exist');
         });
 
@@ -171,9 +171,9 @@ describe('Alerts Admin Pages', () => {
 
             // click the Proceed button and the alert is deleted
             cy.get('[data-testid="training-list-current-delete-button"]').click();
-            cy.get('[data-testid="confirm-alert-delete-dialog"]').should('exist');
-            cy.get('[data-testid="confirm-alert-delete-dialog"]').contains('Proceed');
-            cy.get('[data-testid="confirm-alert-delete-dialog"]').click();
+            cy.get('[data-testid="confirm-alert-delete-confirm-dialog"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm-dialog"]').contains('Proceed');
+            cy.get('[data-testid="confirm-alert-delete-confirm-dialog"]').click();
             // dialog disappears
             cy.get('[data-testid="confirm-dialogbox"]').should('not.exist');
             // alert is deleted on screen
@@ -337,7 +337,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 2 + 1);
             // then we click the add button and see an empty form
             cy.get('[data-testid="admin-alerts-help-display-button"]').click();
             cy.wait(500);
@@ -355,7 +355,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 2 + 1);
         });
         it('has a working Help button on the Add page', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
@@ -412,7 +412,7 @@ describe('Alerts Admin Pages', () => {
             ).should('have.value', 81);
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
-                .should('have.length', 81);
+                .should('have.length', 81 + 1);
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-81 of 81');
         });
     });

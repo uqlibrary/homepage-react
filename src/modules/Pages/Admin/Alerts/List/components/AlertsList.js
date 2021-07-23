@@ -45,8 +45,11 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
     }, []);
 
     React.useEffect(() => {
-        !!alerts &&
-            alerts.length > 0 &&
+        console.log('about to load alerts into type arrays ', alerts);
+        if (!!alerts && alerts.length > 0) {
+            setPastAlerts([]);
+            setFutureAlerts([]);
+            setCurrentAlerts([]);
             alerts.forEach(alert => {
                 const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
                 const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
@@ -85,6 +88,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                     setCurrentAlerts(currentAlerts => [...currentAlerts, alert]);
                 }
             });
+        }
     }, [alerts]);
 
     if (!!alertsError) {
@@ -106,13 +110,9 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         );
     }
 
-    // if (!alertsError && !!alertsLoading) {
-    //     return (
-    //         <div style={{ minHeight: 600 }}>
-    //             <InlineLoader message="Loading" />
-    //         </div>
-    //     );
-    // }
+    const deleteAlert = alertID => {
+        return actions.deleteAlert(alertID);
+    };
 
     return (
         <StandardPage title="Alerts Management">
@@ -133,35 +133,38 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                             className={classes.pageLayout}
                         >
                             <div data-testid="admin-alerts-list-current-list">
-                                {AlertsListAsTable(
-                                    currentAlerts,
-                                    'Current alerts',
-                                    alertsLoading,
-                                    alertsError,
-                                    history,
-                                    actions,
-                                )}
+                                <AlertsListAsTable
+                                    rows={currentAlerts}
+                                    headertag="Current alerts"
+                                    alertsLoading={alertsLoading}
+                                    alertsError={alertsError}
+                                    history={history}
+                                    actions={actions}
+                                    deleteAlert={deleteAlert}
+                                />
                             </div>
                             <div data-testid="admin-alerts-list-future-list">
-                                {AlertsListAsTable(
-                                    futureAlerts,
-                                    'Scheduled alerts',
-                                    alertsLoading,
-                                    alertsError,
-                                    history,
-                                    actions,
-                                )}
+                                <AlertsListAsTable
+                                    rows={futureAlerts}
+                                    headertag="Scheduled alerts"
+                                    alertsLoading={alertsLoading}
+                                    alertsError={alertsError}
+                                    history={history}
+                                    actions={actions}
+                                    deleteAlert={deleteAlert}
+                                />
                             </div>
                             <div data-testid="admin-alerts-list-past-list">
-                                {AlertsListAsTable(
-                                    pastAlerts,
-                                    'Past alerts',
-                                    alertsLoading,
-                                    alertsError,
-                                    history,
-                                    actions,
-                                    true,
-                                )}
+                                <AlertsListAsTable
+                                    rows={pastAlerts}
+                                    headertag="Past alerts"
+                                    alertsLoading={alertsLoading}
+                                    alertsError={alertsError}
+                                    history={history}
+                                    actions={actions}
+                                    deleteAlert={deleteAlert}
+                                    hasFooter
+                                />
                             </div>
                         </Grid>
                     </Grid>

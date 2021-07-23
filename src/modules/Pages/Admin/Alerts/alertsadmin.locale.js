@@ -127,5 +127,10 @@ export default {
             cancelButtonLabel: 'Cancel',
             confirmButtonLabel: 'Proceed',
         },
+        deleteError: {
+            confirmationTitle: 'Record Deletion was not successful',
+            confirmationMessage: <p>Please try again later</p>,
+            confirmButtonLabel: 'OK',
+        },
     },
 };

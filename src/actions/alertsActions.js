@@ -9,8 +9,9 @@ import {
 } from 'repositories/routes';
 
 export function loadAllAlerts() {
-    console.log('Loading Alerts');
+    console.log('action loadAllAlerts: Loading Alerts');
     return dispatch => {
+        dispatch({ type: actions.ALERTS_CLEAR });
         dispatch({ type: actions.ALERTS_LOADING });
         return get(ALERTS_ALL_API())
             .then(alertResponse => {
@@ -29,7 +30,7 @@ export function loadAllAlerts() {
 }
 
 export const createAlert = request => {
-    console.log('createAlert, request to save: ', request);
+    console.log('action createAlert, request to save: ', request);
 
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
@@ -55,7 +56,7 @@ export const createAlert = request => {
 export const saveAlertChange = request => {
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
-        console.log('saveAlertChange action, ALERT_SAVE_API() = ', ALERT_SAVE_API({ id: request.id }));
+        console.log('action saveAlertChange action, ALERT_SAVE_API() = ', ALERT_SAVE_API({ id: request.id }));
         return post(ALERT_SAVE_API({ id: request.id }), request)
             .then(data => {
                 console.log('saveAlertChange action, returned data = ', data);
@@ -119,7 +120,7 @@ export const deleteAlert = alertID => {
 };
 
 export function clearAlerts() {
-    console.log('refreshingAlerts');
+    console.log('action clearAlerts - refreshing Alerts');
     return dispatch => {
         dispatch({
             type: actions.ALERTS_CLEAR,
@@ -136,7 +137,7 @@ export function clearAlerts() {
 // }
 
 export function loadAnAlert(alertId) {
-    console.log('load an Alert for ', alertId);
+    console.log('action load an Alert for ', alertId);
     return dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
         console.log('getting ', ALERT_BY_ID_API({ id: alertId }));

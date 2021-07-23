@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -18,11 +18,8 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 
 import DeleteIcon from '@material-ui/icons/Delete';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
 
+import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
@@ -31,67 +28,6 @@ const moment = require('moment');
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
-
-const useStyles1 = makeStyles(theme => ({
-    root: {
-        flexShrink: 0,
-        marginLeft: theme.spacing(2.5),
-    },
-}));
-
-function TablePaginationActions(props) {
-    const classes = useStyles1();
-    const theme = useTheme();
-    const { count, page, rowsPerPage, onChangePage } = props;
-
-    const handleFirstPageButtonClick = event => {
-        onChangePage(event, 0);
-    };
-
-    const handleBackButtonClick = event => {
-        onChangePage(event, page - 1);
-    };
-
-    const handleNextButtonClick = event => {
-        onChangePage(event, page + 1);
-    };
-
-    const handleLastPageButtonClick = event => {
-        onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-
-    return (
-        <div className={classes.root}>
-            <IconButton onClick={handleFirstPageButtonClick} disabled={page === 0} aria-label="first page">
-                {theme.direction === 'rtl' ? <LastPageIcon /> : <FirstPageIcon />}
-            </IconButton>
-            <IconButton onClick={handleBackButtonClick} disabled={page === 0} aria-label="previous page">
-                {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
-            </IconButton>
-            <IconButton
-                onClick={handleNextButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="next page"
-            >
-                {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
-            </IconButton>
-            <IconButton
-                onClick={handleLastPageButtonClick}
-                disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-                aria-label="last page"
-            >
-                {theme.direction === 'rtl' ? <FirstPageIcon /> : <LastPageIcon />}
-            </IconButton>
-        </div>
-    );
-}
-
-TablePaginationActions.propTypes = {
-    count: PropTypes.number.isRequired,
-    onChangePage: PropTypes.func.isRequired,
-    page: PropTypes.number.isRequired,
-    rowsPerPage: PropTypes.number.isRequired,
-};
 
 const useStyles2 = makeStyles(
     theme => ({
@@ -125,20 +61,21 @@ const useStyles2 = makeStyles(
     }),
     { withTheme: true },
 );
-
-export default function AlertsListAsTable(
+export const AlertsListAsTable = ({
     rows,
     headertag,
     alertsLoading,
     alertsError,
     history,
     actions,
-    hasFooter = false,
-) {
+    deleteAlert,
+    hasFooter,
+}) => {
     console.log('AlertsListAsTable alertsError = ', alertsError);
     const classes = useStyles2();
     const [page, setPage] = React.useState(0);
     const [deleteActive, setDeleteActive] = React.useState(false);
+    const [deleteErrorActive, setDeleteErrorActive] = React.useState(false);
     const [alertNotice, setAlertNotice] = React.useState('');
 
     const defaultNumberOfRowsToDisplay = 5;
@@ -158,6 +95,7 @@ export default function AlertsListAsTable(
     };
 
     const tableType = headertag.replace(' alerts', '').toLowerCase();
+    console.log('AlertsListAsTable ', tableType, ' rows = ', rows);
 
     let userows = rows;
     // anything which is planning to show a footer should be reversed into 'show newest first' order
@@ -175,7 +113,7 @@ export default function AlertsListAsTable(
                     marginRight: 20,
                     marginBottom: 6,
                     opacity: 0.3,
-                    height: 200,
+                    height: 200, // default to some space for the blocks
                 }}
             >
                 <InlineLoader message="Loading" />
@@ -216,7 +154,7 @@ export default function AlertsListAsTable(
     const confirmDelete = () => {
         // const checkboxes0 = document.querySelectorAll('input[type="checkbox"]');
         // const checkboxes = document.querySelectorAll('#admin-alerts-list :checked');
-
+        console.log('confirmDelete');
         showConfirmation();
     };
 
@@ -226,36 +164,28 @@ export default function AlertsListAsTable(
             checkboxes.forEach(c => {
                 const alertID = c.value.replace(checkBoxIdPrefix, '');
                 console.log('deleting alert with id ', alertID);
-                actions.deleteAlert(alertID).then(response => {
-                    console.log('response was ', response);
-                    console.log('deleted error status: ', alertsError);
-                    console.log('deleted: ', `alert-list-row-${alertID}`);
+                deleteAlert(alertID)
+                    .then(response => {
+                        console.log('response was ', response);
+                        console.log('then deleted error status: ', alertsError);
+                        console.log('deleted: ', `alert-list-row-${alertID}`);
 
-                    if (!alertsError) {
+                        // if (!alertsError) {
                         setAlertNotice('');
                         setDeleteActive(false);
-
-                        // remove the alert
-                        const alertRow = document.getElementById(`alert-list-row-${alertID}`);
-                        !!alertRow && alertRow.remove();
-
-                        const listTable = document.getElementById(`alert-list-${tableType}`);
-                        const listBody = !!listTable && listTable.querySelector('tbody');
-                        if (!!listBody && listBody.childElementCount <= 1) {
-                            // 0 alerts left, only the 'no alerts' row
-                            // remove header block
-                            const listHead = listTable.querySelector('thead');
-                            !!listHead && listHead.remove();
-                            // show 'no alerts'
-                            const noAlert = document.getElementById(`alert-list-no-alerts-${tableType}`);
-                            !!noAlert && (noAlert.style.display = 'inline-table');
-                        }
-                    } else {
-                        console.log(' there was an error deleting');
-                    }
-                });
+                        actions.loadAllAlerts();
+                        // } else {
+                        //     console.log('1 there was an error deleting');
+                        // }
+                    })
+                    .catch(x => {
+                        console.log('catch deleted error status: ', alertsError);
+                        console.log('2 there was an error deleting ', x);
+                        setAlertNotice('');
+                        setDeleteActive(false);
+                        setDeleteErrorActive(true);
+                    });
             });
-            // actions.clearAlerts(); // force the list to reload
         }
     };
 
@@ -270,16 +200,29 @@ export default function AlertsListAsTable(
         };
     };
 
+    console.log('deleteErrorActive = ', deleteErrorActive);
     return (
         <React.Fragment>
-            <ConfirmationBox
-                confirmationBoxId="alert-delete-dialog"
-                onAction={() => deleteSelectedAlerts()}
-                onClose={hideConfirmation}
-                onCancelAction={hideConfirmation}
-                isOpen={isOpen}
-                locale={confirmDeleteLocale(numberOfCheckedBoxes)}
-            />
+            {!!deleteActive && (
+                <ConfirmationBox
+                    confirmationBoxId="alert-delete-confirm-dialog"
+                    onAction={() => deleteSelectedAlerts()}
+                    onClose={hideConfirmation}
+                    onCancelAction={hideConfirmation}
+                    isOpen={isOpen}
+                    locale={confirmDeleteLocale(numberOfCheckedBoxes)}
+                />
+            )}
+            {!!deleteErrorActive && (
+                <ConfirmationBox
+                    confirmationBoxId="alert-delete-error-dialog"
+                    onAction={hideConfirmation}
+                    onClose={hideConfirmation}
+                    hideCancelButton
+                    isOpen={isOpen}
+                    locale={locale.listPage.deleteError}
+                />
+            )}
             <div
                 // id={`headerRow-${tableType}`}
                 data-testid={`headerRow-${tableType}`}
@@ -432,4 +375,21 @@ export default function AlertsListAsTable(
             </TableContainer>
         </React.Fragment>
     );
-}
+};
+
+AlertsListAsTable.propTypes = {
+    rows: PropTypes.array,
+    headertag: PropTypes.string,
+    alertsLoading: PropTypes.any,
+    alertsError: PropTypes.any,
+    history: PropTypes.object,
+    actions: PropTypes.any,
+    deleteAlert: PropTypes.any,
+    hasFooter: PropTypes.bool,
+};
+
+AlertsListAsTable.defaultProps = {
+    hasFooter: false,
+};
+
+export default AlertsListAsTable;
