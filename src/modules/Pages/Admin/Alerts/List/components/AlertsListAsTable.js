@@ -80,7 +80,7 @@ export const AlertsListAsTable = ({
     const defaultNumberOfRowsToDisplay = 5;
     const [rowsPerPage, setRowsPerPage] = React.useState(defaultNumberOfRowsToDisplay);
 
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
         isDeleteFailureConfirmationOpen,
         showDeleteFailureConfirmation,
@@ -155,10 +155,6 @@ export const AlertsListAsTable = ({
         );
     };
 
-    const confirmDelete = () => {
-        showConfirmation();
-    };
-
     function handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, numRequests) {
         if (numRequestsActual === numRequests && numRequestsSuccess < numRequests) {
             console.log('count: numRequestsSuccess = ', numRequestsSuccess, '; numRequests = ', numRequests);
@@ -211,10 +207,10 @@ export const AlertsListAsTable = ({
         <React.Fragment>
             <ConfirmationBox
                 confirmationBoxId="alert-delete-confirm"
-                onAction={() => deleteSelectedAlerts()}
-                onClose={hideConfirmation}
-                onCancelAction={hideConfirmation}
-                isOpen={isOpen}
+                onAction={deleteSelectedAlerts}
+                onClose={hideDeleteConfirmation}
+                onCancelAction={hideDeleteConfirmation}
+                isOpen={isDeleteConfirmOpen}
                 locale={confirmDeleteLocale(numberOfCheckedBoxes)}
             />
             <ConfirmationBox
@@ -237,7 +233,7 @@ export const AlertsListAsTable = ({
                     >
                         <span>{alertNotice}</span>
                         <IconButton
-                            onClick={confirmDelete}
+                            onClick={showDeleteConfirmation}
                             aria-label="Delete alert(s)"
                             // id={`training-list-${tableType}-delete-button`}
                             data-testid={`training-list-${tableType}-delete-button`}
