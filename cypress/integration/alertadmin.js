@@ -385,6 +385,41 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
+        it('hides incomplete links from the preview', () => {
+            // rather than show things like "title: body []()"
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 6');
+            cy.get('[data-testid="admin-alerts-form-body"]').type('body 6');
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            // when the user has required a link but entered nothing, no link shows in the preview
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'body 6');
+                });
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').type('Click here');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            // when the user has required a link and entered the text but no link, no link shows in the preview
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'body 6');
+                });
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').clear();
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http://example.com');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            // when the user has required a link and entered the link but no linktext, no link shows in the preview
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'body 6');
+                });
+        });
         it('can save an alert (simple)', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);

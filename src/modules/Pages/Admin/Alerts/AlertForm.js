@@ -190,7 +190,11 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         alertWebComponent.setAttribute('id', 'alert-preview');
         alertWebComponent.setAttribute('alerttitle', values.alertTitle);
         alertWebComponent.setAttribute('alerttype', !!values.urgent ? '1' : '0');
-        const body = (!!values.body && getBody(values)) || getBody(defaults);
+        let body = (!!values.body && getBody(values)) || getBody(defaults);
+        // when they havent entered all the link details yet, dont display the link in the preview at all
+        body = body.replace('[]()', '');
+        body = body.replace(`[${values.linkTitle}]()`, '');
+        body = body.replace(`[](${values.linkUrl})`, '');
         // when the alert body has the square bracket for 'permanent',
         // that enclosed string is not accepted by setattribute
         // something to do with XSS blocking for special char?
