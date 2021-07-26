@@ -88,13 +88,12 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         }
     }, [showConfirmation, alertError, alertStatus]);
 
-    // or should this reset to defaults?
     const clearForm = () => {
         setValues({
             ['alertTitle']: '',
             ['enteredbody']: '',
-            ['startDate']: values.startDate,
-            ['endDate']: values.endDate,
+            ['startDate']: defaults.startDate,
+            ['endDate']: defaults.endDate,
             ['urgent']: false,
             ['permanentAlert']: false,
             ['linkRequired']: false,
