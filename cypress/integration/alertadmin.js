@@ -237,6 +237,57 @@ describe('Alerts Admin Pages', () => {
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
         });
+        it('during delete section checkboxes in other sections are disabled', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').check();
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').check();
+            cy.get('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').uncheck();
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').uncheck();
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').uncheck();
+            cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="alert-list-item-checkbox-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').should(
+                'not.be.disabled',
+            );
+        });
     });
     context('Alert Admin Add page', () => {
         it('displays an "unauthorised" page to public users', () => {

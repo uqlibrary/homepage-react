@@ -135,17 +135,33 @@ export const AlertsListAsTable = ({
     const handleCheckboxChange = e => {
         const numberOfCheckedBoxes = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
 
+        const thisType = e.target.closest('table').parentElement.id;
         if (!!e.target && !!e.target.checked) {
             console.log('checkbox has been checked');
             // handle a checkbox being turned on
             if (numberOfCheckedBoxes === 1) {
                 setDeleteActive(true);
             }
+            // disable anycheckboxes in a different section
+            const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
+            checkBoxList.forEach(ii => {
+                const thetype = ii.closest('table').parentElement.id;
+                if (thetype !== thisType) {
+                    ii.disabled = true;
+                    ii.parentElement.parentElement.classList.add('Mui-disabled');
+                }
+            });
         } else if (!!e.target && !e.target.checked) {
             console.log('checkbox has been UNchecked');
             // handle a checkbox being turned off
             if (numberOfCheckedBoxes === 0) {
                 setDeleteActive(false);
+                // re-enable the checboxes in other sections
+                const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
+                checkBoxList.forEach(ii => {
+                    ii.disabled = false;
+                    ii.parentElement.parentElement.classList.remove('Mui-disabled');
+                });
             }
         }
         setAlertNotice(
@@ -262,6 +278,7 @@ export const AlertsListAsTable = ({
                                                 inputProps={{
                                                     'aria-labelledby': `alert-list-item-title-${alert.id}`,
                                                     'data-testid': `alert-list-item-checkbox-${alert.id}`,
+                                                    'data-type': `${tableType}`,
                                                 }}
                                                 onChange={handleCheckboxChange}
                                                 value={`${checkBoxIdPrefix}${alert.id}`}
