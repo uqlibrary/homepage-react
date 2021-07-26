@@ -155,38 +155,23 @@ export const AlertsListAsTable = ({
         );
     };
 
-    function handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, numRequests) {
-        if (numRequestsActual === numRequests && numRequestsSuccess < numRequests) {
-            console.log('count: numRequestsSuccess = ', numRequestsSuccess, '; numRequests = ', numRequests);
-            showDeleteFailureConfirmation();
-        }
-    }
-
     const deleteSelectedAlerts = () => {
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
         if (!!checkboxes && checkboxes.length > 0) {
-            let numRequestsActual = 0;
-            let numRequestsSuccess = 0;
             checkboxes.forEach(c => {
                 const alertID = c.value.replace(checkBoxIdPrefix, '');
                 console.log('deleting alert with id ', alertID);
-                numRequestsActual++;
                 deleteAlert(alertID)
-                    .then(response => {
-                        numRequestsSuccess++;
-                        console.log('response was ', response);
+                    .then(() => {
                         console.log('then deleted error status: ', alertsError);
                         console.log('deleted: ', `alert-list-row-${alertID}`);
 
                         setAlertNotice('');
                         setDeleteActive(false);
                         actions.loadAllAlerts();
-
-                        handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, checkboxes.length);
                     })
-                    .catch(x => {
-                        console.log('There was an error deleting ', x);
-                        handleShowDeleteFailureConfirmation(numRequestsSuccess, numRequestsActual, checkboxes.length);
+                    .catch(() => {
+                        showDeleteFailureConfirmation();
                     });
             });
         }
@@ -235,8 +220,8 @@ export const AlertsListAsTable = ({
                         <IconButton
                             onClick={showDeleteConfirmation}
                             aria-label="Delete alert(s)"
-                            // id={`training-list-${tableType}-delete-button`}
-                            data-testid={`training-list-${tableType}-delete-button`}
+                            // id={`alert-list-${tableType}-delete-button`}
+                            data-testid={`alert-list-${tableType}-delete-button`}
                         >
                             <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
                         </IconButton>

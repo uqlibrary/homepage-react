@@ -158,7 +158,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="headerRow-scheduled"] span span').contains('1 alert selected');
 
             // click the delete button and the delete dialog appears
-            cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
+            cy.get('[data-testid="alert-list-scheduled-delete-button"]').click();
             cy.get('[data-testid="cancel-alert-delete-confirm"]').should('exist');
             // close dialog
             cy.get('[data-testid="cancel-alert-delete-confirm"]').click();
@@ -172,7 +172,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="headerRow-current"] span span').contains('1 alert selected');
 
             // click the Proceed button and the alert is deleted
-            cy.get('[data-testid="training-list-current-delete-button"]').click();
+            cy.get('[data-testid="alert-list-current-delete-button"]').click();
             cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
             cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
             cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
@@ -187,7 +187,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
             cy.get('[data-testid="headerRow-scheduled"] span span').contains('1 alert selected');
             // click bin icon
-            cy.get('[data-testid="training-list-scheduled-delete-button"]').click();
+            cy.get('[data-testid="alert-list-scheduled-delete-button"]').click();
             // a confirm dialog popsup
             cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
             cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
@@ -202,6 +202,39 @@ describe('Alerts Admin Pages', () => {
             // dialog can be closed
             cy.get('[data-testid="confirm-alert-delete-error-dialog"]').should('exist');
             cy.get('[data-testid="confirm-alert-delete-error-dialog"]').click();
+            cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
+        });
+        it('sequential alerts do not fail', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
+            cy.get('[data-testid="headerRow-past"] span span').contains('1 alert selected');
+            // click bin icon
+            cy.get('[data-testid="alert-list-past-delete-button"]').click();
+            // a confirm dialog popsup
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
+            // click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
+            cy.wait(500);
+            // the error dialog doesnt appear
+            cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
+            // subsequent deletes also succeed
+            cy.get('[data-testid="alert-list-item-checkbox-da181a00-d476-11eb-8596-2540419539a9"]').check();
+            cy.get('[data-testid="headerRow-past"] span span').contains('1 alert selected');
+            cy.get('[data-testid="alert-list-item-checkbox-cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08"]').check();
+            cy.get('[data-testid="headerRow-past"] span span').contains('2 alerts selected');
+            // click bin icon
+            cy.get('[data-testid="alert-list-past-delete-button"]').click();
+            // a confirm dialog popsup
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
+            // click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
+            cy.wait(500);
+            // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
         });
     });
