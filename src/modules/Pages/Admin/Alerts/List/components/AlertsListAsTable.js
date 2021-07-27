@@ -103,7 +103,7 @@ export const AlertsListAsTable = ({
     console.log('AlertsListAsTable ', tableType, ' rows = ', rows);
 
     let userows = rows;
-    if (!!rows && rows.length > 0 && !!reverseOrder) {
+    if (!!reverseOrder && !!rows && rows.length > 0) {
         userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
     }
 
@@ -150,7 +150,8 @@ export const AlertsListAsTable = ({
     };
 
     const handleCheckboxChange = e => {
-        const numberCheckboxesSelected = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
+        const numberCheckboxesSelected = document.querySelectorAll('#admin-alerts-list tr.alert-data-row :checked')
+            .length;
 
         const thisType = e.target.closest('table').parentElement.id;
         if (!!e.target && !!e.target.checked) {
@@ -159,7 +160,7 @@ export const AlertsListAsTable = ({
             if (numberCheckboxesSelected === 1) {
                 setDeleteActive(true);
             }
-            // disable anycheckboxes in a different section
+            // disable any checkboxes in a different alert list
             const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
             checkBoxList.forEach(ii => {
                 const thetype = ii.closest('table').parentElement.id;
@@ -216,8 +217,7 @@ export const AlertsListAsTable = ({
         };
     };
 
-    console.log('footerDisplayMinLength = ', footerDisplayMinLength);
-    console.log('userows.length = ', userows.length);
+    const needsPaginator = userows.length >= footerDisplayMinLength;
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -292,6 +292,7 @@ export const AlertsListAsTable = ({
                                         key={alert.id}
                                         id={`alert-list-row-${alert.id}`}
                                         data-testid={`alert-list-row-${alert.id}`}
+                                        className="alert-data-row"
                                     >
                                         <TableCell component="td">
                                             <Checkbox
@@ -367,7 +368,7 @@ export const AlertsListAsTable = ({
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                    {userows.length >= footerDisplayMinLength && (
+                    {!!needsPaginator && (
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
@@ -405,13 +406,13 @@ AlertsListAsTable.propTypes = {
     history: PropTypes.object,
     actions: PropTypes.any,
     deleteAlert: PropTypes.any,
-    footerDisplayMinLength: PropTypes.any,
+    footerDisplayMinLength: PropTypes.number,
     reverseOrder: PropTypes.bool,
 };
 
 AlertsListAsTable.defaultProps = {
-    footerDisplayMinLength: 5,
-    reverseOrder: false,
+    footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
+    reverseOrder: false, // show this alert data list in reverse order (currently the Past Alerts)
 };
 
 export default AlertsListAsTable;
