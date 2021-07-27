@@ -1,90 +1,144 @@
 /* eslint-disable max-len */
+/* eslint-disable no-trailing-spaces */
 import React, { Fragment } from 'react';
 
 export default {
     helpPopupText: (
         <Fragment>
-            <h2>About</h2>
+            <h2>About Alerts Management</h2>
             <p>
-                UQ Library's Alert Management application provides authorized users with an interface to add, update and
-                remove alerts. These alerts are displayed above the header on all UQ Library pages.
+                This application enables authorised users to post alerts for library clients in the website header.
+                Alerts appear as part of the reusable header on sites that include the Library Homepage and various
+                apps, Drupal Website, Libguides and Library CRM pages.
             </p>
 
-            <h2>Alert listing</h2>
+            <h2>Alert listing screen</h2>
             <p>
-                Alerts are listed on the main page and are split into three tables: "Current Alerts", "Scheduled Alerts"
-                and "Past Alerts".
-            </p>
-            <p>Full dates can be seen by mousing over the short date display.</p>
-
-            <h2 id="adding-alert" data-testid="admin-alerts-help-example">
-                Adding an alert
-            </h2>
-            <p>
-                Adding alerts is done via the "ADD ALERT" button in the top right corner of the main alert list view. An
-                alert consists of the following components:
+                Alerts are listed in three tables: Current alerts, Scheduled alerts and Past alerts based on their start
+                and end date and time.
             </p>
             <ul>
                 <li>
-                    Title
-                    <div className="description">(cannot be empty)</div>
+                    <strong>Current alerts</strong>: displays alerts published on the website now based on start and end
+                    date/time. List is ordered by start time.
                 </li>
                 <li>
-                    Description
-                    <div className="description">(cannot be empty, cannot contain HTML tags</div>
+                    <strong>Scheduled alerts</strong>: displays alerts to be displayed in the future based on start
+                    date/time. List is ordered by alert start time.
                 </li>
                 <li>
-                    Start date/time
-                    <div className="description">(cannot be empty, must be before the end date / time)</div>
-                </li>
-                <li>
-                    End date/time
-                    <div className="description">(cannot be empty, must be after the start date / time)</div>
-                </li>
-                <li>
-                    Urgent
-                    <div className="description">
-                        Changes the color of the alert when displayed (urgent = red, non-urgent = blue)
-                    </div>
-                </li>
-                <li>
-                    Permanent
-                    <div className="description">The alert cannot be dismissed</div>
-                </li>
-                <li>
-                    Add info link
-                    <div className="description">Shows/hides the URL fields</div>
-                </li>
-                <li>
-                    Link Title
-                    <div className="description">(cannot be empty)</div>
-                </li>
-                <li>
-                    Link URL
-                    <div className="description">(cannot be empty)</div>
+                    <strong>Past alerts</strong>: displays past alerts. List is ordered reverse chronologically by end
+                    date/time.
                 </li>
             </ul>
-            <p>
-                Validation is offered on the form, but staff are urged to double check all entered data before clicking
-                "Save".
-            </p>
 
-            <h2>Editing an alert</h2>
+            <h2 id="adding-alert" data-testid="admin-alerts-help-example">
+                Add an alert
+            </h2>
             <p>
-                Editing an existing alert is done by pressing the "Edit" button at the back of an alert row in the main
-                alert list view. This will take the user to the "Edit Alert" view, which is functionally identical to
-                the "Add Alert" view. Please see the <a href="#adding-alert">"Adding an alert"</a> section for more
-                details.
+                Press the <strong>Add alert</strong> button on the Alert listing screen. The Create alert form will
+                appear.
             </p>
+            <dl>
+                <dt>Title</dt>
+                <dd>
+                    <p>Alert lead text. Appears in bold.</p>
+                    <p>Required field. Max length of 255 characters.</p>
+                </dd>
+                <dt>Message</dt>
+                <dd>
+                    <p>Alert body text.</p>
+                    <p>Required field. Max length of 550 characters.</p>
+                </dd>
+                <dt>Start date</dt>
+                <dd>
+                    <p>Date and time when the alert should be published for clients.</p>
+                    <p>Defaults to current date and time. Cannot be in the past.</p>
+                    <p>Set into the future to schedule an alert.</p>
+                    <p>Full date information can be seen by mousing over the short date display.</p>
+                </dd>
+                <dt>End date</dt>
+                <dd>
+                    <p>Date and time when alert should be unpublished.</p>
+                    <p>Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
+                    <p>Full date information can be seen by mousing over the short date display.</p>
+                </dd>
+                <dt>Add info link</dt>
+                <dd>
+                    <p>Displays more info link/button for clients.</p>
+                    <p>Optional field. When checked, displays Link title and Link URL fields for button.</p>
+                </dd>
+                <dt>*Link title</dt>
+                <dd>
+                    <p>More info button text.</p>
+                    <p>Conditional required field. Max length of 55 characters.</p>
+                    <p>
+                        Ensure clear call to action. Preferably use destination page title. Minimise field length for
+                        display and accessibility reasons.
+                    </p>
+                </dd>
+                <dt>*Link URL</dt>
+                <dd>
+                    <p>More info button URL.</p>
+                    <p>Conditional required field. Field accepts full URL only.</p>
+                </dd>
+                <dt>Permanent</dt>
+                <dd>
+                    <p>Removes ‘close’ button on alert for clients so alert is always visible.</p>
+                </dd>
+                <dt>Urgent</dt>
+                <dd>
+                    <p>Changes alert colour to orange and changes icon to indicate alert is urgent.</p>
+                    <p>Default non-urgent alert is blue.</p>
+                </dd>
+            </dl>
+            <ul>
+                <li>
+                    Press <strong>Preview</strong> to check your alert. A preview alert will appear at the top of the
+                    page. The More info button will not navigate you to the new page, however it will confirm the URL
+                    once the alert is live.
+                </li>
+                <li>
+                    Press <strong>Save</strong> to create the alert. The system will confirm the alert has been created
+                    and enable you to create another alert or proceed to the Alerts listing screen
+                </li>
+            </ul>
+            <p>The alert will appear between the start time and the end time set in the alert.</p>
 
-            <h2>Removing alerts</h2>
+            <h2>Edit an alert</h2>
+            <ol>
+                <li>
+                    Press <strong>Edit</strong> beside an alert on the Alerts listing screen. The Edit alert form will
+                    appear with the alert information prefilled.
+                </li>
+                <li>
+                    Update the alert details. The <strong>Save</strong> button will be enabled.
+                </li>
+                <li>
+                    <strong>Preview</strong> your alert is correct, then press <strong>Save</strong>. The system will
+                    confirm the alert has been updated and enable you to return to the Alerts listing screen.
+                </li>
+            </ol>
+            <p>Press Cancel if you don’t want to make any changes.</p>
+
+            <h2>Remove alerts</h2>
             <p>
-                Removing alerts is done via the main alert list view. Simply select all the alerts that need to be
-                removed and press the delete icon (looks like a trash can). A confirmation will be displayed before the
-                alerts are removed.
+                <strong>Deleted alerts cannot be restored. Past alerts should generally be retained.</strong>
             </p>
+            <p>On the Alerts listing screen:</p>
+            <ol>
+                <li>
+                    Check one or more alerts within one of the tables, e.g. Past alerts. A blue bar with a Delete button
+                    (bin) and a Deselect button (cross) will appear in the table title row.
+                </li>
+                <li>
+                    Press <strong>Delete</strong> (the bin icon) to proceed with deleting the alerts. You will be asked
+                    to confirm you wish to proceed. The system will confirm the alerts are permanently deleted.
+                </li>
+            </ol>
+
             <p>
-                <strong>Warning! Removed alerts cannot be brought back</strong>
+                Press <strong>Close (the cross icon)</strong> to deselect all selected alerts.
             </p>
         </Fragment>
     ),

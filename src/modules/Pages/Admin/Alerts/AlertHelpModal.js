@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import Backdrop from '@material-ui/core/Backdrop';
+import SimpleBackdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
@@ -18,6 +18,17 @@ const useStyles = makeStyles(
             overflowY: 'scroll',
             maxHeight: '75%',
             paddingTop: '30%',
+            '& p': {
+                marginBlockStart: 0,
+                marginBlockEnd: '1em',
+            },
+            '& li': {
+                marginBlockStart: 0,
+                marginBlockEnd: '1em',
+            },
+            '& dt': {
+                fontStyle: 'italic',
+            },
         },
         paper: {
             backgroundColor: theme.palette.background.paper,
@@ -25,7 +36,7 @@ const useStyles = makeStyles(
             boxShadow: theme.shadows[5],
             padding: theme.spacing(2, 4, 3),
             maxWidth: '75%',
-            marginTop: 64,
+            marginTop: 1000,
             marginBottom: 64,
         },
         actionButtonPlacer: {
@@ -68,10 +79,11 @@ export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
         <Fragment>
             <div className={classes.actionButtonPlacer}>
                 <Button
-                    onClick={openHelpLightbox}
-                    data-testid="admin-alerts-help-button"
-                    color="secondary"
                     children="About alerts"
+                    color="secondary"
+                    data-testid="admin-alerts-help-button"
+                    id="admin-alerts-help-button"
+                    onClick={openHelpLightbox}
                 />
             </div>
             {!!showAddButton && (
@@ -87,17 +99,14 @@ export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
                 </div>
             )}
             <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
                 className={classes.modal}
                 open={lightboxOpen}
                 onClose={closeHelpLightbox}
                 closeAfterTransition
-                BackdropComponent={Backdrop}
+                BackdropComponent={SimpleBackdrop}
                 BackdropProps={{
                     timeout: 500,
                 }}
-                disableScrollLock
             >
                 <Fade in={lightboxOpen}>
                     <div className={classes.paper}>{locale.helpPopupText}</div>
