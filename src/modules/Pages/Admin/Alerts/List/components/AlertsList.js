@@ -163,7 +163,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
-                                    hasFooter
+                                    reverseOrder
                                 />
                             </div>
                         </Grid>

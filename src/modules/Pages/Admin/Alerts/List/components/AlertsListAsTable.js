@@ -70,7 +70,8 @@ export const AlertsListAsTable = ({
     history,
     actions,
     deleteAlert,
-    hasFooter,
+    footerDisplayMinLength,
+    reverseOrder,
 }) => {
     console.log('AlertsListAsTable alertsError = ', alertsError);
     const classes = useStyles2();
@@ -78,8 +79,7 @@ export const AlertsListAsTable = ({
     const [deleteActive, setDeleteActive] = React.useState(false);
     const [alertNotice, setAlertNotice] = React.useState('');
 
-    const defaultNumberOfRowsToDisplay = 5;
-    const [rowsPerPage, setRowsPerPage] = React.useState(defaultNumberOfRowsToDisplay);
+    const [rowsPerPage, setRowsPerPage] = React.useState(footerDisplayMinLength);
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -103,8 +103,7 @@ export const AlertsListAsTable = ({
     console.log('AlertsListAsTable ', tableType, ' rows = ', rows);
 
     let userows = rows;
-    // anything which is planning to show a footer should be reversed into 'show newest first' order
-    if (!!hasFooter && !!rows && rows.length > 0) {
+    if (!!rows && rows.length > 0 && !!reverseOrder) {
         userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
     }
 
@@ -217,6 +216,8 @@ export const AlertsListAsTable = ({
         };
     };
 
+    console.log('footerDisplayMinLength = ', footerDisplayMinLength);
+    console.log('userows.length = ', userows.length);
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -366,7 +367,7 @@ export const AlertsListAsTable = ({
                             </TableCell>
                         </TableRow>
                     </TableBody>
-                    {!!hasFooter && userows.length > 0 && (
+                    {userows.length >= footerDisplayMinLength && (
                         <TableFooter>
                             <TableRow>
                                 <TablePagination
@@ -404,11 +405,13 @@ AlertsListAsTable.propTypes = {
     history: PropTypes.object,
     actions: PropTypes.any,
     deleteAlert: PropTypes.any,
-    hasFooter: PropTypes.bool,
+    footerDisplayMinLength: PropTypes.any,
+    reverseOrder: PropTypes.bool,
 };
 
 AlertsListAsTable.defaultProps = {
-    hasFooter: false,
+    footerDisplayMinLength: 5,
+    reverseOrder: false,
 };
 
 export default AlertsListAsTable;
