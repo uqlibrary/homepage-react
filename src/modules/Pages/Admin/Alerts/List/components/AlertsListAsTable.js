@@ -17,6 +17,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 
+import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import { TablePaginationActions } from './TablePaginationActions';
@@ -132,14 +133,31 @@ export const AlertsListAsTable = ({
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
+    const reEnableAllCheckboxes = () => {
+        const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
+        checkBoxList.forEach(ii => {
+            ii.disabled = false;
+            ii.parentElement.parentElement.classList.remove('Mui-disabled');
+        });
+    };
+
+    const clearAllCheckboxes = () => {
+        const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
+        checkBoxList.forEach(ii => {
+            if (ii.checked) {
+                ii.click();
+            }
+        });
+    };
+
     const handleCheckboxChange = e => {
-        const numberOfCheckedBoxes = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
+        const numberCheckboxesSelected = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
 
         const thisType = e.target.closest('table').parentElement.id;
         if (!!e.target && !!e.target.checked) {
             console.log('checkbox has been checked');
             // handle a checkbox being turned on
-            if (numberOfCheckedBoxes === 1) {
+            if (numberCheckboxesSelected === 1) {
                 setDeleteActive(true);
             }
             // disable anycheckboxes in a different section
@@ -154,20 +172,15 @@ export const AlertsListAsTable = ({
         } else if (!!e.target && !e.target.checked) {
             console.log('checkbox has been UNchecked');
             // handle a checkbox being turned off
-            if (numberOfCheckedBoxes === 0) {
+            if (numberCheckboxesSelected === 0) {
                 setDeleteActive(false);
-                // re-enable the checboxes in other sections
-                const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
-                checkBoxList.forEach(ii => {
-                    ii.disabled = false;
-                    ii.parentElement.parentElement.classList.remove('Mui-disabled');
-                });
+                reEnableAllCheckboxes();
             }
         }
         setAlertNotice(
             '[n] alert[s] selected'
-                .replace('[n]', numberOfCheckedBoxes)
-                .replace('[s]', numberOfCheckedBoxes === 1 ? '' : 's'),
+                .replace('[n]', numberCheckboxesSelected)
+                .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
         );
     };
 
@@ -193,7 +206,7 @@ export const AlertsListAsTable = ({
         }
     };
 
-    const numberOfCheckedBoxes = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
+    const numberCheckboxesSelected = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
 
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
@@ -212,7 +225,7 @@ export const AlertsListAsTable = ({
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
-                locale={confirmDeleteLocale(numberOfCheckedBoxes)}
+                locale={confirmDeleteLocale(numberCheckboxesSelected)}
             />
             <ConfirmationBox
                 confirmationBoxId="alert-delete-error-dialog"
@@ -240,6 +253,14 @@ export const AlertsListAsTable = ({
                             data-testid={`alert-list-${tableType}-delete-button`}
                         >
                             <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
+                        </IconButton>
+                        <IconButton
+                            onClick={clearAllCheckboxes}
+                            aria-label="Clear selected checkboxes"
+                            data-testid={`alert-list-${tableType}-deselect-button`}
+                            className={classes.iconHighlighted}
+                        >
+                            <CloseIcon />
                         </IconButton>
                     </span>
                 )}
@@ -278,7 +299,6 @@ export const AlertsListAsTable = ({
                                                 inputProps={{
                                                     'aria-labelledby': `alert-list-item-title-${alert.id}`,
                                                     'data-testid': `alert-list-item-checkbox-${alert.id}`,
-                                                    'data-type': `${tableType}`,
                                                 }}
                                                 onChange={handleCheckboxChange}
                                                 value={`${checkBoxIdPrefix}${alert.id}`}
