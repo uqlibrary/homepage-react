@@ -140,7 +140,7 @@ mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
         },
     ]),
 );
-// mock.onAny(routes.ALERT_CREATE_API('id').apiUrl).reply(withDelay([500, {}]));
+// mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
 mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([
         200,
@@ -155,7 +155,7 @@ mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' })
         },
     ]),
 );
-// mock.onAny(routes.ALERT_SAVE_API('id').apiUrl).reply(withDelay([500, {}]));
+// mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
 console.log('delete mock url = ', routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl);
 mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([200, []]),

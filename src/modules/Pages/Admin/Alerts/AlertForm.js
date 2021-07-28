@@ -282,15 +282,9 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         handlePreview(false);
     };
 
-    /* istanbul ignore next */
-    const _handleDefaultSubmit = event => {
-        event && event.preventDefault();
-    };
-
     const errorLocale = {
         ...locale.form.add.addAlertError,
-        confirmationTitle:
-            defaults.type === 'add' ? `An error occurred while saving: ${alertError}` : 'We could not load this alert',
+        confirmationTitle: `An error occurred: ${alertError}`,
     };
 
     const handleConfirmation = () => {
@@ -308,11 +302,10 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     return (
         <Fragment>
-            <form onSubmit={_handleDefaultSubmit}>
+            <form>
                 {alertStatus === 'error' && (
                     <ConfirmationBox
                         confirmationBoxId="alert-error"
-                        onAction={() => navigateToListPage()}
                         onClose={hideConfirmation}
                         hideCancelButton
                         isOpen={isOpen}
