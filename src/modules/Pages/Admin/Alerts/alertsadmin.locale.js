@@ -49,7 +49,7 @@ export default {
                         <dt>Title</dt>
                         <dd>
                             <p>Alert lead text. Appears in bold.</p>
-                            <p>Required field. Max length of 255 characters.</p>
+                            <p>Required field. Max length of 100 characters.</p>
                         </dd>
                         <dt>Message</dt>
                         <dd>
