@@ -118,6 +118,7 @@ export const seeLibraryServices = account => loggedinCanSee(account);
 export const seeFeedback = account => everyoneCanSee(account);
 
 // there is an intention to make a non-hard coded access system. Perhaps a table, and an update screen?
+// until this is db driven, make the same change in Reusable so the user gets an entry in the MyLibrary menu
 export const seeAlertsAdmin = account =>
     !!account &&
     !!account.id &&
