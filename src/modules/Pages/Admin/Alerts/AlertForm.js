@@ -285,7 +285,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const errorLocale = {
-        ...locale.addForm.addAlertError,
+        ...locale.form.add.addAlertError,
         confirmationTitle:
             defaults.type === 'add' ? `An error occurred while saving: ${alertError}` : 'We could not load this alert',
     };
@@ -325,7 +325,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         hideCancelButton
                         isOpen={isOpen}
-                        locale={locale.editForm.editAlertConfirmation}
+                        locale={locale.form.edit.editAlertConfirmation}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'add' && (
@@ -335,10 +335,10 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
-                        locale={locale.addForm.addAlertConfirmation}
+                        locale={locale.form.add.addAlertConfirmation}
                     />
                 )}
-                <StandardCard help={locale.addForm.help}>
+                <StandardCard>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <FormControl fullWidth>
@@ -429,26 +429,26 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         <Grid item sm={4} xs={12}>
                             <InputLabel
                                 style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                title={locale.addForm.permanentTooltip}
+                                title={locale.form.add.permanentTooltip}
                             >
                                 <Checkbox
                                     data-testid="admin-alerts-form-checkbox-permanent"
                                     checked={values.permanentAlert}
                                     onChange={handleChange('permanentAlert')}
                                     name="permanentAlert"
-                                    title={locale.addForm.permanentTooltip}
+                                    title={locale.form.add.permanentTooltip}
                                 />
                                 Permanent
                             </InputLabel>
                         </Grid>
                         <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.addForm.urgentTooltip}>
+                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.add.urgentTooltip}>
                                 <Checkbox
                                     checked={values.urgent}
                                     data-testid="admin-alerts-form-checkbox-urgent"
                                     onChange={handleChange('urgent')}
                                     name="urgent"
-                                    title={locale.addForm.urgentTooltip}
+                                    title={locale.form.add.urgentTooltip}
                                 />
                                 Urgent
                             </InputLabel>

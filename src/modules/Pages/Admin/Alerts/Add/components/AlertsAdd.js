@@ -10,6 +10,7 @@ import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
@@ -45,7 +46,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal actions={actions} history={history} />
+                    <AlertHelpModal actions={actions} history={history} helpEntry={locale.form.help} />
                     <StandardCard title="Create alert" noPadding>
                         <AlertForm
                             actions={actions}

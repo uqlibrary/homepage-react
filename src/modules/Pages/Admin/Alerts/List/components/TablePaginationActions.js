@@ -18,7 +18,7 @@ const useStyles1 = makeStyles(theme => ({
     },
 }));
 
-function TablePaginationActions(props) {
+export function TablePaginationActions(props) {
     const classes = useStyles1();
     const theme = useTheme();
     const { count, page, rowsPerPage, onChangePage } = props;

@@ -11,6 +11,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
+import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(
     theme => ({
@@ -122,7 +123,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                         <p>Mobile? You might want to turn your phone sideways!</p>
                     </Grid>
                 </Grid>
-                <AlertHelpModal actions={actions} history={history} showAddButton />
+                <AlertHelpModal actions={actions} history={history} showAddButton helpEntry={locale.listPage.help} />
                 <StandardCard title="All alerts" noPadding>
                     <Grid container>
                         <Grid

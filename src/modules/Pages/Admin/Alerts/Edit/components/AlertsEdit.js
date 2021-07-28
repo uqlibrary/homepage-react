@@ -13,6 +13,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
 import { formatDate } from '../../alerthelpers';
+import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
@@ -83,7 +84,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal actions={actions} history={history} />
+                    <AlertHelpModal actions={actions} history={history} helpEntry={locale.form.help} />
                     <StandardCard title="Edit alert" noPadding>
                         <AlertForm
                             actions={actions}

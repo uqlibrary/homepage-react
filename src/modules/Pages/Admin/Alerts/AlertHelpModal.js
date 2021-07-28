@@ -5,19 +5,12 @@ import SimpleBackdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
-import Modal from '@material-ui/core/Modal';
-
-import { default as locale } from './alertsadmin.locale';
+import Drawer from '@material-ui/core/Drawer';
 
 const useStyles = makeStyles(
     theme => ({
-        modal: {
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+        drawer: {
             overflowY: 'scroll',
-            maxHeight: '75%',
-            paddingTop: '30%',
             '& p': {
                 marginBlockStart: 0,
                 marginBlockEnd: '1em',
@@ -32,12 +25,11 @@ const useStyles = makeStyles(
         },
         paper: {
             backgroundColor: theme.palette.background.paper,
-            border: '2px solid #000',
-            boxShadow: theme.shadows[5],
             padding: theme.spacing(2, 4, 3),
-            maxWidth: '75%',
-            marginTop: 1000,
-            marginBottom: 64,
+            width: 500,
+            [theme.breakpoints.down('sm')]: {
+                width: 200,
+            },
         },
         actionButtonPlacer: {
             float: 'right',
@@ -54,7 +46,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
+export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, showAddButton }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -77,15 +69,17 @@ export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
 
     return (
         <Fragment>
-            <div className={classes.actionButtonPlacer}>
-                <Button
-                    children="About alerts"
-                    color="secondary"
-                    data-testid="admin-alerts-help-button"
-                    id="admin-alerts-help-button"
-                    onClick={openHelpLightbox}
-                />
-            </div>
+            {!!helpEntry && (
+                <div className={classes.actionButtonPlacer}>
+                    <Button
+                        children={helpButtonLabel}
+                        color="secondary"
+                        data-testid="admin-alerts-help-button"
+                        id="admin-alerts-help-button"
+                        onClick={openHelpLightbox}
+                    />
+                </div>
+            )}
             {!!showAddButton && (
                 <div className={classes.actionButtonPlacer}>
                     <Button
@@ -98,8 +92,9 @@ export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
                     />
                 </div>
             )}
-            <Modal
-                className={classes.modal}
+            <Drawer
+                anchor="right"
+                className={classes.drawer}
                 open={lightboxOpen}
                 onClose={closeHelpLightbox}
                 closeAfterTransition
@@ -109,15 +104,34 @@ export const AlertHelpModal = ({ actions, history, showAddButton = false }) => {
                 }}
             >
                 <Fade in={lightboxOpen}>
-                    <div className={classes.paper}>{locale.helpPopupText}</div>
+                    <div className={classes.paper}>
+                        <h2>{helpEntry?.title || 'TBA'}</h2>
+                        <div>{helpEntry?.text || ''}</div>
+                        <div>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                className={classes.button}
+                                children={helpEntry?.buttonLabel || 'Close'}
+                                onClick={closeHelpLightbox}
+                            />
+                        </div>
+                    </div>
                 </Fade>
-            </Modal>
+            </Drawer>
         </Fragment>
     );
 };
 
 AlertHelpModal.propTypes = {
     actions: PropTypes.any,
+    helpEntry: PropTypes.any,
+    helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
+};
+
+AlertHelpModal.defaultProps = {
+    showAddButton: false,
+    helpButtonLabel: 'Help',
 };
