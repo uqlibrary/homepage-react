@@ -510,11 +510,7 @@ const PersonalisedPanel = ({
                                     placement="left"
                                     TransitionProps={{ timeout: 300 }}
                                 >
-                                    <Typography
-                                        component={'span'}
-                                        // color={'secondary'}
-                                        style={{ fontSize: 14, color: '#595959' }}
-                                    >
+                                    <Typography component={'span'} style={{ fontSize: 14, color: '#595959' }}>
                                         <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
                                         {(account && account.id) || ''}
                                     </Typography>
