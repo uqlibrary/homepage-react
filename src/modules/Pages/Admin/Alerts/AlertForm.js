@@ -338,7 +338,10 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                 <StandardCard>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <FormControl fullWidth>
+                            <FormControl
+                                fullWidth
+                                title="Alert lead text. Appears in bold. Field length of 100 characters."
+                            >
                                 <InputLabel htmlFor="alertTitle">Title *</InputLabel>
                                 <Input
                                     id="alertTitle"
@@ -346,14 +349,13 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     value={values.alertTitle}
                                     onChange={handleChange('alertTitle')}
                                     inputProps={{ maxLength: 100 }}
-                                    title="Alert lead text. Appears in bold. Field length of 100 characters."
                                 />
                             </FormControl>
                         </Grid>
                     </Grid>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
-                            <FormControl fullWidth>
+                            <FormControl fullWidth title="Regular body text. Field length of 550 characters.">
                                 <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
                                     Message *
                                 </InputLabel>
@@ -365,7 +367,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     multiline
                                     rows={2}
                                     inputProps={{ maxLength: 550 }}
-                                    title="Regular body text. Field length of 550 characters."
                                 />
                             </FormControl>
                         </Grid>
