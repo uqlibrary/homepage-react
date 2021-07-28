@@ -67,6 +67,11 @@ const useStyles2 = makeStyles(
             backgroundColor: theme.palette.accent.main,
             color: '#fff',
         },
+        checkboxCell: {
+            '& input[type="checkbox"]:checked + svg': {
+                fill: '#595959',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -313,9 +318,9 @@ export const AlertsListAsTable = ({
                                         data-testid={`alert-list-row-${alert.id}`}
                                         className="alert-data-row"
                                     >
-                                        <TableCell component="td">
+                                        <TableCell component="td" className={classes.checkboxCell}>
                                             <Checkbox
-                                                classes={{ root: classes.checkbox }}
+                                                // classes={{ root: classes.checkbox }}
                                                 id={`alert-list-item-checkbox-${alert.id}`}
                                                 inputProps={{
                                                     'aria-labelledby': `alert-list-item-title-${alert.id}`,
