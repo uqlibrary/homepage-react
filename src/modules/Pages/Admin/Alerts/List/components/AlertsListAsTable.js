@@ -79,7 +79,7 @@ export const AlertsListAsTable = ({
     actions,
     deleteAlert,
     footerDisplayMinLength,
-    reverseOrder,
+    alertOrder,
 }) => {
     console.log('AlertsListAsTable alertsError = ', alertsError);
     const classes = useStyles2();
@@ -111,8 +111,16 @@ export const AlertsListAsTable = ({
     console.log('AlertsListAsTable ', tableType, ' rows = ', rows);
 
     let userows = rows;
-    if (!!reverseOrder && !!rows && rows.length > 0) {
-        userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
+    if (!!alertOrder && !!rows && rows.length > 0) {
+        if (alertOrder === 'reverseEnd') {
+            userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
+        } else if (alertOrder === 'forwardEnd') {
+            userows = rows.sort((a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'));
+        } else if (alertOrder === 'forwardStart') {
+            userows = rows.sort(
+                (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
+            );
+        }
     }
 
     if (!!alertsLoading) {
@@ -420,12 +428,12 @@ AlertsListAsTable.propTypes = {
     actions: PropTypes.any,
     deleteAlert: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
-    reverseOrder: PropTypes.bool,
+    alertOrder: PropTypes.any,
 };
 
 AlertsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
-    reverseOrder: false, // show this alert data list in reverse order (currently the Past Alerts)
+    alertOrder: false, // what order should we sort the alerts in?
 };
 
 export default AlertsListAsTable;

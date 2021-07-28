@@ -142,6 +142,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
+                                    alertOrder="forwardEnd"
                                 />
                             </div>
                             <div data-testid="admin-alerts-list-future-list">
@@ -153,6 +154,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
+                                    alertOrder="forwardStart"
                                 />
                             </div>
                             <div data-testid="admin-alerts-list-past-list">
@@ -164,7 +166,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
-                                    reverseOrder
+                                    alertOrder="reverseEnd"
                                 />
                             </div>
                         </Grid>
