@@ -91,6 +91,15 @@ export const mui1theme = createMuiTheme({
                 margin: 0,
             },
         },
+        MuiButton: {
+            containedSecondary: {
+                '&:hover': {
+                    backgroundColor: '#aca7a3',
+                    borderColor: '#aca7a3',
+                    color: '#000',
+                },
+            },
+        },
     },
     graphs: {
         color1: '#d72865',

@@ -163,6 +163,15 @@ exports[`Index page should render placeholders 1`] = `
                   "padding": 0,
                 },
               },
+              "MuiButton": Object {
+                "containedSecondary": Object {
+                  "&:hover": Object {
+                    "backgroundColor": "#aca7a3",
+                    "borderColor": "#aca7a3",
+                    "color": "#000",
+                  },
+                },
+              },
               "MuiFormLabel": Object {
                 "root": Object {
                   "overflow": "hidden",
@@ -1349,6 +1358,15 @@ exports[`Index page should render placeholders 1`] = `
                                                               "boxShadow": "none",
                                                               "margin": 0,
                                                               "padding": 0,
+                                                            },
+                                                          },
+                                                          "MuiButton": Object {
+                                                            "containedSecondary": Object {
+                                                              "&:hover": Object {
+                                                                "backgroundColor": "#aca7a3",
+                                                                "borderColor": "#aca7a3",
+                                                                "color": "#000",
+                                                              },
                                                             },
                                                           },
                                                           "MuiFormLabel": Object {
@@ -6348,6 +6366,15 @@ exports[`Index page should render placeholders 1`] = `
                                                           "padding": 0,
                                                         },
                                                       },
+                                                      "MuiButton": Object {
+                                                        "containedSecondary": Object {
+                                                          "&:hover": Object {
+                                                            "backgroundColor": "#aca7a3",
+                                                            "borderColor": "#aca7a3",
+                                                            "color": "#000",
+                                                          },
+                                                        },
+                                                      },
                                                       "MuiFormLabel": Object {
                                                         "root": Object {
                                                           "overflow": "hidden",
@@ -7817,6 +7844,15 @@ exports[`Index page should render placeholders 1`] = `
                                                           "boxShadow": "none",
                                                           "margin": 0,
                                                           "padding": 0,
+                                                        },
+                                                      },
+                                                      "MuiButton": Object {
+                                                        "containedSecondary": Object {
+                                                          "&:hover": Object {
+                                                            "backgroundColor": "#aca7a3",
+                                                            "borderColor": "#aca7a3",
+                                                            "color": "#000",
+                                                          },
                                                         },
                                                       },
                                                       "MuiFormLabel": Object {

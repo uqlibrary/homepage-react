@@ -178,6 +178,15 @@ exports[`Application component should render for anon user 1`] = `
                   "padding": 0,
                 },
               },
+              "MuiButton": Object {
+                "containedSecondary": Object {
+                  "&:hover": Object {
+                    "backgroundColor": "#aca7a3",
+                    "borderColor": "#aca7a3",
+                    "color": "#000",
+                  },
+                },
+              },
               "MuiFormLabel": Object {
                 "root": Object {
                   "overflow": "hidden",
@@ -1787,6 +1796,15 @@ exports[`Application component should render for anon user 1`] = `
                                                                                     "padding": 0,
                                                                                   },
                                                                                 },
+                                                                                "MuiButton": Object {
+                                                                                  "containedSecondary": Object {
+                                                                                    "&:hover": Object {
+                                                                                      "backgroundColor": "#aca7a3",
+                                                                                      "borderColor": "#aca7a3",
+                                                                                      "color": "#000",
+                                                                                    },
+                                                                                  },
+                                                                                },
                                                                                 "MuiFormLabel": Object {
                                                                                   "root": Object {
                                                                                     "overflow": "hidden",
@@ -6784,6 +6802,15 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "padding": 0,
                                                                               },
                                                                             },
+                                                                            "MuiButton": Object {
+                                                                              "containedSecondary": Object {
+                                                                                "&:hover": Object {
+                                                                                  "backgroundColor": "#aca7a3",
+                                                                                  "borderColor": "#aca7a3",
+                                                                                  "color": "#000",
+                                                                                },
+                                                                              },
+                                                                            },
                                                                             "MuiFormLabel": Object {
                                                                               "root": Object {
                                                                                 "overflow": "hidden",
@@ -8255,6 +8282,15 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 "padding": 0,
                                                                               },
                                                                             },
+                                                                            "MuiButton": Object {
+                                                                              "containedSecondary": Object {
+                                                                                "&:hover": Object {
+                                                                                  "backgroundColor": "#aca7a3",
+                                                                                  "borderColor": "#aca7a3",
+                                                                                  "color": "#000",
+                                                                                },
+                                                                              },
+                                                                            },
                                                                             "MuiFormLabel": Object {
                                                                               "root": Object {
                                                                                 "overflow": "hidden",
@@ -9651,6 +9687,15 @@ exports[`Application component should render loading screen while account is loa
                   "boxShadow": "none",
                   "margin": 0,
                   "padding": 0,
+                },
+              },
+              "MuiButton": Object {
+                "containedSecondary": Object {
+                  "&:hover": Object {
+                    "backgroundColor": "#aca7a3",
+                    "borderColor": "#aca7a3",
+                    "color": "#000",
+                  },
                 },
               },
               "MuiFormLabel": Object {
@@ -11257,6 +11302,15 @@ exports[`Application component should render loading screen while account is loa
                                                                                     "padding": 0,
                                                                                   },
                                                                                 },
+                                                                                "MuiButton": Object {
+                                                                                  "containedSecondary": Object {
+                                                                                    "&:hover": Object {
+                                                                                      "backgroundColor": "#aca7a3",
+                                                                                      "borderColor": "#aca7a3",
+                                                                                      "color": "#000",
+                                                                                    },
+                                                                                  },
+                                                                                },
                                                                                 "MuiFormLabel": Object {
                                                                                   "root": Object {
                                                                                     "overflow": "hidden",
@@ -16254,6 +16308,15 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "padding": 0,
                                                                               },
                                                                             },
+                                                                            "MuiButton": Object {
+                                                                              "containedSecondary": Object {
+                                                                                "&:hover": Object {
+                                                                                  "backgroundColor": "#aca7a3",
+                                                                                  "borderColor": "#aca7a3",
+                                                                                  "color": "#000",
+                                                                                },
+                                                                              },
+                                                                            },
                                                                             "MuiFormLabel": Object {
                                                                               "root": Object {
                                                                                 "overflow": "hidden",
@@ -17723,6 +17786,15 @@ exports[`Application component should render loading screen while account is loa
                                                                                 "boxShadow": "none",
                                                                                 "margin": 0,
                                                                                 "padding": 0,
+                                                                              },
+                                                                            },
+                                                                            "MuiButton": Object {
+                                                                              "containedSecondary": Object {
+                                                                                "&:hover": Object {
+                                                                                  "backgroundColor": "#aca7a3",
+                                                                                  "borderColor": "#aca7a3",
+                                                                                  "color": "#000",
+                                                                                },
                                                                               },
                                                                             },
                                                                             "MuiFormLabel": Object {
