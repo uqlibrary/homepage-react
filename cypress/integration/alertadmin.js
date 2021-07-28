@@ -652,6 +652,10 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
+                .parent()
+                .parent()
+                .should('have.attr', 'style', 'padding-bottom: 1em; display: block; visibility: visible; opacity: 1;');
+            cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
                     cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
@@ -662,6 +666,18 @@ describe('Alerts Admin Pages', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
+            // when the user edits a field the preview disappears and can be reshown
+            cy.get('[data-testid="admin-alerts-form-title"]').type(' again');
+            // preview is only hidden by css this time - this minimises jumping around of the screen
+            cy.get('uq-alert[id="alert-preview"]')
+                .parent()
+                .parent()
+                .should('have.attr', 'style', 'padding-bottom: 1em; display: block; visibility: hidden; opacity: 0;');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]')
+                .parent()
+                .parent()
+                .should('have.attr', 'style', 'padding-bottom: 1em; display: block; visibility: visible; opacity: 1;');
         });
         it('can show a preview of the original alert', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');

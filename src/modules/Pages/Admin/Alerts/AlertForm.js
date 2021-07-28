@@ -277,6 +277,9 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         expandValues({ ...values, [prop]: newValue });
 
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
+
+        // if the form has changed, hide the Preview
+        handlePreview(false);
     };
 
     /* istanbul ignore next */
