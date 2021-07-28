@@ -324,20 +324,20 @@ export const AlertsListAsTable = ({
                                             >{`${alert.title}`}</h4>{' '}
                                             {`${alert.message.replace('[permanent]', '')}`}
                                             <div>
-                                                {!!alert.urgent && (
-                                                    <Chip
-                                                        data-testid={`alert-list-urgent-chip-${alert.id}`}
-                                                        label="Urgent"
-                                                        title="This is an urgent alert"
-                                                        className={classes.urgent}
-                                                    />
-                                                )}{' '}
                                                 {alert.body.includes('](') && (
                                                     <Chip
                                                         data-testid={`alert-list-link-chip-${alert.id}`}
                                                         label="Link"
                                                         title="This alert has a link out"
                                                         className={classes.link}
+                                                    />
+                                                )}{' '}
+                                                {!!alert.urgent && (
+                                                    <Chip
+                                                        data-testid={`alert-list-urgent-chip-${alert.id}`}
+                                                        label="Urgent"
+                                                        title="This is an urgent alert"
+                                                        className={classes.urgent}
                                                     />
                                                 )}{' '}
                                                 {alert.body.includes('[permanent]') && (
