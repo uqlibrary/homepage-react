@@ -306,6 +306,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                 {alertStatus === 'error' && (
                     <ConfirmationBox
                         confirmationBoxId="alert-error"
+                        onAction={() => alertError === 'The requested page could not be found.' && navigateToListPage()}
                         onClose={hideConfirmation}
                         hideCancelButton
                         isOpen={isOpen}
