@@ -245,6 +245,8 @@ export const AlertsListAsTable = ({
     return (
         <React.Fragment>
             <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
                 confirmationBoxId="alert-delete-confirm"
                 onAction={deleteSelectedAlerts}
                 onClose={hideDeleteConfirmation}
@@ -253,6 +255,8 @@ export const AlertsListAsTable = ({
                 locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
             />
             <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
                 confirmationBoxId="alert-delete-error-dialog"
                 onAction={hideDeleteFailureConfirmation}
                 onClose={hideDeleteFailureConfirmation}

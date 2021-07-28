@@ -305,6 +305,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             <form>
                 {alertStatus === 'error' && (
                     <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
                         confirmationBoxId="alert-error"
                         onAction={() => alertError === 'The requested page could not be found.' && navigateToListPage()}
                         onClose={hideConfirmation}
@@ -327,6 +329,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                 )}
                 {alertStatus !== 'error' && defaults.type === 'add' && (
                     <ConfirmationBox
+                        actionButtonColor="secondary"
+                        actionButtonVariant="contained"
                         confirmationBoxId="alert-add-save-succeeded"
                         onAction={handleConfirmation}
                         onClose={hideConfirmation}
