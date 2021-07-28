@@ -149,9 +149,12 @@ export const AlertsListAsTable = ({
         });
     };
 
+    function getNumberCheckboxesSelected() {
+        return document.querySelectorAll('#admin-alerts-list tr.alert-data-row :checked').length;
+    }
+
     const handleCheckboxChange = e => {
-        const numberCheckboxesSelected = document.querySelectorAll('#admin-alerts-list tr.alert-data-row :checked')
-            .length;
+        const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
         if (!!e.target && !!e.target.checked) {
@@ -206,8 +209,6 @@ export const AlertsListAsTable = ({
         }
     };
 
-    const numberCheckboxesSelected = document.querySelectorAll('#admin-alerts-list :checked').length - 1;
-
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
             ...locale.listPage.confirmDelete,
@@ -216,6 +217,8 @@ export const AlertsListAsTable = ({
                 .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
         };
     };
+
+    // const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
     const needsPaginator = userows.length >= footerDisplayMinLength;
     return (
@@ -226,7 +229,7 @@ export const AlertsListAsTable = ({
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
-                locale={confirmDeleteLocale(numberCheckboxesSelected)}
+                locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
             />
             <ConfirmationBox
                 confirmationBoxId="alert-delete-error-dialog"

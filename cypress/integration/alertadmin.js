@@ -135,7 +135,8 @@ describe('Alerts Admin Pages', () => {
                 cy.get('td:nth-child(4)').contains('3pm');
             });
         });
-
+    });
+    context('Alert Admin deletion', () => {
         it('the user can select an alert to delete', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
@@ -204,7 +205,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="confirm-alert-delete-error-dialog"]').click();
             cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
         });
-        it('sequential alerts do not fail', () => {
+        it('sequential deletion of alerts does not fail', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
