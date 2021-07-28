@@ -77,6 +77,7 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
                         data-testid="admin-alerts-help-button"
                         id="admin-alerts-help-button"
                         onClick={openHelpLightbox}
+                        variant="contained"
                     />
                 </div>
             )}

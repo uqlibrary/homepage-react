@@ -271,10 +271,10 @@ exports[`Application component should render for anon user 1`] = `
                 "main": "#51247A",
               },
               "secondary": Object {
-                "contrastText": "#fff",
+                "contrastText": "rgba(0, 0, 0, 0.87)",
                 "dark": "#333333",
-                "light": "#dedede",
-                "main": "#595959",
+                "light": "#595959",
+                "main": "#d7d1cc",
               },
               "success": Object {
                 "contrastText": "#fff",
@@ -1880,10 +1880,10 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   "main": "#51247A",
                                                                                 },
                                                                                 "secondary": Object {
-                                                                                  "contrastText": "#fff",
+                                                                                  "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                                   "dark": "#333333",
-                                                                                  "light": "#dedede",
-                                                                                  "main": "#595959",
+                                                                                  "light": "#595959",
+                                                                                  "main": "#d7d1cc",
                                                                                 },
                                                                                 "success": Object {
                                                                                   "contrastText": "#fff",
@@ -6877,10 +6877,10 @@ exports[`Application component should render for anon user 1`] = `
                                                                               "main": "#51247A",
                                                                             },
                                                                             "secondary": Object {
-                                                                              "contrastText": "#fff",
+                                                                              "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
-                                                                              "light": "#dedede",
-                                                                              "main": "#595959",
+                                                                              "light": "#595959",
+                                                                              "main": "#d7d1cc",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",
@@ -8348,10 +8348,10 @@ exports[`Application component should render for anon user 1`] = `
                                                                               "main": "#51247A",
                                                                             },
                                                                             "secondary": Object {
-                                                                              "contrastText": "#fff",
+                                                                              "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
-                                                                              "light": "#dedede",
-                                                                              "main": "#595959",
+                                                                              "light": "#595959",
+                                                                              "main": "#d7d1cc",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",
@@ -9746,10 +9746,10 @@ exports[`Application component should render loading screen while account is loa
                 "main": "#51247A",
               },
               "secondary": Object {
-                "contrastText": "#fff",
+                "contrastText": "rgba(0, 0, 0, 0.87)",
                 "dark": "#333333",
-                "light": "#dedede",
-                "main": "#595959",
+                "light": "#595959",
+                "main": "#d7d1cc",
               },
               "success": Object {
                 "contrastText": "#fff",
@@ -11350,10 +11350,10 @@ exports[`Application component should render loading screen while account is loa
                                                                                   "main": "#51247A",
                                                                                 },
                                                                                 "secondary": Object {
-                                                                                  "contrastText": "#fff",
+                                                                                  "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                                   "dark": "#333333",
-                                                                                  "light": "#dedede",
-                                                                                  "main": "#595959",
+                                                                                  "light": "#595959",
+                                                                                  "main": "#d7d1cc",
                                                                                 },
                                                                                 "success": Object {
                                                                                   "contrastText": "#fff",
@@ -16347,10 +16347,10 @@ exports[`Application component should render loading screen while account is loa
                                                                               "main": "#51247A",
                                                                             },
                                                                             "secondary": Object {
-                                                                              "contrastText": "#fff",
+                                                                              "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
-                                                                              "light": "#dedede",
-                                                                              "main": "#595959",
+                                                                              "light": "#595959",
+                                                                              "main": "#d7d1cc",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",
@@ -17818,10 +17818,10 @@ exports[`Application component should render loading screen while account is loa
                                                                               "main": "#51247A",
                                                                             },
                                                                             "secondary": Object {
-                                                                              "contrastText": "#fff",
+                                                                              "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
-                                                                              "light": "#dedede",
-                                                                              "main": "#595959",
+                                                                              "light": "#595959",
+                                                                              "main": "#d7d1cc",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",

@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     },
     connectFooter: {
         marginTop: 50,
-        backgroundColor: theme.hexToRGBA(theme.palette.secondary.main, 0.15),
+        backgroundColor: theme.hexToRGBA(theme.palette.secondary.light, 0.15),
     },
     minimalFooter: {
         backgroundColor: theme.palette.primary.main,

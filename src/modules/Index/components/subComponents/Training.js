@@ -144,7 +144,7 @@ const useStyles = makeStyles(theme => ({
         },
     },
     moreActionButton: {
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: theme.palette.secondary.light,
         '&:hover': {
             backgroundColor: theme.palette.secondary.dark,
         },

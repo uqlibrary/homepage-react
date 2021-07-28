@@ -502,6 +502,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                 children="Cancel"
                                 data-testid="admin-alerts-form-button-cancel"
                                 onClick={() => navigateToListPage()}
+                                variant="contained"
                             />
                         </Grid>
                         <Grid item xs={9} align="right">
@@ -511,6 +512,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                 children="Preview"
                                 onClick={displayPreview}
                                 style={{ marginRight: '0.5rem' }}
+                                variant="contained"
                             />
                             <Button
                                 color="primary"
