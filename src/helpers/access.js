@@ -117,6 +117,32 @@ export const seeLibraryServices = account => loggedinCanSee(account);
 
 export const seeFeedback = account => everyoneCanSee(account);
 
+// there is an intention to make a non-hard coded access system. Perhaps a table, and an update screen?
+// until this is db driven, make the same change in Reusable so the user gets an entry in the MyLibrary menu
+export const seeAlertsAdmin = account =>
+    !!account &&
+    !!account.id &&
+    [
+        'uqstaff', // mock
+        // Staff who will use the form
+        'uqjtilse', // jake Tilse
+        'uqsvangr', // Stacey van Groll
+        'uqtziebe', // Tanya Ziebell
+        'uqnfitt', // nick Fitt
+        'uqrbowen', // Rob Bowen
+        'uqehorns', // Eric Hornsby
+        'uqdcall1', // Dan Callan
+        'uqtscho1', // Tristan Schoonens
+        // devs
+        'uqldegro', // Lea de Groot
+        'uqamartl', // Andrew Martlew
+        'uqklane1', // Ky Lane
+        'uqawil42', // Ashley Wilson
+        'uqclien1', // Cliff Lien
+        'uqmmoise', // Marcelo Perez Moises
+        // all devs should be here
+    ].includes(account.id);
+
 // what is displayed in the User Services panel on the homepage, determined per group
 const userGroupServices = {
     [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],

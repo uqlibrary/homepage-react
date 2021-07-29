@@ -5,15 +5,18 @@ import PropTypes from 'prop-types';
 import locale from './notfound.locale';
 
 import { AUTH_URL_LOGIN } from 'config';
-import { flattedPathConfig } from 'config/routes';
+import { flattedPathConfig, adminEditRegexConfig } from 'config/routes';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import ScriptTag from 'react-script-tag';
 
 export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
+    console.log('NotFound location.pathname = ', location.pathname);
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
+    const isValidFileRoute = adminEditRegexConfig.test(location.pathname);
+    console.log('NotFound isValidRoute = ', isValidRoute);
     // if not known page, standard 404
-    if (!isValidRoute) {
+    if (!(isValidRoute || isValidFileRoute)) {
         return (
             <StandardPage standardPageId="not-found" title={locale.notFound.title}>
                 <ScriptTag

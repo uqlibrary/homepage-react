@@ -25,8 +25,8 @@ export const mui1theme = createMuiTheme({
             },
         },
         secondary: {
-            light: '#dedede',
-            main: '#595959',
+            light: '#595959',
+            main: '#d7d1cc',
             dark: '#333333',
         },
         accent: {
@@ -89,6 +89,15 @@ export const mui1theme = createMuiTheme({
                 boxShadow: 'none',
                 padding: 0,
                 margin: 0,
+            },
+        },
+        MuiButton: {
+            containedSecondary: {
+                '&:hover': {
+                    backgroundColor: '#aca7a3',
+                    borderColor: '#aca7a3',
+                    color: '#000',
+                },
             },
         },
     },

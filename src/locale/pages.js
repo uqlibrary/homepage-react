@@ -35,8 +35,13 @@ export default {
                 </StandardCard>
             ),
         },
-        masquerade: {
-            title: 'Masquerade',
+        admin: {
+            masquerade: {
+                title: 'Masquerade',
+            },
+            alerts: {
+                title: 'Alerts',
+            },
         },
         courseresources: {
             title: 'Course resources',

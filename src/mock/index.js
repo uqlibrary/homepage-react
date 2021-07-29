@@ -31,6 +31,7 @@ import {
     printBalance,
     training_object,
 } from './data/account';
+import { alertList } from './data/alerts';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -55,6 +56,7 @@ user = user || 'vanilla';
 
 const withDelay = response => config => {
     const randomTime = Math.floor(Math.random() * 100) + 1; // Change these values to delay mock API
+    // const randomTime = 5000;
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
@@ -121,6 +123,84 @@ mock.onGet(routes.LIB_HOURS_API().apiUrl).reply(withDelay([200, libHours]));
 mock.onGet(routes.POSSIBLE_RECORDS_API().apiUrl).reply(withDelay([200, possibleRecords]));
 
 mock.onGet(routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(withDelay([200, incompleteNTROs]));
+
+mock.onGet(routes.ALERTS_ALL_API().apiUrl).reply(withDelay([200, alertList]));
+mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '99999-d897-11eb-a27e-df4e46db7245',
+            start: '2020-06-07 02:00:03',
+            end: '2020-06-07 03:00:03',
+            title: 'Updated alert',
+            body:
+                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+            urgent: 0,
+        },
+    ]),
+);
+// mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
+mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
+            start: '2020-06-07 02:00:03',
+            end: '2020-06-07 03:00:03',
+            title: 'Updated alert',
+            body:
+                'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
+            urgent: 0,
+        },
+    ]),
+);
+// mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
+console.log('delete mock url = ', routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl);
+mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+// mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, []]));
+mock.onDelete(routes.ALERT_DELETE_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.ALERT_DELETE_API({ id: 'da181a00-d476-11eb-8596-2540419539a9' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.ALERT_DELETE_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.ALERT_DELETE_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
+    withDelay([500, []]),
+);
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec',
+            start: '2021-06-06 00:45:34',
+            end: '2021-06-06 05:00:34',
+            title: 'Sample alert 2:',
+            body: 'Has mock data.',
+            urgent: 0,
+        },
+    ]),
+);
+// mock.onAny(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }).apiUrl).reply(withDelay([500, {}]));
+
+mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '1db618c0-d897-11eb-a27e-df4e46db7245',
+            start: '2020-06-07 02:00:03',
+            end: '2020-06-07 03:00:03',
+            title: 'Example alert:',
+            body:
+                'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
+            urgent: 1,
+        },
+    ]),
+);
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailability]));
 // .reply(withDelay([500, {}]));

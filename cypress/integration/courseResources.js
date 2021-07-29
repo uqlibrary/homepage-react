@@ -19,7 +19,7 @@ function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
 
     cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
 
-    cy.get(`div[data-testid=classpanel-${panelId}] h3`).contains(title);
+    cy.get(`div[data-testid=classpanel-${panelId}] h2`).contains(title);
 }
 
 function the_user_lands_on_the_Search_tab() {
@@ -57,7 +57,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
     courseReadingList,
     displayType = 'mycourses',
 ) {
-    const headerLevel = displayType === 'mycourses' ? 'h4' : 'h5';
+    const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
     const readingList = firstReadingListItems(courseReadingList);
     const firstReadingListTitle = readingList.title || 'mock data is missing';
     const firstReadingListLink = readingList.itemLink || 'mock data is missing';
@@ -80,7 +80,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
         courseReadingList.reading_lists[0];
     const readingListLink = readingList.url || 'mock data is missing';
 
-    cy.get('.readingLists h4').contains(
+    cy.get('.readingLists h3').contains(
         `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`,
     );
 
@@ -116,7 +116,7 @@ function exams_panel_loads_correctly_for_a_subject_with_one_exam() {
 }
 
 function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, displayType = 'mycourses') {
-    const headerLevel = displayType === 'mycourses' ? 'h4' : 'h5';
+    const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
 
     const courseCode = examPapers.coursecode || 'mock data is missing';
 
@@ -157,7 +157,7 @@ function guides_panel_loads_correctly_for_a_subject_with_zero_guides() {
 }
 
 function guides_panel_loads_correctly_for_a_subject_with_many_guides(guidesList, coursecode) {
-    cy.get(`div[data-testid=guides-${coursecode}] h4`).contains(`${locale.myCourses.guides.title}`);
+    cy.get(`div[data-testid=guides-${coursecode}] h3`).contains(`${locale.myCourses.guides.title}`);
 
     const numGuides = guidesList.length - 1;
     const numGuidesVisible =
@@ -178,7 +178,7 @@ function guides_panel_loads_correctly_for_a_subject_with_many_guides(guidesList,
 }
 
 function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, coursecode, displayType = 'mycourses') {
-    const headerLevel = displayType === 'mycourses' ? 'h4' : 'h5';
+    const headerLevel = displayType === 'mycourses' ? 'h3' : 'h4';
 
     const guide = guides[0] || {};
     const guideTitle = guide.title || 'mock data is missing';
@@ -277,7 +277,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     );
 
     // the tab loads and we see the title of the correct course
-    cy.get(`div[data-testid=classpanel-${tabId}] h4`).contains(courseReadingList.course_title);
+    cy.get(`div[data-testid=classpanel-${tabId}] h3`).contains(courseReadingList.course_title);
 }
 
 function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
@@ -298,7 +298,7 @@ function click_on_a_subject_tab(panelNumber, courseReadingList) {
     cy.get(`button#classtab-${panelNumber}`)
         .contains(courseCode)
         .click();
-    cy.get(`div[data-testid=classpanel-${panelNumber}] h3`).contains(title);
+    cy.get(`div[data-testid=classpanel-${panelNumber}] h2`).contains(title);
 }
 
 function the_user_clicks_on_the_second_subject_tab(courseReadingList) {
@@ -319,10 +319,10 @@ function the_title_block_displays_properly(courseReadingList) {
     const semester = readingList.period || 'mock data is missing3';
     const campus = readingList.campus || 'mock data is missing4';
 
-    cy.get('h3[data-testid=course-resource-subject-title]').contains(listTitle);
-    cy.get('h3[data-testid=course-resource-subject-title]').contains(coursecode);
-    cy.get('h3[data-testid=course-resource-subject-title]').contains(campus);
-    cy.get('h3[data-testid=course-resource-subject-title]').contains(semester);
+    cy.get('h2[data-testid=course-resource-subject-title]').contains(listTitle);
+    cy.get('h2[data-testid=course-resource-subject-title]').contains(coursecode);
+    cy.get('h2[data-testid=course-resource-subject-title]').contains(campus);
+    cy.get('h2[data-testid=course-resource-subject-title]').contains(semester);
 }
 
 function FREN1010_loads_properly_for_s111111_user() {
@@ -480,12 +480,12 @@ context('The Course Resources Page', () => {
         cy.get('[data-testid=classtab-FREN1010]')
             .contains('FREN1010')
             .click();
-        cy.get('div[data-testid=classpanel-0] h4').contains('FREN1010');
+        cy.get('div[data-testid=classpanel-0] h3').contains('FREN1010');
 
         cy.get('[data-testid=classtab-HIST1201]')
             .contains('HIST1201')
             .click();
-        cy.get('div[data-testid=classpanel-1] h4').contains('HIST1201');
+        cy.get('div[data-testid=classpanel-1] h3').contains('HIST1201');
 
         // search again and go to the existing tab
         a_user_can_use_the_search_bar_to_load_a_subject(
@@ -549,7 +549,7 @@ context('The Homepage Course Resource Panel', () => {
             'courseresources?user=s1111111&coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020',
         );
         const classPanelId = 'classpanel-1';
-        cy.get(`div[data-testid=${classPanelId}] h3`).contains(secondClass.SUBJECT);
+        cy.get(`div[data-testid=${classPanelId}] h2`).contains(secondClass.SUBJECT);
     });
 
     it('The Course resources panel searches correctly', () => {
@@ -591,7 +591,7 @@ context('The Homepage Course Resource Panel', () => {
             'courseresources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
         );
         const classPanelId = 'classpanel-0';
-        cy.get(`div[data-testid=${classPanelId}] h4`).contains('ACCT1101');
+        cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 
     it('A user putting a space in a search still gets their result on the homepage', () => {
