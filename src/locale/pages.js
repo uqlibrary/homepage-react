@@ -43,9 +43,6 @@ export default {
                 title: 'Alerts',
             },
         },
-        secureCollection: {
-            title: 'Secure File Collection',
-        },
         courseresources: {
             title: 'Course resources',
         },

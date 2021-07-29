@@ -113,12 +113,6 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     };
 };
 
-// confirm the user's login, when needed
-export const SECURE_COLLECTION_CHECK_API = ({ path }) => ({ apiUrl: `file/collection/testlogin/${path}` });
-
-// get file & folder details file/collection/{folder}/{filePath}
-export const SECURE_COLLECTION_FILE_API = ({ path }) => ({ apiUrl: `file/collection/${path}?acknowledged` });
-
 // alerts
 export const ALERTS_ALL_API = (requestNonCachedData = true) => {
     const param = requestNonCachedData ? '?noCache=1' : '';
