@@ -30,18 +30,25 @@ export default {
             },
         },
         help: {
-            title: 'Entering an alert',
+            title: 'Add/edit an alert',
             text: (
                 <Fragment>
                     <ul>
                         <li>
-                            Press <strong>Preview</strong> to check your alert. A preview alert will appear at the top
-                            of the page. The More info button will not navigate you to the new page, however it will
-                            confirm the URL once the alert is live.
+                            Enter a short user focused alert. Use language that explains the issue the client may be
+                            experiencing (“You may be unable to access the internet.”) and any solutions or alternative
+                            services available (“Please use an alternative location.”). If possible, link to more
+                            information or assistance. Avoid overly technical language.
                         </li>
                         <li>
-                            Press <strong>Save</strong> to create the alert. The system will confirm the alert has been
-                            created and enable you to create another alert or proceed to the Alerts listing screen
+                            Press <strong>Preview</strong> to check your alert. Your preview alert will appear at the
+                            top of the page. If you change any details, the preview will disappear. Select Preview again
+                            to review.
+                        </li>
+                        <li>
+                            Press <strong>Save</strong> to create or update the alert. The system will confirm the alert
+                            has been created. When editing alerts, Save will only be enabled when you have made a change
+                            to a field.
                         </li>
                     </ul>
                     <h3>Fields</h3>
@@ -96,6 +103,10 @@ export default {
                         <dd>
                             <p>Changes alert colour to orange and changes icon to indicate alert is urgent.</p>
                             <p>Default non-urgent alert is blue.</p>
+                            <p>
+                                Use discretion, field for high impact alerts only (e.g. COVID lockdown, major system
+                                outage, major network outage, serious campus issue etc).
+                            </p>
                         </dd>
                     </dl>
                     <p>The alert will appear between the start time and the end time set in the alert.</p>
@@ -110,27 +121,27 @@ export default {
                 <Fragment>
                     <p>
                         This application enables authorised users to post alerts for library clients in the website
-                        header. header. Alerts appear as part of the reusable header on sites that include the Library
-                        Homepage apps, Drupal Website, Libguides and Library CRM pages.
+                        header. Alerts appear as part of the reusable header on sites that include the Library Homepage
+                        apps, Drupal Website, Libguides and Library CRM pages.
                     </p>
 
                     <h2>Alert listing screen</h2>
                     <p>
                         Alerts are listed in three tables, Current alerts, Scheduled alerts and Past alerts, based on
-                        their start and end date and time.
+                        their Publish (start) and Unpublish (end) date and time.
                     </p>
                     <ul>
                         <li>
-                            <strong>Current alerts</strong>: displays alerts published on the website now based on start
-                            and end date/time. List is ordered by start time.
+                            <strong>Current alerts</strong>: displays alerts published on the website now based on
+                            Publish date and Unpublish date. List is ordered by Unpublish date (oldest to newest).
                         </li>
                         <li>
-                            <strong>Scheduled alerts</strong>: displays alerts to be displayed in the future based on
-                            start date/time. List is ordered by alert start time.
+                            <strong>Scheduled alerts</strong>: displays future alerts based on Publish date. List is
+                            ordered by alert start time (oldest to newest).
                         </li>
                         <li>
-                            <strong>Past alerts</strong>: displays past alerts. List is ordered reverse chronologically
-                            by end date/time.
+                            <strong>Past alerts</strong>: displays past alerts. List is ordered by Unpublish date
+                            (newest to oldest).
                         </li>
                     </ul>
                     <h2 id="adding-alert" data-testid="admin-alerts-help-example">
@@ -140,18 +151,36 @@ export default {
                         Press the <strong>Add alert</strong> button on the Alert listing screen. The Create alert form
                         will appear.
                     </p>
+                    <p>
+                        Saved alerts will appear on the website within two minutes of their start time. Hard refresh
+                        your browser to view the alert.
+                    </p>
                     <h2>Edit an alert</h2>
-                    <ol>
-                        <li>
-                            Press <strong>Edit</strong> beside an alert on the Alerts listing screen. The Edit alert
-                            form will appear with the alert information prefilled.
-                        </li>
-                    </ol>
+                    <p>
+                        Press <strong>Edit</strong> beside an alert on the Alerts listing screen. The Edit alert form
+                        will appear with the alert information prefilled.
+                    </p>
+                    <p>
+                        The Save button will not be enabled unless you change something. Press Cancel or your browser’s
+                        Back button to exit.
+                    </p>
+                    <p>
+                        Updated alerts will change on the website within two minutes. Hard refresh your browser to view
+                        the alert.
+                    </p>
                     <h2>Remove alerts</h2>
                     <p>
-                        <strong>Deleted alerts cannot be restored. Past alerts should generally be retained.</strong>
+                        <strong>
+                            Deleted alerts cannot be restored. Past alerts should generally be retained so please limit
+                            deletions to recently created alerts with errors and alerts that have not yet been published
+                            which are no longer required.
+                        </strong>
                     </p>
-                    <p>On the Alerts listing screen:</p>
+                    <p>
+                        <strong>To unpublish a current alert</strong>: edit the alert and change its Unpublish date/time
+                        to now.
+                    </p>
+                    <p>To delete alerts, on the Alerts listing screen:</p>
                     <ol>
                         <li>
                             Check one or more alerts within one of the tables, e.g. Past alerts. A blue bar with a
@@ -164,8 +193,33 @@ export default {
                         </li>
                     </ol>
                     <p>
-                        Press <strong>Close (the cross icon)</strong> to deselect all selected alerts.
+                        Alternatively, press <strong>Close (the cross icon)</strong> to deselect all selected alerts.
                     </p>
+                    <h2>Language, tone and voice</h2>
+                    <ul>
+                        <li>
+                            Use user focused language: write about the issue from their perspective, what they may
+                            experience and any alternative services/assistance available.
+                        </li>
+                        <li>Use short sentences, everyday words</li>
+                    </ul>
+                    <p>
+                        See the{' '}
+                        <a target="_blank" href="https://marketing-communication.uq.edu.au/written-style-guide">
+                            UQ Written Style Guide
+                        </a>{' '}
+                        for formatting advice.
+                    </p>
+                    <h2>User permissions </h2>
+                    <p>
+                        Access to this system is limited to staff authorised to publish real time web content across
+                        Library systems.
+                    </p>
+                    <p>
+                        Email <a href="mailto:ithelp@library.uq.edu.au">ithelp@library.uq.edu.au</a> for new staff
+                        access.
+                    </p>
+                    <p>Requests will be reviewed by Library Technology Service. </p>
                 </Fragment>
             ),
         },
