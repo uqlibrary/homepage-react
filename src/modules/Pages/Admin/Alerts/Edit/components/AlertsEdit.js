@@ -69,7 +69,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
-        urgent: alert?.urgent === '1' || false,
+        urgent: !!alert && !!alert.urgent,
         permanentAlert: isPermanent || false,
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',

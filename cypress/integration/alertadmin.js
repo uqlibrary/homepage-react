@@ -621,6 +621,38 @@ describe('Alerts Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('the edit form presets the correct data', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.wait(100);
+            cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
+            cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
+            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2020-06-07T02:00:03');
+            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2020-06-07T03:00:03');
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').should(
+                'have.value',
+                'UQ community COVID-19 advice',
+            );
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').should(
+                'have.value',
+                'https://about.uq.edu.au/coronavirus',
+            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.wait(100);
+            cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Sample alert 2:');
+            cy.get('[data-testid="admin-alerts-form-body"]').contains('Has mock data.');
+            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2021-06-06T00:45:34');
+            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2021-06-06T05:00:34');
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('not.be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('not.be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').should('not.be.visible');
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
+        });
         it('has a working Edit form', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
@@ -660,7 +692,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
                     cy.get('[data-testid="alert-title"]').should('have.text', 'Updated alert');
                 });
             // user can toggle the Preview
@@ -691,7 +723,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
                     cy.get('[data-testid="alert-title"]').contains('Example alert:');
                     cy.get('[data-testid="alert-message"]').contains('This alert can be edited in mock.');
                     cy.get('[data-testid="alert-alert-preview-action-button"]').contains(
