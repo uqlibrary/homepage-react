@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable max-len */
 /* eslint-disable no-trailing-spaces */
 import React, { Fragment } from 'react';
@@ -73,7 +74,6 @@ export default {
                         <dd>
                             <p>Date and time when alert should be unpublished.</p>
                             <p>Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
-                            
                         </dd>
                         <dt>Add info link</dt>
                         <dd>
@@ -97,8 +97,14 @@ export default {
                         <dt>Permanent</dt>
                         <dd>
                             <p>Removes the ‘close’ button on alert for clients so alert is always visible.</p>
-                            <p>Use for essential messages that clients should not be able to close only, e.g. a mask wearing requirement.</p>
-                            <p>When an alert is non-permanent, clients may close the alert for 24 hours. A cookie will be set in their browser for each alert closed.</p>
+                            <p>
+                                Use for essential messages that clients should not be able to close only, e.g. a mask
+                                wearing requirement.
+                            </p>
+                            <p>
+                                When an alert is non-permanent, clients may close the alert for 24 hours. A cookie will
+                                be set in their browser for each alert closed.
+                            </p>
                         </dd>
                         <dt>Urgent</dt>
                         <dd>
@@ -129,7 +135,8 @@ export default {
                     <h2>Alert listing screen</h2>
                     <p>
                         Alerts are listed in three tables, Current alerts, Scheduled alerts and Past alerts, based on
-                        their Publish (start) and Unpublish (end) date and time. Full date information can be seen by mousing over the short date display.
+                        their Publish (start) and Unpublish (end) date and time. Full date information can be seen by
+                        mousing over the short date display.
                     </p>
                     <ul>
                         <li>
