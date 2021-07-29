@@ -43,6 +43,11 @@ const useStyles = makeStyles(
             marginTop: '1em',
             paddingBottom: '1em',
         },
+        checkbox: {
+            '& input[type="checkbox"]:checked + svg': {
+                fill: '#595959',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -424,6 +429,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     checked={values.linkRequired}
                                     data-testid="admin-alerts-form-checkbox-linkrequired"
                                     onChange={handleChange('linkRequired')}
+                                    className={classes.checkbox}
                                 />
                                 Add info link
                             </InputLabel>
@@ -439,6 +445,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     onChange={handleChange('permanentAlert')}
                                     name="permanentAlert"
                                     title={locale.form.add.permanentTooltip}
+                                    className={classes.checkbox}
                                 />
                                 Permanent
                             </InputLabel>
@@ -451,6 +458,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     onChange={handleChange('urgent')}
                                     name="urgent"
                                     title={locale.form.add.urgentTooltip}
+                                    className={classes.checkbox}
                                 />
                                 Urgent
                             </InputLabel>
