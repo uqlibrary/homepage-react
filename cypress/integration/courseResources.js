@@ -341,6 +341,47 @@ function FREN1010_loads_properly_for_s111111_user() {
     course_links_panel_loads_correctly_for_a_subject(FREN1010ReadingList);
 }
 
+context('ACCESSIBILITY', () => {
+    it('User with classes', () => {
+        cy.visit('/courseresources?user=s1111111');
+        cy.injectAxe();
+        cy.viewport(1300, 1000);
+        cy.get('div[data-testid="course-resources"]').contains('My courses');
+        cy.log('Course Resources');
+        cy.checkA11y('div[data-testid="course-resources"]', {
+            reportName: 'Course Resources',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+    });
+
+    it('User without classes', () => {
+        cy.visit('/courseresources?user=s3333333');
+        cy.injectAxe();
+        cy.viewport(1300, 1000);
+        cy.get('div[data-testid="course-resources"]').contains('My courses');
+        cy.log('Course Resources');
+        cy.checkA11y('div[data-testid="course-resources"]', {
+            reportName: 'Course Resources',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+    });
+
+    it('Responsive display', () => {
+        cy.visit('/courseresources?user=s1111111');
+        cy.injectAxe();
+        cy.viewport(414, 736);
+        cy.get('div[data-testid="course-resources"]').contains('My courses');
+        cy.log('Course Resources');
+        cy.checkA11y('div[data-testid="course-resources"]', {
+            reportName: 'Course Resources',
+            scopeName: 'Content',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+    });
+});
+
 context('The Course Resources Page', () => {
     /**
      * Show a user with 3 classes can see all the variations correctly
