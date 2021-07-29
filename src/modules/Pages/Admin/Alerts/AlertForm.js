@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+const moment = require('moment');
 
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -260,9 +261,18 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         return true;
     };
 
+    function isInvalidStartDate(startDate) {
+        return (startDate < defaults.startDate && startDate !== '') || !moment(startDate).isValid();
+    }
+
+    function isInvalidEndDate(endDate, startDate) {
+        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
+    }
+
     const validateValues = currentValues => {
         const isValid =
-            currentValues.endDate >= currentValues.startDate &&
+            !isInvalidStartDate(currentValues.startDate) &&
+            !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
             currentValues.alertTitle.length > 0 &&
             !!currentValues.enteredbody &&
             currentValues.enteredbody.length > 0 &&
@@ -386,6 +396,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                             <TextField
                                 id="startDate"
                                 data-testid="admin-alerts-form-start-date"
+                                error={isInvalidStartDate(values.startDate)}
                                 InputLabelProps={{ shrink: true }}
                                 label="Start date"
                                 onChange={handleChange('startDate')}
@@ -406,7 +417,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                 onChange={handleChange('endDate')}
                                 type="datetime-local"
                                 value={values.endDate}
-                                error={values.endDate < values.startDate && values.startDate !== ''}
+                                error={isInvalidEndDate(values.endDate, values.startDate)}
                                 inputProps={{
                                     min: values.startDate,
                                     required: true,

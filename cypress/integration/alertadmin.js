@@ -657,7 +657,9 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(100);
+            cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-title"]').type('Updated alert');
+            cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
             cy.wait(500);
             cy.get('[data-testid="dialogbox-alert-edit-save-succeeded"] h2').contains('The alert has been updated');
