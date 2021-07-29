@@ -123,7 +123,7 @@ export const seeAlertsAdmin = account =>
     !!account &&
     !!account.id &&
     [
-        'uqstaff', // mock
+        'uqwebadminperson', // mock
         // Staff who will use the form
         'uqjtilse', // jake Tilse
         'uqsvangr', // Stacey van Groll
