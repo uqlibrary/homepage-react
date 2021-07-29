@@ -37,7 +37,8 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-alerts-list-future-list"] tfoot').should('not.exist');
 
             // this alert has no chips
             cy.get('[data-testid="alert-list-urgent-chip-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').should('not.exist');
@@ -51,7 +52,8 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
-            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 81');
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').should('exist');
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 78');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
@@ -512,7 +514,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
             // then we click the add button and see an empty form
             cy.get('[data-testid="admin-alerts-help-display-button"]').click();
             cy.wait(500);
@@ -530,7 +532,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
-                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         });
         it('has a working Help button on the Add page', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
@@ -584,11 +586,11 @@ describe('Alerts Admin Pages', () => {
             ).select('All');
             cy.get(
                 '[data-testid="admin-alerts-list-past-list"] [data-testid="admin-alerts-list-paginator-select"]',
-            ).should('have.value', 81);
+            ).should('have.value', 78);
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
-                .should('have.length', 81 + numRowsHiddenAsNoDatainfo);
-            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-81 of 81');
+                .should('have.length', 78 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-78 of 78');
         });
     });
     context('Alert Admin Edit page', () => {

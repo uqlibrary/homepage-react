@@ -241,7 +241,7 @@ export const AlertsListAsTable = ({
 
     // const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
-    const needsPaginator = userows.length >= footerDisplayMinLength;
+    const needsPaginator = userows.length > footerDisplayMinLength;
     return (
         <React.Fragment>
             <ConfirmationBox

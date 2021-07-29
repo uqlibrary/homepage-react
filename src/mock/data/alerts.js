@@ -442,8 +442,8 @@ export const alertList = [
         "urgent": 0
     }, {
         "id": "f41294e0-9969-11eb-a862-4f8fe8f026ce",
-        "start": "2021-06-13 02:00:16",
-        "end": "2021-06-13 03:00:16",
+        "start": "2031-06-13 02:00:16",
+        "end": "2031-06-13 03:00:16",
         "title": "Library Search maintenance tonight (2am - 3am AEST):",
         "body": "There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.",
         "urgent": 0
@@ -463,15 +463,15 @@ export const alertList = [
         "urgent": 0
     }, {
         "id": "d480b250-9cd8-11eb-88c0-a3882cd6c52e",
-        "start": "2021-04-15 06:00:41",
-        "end": "2021-05-20 17:00:41",
+        "start": "2031-04-15 06:00:41",
+        "end": "2031-05-20 17:00:41",
         "title": "We are open on-campus and online.",
         "body": "Access collections, services, and support to help you continue your work and study.[UQ Library COVID-19 Updates](https:\/\/web.library.uq.edu.au\/library-services\/covid-19)",
         "urgent": 0
     }, {
         "id": "857726b0-a19f-11eb-ab5b-bb33418ed6de",
-        "start": "2021-04-20 16:10:00",
-        "end": "2021-04-21 09:40:00",
+        "start": "2031-04-20 16:10:00",
+        "end": "2031-04-21 09:40:00",
         "title": "Library website issue.",
         "body": "We are aware that parts of our website including the menu are not working correctly and are investigating. Please use the Chrome browser and clear your browser cache if you are experiencing difficulties. We apologise for any inconvenience.",
         "urgent": 0
