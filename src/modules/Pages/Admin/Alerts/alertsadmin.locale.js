@@ -43,7 +43,7 @@ export default {
                         <li>
                             Press <strong>Preview</strong> to check your alert. Your preview alert will appear at the
                             top of the page. If you change any details, the preview will disappear. Select Preview again
-                            to review.
+                            to review your changes.
                         </li>
                         <li>
                             Press <strong>Save</strong> to create or update the alert. The system will confirm the alert
@@ -68,13 +68,12 @@ export default {
                             <p>Date and time when the alert should be published for clients.</p>
                             <p>Defaults to current date and time. Cannot be in the past.</p>
                             <p>Set into the future to schedule an alert.</p>
-                            <p>Full date information can be seen by mousing over the short date display.</p>
                         </dd>
                         <dt>End date</dt>
                         <dd>
                             <p>Date and time when alert should be unpublished.</p>
                             <p>Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
-                            <p>Full date information can be seen by mousing over the short date display.</p>
+                            
                         </dd>
                         <dt>Add info link</dt>
                         <dd>
@@ -97,7 +96,9 @@ export default {
                         </dd>
                         <dt>Permanent</dt>
                         <dd>
-                            <p>Removes ‘close’ button on alert for clients so alert is always visible.</p>
+                            <p>Removes the ‘close’ button on alert for clients so alert is always visible.</p>
+                            <p>Use for essential messages that clients should not be able to close only, e.g. a mask wearing requirement.</p>
+                            <p>When an alert is non-permanent, clients may close the alert for 24 hours. A cookie will be set in their browser for each alert closed.</p>
                         </dd>
                         <dt>Urgent</dt>
                         <dd>
@@ -128,7 +129,7 @@ export default {
                     <h2>Alert listing screen</h2>
                     <p>
                         Alerts are listed in three tables, Current alerts, Scheduled alerts and Past alerts, based on
-                        their Publish (start) and Unpublish (end) date and time.
+                        their Publish (start) and Unpublish (end) date and time. Full date information can be seen by mousing over the short date display.
                     </p>
                     <ul>
                         <li>
@@ -193,7 +194,7 @@ export default {
                         </li>
                     </ol>
                     <p>
-                        Alternatively, press <strong>Close (the cross icon)</strong> to deselect all selected alerts.
+                        Alternatively, press <strong>Close</strong> (the cross icon) to deselect all selected alerts.
                     </p>
                     <h2>Language, tone and voice</h2>
                     <ul>
@@ -201,7 +202,7 @@ export default {
                             Use user focused language: write about the issue from their perspective, what they may
                             experience and any alternative services/assistance available.
                         </li>
-                        <li>Use short sentences, everyday words</li>
+                        <li>Use short sentences and everyday words</li>
                     </ul>
                     <p>
                         See the{' '}
