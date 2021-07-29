@@ -507,11 +507,11 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         <Grid item xs={9} align="right">
                             <Button
                                 data-testid="admin-alerts-form-button-preview"
-                                color="secondary"
+                                color={!!showPreview ? 'default' : 'secondary'}
                                 children="Preview"
                                 onClick={displayPreview}
                                 style={{ marginRight: '0.5rem' }}
-                                variant="contained"
+                                variant={!!showPreview ? 'outlined' : 'contained'}
                             />
                             <Button
                                 color="primary"
