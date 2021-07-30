@@ -3,8 +3,6 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-console.log('###### EDIT ');
-
 import AlertsEdit from '../components/AlertsEdit';
 
 const mapStateToProps = state => {

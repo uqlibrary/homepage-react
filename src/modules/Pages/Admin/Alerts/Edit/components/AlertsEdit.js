@@ -22,22 +22,13 @@ const useStyles = makeStyles(() => ({
 export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history }) => {
     const classes = useStyles();
     const { alertid } = useParams();
-    console.log('AlertsEdit alertid = ', alertid);
-    console.log('AlertsEdit props actions = ', actions);
-    console.log('AlertsEdit props alert = ', alert);
-    console.log('AlertsEdit props alertError = ', alertError);
-    console.log('AlertsEdit props alertStatus = ', alertStatus);
-    console.log('AlertsEdit props history = ', history);
 
     React.useEffect(() => {
-        console.log('useEffect alertid = ', alertid);
         if (!!alertid) {
             actions.loadAnAlert(alertid);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alertid]);
-
-    console.log('alert = ', alert);
 
     if (alertStatus === 'loading') {
         return (

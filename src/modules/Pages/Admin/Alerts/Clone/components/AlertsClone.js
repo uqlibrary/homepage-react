@@ -24,14 +24,11 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
     const { alertid } = useParams();
 
     React.useEffect(() => {
-        console.log('useEffect alertid = ', alertid);
         if (!!alertid) {
             actions.loadAnAlert(alertid);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alertid]);
-
-    console.log('alert = ', alert);
 
     if (alertStatus === 'loading') {
         return (

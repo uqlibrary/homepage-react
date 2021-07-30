@@ -70,7 +70,6 @@ export const AlertsUtilityArea = ({ actions, history, helpEntry, helpButtonLabel
     };
 
     const navigateToAddPage = () => {
-        console.log('navigateToAddPage');
         actions.clearAnAlert();
         history.push('/admin/alerts/add');
     };

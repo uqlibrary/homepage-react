@@ -52,7 +52,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
     }, []);
 
     React.useEffect(() => {
-        console.log('about to load alerts into type arrays ', alerts);
         if (!!alerts && alerts.length > 0) {
             setPastAlerts([]);
             setFutureAlerts([]);
