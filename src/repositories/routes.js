@@ -14,9 +14,10 @@ export const AUTHOR_DETAILS_API = ({ userId }) => ({
 export const SPOTLIGHTS_API = () => ({ apiUrl: 'spotlights/current' });
 
 // Training API
-export const TRAINING_API = (numEvents = 6) => ({
+export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
+    // default, see TRAINING_FILTER_GENERAL
     apiUrl: 'training_events',
-    options: { params: { take: numEvents, 'filterIds[]': 104, ts: `${new Date().getTime()}` } },
+    options: { params: { take: numEvents, 'filterIds[]': filterId, ts: `${new Date().getTime()}` } },
 });
 
 // Papercut balance API
