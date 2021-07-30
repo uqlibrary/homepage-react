@@ -84,7 +84,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.alertsadd,
             component: components.AlertsAdd,
             exact: true,
-            pageTitle: locale.pages.admin.alerts.title,
+            pageTitle: locale.pages.admin.alerts.form.add.title,
         },
     ];
 
@@ -95,7 +95,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.alertsedit(alertid),
             component: components.AlertsEdit,
             // exact: true,
-            pageTitle: locale.pages.admin.alerts.title,
+            pageTitle: locale.pages.admin.alerts.form.edit.title,
             regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
     ];
@@ -105,7 +105,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.alertsclone(alertid),
             component: components.AlertsClone,
             // exact: true,
-            pageTitle: locale.pages.admin.alerts.title,
+            pageTitle: locale.pages.admin.alerts.form.clone.title,
             regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
     ];

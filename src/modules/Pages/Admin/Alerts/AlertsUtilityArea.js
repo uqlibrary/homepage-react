@@ -8,6 +8,13 @@ import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
 import Drawer from '@material-ui/core/Drawer';
 
+/**
+ * a block that shows:
+ * - page heading
+ * - utility buttons (help, add alert, clone alert)
+ * - the help drawer
+ */
+
 const useStyles = makeStyles(
     theme => ({
         drawer: {
@@ -47,7 +54,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, showAddButton, showCloneButton }) => {
+export const AlertsUtilityArea = ({ actions, history, helpEntry, helpButtonLabel, showAddButton, showCloneButton }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -64,9 +71,7 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
 
     const navigateToAddPage = () => {
         console.log('navigateToAddPage');
-        // console.log('navigateToAddPage actions.clearAnAlert() = ', actions.clearAnAlert());
         actions.clearAnAlert();
-        // () => dispatch(actions.clearAnAlert());
         history.push('/admin/alerts/add');
     };
 
@@ -146,7 +151,7 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
     );
 };
 
-AlertHelpModal.propTypes = {
+AlertsUtilityArea.propTypes = {
     actions: PropTypes.any,
     cloneAnAlert: PropTypes.any,
     helpEntry: PropTypes.any,
@@ -156,7 +161,7 @@ AlertHelpModal.propTypes = {
     showCloneButton: PropTypes.bool,
 };
 
-AlertHelpModal.defaultProps = {
+AlertsUtilityArea.defaultProps = {
     cloneAnAlert: null,
     helpButtonLabel: 'Help',
     showAddButton: false,

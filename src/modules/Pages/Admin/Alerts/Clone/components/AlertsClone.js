@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
-const moment = require('moment');
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
@@ -10,7 +9,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
+import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
 import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
 
@@ -67,7 +66,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'clone',
-        minimumDate: moment().format('YYYY-MM-DDTHH:mm'),
+        minimumDate: defaultStartTime,
     };
 
     return (
@@ -77,7 +76,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal actions={actions} history={history} />
+                    <AlertsUtilityArea actions={actions} history={history} />
                     <StandardCard title="Clone alert" noPadding>
                         <AlertForm
                             actions={actions}

@@ -239,8 +239,6 @@ export const AlertsListAsTable = ({
         };
     };
 
-    // const numberCheckboxesSelected = getNumberCheckboxesSelected();
-
     const needsPaginator = userows.length > footerDisplayMinLength;
     return (
         <React.Fragment>
@@ -270,15 +268,11 @@ export const AlertsListAsTable = ({
             >
                 <h3>{headertag}</h3>
                 {!!deleteActive && (
-                    <span
-                        style={{ marginLeft: 'auto', paddingTop: 8 }}
-                        // id={`delete-${tableType}`}
-                    >
+                    <span style={{ marginLeft: 'auto', paddingTop: 8 }}>
                         <span>{alertNotice}</span>
                         <IconButton
                             onClick={showDeleteConfirmation}
                             aria-label="Delete alert(s)"
-                            // id={`alert-list-${tableType}-delete-button`}
                             data-testid={`alert-list-${tableType}-delete-button`}
                         >
                             <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
@@ -324,7 +318,6 @@ export const AlertsListAsTable = ({
                                     >
                                         <TableCell component="td" className={classes.checkboxCell}>
                                             <Checkbox
-                                                // classes={{ root: classes.checkbox }}
                                                 id={`alert-list-item-checkbox-${alert.id}`}
                                                 inputProps={{
                                                     'aria-labelledby': `alert-list-item-title-${alert.id}`,
@@ -405,7 +398,6 @@ export const AlertsListAsTable = ({
                                     rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
                                     colSpan={3}
                                     count={userows.length}
-                                    // id="alert-list-footer"
                                     rowsPerPage={rowsPerPage}
                                     page={page}
                                     SelectProps={{
