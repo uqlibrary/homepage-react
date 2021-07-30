@@ -1,5 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router';
 
 import SimpleBackdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
@@ -46,10 +47,12 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, showAddButton }) => {
+export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, showAddButton, showCloneButton }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
+
+    const { alertid } = useParams();
 
     const openHelpLightbox = () => {
         setLightboxOpen(true);
@@ -65,6 +68,13 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
         actions.clearAnAlert();
         // () => dispatch(actions.clearAnAlert());
         history.push('/admin/alerts/add');
+    };
+
+    const navigateToCloneForm = () => {
+        history.push(`/admin/alerts/clone/${alertid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     return (
@@ -89,6 +99,18 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
                         color="primary"
                         data-testid="admin-alerts-help-display-button"
                         onClick={() => navigateToAddPage()}
+                        variant="contained"
+                    />
+                </div>
+            )}
+            {!!showCloneButton && (
+                <div className={classes.actionButtonPlacer}>
+                    <Button
+                        children="Clone alert"
+                        className={classes.addButton}
+                        color="primary"
+                        data-testid="admin-alerts-modal-clone-button"
+                        onClick={() => navigateToCloneForm()}
                         variant="contained"
                     />
                 </div>
@@ -126,13 +148,17 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
 
 AlertHelpModal.propTypes = {
     actions: PropTypes.any,
+    cloneAnAlert: PropTypes.any,
     helpEntry: PropTypes.any,
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
+    showCloneButton: PropTypes.bool,
 };
 
 AlertHelpModal.defaultProps = {
-    showAddButton: false,
+    cloneAnAlert: null,
     helpButtonLabel: 'Help',
+    showAddButton: false,
+    showCloneButton: false,
 };

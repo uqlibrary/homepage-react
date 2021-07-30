@@ -5,9 +5,9 @@ import React, { Fragment } from 'react';
 
 export default {
     form: {
+        urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',
+        permanentTooltip: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
         add: {
-            urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',
-            permanentTooltip: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
             addAlertConfirmation: {
                 confirmationTitle: 'An alert has been added',
                 confirmationMessage: '',
