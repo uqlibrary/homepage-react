@@ -58,15 +58,11 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const classes = useStyles();
     const { alertid } = useParams();
 
-    console.log('AlertForm: alert = ', alertResponse);
-    console.log('AlertForm: alertStatus = ', alertStatus);
-
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false);
     const [showPreview, setPreviewOpen] = useState(false);
 
-    console.log('AlertForm: defaults = ', defaults);
     const [values, setValues] = useState(defaults);
 
     const isValidUrl = testurl => {
@@ -78,14 +74,12 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             const x = new URL(testurl);
             console.log('new url = ', x);
         } catch (_) {
-            console.log('new url NOT valid');
             return false;
         }
         // while technically an url doesn't need a TLD - in practice it does
         if (!testurl.includes('.')) {
             return false;
         }
-        console.log('new url IS valid');
         return true;
     };
 
@@ -133,11 +127,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    console.log('AlertForm defaults.type = ', defaults.type);
-    console.log('AlertForm alert = ', alertResponse);
     useEffect(() => {
         if (!!alertResponse && !!alertResponse.id && alertStatus === 'saved') {
-            console.log('show conf after saving: ', alertResponse);
             showConfirmation();
         }
     }, [showConfirmation, alertResponse, alertStatus]);
@@ -177,8 +168,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const navigateToCloneForm = () => {
-        console.log('alertid = ', alertid);
-        console.log('defaults = ', defaults);
         history.push(`/admin/alerts/clone/${alertid}`);
 
         const topOfPage = document.getElementById('StandardPage');
@@ -186,8 +175,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const navigateToEditForm = () => {
-        console.log('alertResponse = ', alertResponse);
-        console.log('alertResponse.id = ', alertResponse.id);
         history.push(`/admin/alerts/edit/${alertResponse.id}`);
 
         const topOfPage = document.getElementById('StandardPage');
@@ -225,11 +212,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const saveAlert = () => {
         expandValues(values);
 
-        console.log('will save: title = ', values.alertTitle || /* istanbul ignore next */ '');
-        console.log('will save: body = ', values.body); // getBody());
-        console.log('will save: startDate = ', values.startDate);
-        console.log('will save: endDate = ', values.endDate);
-        console.log('will save: urgent = ', !!values.urgent ? '1' : '0');
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,

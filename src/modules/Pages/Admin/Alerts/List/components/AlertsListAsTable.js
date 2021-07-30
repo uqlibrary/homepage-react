@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
@@ -86,13 +86,12 @@ export const AlertsListAsTable = ({
     footerDisplayMinLength,
     alertOrder,
 }) => {
-    console.log('AlertsListAsTable alertsError = ', alertsError);
     const classes = useStyles2();
-    const [page, setPage] = React.useState(0);
-    const [deleteActive, setDeleteActive] = React.useState(false);
-    const [alertNotice, setAlertNotice] = React.useState('');
+    const [page, setPage] = useState(0);
+    const [deleteActive, setDeleteActive] = useState(false);
+    const [alertNotice, setAlertNotice] = useState('');
 
-    const [rowsPerPage, setRowsPerPage] = React.useState(footerDisplayMinLength);
+    const [rowsPerPage, setRowsPerPage] = useState(footerDisplayMinLength);
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -100,6 +99,11 @@ export const AlertsListAsTable = ({
         showDeleteFailureConfirmation,
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
+
+    React.useEffect(() => {
+        // make it redraw when all displayed rows in a table are deleted
+        setPage(0);
+    }, [rows]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -179,7 +183,6 @@ export const AlertsListAsTable = ({
 
         const thisType = e.target.closest('table').parentElement.id;
         if (!!e.target && !!e.target.checked) {
-            console.log('checkbox has been checked');
             // handle a checkbox being turned on
             if (numberCheckboxesSelected === 1) {
                 setDeleteActive(true);
@@ -194,7 +197,6 @@ export const AlertsListAsTable = ({
                 }
             });
         } else if (!!e.target && !e.target.checked) {
-            console.log('checkbox has been UNchecked');
             // handle a checkbox being turned off
             if (numberCheckboxesSelected === 0) {
                 setDeleteActive(false);
@@ -266,7 +268,10 @@ export const AlertsListAsTable = ({
                 data-testid={`headerRow-${tableType}`}
                 className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
             >
-                <h3>{headertag}</h3>
+                <div>
+                    <h3 style={{ marginBottom: 6 }}>{headertag}</h3>
+                    <div style={{ marginBottom: 3 }}>{rows.length} alerts</div>
+                </div>
                 {!!deleteActive && (
                     <span style={{ marginLeft: 'auto', paddingTop: 8 }}>
                         <span>{alertNotice}</span>
