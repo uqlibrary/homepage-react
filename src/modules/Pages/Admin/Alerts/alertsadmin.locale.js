@@ -36,6 +36,7 @@ export default {
                 confirmationMessage: '',
                 confirmButtonLabel: 'Edit cloned Alert',
                 cancelButtonLabel: 'View alert list',
+                alternateActionButtonLabel: 'Clone again',
             },
         },
         help: {
