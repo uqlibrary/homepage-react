@@ -30,6 +30,14 @@ export default {
                 confirmButtonLabel: 'View alert list',
             },
         },
+        clone: {
+            cloneAlertConfirmation: {
+                confirmationTitle: 'The alert has been cloned',
+                confirmationMessage: '',
+                confirmButtonLabel: 'Edit cloned Alert',
+                cancelButtonLabel: 'View alert list',
+            },
+        },
         help: {
             title: 'Add/edit an alert',
             text: (

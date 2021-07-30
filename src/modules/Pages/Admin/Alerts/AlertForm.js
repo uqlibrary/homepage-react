@@ -379,7 +379,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToEditForm()}
                         isOpen={isOpen}
-                        locale={locale.cloneForm.cloneAlertConfirmation}
+                        locale={locale.form.clone.cloneAlertConfirmation}
                     />
                 )}
                 <StandardCard>
