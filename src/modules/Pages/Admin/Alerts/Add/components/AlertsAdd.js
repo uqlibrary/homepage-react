@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-const moment = require('moment');
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
+import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -20,10 +20,6 @@ const useStyles = makeStyles(() => ({
 
 export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) => {
     const classes = useStyles();
-    const defaultStartTime = moment().format('YYYY-MM-DDTHH:mm');
-    const defaultEndTime = moment()
-        .endOf('day')
-        .format('YYYY-MM-DDTHH:mm');
 
     const defaults = {
         id: '',

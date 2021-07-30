@@ -12,24 +12,17 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { formatDate } from '../../alerthelpers';
-import { default as locale } from '../../alertsadmin.locale';
+import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
-        transition: 'visibility 0s, opacity 0.5s linear',
+        transition: 'visibility 0s, opacity 10s ease-out',
     },
 }));
 
-export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history }) => {
+export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }) => {
     const classes = useStyles();
     const { alertid } = useParams();
-    console.log('AlertsEdit alertid = ', alertid);
-    console.log('AlertsEdit props actions = ', actions);
-    console.log('AlertsEdit props alert = ', alert);
-    console.log('AlertsEdit props alertError = ', alertError);
-    console.log('AlertsEdit props alertStatus = ', alertStatus);
-    console.log('AlertsEdit props history = ', history);
 
     React.useEffect(() => {
         console.log('useEffect alertid = ', alertid);
@@ -64,16 +57,16 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
 
     const defaults = {
         id: alert?.id || '',
-        startDate: alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '',
-        endDate: alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '',
+        startDate: defaultStartTime,
+        endDate: defaultEndTime,
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
-        urgent: !!alert && !!alert.urgent,
+        urgent: alert?.urgent === '1' || false,
         permanentAlert: isPermanent || false,
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
-        type: 'edit',
+        type: 'clone',
         minimumDate: moment().format('YYYY-MM-DDTHH:mm'),
     };
 
@@ -84,8 +77,8 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal actions={actions} history={history} showCloneButton helpEntry={locale.form.help} />
-                    <StandardCard title="Edit alert" noPadding>
+                    <AlertHelpModal actions={actions} history={history} />
+                    <StandardCard title="Clone alert" noPadding>
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
@@ -101,7 +94,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
     );
 };
 
-AlertsEdit.propTypes = {
+AlertsClone.propTypes = {
     actions: PropTypes.any,
     alert: PropTypes.any,
     alertError: PropTypes.any,
@@ -109,4 +102,4 @@ AlertsEdit.propTypes = {
     history: PropTypes.object,
 };
 
-export default AlertsEdit;
+export default AlertsClone;

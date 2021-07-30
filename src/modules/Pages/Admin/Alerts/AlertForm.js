@@ -65,6 +65,23 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     console.log('AlertForm: defaults = ', defaults);
     const [values, setValues] = useState(defaults);
 
+    const isValidUrl = testurl => {
+        try {
+            // eslint-disable-next-line no-new
+            const x = new URL(testurl);
+            console.log('new url = ', x);
+        } catch (_) {
+            console.log('new url NOT valid');
+            return false;
+        }
+        // while technically an url doesn't need a TLD - in practice it does
+        if (!testurl.includes('.')) {
+            return false;
+        }
+        console.log('new url IS valid');
+        return true;
+    };
+
     const handlePreview = showPreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
@@ -77,6 +94,37 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
         setPreviewOpen(showPreview);
     };
+
+    function isInvalidStartDate(startDate) {
+        return (startDate < defaults.startDate && startDate !== '') || !moment(startDate).isValid();
+    }
+
+    function isInvalidEndDate(endDate, startDate) {
+        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
+    }
+
+    const validateValues = currentValues => {
+        const isValid =
+            !isInvalidStartDate(currentValues.startDate) &&
+            !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
+            currentValues.alertTitle.length > 0 &&
+            !!currentValues.enteredbody &&
+            currentValues.enteredbody.length > 0 &&
+            (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
+            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
+
+        // if we are currently showing the preview and the form becomes invalid, hide it again
+        !isValid && !!showPreview && handlePreview(false);
+
+        return isValid;
+    };
+
+    useEffect(() => {
+        if (!!defaults && defaults.type === 'clone') {
+            setFormValidity(validateValues(defaults));
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     console.log('AlertForm defaults.type = ', defaults.type);
     console.log('AlertForm alert = ', alertResponse);
@@ -116,6 +164,15 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         actions.clearAnAlert(); // make the form clear for the next use
 
         history.push('/admin/alerts');
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+    };
+
+    const navigateToEditForm = alertid => {
+        console.log('alertResponse = ', alertResponse);
+        console.log('alertResponse.id = ', alertResponse.id);
+        history.push(`/admin/alerts/edit/${alertid}`);
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
@@ -244,47 +301,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         alertWrapper.appendChild(alertWebComponent);
     };
 
-    const isValidUrl = testurl => {
-        try {
-            // eslint-disable-next-line no-new
-            const x = new URL(testurl);
-            console.log('new url = ', x);
-        } catch (_) {
-            console.log('new url NOT valid');
-            return false;
-        }
-        // while technically an url doesn't need a TLD - in practice it does
-        if (!testurl.includes('.')) {
-            return false;
-        }
-        console.log('new url IS valid');
-        return true;
-    };
-
-    function isInvalidStartDate(startDate) {
-        return (startDate < defaults.startDate && startDate !== '') || !moment(startDate).isValid();
-    }
-
-    function isInvalidEndDate(endDate, startDate) {
-        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
-    }
-
-    const validateValues = currentValues => {
-        const isValid =
-            !isInvalidStartDate(currentValues.startDate) &&
-            !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
-            currentValues.alertTitle.length > 0 &&
-            !!currentValues.enteredbody &&
-            currentValues.enteredbody.length > 0 &&
-            (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
-            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
-
-        // if we are currently showing the preview and the form becomes invalid, hide it again
-        !isValid && !!showPreview && handlePreview(false);
-
-        return isValid;
-    };
-
     const handleChange = prop => event => {
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
@@ -352,6 +368,18 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
                         locale={locale.form.add.addAlertConfirmation}
+                    />
+                )}
+                {alertStatus !== 'error' && defaults.type === 'clone' && (
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        confirmationBoxId="alert-clone-save-succeeded"
+                        onAction={navigateToListPage}
+                        onClose={hideConfirmation}
+                        onCancelAction={() => navigateToEditForm()}
+                        isOpen={isOpen}
+                        locale={locale.cloneForm.cloneAlertConfirmation}
                     />
                 )}
                 <StandardCard>
@@ -446,29 +474,26 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                             </InputLabel>
                         </Grid>
                         <Grid item sm={4} xs={12}>
-                            <InputLabel
-                                style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                title={locale.form.add.permanentTooltip}
-                            >
+                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.permanentTooltip}>
                                 <Checkbox
                                     data-testid="admin-alerts-form-checkbox-permanent"
                                     checked={values.permanentAlert}
                                     onChange={handleChange('permanentAlert')}
                                     name="permanentAlert"
-                                    title={locale.form.add.permanentTooltip}
+                                    title={locale.form.permanentTooltip}
                                     className={classes.checkbox}
                                 />
                                 Permanent
                             </InputLabel>
                         </Grid>
                         <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.add.urgentTooltip}>
+                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.urgentTooltip}>
                                 <Checkbox
                                     checked={values.urgent}
                                     data-testid="admin-alerts-form-checkbox-urgent"
                                     onChange={handleChange('urgent')}
                                     name="urgent"
-                                    title={locale.form.add.urgentTooltip}
+                                    title={locale.form.urgentTooltip}
                                     className={classes.checkbox}
                                 />
                                 Urgent
@@ -536,7 +561,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                 color="primary"
                                 data-testid="admin-alerts-form-button-save"
                                 variant="contained"
-                                children="Save"
+                                children={defaults.type === 'clone' ? 'Add new' : 'Save'}
                                 disabled={!isFormValid}
                                 onClick={saveAlert}
                                 className={classes.saveButton}
