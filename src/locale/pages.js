@@ -40,7 +40,12 @@ export default {
                 title: 'Masquerade',
             },
             alerts: {
-                title: 'Alerts',
+                title: 'Alerts administration',
+                form: {
+                    add: { title: 'Add a new Alert' },
+                    edit: { title: 'Edit an Alert' },
+                    clone: { title: 'Clone an Alert - make a new alert base don an existing one' },
+                },
             },
         },
         courseresources: {

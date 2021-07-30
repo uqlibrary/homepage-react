@@ -89,17 +89,17 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         return true;
     };
 
-    const handlePreview = showPreview => {
+    const handlePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
         if (!alertWrapper) {
             return;
         }
 
-        alertWrapper.parentElement.style.visibility = !!showPreview ? 'visible' : 'hidden';
-        alertWrapper.parentElement.style.opacity = !!showPreview ? '1' : '0';
+        alertWrapper.parentElement.style.visibility = !!showThePreview ? 'visible' : 'hidden';
+        alertWrapper.parentElement.style.opacity = !!showThePreview ? '1' : '0';
 
-        setPreviewOpen(showPreview);
+        setPreviewOpen(showThePreview);
     };
 
     function isInvalidStartDate(startDate) {
@@ -178,6 +178,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     const navigateToCloneForm = () => {
         console.log('alertid = ', alertid);
+        console.log('defaults = ', defaults);
         history.push(`/admin/alerts/clone/${alertid}`);
 
         const topOfPage = document.getElementById('StandardPage');
@@ -193,23 +194,23 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const getBody = values => {
-        const permanentAlert = values.permanentAlert ? '[permanent]' : '';
-        const link = values.linkRequired ? `[${values.linkTitle}](${values.linkUrl})` : '';
-        return `${values.enteredbody}${permanentAlert}${link}`;
+    const getBody = bodyValues => {
+        const permanentAlert = bodyValues.permanentAlert ? '[permanent]' : '';
+        const link = bodyValues.linkRequired ? `[${bodyValues.linkTitle}](${bodyValues.linkUrl})` : '';
+        return `${bodyValues.enteredbody}${permanentAlert}${link}`;
     };
 
-    function expandValues(values) {
+    function expandValues(expandableValues) {
         // because otherwise we see 'false' when we clear the field
-        const newAlertTitle = values.alertTitle || /* istanbul ignore next */ '';
+        const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
 
-        const newLinkTitle = values.linkTitle || '';
-        const newLinkUrl = values.linkUrl || '';
+        const newLinkTitle = expandableValues.linkTitle || '';
+        const newLinkUrl = expandableValues.linkUrl || '';
 
-        const newBody = getBody(values);
+        const newBody = getBody(expandableValues);
 
         setValues({
-            ...values,
+            ...expandableValues,
             ['alertTitle']: newAlertTitle,
             ['body']: newBody,
             ['linkTitle']: newLinkTitle,
@@ -249,6 +250,44 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const displayPreview = () => {
+        function makePreviewActionButtonJustNotifyUser() {
+            const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
+            const changeLink = setInterval(() => {
+                // its a moment before it is available
+                const preview = document.getElementById('alert-preview');
+                const previewShadowRoot = !!preview && preview.shadowRoot;
+                const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
+                if (!!link) {
+                    link.setAttribute('href', '#');
+                    link.setAttribute('title', popuptext);
+                    link.onclick = () => {
+                        alert(popuptext);
+                        return false;
+                    };
+                    clearInterval(changeLink);
+                }
+            }, 100);
+        }
+
+        function manuallyMakeWebComponentBePermanent(webComponent, thebody) {
+            // when the alert body has the square bracket for 'permanent',
+            // that enclosed string is not accepted by setattribute
+            // something to do with XSS blocking for special char?
+            // so we have to handle it manually :(
+            webComponent.setAttribute('alertmessage', thebody.replace('[permanent]', ''));
+            // manually remove the 'non-permanent' button
+            const changeMessage = setInterval(() => {
+                // its a moment before it is available
+                const preview = document.getElementById('alert-preview');
+                const previewShadowRoot = !!preview && preview.shadowRoot;
+                const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
+                if (!!closeButton) {
+                    closeButton.remove();
+                    clearInterval(changeMessage);
+                }
+            }, 100);
+        }
+
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
         if (!!showPreview) {
@@ -273,45 +312,15 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         body = body.replace('[]()', '');
         body = body.replace(`[${values.linkTitle}]()`, '');
         body = body.replace(`[](${values.linkUrl})`, '');
-        // when the alert body has the square bracket for 'permanent',
-        // that enclosed string is not accepted by setattribute
-        // something to do with XSS blocking for special char?
-        // so we have to handle it manually :(
         if (!!values.permanentAlert) {
-            alertWebComponent.setAttribute('alertmessage', body.replace('[permanent]', ''));
-            // manually remove the 'non-permanent' button
-            const changeMessage = setInterval(() => {
-                // its a moment before it is available
-                const preview = document.getElementById('alert-preview');
-                const previewShadowRoot = !!preview && preview.shadowRoot;
-                const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
-                if (!!closeButton) {
-                    closeButton.remove();
-                    clearInterval(changeMessage);
-                }
-            }, 100);
+            manuallyMakeWebComponentBePermanent(alertWebComponent, body);
         } else {
             alertWebComponent.setAttribute('alertmessage', body);
         }
         // so the user doesnt lose their work by clicking on the preview button,
         // change the href to an alert of what the click would be
-        const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
         if (!!values.linkRequired) {
-            const changeLink = setInterval(() => {
-                // its a moment before it is available
-                const preview = document.getElementById('alert-preview');
-                const previewShadowRoot = !!preview && preview.shadowRoot;
-                const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
-                if (!!link) {
-                    link.setAttribute('href', '#');
-                    link.setAttribute('title', popuptext);
-                    link.onclick = () => {
-                        alert(popuptext);
-                        return false;
-                    };
-                    clearInterval(changeLink);
-                }
-            }, 100);
+            makePreviewActionButtonJustNotifyUser();
         }
         alertWrapper.appendChild(alertWebComponent);
     };

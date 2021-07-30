@@ -848,15 +848,20 @@ describe('Alerts Admin Pages', () => {
                 .focus()
                 .clear();
             cy.get('[data-testid="admin-alerts-form-title"] input').type('alert title 10');
+            // click "Add new"
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
-            // click 'edit this new record' button in dialog
+            // click 'clone again' button in dialog
             cy.get('[data-testid="confirm-alternate-alert-clone-save-succeeded"]').click();
             cy.location('href').should(
                 'eq',
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',
             );
+            // click "Add new"
+            cy.get('[data-testid="admin-alerts-form-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('The alert has been cloned');
         });
     });
 });

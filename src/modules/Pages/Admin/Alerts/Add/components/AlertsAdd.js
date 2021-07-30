@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
-import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
+import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
 import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
 
@@ -42,7 +42,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal actions={actions} history={history} helpEntry={locale.form.help} />
+                    <AlertsUtilityArea actions={actions} history={history} helpEntry={locale.form.help} />
                     <StandardCard title="Create alert" noPadding>
                         <AlertForm
                             actions={actions}
