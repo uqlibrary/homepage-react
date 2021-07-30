@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { useParams } from 'react-router';
 import PropTypes from 'prop-types';
 const moment = require('moment');
 
@@ -55,8 +56,11 @@ const useStyles = makeStyles(
 
 export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
+    const { alertid } = useParams();
+
     console.log('AlertForm: alert = ', alertResponse);
     console.log('AlertForm: alertStatus = ', alertStatus);
+
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false);
@@ -66,6 +70,9 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const [values, setValues] = useState(defaults);
 
     const isValidUrl = testurl => {
+        if (testurl.length === 0) {
+            return false;
+        }
         try {
             // eslint-disable-next-line no-new
             const x = new URL(testurl);
@@ -169,10 +176,18 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const navigateToEditForm = alertid => {
+    const navigateToCloneForm = () => {
+        console.log('alertid = ', alertid);
+        history.push(`/admin/alerts/clone/${alertid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+    };
+
+    const navigateToEditForm = () => {
         console.log('alertResponse = ', alertResponse);
         console.log('alertResponse.id = ', alertResponse.id);
-        history.push(`/admin/alerts/edit/${alertid}`);
+        history.push(`/admin/alerts/edit/${alertResponse.id}`);
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
@@ -223,7 +238,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             end: formatDate(values.endDate),
         };
         console.log('will save ', newValues);
-        defaults.type === 'add' ? actions.createAlert(newValues) : actions.saveAlertChange(newValues);
+        defaults.type === 'edit' ? actions.saveAlertChange(newValues) : actions.createAlert(newValues);
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -372,14 +387,16 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
                     <ConfirmationBox
-                        actionButtonColor="primary"
+                        actionButtonColor="secondary"
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-clone-save-succeeded"
-                        onAction={navigateToListPage}
+                        onAction={navigateToEditForm}
                         onClose={hideConfirmation}
-                        onCancelAction={() => navigateToEditForm()}
+                        onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
                         locale={locale.form.clone.cloneAlertConfirmation}
+                        showAlternateActionButton
+                        onAlternateAction={navigateToCloneForm}
                     />
                 )}
                 <StandardCard>
@@ -532,7 +549,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     data-testid="admin-alerts-form-link-url"
                                     value={values.linkUrl}
                                     onChange={handleChange('linkUrl')}
-                                    error={values.linkUrl !== '' && !isValidUrl(values.linkUrl)}
+                                    error={!isValidUrl(values.linkUrl)}
                                     title="Please enter a valid URL"
                                 />
                             </FormControl>
