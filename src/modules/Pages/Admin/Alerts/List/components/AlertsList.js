@@ -26,6 +26,12 @@ const useStyles = makeStyles(
             [theme.breakpoints.up('sm')]: {
                 display: 'none',
             },
+            '& p': {
+                backgroundColor: theme.palette.warning.light,
+                fontWeight: 'bold',
+                padding: 6,
+                textAlign: 'center',
+            },
         },
     }),
     { withTheme: true },
