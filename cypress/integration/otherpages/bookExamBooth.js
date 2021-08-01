@@ -1,4 +1,4 @@
-import locale from '../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
+import locale from '../../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
 import moment from 'moment';
 
 context('ACCESSIBILITY', () => {

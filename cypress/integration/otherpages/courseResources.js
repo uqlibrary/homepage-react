@@ -1,18 +1,18 @@
 /* eslint camelcase: 0 */
 /* eslint max-len: 0 */
-import { accounts } from '../../src/mock/data';
-import { default as locale } from '../../src/modules/Pages/CourseResources/courseResources.locale';
-import { _courseLink, _pluralise } from '../../src/modules/Pages/CourseResources/courseResourcesHelpers';
-import { default as FREN1010ReadingList } from '../../src/mock/data/records/courseReadingList_FREN1010';
-import { default as FREN1010Guide } from '../../src/mock/data/records/libraryGuides_FREN1010';
-import { default as FREN1010Exam } from '../../src/mock/data/records/examListFREN1010';
-import { default as HIST1201ReadingList } from '../../src/mock/data/records/courseReadingList_HIST1201';
-import { default as PHIL1002ReadingList } from '../../src/mock/data/records/courseReadingList_PHIL1002';
-import { default as PHIL1002Guide } from '../../src/mock/data/records/libraryGuides_PHIL1002';
-import { default as ACCT1101ReadingList } from '../../src/mock/data/records/courseReadingList_ACCT1101';
-import { default as ACCT1101Guide } from '../../src/mock/data/records/libraryGuides_ACCT1101';
-import { default as ACCT1101Exam } from '../../src/mock/data/records/examListACCT1101';
-import { default as learningResourceSearchSuggestions } from '../../src/mock/data/records/learningResourceSearchSuggestions';
+import { accounts } from '../../../src/mock/data';
+import { default as locale } from '../../../src/modules/Pages/CourseResources/courseResources.locale';
+import { _courseLink, _pluralise } from '../../../src/modules/Pages/CourseResources/courseResourcesHelpers';
+import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
+import { default as FREN1010Guide } from '../../../src/mock/data/records/libraryGuides_FREN1010';
+import { default as FREN1010Exam } from '../../../src/mock/data/records/examListFREN1010';
+import { default as HIST1201ReadingList } from '../../../src/mock/data/records/courseReadingList_HIST1201';
+import { default as PHIL1002ReadingList } from '../../../src/mock/data/records/courseReadingList_PHIL1002';
+import { default as PHIL1002Guide } from '../../../src/mock/data/records/libraryGuides_PHIL1002';
+import { default as ACCT1101ReadingList } from '../../../src/mock/data/records/courseReadingList_ACCT1101';
+import { default as ACCT1101Guide } from '../../../src/mock/data/records/libraryGuides_ACCT1101';
+import { default as ACCT1101Exam } from '../../../src/mock/data/records/examListACCT1101';
+import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
