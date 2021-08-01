@@ -3,7 +3,7 @@ import {
     // hasMyLibraryButtonOptions,
     hasPanels,
     hasPersonalisedPanelOptions,
-} from '../support/access';
+} from '../../support/access';
 
 context('Homepage', () => {
     it('Renders an on-campus undergraduate home page correctly', () => {
