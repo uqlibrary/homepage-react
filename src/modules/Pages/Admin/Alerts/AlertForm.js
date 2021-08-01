@@ -231,45 +231,45 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         });
     };
 
+    function makePreviewActionButtonJustNotifyUser() {
+        const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
+        const changeLink = setInterval(() => {
+            // its a moment before it is available
+            const preview = document.getElementById('alert-preview');
+            const previewShadowRoot = !!preview && preview.shadowRoot;
+            const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
+            if (!!link) {
+                link.setAttribute('href', '#');
+                link.setAttribute('title', popuptext);
+                link.onclick = () => {
+                    alert(popuptext);
+                    return false;
+                };
+                clearInterval(changeLink);
+            }
+        }, 100);
+    }
+
+    function manuallyMakeWebComponentBePermanent(webComponent, thebody) {
+        // when the alert body has the square bracket for 'permanent',
+        // that enclosed string is not accepted by setattribute
+        // something to do with XSS blocking for special char?
+        // so we have to handle it manually :(
+        webComponent.setAttribute('alertmessage', thebody.replace('[permanent]', ''));
+        // manually remove the 'non-permanent' button
+        const changeMessage = setInterval(() => {
+            // its a moment before it is available
+            const preview = document.getElementById('alert-preview');
+            const previewShadowRoot = !!preview && preview.shadowRoot;
+            const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
+            if (!!closeButton) {
+                closeButton.remove();
+                clearInterval(changeMessage);
+            }
+        }, 100);
+    }
+
     const displayPreview = () => {
-        function makePreviewActionButtonJustNotifyUser() {
-            const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
-            const changeLink = setInterval(() => {
-                // its a moment before it is available
-                const preview = document.getElementById('alert-preview');
-                const previewShadowRoot = !!preview && preview.shadowRoot;
-                const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
-                if (!!link) {
-                    link.setAttribute('href', '#');
-                    link.setAttribute('title', popuptext);
-                    link.onclick = () => {
-                        alert(popuptext);
-                        return false;
-                    };
-                    clearInterval(changeLink);
-                }
-            }, 100);
-        }
-
-        function manuallyMakeWebComponentBePermanent(webComponent, thebody) {
-            // when the alert body has the square bracket for 'permanent',
-            // that enclosed string is not accepted by setattribute
-            // something to do with XSS blocking for special char?
-            // so we have to handle it manually :(
-            webComponent.setAttribute('alertmessage', thebody.replace('[permanent]', ''));
-            // manually remove the 'non-permanent' button
-            const changeMessage = setInterval(() => {
-                // its a moment before it is available
-                const preview = document.getElementById('alert-preview');
-                const previewShadowRoot = !!preview && preview.shadowRoot;
-                const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
-                if (!!closeButton) {
-                    closeButton.remove();
-                    clearInterval(changeMessage);
-                }
-            }, 100);
-        }
-
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
         if (!!showPreview) {
