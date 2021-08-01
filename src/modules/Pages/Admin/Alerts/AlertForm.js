@@ -66,13 +66,16 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const [values, setValues] = useState(defaults);
 
     const isValidUrl = testurl => {
-        if (testurl.length === 0) {
+        if (testurl.length < 'http://x.co'.length) {
+            // minimum possible url
             return false;
         }
         try {
-            // eslint-disable-next-line no-new
-            const x = new URL(testurl);
-            console.log('new url = ', x);
+            const url = new URL(testurl);
+            console.log('new url = ', url);
+            if (url.hostname.length < 'x.co'.length) {
+                return false;
+            }
         } catch (_) {
             return false;
         }
@@ -188,6 +191,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     function expandValues(expandableValues) {
+        console.log('expandableValues = ', expandableValues);
+        console.log('defaults = ', defaults);
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
 
@@ -196,14 +201,17 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
         const newBody = getBody(expandableValues);
 
+        const newStartDate = expandableValues.startDate || defaults.startDate;
+        const newEndDate = expandableValues.endDate || defaults.endDate;
+
         setValues({
             ...expandableValues,
             ['alertTitle']: newAlertTitle,
             ['body']: newBody,
             ['linkTitle']: newLinkTitle,
             ['linkUrl']: newLinkUrl,
-            // ['startDate']: newStartDate,
-            // ['endDate']: newEndDate,
+            ['startDate']: newStartDate,
+            ['endDate']: newEndDate,
         });
 
         return values;

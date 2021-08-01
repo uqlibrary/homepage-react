@@ -461,6 +461,19 @@ describe('Alerts Admin Pages', () => {
                     cy.get('[data-testid="alert-message"]').should('have.text', 'body 6');
                 });
         });
+        it('an url must be valid', () => {
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
+            cy.get('[data-testid="admin-alerts-form-link-title"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-form-link-url"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').type('Read more');
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http://x.c');
+            cy.get('[data-testid="admin-alerts-form-link-url"]').should('have.class', 'Mui-error');
+            // one more character
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').type('o');
+            cy.get('[data-testid="admin-alerts-form-link-url"]').should('not.have.class', 'Mui-error');
+        });
         it('can save an alert (simple)', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
             cy.viewport(1300, 1000);
