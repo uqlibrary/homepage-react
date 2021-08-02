@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
@@ -90,8 +91,11 @@ export const AlertsListAsTable = ({
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [alertNotice, setAlertNotice] = useState('');
+    const [cookies, setCookie] = useCookies();
 
-    const [rowsPerPage, setRowsPerPage] = useState(footerDisplayMinLength);
+    const [rowsPerPage, setRowsPerPage] = useState(
+        (!cookies.alertAdminPaginatorSize && footerDisplayMinLength) || parseInt(cookies.alertAdminPaginatorSize, 10),
+    );
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -112,7 +116,15 @@ export const AlertsListAsTable = ({
     const checkBoxIdPrefix = 'checkbox-';
 
     const handleChangeRowsPerPage = event => {
-        setRowsPerPage(parseInt(event.target.value, 10));
+        const numberOfRows = parseInt(event.target.value, 10);
+
+        const current = new Date();
+        const nextYear = new Date();
+        nextYear.setFullYear(current.getFullYear() + 1);
+        console.log('set cookie alertAdminPaginatorSize to ', numberOfRows);
+        setCookie('alertAdminPaginatorSize', numberOfRows, { expires: nextYear });
+
+        setRowsPerPage(numberOfRows);
         setPage(0);
     };
 
@@ -243,7 +255,7 @@ export const AlertsListAsTable = ({
         };
     };
 
-    const needsPaginator = userows.length > footerDisplayMinLength;
+    const needsPaginator = userows.length > (cookies.alertAdminPaginatorSize || footerDisplayMinLength);
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -271,10 +283,16 @@ export const AlertsListAsTable = ({
                 className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
             >
                 <div>
-                    <h3 style={{ marginBottom: 6 }}>{headertag}</h3>
-                    <div data-testid={`headerRow-count-${tableType}`} style={{ marginBottom: 3 }}>
-                        {headerCountIndicator}
-                    </div>
+                    <h3 style={{ marginBottom: 6 }}>
+                        {headertag}
+                        <span
+                            style={{ fontSize: '0.9em', fontWeight: 300 }}
+                            data-testid={`headerRow-count-${tableType}`}
+                        >
+                            {' '}
+                            - {headerCountIndicator}
+                        </span>
+                    </h3>
                 </div>
                 {!!deleteActive && (
                     <span style={{ marginLeft: 'auto', paddingTop: 8 }}>
