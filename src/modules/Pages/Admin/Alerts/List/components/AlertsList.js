@@ -128,7 +128,12 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                         <p>Mobile? You might want to turn your phone sideways!</p>
                     </Grid>
                 </Grid>
-                <AlertsUtilityArea actions={actions} history={history} showAddButton helpEntry={locale.listPage.help} />
+                <AlertsUtilityArea
+                    actions={actions}
+                    helpContent={locale.listPage.help}
+                    history={history}
+                    showAddButton
+                />
                 <StandardCard title="All alerts" noPadding>
                     <Grid container>
                         <Grid

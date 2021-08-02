@@ -42,7 +42,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} history={history} helpEntry={locale.form.help} />
+                    <AlertsUtilityArea actions={actions} history={history} helpContent={locale.form.help} />
                     <StandardCard title="Create alert" noPadding>
                         <AlertForm
                             actions={actions}
