@@ -93,7 +93,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
                         history={history}
                         showCloneButton
                     />
-                    <StandardCard title="Edit alert" noPadding>
+                    <StandardCard title="Edit alert" noPadding squash>
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
