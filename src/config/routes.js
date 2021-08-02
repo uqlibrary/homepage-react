@@ -13,6 +13,7 @@ export const pathConfig = {
         alertsadd: '/admin/alerts/add',
         alertsedit: alertid => `/admin/alerts/edit/${alertid}`,
         alertsclone: alertid => `/admin/alerts/clone/${alertid}`,
+        alertsview: alertid => `/admin/alerts/view/${alertid}`,
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
     },
@@ -28,6 +29,7 @@ export const flattedPathConfig = [
     '/admin/alerts/add',
     '/admin/alerts/edit',
     '/admin/alerts/clone',
+    '/admin/alerts/view',
     '/admin/alerts',
     '/admin/masquerade',
     '/book-exam-booth',
@@ -110,6 +112,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const alertView = [
+        {
+            path: pathConfig.admin.alertsview(alertid),
+            component: components.AlertsView,
+            // exact: true,
+            pageTitle: locale.pages.admin.alerts.form.view.title,
+            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
+        },
+    ];
+
     const masqueradeDisplay = [
         {
             path: pathConfig.admin.masquerade,
@@ -126,6 +138,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && seeAlertsAdmin(account) ? alertAddDisplay : []),
         ...(account && seeAlertsAdmin(account) ? alertEditForm : []),
         ...(account && seeAlertsAdmin(account) ? alertCloneForm : []),
+        ...(account && seeAlertsAdmin(account) ? alertView : []),
         ...(account && seeAlertsAdmin(account) ? alertsListDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         {
