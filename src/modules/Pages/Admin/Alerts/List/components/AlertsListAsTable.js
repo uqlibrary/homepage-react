@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
+// import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -25,6 +25,7 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
+import SplitButton from './splitbutton';
 
 const moment = require('moment');
 
@@ -171,6 +172,20 @@ export const AlertsListAsTable = ({
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
+    const navigateToCloneForm = alertid => {
+        history.push(`/admin/alerts/clone/${alertid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+    };
+
+    const navigateToView = alertid => {
+        history.push(`/admin/alerts/view/${alertid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+    };
+
     const reEnableAllCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]');
         checkBoxList.forEach(ii => {
@@ -224,24 +239,28 @@ export const AlertsListAsTable = ({
         );
     };
 
+    function deleteAlertById(alertID) {
+        deleteAlert(alertID)
+            .then(() => {
+                console.log('then deleted error status: ', alertsError);
+                console.log('deleted: ', `alert-list-row-${alertID}`);
+
+                setAlertNotice('');
+                setDeleteActive(false);
+                actions.loadAllAlerts();
+            })
+            .catch(() => {
+                showDeleteFailureConfirmation();
+            });
+    }
+
     const deleteSelectedAlerts = () => {
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
         if (!!checkboxes && checkboxes.length > 0) {
             checkboxes.forEach(c => {
                 const alertID = c.value.replace(checkBoxIdPrefix, '');
                 console.log('deleting alert with id ', alertID);
-                deleteAlert(alertID)
-                    .then(() => {
-                        console.log('then deleted error status: ', alertsError);
-                        console.log('deleted: ', `alert-list-row-${alertID}`);
-
-                        setAlertNotice('');
-                        setDeleteActive(false);
-                        actions.loadAllAlerts();
-                    })
-                    .catch(() => {
-                        showDeleteFailureConfirmation();
-                    });
+                deleteAlertById(alertID);
             });
         }
     };
@@ -316,7 +335,7 @@ export const AlertsListAsTable = ({
                 )}
             </div>
             <TableContainer id={`alert-list-${tableType}`} data-testid={`alert-list-${tableType}`} component={Paper}>
-                <Table className={classes.table} aria-label="custom pagination table">
+                <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                     <TableHead>
                         <TableRow md-row="" className="md-row">
                             <TableCell component="th" scope="row" />
@@ -336,6 +355,7 @@ export const AlertsListAsTable = ({
                         {rowsPerPage > 0 &&
                             userows.length > 0 &&
                             userows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
+                                console.log('tableType = ', tableType);
                                 return (
                                     <TableRow
                                         key={alert.id}
@@ -393,14 +413,14 @@ export const AlertsListAsTable = ({
                                             <span title={alert.endDateLong}>{alert.endDateDisplay}</span>
                                         </TableCell>
                                         <TableCell component="td">
-                                            <Button
-                                                children="Edit"
-                                                color="primary"
-                                                data-testid={`alert-list-item-edit-${alert.id}`}
-                                                id={`alert-list-item-edit-${alert.id}`}
-                                                onClick={() => navigateToEditForm(alert.id)}
-                                                className={classes.editButton}
-                                                variant="contained"
+                                            <SplitButton
+                                                alertId={alert.id}
+                                                deleteAlertById={deleteAlertById}
+                                                mainButtonLabel={tableType === 'past' ? 'View' : 'Edit'}
+                                                navigateToCloneForm={navigateToCloneForm}
+                                                navigateToEditForm={navigateToEditForm}
+                                                navigateToView={navigateToView}
+                                                confirmDeleteLocale={confirmDeleteLocale}
                                             />
                                         </TableCell>
                                     </TableRow>

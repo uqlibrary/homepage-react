@@ -44,7 +44,8 @@ export default {
                 form: {
                     add: { title: 'Add a new Alert' },
                     edit: { title: 'Edit an Alert' },
-                    clone: { title: 'Clone an Alert - make a new alert base don an existing one' },
+                    clone: { title: 'Clone an Alert - make a new alert based on an existing one' },
+                    view: { title: 'View an Alert' },
                 },
             },
         },
