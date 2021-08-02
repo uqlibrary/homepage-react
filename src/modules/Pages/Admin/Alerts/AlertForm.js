@@ -175,13 +175,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const navigateToEditForm = () => {
-        history.push(`/admin/alerts/edit/${alertResponse.id}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
-    };
-
     const getBody = bodyValues => {
         const permanentAlert = bodyValues.permanentAlert ? '[permanent]' : '';
         const link = bodyValues.linkRequired ? `[${bodyValues.linkTitle}](${bodyValues.linkUrl})` : '';
@@ -383,13 +376,11 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         actionButtonColor="secondary"
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-clone-save-succeeded"
-                        onAction={navigateToEditForm}
                         onClose={hideConfirmation}
-                        onCancelAction={() => navigateToListPage()}
+                        onAction={() => navigateToListPage()}
                         isOpen={isOpen}
                         locale={locale.form.clone.cloneAlertConfirmation}
-                        showAlternateActionButton
-                        onAlternateAction={navigateToCloneForm}
+                        onCancelAction={navigateToCloneForm}
                     />
                 )}
                 <StandardCard>
