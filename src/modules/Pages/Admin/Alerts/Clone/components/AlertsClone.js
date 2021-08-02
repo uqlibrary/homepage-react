@@ -11,7 +11,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
+import { defaultStartTime, formatDate } from '../../alerthelpers';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
@@ -53,8 +53,8 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
 
     const defaults = {
         id: alert?.id || '',
-        startDate: defaultStartTime,
-        endDate: defaultEndTime,
+        startDate: alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '',
+        endDate: alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '',
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
@@ -74,7 +74,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertsUtilityArea actions={actions} history={history} />
-                    <StandardCard title="Clone alert" noPadding>
+                    <StandardCard title="Clone alert - draft" noPadding>
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
