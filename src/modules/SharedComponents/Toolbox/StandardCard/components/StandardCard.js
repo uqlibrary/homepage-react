@@ -57,6 +57,7 @@ export class Cards extends Component {
         customTitleBgColor: PropTypes.any,
         customTextColor: PropTypes.any,
         squareTop: PropTypes.bool,
+        squash: PropTypes.bool,
         smallTitle: PropTypes.bool,
         standardCardId: PropTypes.string,
         subCard: PropTypes.bool,
@@ -84,6 +85,7 @@ export class Cards extends Component {
         const customTitle = !!this.props.customTitleColor ? { color: this.props.customTitleColor } : null;
         const customText = !!this.props.customTextColor ? { color: `${this.props.customTextColor} !important` } : null;
         const fullHeight = !!this.props.fullHeight ? { height: '100%' } : null;
+        const squash = !!this.props.squash ? { marginBottom: -50 } : null;
         const squareTop = !!this.props.squareTop
             ? { borderTopLeftRadius: 0, borderTopRightRadius: 0 }
             : { borderTopLeftRadius: 4, borderTopRightRadius: 4 };
@@ -103,7 +105,7 @@ export class Cards extends Component {
             >
                 {!this.props.noHeader && (
                     <CardHeader
-                        style={{ ...squareTop, ...customTitleBG, ...customTitle }}
+                        style={{ ...squareTop, ...customTitleBG, ...customTitle, ...squash }}
                         title={title}
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
