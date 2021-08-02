@@ -89,9 +89,9 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
                 <section aria-live="assertive">
                     <AlertsUtilityArea
                         actions={actions}
+                        helpContent={locale.form.help}
                         history={history}
                         showCloneButton
-                        helpEntry={locale.form.help}
                     />
                     <StandardCard title="Edit alert" noPadding>
                         <AlertForm

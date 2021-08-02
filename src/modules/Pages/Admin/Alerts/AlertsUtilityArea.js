@@ -54,7 +54,14 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertsUtilityArea = ({ actions, history, helpEntry, helpButtonLabel, showAddButton, showCloneButton }) => {
+export const AlertsUtilityArea = ({
+    actions,
+    helpButtonLabel,
+    helpContent,
+    history,
+    showAddButton,
+    showCloneButton,
+}) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -83,7 +90,7 @@ export const AlertsUtilityArea = ({ actions, history, helpEntry, helpButtonLabel
 
     return (
         <Fragment>
-            {!!helpEntry && (
+            {!!helpContent && (
                 <div className={classes.actionButtonPlacer}>
                     <Button
                         children={helpButtonLabel}
@@ -132,14 +139,14 @@ export const AlertsUtilityArea = ({ actions, history, helpEntry, helpButtonLabel
             >
                 <Fade in={lightboxOpen}>
                     <div className={classes.paper}>
-                        <h2>{helpEntry?.title || 'TBA'}</h2>
-                        <div>{helpEntry?.text || ''}</div>
+                        <h2>{helpContent?.title || 'TBA'}</h2>
+                        <div>{helpContent?.text || ''}</div>
                         <div>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 className={classes.button}
-                                children={helpEntry?.buttonLabel || 'Close'}
+                                children={helpContent?.buttonLabel || 'Close'}
                                 onClick={closeHelpLightbox}
                             />
                         </div>
@@ -152,8 +159,8 @@ export const AlertsUtilityArea = ({ actions, history, helpEntry, helpButtonLabel
 
 AlertsUtilityArea.propTypes = {
     actions: PropTypes.any,
-    cloneAnAlert: PropTypes.any,
-    helpEntry: PropTypes.any,
+    // cloneAnAlert: PropTypes.any,
+    helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
@@ -161,7 +168,7 @@ AlertsUtilityArea.propTypes = {
 };
 
 AlertsUtilityArea.defaultProps = {
-    cloneAnAlert: null,
+    // cloneAnAlert: null,
     helpButtonLabel: 'Help',
     showAddButton: false,
     showCloneButton: false,
