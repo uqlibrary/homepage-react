@@ -21,6 +21,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-current-list"] tbody')
                 .children()
                 .should('have.length', 1 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="headerRow-count-current"]').contains('1 alert');
 
             // this alert has all 3 chips
             cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
@@ -34,6 +35,7 @@ describe('Alerts Admin Pages', () => {
 
             cy.wait(500);
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
+            cy.get('[data-testid="headerRow-count-scheduled"]').contains('5 alerts');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
@@ -48,6 +50,7 @@ describe('Alerts Admin Pages', () => {
             );
 
             cy.get('[data-testid="admin-alerts-list-past-list"]').should('be.visible');
+            cy.get('[data-testid="headerRow-count-past"]').contains('78 alerts');
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
                 .children()
