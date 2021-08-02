@@ -119,6 +119,8 @@ export const AlertsListAsTable = ({
     const tableType = headertag.replace(' alerts', '').toLowerCase();
     console.log('AlertsListAsTable ', tableType, ' rows = ', rows);
 
+    const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length).replace('[s]', rows.length > 1 ? 's' : '');
+
     let userows = rows;
     if (!!alertOrder && !!rows && rows.length > 0) {
         if (alertOrder === 'reverseEnd') {
@@ -270,7 +272,9 @@ export const AlertsListAsTable = ({
             >
                 <div>
                     <h3 style={{ marginBottom: 6 }}>{headertag}</h3>
-                    <div style={{ marginBottom: 3 }}>{rows.length} alerts</div>
+                    <div data-testid={`headerRow-count-${tableType}`} style={{ marginBottom: 3 }}>
+                        {headerCountIndicator}
+                    </div>
                 </div>
                 {!!deleteActive && (
                     <span style={{ marginLeft: 'auto', paddingTop: 8 }}>
