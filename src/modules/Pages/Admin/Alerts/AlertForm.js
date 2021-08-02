@@ -1,5 +1,4 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { useParams } from 'react-router';
 import PropTypes from 'prop-types';
 const moment = require('moment');
 
@@ -56,7 +55,6 @@ const useStyles = makeStyles(
 
 export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
-    const { alertid } = useParams();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
@@ -171,7 +169,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const navigateToCloneForm = () => {
-        history.push(`/admin/alerts/clone/${alertid}`);
+        window.location.reload();
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
@@ -191,8 +189,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     function expandValues(expandableValues) {
-        console.log('expandableValues = ', expandableValues);
-        console.log('defaults = ', defaults);
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
 
@@ -213,8 +209,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             ['startDate']: newStartDate,
             ['endDate']: newEndDate,
         });
-
-        return values;
     }
 
     const saveAlert = () => {
