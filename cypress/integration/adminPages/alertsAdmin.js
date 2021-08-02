@@ -142,6 +142,28 @@ describe('Alerts Admin Pages', () => {
                 cy.get('td:nth-child(4)').contains('3pm');
             });
         });
+        it('can save the paginator default row count selection', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').should(
+                'have.value',
+                '5',
+            );
+            cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').select('10');
+            cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').should(
+                'have.value',
+                '10',
+            );
+            // reload the page and it is still 10 because the cookie saved it
+            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').select('10');
+            cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').should(
+                'have.value',
+                '10',
+            );
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-10 of 78');
+        });
     });
     context('Alert Admin deletion', () => {
         it('the user can select an alert to delete', () => {
