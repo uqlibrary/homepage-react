@@ -1128,5 +1128,44 @@ describe('Alerts Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
         });
+        it('can show a preview of an non-urgent non-permanent alert without link', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-title"]').should('have.text', 'Sample alert 2:');
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'Has mock data.');
+                    cy.get('[data-testid="alert-close"]').should('exist');
+                    cy.get('[data-testid="alert-alert-preview-action-button"]').should('not.exist');
+                });
+        });
+        it('can show a preview of a urgent permanent alert with link', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
+                    cy.get('[data-testid="alert-title"]').should('have.text', 'Example alert:');
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'This alert can be edited in mock.');
+                    cy.get('[data-testid="alert-close"]').should('not.exist');
+                    // cy.
+                    // get('[data-testid="alert-alert-preview-action-button"]').contain('UQ community COVID-19 advice');
+                    cy.get('[data-testid="alert-alert-preview-action-button"]').should(
+                        'have.attr',
+                        'title',
+                        'On the live website, this button will visit https://about.uq.edu.au/coronavirus when clicked',
+                    );
+                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
+                });
+        });
     });
 });
