@@ -68,7 +68,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
             alertWebComponent.setAttribute('alertmessage', body);
         }
         if (!!linkRequired) {
-            makePreviewActionButtonJustNotifyUser(thisAlert);
+            makePreviewActionButtonJustNotifyUser({ ...thisAlert, linkUrl: linkUrl });
         }
         alertWrapper.appendChild(alertWebComponent);
 
