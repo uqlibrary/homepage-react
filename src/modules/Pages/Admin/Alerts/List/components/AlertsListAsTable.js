@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
-// import Button from '@material-ui/core/Button';
 import Chip from '@material-ui/core/Chip';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -81,7 +80,6 @@ export const AlertsListAsTable = ({
     rows,
     headertag,
     alertsLoading,
-    alertsError,
     history,
     actions,
     deleteAlert,
@@ -122,7 +120,6 @@ export const AlertsListAsTable = ({
         const current = new Date();
         const nextYear = new Date();
         nextYear.setFullYear(current.getFullYear() + 1);
-        console.log('set cookie alertAdminPaginatorSize to ', numberOfRows);
         setCookie('alertAdminPaginatorSize', numberOfRows, { expires: nextYear });
 
         setRowsPerPage(numberOfRows);
@@ -130,7 +127,6 @@ export const AlertsListAsTable = ({
     };
 
     const tableType = headertag.replace(' alerts', '').toLowerCase();
-    console.log('AlertsListAsTable ', tableType, ' rows = ', rows);
 
     const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length).replace('[s]', rows.length > 1 ? 's' : '');
 
@@ -242,9 +238,6 @@ export const AlertsListAsTable = ({
     function deleteAlertById(alertID) {
         deleteAlert(alertID)
             .then(() => {
-                console.log('then deleted error status: ', alertsError);
-                console.log('deleted: ', `alert-list-row-${alertID}`);
-
                 setAlertNotice('');
                 setDeleteActive(false);
                 actions.loadAllAlerts();
@@ -259,7 +252,6 @@ export const AlertsListAsTable = ({
         if (!!checkboxes && checkboxes.length > 0) {
             checkboxes.forEach(c => {
                 const alertID = c.value.replace(checkBoxIdPrefix, '');
-                console.log('deleting alert with id ', alertID);
                 deleteAlertById(alertID);
             });
         }
@@ -274,7 +266,7 @@ export const AlertsListAsTable = ({
         };
     };
 
-    const needsPaginator = userows.length > (cookies.alertAdminPaginatorSize || footerDisplayMinLength);
+    const needsPaginator = userows.length > footerDisplayMinLength;
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -314,7 +306,7 @@ export const AlertsListAsTable = ({
                     </h3>
                 </div>
                 {!!deleteActive && (
-                    <span style={{ marginLeft: 'auto', paddingTop: 8 }}>
+                    <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
                         <span>{alertNotice}</span>
                         <IconButton
                             onClick={showDeleteConfirmation}
@@ -355,7 +347,6 @@ export const AlertsListAsTable = ({
                         {rowsPerPage > 0 &&
                             userows.length > 0 &&
                             userows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(alert => {
-                                console.log('tableType = ', tableType);
                                 return (
                                     <TableRow
                                         key={alert.id}
@@ -412,7 +403,11 @@ export const AlertsListAsTable = ({
                                         <TableCell component="td" align="center" className={classes.endDate}>
                                             <span title={alert.endDateLong}>{alert.endDateDisplay}</span>
                                         </TableCell>
-                                        <TableCell component="td">
+                                        <TableCell
+                                            component="td"
+                                            id={`alert-list-action-block-${alert.id}`}
+                                            data-testid={`alert-list-action-block-${alert.id}`}
+                                        >
                                             <SplitButton
                                                 alertId={alert.id}
                                                 deleteAlertById={deleteAlertById}
@@ -471,7 +466,6 @@ AlertsListAsTable.propTypes = {
     rows: PropTypes.array,
     headertag: PropTypes.string,
     alertsLoading: PropTypes.any,
-    alertsError: PropTypes.any,
     history: PropTypes.object,
     actions: PropTypes.any,
     deleteAlert: PropTypes.any,
@@ -481,7 +475,7 @@ AlertsListAsTable.propTypes = {
 
 AlertsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
-    alertOrder: false, // what order should we sort the alerts in?
+    alertOrder: false, // what order should we sort the alerts in? false means unspecified
 };
 
 export default AlertsListAsTable;

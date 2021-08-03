@@ -16,7 +16,12 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useConfirmationState } from 'hooks';
 
 import { default as locale } from './alertsadmin.locale';
-import { formatDate } from './alerthelpers';
+import {
+    formatDate,
+    getBody,
+    makePreviewActionButtonJustNotifyUser,
+    manuallyMakeWebComponentBePermanent,
+} from './alerthelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -175,12 +180,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const getBody = bodyValues => {
-        const permanentAlert = bodyValues.permanentAlert ? '[permanent]' : '';
-        const link = bodyValues.linkRequired ? `[${bodyValues.linkTitle}](${bodyValues.linkUrl})` : '';
-        return `${bodyValues.enteredbody}${permanentAlert}${link}`;
-    };
-
     function expandValues(expandableValues) {
         // because otherwise we see 'false' when we clear the field
         const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
@@ -226,44 +225,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         });
     };
 
-    function makePreviewActionButtonJustNotifyUser() {
-        const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
-        const changeLink = setInterval(() => {
-            // its a moment before it is available
-            const preview = document.getElementById('alert-preview');
-            const previewShadowRoot = !!preview && preview.shadowRoot;
-            const link = !!previewShadowRoot && previewShadowRoot.getElementById('alert-action-desktop');
-            if (!!link) {
-                link.setAttribute('href', '#');
-                link.setAttribute('title', popuptext);
-                link.onclick = () => {
-                    alert(popuptext);
-                    return false;
-                };
-                clearInterval(changeLink);
-            }
-        }, 100);
-    }
-
-    function manuallyMakeWebComponentBePermanent(webComponent, thebody) {
-        // when the alert body has the square bracket for 'permanent',
-        // that enclosed string is not accepted by setattribute
-        // something to do with XSS blocking for special char?
-        // so we have to handle it manually :(
-        webComponent.setAttribute('alertmessage', thebody.replace('[permanent]', ''));
-        // manually remove the 'non-permanent' button
-        const changeMessage = setInterval(() => {
-            // its a moment before it is available
-            const preview = document.getElementById('alert-preview');
-            const previewShadowRoot = !!preview && preview.shadowRoot;
-            const closeButton = !!previewShadowRoot && previewShadowRoot.getElementById('alert-close');
-            if (!!closeButton) {
-                closeButton.remove();
-                clearInterval(changeMessage);
-            }
-        }, 100);
-    }
-
     const displayPreview = () => {
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
@@ -297,7 +258,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         // so the user doesnt lose their work by clicking on the preview button,
         // change the href to an alert of what the click would be
         if (!!values.linkRequired) {
-            makePreviewActionButtonJustNotifyUser();
+            makePreviewActionButtonJustNotifyUser(values);
         }
         alertWrapper.appendChild(alertWebComponent);
     };

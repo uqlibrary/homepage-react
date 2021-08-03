@@ -114,10 +114,10 @@ describe('Alerts Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
 
             // a alert form way down the list loads so that the form is in view
-            cy.get('button[data-testid="alert-list-item-edit-dc64fde0-9969-11eb-8dc3-1d415ccc50ec"]').click();
+            cy.get('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').click();
             cy.location('href').should(
                 'eq',
-                'http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec',
+                'http://localhost:2020/admin/alerts/edit/0aa12a30-996a-11eb-b009-3f6ded4fdb35',
             );
             cy.isInViewport('[data-testid="StandardPage"]');
         });
@@ -164,6 +164,105 @@ describe('Alerts Admin Pages', () => {
             );
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-10 of 78');
         });
+        it('should have working Split button actions for current/scheduled alerts', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.viewport(1300, 1000);
+            // EDIT BUTTON WORKS
+            cy.get('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
+            cy.get('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Edit');
+            // the dropdown split button exists but is not open
+            cy.get('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
+            cy.get('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .parent()
+                .parent()
+                .children()
+                .should('have.length', 1);
+            cy.get(
+                '[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)',
+            ).should('exist');
+            // open the split button
+            cy.get(
+                '[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)',
+            ).click();
+            cy.get('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .parent()
+                .parent()
+                .children()
+                .should('have.length', 2);
+            // CLONE BUTTON WORKS
+            cy.get('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-clone-button"]').should('exist');
+            cy.get('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-clone-button"]').click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',
+            );
+            // back to the list page
+            cy.get('[data-testid="admin-alerts-form-button-cancel"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+            cy.get(
+                '[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)',
+            ).click();
+            // DELETE BUTTON WORKS
+            cy.get('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-delete-button"]').should('exist');
+            cy.get('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-delete-button"]').click();
+            // confirmation appears
+            cy.get('[data-testid="message-title"]').contains('Remove 1 alert?');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
+            // dialog disappears
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
+            // cant test display further as mock data doesnt actually delete
+        });
+        it('should have working Split button actions for past alerts', () => {
+            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.viewport(1300, 1000);
+            // VIEW BUTTON WORKS
+            cy.get('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').should('exist');
+            cy.get('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').contains('View');
+            cy.get('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').click();
+            // but this is actually showing an error because we dont have the mock data
+            cy.viewport(1300, 1000);
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9',
+            );
+
+            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            // the dropdown split button exists but is not open
+            cy.get('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').should('exist');
+            cy.get('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
+                .parent()
+                .parent()
+                .children()
+                .should('have.length', 1);
+            cy.get(
+                '[data-testid="alert-list-action-block-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"] button:nth-of-type(2)',
+            ).should('exist');
+            // open the split button
+            cy.get(
+                '[data-testid="alert-list-action-block-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"] button:nth-of-type(2)',
+            ).click();
+            cy.get('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
+                .parent()
+                .parent()
+                .children()
+                .should('have.length', 2);
+            // CLONE PAGE LINK WORKS
+            cy.get('[data-testid="d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-clone-button"]').should('exist');
+            // but the mock data doesnt exist so we wont try to load it
+            // DELETE PAGE LINK WORKS (needs actual test here because the method is slightly different to the checkbox)
+            cy.get('[data-testid="d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-delete-button"]').should('exist');
+            cy.get('[data-testid="d23f2e10-d7d6-11eb-a928-71f3ef9d35d9-delete-button"]').click();
+            // confirmation appears
+            cy.get('[data-testid="message-title"]').contains('Remove 1 alert?');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').contains('Proceed');
+            cy.get('[data-testid="confirm-alert-delete-confirm"]').click();
+            // dialog disappears
+            cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
+            // cant test display further as mock data doesnt actually delete
+        });
     });
     context('Alert Admin deletion', () => {
         it('the user can select an alert to delete', () => {
@@ -171,21 +270,21 @@ describe('Alerts Admin Pages', () => {
             cy.viewport(1300, 1000);
             // select one alert and every thing looks right
             cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
-            cy.get('[data-testid="headerRow-current"] span').should('not.exist');
+            cy.get('[data-testid="headerRow-current"] span.deleteManager').should('not.exist');
             cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
             cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgb(35, 119, 203)');
-            cy.get('[data-testid="headerRow-current"] span span').contains('1 alert selected');
+            cy.get('[data-testid="headerRow-current"] span.deleteManager span').contains('1 alert selected');
             cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').uncheck();
-            cy.get('[data-testid="headerRow-current"] span').should('not.exist');
+            cy.get('[data-testid="headerRow-current"] span.deleteManager').should('not.exist');
 
             // select two alerts and every thing looks right
             cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
             cy.get('[data-testid="alert-list-item-checkbox-232d6880-996a-11eb-8a79-e7fddae87baf"]').check();
-            cy.get('[data-testid="headerRow-scheduled"] span span').contains('2 alerts selected');
+            cy.get('[data-testid="headerRow-scheduled"] span.deleteManager span').contains('2 alerts selected');
 
             // back down to one alert selected and every thing looks right
             cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').uncheck();
-            cy.get('[data-testid="headerRow-scheduled"] span span').contains('1 alert selected');
+            cy.get('[data-testid="headerRow-scheduled"] span.deleteManager span').contains('1 alert selected');
 
             // click the delete button and the delete dialog appears
             cy.get('[data-testid="alert-list-scheduled-delete-button"]').click();
@@ -911,6 +1010,114 @@ describe('Alerts Admin Pages', () => {
         it('has a working Help button on the Clone page', () => {
             cy.visit(
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-help-button"]').click();
+            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
+            cy.get('button:contains("Close")').click();
+            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+        });
+    });
+    context('Alert Admin View page', () => {
+        it.skip('displays an "unauthorised" page to public users', () => {
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
+        });
+        it.skip('displays an "unauthorised" page to non-authorised users', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaffnonpriv',
+            );
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
+        });
+        it('is accessible', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('View alert');
+            cy.wait(500);
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'Alerts Admin View',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('can view an alert without being able to edit any fields', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('View alert');
+            cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
+            cy.get('[data-testid="admin-alerts-form-title"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-body"] textarea').should(
+                'have.value',
+                'This alert can be edited in mock.',
+            );
+            cy.get('[data-testid="admin-alerts-form-body"] textarea').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2020-06-07T02:00:03');
+            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2020-06-07T03:00:03');
+            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').should(
+                'have.value',
+                'UQ community COVID-19 advice',
+            );
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').should(
+                'have.value',
+                'https://about.uq.edu.au/coronavirus',
+            );
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.disabled');
+
+            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.disabled');
+        });
+        it('can return to the list page from the view page', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+            cy.wait(50);
+            cy.get('button[data-testid="admin-alerts-form-button-cancel"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+        });
+        it('can vist the clone page from the view page', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+            cy.wait(50);
+            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',
+            );
+        });
+        it('has a working Help button on the View page', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
             );
             cy.viewport(1300, 1000);
             cy.wait(50);

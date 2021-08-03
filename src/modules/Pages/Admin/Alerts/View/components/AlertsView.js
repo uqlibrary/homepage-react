@@ -16,7 +16,14 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
-import { defaultStartTime, formatDate } from '../../alerthelpers';
+import {
+    defaultStartTime,
+    extractFieldsFromBody,
+    formatDate,
+    getBody,
+    makePreviewActionButtonJustNotifyUser,
+    manuallyMakeWebComponentBePermanent,
+} from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
@@ -29,12 +36,58 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
     const classes = useStyles();
     const { alertid } = useParams();
 
+    const displayPreview = thisAlert => {
+        const alertWrapper = document.getElementById('previewWrapper');
+        !!alertWrapper && (alertWrapper.innerHTML = '');
+
+        // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
+        const alertWebComponent = document.createElement('uq-alert');
+        /* istanbul ignore next */
+        if (!alertWebComponent) {
+            return null;
+        }
+        console.log('thisAlert = ', thisAlert);
+
+        const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
+
+        alertWebComponent.setAttribute('id', 'alert-preview');
+        alertWebComponent.setAttribute('alerttitle', thisAlert.title);
+        alertWebComponent.setAttribute('alerttype', !!thisAlert.urgent ? '1' : '0');
+        const body =
+            !!thisAlert.body &&
+            getBody({
+                permanentAlert: isPermanent,
+                linkRequired: linkRequired,
+                linkTitle: linkTitle,
+                linkUrl: linkUrl,
+                enteredbody: message,
+            });
+        if (!!isPermanent) {
+            manuallyMakeWebComponentBePermanent(alertWebComponent, body);
+        } else {
+            alertWebComponent.setAttribute('alertmessage', body);
+        }
+        if (!!linkRequired) {
+            makePreviewActionButtonJustNotifyUser(thisAlert);
+        }
+        alertWrapper.appendChild(alertWebComponent);
+
+        return null;
+    };
+
     React.useEffect(() => {
         if (!!alertid) {
             actions.loadAnAlert(alertid);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [alertid]);
+
+    React.useEffect(() => {
+        if (!!alert) {
+            displayPreview(alert);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [alert]);
 
     if (alertStatus === 'loading') {
         return (
@@ -60,15 +113,15 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
 
     // Strip markdown from the body
     const linkRegex = !!alert?.body && alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-    let message = alert?.body || '';
+    let message2 = alert?.body || '';
     if (!!linkRegex && linkRegex.length === 3) {
-        message = alert.body.replace(linkRegex[0], '').replace('  ', ' ');
-        message = message.replace(linkRegex[0], '').replace('  ', ' ');
+        message2 = alert.body.replace(linkRegex[0], '').replace('  ', ' ');
+        message2 = message2.replace(linkRegex[0], '').replace('  ', ' ');
     }
 
-    const isPermanent = message.includes('[permanent]');
-    if (!!isPermanent) {
-        message = message.replace('[permanent]', '');
+    const isPermanent2 = message2.includes('[permanent]');
+    if (!!isPermanent2) {
+        message2 = message2.replace('[permanent]', '');
     }
 
     const values = {
@@ -76,10 +129,10 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         startDate: alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '',
         endDate: alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '',
         alertTitle: alert?.title || '',
-        enteredbody: message || '',
+        enteredbody: message2 || '',
         linkRequired: linkRegex?.length === 3,
         urgent: !!alert && !!alert.urgent,
-        permanentAlert: isPermanent || false,
+        permanentAlert: isPermanent2 || false,
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'view',
