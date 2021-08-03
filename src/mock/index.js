@@ -21,16 +21,8 @@ import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL100
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
 import examSuggestions from './data/records/examSuggestions';
-import {
-    computerAvailability,
-    incompleteNTROs,
-    libHours,
-    libHoursNew,
-    loans,
-    possibleRecords,
-    printBalance,
-    training_object,
-} from './data/account';
+import { incompleteNTROs, loans, possibleRecords } from './data/account';
+import { computerAvailability, libHours, libHoursNew, printBalance, training_object } from './data/misc';
 import { alertList } from './data/alerts';
 
 const queryString = require('query-string');
