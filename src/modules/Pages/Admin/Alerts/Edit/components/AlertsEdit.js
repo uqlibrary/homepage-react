@@ -10,7 +10,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { defaultStartTime, formatDate } from '../../alerthelpers';
+import { defaultStartTime, extractFieldsFromBody, formatDate } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
@@ -36,27 +36,6 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
                 <InlineLoader message="Loading" />
             </div>
         );
-    }
-
-    function extractFieldsFromBody(content) {
-        const linkRegex = !!content && content.match(/\[([^\]]+)\]\(([^)]+)\)/);
-        let theMessage = content || '';
-        if (!!linkRegex && linkRegex.length === 3) {
-            theMessage = content.replace(linkRegex[0], '').replace('  ', ' ');
-            theMessage = theMessage.replace(linkRegex[0], '').replace('  ', ' ');
-        }
-
-        const permanent = theMessage.includes('[permanent]');
-        if (!!permanent) {
-            theMessage = theMessage.replace('[permanent]', '');
-        }
-        return {
-            isPermanent: permanent,
-            linkRequired: linkRegex?.length === 3,
-            linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
-            linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
-            message: theMessage,
-        };
     }
 
     const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
@@ -91,7 +70,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
                         actions={actions}
                         helpContent={locale.form.help}
                         history={history}
-                        showCloneButton
+                        // showCloneButton
                     />
                     <StandardCard title="Edit alert" noPadding squash>
                         <AlertForm
