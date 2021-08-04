@@ -75,7 +75,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
                     <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
-                    <StandardCard title="Clone alert - draft" noPadding squash>
+                    <StandardCard title="Clone alert" noPadding squash>
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
