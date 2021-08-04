@@ -7,42 +7,30 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Welcome to UQ!',
+        title: 'Open online!',
         content: (
             <div>
-                <p>
-                    <a href="https://life.uq.edu.au/orientation">
-                        Celebrate Orientation 
-                    </a>{' '}
-                    during O-Week (19-23 July) and Connect Week (26-30 July).
-                </p>
-                <p>Plan your orientation experience, attend great events, get to know your campus (and Library) and get connected to your UQ Life!</p>
-                <p>Get involved in{' '} 
-                    <a href="https://web.library.uq.edu.au/blog/2021/07/get-involved-o-week?utm_source=homepage&utm_medium=promobox&utm_campaign=orientation-sem2-21">   
-                       O-Week at the Library  
-                    </a>{' '}
-                    for library tours, training sessions, Koala Competition and more!
-                </p>
+                <p>We are here online to help you. Access the Library from home, including:</p>
+                <ul>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
+                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
+                    <li>Tips for <a href="https://web.library.uq.edu.au/library-services/students/how-study-online">studying online</a>.</li>
+                </ul>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a>, including on chat or by phone during business hours, if you need assistance.</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Welcome to UQ!',
+        title: 'Open online!',
         content: (
             <div>
-                <p>
-                    <a href="https://life.uq.edu.au/orientation">   
-                        Celebrate Orientation 
-                    </a>{' '}
-                    during O-Week (19-23 July) and Connect Week (26-30 July).
-                </p>
-                <p>Plan your orientation experience, attend great events, get to know your campus (and Library) and get connected to your UQ Life!</p>
-                <p>Get involved in{' '} 
-                    <a href="https://web.library.uq.edu.au/blog/2021/07/get-involved-o-week?utm_source=homepage&utm_medium=promobox&utm_campaign=orientation-sem2-21">   
-                       O-Week at the Library  
-                    </a>{' '}
-                    for library tours, training sessions, Koala Competition and more!
-                </p>
+                <p>We are here online to help you. Access the Library from home, including:</p>
+                <ul>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
+                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
+                    <li>Tips for <a href="https://web.library.uq.edu.au/library-services/students/how-study-online">studying online</a>.</li>
+                </ul>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a>, including on chat or by phone during business hours, if you need assistance.</p>
             </div>
         ),
     },
