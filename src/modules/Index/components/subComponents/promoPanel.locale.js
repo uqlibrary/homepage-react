@@ -10,7 +10,7 @@ export const promoPanel = {
         title: 'Open online!',
         content: (
             <div>
-                <p>We are online to help you. Access the Library from home, including:</p>
+                <p>We are here online to help you. Access the Library from home, including:</p>
                 <ul>
                     <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
                     <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
@@ -24,7 +24,7 @@ export const promoPanel = {
         title: 'Open online!',
         content: (
             <div>
-                <p>We are online to help you. Access the Library from home, including:</p>
+                <p>We are here online to help you. Access the Library from home, including:</p>
                 <ul>
                     <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
                     <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
