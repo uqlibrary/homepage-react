@@ -24,7 +24,7 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
-import SplitButton from './splitbutton';
+import SplitButton from './SplitButton';
 
 const moment = require('moment');
 
