@@ -11,7 +11,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { defaultStartTime, formatDate } from '../../alerthelpers';
+import { defaultEndTime, defaultStartTime } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
@@ -54,8 +54,8 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
 
     const defaults = {
         id: alert?.id || '',
-        startDate: alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '',
-        endDate: alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '',
+        startDate: defaultStartTime,
+        endDate: defaultEndTime,
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
