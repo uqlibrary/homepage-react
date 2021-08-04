@@ -1,6 +1,6 @@
 import {
     expectUserToDisplayCorrectFirstName,
-    hasMyLibraryButtonOptions,
+    // hasMyLibraryButtonOptions,
     hasPanels,
     hasPersonalisedPanelOptions,
 } from '../support/access';

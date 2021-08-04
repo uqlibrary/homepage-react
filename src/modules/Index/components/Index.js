@@ -126,9 +126,13 @@ export const Index = ({
             dispatch(loadSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
-            dispatch(loadTrainingEvents());
         }
     }, [accountLoading, dispatch]);
+    useEffect(() => {
+        if (accountLoading === false) {
+            dispatch(loadTrainingEvents(account));
+        }
+    }, [account, accountLoading, dispatch]);
     useEffect(() => {
         if (accountLoading === false && !!account && !printBalance && printBalanceLoading === null) {
             dispatch(loadPrintBalance());

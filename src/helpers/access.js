@@ -47,6 +47,9 @@ const EXTRAMURAL_FRYER = 'FRYVISITOR';
 const EXTRAMURAL_HONORARY = 'HON';
 const EXTRAMURAL_PROXY = 'PROXY';
 
+export const TRAINING_FILTER_GENERAL = 104;
+export const TRAINING_FILTER_HOSPITAL = 360;
+
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
 // (this means if an option changes from everyone to logged in, we only need to change the call internally here)
 const everyoneCanSee = account => true || /* istanbul ignore next */ !!account;
@@ -114,6 +117,9 @@ export const seeDocumentDelivery = account =>
 export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
 
 export const seeLibraryServices = account => loggedinCanSee(account);
+
+export const isHospitalUser = account =>
+    !!account && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 
 export const seeFeedback = account => everyoneCanSee(account);
 
