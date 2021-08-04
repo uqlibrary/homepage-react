@@ -137,6 +137,11 @@ export function clearAlerts() {
 //     };
 // }
 
+const stripSeconds = inputDate => {
+    const splittedString = inputDate.split(':');
+    return !!splittedString && splittedString.length > 2 ? splittedString.slice(0, -1).join(':') : inputDate;
+};
+
 export function loadAnAlert(alertId) {
     console.log('action load an Alert for ', alertId);
     return dispatch => {
@@ -144,10 +149,15 @@ export function loadAnAlert(alertId) {
         console.log('getting ', ALERT_BY_ID_API({ id: alertId }));
         return get(ALERT_BY_ID_API({ id: alertId }))
             .then(data => {
-                console.log('got ', data);
+                const result = {
+                    ...data,
+                    start: stripSeconds(data.start),
+                    end: stripSeconds(data.end),
+                };
+                console.log('return ', result);
                 dispatch({
                     type: actions.ALERT_LOADED,
-                    payload: data,
+                    payload: result,
                 });
             })
             .catch(error => {
