@@ -1,5 +1,9 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
+import { useAccountContext } from 'context';
+import ContentLoader from 'react-content-loader';
+import moment from 'moment-timezone';
+
 import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +16,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import EventIcon from '@material-ui/icons/Event';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+
 import { trainingLocale } from './Training.locale';
-import moment from 'moment-timezone';
-import ContentLoader from 'react-content-loader';
+import { TRAINING_URL_GENERAL } from 'helpers/access';
 
 const MyLoader = props => (
     <ContentLoader
@@ -178,6 +182,7 @@ const useStyles = makeStyles(theme => ({
 
 const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }) => {
     const classes = useStyles();
+    const { account } = useAccountContext();
     const [eventDetail, setEventDetail] = React.useState(null);
     const handleEventDetail = event => {
         setEventDetail(event);
@@ -364,7 +369,7 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                             {!eventDetail ? (
                                 <a
                                     className={classes.moreActionButton}
-                                    href="https://web.library.uq.edu.au/library-services/training"
+                                    href={account?.trainingLink || TRAINING_URL_GENERAL}
                                     id="training-event-detail-more-training-button"
                                     data-testid="training-event-detail-more-training-button"
                                 >

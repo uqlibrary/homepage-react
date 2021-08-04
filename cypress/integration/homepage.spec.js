@@ -1,9 +1,12 @@
 import {
     expectUserToDisplayCorrectFirstName,
-    hasMyLibraryButtonOptions,
+    // hasMyLibraryButtonOptions,
     hasPanels,
     hasPersonalisedPanelOptions,
 } from '../support/access';
+// unfortunately hard coded as we cant access helper directory from cypress?
+const TRAINING_URL_GENERAL = 'https://web.library.uq.edu.au/library-services/training';
+const TRAINING_URL_HOSPITAL = 'https://web.library.uq.edu.au/library-services/services-for-hospital-staff';
 
 context('Homepage', () => {
     it('Renders an on-campus undergraduate home page correctly', () => {
@@ -34,6 +37,12 @@ context('Homepage', () => {
 
         // this type of user will see these lines in the Personalisation Panel
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders an RHD home page correctly', () => {
@@ -53,6 +62,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a remote undergraduate home page correctly', () => {
@@ -79,6 +94,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a researcher home page correctly', () => {
@@ -105,6 +126,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-orcid', 'espace-ntro', 'fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a library staff administrator home page correctly', () => {
@@ -133,6 +160,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a Library staff member (without admin privs) home page correctly', () => {
@@ -160,6 +193,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a non-library staff member home page correctly', () => {
@@ -186,6 +225,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a paid Community EM member home page correctly', () => {
@@ -196,6 +241,12 @@ context('Homepage', () => {
         // hasMyLibraryButtonOptions(['borrowing', 'print-balance', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders an Alumni (first year or paid) EM member home page correctly', () => {
@@ -206,6 +257,12 @@ context('Homepage', () => {
         // hasMyLibraryButtonOptions(['borrowing', 'print-balance', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a Hospital EM member home page correctly', () => {
@@ -223,6 +280,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_HOSPITAL,
+        );
     });
 
     it('Renders an Associate EM member home page correctly', () => {
@@ -240,6 +303,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a Fryer Library EM member home page correctly', () => {
@@ -250,6 +319,12 @@ context('Homepage', () => {
         // hasMyLibraryButtonOptions(['borrowing', 'print-balance', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders an Honorary EM member home page correctly', () => {
@@ -276,6 +351,12 @@ context('Homepage', () => {
         // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     it('Renders a logged out user', () => {
@@ -288,6 +369,12 @@ context('Homepage', () => {
 
         // no mylibrary button
         cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
+
+        cy.get('[data-testid="training-event-detail-more-training-button"]').should(
+            'have.attr',
+            'href',
+            TRAINING_URL_GENERAL,
+        );
     });
 
     // it('The skip navigation link works', () => {
