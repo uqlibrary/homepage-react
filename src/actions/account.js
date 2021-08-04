@@ -15,6 +15,7 @@ import {
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
+import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from '../helpers/access';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
 export function getClassNumberFromPieces(subject) {
@@ -82,6 +83,9 @@ export function loadCurrentAccount() {
                                   return subject;
                               })
                             : accountResponse.current_classes;
+                    accountResponse.trainingfilterId = isHospitalUser(accountResponse)
+                        ? TRAINING_FILTER_HOSPITAL
+                        : TRAINING_FILTER_GENERAL;
                     dispatch({
                         type: actions.CURRENT_ACCOUNT_LOADED,
                         payload: accountResponse,
@@ -255,11 +259,13 @@ export function loadCompAvail() {
  * Loads the training events data
  * @returns {function(*)}
  */
-export function loadTrainingEvents() {
-    console.log('Loading Training Events');
+export function loadTrainingEvents(account) {
+    const trainingfilterId =
+        !!account && !!account.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
+    console.log('Loading Training Events for filter ', trainingfilterId);
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
-        return get(TRAINING_API(10))
+        return get(TRAINING_API(10, trainingfilterId))
             .then(availResponse => {
                 dispatch({
                     type: actions.TRAINING_LOADED,
