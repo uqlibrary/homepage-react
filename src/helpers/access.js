@@ -50,9 +50,6 @@ const EXTRAMURAL_PROXY = 'PROXY';
 export const TRAINING_FILTER_GENERAL = 104;
 export const TRAINING_FILTER_HOSPITAL = 360;
 
-export const TRAINING_URL_GENERAL = 'https://web.library.uq.edu.au/library-services/training';
-export const TRAINING_URL_HOSPITAL = 'https://web.library.uq.edu.au/library-services/services-for-hospital-staff';
-
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
 // (this means if an option changes from everyone to logged in, we only need to change the call internally here)
 const everyoneCanSee = account => true || /* istanbul ignore next */ !!account;

@@ -15,13 +15,7 @@ import {
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
-import {
-    isHospitalUser,
-    TRAINING_FILTER_GENERAL,
-    TRAINING_FILTER_HOSPITAL,
-    TRAINING_URL_GENERAL,
-    TRAINING_URL_HOSPITAL,
-} from '../helpers/access';
+import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from '../helpers/access';
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
 export function getClassNumberFromPieces(subject) {
@@ -92,9 +86,6 @@ export function loadCurrentAccount() {
                     accountResponse.trainingfilterId = isHospitalUser(accountResponse)
                         ? TRAINING_FILTER_HOSPITAL
                         : TRAINING_FILTER_GENERAL;
-                    accountResponse.trainingLink = isHospitalUser(accountResponse)
-                        ? TRAINING_URL_HOSPITAL
-                        : TRAINING_URL_GENERAL;
                     dispatch({
                         type: actions.CURRENT_ACCOUNT_LOADED,
                         payload: accountResponse,
