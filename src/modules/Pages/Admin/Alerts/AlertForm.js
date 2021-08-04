@@ -192,7 +192,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         const newStartDate = expandableValues.startDate || defaults.startDate;
         const newEndDate = expandableValues.endDate || defaults.endDate;
 
-        setValues({
+        return {
             ...expandableValues,
             ['alertTitle']: newAlertTitle,
             ['body']: newBody,
@@ -200,16 +200,17 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             ['linkUrl']: newLinkUrl,
             ['startDate']: newStartDate,
             ['endDate']: newEndDate,
-        });
+        };
     }
 
     const saveAlert = () => {
-        expandValues(values);
+        const expandedValues = expandValues(values);
+        setValues(expandedValues);
 
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
-            body: values.body,
+            body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
             urgent: !!values.urgent ? '1' : '0',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
@@ -234,7 +235,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         }
 
         handlePreview(true);
-        expandValues(values);
+        setValues(expandValues(values));
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
         const alertWebComponent = document.createElement('uq-alert');
@@ -267,7 +268,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
 
-        expandValues({ ...values, [prop]: newValue });
+        const newValues = expandValues({ ...values, [prop]: newValue });
+        setValues(newValues);
 
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
 
@@ -525,7 +527,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                 color="primary"
                                 data-testid="admin-alerts-form-button-save"
                                 variant="contained"
-                                children={defaults.type === 'clone' ? 'Add new' : 'Save'}
+                                children={defaults.type === 'edit' ? 'Save' : 'Create'}
                                 disabled={!isFormValid}
                                 onClick={saveAlert}
                                 className={classes.saveButton}
