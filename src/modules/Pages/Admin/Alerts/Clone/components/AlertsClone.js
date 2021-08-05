@@ -54,8 +54,8 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
 
     const defaults = {
         id: alert?.id || '',
-        startDate: defaultStartTime,
-        endDate: defaultEndTime,
+        startDate: defaultStartTime(),
+        endDate: defaultEndTime(),
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
@@ -64,7 +64,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'clone',
-        minimumDate: defaultStartTime,
+        minimumDate: defaultStartTime(),
     };
 
     return (

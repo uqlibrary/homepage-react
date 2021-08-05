@@ -53,7 +53,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
             linkTitle: linkTitle,
             linkUrl: linkUrl,
             type: 'edit',
-            minimumDate: defaultStartTime,
+            minimumDate: defaultStartTime(),
         };
     }
 

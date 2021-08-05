@@ -136,7 +136,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'view',
-        minimumDate: defaultStartTime,
+        minimumDate: defaultStartTime(),
     };
 
     return (
