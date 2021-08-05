@@ -34,8 +34,8 @@ export default {
             cloneAlertConfirmation: {
                 confirmationTitle: 'The alert has been cloned',
                 confirmationMessage: '',
-                confirmButtonLabel: 'View alert list',
-                cancelButtonLabel: 'Clone again',
+                confirmButtonLabel: 'Clone again',
+                cancelButtonLabel: 'View alert list',
             },
         },
         help: {
