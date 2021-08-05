@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
+import { getTimeNowFormatted, getTimeEndOfDayFormatted } from '../../alerthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -23,8 +23,8 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
 
     const defaults = {
         id: '',
-        startDate: defaultStartTime(),
-        endDate: defaultEndTime(),
+        startDate: getTimeNowFormatted(),
+        endDate: getTimeEndOfDayFormatted(),
         alertTitle: '',
         enteredbody: '',
         linkRequired: false,
@@ -33,7 +33,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
         linkTitle: '',
         linkUrl: '',
         type: 'add',
-        minimumDate: defaultStartTime(),
+        minimumDate: getTimeNowFormatted(),
     };
     return (
         <Fragment>

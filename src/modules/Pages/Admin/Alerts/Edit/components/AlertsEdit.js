@@ -10,7 +10,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { defaultStartTime, extractFieldsFromBody, formatDate } from '../../alerthelpers';
+import { getTimeNowFormatted, extractFieldsFromBody, formatDate } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
@@ -53,7 +53,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
             linkTitle: linkTitle,
             linkUrl: linkUrl,
             type: 'edit',
-            minimumDate: defaultStartTime(),
+            minimumDate: getTimeNowFormatted(),
         };
     }
 
