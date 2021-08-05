@@ -12,7 +12,6 @@ import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { useConfirmationState } from 'hooks';
 
 import { default as locale } from './alertsadmin.locale';
@@ -58,16 +57,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AlertForm = ({
-    actions,
-    alertResponse,
-    alertStatus,
-    defaults,
-    alertError,
-    history,
-    title,
-    utilityChild,
-}) => {
+export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -355,196 +345,193 @@ export const AlertForm = ({
                         onCancelAction={() => navigateToListPage()}
                     />
                 )}
-                <StandardCard title={title}>
-                    <div style={{ marginTop: -80 }}>{utilityChild}</div>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <FormControl
-                                fullWidth
-                                title="Alert lead text. Appears in bold. Field length of 100 characters."
-                            >
-                                <InputLabel htmlFor="alertTitle">Title *</InputLabel>
-                                <Input
-                                    id="alertTitle"
-                                    data-testid="admin-alerts-form-title"
-                                    value={values.alertTitle}
-                                    onChange={handleChange('alertTitle')}
-                                    inputProps={{ maxLength: 100 }}
-                                />
-                            </FormControl>
-                        </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <FormControl
+                            fullWidth
+                            title="Alert lead text. Appears in bold. Field length of 100 characters."
+                        >
+                            <InputLabel htmlFor="alertTitle">Title *</InputLabel>
+                            <Input
+                                id="alertTitle"
+                                data-testid="admin-alerts-form-title"
+                                value={values.alertTitle}
+                                onChange={handleChange('alertTitle')}
+                                inputProps={{ maxLength: 100 }}
+                            />
+                        </FormControl>
                     </Grid>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12}>
-                            <FormControl fullWidth title="Regular body text. Field length of 550 characters.">
-                                <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
-                                    Message *
-                                </InputLabel>
-                                <Input
-                                    id="alertBody"
-                                    data-testid="admin-alerts-form-body"
-                                    value={values.enteredbody}
-                                    onChange={handleChange('enteredbody')}
-                                    multiline
-                                    rows={2}
-                                    inputProps={{ maxLength: 550 }}
-                                />
-                            </FormControl>
-                        </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth title="Regular body text. Field length of 550 characters.">
+                            <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
+                                Message *
+                            </InputLabel>
+                            <Input
+                                id="alertBody"
+                                data-testid="admin-alerts-form-body"
+                                value={values.enteredbody}
+                                onChange={handleChange('enteredbody')}
+                                multiline
+                                rows={2}
+                                inputProps={{ maxLength: 550 }}
+                            />
+                        </FormControl>
                     </Grid>
-                    <Grid container spacing={2} style={{ marginTop: 12 }}>
-                        <Grid item md={6} xs={12}>
-                            {/* https://material-ui.com/components/pickers/ */}
-                            <TextField
-                                id="startDate"
-                                data-testid="admin-alerts-form-start-date"
-                                error={isInvalidStartDate(values.startDate)}
-                                InputLabelProps={{ shrink: true }}
-                                label="Start date"
-                                onChange={handleChange('startDate')}
-                                pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                                type="datetime-local"
-                                value={values.startDate}
+                </Grid>
+                <Grid container spacing={2} style={{ marginTop: 12 }}>
+                    <Grid item md={6} xs={12}>
+                        {/* https://material-ui.com/components/pickers/ */}
+                        <TextField
+                            id="startDate"
+                            data-testid="admin-alerts-form-start-date"
+                            error={isInvalidStartDate(values.startDate)}
+                            InputLabelProps={{ shrink: true }}
+                            label="Start date"
+                            onChange={handleChange('startDate')}
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                            type="datetime-local"
+                            value={values.startDate}
+                            inputProps={{
+                                min: defaults.minimumDate,
+                                required: true,
+                            }}
+                        />
+                    </Grid>
+                    <Grid item md={6} xs={12}>
+                        <TextField
+                            id="endDate"
+                            data-testid="admin-alerts-form-end-date"
+                            InputLabelProps={{ shrink: true }}
+                            label="End date"
+                            onChange={handleChange('endDate')}
+                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                            type="datetime-local"
+                            value={values.endDate}
+                            error={isInvalidEndDate(values.endDate, values.startDate)}
+                            inputProps={{
+                                min: values.startDate,
+                                required: true,
+                            }}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    spacing={2}
+                    style={{ minHeight: '4rem', paddingTop: '1rem' }}
+                    className={classes.checkboxes}
+                >
+                    <Grid item sm={4} xs={12}>
+                        <InputLabel
+                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            title="Check to add button to alert linking to more information. Displays extra form fields."
+                        >
+                            <Checkbox
+                                checked={values.linkRequired}
+                                data-testid="admin-alerts-form-checkbox-linkrequired"
+                                onChange={handleChange('linkRequired')}
+                                className={classes.checkbox}
+                            />
+                            Add info link
+                        </InputLabel>
+                    </Grid>
+                    <Grid item sm={4} xs={12}>
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.permanentTooltip}>
+                            <Checkbox
+                                data-testid="admin-alerts-form-checkbox-permanent"
+                                checked={values.permanentAlert}
+                                onChange={handleChange('permanentAlert')}
+                                name="permanentAlert"
+                                title={locale.form.permanentTooltip}
+                                className={classes.checkbox}
+                            />
+                            Permanent
+                        </InputLabel>
+                    </Grid>
+                    <Grid item sm={4} xs={12}>
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.urgentTooltip}>
+                            <Checkbox
+                                checked={values.urgent}
+                                data-testid="admin-alerts-form-checkbox-urgent"
+                                onChange={handleChange('urgent')}
+                                name="urgent"
+                                title={locale.form.urgentTooltip}
+                                className={classes.checkbox}
+                            />
+                            Urgent
+                        </InputLabel>
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    spacing={2}
+                    className={classes.linkTitleWrapper}
+                    style={{
+                        display: values.linkRequired ? 'flex' : 'none',
+                    }}
+                >
+                    <Grid item md={6} xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
+                            <Input
+                                id="linkTitle"
+                                data-testid="admin-alerts-form-link-title"
+                                value={values.linkTitle}
+                                onChange={handleChange('linkTitle')}
+                                title="Use destination page title or clear call to action. Minimise length; max length 55 characters."
                                 inputProps={{
-                                    min: defaults.minimumDate,
-                                    required: true,
+                                    maxLength: 55,
                                 }}
                             />
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <TextField
-                                id="endDate"
-                                data-testid="admin-alerts-form-end-date"
-                                InputLabelProps={{ shrink: true }}
-                                label="End date"
-                                onChange={handleChange('endDate')}
-                                pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                                type="datetime-local"
-                                value={values.endDate}
-                                error={isInvalidEndDate(values.endDate, values.startDate)}
-                                inputProps={{
-                                    min: values.startDate,
-                                    required: true,
-                                }}
-                            />
-                        </Grid>
+                        </FormControl>
                     </Grid>
-                    <Grid
-                        container
-                        spacing={2}
-                        style={{ minHeight: '4rem', paddingTop: '1rem' }}
-                        className={classes.checkboxes}
-                    >
-                        <Grid item sm={4} xs={12}>
-                            <InputLabel
-                                style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                title="Check to add button to alert linking to more information. Displays extra form fields."
-                            >
-                                <Checkbox
-                                    checked={values.linkRequired}
-                                    data-testid="admin-alerts-form-checkbox-linkrequired"
-                                    onChange={handleChange('linkRequired')}
-                                    className={classes.checkbox}
-                                />
-                                Add info link
-                            </InputLabel>
-                        </Grid>
-                        <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.permanentTooltip}>
-                                <Checkbox
-                                    data-testid="admin-alerts-form-checkbox-permanent"
-                                    checked={values.permanentAlert}
-                                    onChange={handleChange('permanentAlert')}
-                                    name="permanentAlert"
-                                    title={locale.form.permanentTooltip}
-                                    className={classes.checkbox}
-                                />
-                                Permanent
-                            </InputLabel>
-                        </Grid>
-                        <Grid item sm={4} xs={12}>
-                            <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.urgentTooltip}>
-                                <Checkbox
-                                    checked={values.urgent}
-                                    data-testid="admin-alerts-form-checkbox-urgent"
-                                    onChange={handleChange('urgent')}
-                                    name="urgent"
-                                    title={locale.form.urgentTooltip}
-                                    className={classes.checkbox}
-                                />
-                                Urgent
-                            </InputLabel>
-                        </Grid>
-                    </Grid>
-                    <Grid
-                        container
-                        spacing={2}
-                        className={classes.linkTitleWrapper}
-                        style={{
-                            display: values.linkRequired ? 'flex' : 'none',
-                        }}
-                    >
-                        <Grid item md={6} xs={12}>
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
-                                <Input
-                                    id="linkTitle"
-                                    data-testid="admin-alerts-form-link-title"
-                                    value={values.linkTitle}
-                                    onChange={handleChange('linkTitle')}
-                                    title="Use destination page title or clear call to action. Minimise length; max length 55 characters."
-                                    inputProps={{
-                                        maxLength: 55,
-                                    }}
-                                />
-                            </FormControl>
-                        </Grid>
-                        <Grid item md={6} xs={12}>
-                            <FormControl fullWidth>
-                                <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
-                                <Input
-                                    type="url"
-                                    id="linkUrl"
-                                    data-testid="admin-alerts-form-link-url"
-                                    value={values.linkUrl}
-                                    onChange={handleChange('linkUrl')}
-                                    error={!isValidUrl(values.linkUrl)}
-                                    title="Please enter a valid URL"
-                                />
-                            </FormControl>
-                        </Grid>
-                    </Grid>
-                    <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-                        <Grid item xs={3} align="left">
-                            <Button
-                                color="secondary"
-                                children="Cancel"
-                                data-testid="admin-alerts-form-button-cancel"
-                                onClick={() => navigateToListPage()}
-                                variant="contained"
+                    <Grid item md={6} xs={12}>
+                        <FormControl fullWidth>
+                            <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
+                            <Input
+                                type="url"
+                                id="linkUrl"
+                                data-testid="admin-alerts-form-link-url"
+                                value={values.linkUrl}
+                                onChange={handleChange('linkUrl')}
+                                error={!isValidUrl(values.linkUrl)}
+                                title="Please enter a valid URL"
                             />
-                        </Grid>
-                        <Grid item xs={9} align="right">
-                            <Button
-                                data-testid="admin-alerts-form-button-preview"
-                                color={!!showPreview ? 'default' : 'secondary'}
-                                children="Preview"
-                                onClick={displayPreview}
-                                style={{ marginRight: '0.5rem' }}
-                                variant={!!showPreview ? 'outlined' : 'contained'}
-                            />
-                            <Button
-                                color="primary"
-                                data-testid="admin-alerts-form-button-save"
-                                variant="contained"
-                                children={defaults.type === 'edit' ? 'Save' : 'Create'}
-                                disabled={!isFormValid}
-                                onClick={saveAlert}
-                                className={classes.saveButton}
-                            />
-                        </Grid>
+                        </FormControl>
                     </Grid>
-                </StandardCard>
+                </Grid>
+                <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid item xs={3} align="left">
+                        <Button
+                            color="secondary"
+                            children="Cancel"
+                            data-testid="admin-alerts-form-button-cancel"
+                            onClick={() => navigateToListPage()}
+                            variant="contained"
+                        />
+                    </Grid>
+                    <Grid item xs={9} align="right">
+                        <Button
+                            data-testid="admin-alerts-form-button-preview"
+                            color={!!showPreview ? 'default' : 'secondary'}
+                            children="Preview"
+                            onClick={displayPreview}
+                            style={{ marginRight: '0.5rem' }}
+                            variant={!!showPreview ? 'outlined' : 'contained'}
+                        />
+                        <Button
+                            color="primary"
+                            data-testid="admin-alerts-form-button-save"
+                            variant="contained"
+                            children={defaults.type === 'edit' ? 'Save' : 'Create'}
+                            disabled={!isFormValid}
+                            onClick={saveAlert}
+                            className={classes.saveButton}
+                        />
+                    </Grid>
+                </Grid>
             </form>
         </Fragment>
     );
@@ -557,8 +544,6 @@ AlertForm.propTypes = {
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
-    title: PropTypes.string,
-    utilityChild: PropTypes.object,
 };
 
 export default AlertForm;
