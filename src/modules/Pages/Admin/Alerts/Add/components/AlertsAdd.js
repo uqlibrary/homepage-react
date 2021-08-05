@@ -8,7 +8,6 @@ import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea'
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
 import { defaultStartTime, defaultEndTime } from '../../alerthelpers';
 
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { default as locale } from '../../alertsadmin.locale';
 
@@ -41,9 +40,8 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
                 <Grid item id="previewWrapper" className={classes.previewWrapper} />
             </Grid>
             <StandardPage title="Alerts Management">
-                <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} history={history} helpContent={locale.form.help} />
-                    <StandardCard title="Create alert" noPadding squash>
+                <Grid container spacing={3}>
+                    <Grid item xs={12}>
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
@@ -51,9 +49,13 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
                             alertStatus={alertStatus}
                             history={history}
                             defaults={defaults}
+                            title="Create alert"
+                            utilityChild={
+                                <AlertsUtilityArea actions={actions} history={history} helpContent={locale.form.help} />
+                            }
                         />
-                    </StandardCard>
-                </section>
+                    </Grid>
+                </Grid>
             </StandardPage>
         </Fragment>
     );

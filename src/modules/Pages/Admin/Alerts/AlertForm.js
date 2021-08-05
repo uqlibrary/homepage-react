@@ -58,7 +58,16 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
+export const AlertForm = ({
+    actions,
+    alertResponse,
+    alertStatus,
+    defaults,
+    alertError,
+    history,
+    title,
+    utilityChild,
+}) => {
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -346,7 +355,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onCancelAction={() => navigateToListPage()}
                     />
                 )}
-                <StandardCard>
+                <StandardCard title={title}>
+                    <div style={{ marginTop: -80 }}>{utilityChild}</div>
                     <Grid container spacing={2}>
                         <Grid item xs={12}>
                             <FormControl
@@ -547,6 +557,8 @@ AlertForm.propTypes = {
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    title: PropTypes.string,
+    utilityChild: PropTypes.object,
 };
 
 export default AlertForm;
