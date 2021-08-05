@@ -23,8 +23,8 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
 
     const defaults = {
         id: '',
-        startDate: defaultStartTime,
-        endDate: defaultEndTime,
+        startDate: defaultStartTime(),
+        endDate: defaultEndTime(),
         alertTitle: '',
         enteredbody: '',
         linkRequired: false,
@@ -33,7 +33,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
         linkTitle: '',
         linkUrl: '',
         type: 'add',
-        minimumDate: defaultStartTime,
+        minimumDate: defaultStartTime(),
     };
     return (
         <Fragment>

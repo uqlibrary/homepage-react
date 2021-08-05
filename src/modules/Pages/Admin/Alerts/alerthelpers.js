@@ -5,11 +5,15 @@ export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     return newMoment.format(dateFormat);
 }
 
-export const defaultStartTime = moment().format('YYYY-MM-DDTHH:mm');
+export function defaultStartTime() {
+    return moment().format('YYYY-MM-DDTHH:mm');
+}
 
-export const defaultEndTime = moment()
-    .endOf('day')
-    .format('YYYY-MM-DDTHH:mm');
+export function defaultEndTime() {
+    return moment()
+        .endOf('day')
+        .format('YYYY-MM-DDTHH:mm');
+}
 
 export function makePreviewActionButtonJustNotifyUser(values) {
     const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
