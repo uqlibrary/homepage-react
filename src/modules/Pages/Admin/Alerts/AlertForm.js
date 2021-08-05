@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useAccountContext } from 'context';
 const moment = require('moment');
 
 import Button from '@material-ui/core/Button';
@@ -59,6 +60,7 @@ const useStyles = makeStyles(
 
 export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
+    const { account } = useAccountContext();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
@@ -172,8 +174,14 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const navigateToCloneForm = () => {
-        window.location.reload();
+    const reloadClonePage = () => {
+        let clonePageAddress;
+        if (window.location.host === 'localhost:2020') {
+            clonePageAddress = `${window.location.pathname}?user=${account.id}`;
+        } else {
+            clonePageAddress = window.location.hash ? `${window.location.hash}` : window.location.pathname;
+        }
+        window.location.assign(clonePageAddress);
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
@@ -339,7 +347,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-clone-save-succeeded"
                         onClose={hideConfirmation}
-                        onAction={navigateToCloneForm}
+                        onAction={() => reloadClonePage()}
                         isOpen={isOpen}
                         locale={locale.form.clone.cloneAlertConfirmation}
                         onCancelAction={() => navigateToListPage()}
