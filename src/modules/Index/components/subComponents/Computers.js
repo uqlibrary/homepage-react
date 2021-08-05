@@ -283,6 +283,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                         <Grid item xs>
                             <Typography
                                 variant={'h5'}
+                                component={'h3'}
                                 style={{
                                     color: '#FFFFFF !important',
                                     backgroundColor: '#000020 !important',

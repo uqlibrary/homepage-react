@@ -11,7 +11,7 @@ import Fade from '@material-ui/core/Fade';
 const useStyles = makeStyles(
     theme => ({
         helpIcon: {
-            color: theme.palette.secondary.main,
+            color: theme.palette.secondary.light,
             opacity: 0.66,
             '&:hover': {
                 opacity: 0.87,

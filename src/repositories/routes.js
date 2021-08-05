@@ -112,3 +112,18 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
         apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list`,
     };
 };
+
+// alerts
+export const ALERTS_ALL_API = (requestNonCachedData = true) => {
+    const param = requestNonCachedData ? '?noCache=1' : '';
+    return {
+        apiUrl: `/alerts${param}`,
+    };
+};
+export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}?noCache=1` });
+
+export const ALERT_CREATE_API = () => ({ apiUrl: 'alert' });
+
+export const ALERT_SAVE_API = ({ id }) => ({ apiUrl: `alert/${id}` });
+
+export const ALERT_DELETE_API = ({ id }) => ({ apiUrl: `alert/${id}` });

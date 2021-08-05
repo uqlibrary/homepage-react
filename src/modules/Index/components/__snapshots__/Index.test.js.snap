@@ -134,6 +134,15 @@ exports[`Index page should render placeholders 1`] = `
                   "padding": 0,
                 },
               },
+              "MuiButton": Object {
+                "containedSecondary": Object {
+                  "&:hover": Object {
+                    "backgroundColor": "#aca7a3",
+                    "borderColor": "#aca7a3",
+                    "color": "#000",
+                  },
+                },
+              },
               "MuiFormLabel": Object {
                 "root": Object {
                   "overflow": "hidden",
@@ -227,10 +236,10 @@ exports[`Index page should render placeholders 1`] = `
                 "main": "#51247A",
               },
               "secondary": Object {
-                "contrastText": "#fff",
+                "contrastText": "rgba(0, 0, 0, 0.87)",
                 "dark": "#333333",
-                "light": "#dedede",
-                "main": "#595959",
+                "light": "#595959",
+                "main": "#d7d1cc",
               },
               "success": Object {
                 "contrastText": "#fff",
@@ -1456,6 +1465,15 @@ exports[`Index page should render placeholders 1`] = `
                                                           "padding": 0,
                                                         },
                                                       },
+                                                      "MuiButton": Object {
+                                                        "containedSecondary": Object {
+                                                          "&:hover": Object {
+                                                            "backgroundColor": "#aca7a3",
+                                                            "borderColor": "#aca7a3",
+                                                            "color": "#000",
+                                                          },
+                                                        },
+                                                      },
                                                       "MuiFormLabel": Object {
                                                         "root": Object {
                                                           "overflow": "hidden",
@@ -1549,10 +1567,10 @@ exports[`Index page should render placeholders 1`] = `
                                                         "main": "#51247A",
                                                       },
                                                       "secondary": Object {
-                                                        "contrastText": "#fff",
+                                                        "contrastText": "rgba(0, 0, 0, 0.87)",
                                                         "dark": "#333333",
-                                                        "light": "#dedede",
-                                                        "main": "#595959",
+                                                        "light": "#595959",
+                                                        "main": "#d7d1cc",
                                                       },
                                                       "success": Object {
                                                         "contrastText": "#fff",
@@ -1888,7 +1906,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             titleTypographyProps={
                                                               Object {
                                                                 "color": "inherit",
-                                                                "component": "h3",
+                                                                "component": "h2",
                                                                 "data-testid": "standard-card-computers-header",
                                                                 "variant": "h5",
                                                               }
@@ -1940,7 +1958,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               titleTypographyProps={
                                                                 Object {
                                                                   "color": "inherit",
-                                                                  "component": "h3",
+                                                                  "component": "h2",
                                                                   "data-testid": "standard-card-computers-header",
                                                                   "variant": "h5",
                                                                 }
@@ -1961,7 +1979,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                   <WithStyles(ForwardRef(Typography))
                                                                     className="MuiCardHeader-title"
                                                                     color="inherit"
-                                                                    component="h3"
+                                                                    component="h2"
                                                                     data-testid="standard-card-computers-header"
                                                                     display="block"
                                                                     variant="h5"
@@ -2003,12 +2021,12 @@ exports[`Index page should render placeholders 1`] = `
                                                                         }
                                                                       }
                                                                       color="inherit"
-                                                                      component="h3"
+                                                                      component="h2"
                                                                       data-testid="standard-card-computers-header"
                                                                       display="block"
                                                                       variant="h5"
                                                                     >
-                                                                      <h3
+                                                                      <h2
                                                                         className="MuiTypography-root MuiCardHeader-title MuiTypography-h5 MuiTypography-colorInherit MuiTypography-displayBlock"
                                                                         data-testid="standard-card-computers-header"
                                                                       >
@@ -2397,7 +2415,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                             </div>
                                                                           </ForwardRef(Grid)>
                                                                         </WithStyles(ForwardRef(Grid))>
-                                                                      </h3>
+                                                                      </h2>
                                                                     </ForwardRef(Typography)>
                                                                   </WithStyles(ForwardRef(Typography))>
                                                                 </div>
@@ -2927,6 +2945,15 @@ exports[`Index page should render placeholders 1`] = `
                                                           "padding": 0,
                                                         },
                                                       },
+                                                      "MuiButton": Object {
+                                                        "containedSecondary": Object {
+                                                          "&:hover": Object {
+                                                            "backgroundColor": "#aca7a3",
+                                                            "borderColor": "#aca7a3",
+                                                            "color": "#000",
+                                                          },
+                                                        },
+                                                      },
                                                       "MuiFormLabel": Object {
                                                         "root": Object {
                                                           "overflow": "hidden",
@@ -3020,10 +3047,10 @@ exports[`Index page should render placeholders 1`] = `
                                                         "main": "#51247A",
                                                       },
                                                       "secondary": Object {
-                                                        "contrastText": "#fff",
+                                                        "contrastText": "rgba(0, 0, 0, 0.87)",
                                                         "dark": "#333333",
-                                                        "light": "#dedede",
-                                                        "main": "#595959",
+                                                        "light": "#595959",
+                                                        "main": "#d7d1cc",
                                                       },
                                                       "success": Object {
                                                         "contrastText": "#fff",
@@ -3311,7 +3338,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             titleTypographyProps={
                                                               Object {
                                                                 "color": "inherit",
-                                                                "component": "h3",
+                                                                "component": "h2",
                                                                 "data-testid": "standard-card-training-header",
                                                                 "variant": "h5",
                                                               }
@@ -3339,7 +3366,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               titleTypographyProps={
                                                                 Object {
                                                                   "color": "inherit",
-                                                                  "component": "h3",
+                                                                  "component": "h2",
                                                                   "data-testid": "standard-card-training-header",
                                                                   "variant": "h5",
                                                                 }
@@ -3360,7 +3387,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                   <WithStyles(ForwardRef(Typography))
                                                                     className="MuiCardHeader-title"
                                                                     color="inherit"
-                                                                    component="h3"
+                                                                    component="h2"
                                                                     data-testid="standard-card-training-header"
                                                                     display="block"
                                                                     variant="h5"
@@ -3402,17 +3429,17 @@ exports[`Index page should render placeholders 1`] = `
                                                                         }
                                                                       }
                                                                       color="inherit"
-                                                                      component="h3"
+                                                                      component="h2"
                                                                       data-testid="standard-card-training-header"
                                                                       display="block"
                                                                       variant="h5"
                                                                     >
-                                                                      <h3
+                                                                      <h2
                                                                         className="MuiTypography-root MuiCardHeader-title MuiTypography-h5 MuiTypography-colorInherit MuiTypography-displayBlock"
                                                                         data-testid="standard-card-training-header"
                                                                       >
                                                                         Training
-                                                                      </h3>
+                                                                      </h2>
                                                                     </ForwardRef(Typography)>
                                                                   </WithStyles(ForwardRef(Typography))>
                                                                 </div>

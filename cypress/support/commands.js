@@ -42,3 +42,28 @@ Cypress.Commands.add('killWindowUnloadHandler', () => {
 Cypress.Commands.add('store', () => {
     return cy.window().its('__store__');
 });
+
+// from https://github.com/cypress-io/cypress/issues/877#issuecomment-490504922
+Cypress.Commands.add('isNotInViewport', element => {
+    cy.get(element).then($el => {
+        const bottom = Cypress.$(cy.state('window')).height();
+        const rect = $el[0].getBoundingClientRect();
+
+        expect(rect.top).to.be.greaterThan(bottom);
+        expect(rect.bottom).to.be.greaterThan(bottom);
+        expect(rect.top).to.be.greaterThan(bottom);
+        expect(rect.bottom).to.be.greaterThan(bottom);
+    });
+});
+
+Cypress.Commands.add('isInViewport', element => {
+    cy.get(element).then($el => {
+        const bottom = Cypress.$(cy.state('window')).height();
+        const rect = $el[0].getBoundingClientRect();
+
+        expect(rect.top).not.to.be.greaterThan(bottom);
+        expect(rect.bottom).not.to.be.greaterThan(bottom);
+        expect(rect.top).not.to.be.greaterThan(bottom);
+        expect(rect.bottom).not.to.be.greaterThan(bottom);
+    });
+});

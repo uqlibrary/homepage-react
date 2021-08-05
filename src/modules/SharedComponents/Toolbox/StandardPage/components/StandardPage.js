@@ -58,7 +58,7 @@ export const StandardPage = ({ title, children, help }) => {
                         <Typography
                             className={classes.layoutTitle}
                             color={'primary'}
-                            component={'h2'}
+                            component={'h1'}
                             data-testid="StandardPage-title"
                             variant={'h4'}
                         >

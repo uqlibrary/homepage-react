@@ -156,8 +156,8 @@ SubjectBody.propTypes = {
 };
 
 SubjectBody.defaultProps = {
-    panelHeadingLevel: 'h4',
-    subjectHeaderLevel: 'h3',
+    panelHeadingLevel: 'h3',
+    subjectHeaderLevel: 'h2',
 };
 
 export default SubjectBody;

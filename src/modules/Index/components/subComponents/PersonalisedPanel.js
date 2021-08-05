@@ -497,7 +497,7 @@ const PersonalisedPanel = ({
                 data-testid="personalised-panel"
             >
                 <div className={classes.flexHeader}>
-                    <Typography variant={'h5'} component={'h5'} color={'primary'} className={classes.greeting}>
+                    <Typography variant={'h5'} component={'h2'} color={'primary'} className={classes.greeting}>
                         {greeting()} {account.firstName || ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
@@ -510,7 +510,7 @@ const PersonalisedPanel = ({
                                     placement="left"
                                     TransitionProps={{ timeout: 300 }}
                                 >
-                                    <Typography component={'span'} color={'secondary'} style={{ fontSize: 14 }}>
+                                    <Typography component={'span'} style={{ fontSize: 14, color: '#595959' }}>
                                         <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
                                         {(account && account.id) || ''}
                                     </Typography>

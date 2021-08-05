@@ -138,7 +138,7 @@ const useStyles = makeStyles(
         },
         help: {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.secondary.light,
             '& a:link, & a:hover, & a:visited': {
                 color: theme.palette.white.main,
                 textDecoration: 'underline',
@@ -159,7 +159,7 @@ const useStyles = makeStyles(
         },
         help_outline: {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.secondary.main,
+            backgroundColor: theme.palette.secondary.light,
             '& a:link, & a:hover, & a:visited': {
                 color: theme.palette.white.main,
                 textDecoration: 'underline',

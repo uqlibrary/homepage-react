@@ -107,7 +107,7 @@ export class Cards extends Component {
                         title={title}
                         titleTypographyProps={{
                             variant: smallTitle ? 'h6' : 'h5',
-                            component: subCard ? 'h4' : 'h3',
+                            component: subCard ? 'h3' : 'h2',
                             color: 'inherit',
                             'data-testid': `${standardCardId}-header`,
                         }}

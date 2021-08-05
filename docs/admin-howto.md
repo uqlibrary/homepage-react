@@ -33,3 +33,7 @@ Visit the [reusable webcomonents instructions](https://github.com/uqlibrary/reus
 ## Viewing what each user type sees
 
 Visit [the homepage test file](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/cypress/integration/homepage.spec.js#L9) to view what elements many user types can see on the Homepage. (Developers can add remaining types on request) 
+
+## New Alerts Admin system
+
+Need to change users? Edit [the access helper](https://github.com/uqlibrary/homepage-react/blob/master/src/helpers/access.js)  and look for "seeAlertsAdmin". This should be replaced by a proper screen based system but in the meantime - add a new line with a correct username, formatted just like the other entries and that person should have access after it reaches production.

@@ -60,12 +60,14 @@ const useStyles = makeStyles(theme => ({
         paddingTop: 4,
         paddingBottom: 4,
         fontSize: 14,
-        color: theme.palette.secondary.main,
+        color: theme.palette.secondary.light,
     },
     actionButtonsLeft: {
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderBottomRightRadius: 0,
+        backgroundColor: theme.palette.secondary.light,
+        color: '#fff',
     },
     actionButtonsRight: {
         backgroundColor: theme.palette.accent.main,
