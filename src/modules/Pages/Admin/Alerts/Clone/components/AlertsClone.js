@@ -11,7 +11,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { defaultEndTime, defaultStartTime } from '../../alerthelpers';
+import { getTimeEndOfDayFormatted, getTimeNowFormatted } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
@@ -54,8 +54,8 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
 
     const defaults = {
         id: alert?.id || '',
-        startDate: defaultStartTime(),
-        endDate: defaultEndTime(),
+        startDate: getTimeNowFormatted(),
+        endDate: getTimeEndOfDayFormatted(),
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
@@ -64,7 +64,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'clone',
-        minimumDate: defaultStartTime(),
+        minimumDate: getTimeNowFormatted(),
     };
 
     return (

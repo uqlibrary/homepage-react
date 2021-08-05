@@ -5,11 +5,11 @@ export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     return newMoment.format(dateFormat);
 }
 
-export function defaultStartTime() {
+export function getTimeNowFormatted() {
     return moment().format('YYYY-MM-DDTHH:mm');
 }
 
-export function defaultEndTime() {
+export function getTimeEndOfDayFormatted() {
     return moment()
         .endOf('day')
         .format('YYYY-MM-DDTHH:mm');
