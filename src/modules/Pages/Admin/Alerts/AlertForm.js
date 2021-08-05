@@ -340,10 +340,10 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-clone-save-succeeded"
                         onClose={hideConfirmation}
-                        onAction={() => navigateToListPage()}
+                        onAction={navigateToCloneForm}
                         isOpen={isOpen}
                         locale={locale.form.clone.cloneAlertConfirmation}
-                        onCancelAction={navigateToCloneForm}
+                        onCancelAction={() => navigateToListPage()}
                     />
                 )}
                 <StandardCard>

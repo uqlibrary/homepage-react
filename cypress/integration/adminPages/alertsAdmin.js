@@ -950,37 +950,11 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
             // click 'view alert list' button in dialog
-            cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
+            cy.get('[data-testid="cancel-alert-clone-save-succeeded"]').click();
             // the alert list reloads
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
         });
-        // it('can clone an alert and re-edit', () => {
-        //     cy.visit(
-        //         'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-        //     );
-        //     cy.viewport(1300, 1000);
-        //     cy.get('h2').should('be.visible');
-        //     cy.get('h2').contains('Clone alert');
-        //     cy.wait(50);
-        //     cy.get('[data-testid="admin-alerts-form-title"] input')
-        //         .focus()
-        //         .clear();
-        //     cy.get('[data-testid="admin-alerts-form-title"] input').type('alert title 8');
-        //     cy.get('[data-testid="admin-alerts-form-button-save"]').click();
-        //     cy.wait(50);
-        //     cy.get('.MuiDialog-container').contains('The alert has been cloned');
-        //     // click 'edit this new record' button in dialog
-        //     cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
-        //     cy.location('href').should(
-        //         'eq',
-        //         'http://localhost:2020/admin/alerts/edit/99999-d897-11eb-a27e-df4e46db7245',
-        //     );
-        //     // because mock cant find that id, it throws an error dialog up. Oh well.
-        //     cy.get('[data-testid="dialogbox-alert-error"]').should('be.visible');
-        //     cy.get('[data-testid="confirm-alert-error"]').click();
-        //     cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
-        // });
         it('can clone an alert and then clone again', () => {
             cy.visit(
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
@@ -998,7 +972,7 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
             // click 'clone again' button in dialog
-            cy.get('[data-testid="cancel-alert-clone-save-succeeded"]').click();
+            cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
             cy.location('href').should(
                 'eq',
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
