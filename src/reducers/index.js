@@ -7,4 +7,5 @@ export { default as courseResourceSuggestionsReducer } from './courseResourceSug
 export { default as primoReducer } from './primo';
 export { default as guidesReducer } from './guidesReducer';
 export { default as readingListReducer } from './readingListReducer';
-export { default as examReducer } from './examReducer';
+export { default as spotlightReducer } from './spotlightReducer';
+export { default as spotlightsReducer } from './spotlightsReducer';

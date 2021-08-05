@@ -99,25 +99,6 @@ export const deleteAlert = alertID => {
             return Promise.reject(e);
         }
     };
-    // return async dispatch => {
-    //     dispatch({ type: actions.ALERT_LOADING });
-    //     console.log('deleteAlert action, ALERT_DELETE_API() = ', ALERT_DELETE_API({ id: alertID }));
-    //     return destroy(ALERT_DELETE_API({ id: alertID }))
-    //         .then(data => {
-    //             console.log('deleteAlert action, returned data = ', data);
-    //             dispatch({
-    //                 type: actions.ALERT_DELETED,
-    //                 payload: data,
-    //             });
-    //         })
-    //         .catch(error => {
-    //             console.log('deleteAlert action error = ', error);
-    //             dispatch({
-    //                 type: actions.ALERT_FAILED,
-    //                 payload: error.message,
-    //             });
-    //         });
-    // };
 };
 
 export function clearAlerts() {

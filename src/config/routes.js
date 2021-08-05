@@ -1,5 +1,5 @@
 import { locale } from 'locale';
-import { seeCourseResources, seeAlertsAdmin } from 'helpers/access';
+import { seeCourseResources, seeAlertsAdmin, seeSpotlightsAdmin } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -16,6 +16,7 @@ export const pathConfig = {
         alertsview: alertid => `/admin/alerts/view/${alertid}`,
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
+        spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
@@ -32,6 +33,7 @@ export const flattedPathConfig = [
     '/admin/alerts/view',
     '/admin/alerts',
     '/admin/masquerade',
+    '/admin/spotlights',
     '/book-exam-booth',
     'https://www.library.uq.edu.au/404.js',
 ];
@@ -132,6 +134,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spotlightsListDisplay = [
+        {
+            path: pathConfig.admin.spotlights,
+            component: components.SpotlightsList,
+            exact: true,
+            pageTitle: locale.pages.admin.spotlights.title,
+        },
+    ];
+
     const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
     return [
         ...publicPages,
@@ -142,6 +153,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(canSeeAlertsAdmin ? alertView : []),
         ...(canSeeAlertsAdmin ? alertsListDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
+        ...(account && seeSpotlightsAdmin(account) ? spotlightsListDisplay : []),
         {
             component: components.NotFound,
         },

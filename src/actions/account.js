@@ -5,7 +5,7 @@ import {
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
     LIB_HOURS_API,
-    SPOTLIGHTS_API,
+    SPOTLIGHTS_API_CURRENT,
     COMP_AVAIL_API,
     TRAINING_API,
     PRINTING_API,
@@ -143,7 +143,7 @@ export function loadSpotlights() {
     console.log('Loading Spotlights');
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHTS_LOADING });
-        return get(SPOTLIGHTS_API())
+        return get(SPOTLIGHTS_API_CURRENT())
             .then(spotlightsResponse => {
                 dispatch({
                     type: actions.SPOTLIGHTS_LOADED,

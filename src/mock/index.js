@@ -5,6 +5,7 @@ import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
 import * as mockData from './data';
 import { spotlights } from './data/spotlights';
+import { spotlightsLong } from './data/spotlightsLong';
 import fetchMock from 'fetch-mock';
 
 import exams_FREN1010 from './data/records/examListFREN1010';
@@ -32,6 +33,7 @@ import {
     training_object,
 } from './data/account';
 import { alertList } from './data/alerts';
+import { spotlightsList } from './data/spotlights';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -107,7 +109,7 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.SPOTLIGHTS_API().apiUrl).reply(withDelay([200, [...spotlights]]));
+mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlights]]));
 
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));

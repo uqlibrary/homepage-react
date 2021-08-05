@@ -127,6 +127,10 @@ const hasSpotlightsADAccess = account => {
     return !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));
 };
 
+export const seeSpotlightsAdmin = account => {
+    return !!account && !!hasSpotlightsADAccess(account);
+};
+
 export const seeAlertsAdmin = account => {
     return !!account && !!hasSpotlightsADAccess(account);
 };

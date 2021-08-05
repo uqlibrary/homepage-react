@@ -48,6 +48,9 @@ export default {
                     view: { title: 'View an Alert' },
                 },
             },
+            spotlights: {
+                title: 'Spotlights',
+            },
         },
         courseresources: {
             title: 'Course resources',
