@@ -5,6 +5,7 @@ import { useParams } from 'react-router';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
+import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
@@ -73,18 +74,17 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertForm
-                        actions={actions}
-                        alertResponse={alert}
-                        alertError={alertError}
-                        alertStatus={alertStatus}
-                        defaults={defaults}
-                        history={history}
-                        title="Clone alert"
-                        utilityChild={
-                            <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
-                        }
-                    />
+                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                    <StandardCard title="Clone alert">
+                        <AlertForm
+                            actions={actions}
+                            alertResponse={alert}
+                            alertError={alertError}
+                            alertStatus={alertStatus}
+                            defaults={defaults}
+                            history={history}
+                        />
+                    </StandardCard>
                 </section>
             </StandardPage>
         </Fragment>
