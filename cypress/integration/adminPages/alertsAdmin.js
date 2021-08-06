@@ -772,8 +772,8 @@ describe('Alerts Admin Pages', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
-            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2020-06-07T02:00:00');
-            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2020-06-07T03:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-29T15:00:00');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2031-07-02T18:30:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
@@ -1067,10 +1067,10 @@ describe('Alerts Admin Pages', () => {
             );
             cy.get('[data-testid="admin-alerts-form-body"] textarea').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2020-06-07T02:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2021-06-29T15:00:00');
             cy.get('[data-testid="admin-alerts-form-start-date"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2020-06-07T03:00:00');
+            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2031-07-02T18:30:00');
             cy.get('[data-testid="admin-alerts-form-end-date"] input').should('be.disabled');
 
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
