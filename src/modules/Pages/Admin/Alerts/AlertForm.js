@@ -67,11 +67,13 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
-    const [isFormValid, setFormValidity] = useState(false);
-    const [showPreview, setPreviewOpen] = useState(false);
+    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+    const [showPreview, setPreviewOpen] = useState(false); // show hide the preview block
 
-    const [values, setValues] = useState(defaults);
+    const [values, setValues] = useState(defaults); // the data displayed in the form
+    const [countSuccess, setSuccessCount] = useState(0); // store the number of success saves to display to the user
     const [dateList, setDateList] = useState([
+        // list of details for "another date row" button
         {
             startDate: defaults.startDateDefault,
             endDate: defaults.endDateDefault,
@@ -145,6 +147,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     useEffect(() => {
         if (!!alertResponse && !!alertResponse.id && alertStatus === 'saved') {
+            setSuccessCount(prevCount => prevCount + 1);
             showConfirmation();
         }
     }, [showConfirmation, alertResponse, alertStatus]);
@@ -228,6 +231,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     }
 
     const saveAlerts = () => {
+        setSuccessCount(0);
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
@@ -377,6 +381,32 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         }
     };
 
+    function postAddConfirmationDetails() {
+        // update the number of alerts saved if they saved multiple date-sets
+        return {
+            ...locale.form.add.addAlertConfirmation,
+            confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
+                'An alert has',
+                countSuccess > 1
+                    ? `${countSuccess} alerts have`
+                    : locale.form.add.addAlertConfirmation.confirmationTitle,
+            ),
+        };
+    }
+
+    function postAddCloneDetails() {
+        // update the number of alerts saved if they saved multiple date-sets
+        return {
+            ...locale.form.clone.cloneAlertConfirmation,
+            confirmationTitle: locale.form.clone.cloneAlertConfirmation.confirmationTitle.replace(
+                'The alert has',
+                countSuccess > 1
+                    ? `${countSuccess} alerts have`
+                    : locale.form.clone.cloneAlertConfirmation.confirmationTitle,
+            ),
+        };
+    }
+
     return (
         <Fragment>
             <form>
@@ -413,7 +443,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
-                        locale={locale.form.add.addAlertConfirmation}
+                        locale={postAddConfirmationDetails()}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
@@ -424,7 +454,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         onAction={() => reloadClonePage()}
                         isOpen={isOpen}
-                        locale={locale.form.clone.cloneAlertConfirmation}
+                        locale={postAddCloneDetails()}
                         onCancelAction={() => navigateToListPage()}
                     />
                 )}

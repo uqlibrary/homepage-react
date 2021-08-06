@@ -1019,6 +1019,27 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').should('exist');
+
+            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('3 alerts have been cloned');
+
+            cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
+
+            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
         });
     });
     context('Alert Admin View page', () => {
