@@ -23,8 +23,14 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
 
     const defaults = {
         id: '',
-        startDate: getTimeNowFormatted(),
-        endDate: getTimeEndOfDayFormatted(),
+        dateList: [
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ],
+        startDateDefault: getTimeNowFormatted(),
+        endDateDefault: getTimeEndOfDayFormatted(),
         alertTitle: '',
         enteredbody: '',
         linkRequired: false,

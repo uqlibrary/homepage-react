@@ -633,7 +633,7 @@ describe('Alerts Admin Pages', () => {
 
             // TODO we dont seem to have access to the date field?
             // from https://github.com/cypress-io/cypress/issues/1366
-            // cy.get('[data-testid="admin-alerts-form-start-date"] input')
+            // cy.get('[data-testid="admin-alerts-form-start-date-0"] input')
             //     .click()
             //     .then(input => {
             //         input[0].dispatchEvent(new Event('input', { bubbles: true }));
@@ -772,8 +772,8 @@ describe('Alerts Admin Pages', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2020-06-07T02:00:00');
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2020-06-07T03:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2020-06-07T02:00:00');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2020-06-07T03:00:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
@@ -792,8 +792,8 @@ describe('Alerts Admin Pages', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Sample alert 2:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('Has mock data.');
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2021-06-06T00:45:00');
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2021-06-06T05:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-06T00:45:00');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2021-06-06T05:00:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
@@ -996,6 +996,30 @@ describe('Alerts Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
         });
+        it('the "add a date set button" works', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-2"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-2"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').should('exist');
+        });
     });
     context('Alert Admin View page', () => {
         it('displays an "unauthorised" page to public users', () => {
@@ -1120,7 +1144,7 @@ describe('Alerts Admin Pages', () => {
                     cy.get('[data-testid="alert-alert-preview-action-button"]').should('not.exist');
                 });
         });
-        it('can show a preview of a urgent permanent alert with link', () => {
+        it('can show a preview of an urgent permanent alert with link', () => {
             cy.visit(
                 'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
             );

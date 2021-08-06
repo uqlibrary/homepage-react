@@ -1,8 +1,9 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-const moment = require('moment');
 
+import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
@@ -13,6 +14,8 @@ import TextField from '@material-ui/core/TextField';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
+
+const moment = require('moment');
 
 import { default as locale } from './alertsadmin.locale';
 import {
@@ -68,6 +71,12 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const [showPreview, setPreviewOpen] = useState(false);
 
     const [values, setValues] = useState(defaults);
+    const [dateList, setDateList] = useState([
+        {
+            startDate: defaults.startDateDefault,
+            endDate: defaults.endDateDefault,
+        },
+    ]);
 
     const isValidUrl = testurl => {
         if (testurl.length < 'http://x.co'.length) {
@@ -104,7 +113,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     function isInvalidStartDate(startDate) {
-        return (startDate < defaults.startDate && startDate !== '') || !moment(startDate).isValid();
+        return (startDate < defaults.startDateDefault && startDate !== '') || !moment(startDate).isValid();
     }
 
     function isInvalidEndDate(endDate, startDate) {
@@ -151,8 +160,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         setValues({
             ['alertTitle']: '',
             ['enteredbody']: '',
-            ['startDate']: defaults.startDate,
-            ['endDate']: defaults.endDate,
+            ['startDate']: defaults.startDateDefault,
+            ['endDate']: defaults.endDateDefault,
             ['urgent']: false,
             ['permanentAlert']: false,
             ['linkRequired']: false,
@@ -194,8 +203,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
         const newBody = getBody(expandableValues);
 
-        const newStartDate = expandableValues.startDate || defaults.startDate;
-        const newEndDate = expandableValues.endDate || defaults.endDate;
+        const newStartDate = expandableValues.startDate || defaults.startDateDefault;
+        const newEndDate = expandableValues.endDate || defaults.endDateDefault;
 
         return {
             ...expandableValues,
@@ -208,7 +217,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         };
     }
 
-    const saveAlert = () => {
+    const saveAlerts = () => {
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
@@ -219,9 +228,19 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             urgent: !!values.urgent ? '1' : '0',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
+            dateList: values.dateList,
         };
-        console.log('will save ', newValues);
-        defaults.type === 'edit' ? actions.saveAlertChange(newValues) : actions.createAlert(newValues);
+        newValues.dateList.forEach(dateset => {
+            // an 'edit' event will only have one entry in the date array
+            const saveableValues = {
+                ...newValues,
+                start: formatDate(dateset.startDate),
+                end: formatDate(dateset.endDate),
+            };
+            !!saveableValues.dateList && delete saveableValues.dateList;
+            console.log('will save: ', saveableValues);
+            defaults.type === 'edit' ? actions.saveAlertChange(saveableValues) : actions.createAlert(saveableValues);
+        });
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -270,6 +289,35 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const handleChange = prop => event => {
+        let dateListIndex = null;
+        if (prop === 'startDate') {
+            dateListIndex = event?.target?.id.replace('startDate-', '');
+        }
+        if (prop === 'endDate') {
+            dateListIndex = event?.target?.id.replace('endDate-', '');
+        }
+        if (!!dateListIndex) {
+            const tempDateEntry = {
+                startDate: prop === 'startDate' ? event.target.value : values.dateList[dateListIndex].startDate,
+                endDate: prop === 'endDate' ? event.target.value : values.dateList[dateListIndex].endDate,
+            };
+            const tempDateList = values.dateList;
+            tempDateList[dateListIndex] = tempDateEntry;
+            setValues({
+                ...values,
+                dateList: tempDateList,
+            });
+
+            setDateList([
+                ...dateList,
+                {
+                    startDate: prop === 'startDate' ? event.target.value : values.dateList[dateListIndex].startDate,
+                    endDate: prop === 'endDate' ? event.target.value : values.dateList[dateListIndex].endDate,
+                },
+            ]);
+            return;
+        }
+
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
 
@@ -280,6 +328,25 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
         // if the form has changed, hide the Preview
         handlePreview(false);
+    };
+
+    const addDateRow = e => {
+        console.log('addDateRow a = ', e);
+        const tempValue = values;
+        tempValue.dateList = [
+            ...tempValue.dateList,
+            {
+                startDate: defaults.startDateDefault,
+                endDate: defaults.endDateDefault,
+            },
+        ];
+        setDateList([
+            ...dateList,
+            {
+                startDate: defaults.startDateDefault,
+                endDate: defaults.endDateDefault,
+            },
+        ]);
     };
 
     const errorLocale = {
@@ -386,43 +453,59 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         </FormControl>
                     </Grid>
                 </Grid>
-                <Grid container spacing={2} style={{ marginTop: 12 }}>
-                    <Grid item md={6} xs={12}>
-                        {/* https://material-ui.com/components/pickers/ */}
-                        <TextField
-                            id="startDate"
-                            data-testid="admin-alerts-form-start-date"
-                            error={isInvalidStartDate(values.startDate)}
-                            InputLabelProps={{ shrink: true }}
-                            label="Start date"
-                            onChange={handleChange('startDate')}
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                            type="datetime-local"
-                            value={values.startDate}
-                            inputProps={{
-                                min: defaults.minimumDate,
-                                required: true,
-                            }}
-                        />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                        <TextField
-                            id="endDate"
-                            data-testid="admin-alerts-form-end-date"
-                            InputLabelProps={{ shrink: true }}
-                            label="End date"
-                            onChange={handleChange('endDate')}
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                            type="datetime-local"
-                            value={values.endDate}
-                            error={isInvalidEndDate(values.endDate, values.startDate)}
-                            inputProps={{
-                                min: values.startDate,
-                                required: true,
-                            }}
-                        />
-                    </Grid>
-                </Grid>
+                {!!values.dateList &&
+                    values.dateList.map((dateset, index) => {
+                        return (
+                            <Grid key={`dateset-${index}`} container spacing={2} style={{ marginTop: 12 }}>
+                                <Grid item md={6} xs={12}>
+                                    {/* https://material-ui.com/components/pickers/ */}
+                                    <TextField
+                                        id={`startDate-${index}`}
+                                        data-testid={`admin-alerts-form-start-date-${index}`}
+                                        error={isInvalidStartDate(dateset.startDate)}
+                                        InputLabelProps={{ shrink: true }}
+                                        label="Start date"
+                                        onChange={handleChange('startDate')}
+                                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                                        type="datetime-local"
+                                        value={values.dateList[index].startDate}
+                                        inputProps={{
+                                            min: defaults.minimumDate,
+                                            required: true,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item md={5} xs={12}>
+                                    <TextField
+                                        id={`endDate-${index}`}
+                                        data-testid={`admin-alerts-form-end-date-${index}`}
+                                        InputLabelProps={{ shrink: true }}
+                                        label="End date"
+                                        onChange={handleChange('endDate')}
+                                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                                        type="datetime-local"
+                                        value={values.dateList[index].endDate}
+                                        error={isInvalidEndDate(dateset.endDate, dateset.startDate)}
+                                        inputProps={{
+                                            min: values.dateList[index].startDate,
+                                            required: true,
+                                        }}
+                                    />
+                                </Grid>
+                                {['add', 'clone'].includes(defaults.type) && index === values.dateList.length - 1 && (
+                                    <Grid item md={1} xs={12}>
+                                        <IconButton
+                                            data-testid={`admin-alerts-form-another-date-button-${index}`}
+                                            onClick={addDateRow}
+                                            title="Add another event with the same text but different start-end times"
+                                        >
+                                            <AddCircleSharpIcon />
+                                        </IconButton>
+                                    </Grid>
+                                )}
+                            </Grid>
+                        );
+                    })}
                 <Grid
                     container
                     spacing={2}
@@ -533,7 +616,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                             variant="contained"
                             children={defaults.type === 'edit' ? 'Save' : 'Create'}
                             disabled={!isFormValid}
-                            onClick={saveAlert}
+                            onClick={saveAlerts}
                             className={classes.saveButton}
                         />
                     </Grid>
