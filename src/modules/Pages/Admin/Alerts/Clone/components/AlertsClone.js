@@ -54,8 +54,14 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
 
     const defaults = {
         id: alert?.id || '',
-        startDate: getTimeNowFormatted(),
-        endDate: getTimeEndOfDayFormatted(),
+        dateList: [
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ],
+        startDateDefault: getTimeNowFormatted(),
+        endDateDefault: getTimeEndOfDayFormatted(),
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,

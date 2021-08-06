@@ -41,10 +41,18 @@ export const AlertsEdit = ({ actions, alert, alertError, alertStatus, history })
     const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
 
     function setDefaults() {
+        const startDateDefault = alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '';
+        const endDateDefault = alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '';
         return {
             id: alert?.id || '',
-            startDate: alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '',
-            endDate: alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '',
+            dateList: [
+                {
+                    startDate: startDateDefault,
+                    endDate: endDateDefault,
+                },
+            ],
+            startDateDefault: startDateDefault,
+            endDateDefault: endDateDefault,
             alertTitle: alert?.title || '',
             enteredbody: message,
             linkRequired: linkRequired,
