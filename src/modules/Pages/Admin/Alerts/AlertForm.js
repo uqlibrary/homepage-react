@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useAccountContext } from 'context';
 const moment = require('moment');
 
 import Button from '@material-ui/core/Button';
@@ -19,6 +18,8 @@ import { default as locale } from './alertsadmin.locale';
 import {
     formatDate,
     getBody,
+    getTimeEndOfDayFormatted,
+    getTimeNowFormatted,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
 } from './alerthelpers';
@@ -60,7 +61,6 @@ const useStyles = makeStyles(
 
 export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
-    const { account } = useAccountContext();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
@@ -175,13 +175,11 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const reloadClonePage = () => {
-        let clonePageAddress;
-        if (window.location.host === 'localhost:2020') {
-            clonePageAddress = `${window.location.pathname}?user=${account.id}`;
-        } else {
-            clonePageAddress = window.location.hash ? `${window.location.hash}` : window.location.pathname;
-        }
-        window.location.assign(clonePageAddress);
+        setValues({
+            ...defaults,
+            startDate: getTimeNowFormatted(),
+            endDate: getTimeEndOfDayFormatted(),
+        });
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
@@ -317,7 +315,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         locale={errorLocale}
                     />
                 )}
-                {alertStatus !== 'error' && defaults.type !== 'add' && (
+                {alertStatus !== 'error' && defaults.type === 'edit' && (
                     <ConfirmationBox
                         actionButtonColor="primary"
                         actionButtonVariant="contained"

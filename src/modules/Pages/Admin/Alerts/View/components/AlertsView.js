@@ -17,7 +17,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import {
-    defaultStartTime,
+    getTimeNowFormatted,
     extractFieldsFromBody,
     formatDate,
     getBody,
@@ -151,7 +151,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'view',
-        minimumDate: defaultStartTime(),
+        minimumDate: getTimeNowFormatted(),
     };
 
     return (
