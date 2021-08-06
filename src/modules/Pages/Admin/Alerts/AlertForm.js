@@ -167,6 +167,12 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             ['linkRequired']: false,
             ['linkTitle']: '',
             ['linkUrl']: '',
+            ['dateList']: [
+                {
+                    startDate: defaults.startDateDefault,
+                    endDate: defaults.endDateDefault,
+                },
+            ],
         });
     };
 
@@ -186,8 +192,12 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const reloadClonePage = () => {
         setValues({
             ...defaults,
-            startDate: getTimeNowFormatted(),
-            endDate: getTimeEndOfDayFormatted(),
+            dateList: [
+                {
+                    startDate: getTimeNowFormatted(),
+                    endDate: getTimeEndOfDayFormatted(),
+                },
+            ],
         });
 
         const topOfPage = document.getElementById('StandardPage');
@@ -336,15 +346,15 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         tempValue.dateList = [
             ...tempValue.dateList,
             {
-                startDate: defaults.startDateDefault,
-                endDate: defaults.endDateDefault,
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
             },
         ];
         setDateList([
             ...dateList,
             {
-                startDate: defaults.startDateDefault,
-                endDate: defaults.endDateDefault,
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
             },
         ]);
     };
