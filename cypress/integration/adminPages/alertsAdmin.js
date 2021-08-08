@@ -1041,6 +1041,37 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
         });
+
+        function removeButtonExists(buttonId) {
+            for (let ii = 0; ii <= buttonId; ii++) {
+                cy.get(`[data-testid="admin-alerts-form-start-date-${ii}"] input`).should('exist');
+                cy.get(`[data-testid="admin-alerts-form-end-date-${ii}"] input`).should('exist');
+                cy.get(`[data-testid="admin-alerts-form-remove-date-button-${ii}"]`).should('exist'); // '-' button exists
+            }
+            const nextButtonId = buttonId + 1;
+            cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
+        }
+
+        it('the "remove a date set button" works', () => {
+            cy.visit(
+                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+            );
+            cy.viewport(1300, 1000);
+
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-remove-date-button-0"]').should('not.exist'); // no '-' button
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click(); // click '+' button
+            removeButtonExists('0');
+
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click(); // click '+' button
+            removeButtonExists('1');
+
+            cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').click();
+            removeButtonExists('2');
+
+            cy.get('[data-testid="admin-alerts-form-remove-date-button-1"]').click(); // remove a date field
+            removeButtonExists('1');
+        });
     });
     context('Alert Admin View page', () => {
         it('displays an "unauthorised" page to public users', () => {

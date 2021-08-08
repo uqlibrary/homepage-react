@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
+import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircle';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -344,6 +345,17 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         handlePreview(false);
     };
 
+    const removeDateRow = indexRowToBeRemoved => {
+        const filteredDatelist = values.dateList.filter((row, index) => {
+            return index !== indexRowToBeRemoved;
+        });
+        setDateList(filteredDatelist);
+        setValues({
+            ...values,
+            dateList: filteredDatelist,
+        });
+    };
+
     const addDateRow = e => {
         console.log('addDateRow a = ', e);
         const tempValue = values;
@@ -497,7 +509,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                     values.dateList.map((dateset, index) => {
                         return (
                             <Grid key={`dateset-${index}`} container spacing={2} style={{ marginTop: 12 }}>
-                                <Grid item md={6} xs={12}>
+                                <Grid item md={5} xs={12}>
                                     {/* https://material-ui.com/components/pickers/ */}
                                     <TextField
                                         id={`startDate-${index}`}
@@ -532,8 +544,17 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                         }}
                                     />
                                 </Grid>
-                                {['add', 'clone'].includes(defaults.type) && index === values.dateList.length - 1 && (
-                                    <Grid item md={1} xs={12}>
+                                <Grid item md={2} xs={12}>
+                                    {['add', 'clone'].includes(defaults.type) && values.dateList.length > 1 && (
+                                        <IconButton
+                                            data-testid={`admin-alerts-form-remove-date-button-${index}`}
+                                            onClick={() => removeDateRow(index)}
+                                            title="Remove start-end times set"
+                                        >
+                                            <RemoveCircleSharpIcon />
+                                        </IconButton>
+                                    )}
+                                    {['add', 'clone'].includes(defaults.type) && index === values.dateList.length - 1 && (
                                         <IconButton
                                             data-testid={`admin-alerts-form-another-date-button-${index}`}
                                             onClick={addDateRow}
@@ -541,8 +562,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                         >
                                             <AddCircleSharpIcon />
                                         </IconButton>
-                                    </Grid>
-                                )}
+                                    )}
+                                </Grid>
                             </Grid>
                         );
                     })}
