@@ -10,7 +10,7 @@
 .idea/markdown-navigator.xml
 .idea/shelf/
 .idea/prettier.xml
-.idea/sonarlint/issuestore/index.pb
+.idea/sonarlint/*
 node_modules
 dist
 npm-debug.log*
