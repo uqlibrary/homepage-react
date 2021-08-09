@@ -399,9 +399,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             ...locale.form.add.addAlertConfirmation,
             confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
                 'An alert has',
-                countSuccess > 1
-                    ? `${countSuccess} alerts have`
-                    : locale.form.add.addAlertConfirmation.confirmationTitle,
+                countSuccess > 1 ? `${countSuccess} alerts have` : 'An alert has',
             ),
         };
     }
@@ -412,9 +410,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             ...locale.form.clone.cloneAlertConfirmation,
             confirmationTitle: locale.form.clone.cloneAlertConfirmation.confirmationTitle.replace(
                 'The alert has',
-                countSuccess > 1
-                    ? `${countSuccess} alerts have`
-                    : locale.form.clone.cloneAlertConfirmation.confirmationTitle,
+                countSuccess > 1 ? `${countSuccess} alerts have` : 'The alert has',
             ),
         };
     }
