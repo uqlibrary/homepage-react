@@ -132,14 +132,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
     return [
         ...publicPages,
         ...(account && seeCourseResources(account) ? courseResoures : []),
-        ...(account && seeAlertsAdmin(account) ? alertAddDisplay : []),
-        ...(account && seeAlertsAdmin(account) ? alertEditForm : []),
-        ...(account && seeAlertsAdmin(account) ? alertCloneForm : []),
-        ...(account && seeAlertsAdmin(account) ? alertView : []),
-        ...(account && seeAlertsAdmin(account) ? alertsListDisplay : []),
+        ...(canSeeAlertsAdmin ? alertAddDisplay : []),
+        ...(canSeeAlertsAdmin ? alertEditForm : []),
+        ...(canSeeAlertsAdmin ? alertCloneForm : []),
+        ...(canSeeAlertsAdmin ? alertView : []),
+        ...(canSeeAlertsAdmin ? alertsListDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         {
             component: components.NotFound,
