@@ -12,6 +12,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
@@ -541,6 +542,20 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     />
                                 </Grid>
                                 <Grid item md={2} xs={12}>
+                                    {['add', 'clone'].includes(defaults.type) &&
+                                    index === values.dateList.length - 1 ? (
+                                        <IconButton
+                                            data-testid={`admin-alerts-form-another-date-button-${index}`}
+                                            title="Add another event with the same text but different start-end times"
+                                            style={{ minWidth: 60 }}
+                                        >
+                                            <AddCircleSharpIcon onClick={addDateRow} />
+                                        </IconButton>
+                                    ) : (
+                                        <Typography className="MuiButtonBase-root" style={{ minWidth: 60 }}>
+                                            &nbsp;
+                                        </Typography>
+                                    )}
                                     {['add', 'clone'].includes(defaults.type) && values.dateList.length > 1 && (
                                         <IconButton
                                             data-testid={`admin-alerts-form-remove-date-button-${index}`}
@@ -548,15 +563,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                             title="Remove start-end times set"
                                         >
                                             <RemoveCircleSharpIcon />
-                                        </IconButton>
-                                    )}
-                                    {['add', 'clone'].includes(defaults.type) && index === values.dateList.length - 1 && (
-                                        <IconButton
-                                            data-testid={`admin-alerts-form-another-date-button-${index}`}
-                                            onClick={addDateRow}
-                                            title="Add another event with the same text but different start-end times"
-                                        >
-                                            <AddCircleSharpIcon />
                                         </IconButton>
                                     )}
                                 </Grid>
