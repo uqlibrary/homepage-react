@@ -134,7 +134,15 @@ export default {
             title: 'View a past alert',
             text: (
                 <Fragment>
-                    <p data-testid="admin-alerts-view-help-example">Help goes here</p>
+                    <p data-testid="admin-alerts-view-help-example">The View alerts form is read only as past alerts cannot be edited. This is so they are preserved as a record of past important notices to clients.</p>
+                    <h3>Copy and reuse (clone) a past alert</h3>
+                    <p>Press <b>Clone</b> to create a copy of the alert. The Clone alert form will appear and be prefilled with the same alert information.
+                    <ul>
+                        <li>The start date will be the current date and time now.</li>
+                        <li>The end date will be set to tonight at 11.59pm.</li>
+                    </ul>
+                    <h3>Return to alerts list</h3>
+                    <p>Press <b>Cancel</b> to return to the Alerts listing page.</p>
                 </Fragment>
             ),
         },
