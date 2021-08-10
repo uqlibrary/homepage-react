@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) => {
+export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
     const classes = useStyles();
 
     const defaults = {
@@ -54,6 +54,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
                             actions={actions}
                             alertResponse={alert}
                             alertError={alertError}
+                            alertLoading={alertLoading}
                             alertStatus={alertStatus}
                             history={history}
                             defaults={defaults}
@@ -69,6 +70,7 @@ AlertsAdd.propTypes = {
     actions: PropTypes.any,
     alert: PropTypes.any,
     alertError: PropTypes.any,
+    alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     history: PropTypes.object,
 };

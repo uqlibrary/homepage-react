@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }) => {
+export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
     const classes = useStyles();
     const { alertid } = useParams();
 
@@ -84,6 +84,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertStatus, history }
                     <StandardCard title="Clone alert">
                         <AlertForm
                             actions={actions}
+                            alertLoading={alertLoading}
                             alertResponse={alert}
                             alertError={alertError}
                             alertStatus={alertStatus}
@@ -101,6 +102,7 @@ AlertsClone.propTypes = {
     actions: PropTypes.any,
     alert: PropTypes.any,
     alertError: PropTypes.any,
+    alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     history: PropTypes.object,
 };
