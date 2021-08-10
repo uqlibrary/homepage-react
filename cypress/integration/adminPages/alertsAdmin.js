@@ -605,6 +605,8 @@ describe('Alerts Admin Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 3');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 3');
+            cy.get('button[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('An alert has been added');
@@ -614,6 +616,8 @@ describe('Alerts Admin Pages', () => {
             // the alert page reloads with a blank form
             cy.get('[data-testid="admin-alerts-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-alerts-form-body"] textarea').should('have.value', '');
+            // the preview is successfully hidden as part of the save function
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
         });
         it('can save an alert (more complex)', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
