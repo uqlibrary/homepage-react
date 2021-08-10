@@ -32,7 +32,7 @@ const useStyles = makeStyles(
             transition: 'visibility 0s, opacity 10s ease-out',
         },
         saveButton: {
-            backgroundColor: theme.palette.accent.main,
+            // backgroundColor: theme.palette.accent.main,
             color: '#fff',
             '&:hover': {
                 backgroundColor: theme.palette.accent.dark,

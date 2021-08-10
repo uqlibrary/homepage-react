@@ -45,7 +45,7 @@ const useStyles = makeStyles(
             marginRight: 16,
         },
         addButton: {
-            backgroundColor: theme.palette.accent.main,
+            // backgroundColor: theme.palette.accent.main,
             color: '#fff',
             '&:hover': {
                 backgroundColor: theme.palette.accent.dark,

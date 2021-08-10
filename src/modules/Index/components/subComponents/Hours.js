@@ -70,10 +70,10 @@ const useStyles = makeStyles(theme => ({
         color: '#fff',
     },
     actionButtonsRight: {
-        backgroundColor: theme.palette.accent.main,
-        '&:hover': {
-            backgroundColor: theme.palette.accent.dark,
-        },
+        // backgroundColor: theme.palette.accent.main,
+        // '&:hover': {
+        //     backgroundColor: theme.palette.accent.dark,
+        // },
         borderTopLeftRadius: 0,
         borderTopRightRadius: 0,
         borderBottomLeftRadius: 0,
@@ -385,6 +385,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <Grid item xs>
                             <Button
                                 classes={{ root: classes.actionButtonsRight }}
+                                color="primary"
                                 size="small"
                                 variant="contained"
                                 color={hoursLocale.actionButtons[1].color}

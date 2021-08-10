@@ -6,6 +6,15 @@ import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 
+const styles = theme => ({
+    circular: {
+        color: theme.palette.accent.main,
+    },
+    message: {
+        color: theme.palette.accent.main,
+    },
+});
+
 export class InlineLoader extends React.Component {
     static propTypes = {
         message: PropTypes.string,
@@ -31,10 +40,15 @@ export class InlineLoader extends React.Component {
                         <Grid item xs />
                     </Hidden>
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
-                        <CircularProgress size={18} thickness={2} color="primary" />
+                        <CircularProgress className={this.props.classes.circular} size={18} thickness={2} />
                     </Grid>
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
-                        <Typography color={'primary'} variant={'h5'} component={'span'} style={{ fontSize: '1.33rem' }}>
+                        <Typography
+                            className={this.props.classes.message}
+                            variant={'h5'}
+                            component={'span'}
+                            style={{ fontSize: '1.33rem' }}
+                        >
                             {this.props.message}
                         </Typography>
                     </Grid>
@@ -47,4 +61,4 @@ export class InlineLoader extends React.Component {
     }
 }
 
-export default withStyles(null, { withTheme: true })(InlineLoader);
+export default withStyles(styles, { withTheme: true })(InlineLoader);

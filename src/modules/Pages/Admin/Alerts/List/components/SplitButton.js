@@ -29,7 +29,7 @@ const useStyles = makeStyles(
             marginTop: -50,
         },
         editButton: {
-            backgroundColor: theme.palette.accent.main,
+            // backgroundColor: theme.palette.accent.main,
             color: '#fff',
             '&:hover': {
                 backgroundColor: theme.palette.accent.dark,
@@ -89,6 +89,7 @@ export const SplitButton = ({
                             }
                             className={classes.editButton}
                             variant="contained"
+                            color="primary"
                         />
                         <Button
                             color="primary"
