@@ -39,7 +39,7 @@ export default {
             },
         },
         help: {
-            title: 'Add/edit an alert',
+            title: 'Add/edit/clone an alert',
             text: (
                 <Fragment>
                     <ul>
@@ -125,6 +125,16 @@ export default {
                         </dd>
                     </dl>
                     <p>The alert will appear between the start time and the end time set in the alert.</p>
+                </Fragment>
+            ),
+        },
+    },
+    view: {
+        help: {
+            title: 'View a past alert',
+            text: (
+                <Fragment>
+                    <p data-testid="admin-alerts-view-help-example">Help goes here</p>
                 </Fragment>
             ),
         },

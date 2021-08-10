@@ -1137,12 +1137,12 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(50);
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-view-help-example"]').should('be.visible');
             cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
         });
         it('can show a preview of an non-urgent non-permanent alert without link', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
