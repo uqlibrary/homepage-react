@@ -161,7 +161,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                    <AlertsUtilityArea actions={actions} helpContent={locale.view.help} history={history} />
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
