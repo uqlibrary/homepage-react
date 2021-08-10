@@ -546,10 +546,11 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     index === values.dateList.length - 1 ? (
                                         <IconButton
                                             data-testid={`admin-alerts-form-another-date-button-${index}`}
+                                            onClick={addDateRow}
                                             title="Add another alert with the same text but different start and end times"
                                             style={{ minWidth: 60 }}
                                         >
-                                            <AddCircleSharpIcon onClick={addDateRow} />
+                                            <AddCircleSharpIcon />
                                         </IconButton>
                                     ) : (
                                         <Typography className="MuiButtonBase-root" style={{ minWidth: 60 }}>
