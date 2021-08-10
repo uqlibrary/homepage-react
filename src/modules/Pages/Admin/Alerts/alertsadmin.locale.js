@@ -101,7 +101,7 @@ export default {
                         <dd>
                             <p>
                                 Removes a Start date and End date set to cancel the creation of the alert copy. Only
-                                visible when you have pressed the <strong>Add another alert</strong> (+ button)"
+                                visible when you have pressed the <strong>Add another alert</strong> (+ button).
                             </p>
                             <p>Use to cancel the creation of one of the copies of this alert.</p>
                             <p>Start date: Defaults to current date and time. Cannot be in the past.</p>
@@ -210,6 +210,20 @@ export default {
                             (newest to oldest).
                         </li>
                     </ul>
+                    <h3>Alert action buttons</h3>
+                    <p>Each alert has two action buttons. There is a primary action and a More actions button (downward arrow). Use the actions to interact with alerts:</p>
+                    <ul>
+                        <li>Current alerts: Edit (primary), Clone and Delete</li>
+                        <li>Future alerts: Edit (primary), Clone and Delete</li>
+                        <li>Past alerts: View (primary), Clone and Delete.</li>
+                    </ul>
+                    <h3>Alert check boxes</h3>
+                    <p>Use the check boxes to select multiple alerts. You can only select alerts from one table at a time, e.g. Current alerts. The number of alerts selected and actions for multiple alerts will appear in the table title row and include:</p>
+                    <ul>
+                        <li>Deselect all (the X button)</li>
+                        <li>Delete selected (the bin button).</li>
+                    </ul>
+                        
                     <h2 id="adding-alert" data-testid="admin-alerts-help-example">
                         Add an alert
                     </h2>
@@ -234,6 +248,17 @@ export default {
                         Updated alerts will change on the website within two minutes. Hard refresh your browser to view
                         the alert.
                     </p>
+            
+                    <h2>Clone (copy) an alert</h2>
+                    <p>Press the <strong>More actions</strong> button beside an alert, then press <strong>Clone</strong>. The Clone alert form will appear with the alert information prefilled and the dates automatically updated.</p>
+                    <p>Cloned alerts are the same as creating a new alert. It will appear on the website within two minutes of their start time. Hard refresh your browser to view the alert.</p>
+                    <h2>View a past alert</h2>
+                    <p>Press <strong>View</strong> beside a past alert. The View alert form will appear in read only mode to ensure past alerts are retained as a record of past messages to clients.</p>
+                    <ul>
+                        <li>Press <strong>Clone</strong> to create a copy of this alert. The Clone alert form will appear with alert information prefilled and the dates automatically updated.</li>
+                        <li>Press <strong>Cancel</strong> to return to the alerts listing screen.</li>
+                    </ul>
+
                     <h2>Remove alerts</h2>
                     <p>
                         <strong>
@@ -246,21 +271,14 @@ export default {
                         <strong>To unpublish a current alert</strong>: edit the alert and change its Unpublish date/time
                         to now.
                     </p>
-                    <p>To delete alerts, on the Alerts listing screen:</p>
-                    <ol>
-                        <li>
-                            Check one or more alerts within one of the tables, e.g. Past alerts. A blue bar with a
-                            Delete button (bin) and a Deselect button (cross) will appear in the table title row.
-                        </li>
-                        <li>
-                            Press <strong>Delete</strong> (the bin icon) to proceed with deleting the alerts. You will
-                            be asked to confirm you wish to proceed. The system will confirm the alerts are permanently
-                            deleted.
-                        </li>
-                    </ol>
-                    <p>
-                        Alternatively, press <strong>Close</strong> (the cross icon) to deselect all selected alerts.
-                    </p>
+            
+                    <p>To delete alerts:</p>
+                    <ul>                        
+                        <li><strong>One only:</strong> press the <strong>More actions</strong> button beside an alert, then press <strong>Delete</strong></li>
+                        <li><strong>Multiple:</strong> use the checkboxes to select multiple alerts within one table. Your selection will appear in the table’s title row with a Delete button (bin) and a Deselect button (cross). Press <strong>Delete</strong> to proceed.</li>
+                    </ul>       
+                    <p>In both cases, you will be asked to confirm you wish to proceed. The system will confirm the alerts are permanently deleted.</p>
+
                     <h2>Language, tone and voice</h2>
                     <ul>
                         <li>
