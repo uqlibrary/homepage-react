@@ -546,7 +546,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                     index === values.dateList.length - 1 ? (
                                         <IconButton
                                             data-testid={`admin-alerts-form-another-date-button-${index}`}
-                                            title="Add another event with the same text but different start-end times"
+                                            title="Add another alert with the same text but different start and end times"
                                             style={{ minWidth: 60 }}
                                         >
                                             <AddCircleSharpIcon onClick={addDateRow} />
@@ -560,7 +560,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                                         <IconButton
                                             data-testid={`admin-alerts-form-remove-date-button-${index}`}
                                             onClick={() => removeDateRow(index)}
-                                            title="Remove start-end times set"
+                                            title="Remove this date/time set from the alert series"
                                         >
                                             <RemoveCircleSharpIcon />
                                         </IconButton>
