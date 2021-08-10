@@ -55,7 +55,7 @@ export default {
                             to review your changes.
                         </li>
                         <li>
-                            Press <strong>Save</strong> to create or update the alert. The system will confirm the alert
+                            Press <strong>Create</strong> to create or clone an alert. The system will confirm the alert
                             has been created. When editing alerts, Save will only be enabled when you have made a change
                             to a field.
                         </li>
@@ -82,6 +82,21 @@ export default {
                         <dd>
                             <p>Date and time when alert should be unpublished.</p>
                             <p>Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
+                        </dd>
+                        <dt>Add another alert with the same text but different start and end times (+ button)</dt>
+                        <dd>
+                            <p>Adds another set of Start date and End date fields to create another copy of this alert.</p>
+                            <p>Use to create multiple alerts with the same content and different dates at once.</p>
+                            <p>Start date: Defaults to current date and time. Cannot be in the past.</p>
+                            <p>End date: Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
+                            <p>Upon save, system creates alerts using all form content and the specified dates. After they are created, these alerts are separate and can be edited or deleted individually only.</p>
+                        </dd>
+                        <dt>Remove this date/time set from the alert series (- button)</dt>
+                        <dd>
+                            <p>Removes a Start date and End date set to cancel the creation of the alert copy. Only visible when you have pressed the <strong>Add another alert</strong> (+ button)"</p>
+                            <p>Use to cancel the creation of one of the copies of this alert.</p>
+                            <p>Start date: Defaults to current date and time. Cannot be in the past.</p>
+                            <p>End date: Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
                         </dd>
                         <dt>Add info link</dt>
                         <dd>
