@@ -258,6 +258,10 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             defaults.type === 'edit' ? actions.saveAlertChange(saveableValues) : actions.createAlert(saveableValues);
         });
 
+        const alertWrapper = document.getElementById('previewWrapper');
+        !!alertWrapper && (alertWrapper.innerHTML = '');
+        handlePreview(false);
+
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
             top: 0,
