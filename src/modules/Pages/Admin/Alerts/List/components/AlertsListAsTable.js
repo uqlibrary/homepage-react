@@ -312,14 +312,16 @@ export const AlertsListAsTable = ({
                             onClick={showDeleteConfirmation}
                             aria-label="Delete alert(s)"
                             data-testid={`alert-list-${tableType}-delete-button`}
+                            title="Delete alert(s)"
                         >
                             <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
                         </IconButton>
                         <IconButton
                             onClick={clearAllCheckboxes}
-                            aria-label="Clear selected checkboxes"
+                            aria-label="Deselect all"
                             data-testid={`alert-list-${tableType}-deselect-button`}
                             className={classes.iconHighlighted}
+                            title="Deselect all"
                         >
                             <CloseIcon />
                         </IconButton>

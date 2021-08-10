@@ -96,10 +96,11 @@ export const SplitButton = ({
                             size="small"
                             aria-controls={open ? 'split-button-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
-                            aria-label="Select alert action"
+                            aria-label="More actions"
                             aria-haspopup="menu"
                             data-testid={`alert-list-arrowicon-${alertId}`}
                             onClick={handleToggle}
+                            title="More actions"
                         >
                             <ArrowDropDownIcon />
                         </Button>
