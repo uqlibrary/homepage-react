@@ -64,7 +64,7 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
+export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -126,6 +126,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     const validateValues = currentValues => {
         const isValid =
+            !alertLoading &&
             !isInvalidStartDate(currentValues.startDate) &&
             !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
             currentValues.alertTitle.length > 0 &&
@@ -437,7 +438,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                 )}
                 {alertStatus !== 'error' && defaults.type === 'edit' && (
                     <ConfirmationBox
-                        actionButtonColor="primary"
+                        actionButtonColor="secondary"
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-edit-save-succeeded"
                         onAction={handleConfirmation}
@@ -698,6 +699,7 @@ AlertForm.propTypes = {
     actions: PropTypes.any,
     alertResponse: PropTypes.any,
     alertError: PropTypes.any,
+    alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
