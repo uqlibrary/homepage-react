@@ -66,7 +66,7 @@ export const isValidInput = params => {
 
 const useStyles = makeStyles(theme => ({
     appbar: {
-        backgroundColor: theme.palette.primary.main, // theme.palette.accent.main,
+        backgroundColor: theme.palette.accent.main,
     },
 }));
 

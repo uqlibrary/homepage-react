@@ -14,7 +14,7 @@ export const useStyles = makeStyles(
             padding: 0,
         },
         layoutTitle: {
-            color: theme.palette.accent.main,
+            color: '#51247A',
             overflowWrap: 'break-word !important',
             maxWidth: 1200,
             width: '90%',
