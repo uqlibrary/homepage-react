@@ -140,7 +140,6 @@ export function loadCurrentAccount() {
  * @returns {function(*)}
  */
 export function loadSpotlights() {
-    console.log('Loading Spotlights');
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHTS_LOADING });
         return get(SPOTLIGHTS_API())
@@ -164,7 +163,6 @@ export function loadSpotlights() {
  * @returns {function(*)}
  */
 export function loadLibHours() {
-    console.log('Loading Library Hours');
     return dispatch => {
         dispatch({ type: actions.LIB_HOURS_LOADING });
         return get(LIB_HOURS_API())
@@ -188,7 +186,6 @@ export function loadLibHours() {
  * @returns {function(*)}
  */
 export function loadPrintBalance() {
-    console.log('Loading Print Balance');
     return dispatch => {
         dispatch({ type: actions.PRINT_BALANCE_LOADING });
         return get(PRINTING_API())
@@ -212,7 +209,6 @@ export function loadPrintBalance() {
  * @returns {function(*)}
  */
 export function loadLoans() {
-    console.log('Loading Loans');
     return dispatch => {
         dispatch({ type: actions.LOANS_LOADING });
         return get(LOANS_API())
@@ -236,7 +232,6 @@ export function loadLoans() {
  * @returns {function(*)}
  */
 export function loadCompAvail() {
-    console.log('Loading Computer Availability');
     return dispatch => {
         dispatch({ type: actions.COMP_AVAIL_LOADING });
         return get(COMP_AVAIL_API())
@@ -262,7 +257,6 @@ export function loadCompAvail() {
 export function loadTrainingEvents(account) {
     const trainingfilterId =
         !!account && !!account.trainingfilterId ? account.trainingfilterId : TRAINING_FILTER_GENERAL;
-    console.log('Loading Training Events for filter ', trainingfilterId);
     return dispatch => {
         dispatch({ type: actions.TRAINING_LOADING });
         return get(TRAINING_API(10, trainingfilterId))
@@ -287,7 +281,6 @@ export function loadTrainingEvents(account) {
  * @returns {action}
  */
 export function searcheSpacePossiblePublications() {
-    console.log('Loading Possible eSpace Pubs');
     return dispatch => {
         dispatch({ type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING });
         return get(POSSIBLE_RECORDS_API())
@@ -312,7 +305,6 @@ export function searcheSpacePossiblePublications() {
  * @returns {action}
  */
 export function searcheSpaceIncompleteNTROPublications() {
-    console.log('Loading Incomplete NTRO Pubs');
     return dispatch => {
         dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
         return get(INCOMPLETE_NTRO_RECORDS_API())

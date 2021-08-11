@@ -4,7 +4,6 @@ import { GUIDES_API, EXAMS_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } 
 import { getCampusByCode, throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
-    console.log('will load loadGuides for ', keyword);
     return dispatch => {
         dispatch({ type: actions.GUIDES_LOADING });
         return get(GUIDES_API({ keyword }))
@@ -19,7 +18,6 @@ export function loadGuides(keyword) {
                 });
             })
             .catch(error => {
-                console.log('guides error: ', error);
                 dispatch({
                     type: actions.GUIDES_FAILED,
                     payload: error.message,
@@ -35,7 +33,6 @@ export function clearGuides() {
 }
 
 export function loadExams(keyword) {
-    console.log('will load Exams for ', keyword);
     return dispatch => {
         dispatch({ type: actions.EXAMS_LOADING });
         return get(EXAMS_API({ keyword }))
@@ -132,7 +129,6 @@ export function loadReadingLists(coursecode, campus, semester, account) {
         return false;
     }
 
-    console.log('will load loadReadingLists for ', READING_LIST_API({ coursecode, campus, semester }).apiUrl);
     return dispatch => {
         dispatch({ type: actions.READING_LIST_LOADING });
         return get(READING_LIST_API({ coursecode, campus, semester }))
@@ -148,12 +144,6 @@ export function loadReadingLists(coursecode, campus, semester, account) {
                 });
             })
             .catch(error => {
-                console.log(
-                    'error for READING_LIST_API ',
-                    READING_LIST_API({ coursecode, campus, semester }).apiUrl,
-                    ': ',
-                    error,
-                );
                 dispatch({
                     type: actions.READING_LIST_FAILED,
                     payload: error.message,
@@ -169,11 +159,8 @@ export function clearReadingLists() {
 }
 
 export function loadCourseReadingListsSuggestions(keyword) {
-    console.log('loadCourseReadingListsSuggestions for ', keyword);
     return dispatch => {
-        console.log('loadCourseReadingListsSuggestions will dispatch ');
         dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADING });
-        console.log(`will fetch '${SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl}'`);
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())
@@ -191,7 +178,6 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 });
             })
             .catch(error => {
-                console.log('loadCourseReadingListsSuggestions error ', error);
                 dispatch({
                     type: actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
                     payload: error.message,

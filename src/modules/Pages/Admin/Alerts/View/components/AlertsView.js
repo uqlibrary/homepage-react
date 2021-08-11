@@ -61,7 +61,6 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         if (!alertWebComponent) {
             return null;
         }
-        console.log('thisAlert = ', thisAlert);
 
         const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
 

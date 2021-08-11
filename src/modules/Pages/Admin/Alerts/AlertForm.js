@@ -89,7 +89,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
         try {
             const url = new URL(testurl);
-            console.log('new url = ', url);
             if (url.hostname.length < 'x.co'.length) {
                 return false;
             }
@@ -157,7 +156,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     useEffect(() => {
         if (!!alertError || alertStatus === 'error') {
-            console.log('There was an error while saving a new alert: ', alertError);
             showConfirmation();
         }
     }, [showConfirmation, alertError, alertStatus]);
@@ -255,7 +253,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 end: formatDate(dateset.endDate),
             };
             !!saveableValues.dateList && delete saveableValues.dateList;
-            console.log('will save: ', saveableValues);
             defaults.type === 'edit' ? actions.saveAlertChange(saveableValues) : actions.createAlert(saveableValues);
         });
 
@@ -362,8 +359,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         });
     };
 
-    const addDateRow = e => {
-        console.log('addDateRow a = ', e);
+    const addDateRow = () => {
         const tempValue = values;
         tempValue.dateList = [
             ...tempValue.dateList,
