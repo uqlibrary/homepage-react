@@ -19,6 +19,7 @@ import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
+import { makeStyles } from '@material-ui/styles';
 
 export const isValidInput = params => {
     /**
@@ -63,6 +64,12 @@ export const isValidInput = params => {
     return valid;
 };
 
+const useStyles = makeStyles(theme => ({
+    appbar: {
+        backgroundColor: theme.palette.primary.main, // theme.palette.accent.main,
+    },
+}));
+
 export const CourseResources = ({
     actions,
     examList,
@@ -84,6 +91,7 @@ export const CourseResources = ({
      * These sections are displayed as 2 tabs across the top
      */
 
+    const classes = useStyles();
     const { account } = useAccountContext();
     const location = useLocation();
 
@@ -318,6 +326,7 @@ export const CourseResources = ({
                                 id="course-resource-top-menu"
                                 position="static"
                                 component="div"
+                                className={classes.appbar}
                             >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
                                     <Tab value="top0" label={locale.myCourses.title} {...a11yProps('0')} />
