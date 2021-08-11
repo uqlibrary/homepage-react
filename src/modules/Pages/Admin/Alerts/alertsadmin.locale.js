@@ -5,9 +5,9 @@ import React, { Fragment } from 'react';
 
 export default {
     form: {
+        urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',
+        permanentTooltip: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
         add: {
-            urgentTooltip: 'Use for urgent/important alerts. Alert colour will change to orange.',
-            permanentTooltip: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
             addAlertConfirmation: {
                 confirmationTitle: 'An alert has been added',
                 confirmationMessage: '',
@@ -30,11 +30,19 @@ export default {
                 confirmButtonLabel: 'View alert list',
             },
         },
+        clone: {
+            cloneAlertConfirmation: {
+                confirmationTitle: 'The alert has been cloned',
+                confirmationMessage: '',
+                confirmButtonLabel: 'Clone again',
+                cancelButtonLabel: 'View alert list',
+            },
+        },
         help: {
-            title: 'Add/edit an alert',
+            title: 'Add/edit/clone an alert',
             text: (
                 <Fragment>
-                    <ul>
+                    <ul data-testid="admin-alerts-help-example">
                         <li>
                             Enter a short user focused alert. Use language that explains the issue the client may be
                             experiencing (“You may be unable to access the internet.”) and any solutions or alternative
@@ -47,13 +55,13 @@ export default {
                             to review your changes.
                         </li>
                         <li>
-                            Press <strong>Save</strong> to create or update the alert. The system will confirm the alert
+                            Press <strong>Create</strong> to create or clone an alert. The system will confirm the alert
                             has been created. When editing alerts, Save will only be enabled when you have made a change
                             to a field.
                         </li>
                     </ul>
                     <h3>Fields</h3>
-                    <dl data-testid="admin-alerts-help-example">
+                    <dl>
                         <dt>Title</dt>
                         <dd>
                             <p>Alert lead text. Appears in bold.</p>
@@ -74,6 +82,30 @@ export default {
                         <dd>
                             <p>Date and time when alert should be unpublished.</p>
                             <p>Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
+                        </dd>
+                        <dt>Add another alert with the same text but different start and end times (+ button)</dt>
+                        <dd>
+                            <p>
+                                Adds another set of Start date and End date fields to create another copy of this alert.
+                            </p>
+                            <p>Use to create multiple alerts with the same content and different dates at once.</p>
+                            <p>Start date: Defaults to current date and time. Cannot be in the past.</p>
+                            <p>End date: Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
+                            <p>
+                                Upon save, system creates alerts using all form content and the specified dates. After
+                                they are created, these alerts are separate and can be edited or deleted individually
+                                only.
+                            </p>
+                        </dd>
+                        <dt>Remove this date/time set from the alert series (- button)</dt>
+                        <dd>
+                            <p>
+                                Removes a Start date and End date set to cancel the creation of the alert copy. Only
+                                visible when you have pressed the <strong>Add another alert</strong> (+ button).
+                            </p>
+                            <p>Use to cancel the creation of one of the copies of this alert.</p>
+                            <p>Start date: Defaults to current date and time. Cannot be in the past.</p>
+                            <p>End date: Defaults to 11.59pm on date of alert creation. Must be after Start Date.</p>
                         </dd>
                         <dt>Add info link</dt>
                         <dd>
@@ -121,6 +153,32 @@ export default {
             ),
         },
     },
+    view: {
+        help: {
+            title: 'View a past alert',
+            text: (
+                <Fragment>
+                    <p data-testid="admin-alerts-view-help-example">
+                        The View alerts form is read only as past alerts cannot be edited. This is so they are preserved
+                        as a record of past important notices to clients.
+                    </p>
+                    <h3>Copy and reuse (clone) a past alert</h3>
+                    <p>
+                        Press <b>Clone</b> to create a copy of the alert. The Clone alert form will appear and be
+                        prefilled with the same alert information.
+                    </p>
+                    <ul>
+                        <li>The start date will be the current date and time now.</li>
+                        <li>The end date will be set to tonight at 11.59pm.</li>
+                    </ul>
+                    <h3>Return to alerts list</h3>
+                    <p>
+                        Press <b>Cancel</b> to return to the Alerts listing page.
+                    </p>
+                </Fragment>
+            ),
+        },
+    },
     listPage: {
         help: {
             title: 'Alerts listing',
@@ -152,6 +210,20 @@ export default {
                             (newest to oldest).
                         </li>
                     </ul>
+                    <h3>Alert action buttons</h3>
+                    <p>Each alert has two action buttons. There is a primary action and a More actions button (downward arrow). Use the actions to interact with alerts:</p>
+                    <ul>
+                        <li>Current alerts: Edit (primary), Clone and Delete</li>
+                        <li>Future alerts: Edit (primary), Clone and Delete</li>
+                        <li>Past alerts: View (primary), Clone and Delete.</li>
+                    </ul>
+                    <h3>Alert check boxes</h3>
+                    <p>Use the check boxes to select multiple alerts. You can only select alerts from one table at a time, e.g. Current alerts. The number of alerts selected and actions for multiple alerts will appear in the table title row and include:</p>
+                    <ul>
+                        <li>Deselect all (the X button)</li>
+                        <li>Delete selected (the bin button).</li>
+                    </ul>
+                        
                     <h2 id="adding-alert" data-testid="admin-alerts-help-example">
                         Add an alert
                     </h2>
@@ -176,6 +248,17 @@ export default {
                         Updated alerts will change on the website within two minutes. Hard refresh your browser to view
                         the alert.
                     </p>
+            
+                    <h2>Clone (copy) an alert</h2>
+                    <p>Press the <strong>More actions</strong> button beside an alert, then press <strong>Clone</strong>. The Clone alert form will appear with the alert information prefilled and the dates automatically updated.</p>
+                    <p>Cloned alerts are the same as creating a new alert. It will appear on the website within two minutes of their start time. Hard refresh your browser to view the alert.</p>
+                    <h2>View a past alert</h2>
+                    <p>Press <strong>View</strong> beside a past alert. The View alert form will appear in read only mode to ensure past alerts are retained as a record of past messages to clients.</p>
+                    <ul>
+                        <li>Press <strong>Clone</strong> to create a copy of this alert. The Clone alert form will appear with alert information prefilled and the dates automatically updated.</li>
+                        <li>Press <strong>Cancel</strong> to return to the alerts listing screen.</li>
+                    </ul>
+
                     <h2>Remove alerts</h2>
                     <p>
                         <strong>
@@ -188,21 +271,14 @@ export default {
                         <strong>To unpublish a current alert</strong>: edit the alert and change its Unpublish date/time
                         to now.
                     </p>
-                    <p>To delete alerts, on the Alerts listing screen:</p>
-                    <ol>
-                        <li>
-                            Check one or more alerts within one of the tables, e.g. Past alerts. A blue bar with a
-                            Delete button (bin) and a Deselect button (cross) will appear in the table title row.
-                        </li>
-                        <li>
-                            Press <strong>Delete</strong> (the bin icon) to proceed with deleting the alerts. You will
-                            be asked to confirm you wish to proceed. The system will confirm the alerts are permanently
-                            deleted.
-                        </li>
-                    </ol>
-                    <p>
-                        Alternatively, press <strong>Close</strong> (the cross icon) to deselect all selected alerts.
-                    </p>
+            
+                    <p>To delete alerts:</p>
+                    <ul>                        
+                        <li><strong>One only:</strong> press the <strong>More actions</strong> button beside an alert, then press <strong>Delete</strong></li>
+                        <li><strong>Multiple:</strong> use the checkboxes to select multiple alerts within one table. Your selection will appear in the table’s title row with a Delete button (bin) and a Deselect button (cross). Press <strong>Delete</strong> to proceed.</li>
+                    </ul>       
+                    <p>In both cases, you will be asked to confirm you wish to proceed. The system will confirm the alerts are permanently deleted.</p>
+
                     <h2>Language, tone and voice</h2>
                     <ul>
                         <li>

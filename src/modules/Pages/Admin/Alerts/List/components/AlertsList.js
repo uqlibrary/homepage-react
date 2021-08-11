@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';
-import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
+import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(
@@ -52,7 +52,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
     }, []);
 
     React.useEffect(() => {
-        console.log('about to load alerts into type arrays ', alerts);
         if (!!alerts && alerts.length > 0) {
             setPastAlerts([]);
             setFutureAlerts([]);
@@ -129,7 +128,12 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                         <p>Mobile? You might want to turn your phone sideways!</p>
                     </Grid>
                 </Grid>
-                <AlertHelpModal actions={actions} history={history} showAddButton helpEntry={locale.listPage.help} />
+                <AlertsUtilityArea
+                    actions={actions}
+                    helpContent={locale.listPage.help}
+                    history={history}
+                    showAddButton
+                />
                 <StandardCard title="All alerts" noPadding>
                     <Grid container>
                         <Grid
@@ -144,7 +148,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={currentAlerts}
                                     headertag="Current alerts"
                                     alertsLoading={alertsLoading}
-                                    alertsError={alertsError}
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
@@ -156,7 +159,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={futureAlerts}
                                     headertag="Scheduled alerts"
                                     alertsLoading={alertsLoading}
-                                    alertsError={alertsError}
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}
@@ -168,7 +170,6 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
                                     rows={pastAlerts}
                                     headertag="Past alerts"
                                     alertsLoading={alertsLoading}
-                                    alertsError={alertsError}
                                     history={history}
                                     actions={actions}
                                     deleteAlert={deleteAlert}

@@ -1,11 +1,19 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useParams } from 'react-router';
 
 import SimpleBackdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
 import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
 import Drawer from '@material-ui/core/Drawer';
+
+/**
+ * a block that shows:
+ * - page heading
+ * - utility buttons (help, add alert, clone alert)
+ * - the help drawer
+ */
 
 const useStyles = makeStyles(
     theme => ({
@@ -46,10 +54,19 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, showAddButton }) => {
+export const AlertsUtilityArea = ({
+    actions,
+    helpButtonLabel,
+    helpContent,
+    history,
+    showAddButton,
+    showCloneButton,
+}) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
+
+    const { alertid } = useParams();
 
     const openHelpLightbox = () => {
         setLightboxOpen(true);
@@ -60,16 +77,20 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
     };
 
     const navigateToAddPage = () => {
-        console.log('navigateToAddPage');
-        // console.log('navigateToAddPage actions.clearAnAlert() = ', actions.clearAnAlert());
         actions.clearAnAlert();
-        // () => dispatch(actions.clearAnAlert());
         history.push('/admin/alerts/add');
+    };
+
+    const navigateToCloneForm = () => {
+        history.push(`/admin/alerts/clone/${alertid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     return (
         <Fragment>
-            {!!helpEntry && (
+            {!!helpContent && (
                 <div className={classes.actionButtonPlacer}>
                     <Button
                         children={helpButtonLabel}
@@ -93,6 +114,18 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
                     />
                 </div>
             )}
+            {!!showCloneButton && (
+                <div className={classes.actionButtonPlacer}>
+                    <Button
+                        children="Clone alert"
+                        className={classes.addButton}
+                        color="primary"
+                        data-testid="admin-alerts-modal-clone-button"
+                        onClick={() => navigateToCloneForm()}
+                        variant="contained"
+                    />
+                </div>
+            )}
             <Drawer
                 anchor="right"
                 className={classes.drawer}
@@ -106,14 +139,14 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
             >
                 <Fade in={lightboxOpen}>
                     <div className={classes.paper}>
-                        <h2>{helpEntry?.title || 'TBA'}</h2>
-                        <div>{helpEntry?.text || ''}</div>
+                        <h2>{helpContent?.title || 'TBA'}</h2>
+                        <div>{helpContent?.text || ''}</div>
                         <div>
                             <Button
                                 variant="contained"
                                 color="primary"
                                 className={classes.button}
-                                children={helpEntry?.buttonLabel || 'Close'}
+                                children={helpContent?.buttonLabel || 'Close'}
                                 onClick={closeHelpLightbox}
                             />
                         </div>
@@ -124,15 +157,19 @@ export const AlertHelpModal = ({ actions, history, helpEntry, helpButtonLabel, s
     );
 };
 
-AlertHelpModal.propTypes = {
+AlertsUtilityArea.propTypes = {
     actions: PropTypes.any,
-    helpEntry: PropTypes.any,
+    // cloneAnAlert: PropTypes.any,
+    helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
+    showCloneButton: PropTypes.bool,
 };
 
-AlertHelpModal.defaultProps = {
-    showAddButton: false,
+AlertsUtilityArea.defaultProps = {
+    // cloneAnAlert: null,
     helpButtonLabel: 'Help',
+    showAddButton: false,
+    showCloneButton: false,
 };

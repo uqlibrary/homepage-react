@@ -132,7 +132,7 @@ mock.onAny(routes.ALERT_CREATE_API().apiUrl).reply(
             id: '99999-d897-11eb-a27e-df4e46db7245',
             start: '2020-06-07 02:00:03',
             end: '2020-06-07 03:00:03',
-            title: 'Updated alert',
+            title: 'Updated alert 1',
             body:
                 'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
             urgent: 0,
@@ -147,7 +147,7 @@ mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' })
             id: '1db618c0-d897-11eb-a27e-df4e46db7245',
             start: '2020-06-07 02:00:03',
             end: '2020-06-07 03:00:03',
-            title: 'Updated alert',
+            title: 'Updated alert 2',
             body:
                 'There may be short periods of disruption during this scheduled maintenance. We apologise for any inconvenience.',
             urgent: 0,
@@ -192,8 +192,8 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
         200,
         {
             id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2020-06-07 02:00:03',
-            end: '2020-06-07 03:00:03',
+            start: '2021-06-29 15:00:34',
+            end: '2031-07-02 18:30:34',
             title: 'Example alert:',
             body:
                 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',

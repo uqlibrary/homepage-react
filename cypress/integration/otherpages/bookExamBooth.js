@@ -1,4 +1,4 @@
-import locale from '../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
+import locale from '../../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
 import moment from 'moment';
 
 context('ACCESSIBILITY', () => {
@@ -107,7 +107,7 @@ context('Book Exam Booth page', () => {
             // The field defaults to the previous day, which can be in the previous month.
             cy.get('@next-month-button').click();
         }
-        cy.get('[role="dialog"]')
+        cy.get('[role="dialog"] .MuiPickersBasePicker-pickerView button')
             .contains('10')
             .click();
         cy.get('[role="dialog"] button')

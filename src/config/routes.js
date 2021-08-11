@@ -12,6 +12,8 @@ export const pathConfig = {
     admin: {
         alertsadd: '/admin/alerts/add',
         alertsedit: alertid => `/admin/alerts/edit/${alertid}`,
+        alertsclone: alertid => `/admin/alerts/clone/${alertid}`,
+        alertsview: alertid => `/admin/alerts/view/${alertid}`,
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
     },
@@ -26,6 +28,8 @@ export const flattedPathConfig = [
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts/edit',
+    '/admin/alerts/clone',
+    '/admin/alerts/view',
     '/admin/alerts',
     '/admin/masquerade',
     '/book-exam-booth',
@@ -82,7 +86,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.alertsadd,
             component: components.AlertsAdd,
             exact: true,
-            pageTitle: locale.pages.admin.alerts.title,
+            pageTitle: locale.pages.admin.alerts.form.add.title,
         },
     ];
 
@@ -93,7 +97,27 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.alertsedit(alertid),
             component: components.AlertsEdit,
             // exact: true,
-            pageTitle: locale.pages.admin.alerts.title,
+            pageTitle: locale.pages.admin.alerts.form.edit.title,
+            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
+        },
+    ];
+
+    const alertCloneForm = [
+        {
+            path: pathConfig.admin.alertsclone(alertid),
+            component: components.AlertsClone,
+            // exact: true,
+            pageTitle: locale.pages.admin.alerts.form.clone.title,
+            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
+        },
+    ];
+
+    const alertView = [
+        {
+            path: pathConfig.admin.alertsview(alertid),
+            component: components.AlertsView,
+            // exact: true,
+            pageTitle: locale.pages.admin.alerts.form.view.title,
             regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
     ];
@@ -108,12 +132,15 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
     return [
         ...publicPages,
         ...(account && seeCourseResources(account) ? courseResoures : []),
-        ...(account && seeAlertsAdmin(account) ? alertAddDisplay : []),
-        ...(account && seeAlertsAdmin(account) ? alertEditForm : []),
-        ...(account && seeAlertsAdmin(account) ? alertsListDisplay : []),
+        ...(canSeeAlertsAdmin ? alertAddDisplay : []),
+        ...(canSeeAlertsAdmin ? alertEditForm : []),
+        ...(canSeeAlertsAdmin ? alertCloneForm : []),
+        ...(canSeeAlertsAdmin ? alertView : []),
+        ...(canSeeAlertsAdmin ? alertsListDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         {
             component: components.NotFound,

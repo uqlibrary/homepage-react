@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
-const moment = require('moment');
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
-import { AlertHelpModal } from 'modules/Pages/Admin/Alerts/AlertHelpModal';
+import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
 import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
+import { getTimeNowFormatted, getTimeEndOfDayFormatted } from '../../alerthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -18,17 +18,19 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) => {
+export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
     const classes = useStyles();
-    const defaultStartTime = moment().format('YYYY-MM-DDTHH:mm');
-    const defaultEndTime = moment()
-        .endOf('day')
-        .format('YYYY-MM-DDTHH:mm');
 
     const defaults = {
         id: '',
-        startDate: defaultStartTime,
-        endDate: defaultEndTime,
+        dateList: [
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ],
+        startDateDefault: getTimeNowFormatted(),
+        endDateDefault: getTimeEndOfDayFormatted(),
         alertTitle: '',
         enteredbody: '',
         linkRequired: false,
@@ -37,7 +39,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
         linkTitle: '',
         linkUrl: '',
         type: 'add',
-        minimumDate: defaultStartTime,
+        minimumDate: getTimeNowFormatted(),
     };
     return (
         <Fragment>
@@ -46,12 +48,13 @@ export const AlertsAdd = ({ actions, alert, alertError, alertStatus, history }) 
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertHelpModal actions={actions} history={history} helpEntry={locale.form.help} />
-                    <StandardCard title="Create alert" noPadding>
+                    <AlertsUtilityArea actions={actions} history={history} helpContent={locale.form.help} />
+                    <StandardCard title="Create alert">
                         <AlertForm
                             actions={actions}
                             alertResponse={alert}
                             alertError={alertError}
+                            alertLoading={alertLoading}
                             alertStatus={alertStatus}
                             history={history}
                             defaults={defaults}
@@ -67,6 +70,7 @@ AlertsAdd.propTypes = {
     actions: PropTypes.any,
     alert: PropTypes.any,
     alertError: PropTypes.any,
+    alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     history: PropTypes.object,
 };

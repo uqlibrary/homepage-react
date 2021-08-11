@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import AlertsEdit from '../components/AlertsEdit';
+import AlertsClone from '../components/AlertsClone';
 
 const mapStateToProps = state => {
     return {
@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let AlertsEditContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsEdit);
-AlertsEditContainer = withRouter(AlertsEditContainer);
+let AlertsCloneContainer = connect(mapStateToProps, mapDispatchToProps)(AlertsClone);
+AlertsCloneContainer = withRouter(AlertsCloneContainer);
 
-export default AlertsEditContainer;
+export default AlertsCloneContainer;
