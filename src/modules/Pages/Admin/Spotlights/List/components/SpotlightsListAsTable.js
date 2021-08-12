@@ -45,11 +45,16 @@ const useStyles2 = makeStyles(
                 backgroundColor: theme.palette.accent.dark,
             },
         },
+        tableCell: {
+            padding: 0,
+        },
         startDate: {
             whiteSpace: 'pre', // makes moment format able to take a carriage return
+            padding: 0,
         },
         endDate: {
             whiteSpace: 'pre',
+            padding: 0,
         },
         headerRow: {
             display: 'flex',
@@ -79,8 +84,9 @@ const useStyles2 = makeStyles(
         toggle: {
             whiteSpace: 'nowrap',
         },
-        scheduledIdndicatorCell: {
+        publishedCell: {
             padding: 0,
+            textAlign: 'center',
         },
     }),
     { withTheme: true },
@@ -469,7 +475,7 @@ export const SpotlightsListAsTable = ({
                                                 value={`${checkBoxIdPrefix}${spotlight.id}`}
                                             />
                                         </TableCell>
-                                        <TableCell component="td" className="spotlightImage">
+                                        <TableCell component="td" className={classes.tableCell}>
                                             <img
                                                 alt={spotlight.img_alt}
                                                 src={spotlight.img_url}
@@ -477,11 +483,11 @@ export const SpotlightsListAsTable = ({
                                             />
                                         </TableCell>
                                         {allowFilter && (
-                                            <TableCell component="td" className={classes.scheduledIdndicatorCell}>
+                                            <TableCell component="td" className={classes.tableCell}>
                                                 {moment(spotlight.start).isAfter(moment()) && <ScheduleIcon />}
                                             </TableCell>
                                         )}
-                                        <TableCell component="td" className="spotlightText">
+                                        <TableCell component="td">
                                             <h4
                                                 style={{ display: 'inline' }}
                                                 id={`spotlight-list-item-title-${spotlight.id}`}
@@ -493,15 +499,14 @@ export const SpotlightsListAsTable = ({
                                         <TableCell component="td" align="center" className={classes.endDate}>
                                             <span title={spotlight.endDateLong}>{spotlight.endDateDisplay}</span>
                                         </TableCell>
-                                        <TableCell component="td">
-                                            <span title={spotlight.endDateLong}>
-                                                {!!spotlight.active ? 'yes' : 'no'}
-                                            </span>
+                                        <TableCell component="td" className={classes.publishedCell}>
+                                            <span>{!!spotlight.active ? 'yes' : 'no'}</span>
                                         </TableCell>
                                         <TableCell
                                             component="td"
                                             id={`spotlight-list-action-block-${spotlight.id}`}
                                             data-testid={`spotlight-list-action-block-${spotlight.id}`}
+                                            className={classes.tableCell}
                                         >
                                             <SplitButton
                                                 spotlightId={spotlight.id}
