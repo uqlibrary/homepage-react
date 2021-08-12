@@ -17,6 +17,7 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+import ScheduleIcon from '@material-ui/icons/Schedule';
 
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -73,9 +74,13 @@ const useStyles2 = makeStyles(
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#595959',
             },
+            padding: 0,
         },
         toggle: {
             whiteSpace: 'nowrap',
+        },
+        scheduledIdndicatorCell: {
+            padding: 0,
         },
     }),
     { withTheme: true },
@@ -134,7 +139,10 @@ export const SpotlightsListAsTable = ({
         setPage(0);
     };
 
-    const tableType = headertag.replace(' spotlights', '').toLowerCase();
+    const tableType = headertag
+        .replace(' spotlights', '')
+        .replaceAll(' ', '-')
+        .toLowerCase();
 
     const headerCountIndicator = '';
     // const headerCountIndicator = ' - [N] spotlight[s] total'
@@ -425,6 +433,7 @@ export const SpotlightsListAsTable = ({
                                 Spotlight
                             </TableCell>
                             <TableCell component="th" scope="row" />
+                            {allowFilter && <TableCell component="th" scope="row" />}
                             <TableCell component="th" scope="row" align="center">
                                 Publish date
                             </TableCell>
@@ -448,11 +457,6 @@ export const SpotlightsListAsTable = ({
                                         id={`spotlight-list-row-${spotlight.id}`}
                                         data-testid={`spotlight-list-row-${spotlight.id}`}
                                         className="spotlight-data-row"
-                                        style={{
-                                            backgroundColor: moment(spotlight.start).isAfter(moment())
-                                                ? 'lightgrey'
-                                                : null,
-                                        }}
                                     >
                                         <TableCell component="td" className={classes.checkboxCell}>
                                             <Checkbox
@@ -472,6 +476,11 @@ export const SpotlightsListAsTable = ({
                                                 style={{ width: 220 }}
                                             />
                                         </TableCell>
+                                        {allowFilter && (
+                                            <TableCell component="td" className={classes.scheduledIdndicatorCell}>
+                                                {moment(spotlight.start).isAfter(moment()) && <ScheduleIcon />}
+                                            </TableCell>
+                                        )}
                                         <TableCell component="td" className="spotlightText">
                                             <h4
                                                 style={{ display: 'inline' }}

@@ -142,7 +142,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                             <div data-testid="admin-spotlights-list-current-list">
                                 <SpotlightsListAsTable
                                     rows={currentSpotlights}
-                                    headertag="Current & scheduled spotlights"
+                                    headertag="Current and scheduled spotlights"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
