@@ -4,8 +4,6 @@ import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
 import * as mockData from './data';
-import { spotlights } from './data/spotlights';
-import { spotlightsLong } from './data/spotlightsLong';
 import fetchMock from 'fetch-mock';
 
 import exams_FREN1010 from './data/records/examListFREN1010';
@@ -26,14 +24,14 @@ import {
     computerAvailability,
     incompleteNTROs,
     libHours,
-    libHoursNew,
     loans,
     possibleRecords,
     printBalance,
     training_object,
 } from './data/account';
 import { alertList } from './data/alerts';
-import { spotlightsList } from './data/spotlights';
+import { spotlights } from './data/spotlights';
+// import { spotlightsLong } from './data/spotlightsLong';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });

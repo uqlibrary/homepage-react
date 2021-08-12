@@ -221,9 +221,8 @@ export const CourseResources = ({
     const updateListOfReadingLists = React.useCallback(() => {
         if (!!readingList && !!readingList.coursecode && currentReadingLists[readingList.coursecode] === undefined) {
             const newReadingList = {};
-            // newReadingList[readingList.coursecode] = filterReadingLists(readingList);
             newReadingList[readingList.coursecode] = readingList;
-            updateReadingLists(currentReadingLists => Object.assign({}, ...currentReadingLists, ...newReadingList));
+            updateReadingLists(currentReadings => Object.assign({}, ...currentReadings, ...newReadingList));
         }
     }, [readingList, currentReadingLists]);
 
@@ -245,7 +244,7 @@ export const CourseResources = ({
             if (subjectNumber !== false && currentGuidesList[subjectNumber] === undefined) {
                 const newGuidesList = {};
                 newGuidesList[subjectNumber] = guideList;
-                updateGuidesList(currentGuidesList => Object.assign({}, ...currentGuidesList, ...newGuidesList));
+                updateGuidesList(currentGuides => Object.assign({}, ...currentGuides, ...newGuidesList));
             }
         }
     }, [guideList, currentGuidesList]);
@@ -261,7 +260,7 @@ export const CourseResources = ({
             if (subjectNumber !== false && currentExamsList[subjectNumber] === undefined) {
                 const newExamsList = {};
                 newExamsList[subjectNumber] = examList;
-                updateExamsList(currentExamsList => Object.assign({}, ...currentExamsList, ...newExamsList));
+                updateExamsList(currentExams => Object.assign({}, ...currentExams, ...newExamsList));
             }
         }
     }, [examList, currentExamsList]);
