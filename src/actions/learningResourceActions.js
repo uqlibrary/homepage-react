@@ -116,9 +116,9 @@ export function loadReadingLists(coursecode, campus, semester, account) {
         } else {
             // this is the users classes
             const semesterString = subjectEnrolment.semester;
-            const campus = getCampusByCode(subjectEnrolment.CAMPUS);
+            const thisCampus = getCampusByCode(subjectEnrolment.CAMPUS);
             return readingLists.filter(item => {
-                return item.period === semesterString && item.campus.indexOf(campus) !== -1;
+                return item.period === semesterString && item.campus.indexOf(thisCampus) !== -1;
             });
         }
     };

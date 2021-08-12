@@ -80,8 +80,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
             (!!readingList &&
                 !!readingList.list &&
                 !!readingList.list[coursecode] &&
-                !!readingList.list[coursecode].title &&
-                ` - ${readingList.list[coursecode].title}`) ||
+                !!readingList.list[coursecode].course_title &&
+                ` - ${readingList.list[coursecode].course_title}`) ||
             null;
 
         if (title !== null) {
