@@ -74,6 +74,9 @@ const useStyles2 = makeStyles(
                 fill: '#595959',
             },
         },
+        toggle: {
+            whiteSpace: 'nowrap',
+        },
     }),
     { withTheme: true },
 );
@@ -150,6 +153,8 @@ export const SpotlightsListAsTable = ({
         userows = userows.filter(row => !!row.active);
         console.log('userows after: ', userows);
     }
+
+    userows = userows.sort((a, b) => a.weight > b.weight);
 
     if (!!spotlightOrder && !!rows && rows.length > 0) {
         if (spotlightOrder === 'reverseEnd') {
@@ -339,7 +344,7 @@ export const SpotlightsListAsTable = ({
                     </Grid>
                     {allowFilter && (
                         <Grid item xs={12} md={3}>
-                            <p>
+                            <p className={classes.toggle}>
                                 <strong>Scheduled</strong>: Show{' '}
                                 <FormControlLabel
                                     control={
@@ -357,7 +362,7 @@ export const SpotlightsListAsTable = ({
                     )}
                     {allowFilter && (
                         <Grid item xs={12} md={3}>
-                            <p>
+                            <p className={classes.toggle}>
                                 <span>
                                     <strong>Unpublished</strong>: Show{' '}
                                 </span>
