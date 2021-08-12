@@ -248,6 +248,9 @@ fetchMock.mock(
     learningResourceSearchSuggestions,
 );
 
+// spotlights
+mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(withDelay([200, spotlights]));
+
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, exams_FREN1010];
