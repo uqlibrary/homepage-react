@@ -105,7 +105,7 @@ export const SpotlightsListAsTable = ({
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
-    const [showFuture, setShowFuture] = useState(false); // maybe set cookie?
+    const [showFuture, setShowFuture] = useState(true); // maybe set cookie?
     const [showUnPublished, setShowUnPublished] = useState(true); // maybe set cookie?
     const [cookies, setCookie] = useCookies();
 
@@ -344,7 +344,7 @@ export const SpotlightsListAsTable = ({
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                     container
                 >
-                    <Grid item xs={12} md={allowFilter ? 8 : 12}>
+                    <Grid item xs={12} md={allowFilter ? 7 : 12}>
                         <h3 style={{ marginBottom: 6 }}>
                             {headertag}
                             <span
@@ -360,7 +360,7 @@ export const SpotlightsListAsTable = ({
                             <p className={classes.toggle}>
                                 <InputLabel
                                     style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                    title="Check to add button to alert linking to more information. Displays extra form fields."
+                                    title="Check and uncheck to show and hide scheduled spotlights in the list"
                                 >
                                     <Checkbox
                                         checked={showFuture}
@@ -374,11 +374,11 @@ export const SpotlightsListAsTable = ({
                         </Grid>
                     )}
                     {allowFilter && (
-                        <Grid item xs={12} md={2}>
+                        <Grid item xs={12} md={3}>
                             <p className={classes.toggle}>
                                 <InputLabel
                                     style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                    title="Check to add button to alert linking to more information. Displays extra form fields."
+                                    title="Check and uncheck to show and hide unpublished spotlights in the list"
                                 >
                                     <Checkbox
                                         checked={showUnPublished}
@@ -386,7 +386,7 @@ export const SpotlightsListAsTable = ({
                                         name="showUnPublished"
                                         inputProps={{ 'aria-label': 'primary checkbox' }}
                                     />
-                                    Hide Unpublished
+                                    Hide unpublished
                                 </InputLabel>
                             </p>
                         </Grid>

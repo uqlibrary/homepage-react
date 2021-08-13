@@ -43,7 +43,9 @@ describe('Spotlights Admin Pages', () => {
             // cy.get('[data-testid="headerRow-count-current"]').contains('1 spotlight');
 
             // only the scheduled spotlight has a 'scheduled' icon
-            cy.get('svg[data-testid="spotlight-scheduled-icon-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]').should('exist');
+            // not currently visible - move to test to after toggle is turned on
+            // cy.get('svg[data-testid="spotlight-scheduled-icon-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]')
+            // .should('exist');
             // current alert exists, but it does not have a 'scheduled' icon
             cy.get('tr[data-testid="spotlight-list-row-b286d890-76f9-11eb-9471-41351ee40e02"]').should('exist');
             cy.get('svg[data-testid="spotlight-scheduled-icon-b286d890-76f9-11eb-9471-41351ee40e02"]').should(
@@ -57,9 +59,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tbody ')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
-            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('not.exist');
-            // cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('exist');
-            // cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains('1-5 of 78');
+            // cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('not.exist');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('exist');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains('1-5 of 330');
         });
         it('is accessible', () => {
             cy.injectAxe();
