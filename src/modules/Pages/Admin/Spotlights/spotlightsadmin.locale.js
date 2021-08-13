@@ -4,6 +4,43 @@
 import React, { Fragment } from 'react';
 
 export default {
+    form: {
+        add: {
+            addSpotlightConfirmation: {
+                confirmationTitle: 'A spotlight has been added',
+                confirmationMessage: '',
+                cancelButtonLabel: 'View spotlight list',
+                confirmButtonLabel: 'Add another spotlight',
+            },
+            addSpotlightError: {
+                confirmationTitle: 'An error occurred while saving',
+                confirmButtonLabel: 'OK',
+            },
+            editSpotlightError: {
+                confirmationTitle: 'We could not load this spotlight',
+                confirmButtonLabel: 'OK',
+            },
+        },
+        edit: {
+            editSpotlightConfirmation: {
+                confirmationTitle: 'The spotlight has been updated',
+                confirmationMessage: '',
+                confirmButtonLabel: 'View spotlight list',
+            },
+        },
+        clone: {
+            cloneSpotlightConfirmation: {
+                confirmationTitle: 'The spotlight has been cloned',
+                confirmationMessage: '',
+                confirmButtonLabel: 'Clone again',
+                cancelButtonLabel: 'View spotlight list',
+            },
+        },
+        help: {
+            title: 'Add/Edit/Clone help',
+            text: <p>Form help goes here</p>,
+        },
+    },
     listPage: {
         confirmDelete: {
             confirmationTitle: 'Remove [N] spotlights?',
@@ -21,6 +58,10 @@ export default {
             confirmationTitle: 'Record Deletion was not successful',
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
+        },
+        help: {
+            title: 'Spotlights listing',
+            text: <p>List page help goes here</p>,
         },
     },
 };

@@ -50,6 +50,12 @@ export default {
             },
             spotlights: {
                 title: 'Spotlights',
+                form: {
+                    add: { title: 'Add a new Spotlight' },
+                    edit: { title: 'Edit a Spotlight' },
+                    clone: { title: 'Clone a Spotlight - make a new spotlight based on an existing one' },
+                    view: { title: 'View a Spotlight' },
+                },
             },
         },
         courseresources: {

@@ -10,8 +10,8 @@ import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import SpotlightsListAsTable from './SpotlightsListAsTable';
-// import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-// import { default as locale } from '../../spotlightsadmin.locale';
+import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
+import { default as locale } from '../../spotlightsadmin.locale';
 
 const useStyles = makeStyles(
     theme => ({
@@ -124,12 +124,12 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                         <p>Mobile? You might want to turn your phone sideways!</p>
                     </Grid>
                 </Grid>
-                {/* <SpotlightsUtilityArea*/}
-                {/*    actions={actions}*/}
-                {/*    helpContent={locale.listPage.help}*/}
-                {/*    history={history}*/}
-                {/*    showAddButton*/}
-                {/* />*/}
+                <SpotlightsUtilityArea
+                    actions={actions}
+                    helpContent={locale.listPage.help}
+                    history={history}
+                    showAddButton
+                />
                 <StandardCard title="All spotlights" noPadding>
                     <Grid container>
                         <Grid

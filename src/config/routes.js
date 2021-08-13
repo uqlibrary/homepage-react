@@ -16,6 +16,7 @@ export const pathConfig = {
         alertsview: alertid => `/admin/alerts/view/${alertid}`,
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
+        spotlightsadd: '/admin/spotlights/add',
         spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
@@ -33,6 +34,7 @@ export const flattedPathConfig = [
     '/admin/alerts/view',
     '/admin/alerts',
     '/admin/masquerade',
+    '/admin/spotlights/add',
     '/admin/spotlights',
     '/book-exam-booth',
     'https://www.library.uq.edu.au/404.js',
@@ -143,7 +145,18 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spotlightAddDisplay = [
+        {
+            path: pathConfig.admin.spotlightsadd,
+            component: components.SpotlightsAdd,
+            exact: true,
+            pageTitle: locale.pages.admin.spotlights.form.add.title,
+        },
+    ];
+
     const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
+    const canSeeSpotlightsAdmin = account && seeSpotlightsAdmin(account);
+    console.log('canSeeSpotlightsAdmin = ', canSeeSpotlightsAdmin);
     return [
         ...publicPages,
         ...(account && seeCourseResources(account) ? courseResoures : []),
@@ -153,7 +166,8 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(canSeeAlertsAdmin ? alertView : []),
         ...(canSeeAlertsAdmin ? alertsListDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(account && seeSpotlightsAdmin(account) ? spotlightsListDisplay : []),
+        ...(canSeeSpotlightsAdmin ? spotlightsListDisplay : []),
+        ...(canSeeSpotlightsAdmin ? spotlightAddDisplay : []),
         {
             component: components.NotFound,
         },

@@ -124,7 +124,10 @@ export const isHospitalUser = account =>
 export const seeFeedback = account => everyoneCanSee(account);
 
 const hasWebContentAdminAccess = account => {
-    return !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));
+    const newVar =
+        !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));
+    console.log('hasWebContentAdminAccess = ', !!newVar);
+    return newVar;
 };
 
 export const seeSpotlightsAdmin = account => {
