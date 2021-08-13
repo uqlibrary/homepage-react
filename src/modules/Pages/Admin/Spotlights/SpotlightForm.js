@@ -130,7 +130,7 @@ export const SpotlightForm = ({
 
         actions.clearSpotlights(); // force the list page to reload after save
 
-        actions.clearAnSpotlight(); // make the form clear for the next use
+        actions.clearASpotlight(); // make the form clear for the next use
 
         history.push('/admin/spotlights');
 

@@ -26,7 +26,7 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../spotlightsadmin.locale';
-import SplitButton from './SplitButton';
+import SpotlightSplitButton from './SpotlightSplitButton';
 
 const moment = require('moment');
 
@@ -484,7 +484,11 @@ export const SpotlightsListAsTable = ({
                                         </TableCell>
                                         {allowFilter && (
                                             <TableCell component="td" className={classes.tableCell}>
-                                                {moment(spotlight.start).isAfter(moment()) && <ScheduleIcon />}
+                                                {moment(spotlight.start).isAfter(moment()) && (
+                                                    <ScheduleIcon
+                                                        data-testid={`spotlight-scheduled-icon-${spotlight.id}`}
+                                                    />
+                                                )}
                                             </TableCell>
                                         )}
                                         <TableCell component="td">
@@ -508,7 +512,7 @@ export const SpotlightsListAsTable = ({
                                             data-testid={`spotlight-list-action-block-${spotlight.id}`}
                                             className={classes.tableCell}
                                         >
-                                            <SplitButton
+                                            <SpotlightSplitButton
                                                 spotlightId={spotlight.id}
                                                 deleteSpotlightById={deleteSpotlightById}
                                                 mainButtonLabel={tableType === 'past' ? 'View' : 'Edit'}

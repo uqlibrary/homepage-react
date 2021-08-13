@@ -38,9 +38,9 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const SplitButton = ({
-    alertId,
-    deleteAlertById,
+export const SpotlightSplitButton = ({
+    spotlightId,
+    deleteSpotlightById,
     mainButtonLabel,
     navigateToCloneForm,
     navigateToEditForm,
@@ -69,8 +69,8 @@ export const SplitButton = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="alert-delete-confirm"
-                onAction={() => deleteAlertById(alertId)}
+                confirmationBoxId="spotlight-delete-confirm"
+                onAction={() => deleteSpotlightById(spotlightId)}
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
@@ -82,10 +82,12 @@ export const SplitButton = ({
                         <Button
                             children={mainButtonLabel}
                             color="primary"
-                            data-testid={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
-                            id={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
+                            data-testid={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
+                            id={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
                             onClick={() =>
-                                mainButtonLabel === 'Edit' ? navigateToEditForm(alertId) : navigateToView(alertId)
+                                mainButtonLabel === 'Edit'
+                                    ? navigateToEditForm(spotlightId)
+                                    : navigateToView(spotlightId)
                             }
                             className={classes.editButton}
                             variant="contained"
@@ -98,7 +100,7 @@ export const SplitButton = ({
                             aria-expanded={open ? 'true' : undefined}
                             aria-label="More actions"
                             aria-haspopup="menu"
-                            data-testid={`alert-list-arrowicon-${alertId}`}
+                            data-testid={`spotlight-list-arrowicon-${spotlightId}`}
                             onClick={handleToggle}
                             title="More actions"
                         >
@@ -118,15 +120,15 @@ export const SplitButton = ({
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
                                             <MenuItem
-                                                data-testid={`${alertId}-clone-button`}
-                                                key={`${alertId}-clone-button`}
-                                                onClick={() => navigateToCloneForm(alertId)}
+                                                data-testid={`${spotlightId}-clone-button`}
+                                                key={`${spotlightId}-clone-button`}
+                                                onClick={() => navigateToCloneForm(spotlightId)}
                                             >
                                                 Clone
                                             </MenuItem>
                                             <MenuItem
-                                                data-testid={`${alertId}-delete-button`}
-                                                key={`${alertId}-delete-button`}
+                                                data-testid={`${spotlightId}-delete-button`}
+                                                key={`${spotlightId}-delete-button`}
                                                 onClick={showDeleteConfirmation}
                                             >
                                                 Delete
@@ -143,10 +145,10 @@ export const SplitButton = ({
     );
 };
 
-SplitButton.propTypes = {
-    alertId: PropTypes.string,
+SpotlightSplitButton.propTypes = {
+    spotlightId: PropTypes.string,
     mainButtonLabel: PropTypes.string,
-    deleteAlertById: PropTypes.func,
+    deleteSpotlightById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     navigateToEditForm: PropTypes.func,
     navigateToView: PropTypes.func,
@@ -154,8 +156,8 @@ SplitButton.propTypes = {
     confirmDeleteLocale: PropTypes.func,
 };
 
-SplitButton.defaultProps = {
+SpotlightSplitButton.defaultProps = {
     mainButtonLabel: 'Edit',
 };
 
-export default SplitButton;
+export default SpotlightSplitButton;
