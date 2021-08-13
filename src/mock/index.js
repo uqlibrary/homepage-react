@@ -30,8 +30,8 @@ import {
     training_object,
 } from './data/account';
 import { alertList } from './data/alerts';
-// import { spotlights } from './data/spotlights';
-import { spotlightsLong as spotlights } from './data/spotlightsLong';
+import { spotlights as spotlightsHomepage } from './data/spotlights';
+import { spotlightsLong } from './data/spotlightsLong';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -107,7 +107,7 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlights]]));
+mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
 
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
@@ -247,7 +247,7 @@ fetchMock.mock(
 );
 
 // spotlights
-mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(withDelay([200, spotlights]));
+mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(withDelay([200, spotlightsLong]));
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
