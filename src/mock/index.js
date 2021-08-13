@@ -30,8 +30,8 @@ import {
     training_object,
 } from './data/account';
 import { alertList } from './data/alerts';
-import { spotlights } from './data/spotlights';
-// import { spotlightsLong } from './data/spotlightsLong';
+// import { spotlights } from './data/spotlights';
+import { spotlightsLong as spotlights } from './data/spotlightsLong';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
