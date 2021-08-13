@@ -17,7 +17,6 @@ import {
 import { seeCourseResources, seeLibraryServices } from 'helpers/access';
 import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
-// import { makeStyles } from '@material-ui/styles';
 import Hours from './subComponents/Hours';
 import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
@@ -40,59 +39,6 @@ const MyLoader = props => (
         <rect x="0" y="0" rx="5" ry="5" width="100%" height="100%" />
     </ContentLoader>
 );
-
-// const useStyles = makeStyles(theme => ({
-//     // ppButton: {
-//     //     width: 24,
-//     //     minWidth: 24,
-//     //     height: 24,
-//     //     padding: 8,
-//     //     margin: 2,
-//     //     backgroundColor: theme.palette.accent.main,
-//     //     '&:hover': {
-//     //         backgroundColor: theme.palette.accent.dark,
-//     //     },
-//     //     '& svg': {
-//     //         width: 18,
-//     //         height: 18,
-//     //         padding: 4,
-//     //         color: theme.palette.white.main,
-//     //     },
-//     // },
-//     // ppBadgeError: {
-//     //     zIndex: 999,
-//     //     width: 12,
-//     //     minWidth: 12,
-//     //     height: 12,
-//     //     fontSize: 8,
-//     //     backgroundColor: 'red',
-//     //     left: -8,
-//     //     top: 8,
-//     //     padding: 1,
-//     // },
-//     // ppBadgeWarning: {
-//     //     zIndex: 999,
-//     //     width: 12,
-//     //     minWidth: 12,
-//     //     height: 12,
-//     //     fontSize: 8,
-//     //     backgroundColor: 'orange',
-//     //     left: -8,
-//     //     top: 8,
-//     //     padding: 1,
-//     // },
-//     // ppBadgeInfo: {
-//     //     zIndex: 999,
-//     //     width: 12,
-//     //     minWidth: 12,
-//     //     height: 12,
-//     //     fontSize: 8,
-//     //     backgroundColor: '#656565',
-//     //     left: -8,
-//     //     top: 8,
-//     //     padding: 1,
-//     // },
-// }));
 
 export const Index = ({
     account,
@@ -118,7 +64,6 @@ export const Index = ({
     incompleteNTRO,
     incompleteNTROLoading,
 }) => {
-    // const classes = useStyles();
     const dispatch = useDispatch();
     // Load homepage data requirements
     useEffect(() => {
@@ -229,7 +174,6 @@ export const Index = ({
                         computerAvailability={computerAvailability}
                         computerAvailabilityLoading={computerAvailabilityLoading}
                         computerAvailabilityError={computerAvailabilityError}
-                        // height={classes.computersAvailHeight}
                     />
                 </Grid>
                 {accountLoading === false && !!account && (

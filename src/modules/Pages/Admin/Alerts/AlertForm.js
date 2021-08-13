@@ -39,11 +39,6 @@ const useStyles = makeStyles(
             },
         },
         saveButton: {
-            // backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            // '&:hover': {
-            //     backgroundColor: theme.palette.accent.dark,
-            // },
             '&:disabled': {
                 color: 'rgba(0, 0, 0, 0.26)',
                 boxShadow: 'none',
@@ -298,8 +293,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         } else {
             alertWebComponent.setAttribute('alertmessage', body);
         }
-        // so the user doesnt lose their work by clicking on the preview button,
-        // change the href to an alert of what the click would be
         if (!!values.linkRequired) {
             makePreviewActionButtonJustNotifyUser(values);
         }
@@ -508,7 +501,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         return (
                             <Grid key={`dateset-${index}`} container spacing={2} style={{ marginTop: 12 }}>
                                 <Grid item md={5} xs={12}>
-                                    {/* https://material-ui.com/components/pickers/ */}
                                     <TextField
                                         id={`startDate-${index}`}
                                         data-testid={`admin-alerts-form-start-date-${index}`}

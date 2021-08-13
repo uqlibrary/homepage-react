@@ -162,8 +162,8 @@ exports[`Index page should render placeholders 1`] = `
             },
             "palette": Object {
               "accent": Object {
-                "dark": "#195794",
-                "light": "#3881cb",
+                "dark": "#3b1a59",
+                "light": "#962A8B",
                 "main": "#51247A",
               },
               "action": Object {
@@ -221,7 +221,7 @@ exports[`Index page should render placeholders 1`] = `
               },
               "primary": Object {
                 "contrastText": "#fff",
-                "dark": "#3b1a59",
+                "dark": "#195794",
                 "gradient": Object {
                   "diagonal": Object {
                     "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -232,7 +232,7 @@ exports[`Index page should render placeholders 1`] = `
                     "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                   },
                 },
-                "light": "#962A8B",
+                "light": "#3881cb",
                 "main": "#2377CB",
               },
               "secondary": Object {
@@ -1493,8 +1493,8 @@ exports[`Index page should render placeholders 1`] = `
                                                     },
                                                     "palette": Object {
                                                       "accent": Object {
-                                                        "dark": "#195794",
-                                                        "light": "#3881cb",
+                                                        "dark": "#3b1a59",
+                                                        "light": "#962A8B",
                                                         "main": "#51247A",
                                                       },
                                                       "action": Object {
@@ -1552,7 +1552,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       },
                                                       "primary": Object {
                                                         "contrastText": "#fff",
-                                                        "dark": "#3b1a59",
+                                                        "dark": "#195794",
                                                         "gradient": Object {
                                                           "diagonal": Object {
                                                             "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -1563,7 +1563,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                           },
                                                         },
-                                                        "light": "#962A8B",
+                                                        "light": "#3881cb",
                                                         "main": "#2377CB",
                                                       },
                                                       "secondary": Object {
@@ -2973,8 +2973,8 @@ exports[`Index page should render placeholders 1`] = `
                                                     },
                                                     "palette": Object {
                                                       "accent": Object {
-                                                        "dark": "#195794",
-                                                        "light": "#3881cb",
+                                                        "dark": "#3b1a59",
+                                                        "light": "#962A8B",
                                                         "main": "#51247A",
                                                       },
                                                       "action": Object {
@@ -3032,7 +3032,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       },
                                                       "primary": Object {
                                                         "contrastText": "#fff",
-                                                        "dark": "#3b1a59",
+                                                        "dark": "#195794",
                                                         "gradient": Object {
                                                           "diagonal": Object {
                                                             "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -3043,7 +3043,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                           },
                                                         },
-                                                        "light": "#962A8B",
+                                                        "light": "#3881cb",
                                                         "main": "#2377CB",
                                                       },
                                                       "secondary": Object {

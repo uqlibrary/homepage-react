@@ -12,6 +12,7 @@ const styles = theme => ({
     },
     message: {
         color: theme.palette.accent.main,
+        fontSize: '1.33rem',
     },
 });
 
@@ -43,12 +44,7 @@ export class InlineLoader extends React.Component {
                         <CircularProgress className={this.props.classes.circular} size={18} thickness={2} />
                     </Grid>
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
-                        <Typography
-                            className={this.props.classes.message}
-                            variant={'h5'}
-                            component={'span'}
-                            style={{ fontSize: '1.33rem' }}
-                        >
+                        <Typography className={this.props.classes.message} variant={'h5'} component={'span'}>
                             {this.props.message}
                         </Typography>
                     </Grid>

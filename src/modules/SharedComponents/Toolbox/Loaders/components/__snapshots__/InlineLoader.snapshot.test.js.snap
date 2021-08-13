@@ -49,11 +49,6 @@ exports[`Component InlineLoader should render as expected 1`] = `
     >
       <WithStyles(ForwardRef(Typography))
         component="span"
-        style={
-          Object {
-            "fontSize": "1.33rem",
-          }
-        }
         variant="h5"
       >
         This is a tst

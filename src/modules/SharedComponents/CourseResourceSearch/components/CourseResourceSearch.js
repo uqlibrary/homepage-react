@@ -23,7 +23,6 @@ const useStyles = makeStyles(
         },
         selectInput: {
             fontWeight: 300,
-            // color: theme.palette.accent.main,
             textOverflow: 'ellipsis !important',
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
@@ -34,11 +33,6 @@ const useStyles = makeStyles(
                 whiteSpace: 'nowrap !important',
             },
         },
-        // underline: {
-        //     '&:after': {
-        //         borderColor: '#51247A',
-        //     },
-        // },
         searchUnderlinks: {
             marginBottom: 4,
             '&a, a:link, a:hover, a:visited, a:active': {
@@ -204,14 +198,8 @@ export const CourseResourceSearch = ({
                                         type: 'search',
                                         classes: {
                                             input: classes.selectInput,
-                                            // underline: classes.underline,
                                         },
                                     }}
-                                    // InputLabelProps={{
-                                    //     style: {
-                                    //         color: '#51247A',
-                                    //     },
-                                    // }}
                                     inputProps={{
                                         ...params.inputProps,
                                         'data-testid': `${elementId}-autocomplete-input-wrapper`,

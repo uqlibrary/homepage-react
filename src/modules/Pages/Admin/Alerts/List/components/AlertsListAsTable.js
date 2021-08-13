@@ -36,13 +36,6 @@ const useStyles2 = makeStyles(
         table: {
             minWidth: 500,
         },
-        // editButton: {
-        //     // backgroundColor: theme.palette.accent.main,
-        //     color: '#fff',
-        //     '&:hover': {
-        //         backgroundColor: theme.palette.accent.dark,
-        //     },
-        // },
         startDate: {
             whiteSpace: 'pre', // makes moment format able to take a carriage return
         },

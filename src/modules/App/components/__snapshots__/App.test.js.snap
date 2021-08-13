@@ -179,8 +179,8 @@ exports[`Application component should render for anon user 1`] = `
             },
             "palette": Object {
               "accent": Object {
-                "dark": "#195794",
-                "light": "#3881cb",
+                "dark": "#3b1a59",
+                "light": "#962A8B",
                 "main": "#51247A",
               },
               "action": Object {
@@ -238,7 +238,7 @@ exports[`Application component should render for anon user 1`] = `
               },
               "primary": Object {
                 "contrastText": "#fff",
-                "dark": "#3b1a59",
+                "dark": "#195794",
                 "gradient": Object {
                   "diagonal": Object {
                     "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -249,7 +249,7 @@ exports[`Application component should render for anon user 1`] = `
                     "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                   },
                 },
-                "light": "#962A8B",
+                "light": "#3881cb",
                 "main": "#2377CB",
               },
               "secondary": Object {
@@ -1927,8 +1927,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                           },
                                                                           "palette": Object {
                                                                             "accent": Object {
-                                                                              "dark": "#195794",
-                                                                              "light": "#3881cb",
+                                                                              "dark": "#3b1a59",
+                                                                              "light": "#962A8B",
                                                                               "main": "#51247A",
                                                                             },
                                                                             "action": Object {
@@ -1986,7 +1986,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             },
                                                                             "primary": Object {
                                                                               "contrastText": "#fff",
-                                                                              "dark": "#3b1a59",
+                                                                              "dark": "#195794",
                                                                               "gradient": Object {
                                                                                 "diagonal": Object {
                                                                                   "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -1997,7 +1997,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#962A8B",
+                                                                              "light": "#3881cb",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {
@@ -3407,8 +3407,8 @@ exports[`Application component should render for anon user 1`] = `
                                                                           },
                                                                           "palette": Object {
                                                                             "accent": Object {
-                                                                              "dark": "#195794",
-                                                                              "light": "#3881cb",
+                                                                              "dark": "#3b1a59",
+                                                                              "light": "#962A8B",
                                                                               "main": "#51247A",
                                                                             },
                                                                             "action": Object {
@@ -3466,7 +3466,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             },
                                                                             "primary": Object {
                                                                               "contrastText": "#fff",
-                                                                              "dark": "#3b1a59",
+                                                                              "dark": "#195794",
                                                                               "gradient": Object {
                                                                                 "diagonal": Object {
                                                                                   "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -3477,7 +3477,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#962A8B",
+                                                                              "light": "#3881cb",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {
@@ -4787,8 +4787,8 @@ exports[`Application component should render loading screen while account is loa
             },
             "palette": Object {
               "accent": Object {
-                "dark": "#195794",
-                "light": "#3881cb",
+                "dark": "#3b1a59",
+                "light": "#962A8B",
                 "main": "#51247A",
               },
               "action": Object {
@@ -4846,7 +4846,7 @@ exports[`Application component should render loading screen while account is loa
               },
               "primary": Object {
                 "contrastText": "#fff",
-                "dark": "#3b1a59",
+                "dark": "#195794",
                 "gradient": Object {
                   "diagonal": Object {
                     "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -4857,7 +4857,7 @@ exports[`Application component should render loading screen while account is loa
                     "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                   },
                 },
-                "light": "#962A8B",
+                "light": "#3881cb",
                 "main": "#2377CB",
               },
               "secondary": Object {
@@ -6530,8 +6530,8 @@ exports[`Application component should render loading screen while account is loa
                                                                           },
                                                                           "palette": Object {
                                                                             "accent": Object {
-                                                                              "dark": "#195794",
-                                                                              "light": "#3881cb",
+                                                                              "dark": "#3b1a59",
+                                                                              "light": "#962A8B",
                                                                               "main": "#51247A",
                                                                             },
                                                                             "action": Object {
@@ -6589,7 +6589,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             },
                                                                             "primary": Object {
                                                                               "contrastText": "#fff",
-                                                                              "dark": "#3b1a59",
+                                                                              "dark": "#195794",
                                                                               "gradient": Object {
                                                                                 "diagonal": Object {
                                                                                   "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -6600,7 +6600,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#962A8B",
+                                                                              "light": "#3881cb",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {
@@ -8010,8 +8010,8 @@ exports[`Application component should render loading screen while account is loa
                                                                           },
                                                                           "palette": Object {
                                                                             "accent": Object {
-                                                                              "dark": "#195794",
-                                                                              "light": "#3881cb",
+                                                                              "dark": "#3b1a59",
+                                                                              "light": "#962A8B",
                                                                               "main": "#51247A",
                                                                             },
                                                                             "action": Object {
@@ -8069,7 +8069,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             },
                                                                             "primary": Object {
                                                                               "contrastText": "#fff",
-                                                                              "dark": "#3b1a59",
+                                                                              "dark": "#195794",
                                                                               "gradient": Object {
                                                                                 "diagonal": Object {
                                                                                   "background": "linear-gradient(135deg, rgb(81,36,122) 55%,rgb(150,42,139) 100%)",
@@ -8080,7 +8080,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#962A8B",
+                                                                              "light": "#3881cb",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {

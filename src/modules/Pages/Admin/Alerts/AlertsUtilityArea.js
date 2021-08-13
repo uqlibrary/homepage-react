@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
 
 import SimpleBackdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
@@ -11,7 +10,7 @@ import Drawer from '@material-ui/core/Drawer';
 /**
  * a block that shows:
  * - page heading
- * - utility buttons (help, add alert, clone alert)
+ * - utility buttons (help, add alert, anything else we want to put up here)
  * - the help drawer
  */
 
@@ -44,29 +43,13 @@ const useStyles = makeStyles(
             marginTop: 16,
             marginRight: 16,
         },
-        addButton: {
-            // backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.accent.dark,
-            },
-        },
     }),
     { withTheme: true },
 );
-export const AlertsUtilityArea = ({
-    actions,
-    helpButtonLabel,
-    helpContent,
-    history,
-    showAddButton,
-    showCloneButton,
-}) => {
+export const AlertsUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
-
-    const { alertid } = useParams();
 
     const openHelpLightbox = () => {
         setLightboxOpen(true);
@@ -79,13 +62,6 @@ export const AlertsUtilityArea = ({
     const navigateToAddPage = () => {
         actions.clearAnAlert();
         history.push('/admin/alerts/add');
-    };
-
-    const navigateToCloneForm = () => {
-        history.push(`/admin/alerts/clone/${alertid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     return (
@@ -106,22 +82,9 @@ export const AlertsUtilityArea = ({
                 <div className={classes.actionButtonPlacer}>
                     <Button
                         children="Add alert"
-                        className={classes.addButton}
                         color="primary"
                         data-testid="admin-alerts-help-display-button"
                         onClick={() => navigateToAddPage()}
-                        variant="contained"
-                    />
-                </div>
-            )}
-            {!!showCloneButton && (
-                <div className={classes.actionButtonPlacer}>
-                    <Button
-                        children="Clone alert"
-                        className={classes.addButton}
-                        color="primary"
-                        data-testid="admin-alerts-modal-clone-button"
-                        onClick={() => navigateToCloneForm()}
                         variant="contained"
                     />
                 </div>
@@ -159,17 +122,13 @@ export const AlertsUtilityArea = ({
 
 AlertsUtilityArea.propTypes = {
     actions: PropTypes.any,
-    // cloneAnAlert: PropTypes.any,
     helpContent: PropTypes.any,
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
-    showCloneButton: PropTypes.bool,
 };
 
 AlertsUtilityArea.defaultProps = {
-    // cloneAnAlert: null,
     helpButtonLabel: 'Help',
     showAddButton: false,
-    showCloneButton: false,
 };

@@ -6,9 +6,9 @@ import createPalette from '@material-ui/core/styles/createPalette';
 export const mui1theme = createMuiTheme({
     palette: createPalette({
         primary: {
-            light: '#962A8B',
+            light: '#3881cb',
             main: '#2377CB', // uqblue
-            dark: '#3b1a59',
+            dark: '#195794',
             gradient: {
                 horizontal: {
                     background: 'linear-gradient(to right, rgb(81,36,122) 55%,rgb(150,42,139) 100%)',
@@ -30,9 +30,9 @@ export const mui1theme = createMuiTheme({
             dark: '#333333',
         },
         accent: {
-            light: '#3881cb',
+            light: '#962A8B',
             main: '#51247A', // uqpurple
-            dark: '#195794',
+            dark: '#3b1a59',
         },
         white: {
             main: '#FFFFFF',
