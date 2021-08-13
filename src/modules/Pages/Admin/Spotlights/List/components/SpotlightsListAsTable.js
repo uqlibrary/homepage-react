@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Grid from '@material-ui/core/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import Switch from '@material-ui/core/Switch';
+import InputLabel from '@material-ui/core/InputLabel';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -345,7 +344,7 @@ export const SpotlightsListAsTable = ({
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                     container
                 >
-                    <Grid item xs={12} md={allowFilter ? 6 : 12}>
+                    <Grid item xs={12} md={allowFilter ? 8 : 12}>
                         <h3 style={{ marginBottom: 6 }}>
                             {headertag}
                             <span
@@ -357,40 +356,38 @@ export const SpotlightsListAsTable = ({
                         </h3>
                     </Grid>
                     {allowFilter && (
-                        <Grid item xs={12} md={3}>
+                        <Grid item xs={12} md={2}>
                             <p className={classes.toggle}>
-                                <strong>Scheduled</strong>: Show{' '}
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={showFuture}
-                                            onChange={showHideScheduled}
-                                            name="showFuture"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    }
-                                    label="Hide"
-                                />
+                                <InputLabel
+                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                    title="Check to add button to alert linking to more information. Displays extra form fields."
+                                >
+                                    <Checkbox
+                                        checked={showFuture}
+                                        onChange={showHideScheduled}
+                                        name="showFuture"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                    Hide scheduled
+                                </InputLabel>
                             </p>
                         </Grid>
                     )}
                     {allowFilter && (
-                        <Grid item xs={12} md={3}>
+                        <Grid item xs={12} md={2}>
                             <p className={classes.toggle}>
-                                <span>
-                                    <strong>Unpublished</strong>: Show{' '}
-                                </span>
-                                <FormControlLabel
-                                    control={
-                                        <Switch
-                                            checked={showUnPublished}
-                                            onChange={showHideUnPublished}
-                                            name="showUnPublished"
-                                            inputProps={{ 'aria-label': 'primary checkbox' }}
-                                        />
-                                    }
-                                    label="Hide"
-                                />
+                                <InputLabel
+                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                    title="Check to add button to alert linking to more information. Displays extra form fields."
+                                >
+                                    <Checkbox
+                                        checked={showUnPublished}
+                                        onChange={showHideUnPublished}
+                                        name="showUnPublished"
+                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                    />
+                                    Hide Unpublished
+                                </InputLabel>
                             </p>
                         </Grid>
                     )}
