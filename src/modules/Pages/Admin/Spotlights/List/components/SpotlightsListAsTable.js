@@ -496,7 +496,7 @@ export const SpotlightsListAsTable = ({
                                             <img
                                                 alt={spotlight.img_alt}
                                                 src={spotlight.img_url}
-                                                style={{ width: 220 }}
+                                                style={{ width: 220, minHeight: 80 }}
                                             />
                                         </TableCell>
                                         <TableCell
