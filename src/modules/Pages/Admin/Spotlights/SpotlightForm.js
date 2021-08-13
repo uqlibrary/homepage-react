@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
+import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
@@ -15,7 +16,8 @@ import { useConfirmationState } from 'hooks';
 const moment = require('moment');
 
 import { default as locale } from './spotlightsadmin.locale';
-import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
+// import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
+import { formatDate } from './spotlighthelpers';
 
 const useStyles = makeStyles(() => ({
     saveButton: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles(() => ({
 
 export const SpotlightForm = ({
     actions,
-    spotlightLoading,
+    spotlightsLoading,
     spotlightResponse,
     spotlightStatus,
     defaults,
@@ -42,7 +44,17 @@ export const SpotlightForm = ({
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
-    const [values, setValues] = useState(defaults); // the data displayed in the form
+    console.log('defaults = ', defaults);
+    const [values, setValues] = useState({
+        // the data displayed in the form
+        ...defaults,
+        start: defaults.startDateDefault,
+        end: defaults.endDateDefault,
+    });
+
+    const isValidTitle = title => {
+        return title.length > 0;
+    };
 
     const isValidUrl = testurl => {
         if (!!testurl && testurl.length < 'http://x.co'.length) {
@@ -74,14 +86,35 @@ export const SpotlightForm = ({
 
     const validateValues = currentValues => {
         const isValid =
-            !spotlightLoading &&
-            !isInvalidStartDate(currentValues.startDate) &&
-            !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
-            currentValues.spotlightTitle.length > 0 &&
-            !!currentValues.enteredbody &&
-            currentValues.enteredbody.length > 0 &&
-            (!currentValues.linkRequired || currentValues.linkUrl.length > 0) &&
-            (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
+            !spotlightsLoading &&
+            !isInvalidStartDate(currentValues.start) &&
+            !isInvalidEndDate(currentValues.end, currentValues.start) &&
+            !!isValidTitle(currentValues.title) &&
+            // !!currentValues.url &&
+            // currentValues.img_alt.length > 0 &&
+            // currentValues.img_url.length > 0 &&
+            // currentValues.url.length > 0 &&
+            isValidUrl(currentValues.url);
+
+        console.log('validateValues: isValid = ', isValid, currentValues);
+        // console.log(
+        //     'validateValues: isInvalidStartDate(',
+        //     currentValues.start,
+        //     ') = ',
+        //     isInvalidStartDate(currentValues.start),
+        // );
+        // console.log('validateValues: currentValues.end = ', currentValues.end);
+        // console.log(
+        //     'validateValues: isInvalidStartDate(',
+        //     currentValues.end,
+        //     ') = ',
+        //     isInvalidStartDate(currentValues.end),
+        // );
+        // console.log('validateValues: spotlightsLoading = ', spotlightsLoading);
+        // console.log('validateValues: isValidTitle(', currentValues.title, ') = ', isValidTitle(currentValues.title));
+        // console.log('validateValues: isValidUrl(', currentValues.url, ') = ', isValidUrl(currentValues.url));
+        // console.log('validateValues: currentValues.img_alt = ', currentValues.img_alt);
+        // console.log('validateValues: currentValues = ', currentValues);
 
         return isValid;
     };
@@ -106,23 +139,20 @@ export const SpotlightForm = ({
     }, [showConfirmation, spotlightError, spotlightStatus]);
 
     const clearForm = () => {
-        setValues({
-            ['alertTitle']: '',
-            ['enteredbody']: '',
-            ['startDate']: defaults.startDateDefault,
-            ['endDate']: defaults.endDateDefault,
-            ['urgent']: false,
-            // ['permanentSpotlight']: false,
-            ['linkRequired']: false,
-            ['linkTitle']: '',
-            ['linkUrl']: '',
-            ['dateList']: [
-                {
-                    startDate: defaults.startDateDefault,
-                    endDate: defaults.endDateDefault,
-                },
-            ],
-        });
+        setValues(defaults);
+        // setValues({
+        //     ['title']: '',
+        //     ['url']: '',
+        //     ['start']: defaults.startDateDefault,
+        //     ['end']: defaults.endDateDefault,
+        //     ['urgent']: false,
+        //     ['img_alt']: '',
+        //     ['img_url']: '',
+        //     ['weight']: 0,
+        //     ['active']: 0,
+        //     startDateDefault: getTimeNowFormatted(),
+        //     endDateDefault: getTimeEndOfDayFormatted(),
+        // });
     };
 
     const navigateToListPage = () => {
@@ -139,54 +169,23 @@ export const SpotlightForm = ({
     };
 
     const reloadClonePage = () => {
-        setValues({
-            ...defaults,
-            dateList: [
-                {
-                    startDate: getTimeNowFormatted(),
-                    endDate: getTimeEndOfDayFormatted(),
-                },
-            ],
-        });
+        setValues(defaults);
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    function expandValues(expandableValues) {
-        // because otherwise we see 'false' when we clear the field
-        const newAlertTitle = expandableValues.alertTitle || /* istanbul ignore next */ '';
-
-        const newLinkTitle = expandableValues.linkTitle || '';
-        const newLinkUrl = expandableValues.linkUrl || '';
-        const newBody = expandableValues.body || '';
-
-        const newStartDate = expandableValues.startDate || defaults.startDateDefault;
-        const newEndDate = expandableValues.endDate || defaults.endDateDefault;
-
-        return {
-            ...expandableValues,
-            ['alertTitle']: newAlertTitle,
-            ['body']: newBody,
-            ['linkTitle']: newLinkTitle,
-            ['linkUrl']: newLinkUrl,
-            ['startDate']: newStartDate,
-            ['endDate']: newEndDate,
-        };
-    }
-
-    const saveSpotlights = () => {
-        const expandedValues = expandValues(values);
-        setValues(expandedValues);
-
+    const saveSpotlight = () => {
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
-            title: values.alertTitle,
-            body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
-            urgent: !!values.urgent ? '1' : '0',
-            start: formatDate(values.startDate),
-            end: formatDate(values.endDate),
-            dateList: values.dateList,
+            start: formatDate(values.start),
+            end: formatDate(values.end),
+            title: values.title,
+            url: values.url, // unsure why this isnt set into `values` by the Set call above
+            img_url: values.img_url,
+            img_alt: values.img_alt || values.title,
+            weight: values.weight,
+            active: !!values.active ? 1 : 0,
         };
 
         defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : actions.createSpotlight(newValues);
@@ -201,11 +200,10 @@ export const SpotlightForm = ({
 
     const handleChange = prop => event => {
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
+        console.log('handleChange ', prop, ': newValue = ', newValue);
         setValues({ ...values, [prop]: newValue });
 
-        const newValues = expandValues({ ...values, [prop]: newValue });
-        setValues(newValues);
-
+        console.log('handleChange values now = ', values);
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
     };
 
@@ -283,28 +281,33 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl fullWidth title="Help TBA">
-                            <InputLabel htmlFor="spotlightTitle">Title *</InputLabel>
+                            <InputLabel htmlFor="spotlightTitle">Title - visible to assitive technology *</InputLabel>
                             <Input
                                 id="spotlightTitle"
                                 data-testid="admin-spotlights-form-title"
-                                value={values.title}
-                                onChange={handleChange('spotlightTitle')}
+                                error={!isValidTitle(values.title)}
                                 inputProps={{ maxLength: 100 }}
+                                onChange={handleChange('title')}
+                                required
+                                value={values.title}
                             />
                         </FormControl>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title="Tooltip TBA. Optional - if blank Title will duplicate as tooltip">
-                            <InputLabel htmlFor="spotlightTitle">
+                        <FormControl
+                            fullWidth
+                            title="Tooltip TBA. Optional - if blank, Title will duplicate as tooltip"
+                        >
+                            <InputLabel htmlFor="spotlightTooltip">
                                 Tooltip text - visible when user mouses over spotlight
                             </InputLabel>
                             <Input
-                                id="spotlightTitle"
+                                id="spotlightTooltip"
                                 data-testid="admin-spotlights-form-tooltip"
                                 value={values.img_alt}
-                                onChange={handleChange('spotlightTooltip')}
+                                onChange={handleChange('img_alt')}
                                 inputProps={{ maxLength: 100 }}
                             />
                         </FormControl>
@@ -318,9 +321,9 @@ export const SpotlightForm = ({
                                 type="url"
                                 id="linkUrl"
                                 data-testid="admin-spotlights-form-link-url"
-                                value={values.img_url}
-                                onChange={handleChange('img_url')}
-                                error={!isValidUrl(values.img_url)}
+                                value={values.url}
+                                onChange={handleChange('url')}
+                                error={!isValidUrl(values.url)}
                             />
                         </FormControl>
                     </Grid>
@@ -330,16 +333,17 @@ export const SpotlightForm = ({
                         {/* https://material-ui.com/components/pickers/ */}
                         <TextField
                             data-testid="admin-spotlights-form-start-date"
-                            error={isInvalidStartDate(values.startDate)}
+                            error={isInvalidStartDate(values.start)}
                             InputLabelProps={{ shrink: true }}
-                            label="Start date"
-                            onChange={handleChange('startDate')}
+                            label="Date published"
+                            onChange={handleChange('start')}
                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                             type="datetime-local"
-                            value={values.startDate}
+                            value={values.start}
                             inputProps={{
                                 min: defaults.minimumDate,
                                 required: true,
+                                'aria-label': 'Date the spotlight will be published',
                             }}
                         />
                     </Grid>
@@ -347,17 +351,41 @@ export const SpotlightForm = ({
                         <TextField
                             data-testid="admin-spotlights-form-end-date"
                             InputLabelProps={{ shrink: true }}
-                            label="End date"
-                            onChange={handleChange('endDate')}
+                            label="Date unpublished"
+                            onChange={handleChange('end')}
                             pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                             type="datetime-local"
-                            value={values.endDate}
-                            error={isInvalidEndDate(values.endDate, values.startDate)}
+                            value={values.end}
+                            error={isInvalidEndDate(values.end, values.start)}
                             inputProps={{
-                                min: values.startDate,
+                                min: values.start,
                                 required: true,
+                                'aria-label': 'Date the spotlight will be unpublished',
                             }}
                         />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid item xs={3} align="left">
+                        <div style={{ width: '90%', height: '4rem', padding: '1rem', backgroundColor: 'lightgrey' }}>
+                            File Upload tbd
+                        </div>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid item xs={3} align="left">
+                        <InputLabel
+                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            title="Check to add button to alert linking to more information. Displays extra form fields."
+                        >
+                            <Checkbox
+                                checked={values.active === 1}
+                                data-testid="admin-alerts-form-checkbox-published"
+                                onChange={handleChange('active')}
+                                className={classes.checkbox}
+                            />
+                            Published?
+                        </InputLabel>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
@@ -377,7 +405,7 @@ export const SpotlightForm = ({
                             variant="contained"
                             children={defaults.type === 'edit' ? 'Save' : 'Create'}
                             disabled={!isFormValid}
-                            onClick={saveSpotlights}
+                            onClick={saveSpotlight}
                             className={classes.saveButton}
                         />
                     </Grid>
@@ -391,7 +419,7 @@ SpotlightForm.propTypes = {
     actions: PropTypes.any,
     spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
-    spotlightLoading: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,

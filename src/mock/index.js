@@ -249,6 +249,24 @@ fetchMock.mock(
 // spotlights
 mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(withDelay([200, spotlightsLong]));
 
+mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '5bc14170-e1e9-11ea-b88d-9bb67d805fd9',
+            start: '2020-08-19 00:01:32',
+            end: '2020-08-30 23:59:00',
+            title: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
+            url: 'https://web.library.uq.edu.au/blog/2020/08/announcing-2020-fryer-library-fellow',
+            img_url: 'http://localhost:2020/public/images/spotlights/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
+            img_alt: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
+            weight: 4,
+            active: 1,
+        },
+    ]),
+);
+// mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
+
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, exams_FREN1010];

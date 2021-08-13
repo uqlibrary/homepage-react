@@ -18,20 +18,20 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const SpotlightsAdd = ({ actions, spotlight, spotlightError, spotlightLoading, spotlightStatus, history }) => {
+export const SpotlightsAdd = ({ actions, spotlight, spotlightError, spotlightsLoading, spotlightStatus, history }) => {
+    console.log('SpotlightsAdd : spotlightsLoading = ', spotlightsLoading);
     const classes = useStyles();
 
     const defaults = {
         id: '',
         startDateDefault: getTimeNowFormatted(),
         endDateDefault: getTimeEndOfDayFormatted(),
-        spotlightTitle: '',
-        enteredbody: '',
-        linkRequired: false,
-        urgent: false,
-        permanentAlert: false,
-        linkTitle: '',
-        linkUrl: '',
+        title: '',
+        url: '',
+        img_url: '',
+        img_alt: '',
+        weight: 0,
+        active: 0,
         type: 'add',
         minimumDate: getTimeNowFormatted(),
     };
@@ -48,7 +48,7 @@ export const SpotlightsAdd = ({ actions, spotlight, spotlightError, spotlightLoa
                             actions={actions}
                             spotlightResponse={spotlight}
                             spotlightError={spotlightError}
-                            spotlightLoading={spotlightLoading}
+                            spotlightsLoading={false}
                             spotlightStatus={spotlightStatus}
                             history={history}
                             defaults={defaults}
@@ -64,7 +64,7 @@ SpotlightsAdd.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
     spotlightError: PropTypes.any,
-    spotlightLoading: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     history: PropTypes.object,
 };

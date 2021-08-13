@@ -38,7 +38,7 @@ export default {
         },
         help: {
             title: 'Add/Edit/Clone help',
-            text: <p>Form help goes here</p>,
+            text: <p data-testid="admin-spotlights-help-example">Form help goes here</p>,
         },
     },
     listPage: {
