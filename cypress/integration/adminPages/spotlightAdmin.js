@@ -121,6 +121,14 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('o');
             cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
         });
+        it('entering the fields works', () => {
+            cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
+            cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'spotlight title 3');
+            cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
+            cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
+            cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
+        });
         it('can save a spotlight (simple)', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');

@@ -199,7 +199,10 @@ export const SpotlightForm = ({
     };
 
     const handleChange = prop => event => {
-        const newValue = !!event.target.value ? event.target.value : event.target.checked;
+        let newValue = !!event.target.value ? event.target.value : event.target.checked;
+        if (prop === 'active') {
+            newValue = !!newValue ? 1 : 0;
+        }
         console.log('handleChange ', prop, ': newValue = ', newValue);
         setValues({ ...values, [prop]: newValue });
 
@@ -380,7 +383,7 @@ export const SpotlightForm = ({
                         >
                             <Checkbox
                                 checked={values.active === 1}
-                                data-testid="admin-alerts-form-checkbox-published"
+                                data-testid="admin-spotlights-form-checkbox-published"
                                 onChange={handleChange('active')}
                                 className={classes.checkbox}
                             />
