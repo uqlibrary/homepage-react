@@ -38,7 +38,47 @@ export default {
         },
         help: {
             title: 'Add/Edit/Clone help',
-            text: <p data-testid="admin-spotlights-help-example">Form help goes here</p>,
+            text: (
+                <div data-testid="admin-spotlights-help-example">
+                    <p>Note: this help is out of date and will be updated as part of the development process</p>
+                    <h2 id="adding-spotlight">Adding an spotlight</h2>
+                    <p>
+                        Adding spotlights is done via the <b>+ADD NEW</b> button located at the top right hand corner of
+                        the main spotlight list view. A spotlight consists of the following fields:
+                    </p>
+                    <dl>
+                        <dt>Title</dt>
+                        <dd className="description">(required)</dd>
+                        <dt>Start date/time</dt>
+                        <dd className="description">
+                            format: day/month/year - 24hs(required. date/time has to be before End Date)
+                        </dd>
+
+                        <dt>End date/time</dt>
+                        <dd className="description">
+                            format: day/month/year - 24hs(required. date/time has to be after Start Date)
+                        </dd>
+
+                        <dt>Link</dt>
+                        <dd className="description">(required. Target link when spotlight is clicked)</dd>
+                        <dt>Image Title</dt>
+                        <dd className="description">(required)</dd>
+                        <dt>Image URL</dt>
+                        <dd className="description">(read only field - displays the image url)</dd>
+                        <dt>File Upload</dt>
+                        <dd className="description">upload an image to be used in the spotlight</dd>
+                        <dt>Published</dt>
+                        <dd className="description">Enable / Disable the spotlight</dd>
+                    </dl>
+                    <h2>Editing an spotlight</h2>
+                    <p>
+                        Editing an existing spotlight is done by pressing the mode_edit button on the specific spotlight
+                        row in the main spotlight grid view. This will take the user to the "Edit Spotlight" view, which
+                        is functionally identical to the "Add Spotlight" view. Please see the "Adding a spotlight"
+                        section for more details.
+                    </p>
+                </div>
+            ),
         },
     },
     listPage: {
@@ -61,7 +101,50 @@ export default {
         },
         help: {
             title: 'Spotlights listing',
-            text: <p>List page help goes here</p>,
+            text: (
+                <div data-testid="admin-spotlights-help-example">
+                    <p>Note: this help is out of date and will be updated as part of the development process</p>
+                    <h2>About</h2>
+                    <p>
+                        UQ Library's Spotlight Management application provides authorised users with an interface to
+                        add, update and remove spotlights. These spotlights are displayed on the UQ Library homepage.
+                    </p>
+                    <h2>Spotlight listing</h2>
+                    <p>
+                        All spotlights are listed on the main page in grid view where users can easily filter content
+                        using the buttons located in the header.
+                    </p>
+                    <ul>
+                        <li>
+                            <b>Quick search</b> offers a text input to filter the grid view via spotlight title
+                        </li>
+                        <li>
+                            <b>Show Current Spotlights</b> will only display published spotlights within a valid and
+                            current date range
+                        </li>
+                        <li>
+                            The <b>Reorder</b> button will allow users to re-index the spotlight display order on the
+                            library's homepage
+                        </li>
+                        <li>
+                            <b>Add New</b> allows users to insert a new spotlight
+                        </li>
+                        <li>
+                            <b>Help/Info</b> displays this guide
+                        </li>
+                    </ul>
+                    <h2>Removing spotlights</h2>
+                    <p>
+                        The removal of spotlights is carried out in the main spotlight grid view. Simply click on the
+                        respective spotlight mode_edit button to delete an individual spotlight or use the first column
+                        check boxes to remove multiple spotlights at once. A confirmation screen will be displayed
+                        requesting the user to confirm this action.
+                    </p>
+                    <p>
+                        <strong>Warning! Removed spotlights cannot be restored.</strong>
+                    </p>
+                </div>
+            ),
         },
     },
 };
