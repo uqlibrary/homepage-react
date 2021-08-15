@@ -19,25 +19,15 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 
 // based on https://material-ui.com/components/button-group/ "Split button"
 
-const useStyles = makeStyles(
-    theme => ({
-        parent: {
-            position: 'relative',
-            minHeight: 50,
-        },
-        menuWrapper: {
-            marginTop: -50,
-        },
-        editButton: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.accent.dark,
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const useStyles = makeStyles(() => ({
+    parent: {
+        position: 'relative',
+        minHeight: 50,
+    },
+    menuWrapper: {
+        marginTop: -50,
+    },
+}));
 export const SplitButton = ({
     alertId,
     deleteAlertById,
@@ -87,12 +77,10 @@ export const SplitButton = ({
                             onClick={() =>
                                 mainButtonLabel === 'Edit' ? navigateToEditForm(alertId) : navigateToView(alertId)
                             }
-                            className={classes.editButton}
                             variant="contained"
                         />
                         <Button
                             color="primary"
-                            className={classes.editButton}
                             size="small"
                             aria-controls={open ? 'split-button-menu' : undefined}
                             aria-expanded={open ? 'true' : undefined}
