@@ -427,7 +427,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 {alertStatus !== 'error' && defaults.type === 'edit' && (
                     <ConfirmationBox
-                        actionButtonColor="secondary"
+                        actionButtonColor="primary"
                         actionButtonVariant="contained"
                         confirmationBoxId="alert-edit-save-succeeded"
                         onAction={handleConfirmation}
