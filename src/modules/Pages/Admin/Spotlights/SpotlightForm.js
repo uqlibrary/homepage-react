@@ -145,6 +145,18 @@ export const SpotlightForm = ({
         }
     }, [showConfirmation, spotlightError, spotlightStatus]);
 
+    const addAriaLabelToMuiDatePickerButton = (idDiv, ariaLabel) => {
+        const theBlock = document.getElementById(idDiv);
+        const theButton = !!theBlock && theBlock.parentNode.querySelector('button');
+        !!theButton && !theButton.hasAttribute('aria-label') && theButton.setAttribute('aria-label', ariaLabel);
+    };
+
+    const runAfterRender = () => {
+        // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
+        addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
+        addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
+    };
+
     const clearForm = () => {
         setValues(defaults);
         // setValues({
@@ -242,7 +254,7 @@ export const SpotlightForm = ({
 
     return (
         <Fragment>
-            <form>
+            <form onLoad={runAfterRender()}>
                 {spotlightStatus === 'error' && (
                     <ConfirmationBox
                         actionButtonColor="primary"
@@ -346,6 +358,7 @@ export const SpotlightForm = ({
                 <Grid container spacing={2} style={{ marginTop: 12 }}>
                     <Grid item md={5} xs={12}>
                         <KeyboardDateTimePicker
+                            id="admin-spotlights-form-start-date"
                             data-testid="admin-spotlights-form-start-date"
                             value={values.start}
                             label="Date published"
@@ -358,6 +371,7 @@ export const SpotlightForm = ({
                     </Grid>
                     <Grid item md={5} xs={12}>
                         <KeyboardDateTimePicker
+                            id="admin-spotlights-form-end-date"
                             data-testid="admin-spotlights-form-end-date"
                             label="Date unpublished"
                             onChange={handleChange('end')}

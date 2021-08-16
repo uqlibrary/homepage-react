@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Spotlights Admin public access', () => {
@@ -105,7 +107,7 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Create a new spotlight');
-            cy.wait(500);
+            cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Spotlights Admin Add',
                 scopeName: 'Content',
@@ -122,12 +124,83 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
         });
         it('entering the fields works', () => {
+            // form starts with submit button disabled
+            cy.get('[data-testid="admin-spotlights-form-button-save"').should('be.disabled');
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
+
+            // add file upload test here
+
+            // the form is currently valid so the create button should enable
+            cy.get('[data-testid="admin-spotlights-form-button-save"').should('not.be.disabled');
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
+
+            // end date starts with the correct default
+            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should($input => {
+                const defaultDate = $input.val();
+                expect(defaultDate).to.include(moment().format('DD/MM/YYYY'));
+            });
+            // so does start date
+            cy.get('[data-testid="admin-spotlights-form-start-date"] input').should($input => {
+                const defaultDate = $input.val();
+                expect(defaultDate).to.include(moment().format('DD/MM/YYYY'));
+            });
+            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+            // advance the start date one month
+            cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
+                .as('next-month-button')
+                .click();
+            // and pick the first of the month
+            cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
+                .first()
+                .contains('1')
+                .click();
+            // the time dialog loads, but lets just ok out
+            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
+                .contains('OK')
+                .click();
+            // and date is set to next month
+            cy.get('[data-testid="admin-spotlights-form-start-date"] input').should($input => {
+                const defaultDate = $input.val();
+                const nextmonth = moment()
+                    .add(1, 'M')
+                    .startOf('month');
+                expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
+            });
+            // and the end date field now has an error, so the submit button is disabled
+            cy.get('[data-testid="admin-spotlights-form-button-save"').should('be.disabled');
+            // and the end date has an error message
+            cy.get('[data-testid="admin-spotlights-form-end-date"] p.Mui-error')
+                .should('exist')
+                .and('contain', 'Date should not be before minimal date');
+            // open the end date so we can fix the date
+            cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
+            // advance the end date another month
+            cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
+                .as('next-month-button')
+                .click();
+            // and pick the first of the month
+            cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
+                .first()
+                .contains('1')
+                .click();
+            // the time dialog loads, but lets just ok out
+            cy.get('.MuiDialogActions-spacing button:nth-child(2)')
+                .contains('OK')
+                .click();
+            // and date is set to next month
+            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should($input => {
+                const defaultDate = $input.val();
+                const nextmonth = moment()
+                    .add(2, 'M')
+                    .startOf('month');
+                expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
+            });
+            // all is good so the create button enables
+            cy.get('[data-testid="admin-spotlights-form-button-save"').should('not.be.disabled');
         });
         it('can save a spotlight (simple)', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
