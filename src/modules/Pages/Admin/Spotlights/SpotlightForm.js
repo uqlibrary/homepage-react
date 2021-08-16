@@ -8,16 +8,15 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
+import { KeyboardDateTimePicker } from '@material-ui/pickers';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-
-const moment = require('moment');
-
 import { default as locale } from './spotlightsadmin.locale';
 // import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
 import { formatDate } from './spotlighthelpers';
+
+const moment = require('moment');
 
 const useStyles = makeStyles(() => ({
     saveButton: {
@@ -76,8 +75,16 @@ export const SpotlightForm = ({
         return true;
     };
 
-    function isInvalidStartDate(startDate) {
-        return (startDate < defaults.startDateDefault && startDate !== '') || !moment(startDate).isValid();
+    function isValidStartDate(param, startDate) {
+        const momentStartDate = new moment(startDate);
+        const momentStartDateFormatted = momentStartDate.format('YYYY-MM-DDTHH:mm');
+        return (
+            startDate !== '' && momentStartDateFormatted >= defaults.startDateDefault && !!moment(startDate).isValid()
+        );
+    }
+
+    function isInvalidStartDate(param, startDate) {
+        return !isValidStartDate(param, startDate);
     }
 
     function isInvalidEndDate(endDate, startDate) {
@@ -87,7 +94,7 @@ export const SpotlightForm = ({
     const validateValues = currentValues => {
         const isValid =
             !spotlightsLoading &&
-            !isInvalidStartDate(currentValues.start) &&
+            !isInvalidStartDate(null, currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
             !!isValidTitle(currentValues.title) &&
             // !!currentValues.url &&
@@ -199,9 +206,14 @@ export const SpotlightForm = ({
     };
 
     const handleChange = prop => event => {
-        let newValue = !!event.target.value ? event.target.value : event.target.checked;
-        if (prop === 'active') {
-            newValue = !!newValue ? 1 : 0;
+        let newValue;
+        if (['start', 'end'].includes(prop)) {
+            newValue = event.format('YYYY/MM/DD hh:mm a');
+        } else {
+            newValue = !!event.target.value ? event.target.value : event.target.checked;
+            if (prop === 'active') {
+                newValue = !!newValue ? 1 : 0;
+            }
         }
         console.log('handleChange ', prop, ': newValue = ', newValue);
         setValues({ ...values, [prop]: newValue });
@@ -333,38 +345,26 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: 12 }}>
                     <Grid item md={5} xs={12}>
-                        {/* https://material-ui.com/components/pickers/ */}
-                        <TextField
+                        <KeyboardDateTimePicker
                             data-testid="admin-spotlights-form-start-date"
-                            error={isInvalidStartDate(values.start)}
-                            InputLabelProps={{ shrink: true }}
+                            value={values.start}
                             label="Date published"
                             onChange={handleChange('start')}
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                            type="datetime-local"
-                            value={values.start}
-                            inputProps={{
-                                min: defaults.minimumDate,
-                                required: true,
-                                'aria-label': 'Date the spotlight will be published',
-                            }}
+                            minDate={defaults.minimumDate}
+                            format="DD/MM/YYYY HH:mm a"
+                            showTodayButton
+                            autoOk
                         />
                     </Grid>
                     <Grid item md={5} xs={12}>
-                        <TextField
+                        <KeyboardDateTimePicker
                             data-testid="admin-spotlights-form-end-date"
-                            InputLabelProps={{ shrink: true }}
                             label="Date unpublished"
                             onChange={handleChange('end')}
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                            type="datetime-local"
                             value={values.end}
-                            error={isInvalidEndDate(values.end, values.start)}
-                            inputProps={{
-                                min: values.start,
-                                required: true,
-                                'aria-label': 'Date the spotlight will be unpublished',
-                            }}
+                            minDate={values.start}
+                            format="DD/MM/YYYY HH:mm a"
+                            autoOk
                         />
                     </Grid>
                 </Grid>
