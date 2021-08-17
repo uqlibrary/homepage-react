@@ -3224,7 +3224,7 @@ export const spotlightsLong = [{
     "end": "2021-01-18 18:00:00",
     "title": "08\/01\/21 Spaces & collections closed temporarily",
     "url": "https:\/\/web.library.uq.edu.au\/library-services\/covid-19",
-    "img_url": "https:\/\/app.library.uq.edu.au\/file\/public\/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg",
+    "img_url": "https:\/\/app.library.uq.edu.au\/file\/public\/3d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg",
     "img_alt": "Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.",
     "weight": 0,
     "active": 0

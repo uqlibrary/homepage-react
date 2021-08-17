@@ -11,10 +11,13 @@ import { makeStyles } from '@material-ui/styles';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-import { useConfirmationState } from 'hooks';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import { SpotlightUploader } from 'modules/Pages/Admin/Spotlights/SpotlightUploader';
 import { default as locale } from './spotlightsadmin.locale';
 // import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
 import { formatDate } from './spotlighthelpers';
+
+import { useConfirmationState } from 'hooks';
 
 const moment = require('moment');
 
@@ -35,13 +38,29 @@ export const SpotlightForm = ({
     spotlightStatus,
     defaults,
     spotlightError,
+    publicFileUploading,
+    publicFileUploadError,
+    publicFileUploadResult,
     history,
 }) => {
+    console.log('uploadPublicFile: publicFileUploading = ', publicFileUploading);
+    console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
+    console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
+    // !!publicFileUploadResult
+    //     ? console.log('uploadPublicFile: publicFileUploadResult join = ', publicFileUploadResult.join(' ').trim())
+    //     : console.log('no join publicFileUploadResult = ', publicFileUploadResult);
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    // const [isOpenUploadFile, showErrorUploadFile, hideConfirmationUploadFile] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+    const [uploadedFiles, handleUploadedFiles] = useState(null);
+
+    // dev only
+    useEffect(() => {
+        console.log('uploadedFiles set to ', uploadedFiles);
+    }, [uploadedFiles]);
 
     console.log('defaults = ', defaults);
     const [values, setValues] = useState({
@@ -145,6 +164,12 @@ export const SpotlightForm = ({
         }
     }, [showConfirmation, spotlightError, spotlightStatus]);
 
+    useEffect(() => {
+        if (!!publicFileUploadError) {
+            showConfirmation();
+        }
+    }, [showConfirmation, publicFileUploadError]);
+
     const addAriaLabelToMuiDatePickerButton = (idDiv, ariaLabel) => {
         const theBlock = document.getElementById(idDiv);
         const theButton = !!theBlock && theBlock.parentNode.querySelector('button');
@@ -155,6 +180,7 @@ export const SpotlightForm = ({
         // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
         addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
         addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
+        return;
     };
 
     const clearForm = () => {
@@ -194,6 +220,19 @@ export const SpotlightForm = ({
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
+    const handleSpotlightCreation = newValues => {
+        if (defaults.type === 'add') {
+            console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles[0]);
+            // only 1 file may be uploaded, but it comes in an array
+            const uploadedFile = !!uploadedFiles && uploadedFiles.shift();
+            newValues.uploadedFile = uploadedFile;
+            !!uploadedFile && actions.createSpotlightWithFile(newValues);
+        } else {
+            // newValues.img_url should be supplied by the form, because we preview the image in there
+            actions.createSpotlight(newValues);
+        }
+    };
+
     const saveSpotlight = () => {
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
@@ -207,7 +246,8 @@ export const SpotlightForm = ({
             active: !!values.active ? 1 : 0,
         };
 
-        defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : actions.createSpotlight(newValues);
+        console.log('defaults.type = ', defaults.type);
+        defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : handleSpotlightCreation(newValues);
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -239,6 +279,16 @@ export const SpotlightForm = ({
         confirmationTitle: `An error occurred: ${spotlightError}`,
     };
 
+    const uploadErrorLocale = () => {
+        console.log('uploadErrorLocale: publicFileUploadResult = ', publicFileUploadResult);
+        const errorMessage = (!!publicFileUploadResult && publicFileUploadResult[0]) || '';
+        return {
+            ...locale.form.upload.uploadError,
+            // confirmationTitle: 'An error occurred during the upload',
+            confirmationTitle: `An error occurred during the upload${!!errorMessage ? ': ' + errorMessage.trim() : ''}`,
+        };
+    };
+
     const handleConfirmation = () => {
         if (defaults.type === 'edit') {
             // the action on edit page is always 'return to list'
@@ -251,6 +301,24 @@ export const SpotlightForm = ({
             clearForm();
         }
     };
+
+    if (!!publicFileUploading) {
+        return (
+            <Grid
+                item
+                xs={'auto'}
+                style={{
+                    width: 80,
+                    marginRight: 20,
+                    marginBottom: 6,
+                    opacity: 0.3,
+                    height: 200, // default to some space for the blocks
+                }}
+            >
+                <InlineLoader message="Loading" />
+            </Grid>
+        );
+    }
 
     return (
         <Fragment>
@@ -271,7 +339,7 @@ export const SpotlightForm = ({
                 )}
                 {spotlightStatus !== 'error' && defaults.type === 'edit' && (
                     <ConfirmationBox
-                        actionButtonColor="secondary"
+                        actionButtonColor="primary"
                         actionButtonVariant="contained"
                         confirmationBoxId="spotlight-edit-save-succeeded"
                         onAction={handleConfirmation}
@@ -281,7 +349,7 @@ export const SpotlightForm = ({
                         locale={locale.form.edit.editSpotlightConfirmation}
                     />
                 )}
-                {spotlightStatus !== 'error' && defaults.type === 'add' && (
+                {spotlightStatus !== 'error' && !publicFileUploadError && defaults.type === 'add' && (
                     <ConfirmationBox
                         actionButtonColor="secondary"
                         actionButtonVariant="contained"
@@ -303,6 +371,18 @@ export const SpotlightForm = ({
                         isOpen={isOpen}
                         locale={locale.form.clone.cloneSpotlightConfirmation}
                         onCancelAction={() => navigateToListPage()}
+                    />
+                )}
+                {!!publicFileUploadError && (
+                    <ConfirmationBox
+                        actionButtonColor="primary"
+                        actionButtonVariant="contained"
+                        confirmationBoxId="spotlight-file-upload-failed"
+                        onClose={hideConfirmation}
+                        onAction={() => hideConfirmation()}
+                        isOpen={isOpen}
+                        locale={uploadErrorLocale()}
+                        hideCancelButton
                     />
                 )}
                 <Grid container spacing={2}>
@@ -383,10 +463,8 @@ export const SpotlightForm = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-                    <Grid item xs={3} align="left">
-                        <div style={{ width: '90%', height: '4rem', padding: '1rem', backgroundColor: 'lightgrey' }}>
-                            File Upload tbd
-                        </div>
+                    <Grid item xs={10} align="left">
+                        <SpotlightUploader onAddFile={handleUploadedFiles} />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
@@ -434,12 +512,21 @@ export const SpotlightForm = ({
 
 SpotlightForm.propTypes = {
     actions: PropTypes.any,
+    publicFileUploading: PropTypes.any,
+    publicFileUploadError: PropTypes.any,
+    publicFileUploadResult: PropTypes.any,
     spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
     spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+};
+
+SpotlightForm.defaultProps = {
+    publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
+    publicFileUploadError: false,
+    publicFileUploadResult: false,
 };
 
 export default SpotlightForm;

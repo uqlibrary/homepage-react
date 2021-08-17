@@ -6,6 +6,7 @@ import {
     SPOTLIGHTS_ALL_API,
     SPOTLIGHT_GET_BY_ID_API,
     SPOTLIGHT_DELETE_API,
+    UPLOAD_PUBLIC_FILES_API,
 } from 'repositories/routes';
 
 export function loadAllSpotlights() {
@@ -29,25 +30,71 @@ export function loadAllSpotlights() {
     };
 }
 
+function saveSpotlight(request, dispatch) {
+    return post(SPOTLIGHT_CREATE_API(), request)
+        .then(data => {
+            console.log('saveSpotlight action, returned data = ', data);
+            dispatch({
+                type: actions.SPOTLIGHT_SAVED,
+                payload: data,
+            });
+        })
+        .catch(error => {
+            console.log('saveSpotlight action error = ', error);
+            dispatch({
+                type: actions.SPOTLIGHT_FAILED,
+                payload: error.message,
+            });
+        });
+}
+
 export const createSpotlight = request => {
     console.log('action createSpotlight, request to save: ', request);
+    return dispatch => {
+        console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
+        // console.log('dispatch = ', dispatch);
+        console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
+        dispatch({ type: actions.SPOTLIGHT_LOADING });
+        return saveSpotlight(request, dispatch);
+    };
+};
+
+export const createSpotlightWithFile = request => {
+    console.log('action createSpotlightWithFile, request to save: ', request);
+
+    if (!request.uploadedFile) {
+        return createSpotlight(request);
+    }
 
     return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHT_LOADING });
-        console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
-        return post(SPOTLIGHT_CREATE_API(), request)
-            .then(data => {
-                console.log('createSpotlight action, returned data = ', data);
+        dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
+
+        return post(UPLOAD_PUBLIC_FILES_API(), {
+            file: request.uploadedFile,
+        })
+            .then(response => {
+                console.log('uploadPublicFile got ', response);
                 dispatch({
-                    type: actions.SPOTLIGHT_SAVED,
-                    payload: data,
+                    type: actions.PUBLIC_FILE_UPLOADED,
+                    payload: response,
                 });
+
+                const firstresponse = response.shift();
+                request.img_url =
+                    !!firstresponse &&
+                    !!firstresponse.key &&
+                    `https://app.library.uq.edu.au/file/public/${firstresponse.key}.jpg`;
+
+                delete request.uploadedFile;
+                console.log('action createSpotlightWithFile, request to save: ', request);
+                dispatch({ type: actions.SPOTLIGHT_LOADING });
+                return saveSpotlight(request, dispatch);
             })
             .catch(error => {
-                console.log('createSpotlight action error = ', error);
+                console.log('uploadPublicFile error = ', error);
                 dispatch({
-                    type: actions.SPOTLIGHT_FAILED,
-                    payload: error.message,
+                    type: actions.PUBLIC_FILE_UPLOAD_FAILED,
+                    payload: error,
                 });
             });
     };
@@ -141,3 +188,10 @@ export function clearASpotlight() {
         dispatch({ type: actions.SPOTLIGHT_CLEAR });
     };
 }
+
+// export function uploadPublicFile(newFile) {
+//     console.log('uploadPublicFile ', newFile);
+//     return dispatch => {
+//
+//     };
+// }

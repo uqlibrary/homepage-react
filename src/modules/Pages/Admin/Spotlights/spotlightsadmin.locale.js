@@ -36,6 +36,12 @@ export default {
                 cancelButtonLabel: 'View spotlight list',
             },
         },
+        upload: {
+            uploadError: {
+                confirmationTitle: 'An error occurred while uploading the file',
+                confirmButtonLabel: 'OK',
+            },
+        },
         help: {
             title: 'Add/Edit/Clone help',
             text: (

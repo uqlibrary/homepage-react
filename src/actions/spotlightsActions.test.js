@@ -10,6 +10,7 @@ import {
     loadAllSpotlights,
     loadASpotlight,
     saveSpotlightChange,
+    uploadPublicFile,
 } from './spotlightsActions';
 
 jest.mock('raven-js');
@@ -22,6 +23,13 @@ const newSpotlightRecord = {
     start: '2021-08-05 11:25:51',
     title: 'test LdG',
     url: 'http://example.com',
+};
+const fileToUpload = {
+    path: 'my-new-spotlight-image.jpg',
+    preview: 'blob:http://localhost:my-new-spotlight-image',
+    name: 'my-new-spotlight-image.jpg',
+    lastModified: 1629160776973,
+    lastModifiedDate: 'Tue Aug 17 2021 10:39:36 GMT+1000 (Australian Eastern Standard Time)',
 };
 /*
                     active: 0,
@@ -178,6 +186,28 @@ describe('Spotlight list actions', () => {
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
 
             await mockActionsStore.dispatch(createSpotlight(newSpotlightRecord));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles a successful file upload request', async () => {
+            mockApi.onAny(repositories.routes.UPLOAD_PUBLIC_FILES_API().apiUrl).reply(200, {
+                payload: 'tba',
+            });
+            const expectedActions = [actions.PUBLIC_FILE_UPLOADING, actions.PUBLIC_FILE_UPLOADED];
+            await mockActionsStore.dispatch(uploadPublicFile(fileToUpload));
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+
+        it('handles a failing file upload request', async () => {
+            mockApi.onAny(repositories.routes.UPLOAD_PUBLIC_FILES_API().apiUrl).reply(500, {
+                payload: 'error message',
+            });
+            const expectedActions = [
+                actions.PUBLIC_FILE_UPLOADING,
+                actions.APP_ALERT_SHOW,
+                actions.PUBLIC_FILE_UPLOAD_FAILED,
+            ];
+            await mockActionsStore.dispatch(uploadPublicFile(fileToUpload));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });

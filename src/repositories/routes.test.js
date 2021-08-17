@@ -1,4 +1,5 @@
 import * as routes from './routes';
+import { UPLOAD_PUBLIC_FILES_API } from './routes';
 
 describe('Backend routes method', () => {
     it('should get zero-padded year', () => {
@@ -49,9 +50,9 @@ describe('Backend routes method', () => {
     //     });
     // });
 
-    it('should construct url for FILE_UPLOAD_API', () => {
-        expect(routes.FILE_UPLOAD_API()).toEqual({
-            apiUrl: 'file/upload/presigned',
+    it('should construct url for UPLOAD_PUBLIC_FILES_API', () => {
+        expect(routes.UPLOAD_PUBLIC_FILES_API()).toEqual({
+            apiUrl: 'file/upload/public',
         });
     });
 

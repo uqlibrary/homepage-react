@@ -18,7 +18,17 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const SpotlightsAdd = ({ actions, spotlight, spotlightError, spotlightsLoading, spotlightStatus, history }) => {
+export const SpotlightsAdd = ({
+    actions,
+    spotlight,
+    spotlightError,
+    spotlightsLoading,
+    spotlightStatus,
+    history,
+    publicFileUploading,
+    publicFileUploadError,
+    publicFileUploadResult,
+}) => {
     console.log('SpotlightsAdd : spotlightsLoading = ', spotlightsLoading);
     const classes = useStyles();
 
@@ -52,6 +62,9 @@ export const SpotlightsAdd = ({ actions, spotlight, spotlightError, spotlightsLo
                             spotlightStatus={spotlightStatus}
                             history={history}
                             defaults={defaults}
+                            publicFileUploading={publicFileUploading}
+                            publicFileUploadError={publicFileUploadError}
+                            publicFileUploadResult={publicFileUploadResult}
                         />
                     </StandardCard>
                 </section>
@@ -67,6 +80,9 @@ SpotlightsAdd.propTypes = {
     spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     history: PropTypes.object,
+    publicFileUploading: PropTypes.any,
+    publicFileUploadError: PropTypes.any,
+    publicFileUploadResult: PropTypes.any,
 };
 
 export default SpotlightsAdd;

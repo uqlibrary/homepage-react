@@ -97,7 +97,7 @@ export const COMP_AVAIL_API = () => ({
 });
 
 // file uploading apis
-export const FILE_UPLOAD_API = () => ({ apiUrl: 'file/upload/presigned' });
+export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 

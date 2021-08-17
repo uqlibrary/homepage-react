@@ -32,6 +32,7 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
+import { UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -266,6 +267,18 @@ mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
     ]),
 );
 // mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
+
+mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
+    {
+        key: '123456-123456-123456-123456-123456',
+        type: 'mimetype',
+        name: 'name',
+        size: 9999,
+    },
+]);
+// mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
+//     message: ['an error message from the api that describes what the problem was'],
+// });
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
