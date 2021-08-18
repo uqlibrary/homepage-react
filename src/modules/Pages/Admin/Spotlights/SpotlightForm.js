@@ -113,8 +113,10 @@ export const SpotlightForm = ({
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
             !!isValidTitle(currentValues.title) &&
             // currentValues.img_alt.length > 0 && // set to title during save if blank
-            !!currentValues.localfilename &&
-            currentValues.localfilename.length > 0 &&
+            // !!currentValues.localfilename &&
+            // currentValues.localfilename.length > 0 &&
+            !!currentValues.uploadedFile &&
+            // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
             isValidUrl(currentValues.url);
@@ -223,12 +225,15 @@ export const SpotlightForm = ({
     };
 
     const handleSpotlightCreation = newValues => {
+        console.log('handleSpotlightCreation 1: newValues = ', newValues);
         if (defaults.type === 'add') {
-            console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles[0]);
+            console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
             // only 1 file may be uploaded, but it comes in an array
-            const uploadedFile = !!uploadedFiles && uploadedFiles.shift();
-            newValues.uploadedFile = uploadedFile;
-            !!uploadedFile && actions.createSpotlightWithFile(newValues);
+            // const uploadedFile = !!uploadedFiles && uploadedFiles.lengh > 0 && uploadedFiles.shift();
+            // newValues.uploadedFile = uploadedFile;
+            console.log('handleSpotlightCreation 2: newValues = ', newValues);
+            // !!uploadedFile && actions.createSpotlightWithFile(newValues);
+            actions.createSpotlightWithFile(newValues);
         } else {
             // newValues.img_url should be supplied by the form, because we preview the image in there
             actions.createSpotlight(newValues);
@@ -236,13 +241,14 @@ export const SpotlightForm = ({
     };
 
     const saveSpotlight = () => {
+        console.log('saveSpotlight: values = ', values);
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             start: formatDate(values.start),
             end: formatDate(values.end),
             title: values.title,
-            url: values.url, // unsure why this isnt set into `values` by the Set call above
-            img_url: values.img_url,
+            url: values.url,
+            // img_url: values.img_url,
             img_alt: values.img_alt || values.title,
             weight: values.weight,
             active: !!values.active ? 1 : 0,
@@ -251,9 +257,10 @@ export const SpotlightForm = ({
         console.log('saveSpotlight defaults.type = ', defaults.type);
         console.log(
             defaults.type === 'edit'
-                ? 'saveSpotlight actions.saveSpotlightChange(newValues) '
-                : 'saveSpotlight handleSpotlightCreation(newValues)',
+                ? 'saveSpotlight actions.saveSpotlightChange: newValues = '
+                : 'saveSpotlight handleSpotlightCreation: newValues = ',
         );
+        console.log('saveSpotlight: newValues = ', newValues);
         defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : handleSpotlightCreation(newValues);
 
         // force to the top of the page, because otherwise it looks a bit weird
@@ -334,20 +341,20 @@ export const SpotlightForm = ({
 
         setUploadedFiles(file);
 
-        const filename = !!file && file.name;
-        console.log('handleUploadedFiles filename = ', filename);
-        setValues({ ...values, ['localfilename']: filename });
+        // const filename = !!file && file.name;
+        // console.log('handleUploadedFiles filename = ', filename);
+        setValues({ ...values, ['uploadedFile']: file });
 
         console.log('handleUploadedFiles values now = ', values);
-        setFormValidity(validateValues({ ...values, ['localfilename']: filename }));
+        setFormValidity(validateValues({ ...values, ['uploadedFile']: file }));
 
         setTimeout(() => {
-            console.log('handleUploadedFiles: uploadedFiles = ', uploadedFiles);
+            console.log('handleUploadedFiles setTimeout: uploadedFiles = ', uploadedFiles);
         }, 1000);
     };
 
     const clearUploadedFile = () => {
-        setFormValidity(validateValues({ ...values, ['localfilename']: '' }));
+        setFormValidity(validateValues({ ...values, ['uploadedFile']: '' }));
     };
 
     return (
