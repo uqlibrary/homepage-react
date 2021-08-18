@@ -69,9 +69,12 @@ export const createSpotlightWithFile = request => {
     return async dispatch => {
         dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
-        return post(UPLOAD_PUBLIC_FILES_API(), {
-            file: request.uploadedFile,
-        })
+        console.log('createSpotlightWithFile: post data: ', [request.uploadedFile]);
+
+        // const formData = new FormData();
+        // formData.append('spotlightImage', request.uploadedFile);
+        const formData = new FormData(request.uploadedFile);
+        return post(UPLOAD_PUBLIC_FILES_API(), [formData])
             .then(response => {
                 console.log('uploadPublicFile got ', response);
                 dispatch({

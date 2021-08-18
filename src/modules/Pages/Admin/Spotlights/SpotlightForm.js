@@ -252,6 +252,7 @@ export const SpotlightForm = ({
             img_alt: values.img_alt || values.title,
             weight: values.weight,
             active: !!values.active ? 1 : 0,
+            uploadedFile: values.uploadedFile,
         };
 
         console.log('saveSpotlight defaults.type = ', defaults.type);
