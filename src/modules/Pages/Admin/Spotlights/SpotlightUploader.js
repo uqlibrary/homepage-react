@@ -12,13 +12,12 @@ const thumbsContainer = {
     marginTop: 16,
 };
 
-const thumb = {
+const thumbBlock = {
     display: 'inline-flex',
     borderRadius: 2,
     border: '1px solid #eaeaea',
     marginBottom: 8,
     marginRight: 8,
-    // width: 100,
     height: 200,
     padding: 4,
     boxSizing: 'border-box',
@@ -30,13 +29,18 @@ const thumbInner = {
     overflow: 'hidden',
 };
 
-const img = {
+const thumbImg = {
     display: 'block',
     width: 'auto',
     height: '100%',
 };
 
-export function SpotlightUploader({ onAddFile }) {
+const deleteButton = {
+    width: 80,
+    height: 80,
+};
+
+export function SpotlightUploader({ onAddFile, onClearFile }) {
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
@@ -54,9 +58,9 @@ export function SpotlightUploader({ onAddFile }) {
     });
 
     const thumbs = files.map(file => (
-        <div style={thumb} key={file.name}>
+        <div style={thumbBlock} key={file.name}>
             <div style={thumbInner}>
-                <img src={file.preview} style={img} />
+                <img src={file.preview} style={thumbImg} />
             </div>
         </div>
     ));
@@ -73,6 +77,8 @@ export function SpotlightUploader({ onAddFile }) {
         console.log('remove uploaded file ', files);
         files.forEach(file => URL.revokeObjectURL(file.preview));
         setFiles([]);
+
+        onClearFile();
     };
 
     return (
@@ -88,11 +94,7 @@ export function SpotlightUploader({ onAddFile }) {
             ) : (
                 <aside style={thumbsContainer}>
                     {thumbs}
-                    <IconButton
-                        onClick={removeUpload}
-                        // aria-label="Delete uploaded spotlight image"
-                        title="Delete uploaded spotlight image"
-                    >
+                    <IconButton style={deleteButton} onClick={removeUpload} title="Delete uploaded spotlight image">
                         <DeleteIcon />
                     </IconButton>
                 </aside>
@@ -103,4 +105,5 @@ export function SpotlightUploader({ onAddFile }) {
 
 SpotlightUploader.propTypes = {
     onAddFile: PropTypes.func,
+    onClearFile: PropTypes.func,
 };

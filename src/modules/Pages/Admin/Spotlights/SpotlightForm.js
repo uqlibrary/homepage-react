@@ -55,12 +55,7 @@ export const SpotlightForm = ({
     // const [isOpenUploadFile, showErrorUploadFile, hideConfirmationUploadFile] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [uploadedFiles, handleUploadedFiles] = useState(null);
-
-    // dev only
-    useEffect(() => {
-        console.log('uploadedFiles set to ', uploadedFiles);
-    }, [uploadedFiles]);
+    const [uploadedFiles, setUploadedFiles] = useState(null);
 
     console.log('defaults = ', defaults);
     const [values, setValues] = useState({
@@ -111,15 +106,17 @@ export const SpotlightForm = ({
     }
 
     const validateValues = currentValues => {
+        console.log('validateValues: currentValues = ', currentValues);
         const isValid =
             !spotlightsLoading &&
             !isInvalidStartDate(null, currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
             !!isValidTitle(currentValues.title) &&
-            // !!currentValues.url &&
-            // currentValues.img_alt.length > 0 &&
-            // currentValues.img_url.length > 0 &&
-            // currentValues.url.length > 0 &&
+            // currentValues.img_alt.length > 0 && // set to title during save if blank
+            !!currentValues.localfilename &&
+            currentValues.localfilename.length > 0 &&
+            !!currentValues.url &&
+            currentValues.url.length > 0 &&
             isValidUrl(currentValues.url);
 
         console.log('validateValues: isValid = ', isValid, currentValues);
@@ -153,6 +150,12 @@ export const SpotlightForm = ({
     }, []);
 
     useEffect(() => {
+        // console.log('uploadedFiles set to ', uploadedFiles);
+        console.log('values have been changed to: ', values);
+        setFormValidity(validateValues(values));
+    }, [values]);
+
+    useEffect(() => {
         if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
             showConfirmation();
         }
@@ -180,7 +183,6 @@ export const SpotlightForm = ({
         // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
         addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
         addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
-        return;
     };
 
     const clearForm = () => {
@@ -246,7 +248,12 @@ export const SpotlightForm = ({
             active: !!values.active ? 1 : 0,
         };
 
-        console.log('defaults.type = ', defaults.type);
+        console.log('saveSpotlight defaults.type = ', defaults.type);
+        console.log(
+            defaults.type === 'edit'
+                ? 'saveSpotlight actions.saveSpotlightChange(newValues) '
+                : 'saveSpotlight handleSpotlightCreation(newValues)',
+        );
         defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : handleSpotlightCreation(newValues);
 
         // force to the top of the page, because otherwise it looks a bit weird
@@ -320,6 +327,29 @@ export const SpotlightForm = ({
         );
     }
 
+    const handleUploadedFiles = files => {
+        console.log('handleUploadedFiles files = ', files);
+        const file = !!files && files.length > 0 && files.shift();
+        console.log('handleUploadedFiles file = ', file);
+
+        setUploadedFiles(file);
+
+        const filename = !!file && file.name;
+        console.log('handleUploadedFiles filename = ', filename);
+        setValues({ ...values, ['localfilename']: filename });
+
+        console.log('handleUploadedFiles values now = ', values);
+        setFormValidity(validateValues({ ...values, ['localfilename']: filename }));
+
+        setTimeout(() => {
+            console.log('handleUploadedFiles: uploadedFiles = ', uploadedFiles);
+        }, 1000);
+    };
+
+    const clearUploadedFile = () => {
+        setFormValidity(validateValues({ ...values, ['localfilename']: '' }));
+    };
+
     return (
         <Fragment>
             <form onLoad={runAfterRender()}>
@@ -387,7 +417,7 @@ export const SpotlightForm = ({
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title="Help TBA">
+                        <FormControl fullWidth title={locale.form.tooltips.ariaTitle}>
                             <InputLabel htmlFor="spotlightTitle">Title - visible to assitive technology *</InputLabel>
                             <Input
                                 id="spotlightTitle"
@@ -403,13 +433,8 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl
-                            fullWidth
-                            title="Tooltip TBA. Optional - if blank, Title will duplicate as tooltip"
-                        >
-                            <InputLabel htmlFor="spotlightTooltip">
-                                Tooltip text - visible when user mouses over spotlight
-                            </InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.tooltipMouseover}>
+                            <InputLabel htmlFor="spotlightTooltip">{locale.form.tooltips.tooltipInField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
                                 data-testid="admin-spotlights-form-tooltip"
@@ -422,7 +447,7 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title="Please enter a valid URL">
+                        <FormControl fullWidth title={locale.form.tooltips.link}>
                             <InputLabel htmlFor="linkUrl">Spotlight link *</InputLabel>
                             <Input
                                 type="url"
@@ -464,14 +489,14 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={10} align="left">
-                        <SpotlightUploader onAddFile={handleUploadedFiles} />
+                        <SpotlightUploader onAddFile={handleUploadedFiles} onClearFile={clearUploadedFile} />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">
                         <InputLabel
                             style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                            title="Check to add button to alert linking to more information. Displays extra form fields."
+                            title={locale.form.tooltips.publishcheckbox}
                         >
                             <Checkbox
                                 checked={values.active === 1}

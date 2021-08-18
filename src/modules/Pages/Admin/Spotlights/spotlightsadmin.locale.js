@@ -5,6 +5,13 @@ import React, { Fragment } from 'react';
 
 export default {
     form: {
+        tooltips: {
+            ariaTitle: 'Help TBA',
+            tooltipMouseover: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
+            tooltipInField: 'Tooltip text - visible when user mouses over spotlight',
+            link: 'Please enter a valid URL',
+            publishcheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
+        },
         add: {
             addSpotlightConfirmation: {
                 confirmationTitle: 'A spotlight has been added',
