@@ -33,6 +33,10 @@ const useStyles = makeStyles(
                 paddingTop: 16,
             },
         },
+        header: {
+            color: theme.palette.accent.main,
+            textAlign: 'center',
+        },
     }),
     { withTheme: true },
 );
@@ -80,8 +84,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
             (!!readingList &&
                 !!readingList.list &&
                 !!readingList.list[coursecode] &&
-                !!readingList.list[coursecode].title &&
-                ` - ${readingList.list[coursecode].title}`) ||
+                !!readingList.list[coursecode].course_title &&
+                ` - ${readingList.list[coursecode].course_title}`) ||
             null;
 
         if (title !== null) {
@@ -97,11 +101,10 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
     return (
         <React.Fragment>
             <Typography
-                color={'primary'}
+                className={classes.header}
                 component={subjectHeaderLevel}
                 variant={'h5'}
                 data-testid="course-resource-subject-title"
-                style={{ textAlign: 'center' }}
             >
                 {coursecode}
                 {courseTitle()}

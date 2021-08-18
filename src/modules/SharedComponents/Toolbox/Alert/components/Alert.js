@@ -180,7 +180,7 @@ const useStyles = makeStyles(
         },
         info: {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.accent.main,
+            backgroundColor: theme.palette.primary.main,
             '& a:link, & a:hover, & a:visited': {
                 color: theme.palette.white.main,
                 textDecoration: 'underline',
@@ -201,7 +201,7 @@ const useStyles = makeStyles(
         },
         info_outline: {
             color: theme.palette.white.main,
-            backgroundColor: theme.palette.accent.main,
+            backgroundColor: theme.palette.primary.main,
             '& a:link, & a:hover, & a:visited': {
                 color: theme.palette.white.main,
                 textDecoration: 'underline',

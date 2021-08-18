@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'none',
         textAlign: 'left',
         fontSize: 16,
-        color: theme.palette.accent.main,
+        color: theme.palette.primary.main,
         fontWeight: 300,
         lineHeight: 1.25,
     },

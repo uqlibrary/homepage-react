@@ -34,7 +34,6 @@ exports[`Component InlineLoader should render as expected 1`] = `
       xs="auto"
     >
       <WithStyles(ForwardRef(CircularProgress))
-        color="primary"
         size={18}
         thickness={2}
       />
@@ -49,13 +48,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
       xs="auto"
     >
       <WithStyles(ForwardRef(Typography))
-        color="primary"
         component="span"
-        style={
-          Object {
-            "fontSize": "1.33rem",
-          }
-        }
         variant="h5"
       >
         This is a tst

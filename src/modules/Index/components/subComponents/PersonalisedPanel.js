@@ -59,6 +59,7 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
     },
     greeting: {
+        color: theme.palette.accent.main,
         fontSize: '2.25rem',
         lineHeight: 1,
         marginLeft: 16,
@@ -118,7 +119,7 @@ const useStyles = makeStyles(theme => ({
     itemButton: {
         padding: 1,
         minWidth: 0,
-        backgroundColor: theme.palette.accent.main,
+        backgroundColor: theme.palette.primary.main,
         width: 24,
         height: 24,
         borderRadius: 4,
@@ -497,7 +498,7 @@ const PersonalisedPanel = ({
                 data-testid="personalised-panel"
             >
                 <div className={classes.flexHeader}>
-                    <Typography variant={'h5'} component={'h2'} color={'primary'} className={classes.greeting}>
+                    <Typography variant={'h5'} component={'h2'} className={classes.greeting}>
                         {greeting()} {account.firstName || ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
