@@ -498,9 +498,6 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                <TableCell component="th" scope="row" style={{ width: 10 }}>
-                                    W
-                                </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
                                 <TableCell component="th" scope="row" style={{ width: 200 }}>
                                     Spotlight
@@ -543,16 +540,8 @@ export const SpotlightsListAsTable = ({
                                                                 {...draggableProvided.draggableProps}
                                                                 {...draggableProvided.dragHandleProps}
                                                                 innerRef={draggableProvided.innerRef}
+                                                                role="row"
                                                             >
-                                                                <TableCell
-                                                                    component="td"
-                                                                    className={`${classes.tableCell} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
-                                                                >
-                                                                    {' '}
-                                                                    {spotlight.weight}
-                                                                </TableCell>
                                                                 <TableCell
                                                                     component="td"
                                                                     className={`${classes.checkboxCell} ${

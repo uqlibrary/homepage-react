@@ -179,6 +179,7 @@ export const SpotlightForm = ({
         const theBlock = document.getElementById(idDiv);
         const theButton = !!theBlock && theBlock.parentNode.querySelector('button');
         !!theButton && !theButton.hasAttribute('aria-label') && theButton.setAttribute('aria-label', ariaLabel);
+        console.log('addAriaLabelToMuiDatePickerButton theButton = ', theButton);
     };
 
     const runAfterRender = () => {

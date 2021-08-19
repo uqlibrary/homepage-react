@@ -143,7 +143,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                 <SpotlightsListAsTable
                                     rows={currentSpotlights}
                                     headertag="Current and scheduled spotlights"
-                                    tableType="curent"
+                                    tableType="current"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
