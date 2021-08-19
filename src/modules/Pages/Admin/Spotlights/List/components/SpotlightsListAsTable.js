@@ -1,6 +1,8 @@
 import React, { useState, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useCookies } from 'react-cookie';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
@@ -325,6 +327,11 @@ export const SpotlightsListAsTable = ({
         setShowUnPublished(prevState => !prevState);
     };
 
+    const onDragEnd = result => {
+        // must synchronously update state (and server?) to reflect drag result
+        console.log('onDragEnd: result = ', result);
+    };
+
     const needsPaginator = userows.length > footerDisplayMinLength;
     return (
         <Fragment>
@@ -458,124 +465,151 @@ export const SpotlightsListAsTable = ({
                             <TableCell component="th" scope="row" />
                         </TableRow>
                     </TableHead>
-                    <TableBody>
-                        {rowsPerPage > 0 &&
-                            userows.length > 0 &&
-                            userows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(spotlight => {
-                                console.log('spotlight = ', spotlight);
-                                const isScheduled = moment(spotlight.start).isAfter(moment());
-                                return (
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId={`droppable-section-${tableType}`}>
+                            {provided => (
+                                <TableBody>
+                                    ref={provided.innerRef}
+                                    {...provided.droppableProps}
+                                    {rowsPerPage > 0 &&
+                                        userows.length > 0 &&
+                                        userows
+                                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            .map((spotlight, rowindex) => {
+                                                console.log('spotlight = ', spotlight);
+                                                const isScheduled = moment(spotlight.start).isAfter(moment());
+                                                return (
+                                                    <Draggable draggableId={spotlight.id} index={rowindex}>
+                                                        {draggableProvided => (
+                                                            <TableRow
+                                                                key={spotlight.id}
+                                                                id={`spotlight-list-row-${spotlight.id}`}
+                                                                data-testid={`spotlight-list-row-${spotlight.id}`}
+                                                                className="spotlight-data-row"
+                                                                // index={rowindex}
+                                                                {...draggableProvided.draggableProps}
+                                                                {...draggableProvided.dragHandleProps}
+                                                                ref={draggableProvided.innerRef}
+                                                            >
+                                                                <TableCell
+                                                                    component="td"
+                                                                    className={`${classes.checkboxCell} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    <Checkbox
+                                                                        id={`spotlight-list-item-checkbox-${spotlight.id}`}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': `spotlight-list-item-title-${spotlight.id}`,
+                                                                            'data-testid': `spotlight-list-item-checkbox-${spotlight.id}`,
+                                                                        }}
+                                                                        onChange={handleCheckboxChange}
+                                                                        value={`${checkBoxIdPrefix}${spotlight.id}`}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell
+                                                                    component="td"
+                                                                    className={`${classes.tableCell} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    <img
+                                                                        alt={spotlight.img_alt}
+                                                                        src={spotlight.img_url}
+                                                                        style={{ width: 220, minHeight: 80 }}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell
+                                                                    component="td"
+                                                                    className={`${classes.tableCell} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    {isScheduled && (
+                                                                        <div style={{ float: 'left', width: 30 }}>
+                                                                            <ScheduleIcon
+                                                                                data-testid={`spotlight-scheduled-icon-${spotlight.id}`}
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                    <h4
+                                                                        style={{ display: 'inline' }}
+                                                                        id={`spotlight-list-item-title-${spotlight.id}`}
+                                                                    >{`${spotlight.title}`}</h4>{' '}
+                                                                </TableCell>
+                                                                <TableCell
+                                                                    component="td"
+                                                                    align="center"
+                                                                    className={`${classes.startDate} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    <span title={spotlight.startDateLong}>
+                                                                        {spotlight.startDateDisplay}
+                                                                    </span>
+                                                                </TableCell>
+                                                                <TableCell
+                                                                    component="td"
+                                                                    align="center"
+                                                                    className={`${classes.endDate} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    <span title={spotlight.endDateLong}>
+                                                                        {spotlight.endDateDisplay}
+                                                                    </span>
+                                                                </TableCell>
+                                                                <TableCell
+                                                                    component="td"
+                                                                    className={`${classes.publishedCell} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    <span>{!!spotlight.active ? 'yes' : 'no'}</span>
+                                                                </TableCell>
+                                                                <TableCell
+                                                                    component="td"
+                                                                    id={`spotlight-list-action-block-${spotlight.id}`}
+                                                                    data-testid={`spotlight-list-action-block-${spotlight.id}`}
+                                                                    className={`${classes.tableCell} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    <SpotlightSplitButton
+                                                                        spotlightId={spotlight.id}
+                                                                        deleteSpotlightById={deleteSpotlightById}
+                                                                        mainButtonLabel={
+                                                                            tableType === 'past' ? 'View' : 'Edit'
+                                                                        }
+                                                                        navigateToCloneForm={navigateToCloneForm}
+                                                                        navigateToEditForm={navigateToEditForm}
+                                                                        navigateToView={navigateToView}
+                                                                        confirmDeleteLocale={confirmDeleteLocale}
+                                                                    />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        )}
+                                                    </Draggable>
+                                                );
+                                            })}
                                     <TableRow
-                                        key={spotlight.id}
-                                        id={`spotlight-list-row-${spotlight.id}`}
-                                        data-testid={`spotlight-list-row-${spotlight.id}`}
-                                        className="spotlight-data-row"
+                                        id={`spotlight-list-no-spotlights-${tableType}`}
+                                        data-testid={`spotlight-list-no-spotlights-${tableType}`}
+                                        style={
+                                            rowsPerPage > 0 && userows.length > 0
+                                                ? { display: 'none' }
+                                                : { display: 'table-row' }
+                                        }
                                     >
-                                        <TableCell
-                                            component="td"
-                                            className={`${classes.checkboxCell} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            <Checkbox
-                                                id={`spotlight-list-item-checkbox-${spotlight.id}`}
-                                                inputProps={{
-                                                    'aria-labelledby': `spotlight-list-item-title-${spotlight.id}`,
-                                                    'data-testid': `spotlight-list-item-checkbox-${spotlight.id}`,
-                                                }}
-                                                onChange={handleCheckboxChange}
-                                                value={`${checkBoxIdPrefix}${spotlight.id}`}
-                                            />
-                                        </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            className={`${classes.tableCell} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            <img
-                                                alt={spotlight.img_alt}
-                                                src={spotlight.img_url}
-                                                style={{ width: 220, minHeight: 80 }}
-                                            />
-                                        </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            className={`${classes.tableCell} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            {isScheduled && (
-                                                <div style={{ float: 'left', width: 30 }}>
-                                                    <ScheduleIcon
-                                                        data-testid={`spotlight-scheduled-icon-${spotlight.id}`}
-                                                    />
-                                                </div>
-                                            )}
-                                            <h4
-                                                style={{ display: 'inline' }}
-                                                id={`spotlight-list-item-title-${spotlight.id}`}
-                                            >{`${spotlight.title}`}</h4>{' '}
-                                        </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            align="center"
-                                            className={`${classes.startDate} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            <span title={spotlight.startDateLong}>{spotlight.startDateDisplay}</span>
-                                        </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            align="center"
-                                            className={`${classes.endDate} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            <span title={spotlight.endDateLong}>{spotlight.endDateDisplay}</span>
-                                        </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            className={`${classes.publishedCell} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            <span>{!!spotlight.active ? 'yes' : 'no'}</span>
-                                        </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            id={`spotlight-list-action-block-${spotlight.id}`}
-                                            data-testid={`spotlight-list-action-block-${spotlight.id}`}
-                                            className={`${classes.tableCell} ${
-                                                !!isScheduled ? classes.scheduledDisplay : ''
-                                            }`}
-                                        >
-                                            <SpotlightSplitButton
-                                                spotlightId={spotlight.id}
-                                                deleteSpotlightById={deleteSpotlightById}
-                                                mainButtonLabel={tableType === 'past' ? 'View' : 'Edit'}
-                                                navigateToCloneForm={navigateToCloneForm}
-                                                navigateToEditForm={navigateToEditForm}
-                                                navigateToView={navigateToView}
-                                                confirmDeleteLocale={confirmDeleteLocale}
-                                            />
+                                        <TableCell component="td">
+                                            <p>No spotlights</p>
                                         </TableCell>
                                     </TableRow>
-                                );
-                            })}
-                        <TableRow
-                            id={`spotlight-list-no-spotlights-${tableType}`}
-                            data-testid={`spotlight-list-no-spotlights-${tableType}`}
-                            style={
-                                rowsPerPage > 0 && userows.length > 0 ? { display: 'none' } : { display: 'table-row' }
-                            }
-                        >
-                            <TableCell component="td">
-                                <p>No spotlights</p>
-                            </TableCell>
-                        </TableRow>
-                    </TableBody>
+                                    {provided.placeholder}
+                                </TableBody>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                     {!!needsPaginator && (
                         <TableFooter>
                             <TableRow>
