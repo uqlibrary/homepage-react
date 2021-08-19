@@ -104,6 +104,7 @@ export const createSpotlightWithFile = request => {
 };
 
 export const saveSpotlightChange = request => {
+    console.log('saveSpotlightChange for request ', request);
     return async dispatch => {
         dispatch({ type: actions.SPOTLIGHT_LOADING });
         console.log(

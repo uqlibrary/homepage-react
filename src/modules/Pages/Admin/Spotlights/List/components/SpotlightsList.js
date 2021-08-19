@@ -143,6 +143,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                 <SpotlightsListAsTable
                                     rows={currentSpotlights}
                                     headertag="Current and scheduled spotlights"
+                                    tableType="curent"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
@@ -154,6 +155,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                             <div data-testid="admin-spotlights-list-past-list">
                                 <SpotlightsListAsTable
                                     rows={pastSpotlights}
+                                    tableType="past"
                                     headertag="Past spotlights"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
