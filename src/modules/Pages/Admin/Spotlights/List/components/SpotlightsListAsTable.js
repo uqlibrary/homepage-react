@@ -440,37 +440,35 @@ export const SpotlightsListAsTable = ({
                     </IconButton>
                 </span>
             )}
-            <TableContainer
-                id={`spotlight-list-${tableType}`}
-                data-testid={`spotlight-list-${tableType}`}
-                component={Paper}
-            >
-                <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
-                    <TableHead>
-                        <TableRow md-row="" className="md-row">
-                            <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
-                            <TableCell component="th" scope="row" style={{ width: 200 }}>
-                                Spotlight
-                            </TableCell>
-                            <TableCell component="th" scope="row" />
-                            <TableCell component="th" scope="row" align="center" style={{ padding: 0 }}>
-                                Publish date
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="center" style={{ padding: 8 }}>
-                                Unpublish date
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="center" style={{ width: 50, padding: 8 }}>
-                                Published?
-                            </TableCell>
-                            <TableCell component="th" scope="row" />
-                        </TableRow>
-                    </TableHead>
-                    <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <TableContainer
+                    id={`spotlight-list-${tableType}`}
+                    data-testid={`spotlight-list-${tableType}`}
+                    component={Paper}
+                >
+                    <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
+                        <TableHead>
+                            <TableRow md-row="" className="md-row">
+                                <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
+                                <TableCell component="th" scope="row" style={{ width: 200 }}>
+                                    Spotlight
+                                </TableCell>
+                                <TableCell component="th" scope="row" />
+                                <TableCell component="th" scope="row" align="center" style={{ padding: 0 }}>
+                                    Publish date
+                                </TableCell>
+                                <TableCell component="th" scope="row" align="center" style={{ padding: 8 }}>
+                                    Unpublish date
+                                </TableCell>
+                                <TableCell component="th" scope="row" align="center" style={{ width: 50, padding: 8 }}>
+                                    Published?
+                                </TableCell>
+                                <TableCell component="th" scope="row" />
+                            </TableRow>
+                        </TableHead>
                         <Droppable droppableId={`droppable-section-${tableType}`}>
-                            {provided => (
-                                <TableBody>
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
+                            {droppableProvided => (
+                                <TableBody innerRef={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
                                     {rowsPerPage > 0 &&
                                         userows.length > 0 &&
                                         userows
@@ -479,17 +477,21 @@ export const SpotlightsListAsTable = ({
                                                 console.log('spotlight = ', spotlight);
                                                 const isScheduled = moment(spotlight.start).isAfter(moment());
                                                 return (
-                                                    <Draggable draggableId={spotlight.id} index={rowindex}>
+                                                    <Draggable
+                                                        draggableId={spotlight.id}
+                                                        index={rowindex}
+                                                        key={spotlight.id}
+                                                    >
                                                         {draggableProvided => (
                                                             <TableRow
-                                                                key={spotlight.id}
+                                                                // key={spotlight.id}
                                                                 id={`spotlight-list-row-${spotlight.id}`}
                                                                 data-testid={`spotlight-list-row-${spotlight.id}`}
                                                                 className="spotlight-data-row"
                                                                 // index={rowindex}
                                                                 {...draggableProvided.draggableProps}
                                                                 {...draggableProvided.dragHandleProps}
-                                                                ref={draggableProvided.innerRef}
+                                                                innerRef={draggableProvided.innerRef}
                                                             >
                                                                 <TableCell
                                                                     component="td"
@@ -605,36 +607,36 @@ export const SpotlightsListAsTable = ({
                                             <p>No spotlights</p>
                                         </TableCell>
                                     </TableRow>
-                                    {provided.placeholder}
+                                    {droppableProvided.placeholder}
                                 </TableBody>
                             )}
                         </Droppable>
-                    </DragDropContext>
-                    {!!needsPaginator && (
-                        <TableFooter>
-                            <TableRow>
-                                <TablePagination
-                                    rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
-                                    colSpan={3}
-                                    count={userows.length}
-                                    rowsPerPage={rowsPerPage}
-                                    page={page}
-                                    SelectProps={{
-                                        inputProps: {
-                                            'aria-label': 'rows per page',
-                                            'data-testid': 'admin-spotlights-list-paginator-select',
-                                        },
-                                        native: true,
-                                    }}
-                                    onChangePage={handleChangePage}
-                                    onChangeRowsPerPage={handleChangeRowsPerPage}
-                                    ActionsComponent={TablePaginationActions}
-                                />
-                            </TableRow>
-                        </TableFooter>
-                    )}
-                </Table>
-            </TableContainer>
+                        {!!needsPaginator && (
+                            <TableFooter>
+                                <TableRow>
+                                    <TablePagination
+                                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
+                                        colSpan={3}
+                                        count={userows.length}
+                                        rowsPerPage={rowsPerPage}
+                                        page={page}
+                                        SelectProps={{
+                                            inputProps: {
+                                                'aria-label': 'rows per page',
+                                                'data-testid': 'admin-spotlights-list-paginator-select',
+                                            },
+                                            native: true,
+                                        }}
+                                        onChangePage={handleChangePage}
+                                        onChangeRowsPerPage={handleChangeRowsPerPage}
+                                        ActionsComponent={TablePaginationActions}
+                                    />
+                                </TableRow>
+                            </TableFooter>
+                        )}
+                    </Table>
+                </TableContainer>
+            </DragDropContext>
         </Fragment>
     );
 };
