@@ -71,9 +71,10 @@ export const createSpotlightWithFile = request => {
 
         console.log('createSpotlightWithFile: post data: ', [request.uploadedFile]);
 
-        // const formData = new FormData();
-        // formData.append('spotlightImage', request.uploadedFile);
-        const formData = new FormData(request.uploadedFile);
+        const formData = new FormData();
+        formData.append('spotlightImage', request.uploadedFile);
+        // const formData = new FormData(request.uploadedFile);
+        console.log('createSpotlightWithFile: about to upload: = ', formData.get('spotlightImage'));
         return post(UPLOAD_PUBLIC_FILES_API(), [formData])
             .then(response => {
                 console.log('uploadPublicFile got ', response);
