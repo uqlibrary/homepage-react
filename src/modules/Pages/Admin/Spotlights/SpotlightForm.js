@@ -155,7 +155,7 @@ export const SpotlightForm = ({
         // console.log('uploadedFiles set to ', uploadedFiles);
         console.log('values have been changed to: ', values);
         setFormValidity(validateValues(values));
-    }, [values]);
+    }, [values, validateValues]);
 
     useEffect(() => {
         if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
