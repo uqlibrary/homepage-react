@@ -236,7 +236,7 @@ export const SpotlightForm = ({
             actions.createSpotlightWithFile(newValues);
         } else {
             // newValues.img_url should be supplied by the form, because we preview the image in there
-            actions.createSpotlight(newValues);
+            actions.createSpotlightWithoutFile(newValues);
         }
     };
 

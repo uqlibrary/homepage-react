@@ -30,17 +30,17 @@ export function loadAllSpotlights() {
     };
 }
 
-function saveSpotlight(request, dispatch) {
+function createSpotlight(request, dispatch) {
     return post(SPOTLIGHT_CREATE_API(), request)
         .then(data => {
-            console.log('saveSpotlight action, returned data = ', data);
+            console.log('createSpotlight action, returned data = ', data);
             dispatch({
                 type: actions.SPOTLIGHT_SAVED,
                 payload: data,
             });
         })
         .catch(error => {
-            console.log('saveSpotlight action error = ', error);
+            console.log('createSpotlight action error = ', error);
             dispatch({
                 type: actions.SPOTLIGHT_FAILED,
                 payload: error.message,
@@ -48,14 +48,15 @@ function saveSpotlight(request, dispatch) {
         });
 }
 
-export const createSpotlight = request => {
+// possibly this isnt needed? the file should always exist?
+export const createSpotlightWithoutFile = request => {
     console.log('action createSpotlight, request to save: ', request);
     return dispatch => {
         console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
         // console.log('dispatch = ', dispatch);
         console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
         dispatch({ type: actions.SPOTLIGHT_LOADING });
-        return saveSpotlight(request, dispatch);
+        return createSpotlight(request, dispatch);
     };
 };
 
@@ -63,13 +64,13 @@ export const createSpotlightWithFile = request => {
     console.log('action createSpotlightWithFile, request to save: ', request);
 
     if (!request.uploadedFile) {
-        return createSpotlight(request);
+        return createSpotlightWithoutFile(request);
     }
 
     return async dispatch => {
         dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
-        console.log('createSpotlightWithFile: post data: ', [request.uploadedFile]);
+        console.log('createSpotlightWithFile: post data: ', request.uploadedFile);
 
         const formData = new FormData();
         formData.append('spotlightImage', request.uploadedFile);
@@ -92,7 +93,7 @@ export const createSpotlightWithFile = request => {
                 delete request.uploadedFile;
                 console.log('action createSpotlightWithFile, request to save: ', request);
                 dispatch({ type: actions.SPOTLIGHT_LOADING });
-                return saveSpotlight(request, dispatch);
+                return createSpotlight(request, dispatch);
             })
             .catch(error => {
                 console.log('uploadPublicFile error = ', error);
