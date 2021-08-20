@@ -193,10 +193,3 @@ export function clearASpotlight() {
         dispatch({ type: actions.SPOTLIGHT_CLEAR });
     };
 }
-
-// export function uploadPublicFile(newFile) {
-//     console.log('uploadPublicFile ', newFile);
-//     return dispatch => {
-//
-//     };
-// }

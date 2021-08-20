@@ -410,14 +410,14 @@ export const spotlightsLong = [{
     "active": 1
 }, {
     "id": "fba95ec0-77f5-11eb-8c73-9734f9d4b368",
-    "start": "2031-03-01 00:01:00",
-    "end": "2099-03-07 23:59:00",
+    "start": "2021-03-01 00:01:00",
+    "end": "2099-12-07 23:59:00",
     "title": "Study outdoors in Duhig Place - Study space",
     "url": "http:\/\/bit.ly\/3uBIK7C",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.",
     "weight": 0,
-    "active": 1
+    "active": 0
 }, {
     "id": "aa2fab10-7cb1-11eb-a9ab-d7c632403564",
     "start": "2031-03-08 00:01:00",

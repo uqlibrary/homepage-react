@@ -155,7 +155,8 @@ export const SpotlightForm = ({
         // console.log('uploadedFiles set to ', uploadedFiles);
         console.log('values have been changed to: ', values);
         setFormValidity(validateValues(values));
-    }, [values, validateValues]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [values]);
 
     useEffect(() => {
         if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {

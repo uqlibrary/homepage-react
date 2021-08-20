@@ -32,74 +32,52 @@ const moment = require('moment');
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
 
-const useStyles2 = makeStyles(
-    theme => ({
-        table: {
-            // minWidth: 500,
-            // tableLayout: 'fixed',
+const useStyles = makeStyles(() => ({
+    table: {
+        // minWidth: 500,
+        // tableLayout: 'fixed',
+    },
+    tableCell: {
+        padding: 0,
+    },
+    scheduledIconCell: {
+        padding: 0,
+    },
+    startDate: {
+        whiteSpace: 'pre', // makes moment format able to take a carriage return
+        padding: 0,
+    },
+    endDate: {
+        whiteSpace: 'pre',
+        padding: 0,
+    },
+    headerRow: {
+        display: 'flex',
+        padding: '0 0.5rem',
+    },
+    iconHighlighted: {
+        color: '#fff',
+    },
+    checkboxCell: {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#595959',
         },
-        editButton: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.accent.dark,
-            },
-        },
-        tableCell: {
-            padding: 0,
-        },
-        scheduledIconCell: {
-            padding: 0,
-        },
-        startDate: {
-            whiteSpace: 'pre', // makes moment format able to take a carriage return
-            padding: 0,
-        },
-        endDate: {
-            whiteSpace: 'pre',
-            padding: 0,
-        },
-        headerRow: {
-            display: 'flex',
-            padding: '0 0.5rem',
-        },
-        headerRowHighlighted: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-        },
-        iconHighlighted: {
-            color: '#fff',
-        },
-        urgent: {
-            backgroundColor: theme.palette.warning.main,
-            color: '#fff',
-        },
-        link: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-        },
-        checkboxCell: {
-            '& input[type="checkbox"]:checked + svg': {
-                fill: '#595959',
-            },
-            padding: 0,
-        },
-        toggle: {
-            whiteSpace: 'nowrap',
-        },
-        publishedCell: {
-            padding: 0,
-            textAlign: 'center',
-        },
-        scheduledDisplay: {
+        padding: 0,
+    },
+    toggle: {
+        whiteSpace: 'nowrap',
+    },
+    publishedCell: {
+        padding: 0,
+        textAlign: 'center',
+    },
+    scheduledDisplay: {
+        fontWeight: '300',
+        '& h4': {
             fontWeight: '300',
-            '& h4': {
-                fontWeight: '300',
-            },
         },
-    }),
-    { withTheme: true },
-);
+    },
+}));
 export const SpotlightsListAsTable = ({
     rows,
     headertag,
@@ -111,7 +89,7 @@ export const SpotlightsListAsTable = ({
     spotlightOrder,
     allowFilter,
 }) => {
-    const classes = useStyles2();
+    const classes = useStyles();
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
