@@ -4,6 +4,7 @@ import { useDropzone } from 'react-dropzone';
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import { default as locale } from './spotlightsadmin.locale';
 
 const thumbsContainer = {
     display: 'flex',
@@ -89,7 +90,7 @@ export function SpotlightUploader({ onAddFile, onClearFile }) {
                     style={{ border: 'thin solid black', backgroundColor: 'lightgrey', padding: '1rem' }}
                 >
                     <input {...getInputProps()} />
-                    <p>Drag 'n' drop some files here, or click to select files</p>
+                    <p>{locale.form.add.dragareaInstructions}</p>
                 </div>
             ) : (
                 <aside style={thumbsContainer}>
