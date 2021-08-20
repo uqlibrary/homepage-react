@@ -22,6 +22,7 @@ export function loadAllSpotlights() {
                 });
             })
             .catch(error => {
+                console.log('loadAllSpotlights, error = ', error);
                 dispatch({
                     type: actions.SPOTLIGHTS_FAILED,
                     payload: error.message,
@@ -172,14 +173,14 @@ export function loadASpotlight(spotlightId) {
         console.log('getting ', SPOTLIGHT_GET_BY_ID_API({ id: spotlightId }));
         return get(SPOTLIGHT_GET_BY_ID_API({ id: spotlightId }))
             .then(data => {
-                console.log('got ', data);
+                console.log('loadASpotlight action, returned data = ', data);
                 dispatch({
                     type: actions.SPOTLIGHT_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('loadAnSpotlight error = ', error);
+                console.log('loadASpotlight action error = ', error);
                 dispatch({
                     type: actions.SPOTLIGHT_FAILED,
                     payload: error.message,
