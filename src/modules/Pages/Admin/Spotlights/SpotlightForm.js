@@ -155,6 +155,7 @@ export const SpotlightForm = ({
         // console.log('uploadedFiles set to ', uploadedFiles);
         console.log('values have been changed to: ', values);
         setFormValidity(validateValues(values));
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values]);
 
     useEffect(() => {
@@ -237,7 +238,7 @@ export const SpotlightForm = ({
             actions.createSpotlightWithFile(newValues);
         } else {
             // newValues.img_url should be supplied by the form, because we preview the image in there
-            actions.createSpotlight(newValues);
+            actions.createSpotlightWithoutFile(newValues);
         }
     };
 

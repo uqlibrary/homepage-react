@@ -1,5 +1,13 @@
 import moment from 'moment';
 
+const numberCurrentPublishedSpotlights = 3;
+const totalCountPastRecords = 34;
+
+function getFooterLabel(totalCountRecordsAvailable, numberDisplayedOnPage = 5) {
+    // eg '1-5 of 34'
+    return `1-${numberDisplayedOnPage} of ${totalCountRecordsAvailable}`;
+}
+
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Spotlights Admin public access', () => {
@@ -41,7 +49,7 @@ describe('Spotlights Admin Pages', () => {
             cy.wait(100);
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()
-                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
             // cy.get('[data-testid="headerRow-count-current"]').contains('1 spotlight');
 
             // only the scheduled spotlight has a 'scheduled' icon
@@ -49,8 +57,8 @@ describe('Spotlights Admin Pages', () => {
             // cy.get('svg[data-testid="spotlight-scheduled-icon-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]')
             // .should('exist');
             // current alert exists, but it does not have a 'scheduled' icon
-            cy.get('tr[data-testid="spotlight-list-row-b286d890-76f9-11eb-9471-41351ee40e02"]').should('exist');
-            cy.get('svg[data-testid="spotlight-scheduled-icon-b286d890-76f9-11eb-9471-41351ee40e02"]').should(
+            cy.get('tr[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
+            cy.get('svg[data-testid="spotlight-scheduled-icon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
                 'not.exist',
             );
 
@@ -63,7 +71,9 @@ describe('Spotlights Admin Pages', () => {
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
             // cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('not.exist');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('exist');
-            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains('1-5 of 330');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
+                getFooterLabel(totalCountPastRecords),
+            );
         });
         it('is accessible', () => {
             cy.injectAxe();
@@ -78,22 +88,28 @@ describe('Spotlights Admin Pages', () => {
             });
         });
         it('the footer paginator shows all links when "all" is selected', () => {
-            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains('1-5 of 330');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
+                getFooterLabel(totalCountPastRecords),
+            );
             cy.get(
                 '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
             ).select('All');
             cy.get(
                 '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
-            ).should('have.value', 330);
+            ).should('have.value', totalCountPastRecords);
             cy.get('[data-testid="admin-spotlights-list-past-list"] tbody ')
                 .children()
-                .should('have.length', 330 + numRowsHiddenAsNoDatainfo);
-            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains('1-330 of 330');
+                .should('have.length', totalCountPastRecords + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
+                getFooterLabel(totalCountPastRecords, totalCountPastRecords),
+            );
 
             // reload the page and the cookie being set means it is still on 'all'
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains('1-330 of 330');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
+                getFooterLabel(totalCountPastRecords, totalCountPastRecords),
+            );
         });
     });
     context('Spotlight Admin Add page', () => {
@@ -223,7 +239,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()
-                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+                .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
         });
         it('has a working Help button on the Add page', () => {
             cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');

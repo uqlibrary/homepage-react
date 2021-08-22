@@ -13,6 +13,7 @@ export default {
             publishcheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
         },
         add: {
+            dragareaInstructions: "Drag 'n' drop your new Spotlight image here, or click to select an image",
             addSpotlightConfirmation: {
                 confirmationTitle: 'A spotlight has been added',
                 confirmationMessage: '',

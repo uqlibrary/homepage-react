@@ -22,6 +22,7 @@ export function loadAllSpotlights() {
                 });
             })
             .catch(error => {
+                console.log('loadAllSpotlights, error = ', error);
                 dispatch({
                     type: actions.SPOTLIGHTS_FAILED,
                     payload: error.message,
@@ -30,17 +31,17 @@ export function loadAllSpotlights() {
     };
 }
 
-function saveSpotlight(request, dispatch) {
+function createSpotlight(request, dispatch) {
     return post(SPOTLIGHT_CREATE_API(), request)
         .then(data => {
-            console.log('saveSpotlight action, returned data = ', data);
+            console.log('createSpotlight action, returned data = ', data);
             dispatch({
                 type: actions.SPOTLIGHT_SAVED,
                 payload: data,
             });
         })
         .catch(error => {
-            console.log('saveSpotlight action error = ', error);
+            console.log('createSpotlight action error = ', error);
             dispatch({
                 type: actions.SPOTLIGHT_FAILED,
                 payload: error.message,
@@ -48,14 +49,15 @@ function saveSpotlight(request, dispatch) {
         });
 }
 
-export const createSpotlight = request => {
+// possibly this isnt needed? the file should always exist?
+export const createSpotlightWithoutFile = request => {
     console.log('action createSpotlight, request to save: ', request);
     return dispatch => {
         console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
         // console.log('dispatch = ', dispatch);
         console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
         dispatch({ type: actions.SPOTLIGHT_LOADING });
-        return saveSpotlight(request, dispatch);
+        return createSpotlight(request, dispatch);
     };
 };
 
@@ -63,18 +65,19 @@ export const createSpotlightWithFile = request => {
     console.log('action createSpotlightWithFile, request to save: ', request);
 
     if (!request.uploadedFile) {
-        return createSpotlight(request);
+        return createSpotlightWithoutFile(request);
     }
 
     return async dispatch => {
         dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
-        console.log('createSpotlightWithFile: post data: ', [request.uploadedFile]);
+        console.log('createSpotlightWithFile: post data: ', request.uploadedFile);
 
-        // const formData = new FormData();
-        // formData.append('spotlightImage', request.uploadedFile);
-        const formData = new FormData(request.uploadedFile);
-        return post(UPLOAD_PUBLIC_FILES_API(), [formData])
+        const formData = new FormData();
+        formData.append('spotlightImage', request.uploadedFile);
+        // do not inspect formData with get, eg not: formData.get('spotlightImage')),
+        // it causes webpack not to build, with cryptic errors
+        return post(UPLOAD_PUBLIC_FILES_API(), [formData], { headers: { 'Content-Type': 'multipart/form-data' } })
             .then(response => {
                 console.log('uploadPublicFile got ', response);
                 dispatch({
@@ -91,7 +94,7 @@ export const createSpotlightWithFile = request => {
                 delete request.uploadedFile;
                 console.log('action createSpotlightWithFile, request to save: ', request);
                 dispatch({ type: actions.SPOTLIGHT_LOADING });
-                return saveSpotlight(request, dispatch);
+                return createSpotlight(request, dispatch);
             })
             .catch(error => {
                 console.log('uploadPublicFile error = ', error);
@@ -171,14 +174,14 @@ export function loadASpotlight(spotlightId) {
         console.log('getting ', SPOTLIGHT_GET_BY_ID_API({ id: spotlightId }));
         return get(SPOTLIGHT_GET_BY_ID_API({ id: spotlightId }))
             .then(data => {
-                console.log('got ', data);
+                console.log('loadASpotlight action, returned data = ', data);
                 dispatch({
                     type: actions.SPOTLIGHT_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('loadAnSpotlight error = ', error);
+                console.log('loadASpotlight action error = ', error);
                 dispatch({
                     type: actions.SPOTLIGHT_FAILED,
                     payload: error.message,
@@ -192,10 +195,3 @@ export function clearASpotlight() {
         dispatch({ type: actions.SPOTLIGHT_CLEAR });
     };
 }
-
-// export function uploadPublicFile(newFile) {
-//     console.log('uploadPublicFile ', newFile);
-//     return dispatch => {
-//
-//     };
-// }

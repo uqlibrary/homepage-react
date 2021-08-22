@@ -52,7 +52,7 @@ describe('Backend routes method', () => {
 
     it('should construct url for UPLOAD_PUBLIC_FILES_API', () => {
         expect(routes.UPLOAD_PUBLIC_FILES_API()).toEqual({
-            apiUrl: 'file/upload/public',
+            apiUrl: 'file/public',
         });
     });
 
