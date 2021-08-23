@@ -37,7 +37,14 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlightsError, history }) => {
+export const SpotlightsList = ({
+    actions,
+    spotlights,
+    spotlightsLoading,
+    spotlightsError,
+    spotlightError,
+    history,
+}) => {
     const classes = useStyles();
 
     const [currentSpotlights, setCurrentSpotlights] = useState([]);
@@ -144,6 +151,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     rows={currentSpotlights}
                                     headertag="Current and scheduled spotlights"
                                     tableType="current"
+                                    spotlightError={spotlightError}
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
@@ -157,6 +165,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     rows={pastSpotlights}
                                     tableType="past"
                                     headertag="Past spotlights"
+                                    spotlightError={spotlightError}
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
@@ -178,6 +187,7 @@ SpotlightsList.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.any,
     spotlightsError: PropTypes.any,
+    spotlightError: PropTypes.any,
     history: PropTypes.object,
 };
 

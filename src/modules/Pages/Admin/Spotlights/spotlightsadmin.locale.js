@@ -160,5 +160,11 @@ export default {
                 </div>
             ),
         },
+        tooltips: {
+            hideShowUnpublishedCheckbox: 'Check and uncheck to show and hide unpublished spotlights in the list',
+            hideShowScheduledCheckbox: 'Check and uncheck to show and hide scheduled spotlights in the list',
+            deleteCheckedSpotlightsButton: 'Delete spotlight(s)',
+            clearCheckedSpotlightsButton: 'Deselect all',
+        },
     },
 };

@@ -85,6 +85,7 @@ export const SpotlightsListAsTable = ({
     headertag,
     tableType,
     spotlightsLoading,
+    spotlightError,
     history,
     actions,
     deleteSpotlight,
@@ -92,6 +93,7 @@ export const SpotlightsListAsTable = ({
     allowFilter,
     canDragRows,
 }) => {
+    console.log('spotlightError = ', spotlightError);
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
@@ -120,27 +122,23 @@ export const SpotlightsListAsTable = ({
                 return;
             }
 
-            let localRows = rowList.map((row, index) => {
-                if (tableType !== 'past') {
-                    // change "!== past" to test by passed in attribute for 'candragdrop?
-                    row.weight = (index + 1) * 10;
-                    // reset the weights to a clean 10 step, in case they arent already,
-                    // so it is easy to insert one in the middle during drag and drop
-                }
-                return row;
-            });
-            console.log('localRows = ', localRows);
-
+            let localRows = rowList
+                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
+                .map((row, index) => {
+                    if (tableType !== 'past') {
+                        // change "!== past" to test by passed in attribute for 'candragdrop?
+                        row.weight = (index + 1) * 10;
+                        // reset the weights to a clean 10 step, in case they arent already,
+                        // so it is easy to insert one in the middle during drag and drop
+                    }
+                    return row;
+                });
             if (!!allowFilter && !!showFuture) {
                 localRows = localRows.filter(row => !moment(row.start).isAfter(moment()));
-                console.log('2 localRows future: ', localRows);
             }
             if (!!allowFilter && !!showUnPublished) {
                 localRows = localRows.filter(row => !!row.active);
-                console.log('3 localRows unpublished = ', localRows);
             }
-
-            console.log('4 localRows = ', localRows);
 
             // might be used by Past section if we add sortable columns?
             // if (!!spotlightOrder && !!rows && rows.length > 0) {
@@ -165,16 +163,15 @@ export const SpotlightsListAsTable = ({
     );
 
     React.useEffect(() => {
-        console.log('rows have changed ', rows.length);
         displayTheRows(rows);
 
         // make it redraw when all displayed rows in a table are deleted
         rows.length === 0 && setPage(0);
     }, [rows, displayTheRows]);
 
-    React.useEffect(() => {
-        console.log('useRows have changed ', userows);
-    }, [userows]);
+    // React.useEffect(() => {
+    //     console.log('useRows have changed ', userows);
+    // }, [userows]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -313,8 +310,22 @@ export const SpotlightsListAsTable = ({
 
     // after a drag and drop save, this updates the display
     function moveRow(r, filtereduserows) {
+        const currentRow = rows.find(row => row.id === r.id);
+        // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
+        const rowToUpdate = {
+            id: currentRow.id,
+            start: currentRow.start,
+            end: currentRow.end,
+            title: currentRow.title,
+            url: currentRow.url,
+            img_url: currentRow.img_url,
+            img_alt: currentRow.img_alt,
+            active: currentRow.active,
+            weight: r.weight,
+        };
+        console.log('send for save: ', rowToUpdate);
         actions
-            .saveSpotlightChange(r)
+            .saveSpotlightChange(rowToUpdate)
             .then(() => {
                 rows.forEach(row => {
                     filtereduserows.forEach(fr => {
@@ -327,17 +338,16 @@ export const SpotlightsListAsTable = ({
                     });
                 });
                 rows.sort((a, b) => a.weight - b.weight);
-                console.log('after: ');
-                rows.forEach(row => console.log(row.id, ' ', row.weight, ' ', row.title));
                 setUserows(rows);
             })
-            .catch(() => {
+            .catch(e => {
                 // TODO
+                console.log('spotlightError = ', spotlightError);
+                console.log('an error on save occurred: ', e);
             });
     }
 
     const onDragEnd = result => {
-        console.log('onDragEnd: result = ', result);
         // must synchronously update state (and server) to reflect drag result
         const { destination, source, draggableId } = result;
         if (!destination) {
@@ -351,15 +361,13 @@ export const SpotlightsListAsTable = ({
             return;
         }
 
-        console.log('draggableId = ', draggableId);
         let counter = 1;
         let filtereduserows = [];
         rows.forEach((row, index) => {
             const newWeight =
                 row.id !== draggableId
                     ? counter * 10 // apart from the moved item, we just count through the items, in 10s
-                    : destination.index * 10 + 5; // the moved item gets the nearest item plus 5
-            console.log('newrow = ', row.id, row.weight, newWeight);
+                    : destination.index * 10 + 5; // set moved item to the nearest item plus 5 to insert between 2 rows
             const newrow = {
                 ...row,
                 weight: newWeight,
@@ -382,7 +390,7 @@ export const SpotlightsListAsTable = ({
         filtereduserows.forEach(reWeightedRow => {
             rows.map(r => {
                 if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
-                    moveRow(r, filtereduserows);
+                    moveRow(reWeightedRow, filtereduserows);
                 }
             });
         });
@@ -436,7 +444,7 @@ export const SpotlightsListAsTable = ({
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                     container
                 >
-                    <Grid item xs={12} md={allowFilter ? 7 : 12}>
+                    <Grid item xs={12} md={allowFilter ? 6 : 12}>
                         <h3 style={{ marginBottom: 6 }}>
                             {headertag}
                             <span
@@ -448,39 +456,43 @@ export const SpotlightsListAsTable = ({
                         </h3>
                     </Grid>
                     {allowFilter && (
-                        <Grid item xs={12} md={2}>
-                            <p className={classes.toggle}>
+                        <Grid item xs={12} md={3}>
+                            <span className={classes.toggle}>
                                 <InputLabel
                                     style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                    title="Check and uncheck to show and hide scheduled spotlights in the list"
+                                    title={locale.listPage.tooltips.hideShowScheduledCheckbox}
                                 >
                                     <Checkbox
                                         checked={showFuture}
                                         onChange={showHideScheduled}
                                         name="showFuture"
-                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                        inputProps={{
+                                            'aria-label': locale.listPage.tooltips.hideShowScheduledCheckbox,
+                                        }}
                                     />
                                     Hide scheduled
                                 </InputLabel>
-                            </p>
+                            </span>
                         </Grid>
                     )}
                     {allowFilter && (
                         <Grid item xs={12} md={3}>
-                            <p className={classes.toggle}>
+                            <span className={classes.toggle}>
                                 <InputLabel
                                     style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                    title="Check and uncheck to show and hide unpublished spotlights in the list"
+                                    title={locale.listPage.tooltips.hideShowUnpublishedCheckbox}
                                 >
                                     <Checkbox
                                         checked={showUnPublished}
                                         onChange={showHideUnPublished}
                                         name="showUnPublished"
-                                        inputProps={{ 'aria-label': 'primary checkbox' }}
+                                        inputProps={{
+                                            'aria-label': locale.listPage.tooltips.hideShowUnpublishedCheckbox,
+                                        }}
                                     />
                                     Hide unpublished
                                 </InputLabel>
-                            </p>
+                            </span>
                         </Grid>
                     )}
                 </Grid>
@@ -498,18 +510,18 @@ export const SpotlightsListAsTable = ({
                     <span>{spotlightNotice}</span>
                     <IconButton
                         onClick={showDeleteConfirmation}
-                        aria-label="Delete spotlight(s)"
+                        aria-label={locale.listPage.tooltips.deleteCheckedSpotlightsButton}
                         data-testid={`spotlight-list-${tableType}-delete-button`}
-                        title="Delete spotlight(s)"
+                        title={locale.listPage.tooltips.deleteCheckedSpotlightsButton}
                     >
                         <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
                     </IconButton>
                     <IconButton
                         onClick={clearAllCheckboxes}
-                        aria-label="Deselect all"
+                        aria-label={locale.listPage.tooltips.clearCheckedSpotlightsButton}
                         data-testid={`spotlight-list-${tableType}-deselect-button`}
                         className={classes.iconHighlighted}
-                        title="Deselect all"
+                        title={locale.listPage.tooltips.clearCheckedSpotlightsButton}
                     >
                         <CloseIcon />
                     </IconButton>
@@ -549,7 +561,6 @@ export const SpotlightsListAsTable = ({
                                         userows
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((spotlight, rowindex) => {
-                                                console.log('canDragRows = ', canDragRows);
                                                 const isScheduled = moment(spotlight.start).isAfter(moment());
                                                 return (
                                                     <Draggable
@@ -693,7 +704,7 @@ export const SpotlightsListAsTable = ({
                                 <TableRow>
                                     <TablePagination
                                         rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
-                                        colSpan={3}
+                                        colSpan={4}
                                         count={userows.length}
                                         rowsPerPage={rowsPerPage}
                                         page={page}
@@ -723,6 +734,7 @@ SpotlightsListAsTable.propTypes = {
     headertag: PropTypes.string,
     tableType: PropTypes.string,
     spotlightsLoading: PropTypes.any,
+    spotlightError: PropTypes.any,
     history: PropTypes.object,
     actions: PropTypes.any,
     deleteSpotlight: PropTypes.any,

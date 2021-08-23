@@ -309,13 +309,13 @@ export const spotlightsLong = [{
     "weight": 0,
     "active": 1
 }, {
-    "id": "38cbf430-8693-11e9-98ab-9d52a58e86ca",
+    "id": "38cbf430-8693-11e9-98ab-9d52a58e86cb",
     "start": "2021-02-08 00:01:00",
     "end": "2021-02-28 23:59:00",
-    "title": "Follow us social media",
+    "title": "Follow us social media 1",
     "url": "https:\/\/www.facebook.com\/uniofqldlibrary\/",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
-    "img_alt": "Follow us social media",
+    "img_alt": "Follow us social media 1",
     "weight": 0,
     "active": 1
 }, {
@@ -452,10 +452,10 @@ export const spotlightsLong = [{
     "id": "38cbf430-8693-11e9-98ab-9d52a58e86ca",
     "start": "2021-07-19 00:01:00",
     "end": "2031-08-01 23:59:00",
-    "title": "Follow us social media",
+    "title": "Follow us social media 3",
     "url": "https:\/\/www.facebook.com\/uniofqldlibrary\/",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
-    "img_alt": "Follow us social media",
+    "img_alt": "Follow us social media 3",
     "weight": 6,
     "active": 1
 }, {
