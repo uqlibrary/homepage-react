@@ -98,8 +98,8 @@ export const SpotlightsListAsTable = ({
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
-    const [showFuture, setShowFuture] = useState(true);
-    const [showUnPublished, setShowUnPublished] = useState(true);
+    const [showScheduled, setShowScheduled] = useState(false);
+    const [showUnPublished, setShowUnPublished] = useState(false);
     const [userows, setUserows] = useState([]);
     const [cookies, setCookie] = useCookies();
 
@@ -133,10 +133,10 @@ export const SpotlightsListAsTable = ({
                     }
                     return row;
                 });
-            if (!!allowFilter && !!showFuture) {
+            if (!!allowFilter && !showScheduled) {
                 localRows = localRows.filter(row => !moment(row.start).isAfter(moment()));
             }
-            if (!!allowFilter && !!showUnPublished) {
+            if (!!allowFilter && !showUnPublished) {
                 localRows = localRows.filter(row => !!row.active);
             }
 
@@ -159,7 +159,7 @@ export const SpotlightsListAsTable = ({
             // console.log('userows = (will display rows): ', userows);
             setUserows(localRows);
         },
-        [allowFilter, showFuture, showUnPublished, tableType],
+        [allowFilter, showScheduled, showUnPublished, tableType],
     );
 
     React.useEffect(() => {
@@ -302,7 +302,7 @@ export const SpotlightsListAsTable = ({
     };
 
     const showHideScheduled = () => {
-        setShowFuture(prevState => !prevState);
+        setShowScheduled(prevState => !prevState);
     };
     const showHideUnPublished = () => {
         setShowUnPublished(prevState => !prevState);
@@ -463,14 +463,14 @@ export const SpotlightsListAsTable = ({
                                     title={locale.listPage.tooltips.hideShowScheduledCheckbox}
                                 >
                                     <Checkbox
-                                        checked={showFuture}
+                                        checked={showScheduled}
                                         onChange={showHideScheduled}
-                                        name="showFuture"
+                                        name="showScheduled"
                                         inputProps={{
                                             'aria-label': locale.listPage.tooltips.hideShowScheduledCheckbox,
                                         }}
                                     />
-                                    Hide scheduled
+                                    Show scheduled
                                 </InputLabel>
                             </span>
                         </Grid>
@@ -490,7 +490,7 @@ export const SpotlightsListAsTable = ({
                                             'aria-label': locale.listPage.tooltips.hideShowUnpublishedCheckbox,
                                         }}
                                     />
-                                    Hide unpublished
+                                    Show unpublished
                                 </InputLabel>
                             </span>
                         </Grid>
