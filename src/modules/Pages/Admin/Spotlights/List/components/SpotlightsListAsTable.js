@@ -444,7 +444,7 @@ export const SpotlightsListAsTable = ({
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                     container
                 >
-                    <Grid item xs={12} md={allowFilter ? 6 : 12}>
+                    <Grid item xs={12} md={allowFilter ? 5 : 12}>
                         <h3 style={{ marginBottom: 6 }}>
                             {headertag}
                             <span
@@ -455,11 +455,11 @@ export const SpotlightsListAsTable = ({
                             </span>
                         </h3>
                     </Grid>
-                    {allowFilter && (
-                        <Grid item xs={12} md={3}>
+                    <Grid item xs={12} md={7} container justify="flex-end">
+                        {allowFilter && (
                             <span className={classes.toggle}>
                                 <InputLabel
-                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                    style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
                                     title={locale.listPage.tooltips.hideShowScheduledCheckbox}
                                 >
                                     <Checkbox
@@ -473,13 +473,11 @@ export const SpotlightsListAsTable = ({
                                     Show scheduled
                                 </InputLabel>
                             </span>
-                        </Grid>
-                    )}
-                    {allowFilter && (
-                        <Grid item xs={12} md={3}>
+                        )}
+                        {allowFilter && (
                             <span className={classes.toggle}>
                                 <InputLabel
-                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                    style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
                                     title={locale.listPage.tooltips.hideShowUnpublishedCheckbox}
                                 >
                                     <Checkbox
@@ -493,8 +491,8 @@ export const SpotlightsListAsTable = ({
                                     Show unpublished
                                 </InputLabel>
                             </span>
-                        </Grid>
-                    )}
+                        )}
+                    </Grid>
                 </Grid>
             )}
             {/* {allowFilter && (*/}
