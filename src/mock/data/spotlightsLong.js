@@ -162,7 +162,7 @@ export const spotlightsLong = [{
     "id": "3fa92cc0-6ab9-11e7-839f-a1392c2927cc",
     "start": "2031-07-17 16:27:00",
     "end": "2099-07-23 23:50:00",
-    "title": "O-Week_What's happening at the Library_01",
+    "title": "Can be dragged to after entry #2 when Scheduled and Unpublished are visible",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2016\/02\/welcome-o-week-whats-happening-library",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Welcome to O-Week! What's happening at the Library",

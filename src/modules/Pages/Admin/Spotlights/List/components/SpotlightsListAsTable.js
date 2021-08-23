@@ -95,8 +95,9 @@ export const SpotlightsListAsTable = ({
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
-    const [showFuture, setShowFuture] = useState(true); // maybe set cookie?
-    const [showUnPublished, setShowUnPublished] = useState(true); // maybe set cookie?
+    const [showFuture, setShowFuture] = useState(true);
+    const [showUnPublished, setShowUnPublished] = useState(true);
+    const [userows, setUserows] = useState([]);
     const [cookies, setCookie] = useCookies();
 
     const [rowsPerPage, setRowsPerPage] = useState(
@@ -111,10 +112,68 @@ export const SpotlightsListAsTable = ({
         hideDeleteFailureConfirmation,
     ] = useConfirmationState();
 
+    const displayTheRows = React.useCallback(
+        rowList => {
+            if (rowList.length === 0) {
+                setUserows([]);
+                return;
+            }
+
+            let localRows = rowList.map((row, index) => {
+                if (tableType !== 'past') {
+                    // change "!== past" to test by passed in attribute for 'candragdrop?
+                    row.weight = (index + 1) * 10;
+                    // reset the weights to a clean 10 step, in case they arent already,
+                    // so it is easy to insert one in the middle during drag and drop
+                }
+                return row;
+            });
+            console.log('localRows = ', localRows);
+
+            if (!!allowFilter && !!showFuture) {
+                localRows = localRows.filter(row => !moment(row.start).isAfter(moment()));
+                console.log('2 localRows future: ', localRows);
+            }
+            if (!!allowFilter && !!showUnPublished) {
+                localRows = localRows.filter(row => !!row.active);
+                console.log('3 localRows unpublished = ', localRows);
+            }
+
+            console.log('4 localRows = ', localRows);
+
+            // might be used by Past section if we add sortable columns?
+            // if (!!spotlightOrder && !!rows && rows.length > 0) {
+            //     if (spotlightOrder === 'reverseEnd') {
+            //         setUserows(userows.sort(
+            //             (a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
+            //         ));
+            //     } else if (spotlightOrder === 'forwardEnd') {
+            //         setUserows(userows.sort(
+            //             (a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'),
+            //         ));
+            //     } else if (spotlightOrder === 'forwardStart') {
+            //         setUserows(userows.sort(
+            //             (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
+            //         ));
+            //     }
+            // }
+            // console.log('userows = (will display rows): ', userows);
+            setUserows(localRows);
+        },
+        [allowFilter, showFuture, showUnPublished, tableType],
+    );
+
     React.useEffect(() => {
+        console.log('rows have changed ', rows.length);
+        displayTheRows(rows);
+
         // make it redraw when all displayed rows in a table are deleted
-        setPage(0);
-    }, [rows]);
+        rows.length === 0 && setPage(0);
+    }, [rows, displayTheRows]);
+
+    React.useEffect(() => {
+        console.log('useRows have changed ', userows);
+    }, [userows]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -138,63 +197,6 @@ export const SpotlightsListAsTable = ({
     // const headerCountIndicator = ' - [N] spotlight[s] total'
     //     .replace('[N]', rows.length)
     //     .replace('[s]', rows.length > 1 ? 's' : '');
-
-    let userows = rows.map((row, index) => {
-        if (tableType !== 'past') {
-            // change "!== past" to test by passed in attribute for 'candragdrop?
-            row.weight = (index + 1) * 10;
-            // reset the weights to a clean 10 step, in case they arent already,
-            // so it is easy to insert one in the middle during drag and drop
-        }
-        return row;
-    });
-    // const unchangedRows = userows;
-    const unchangedRows = rows.map(r => r);
-    console.log('unchangedRows = ', unchangedRows);
-
-    if (!!allowFilter && !!showFuture) {
-        userows = userows.filter(row => !moment(row.start).isAfter(moment()));
-        console.log('userows after: ', userows);
-    }
-    if (!!allowFilter && !!showUnPublished) {
-        userows = userows.filter(row => !!row.active);
-    }
-
-    userows = userows.sort((a, b) => a.weight > b.weight);
-
-    // if (!!spotlightOrder && !!rows && rows.length > 0) {
-    //     if (spotlightOrder === 'reverseEnd') {
-    //         userows = userows.sort(
-    //             (a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
-    //         );
-    //     } else if (spotlightOrder === 'forwardEnd') {
-    //         userows = userows.sort(
-    //             (a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'),
-    //         );
-    //     } else if (spotlightOrder === 'forwardStart') {
-    //         userows = userows.sort(
-    //             (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
-    //         );
-    //     }
-    // }
-
-    if (!!spotlightsLoading) {
-        return (
-            <Grid
-                item
-                xs={'auto'}
-                style={{
-                    width: 80,
-                    marginRight: 20,
-                    marginBottom: 6,
-                    opacity: 0.3,
-                    height: 200, // default to some space for the blocks
-                }}
-            >
-                <InlineLoader message="Loading" />
-            </Grid>
-        );
-    }
 
     const navigateToEditForm = spotlightid => {
         history.push(`/admin/spotlights/edit/${spotlightid}`);
@@ -308,6 +310,31 @@ export const SpotlightsListAsTable = ({
         setShowUnPublished(prevState => !prevState);
     };
 
+    // after a drag and drop save, this updates the display
+    function moveRow(r, filtereduserows) {
+        actions
+            .saveSpotlightChange(r)
+            .then(() => {
+                rows.forEach(row => {
+                    filtereduserows.forEach(fr => {
+                        if (fr.id === row.id && fr.weight !== row.weight) {
+                            // we have the option here of setting all the values from the db
+                            // in case it has updated? but that seems overkill
+                            row.weight = fr.weight;
+                            console.log('setting ', fr.id, ' to ', fr.weight);
+                        }
+                    });
+                });
+                rows.sort((a, b) => a.weight - b.weight);
+                console.log('after: ');
+                rows.forEach(row => console.log(row.id, ' ', row.weight, ' ', row.title));
+                setUserows(rows);
+            })
+            .catch(() => {
+                // TODO
+            });
+    }
+
     const onDragEnd = result => {
         console.log('onDragEnd: result = ', result);
         // must synchronously update state (and server) to reflect drag result
@@ -323,19 +350,20 @@ export const SpotlightsListAsTable = ({
             return;
         }
 
-        const movedSpotlight = rows.find(s => s.id === draggableId);
-
+        console.log('draggableId = ', draggableId);
         let counter = 1;
         let filtereduserows = [];
         rows.forEach((row, index) => {
+            const newWeight =
+                row.id !== draggableId
+                    ? counter * 10 // apart from the moved item, we just count through the items, in 10s
+                    : destination.index * 10 + 5; // the moved item gets the nearest item plus 5
+            console.log('newrow = ', row.id, row.weight, newWeight);
             const newrow = {
                 ...row,
-                weight:
-                    row.id !== movedSpotlight.id
-                        ? counter * 10 // apart form the moved item, we just count through the items, in 10s
-                        : destination.index * 10 + 5, // the moved item gets the nearest item plus 5
+                weight: newWeight,
             };
-            if (row.id !== movedSpotlight.id) {
+            if (row.id !== draggableId) {
                 counter++;
             }
             filtereduserows[index] = newrow;
@@ -346,20 +374,39 @@ export const SpotlightsListAsTable = ({
             return a.weight - b.weight;
         });
         filtereduserows.forEach((row, index) => {
-            return (row.weight = (index + 1) * 10);
+            row.weight = (index + 1) * 10;
         });
 
         // now persist the changed record to the DB
         filtereduserows.forEach(reWeightedRow => {
             rows.map(r => {
-                if (reWeightedRow.id === r.id) {
-                    reWeightedRow.weight !== r.weight && actions.saveSpotlightChange(r);
+                if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
+                    moveRow(r, filtereduserows);
                 }
             });
         });
     };
 
     const needsPaginator = userows.length > footerDisplayMinLength;
+
+    if (!!spotlightsLoading) {
+        return (
+            <Grid
+                item
+                xs={'auto'}
+                style={{
+                    width: 80,
+                    marginRight: 20,
+                    marginBottom: 6,
+                    opacity: 0.3,
+                    height: 200, // default to some space for the blocks
+                }}
+            >
+                <InlineLoader message="Loading" />
+            </Grid>
+        );
+    }
+
     return (
         <Fragment>
             <ConfirmationBox
@@ -476,6 +523,9 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
+                                <TableCell component="th" scope="row" style={{ width: 10 }}>
+                                    W
+                                </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
                                 <TableCell component="th" scope="row" style={{ width: 200 }}>
                                     Spotlight
@@ -495,7 +545,7 @@ export const SpotlightsListAsTable = ({
                         </TableHead>
                         <Droppable droppableId={`droppable-section-${tableType}`}>
                             {droppableProvided => (
-                                <TableBody innerRef={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
+                                <TableBody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
                                     {rowsPerPage > 0 &&
                                         userows.length > 0 &&
                                         userows
@@ -517,9 +567,18 @@ export const SpotlightsListAsTable = ({
                                                                 // index={rowindex}
                                                                 {...draggableProvided.draggableProps}
                                                                 {...draggableProvided.dragHandleProps}
-                                                                innerRef={draggableProvided.innerRef}
+                                                                ref={draggableProvided.innerRef}
                                                                 role="row"
                                                             >
+                                                                <TableCell
+                                                                    component="td"
+                                                                    className={`${classes.tableCell} ${
+                                                                        !!isScheduled ? classes.scheduledDisplay : ''
+                                                                    }`}
+                                                                >
+                                                                    {' '}
+                                                                    {spotlight.weight}
+                                                                </TableCell>
                                                                 <TableCell
                                                                     component="td"
                                                                     className={`${classes.checkboxCell} ${

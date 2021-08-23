@@ -110,6 +110,39 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
 
 mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
 
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc',
+            start: '2021-01-08 15:05:00',
+            end: '2021-01-18 18:00:00',
+            title: 'Has been dragged to position #2',
+            url: 'https://web.library.uq.edu.au/library-services/covid-19',
+            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
+            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
+            weight: 20,
+            active: 0,
+        },
+    ]),
+);
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095b' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '480c5c20-6df0-11e7-86d1-31e8626e095b',
+            start: '2021-01-08 15:05:00',
+            end: '2021-01-18 18:00:00',
+            title: 'was in pos #2, dragging #1 moved this',
+            url: 'https://web.library.uq.edu.au/library-services/covid-19',
+            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
+            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
+            weight: 10,
+            active: 0,
+        },
+    ]),
+);
+
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
 // .reply(withDelay([500, {}]));
