@@ -470,7 +470,7 @@ export const SpotlightsListAsTable = ({
                                             'aria-label': locale.listPage.tooltips.hideShowScheduledCheckbox,
                                         }}
                                     />
-                                    Show scheduled
+                                    {locale.listPage.labels.hideShowScheduledCheckbox}
                                 </InputLabel>
                             </span>
                         )}
@@ -488,7 +488,7 @@ export const SpotlightsListAsTable = ({
                                             'aria-label': locale.listPage.tooltips.hideShowUnpublishedCheckbox,
                                         }}
                                     />
-                                    Show unpublished
+                                    {locale.listPage.labels.hideShowUnpublishedCheckbox}
                                 </InputLabel>
                             </span>
                         )}

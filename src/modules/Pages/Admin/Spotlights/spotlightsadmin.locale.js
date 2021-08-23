@@ -160,6 +160,10 @@ export default {
                 </div>
             ),
         },
+        labels: {
+            hideShowUnpublishedCheckbox: 'Show unpublished',
+            hideShowScheduledCheckbox: 'Show scheduled',
+        },
         tooltips: {
             hideShowUnpublishedCheckbox: 'Check and uncheck to show and hide unpublished spotlights in the list',
             hideShowScheduledCheckbox: 'Check and uncheck to show and hide scheduled spotlights in the list',
