@@ -162,6 +162,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     actions={actions}
                                     deleteAlert={deleteAlert}
                                     alertOrder="reverseEnd"
+                                    canDragRows={false}
                                 />
                             </div>
                         </Grid>

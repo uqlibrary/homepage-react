@@ -90,6 +90,7 @@ export const SpotlightsListAsTable = ({
     deleteSpotlight,
     footerDisplayMinLength,
     allowFilter,
+    canDragRows,
 }) => {
     const classes = useStyles();
     const [page, setPage] = useState(0);
@@ -551,12 +552,14 @@ export const SpotlightsListAsTable = ({
                                         userows
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((spotlight, rowindex) => {
+                                                console.log('canDragRows = ', canDragRows);
                                                 const isScheduled = moment(spotlight.start).isAfter(moment());
                                                 return (
                                                     <Draggable
                                                         draggableId={spotlight.id}
                                                         index={rowindex}
                                                         key={spotlight.id}
+                                                        isDragDisabled={!canDragRows}
                                                     >
                                                         {draggableProvided => (
                                                             <TableRow
@@ -738,12 +741,14 @@ SpotlightsListAsTable.propTypes = {
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
     allowFilter: PropTypes.bool,
+    canDragRows: PropTypes.bool,
 };
 
 SpotlightsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the spotlight list before we display the paginator
     // spotlightOrder: false, // what order should we sort the spotlights in? false means unspecified
-    allowFilter: false, // does this table display filtering of scheduled and unpublished spotlights?
+    allowFilter: false, // does this section display filtering of scheduled and unpublished spotlights?
+    canDragRows: true, // does this section allow drag and drop
 };
 
 export default SpotlightsListAsTable;
