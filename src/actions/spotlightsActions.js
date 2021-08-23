@@ -123,11 +123,12 @@ export const saveSpotlightChange = request => {
                 });
             })
             .catch(error => {
-                console.log('saveSpotlightChange action error = ', error);
+                console.log('saveSpotlightChange action error returned: ', error);
                 dispatch({
                     type: actions.SPOTLIGHT_FAILED,
                     payload: error.message,
                 });
+                console.log('saveSpotlightChange action error FAILED dispatched');
             });
     };
 };

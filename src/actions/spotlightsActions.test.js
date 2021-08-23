@@ -5,7 +5,6 @@ import * as repositories from 'repositories';
 import {
     clearSpotlights,
     clearASpotlight,
-    createSpotlight,
     deleteSpotlight,
     loadAllSpotlights,
     loadASpotlight,
@@ -26,7 +25,15 @@ const fileToUpload = new File(['foo'], 'foo.jpg', {
 //     lastModified: 1629160776973,
 //     lastModifiedDate: 'Tue Aug 17 2021 10:39:36 GMT+1000 (Australian Eastern Standard Time)',
 // };
-const newSpotlightRecord = {
+const sendSpotlightRecord = {
+    active: 0,
+    end: '2021-08-12 11:25:51',
+    img_alt: 'test',
+    start: '2021-08-05 11:25:51',
+    title: 'test LdG',
+    url: 'http://example.com',
+};
+const returnedSpotlightRecord = {
     active: 0,
     end: '2021-08-12 11:25:51',
     img_alt: 'test',
@@ -34,7 +41,6 @@ const newSpotlightRecord = {
     start: '2021-08-05 11:25:51',
     title: 'test LdG',
     url: 'http://example.com',
-    uploadedFile: fileToUpload,
 };
 /*
                     active: 0,
@@ -169,7 +175,7 @@ describe('Spotlight list actions', () => {
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
 
-            await mockActionsStore.dispatch(createSpotlightWithoutFile(newSpotlightRecord));
+            await mockActionsStore.dispatch(createSpotlightWithoutFile(sendSpotlightRecord));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -178,19 +184,19 @@ describe('Spotlight list actions', () => {
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_FAILED];
 
-            await mockActionsStore.dispatch(createSpotlightWithoutFile(newSpotlightRecord));
+            await mockActionsStore.dispatch(createSpotlightWithoutFile(sendSpotlightRecord));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
         it('handles an spotlight creation request', async () => {
             mockApi.onAny(repositories.routes.SPOTLIGHT_CREATE_API().apiUrl).reply(200, {
+                ...returnedSpotlightRecord,
                 id: '88888-d62b-11e7-954e-57c2cc19d151',
-                ...newSpotlightRecord,
             });
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
 
-            await mockActionsStore.dispatch(createSpotlightWithoutFile(newSpotlightRecord));
+            await mockActionsStore.dispatch(createSpotlightWithoutFile(sendSpotlightRecord));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -204,7 +210,12 @@ describe('Spotlight list actions', () => {
                 actions.SPOTLIGHT_LOADING,
                 actions.SPOTLIGHT_SAVED,
             ];
-            await mockActionsStore.dispatch(createSpotlightWithFile(newSpotlightRecord));
+            await mockActionsStore.dispatch(
+                createSpotlightWithFile({
+                    ...sendSpotlightRecord,
+                    uploadedFile: fileToUpload,
+                }),
+            );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -217,7 +228,12 @@ describe('Spotlight list actions', () => {
                 actions.APP_ALERT_SHOW,
                 actions.PUBLIC_FILE_UPLOAD_FAILED,
             ];
-            await mockActionsStore.dispatch(createSpotlightWithFile(newSpotlightRecord));
+            await mockActionsStore.dispatch(
+                createSpotlightWithFile({
+                    ...sendSpotlightRecord,
+                    uploadedFile: fileToUpload,
+                }),
+            );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
@@ -257,18 +273,19 @@ describe('Spotlight list actions', () => {
             mockApi
                 .onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
                 .reply(200, {
+                    ...returnedSpotlightRecord,
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
                     weight: 0,
-                    ...newSpotlightRecord,
                 });
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
 
             await mockActionsStore.dispatch(
                 saveSpotlightChange({
+                    ...sendSpotlightRecord,
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
+                    img_url: 'https://app.library.uq.edu.au/file/public/20d834a0-f58c-11eb-a4cd-611585dc0de4.jpg',
                     weight: 0,
-                    ...newSpotlightRecord,
                 }),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -282,25 +299,10 @@ describe('Spotlight list actions', () => {
 
             await mockActionsStore.dispatch(
                 saveSpotlightChange({
+                    ...sendSpotlightRecord,
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
+                    img_url: 'https://app.library.uq.edu.au/file/public/20d834a0-f58c-11eb-a4cd-611585dc0de4.jpg',
                     weight: 0,
-                    ...newSpotlightRecord,
-                }),
-            );
-            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-        });
-        it('handles a failing spotlight save request', async () => {
-            mockApi
-                .onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }))
-                .reply(500);
-
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_FAILED];
-
-            await mockActionsStore.dispatch(
-                saveSpotlightChange({
-                    id: '88888-d62b-11e7-954e-57c2cc19d151',
-                    weight: 0,
-                    ...newSpotlightRecord,
                 }),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
