@@ -8,6 +8,28 @@ function getFooterLabel(totalCountRecordsAvailable, numberDisplayedOnPage = 5) {
     return `1-${numberDisplayedOnPage} of ${totalCountRecordsAvailable}`;
 }
 
+function dragzoneIsReadyForDrag() {
+    cy.get('[data-testid="dropzone-dragarea"]').should('exist');
+    cy.get('[data-testid="dropzone-preview"]').should('not.exist');
+}
+
+function dragFileToDropzone(uploadableFile) {
+    dragzoneIsReadyForDrag();
+    cy.fixture(uploadableFile, 'base64').then(content => {
+        cy.get('[data-testid="spotlights-form-upload-dropzone"]').uploadFile(content, uploadableFile);
+    });
+    cy.get('[data-testid="dropzone-dragarea"]').should('not.exist');
+    cy.get('[data-testid="dropzone-preview"]').should('exist');
+}
+
+function saveButtonisDisabled() {
+    cy.get('[data-testid="admin-spotlights-form-button-save"]').should('be.disabled');
+}
+
+function saveButtonNOTDisabled() {
+    cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
+}
+
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Spotlights Admin public access', () => {
@@ -123,6 +145,9 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Create a new spotlight');
+            cy.log(
+                'This test fails locally occasionally because we had to add the aria-label to the buttons manually - try it again',
+            );
             cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Spotlights Admin Add',
@@ -139,19 +164,19 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('o');
             cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
         });
-        // temp skip as havent figured out cypress for file upload
-        it.skip('entering the fields works', () => {
-            // form starts with submit button disabled
-            cy.get('[data-testid="admin-spotlights-form-button-save"').should('be.disabled');
+
+        it('Entering the fields works', () => {
+            saveButtonisDisabled();
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'spotlight title 3');
+
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
 
-            // add file upload test here
+            dragFileToDropzone('test.jpg');
 
-            // the form is currently valid so the create button should enable
-            cy.get('[data-testid="admin-spotlights-form-button-save"').should('not.be.disabled');
+            saveButtonNOTDisabled();
+
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
 
@@ -188,7 +213,7 @@ describe('Spotlights Admin Pages', () => {
                 expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
             });
             // and the end date field now has an error, so the submit button is disabled
-            cy.get('[data-testid="admin-spotlights-form-button-save"').should('be.disabled');
+            saveButtonisDisabled();
             // and the end date has an error message
             cy.get('[data-testid="admin-spotlights-form-end-date"] p.Mui-error')
                 .should('exist')
@@ -217,20 +242,32 @@ describe('Spotlights Admin Pages', () => {
                 expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
             });
             // all is good so the create button enables
-            cy.get('[data-testid="admin-spotlights-form-button-save"').should('not.be.disabled');
+            saveButtonNOTDisabled();
+
+            // can clear the upload with the Trashcan button
+            cy.get('[data-testid="dropzone-preview"] button')
+                .should('exist')
+                .click();
+            dragzoneIsReadyForDrag();
+            saveButtonisDisabled();
         });
-        it.skip('can save a spotlight (simple)', () => {
+
+        it('can save a spotlight', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
-            cy.get('[data-testid="admin-spotlights-form-button-save"]').click();
+            dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="admin-spotlights-form-button-save"]')
+                .should('not.be.disabled')
+                .click();
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('A spotlight has been added');
             // click 'add another alert' button in dialog
             cy.get('[data-testid="confirm-spotlight-add-save-succeeded"]').click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
             // the alert page reloads with a blank form
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
             cy.get('[data-testid="admin-spotlights-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', '');
+            dragzoneIsReadyForDrag();
         });
         it('the cancel button returns to the list page', () => {
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]').click();
@@ -249,27 +286,21 @@ describe('Spotlights Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
         });
-        it.skip('save button is disabled unless the form is valid', () => {
-            function saveButtonDisabled() {
-                cy.get('[data-testid="admin-spotlights-form-button-save"]').should('be.disabled');
-            }
+        it('save button is disabled unless the form is valid', () => {
+            // fill out the form from the bottom up to double-check the "button enables properly"
+            saveButtonisDisabled();
 
-            function saveButtonNOTDisabled() {
-                cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
-            }
+            dragFileToDropzone('test.jpg');
+            saveButtonisDisabled();
 
-            saveButtonDisabled();
             cy.get('[data-testid="admin-spotlights-form-title"]').type('alert title 5');
-            saveButtonDisabled();
+            saveButtonisDisabled();
 
             // start an url, but button are disabled while it isnt valid
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://e');
-            saveButtonDisabled();
+            saveButtonisDisabled();
             // complete to a valid url
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('xample.com');
-            // saveButtonDisabled();
-
-            // upload a file
             saveButtonNOTDisabled();
         });
     });

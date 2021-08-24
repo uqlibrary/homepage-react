@@ -82,17 +82,17 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
     };
 
     return (
-        <section className="container">
+        <section className="container" data-testid="spotlights-form-upload-dropzone">
             {!thumbs || thumbs.length === 0 ? (
                 <div
                     {...getRootProps({ className: 'dropzone' })}
                     style={{ border: 'thin solid black', backgroundColor: 'lightgrey', padding: '1rem' }}
                 >
-                    <input {...getInputProps()} />
+                    <input data-testid="dropzone-dragarea" {...getInputProps()} />
                     <p>{locale.form.labels.dragareaInstructions}</p>
                 </div>
             ) : (
-                <aside style={thumbsContainer}>
+                <aside data-testid="dropzone-preview" style={thumbsContainer}>
                     {thumbs}
                     <IconButton style={deleteButton} onClick={removeUpload} title="Delete uploaded spotlight image">
                         <DeleteIcon />
