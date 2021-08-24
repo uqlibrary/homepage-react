@@ -89,7 +89,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
                     style={{ border: 'thin solid black', backgroundColor: 'lightgrey', padding: '1rem' }}
                 >
                     <input {...getInputProps()} />
-                    <p>{locale.form.add.dragareaInstructions}</p>
+                    <p>{locale.form.labels.dragareaInstructions}</p>
                 </div>
             ) : (
                 <aside style={thumbsContainer}>

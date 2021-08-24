@@ -508,18 +508,18 @@ export const SpotlightsListAsTable = ({
                     <span>{spotlightNotice}</span>
                     <IconButton
                         onClick={showDeleteConfirmation}
-                        aria-label={locale.listPage.tooltips.deleteCheckedSpotlightsButton}
+                        aria-label={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
                         data-testid={`spotlight-list-${tableType}-delete-button`}
-                        title={locale.listPage.tooltips.deleteCheckedSpotlightsButton}
+                        title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
                     >
                         <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
                     </IconButton>
                     <IconButton
                         onClick={clearAllCheckboxes}
-                        aria-label={locale.listPage.tooltips.clearCheckedSpotlightsButton}
+                        aria-label={locale.listPage.tooltips.clearSelectedSpotlightsButton}
                         data-testid={`spotlight-list-${tableType}-deselect-button`}
                         className={classes.iconHighlighted}
-                        title={locale.listPage.tooltips.clearCheckedSpotlightsButton}
+                        title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
                     >
                         <CloseIcon />
                     </IconButton>

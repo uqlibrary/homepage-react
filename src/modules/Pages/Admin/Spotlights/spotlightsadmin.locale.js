@@ -10,6 +10,7 @@ export default {
             ariaField: 'Tooltip text - visible when user mouses over spotlight',
             linkField: 'Spotlight link *',
             publishedCheckbox: 'Published?',
+            dragareaInstructions: "Drag 'n' drop your new Spotlight image here, or click to select an image",
         },
         tooltips: {
             titleField: 'Help TBA',
@@ -18,7 +19,6 @@ export default {
             publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
         },
         add: {
-            dragareaInstructions: "Drag 'n' drop your new Spotlight image here, or click to select an image",
             addSpotlightConfirmation: {
                 confirmationTitle: 'A spotlight has been added',
                 confirmationMessage: '',
@@ -172,8 +172,8 @@ export default {
         tooltips: {
             hideShowUnpublishedCheckbox: 'Check and uncheck to show and hide unpublished spotlights in the list',
             hideShowScheduledCheckbox: 'Check and uncheck to show and hide scheduled spotlights in the list',
-            deleteCheckedSpotlightsButton: 'Delete spotlight(s)',
-            clearCheckedSpotlightsButton: 'Deselect all',
+            deleteSelectedSpotlightsButton: 'Delete spotlight(s)',
+            clearSelectedSpotlightsButton: 'Deselect all',
         },
     },
 };
