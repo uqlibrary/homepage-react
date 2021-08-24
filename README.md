@@ -196,15 +196,15 @@ TBA
 
 ### Gotchas
 
-- Because FE is served from cloudFront, add a behaviour to serve css/js filename patterns. E.g. behaviours have been
+- Because FE is served from Cloudfront, add a behaviour to Cloudfront to serve any css/js filename patterns. E.g. behaviours have been
   added for `main-*` and `commons-*` files.
+- Content Security Policies (CSP) are provided from Cloudfront - https://github.com/uqlibrary/cffx-add-security-headers
 
 #### Optimisation Guidelines
 
-- do not use functional components
 - try to simplify props
-- component should extend React.PureComponent if props are simple
-- component should extend React.Component, shouldComponentUpdate() should be implemented if props have objects
+- components should extend React.PureComponent if props are simple (if you fallback to a Class component)
+- class components should extend React.Component, shouldComponentUpdate() should be implemented if props have objects
 - import explicit and specific components (do not import all):
   - _DO NOT_ `import { Button } from 'material-ui';`
   - _DO_ `import { Button } from 'material-ui/Button';`
