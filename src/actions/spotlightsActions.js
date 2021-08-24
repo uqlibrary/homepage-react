@@ -74,12 +74,14 @@ export const createSpotlightWithFile = request => {
         console.log('createSpotlightWithFile: post data: ', request.uploadedFile);
 
         const formData = new FormData();
-        formData.append('spotlightImage', request.uploadedFile);
+        request.uploadedFile.map((file, index) => {
+            formData.append(`file${index}`, file);
+        });
         // do not inspect formData with get, eg not: formData.get('spotlightImage')),
         // it causes webpack not to build, with cryptic errors
-        return post(UPLOAD_PUBLIC_FILES_API(), [formData], { headers: { 'Content-Type': 'multipart/form-data' } })
+        return post(UPLOAD_PUBLIC_FILES_API(), formData)
             .then(response => {
-                console.log('uploadPublicFile got ', response);
+                console.log('uploadPublicFile got response ', response);
                 dispatch({
                     type: actions.PUBLIC_FILE_UPLOADED,
                     payload: response,

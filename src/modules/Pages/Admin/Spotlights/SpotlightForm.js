@@ -180,7 +180,6 @@ export const SpotlightForm = ({
         const theBlock = document.getElementById(idDiv);
         const theButton = !!theBlock && theBlock.parentNode.querySelector('button');
         !!theButton && !theButton.hasAttribute('aria-label') && theButton.setAttribute('aria-label', ariaLabel);
-        console.log('addAriaLabelToMuiDatePickerButton theButton = ', theButton);
     };
 
     const runAfterRender = () => {
@@ -339,20 +338,16 @@ export const SpotlightForm = ({
 
     const handleSuppliedFiles = files => {
         console.log('handleSuppliedFiles files = ', files);
-        // they can actually only provide a single file
-        const file = !!files && files.length > 0 && files.shift();
-        console.log('handleSuppliedFiles file = ', file);
+        setUploadedFiles(files);
 
-        setUploadedFiles(file);
-
-        // const filename = !!file && file.name;
-        // console.log('handleSuppliedFiles filename = ', filename);
-        setValues({ ...values, ['uploadedFile']: file });
-
+        console.log('check: ', { ...values, ['uploadedFile']: files });
+        setValues({ ...values, ['uploadedFile']: files });
         console.log('handleSuppliedFiles values now = ', values);
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: file }));
+
+        setFormValidity(validateValues({ ...values, ['uploadedFile']: files }));
 
         setTimeout(() => {
+            console.log('handleSuppliedFiles setTimeout: values = ', values);
             console.log('handleSuppliedFiles setTimeout: uploadedFiles = ', uploadedFiles);
         }, 1000);
     };

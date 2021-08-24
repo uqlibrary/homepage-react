@@ -17,7 +17,7 @@ export function put({ apiUrl, options = {} }, data, config = {}) {
  * @param {string} apiUrl
  * @param {object} data to be posted to API
  * @param {object} any query string parameters (defined in routes with apiUrl)
- * @param {object} any additional options (headers, responseType, etc)
+ * @param {object} config additional options (headers, responseType, etc)
  * @returns {Promise}
  */
 export function post({ apiUrl, options = {} }, data, config = {}) {
