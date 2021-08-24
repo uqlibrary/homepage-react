@@ -14,7 +14,6 @@ const thumbsContainer = {
 };
 
 const thumbBlock = {
-    display: 'inline-flex',
     borderRadius: 2,
     border: '1px solid #eaeaea',
     marginBottom: 8,
@@ -32,8 +31,7 @@ const thumbInner = {
 
 const thumbImg = {
     display: 'block',
-    width: 'auto',
-    height: '100%',
+    height: 200,
 };
 
 const deleteButton = {
@@ -60,8 +58,9 @@ export function SpotlightUploader({ onAddFile, onClearFile }) {
 
     const thumbs = files.map(file => (
         <div style={thumbBlock} key={file.name}>
+            <h3>Preview:</h3>
             <div style={thumbInner}>
-                <img src={file.preview} style={thumbImg} />
+                <img alt="preview of uploaded spotlight file" src={file.preview} style={thumbImg} />
             </div>
         </div>
     ));
