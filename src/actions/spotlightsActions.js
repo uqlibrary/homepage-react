@@ -8,6 +8,7 @@ import {
     SPOTLIGHT_DELETE_API,
     UPLOAD_PUBLIC_FILES_API,
 } from 'repositories/routes';
+import { API_URL } from '../config';
 
 export function loadAllSpotlights() {
     console.log('action loadAllSpotlights: Loading Spotlights');
@@ -32,6 +33,11 @@ export function loadAllSpotlights() {
 }
 
 function createSpotlight(request, dispatch) {
+    // as we are creating a new spotlight there should not be an id field
+    if ('id' in request) {
+        delete request.id;
+    }
+    console.log('createSpotlight: send request: ', request);
     return post(SPOTLIGHT_CREATE_API(), request)
         .then(data => {
             console.log('createSpotlight action, returned data = ', data);
@@ -88,10 +94,10 @@ export const createSpotlightWithFile = request => {
                 });
 
                 const firstresponse = response.shift();
+                const apiProd = 'https://api.library.uq.edu.au/v1/';
+                const domain = API_URL === apiProd ? 'app.library.uq.edu.au' : 'app-testing.library.uq.edu.au';
                 request.img_url =
-                    !!firstresponse &&
-                    !!firstresponse.key &&
-                    `https://app.library.uq.edu.au/file/public/${firstresponse.key}.jpg`;
+                    !!firstresponse && !!firstresponse.key && `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
                 console.log('action createSpotlightWithFile, request to save: ', request);
