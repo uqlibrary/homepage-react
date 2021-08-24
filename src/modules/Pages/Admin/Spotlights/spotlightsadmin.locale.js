@@ -5,10 +5,15 @@ import React, { Fragment } from 'react';
 
 export default {
     form: {
+        labels: {
+            titleField: 'Title - visible to assitive technology *',
+            ariaField: 'Tooltip text - visible when user mouses over spotlight',
+            linkField: 'Spotlight link *',
+            publishedCheckbox: 'Published?',
+        },
         tooltips: {
             ariaTitle: 'Help TBA',
             tooltipMouseover: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
-            tooltipInField: 'Tooltip text - visible when user mouses over spotlight',
             link: 'Please enter a valid URL',
             publishcheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
         },

@@ -428,7 +428,7 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl fullWidth title={locale.form.tooltips.ariaTitle}>
-                            <InputLabel htmlFor="spotlightTitle">Title - visible to assitive technology *</InputLabel>
+                            <InputLabel htmlFor="spotlightTitle">{locale.form.labels.titleField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
                                 data-testid="admin-spotlights-form-title"
@@ -444,7 +444,7 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl fullWidth title={locale.form.tooltips.tooltipMouseover}>
-                            <InputLabel htmlFor="spotlightTooltip">{locale.form.tooltips.tooltipInField}</InputLabel>
+                            <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.ariaField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
                                 data-testid="admin-spotlights-form-tooltip"
@@ -458,7 +458,7 @@ export const SpotlightForm = ({
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl fullWidth title={locale.form.tooltips.link}>
-                            <InputLabel htmlFor="linkUrl">Spotlight link *</InputLabel>
+                            <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
                                 type="url"
                                 id="linkUrl"
@@ -514,7 +514,7 @@ export const SpotlightForm = ({
                                 onChange={handleChange('active')}
                                 className={classes.checkbox}
                             />
-                            Published?
+                            {locale.form.labels.publishedCheckbox}
                         </InputLabel>
                     </Grid>
                 </Grid>
