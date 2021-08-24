@@ -308,8 +308,7 @@ export const SpotlightsListAsTable = ({
         setShowUnPublished(prevState => !prevState);
     };
 
-    // after a drag and drop save, this updates the display
-    function moveRow(r, filtereduserows) {
+    function persistRow(r, filtereduserows) {
         const currentRow = rows.find(row => row.id === r.id);
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
         const rowToUpdate = {
@@ -345,6 +344,18 @@ export const SpotlightsListAsTable = ({
                 console.log('spotlightError = ', spotlightError);
                 console.log('an error on save occurred: ', e);
             });
+    }
+
+    // https://stackoverflow.com/a/5306832/1246313
+    function arrayMove(arr, oldIndex, newIndex) {
+        if (newIndex >= arr.length) {
+            let k = newIndex - arr.length + 1;
+            while (k--) {
+                arr.push(undefined);
+            }
+        }
+        arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+        return arr; // for testing
     }
 
     const onDragEnd = result => {
@@ -386,11 +397,21 @@ export const SpotlightsListAsTable = ({
             row.weight = (index + 1) * 10;
         });
 
+        // react-beautiful-dnd relies on the order of the array, rather than an index
+        // reorder the array so we dont get a flash of the original order while we wait for the new array to load
+        filtereduserows.sort((a, b) => a.weight - b.weight);
+        const oldIndex = rows.find(r => r.id === draggableId).weight / 10 - 1;
+        const newIndex = filtereduserows.find(r => r.id === draggableId).weight / 10 - 1;
+        console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
+        arrayMove(userows, oldIndex, newIndex);
+
         // now persist the changed record to the DB
         filtereduserows.forEach(reWeightedRow => {
             rows.map(r => {
                 if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
-                    moveRow(reWeightedRow, filtereduserows);
+                    // then do the save
+                    console.log('persist ', reWeightedRow.id);
+                    persistRow(reWeightedRow, filtereduserows);
                 }
             });
         });
