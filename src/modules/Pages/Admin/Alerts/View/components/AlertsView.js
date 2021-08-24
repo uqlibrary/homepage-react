@@ -26,26 +26,11 @@ import {
 } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
-const useStyles = makeStyles(
-    theme => ({
-        previewWrapper: {
-            transition: 'visibility 0s, opacity 10s ease-out',
-        },
-        saveButton: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.accent.dark,
-            },
-            '&:disabled': {
-                color: 'rgba(0, 0, 0, 0.26)',
-                boxShadow: 'none',
-                backgroundColor: 'rgba(0, 0, 0, 0.12)',
-            },
-        },
-    }),
-    { withTheme: true },
-);
+const useStyles = makeStyles(() => ({
+    previewWrapper: {
+        transition: 'visibility 0s, opacity 10s ease-out',
+    },
+}));
 
 export const AlertsView = ({ actions, alert, alertStatus, history }) => {
     const classes = useStyles();
@@ -61,7 +46,6 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         if (!alertWebComponent) {
             return null;
         }
-        console.log('thisAlert = ', thisAlert);
 
         const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
 
@@ -161,7 +145,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                    <AlertsUtilityArea actions={actions} helpContent={locale.view.help} history={history} />
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
@@ -198,7 +182,6 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                         </Grid>
                         <Grid container spacing={2} style={{ marginTop: 12 }}>
                             <Grid item md={6} xs={12}>
-                                {/* https://material-ui.com/components/pickers/ */}
                                 <TextField
                                     id="startDate"
                                     data-testid="admin-alerts-form-start-date"
@@ -321,7 +304,6 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                     variant="contained"
                                     children="Clone"
                                     onClick={() => navigateToCloneForm()}
-                                    className={classes.saveButton}
                                 />
                             </Grid>
                         </Grid>

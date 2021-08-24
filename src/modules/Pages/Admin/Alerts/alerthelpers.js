@@ -15,6 +15,8 @@ export function getTimeEndOfDayFormatted() {
         .format('YYYY-MM-DDTHH:mm');
 }
 
+// so the user doesnt lose their work by clicking on the preview button,
+// change the href to an alert of what the click would be
 export function makePreviewActionButtonJustNotifyUser(values) {
     const popuptext = `On the live website, this button will visit ${values.linkUrl} when clicked`;
     const changeLink = setInterval(() => {

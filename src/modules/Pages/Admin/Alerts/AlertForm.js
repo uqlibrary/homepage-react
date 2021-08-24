@@ -1,8 +1,10 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-const moment = require('moment');
 
+import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp';
+import RemoveCircleSharpIcon from '@material-ui/icons/RemoveCircle';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
@@ -10,9 +12,12 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
+
+const moment = require('moment');
 
 import { default as locale } from './alertsadmin.locale';
 import {
@@ -34,11 +39,6 @@ const useStyles = makeStyles(
             },
         },
         saveButton: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.accent.dark,
-            },
             '&:disabled': {
                 color: 'rgba(0, 0, 0, 0.26)',
                 boxShadow: 'none',
@@ -59,15 +59,23 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alertError, history }) => {
+export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
 
-    const [isFormValid, setFormValidity] = useState(false);
-    const [showPreview, setPreviewOpen] = useState(false);
+    const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
+    const [showPreview, setPreviewOpen] = useState(false); // show hide the preview block
 
-    const [values, setValues] = useState(defaults);
+    const [values, setValues] = useState(defaults); // the data displayed in the form
+    const [countSuccess, setSuccessCount] = useState(0); // store the number of success saves to display to the user
+    const [dateList, setDateList] = useState([
+        // list of details for "another date row" button
+        {
+            startDate: defaults.startDateDefault,
+            endDate: defaults.endDateDefault,
+        },
+    ]);
 
     const isValidUrl = testurl => {
         if (testurl.length < 'http://x.co'.length) {
@@ -76,7 +84,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         }
         try {
             const url = new URL(testurl);
-            console.log('new url = ', url);
             if (url.hostname.length < 'x.co'.length) {
                 return false;
             }
@@ -104,7 +111,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     function isInvalidStartDate(startDate) {
-        return (startDate < defaults.startDate && startDate !== '') || !moment(startDate).isValid();
+        return (startDate < defaults.startDateDefault && startDate !== '') || !moment(startDate).isValid();
     }
 
     function isInvalidEndDate(endDate, startDate) {
@@ -113,6 +120,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     const validateValues = currentValues => {
         const isValid =
+            !alertLoading &&
             !isInvalidStartDate(currentValues.startDate) &&
             !isInvalidEndDate(currentValues.endDate, currentValues.startDate) &&
             currentValues.alertTitle.length > 0 &&
@@ -136,13 +144,13 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
     useEffect(() => {
         if (!!alertResponse && !!alertResponse.id && alertStatus === 'saved') {
+            setSuccessCount(prevCount => prevCount + 1);
             showConfirmation();
         }
     }, [showConfirmation, alertResponse, alertStatus]);
 
     useEffect(() => {
         if (!!alertError || alertStatus === 'error') {
-            console.log('There was an error while saving a new alert: ', alertError);
             showConfirmation();
         }
     }, [showConfirmation, alertError, alertStatus]);
@@ -151,13 +159,19 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         setValues({
             ['alertTitle']: '',
             ['enteredbody']: '',
-            ['startDate']: defaults.startDate,
-            ['endDate']: defaults.endDate,
+            ['startDate']: defaults.startDateDefault,
+            ['endDate']: defaults.endDateDefault,
             ['urgent']: false,
             ['permanentAlert']: false,
             ['linkRequired']: false,
             ['linkTitle']: '',
             ['linkUrl']: '',
+            ['dateList']: [
+                {
+                    startDate: defaults.startDateDefault,
+                    endDate: defaults.endDateDefault,
+                },
+            ],
         });
     };
 
@@ -177,8 +191,12 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     const reloadClonePage = () => {
         setValues({
             ...defaults,
-            startDate: getTimeNowFormatted(),
-            endDate: getTimeEndOfDayFormatted(),
+            dateList: [
+                {
+                    startDate: getTimeNowFormatted(),
+                    endDate: getTimeEndOfDayFormatted(),
+                },
+            ],
         });
 
         const topOfPage = document.getElementById('StandardPage');
@@ -194,8 +212,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
         const newBody = getBody(expandableValues);
 
-        const newStartDate = expandableValues.startDate || defaults.startDate;
-        const newEndDate = expandableValues.endDate || defaults.endDate;
+        const newStartDate = expandableValues.startDate || defaults.startDateDefault;
+        const newEndDate = expandableValues.endDate || defaults.endDateDefault;
 
         return {
             ...expandableValues,
@@ -208,7 +226,8 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         };
     }
 
-    const saveAlert = () => {
+    const saveAlerts = () => {
+        setSuccessCount(0);
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
@@ -219,9 +238,22 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             urgent: !!values.urgent ? '1' : '0',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
+            dateList: values.dateList,
         };
-        console.log('will save ', newValues);
-        defaults.type === 'edit' ? actions.saveAlertChange(newValues) : actions.createAlert(newValues);
+        newValues.dateList.forEach(dateset => {
+            // an 'edit' event will only have one entry in the date array
+            const saveableValues = {
+                ...newValues,
+                start: formatDate(dateset.startDate),
+                end: formatDate(dateset.endDate),
+            };
+            !!saveableValues.dateList && delete saveableValues.dateList;
+            defaults.type === 'edit' ? actions.saveAlertChange(saveableValues) : actions.createAlert(saveableValues);
+        });
+
+        const alertWrapper = document.getElementById('previewWrapper');
+        !!alertWrapper && (alertWrapper.innerHTML = '');
+        handlePreview(false);
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -261,8 +293,6 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
         } else {
             alertWebComponent.setAttribute('alertmessage', body);
         }
-        // so the user doesnt lose their work by clicking on the preview button,
-        // change the href to an alert of what the click would be
         if (!!values.linkRequired) {
             makePreviewActionButtonJustNotifyUser(values);
         }
@@ -270,6 +300,35 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
     };
 
     const handleChange = prop => event => {
+        let dateListIndex = null;
+        if (prop === 'startDate') {
+            dateListIndex = event?.target?.id.replace('startDate-', '');
+        }
+        if (prop === 'endDate') {
+            dateListIndex = event?.target?.id.replace('endDate-', '');
+        }
+        if (!!dateListIndex) {
+            const tempDateEntry = {
+                startDate: prop === 'startDate' ? event.target.value : values.dateList[dateListIndex].startDate,
+                endDate: prop === 'endDate' ? event.target.value : values.dateList[dateListIndex].endDate,
+            };
+            const tempDateList = values.dateList;
+            tempDateList[dateListIndex] = tempDateEntry;
+            setValues({
+                ...values,
+                dateList: tempDateList,
+            });
+
+            setDateList([
+                ...dateList,
+                {
+                    startDate: prop === 'startDate' ? event.target.value : values.dateList[dateListIndex].startDate,
+                    endDate: prop === 'endDate' ? event.target.value : values.dateList[dateListIndex].endDate,
+                },
+            ]);
+            return;
+        }
+
         const newValue = !!event.target.value ? event.target.value : event.target.checked;
         setValues({ ...values, [prop]: newValue });
 
@@ -280,6 +339,35 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
 
         // if the form has changed, hide the Preview
         handlePreview(false);
+    };
+
+    const removeDateRow = indexRowToBeRemoved => {
+        const filteredDatelist = values.dateList.filter((row, index) => {
+            return index !== indexRowToBeRemoved;
+        });
+        setDateList(filteredDatelist);
+        setValues({
+            ...values,
+            dateList: filteredDatelist,
+        });
+    };
+
+    const addDateRow = () => {
+        const tempValue = values;
+        tempValue.dateList = [
+            ...tempValue.dateList,
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ];
+        setDateList([
+            ...dateList,
+            {
+                startDate: getTimeNowFormatted(),
+                endDate: getTimeEndOfDayFormatted(),
+            },
+        ]);
     };
 
     const errorLocale = {
@@ -299,6 +387,28 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
             clearForm();
         }
     };
+
+    function postAddConfirmationDetails() {
+        // update the number of alerts saved if they saved multiple date-sets
+        return {
+            ...locale.form.add.addAlertConfirmation,
+            confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
+                'An alert has',
+                countSuccess > 1 ? `${countSuccess} alerts have` : 'An alert has',
+            ),
+        };
+    }
+
+    function postAddCloneDetails() {
+        // update the number of alerts saved if they saved multiple date-sets
+        return {
+            ...locale.form.clone.cloneAlertConfirmation,
+            confirmationTitle: locale.form.clone.cloneAlertConfirmation.confirmationTitle.replace(
+                'The alert has',
+                countSuccess > 1 ? `${countSuccess} alerts have` : 'The alert has',
+            ),
+        };
+    }
 
     return (
         <Fragment>
@@ -336,7 +446,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         onCancelAction={() => navigateToListPage()}
                         isOpen={isOpen}
-                        locale={locale.form.add.addAlertConfirmation}
+                        locale={postAddConfirmationDetails()}
                     />
                 )}
                 {alertStatus !== 'error' && defaults.type === 'clone' && (
@@ -347,7 +457,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         onClose={hideConfirmation}
                         onAction={() => reloadClonePage()}
                         isOpen={isOpen}
-                        locale={locale.form.clone.cloneAlertConfirmation}
+                        locale={postAddCloneDetails()}
                         onCancelAction={() => navigateToListPage()}
                     />
                 )}
@@ -386,43 +496,73 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                         </FormControl>
                     </Grid>
                 </Grid>
-                <Grid container spacing={2} style={{ marginTop: 12 }}>
-                    <Grid item md={6} xs={12}>
-                        {/* https://material-ui.com/components/pickers/ */}
-                        <TextField
-                            id="startDate"
-                            data-testid="admin-alerts-form-start-date"
-                            error={isInvalidStartDate(values.startDate)}
-                            InputLabelProps={{ shrink: true }}
-                            label="Start date"
-                            onChange={handleChange('startDate')}
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                            type="datetime-local"
-                            value={values.startDate}
-                            inputProps={{
-                                min: defaults.minimumDate,
-                                required: true,
-                            }}
-                        />
-                    </Grid>
-                    <Grid item md={6} xs={12}>
-                        <TextField
-                            id="endDate"
-                            data-testid="admin-alerts-form-end-date"
-                            InputLabelProps={{ shrink: true }}
-                            label="End date"
-                            onChange={handleChange('endDate')}
-                            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
-                            type="datetime-local"
-                            value={values.endDate}
-                            error={isInvalidEndDate(values.endDate, values.startDate)}
-                            inputProps={{
-                                min: values.startDate,
-                                required: true,
-                            }}
-                        />
-                    </Grid>
-                </Grid>
+                {!!values.dateList &&
+                    values.dateList.map((dateset, index) => {
+                        return (
+                            <Grid key={`dateset-${index}`} container spacing={2} style={{ marginTop: 12 }}>
+                                <Grid item md={5} xs={12}>
+                                    <TextField
+                                        id={`startDate-${index}`}
+                                        data-testid={`admin-alerts-form-start-date-${index}`}
+                                        error={isInvalidStartDate(dateset.startDate)}
+                                        InputLabelProps={{ shrink: true }}
+                                        label="Start date"
+                                        onChange={handleChange('startDate')}
+                                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                                        type="datetime-local"
+                                        value={values.dateList[index].startDate}
+                                        inputProps={{
+                                            min: defaults.minimumDate,
+                                            required: true,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item md={5} xs={12}>
+                                    <TextField
+                                        id={`endDate-${index}`}
+                                        data-testid={`admin-alerts-form-end-date-${index}`}
+                                        InputLabelProps={{ shrink: true }}
+                                        label="End date"
+                                        onChange={handleChange('endDate')}
+                                        pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
+                                        type="datetime-local"
+                                        value={values.dateList[index].endDate}
+                                        error={isInvalidEndDate(dateset.endDate, dateset.startDate)}
+                                        inputProps={{
+                                            min: values.dateList[index].startDate,
+                                            required: true,
+                                        }}
+                                    />
+                                </Grid>
+                                <Grid item md={2} xs={12}>
+                                    {['add', 'clone'].includes(defaults.type) &&
+                                    index === values.dateList.length - 1 ? (
+                                        <IconButton
+                                            data-testid={`admin-alerts-form-another-date-button-${index}`}
+                                            onClick={addDateRow}
+                                            title="Add another alert with the same text but different start and end times"
+                                            style={{ minWidth: 60 }}
+                                        >
+                                            <AddCircleSharpIcon />
+                                        </IconButton>
+                                    ) : (
+                                        <Typography className="MuiButtonBase-root" style={{ minWidth: 60 }}>
+                                            &nbsp;
+                                        </Typography>
+                                    )}
+                                    {['add', 'clone'].includes(defaults.type) && values.dateList.length > 1 && (
+                                        <IconButton
+                                            data-testid={`admin-alerts-form-remove-date-button-${index}`}
+                                            onClick={() => removeDateRow(index)}
+                                            title="Remove this date/time set from the alert series"
+                                        >
+                                            <RemoveCircleSharpIcon />
+                                        </IconButton>
+                                    )}
+                                </Grid>
+                            </Grid>
+                        );
+                    })}
                 <Grid
                     container
                     spacing={2}
@@ -533,7 +673,7 @@ export const AlertForm = ({ actions, alertResponse, alertStatus, defaults, alert
                             variant="contained"
                             children={defaults.type === 'edit' ? 'Save' : 'Create'}
                             disabled={!isFormValid}
-                            onClick={saveAlert}
+                            onClick={saveAlerts}
                             className={classes.saveButton}
                         />
                     </Grid>
@@ -547,6 +687,7 @@ AlertForm.propTypes = {
     actions: PropTypes.any,
     alertResponse: PropTypes.any,
     alertError: PropTypes.any,
+    alertLoading: PropTypes.any,
     alertStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,

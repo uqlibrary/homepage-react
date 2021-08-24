@@ -36,13 +36,6 @@ const useStyles2 = makeStyles(
         table: {
             minWidth: 500,
         },
-        editButton: {
-            backgroundColor: theme.palette.accent.main,
-            color: '#fff',
-            '&:hover': {
-                backgroundColor: theme.palette.accent.dark,
-            },
-        },
         startDate: {
             whiteSpace: 'pre', // makes moment format able to take a carriage return
         },
@@ -54,7 +47,7 @@ const useStyles2 = makeStyles(
             padding: '0 0.5rem',
         },
         headerRowHighlighted: {
-            backgroundColor: theme.palette.accent.main,
+            backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },
         iconHighlighted: {
@@ -65,7 +58,7 @@ const useStyles2 = makeStyles(
             color: '#fff',
         },
         link: {
-            backgroundColor: theme.palette.accent.main,
+            backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },
         checkboxCell: {
@@ -312,14 +305,16 @@ export const AlertsListAsTable = ({
                             onClick={showDeleteConfirmation}
                             aria-label="Delete alert(s)"
                             data-testid={`alert-list-${tableType}-delete-button`}
+                            title="Delete alert(s)"
                         >
                             <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
                         </IconButton>
                         <IconButton
                             onClick={clearAllCheckboxes}
-                            aria-label="Clear selected checkboxes"
+                            aria-label="Deselect all"
                             data-testid={`alert-list-${tableType}-deselect-button`}
                             className={classes.iconHighlighted}
+                            title="Deselect all"
                         >
                             <CloseIcon />
                         </IconButton>

@@ -47,6 +47,9 @@ const EXTRAMURAL_FRYER = 'FRYVISITOR';
 const EXTRAMURAL_HONORARY = 'HON';
 const EXTRAMURAL_PROXY = 'PROXY';
 
+export const TRAINING_FILTER_GENERAL = 104;
+export const TRAINING_FILTER_HOSPITAL = 360;
+
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
 // (this means if an option changes from everyone to logged in, we only need to change the call internally here)
 const everyoneCanSee = account => true || /* istanbul ignore next */ !!account;
@@ -115,33 +118,25 @@ export const seeEspace = (account, author) => loggedinCanSee(account) && !!autho
 
 export const seeLibraryServices = account => loggedinCanSee(account);
 
+export const isHospitalUser = account =>
+    !!account && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
+
 export const seeFeedback = account => everyoneCanSee(account);
 
-// there is an intention to make a non-hard coded access system. Perhaps a table, and an update screen?
-// until this is db driven, make the same change in Reusable so the user gets an entry in the MyLibrary menu
-export const seeAlertsAdmin = account =>
-    !!account &&
-    !!account.id &&
-    [
-        'uqwebadminperson', // mock
-        // Staff who will use the form
-        'uqjtilse', // jake Tilse
-        'uqsvangr', // Stacey van Groll
-        'uqtziebe', // Tanya Ziebell
-        'uqnfitt', // nick Fitt
-        'uqrbowen', // Rob Bowen
-        'uqehorns', // Eric Hornsby
-        'uqdcall1', // Dan Callan
-        'uqtscho1', // Tristan Schoonens
-        // devs
-        'uqldegro', // Lea de Groot
-        'uqamartl', // Andrew Martlew
-        'uqklane1', // Ky Lane
-        'uqawil42', // Ashley Wilson
-        'uqclien1', // Cliff Lien
-        'uqmmoise', // Marcelo Perez Moises
-        // all devs should be here
-    ].includes(account.id);
+const hasWebContentAdminAccess = account => {
+    const newVar =
+        !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));
+    console.log('hasWebContentAdminAccess = ', !!newVar);
+    return newVar;
+};
+
+export const seeSpotlightsAdmin = account => {
+    return !!account && !!hasWebContentAdminAccess(account);
+};
+
+export const seeAlertsAdmin = account => {
+    return !!account && !!hasWebContentAdminAccess(account);
+};
 
 // what is displayed in the User Services panel on the homepage, determined per group
 const userGroupServices = {

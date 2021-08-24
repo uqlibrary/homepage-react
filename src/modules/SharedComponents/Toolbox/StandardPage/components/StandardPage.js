@@ -14,6 +14,7 @@ export const useStyles = makeStyles(
             padding: 0,
         },
         layoutTitle: {
+            color: '#51247A',
             overflowWrap: 'break-word !important',
             maxWidth: 1200,
             width: '90%',
@@ -57,7 +58,6 @@ export const StandardPage = ({ title, children, help }) => {
                     <Grid item xs className={classes.title}>
                         <Typography
                             className={classes.layoutTitle}
-                            color={'primary'}
                             component={'h1'}
                             data-testid="StandardPage-title"
                             variant={'h4'}

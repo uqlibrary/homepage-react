@@ -14,7 +14,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('displays a list of alerts to the authorised user', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-list-current-list"]').should('be.visible');
             cy.wait(100);
@@ -59,7 +59,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-5 of 78');
         });
         it('is accessible', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -72,7 +72,7 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('has a working Help button on the List page', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
@@ -83,7 +83,7 @@ describe('Alerts Admin Pages', () => {
         });
 
         it('has a working Add button on the List page', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-help-display-button"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-help-display-button"]').click();
@@ -91,7 +91,7 @@ describe('Alerts Admin Pages', () => {
         });
 
         it('has a working Edit button on the List page', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
                 'be.visible',
@@ -123,7 +123,7 @@ describe('Alerts Admin Pages', () => {
         });
 
         it('has alert dates formatted as expected', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             // non-past dates dont have the year' time is formatted as expected
             cy.get('tr[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').within(() => {
@@ -143,7 +143,7 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('can save the paginator default row count selection', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').should(
                 'have.value',
@@ -155,7 +155,7 @@ describe('Alerts Admin Pages', () => {
                 '10',
             );
             // reload the page and it is still 10 because the cookie saved it
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').select('10');
             cy.get('[data-testid="alert-list-past"] [data-testid="admin-alerts-list-paginator-select"]').should(
@@ -165,7 +165,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-10 of 78');
         });
         it('should have working Split button actions for current/scheduled alerts', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             // EDIT BUTTON WORKS
             cy.get('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
@@ -215,7 +215,7 @@ describe('Alerts Admin Pages', () => {
             // cant test display further as mock data doesnt actually delete
         });
         it('should have working Split button actions for past alerts', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             // VIEW BUTTON WORKS
             cy.get('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').should('exist');
@@ -228,7 +228,7 @@ describe('Alerts Admin Pages', () => {
                 'http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9',
             );
 
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             // the dropdown split button exists but is not open
             cy.get('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').should('exist');
             cy.get('[data-testid="alert-list-arrowicon-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]')
@@ -266,7 +266,7 @@ describe('Alerts Admin Pages', () => {
     });
     context('Alert Admin deletion', () => {
         it('the user can select an alert to delete', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             // select one alert and every thing looks right
             cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
@@ -295,7 +295,7 @@ describe('Alerts Admin Pages', () => {
         });
 
         it('the user can delete an alert', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
             cy.get('[data-testid="headerRow-current"] span span').contains('1 alert selected');
@@ -311,7 +311,7 @@ describe('Alerts Admin Pages', () => {
         });
 
         it('reports when a delete fails', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-item-checkbox-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').check();
             cy.get('[data-testid="headerRow-scheduled"] span span').contains('1 alert selected');
@@ -334,7 +334,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
         });
         it('sequential deletion of alerts does not fail', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-item-checkbox-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 alert selected');
@@ -367,7 +367,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="dialogbox-alert-delete-error-dialog"]').should('not.exist');
         });
         it('during delete section checkboxes in other sections are disabled', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
                 'not.be.disabled',
@@ -418,7 +418,7 @@ describe('Alerts Admin Pages', () => {
             );
         });
         it('can unselect all checkboxes with the "X"', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
                 'not.be.disabled',
@@ -470,7 +470,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('is accessible', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -484,7 +484,7 @@ describe('Alerts Admin Pages', () => {
         });
         it('can show a preview of the initial blank alert', () => {
             // this one is more about making sure nothing bad happens rather than checking it looks ok
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
@@ -503,7 +503,7 @@ describe('Alerts Admin Pages', () => {
                 });
         });
         it('can show a preview of an urgent non-permanent alert without link', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title');
@@ -520,7 +520,7 @@ describe('Alerts Admin Pages', () => {
                 });
         });
         it('can show a preview of a non-urgent permanent alert with link', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 2');
@@ -554,7 +554,7 @@ describe('Alerts Admin Pages', () => {
         });
         it('hides incomplete links from the preview', () => {
             // rather than show things like "title: body []()"
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 6');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 6');
@@ -588,7 +588,7 @@ describe('Alerts Admin Pages', () => {
                 });
         });
         it('an url must be valid', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
             cy.get('[data-testid="admin-alerts-form-link-title"]').should('be.visible');
@@ -601,22 +601,26 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-link-url"]').should('not.have.class', 'Mui-error');
         });
         it('can save an alert (simple)', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 3');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 3');
+            cy.get('button[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('An alert has been added');
             // click 'add another alert' button in dialog
             cy.get('[data-testid="confirm-alert-add-save-succeeded"]').click();
-            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add?user=uqstaff');
             // the alert page reloads with a blank form
             cy.get('[data-testid="admin-alerts-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-alerts-form-body"] textarea').should('have.value', '');
+            // the preview is successfully hidden as part of the save function
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
         });
         it('can save an alert (more complex)', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 4');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 4');
@@ -633,7 +637,7 @@ describe('Alerts Admin Pages', () => {
 
             // TODO we dont seem to have access to the date field?
             // from https://github.com/cypress-io/cypress/issues/1366
-            // cy.get('[data-testid="admin-alerts-form-start-date"] input')
+            // cy.get('[data-testid="admin-alerts-form-start-date-0"] input')
             //     .click()
             //     .then(input => {
             //         input[0].dispatchEvent(new Event('input', { bubbles: true }));
@@ -663,7 +667,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="confirm-alert-add-save-succeeded"]').should('not.exist');
         });
         it('the cancel button returns to the list page', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-form-button-cancel"]').click();
             cy.wait(50);
@@ -674,7 +678,7 @@ describe('Alerts Admin Pages', () => {
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         });
         it('has a working Help button on the Add page', () => {
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
@@ -695,7 +699,7 @@ describe('Alerts Admin Pages', () => {
                 cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
             }
 
-            cy.visit('http://localhost:2020/admin/alerts/add?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
             PreviewButtonAvailableAndSaveDisabled();
 
@@ -720,7 +724,7 @@ describe('Alerts Admin Pages', () => {
             buttonsAreNOTDisabled();
         });
         it('the footer paginator shows all links when "all" is selected', () => {
-            cy.visit('http://localhost:2020/admin/alerts?user=uqwebadminperson');
+            cy.visit('http://localhost:2020/admin/alerts?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get(
                 '[data-testid="admin-alerts-list-past-list"] [data-testid="admin-alerts-list-paginator-select"]',
@@ -750,9 +754,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('h1').contains('Permission denied');
         });
         it('is accessible', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -765,15 +767,13 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('the edit form presets the correct data', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2020-06-07T02:00:00');
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2020-06-07T03:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-29T15:00:00');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2031-07-02T18:30:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
@@ -785,15 +785,13 @@ describe('Alerts Admin Pages', () => {
                 'have.value',
                 'https://about.uq.edu.au/coronavirus',
             );
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Sample alert 2:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('Has mock data.');
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2021-06-06T00:45:00');
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2021-06-06T05:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-06T00:45:00');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2021-06-06T05:00:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
@@ -801,9 +799,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
         });
         it('has a working Edit form', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
@@ -817,9 +813,7 @@ describe('Alerts Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('has a working Help button on the Edit page', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(50);
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
@@ -830,9 +824,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
         });
         it('can show a preview of a change', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.wait(50);
@@ -871,9 +863,7 @@ describe('Alerts Admin Pages', () => {
                 .should('have.attr', 'style', 'padding-bottom: 1em; display: block; visibility: visible; opacity: 1;');
         });
         it('can show a preview of the original alert', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.wait(50);
@@ -920,9 +910,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('h1').contains('Page not found');
         });
         it('is accessible', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -935,9 +923,7 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('can clone an alert and return to list', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
@@ -956,9 +942,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
         });
         it('can clone an alert and then clone again', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
@@ -975,7 +959,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
             cy.location('href').should(
                 'eq',
-                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
+                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff',
             );
             // click "Add new"
             cy.wait(50);
@@ -984,9 +968,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
         });
         it('has a working Help button on the Clone page', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(50);
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
@@ -995,6 +977,78 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+        });
+        it('the "add a date set button" works', () => {
+            cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-2"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-2"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').should('exist');
+
+            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('3 alerts have been cloned');
+
+            cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
+
+            cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
+
+            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
+        });
+
+        function thisManyRemoveButtonsExist(buttonId) {
+            for (let ii = 0; ii < buttonId; ii++) {
+                cy.get(`[data-testid="admin-alerts-form-start-date-${ii}"] input`).should('exist');
+                cy.get(`[data-testid="admin-alerts-form-end-date-${ii}"] input`).should('exist');
+                cy.get(`[data-testid="admin-alerts-form-remove-date-button-${ii}"]`).should('exist'); // '-' button exists
+            }
+            const nextButtonId = buttonId + 1;
+            cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
+        }
+
+        it('the "remove a date set button" works', () => {
+            cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-remove-date-button-0"]').should('not.exist'); // no '-' button
+            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click(); // click '+' button
+            thisManyRemoveButtonsExist(1);
+
+            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click(); // click '+' button
+            thisManyRemoveButtonsExist(2);
+
+            cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').click();
+            thisManyRemoveButtonsExist(3);
+
+            cy.get('[data-testid="admin-alerts-form-remove-date-button-1"]').click(); // remove a date field
+            thisManyRemoveButtonsExist(2);
         });
     });
     context('Alert Admin View page', () => {
@@ -1013,9 +1067,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('h1').contains('Page not found');
         });
         it('is accessible', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -1028,9 +1080,7 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('can view an alert without being able to edit any fields', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('View alert');
@@ -1043,10 +1093,10 @@ describe('Alerts Admin Pages', () => {
             );
             cy.get('[data-testid="admin-alerts-form-body"] textarea').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2020-06-07T02:00:00');
+            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2021-06-29T15:00:00');
             cy.get('[data-testid="admin-alerts-form-start-date"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2020-06-07T03:00:00');
+            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2031-07-02T18:30:00');
             cy.get('[data-testid="admin-alerts-form-end-date"] input').should('be.disabled');
 
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
@@ -1071,18 +1121,14 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.disabled');
         });
         it('can return to the list page from the view page', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(50);
             cy.get('button[data-testid="admin-alerts-form-button-cancel"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('can vist the clone page from the view page', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(50);
             cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
@@ -1092,22 +1138,18 @@ describe('Alerts Admin Pages', () => {
             );
         });
         it('has a working Help button on the View page', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.wait(50);
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
+            cy.get('[data-testid="admin-alerts-view-help-example"]').should('be.visible');
             cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
         });
         it('can show a preview of an non-urgent non-permanent alert without link', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqwebadminperson',
-            );
+            cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
@@ -1120,10 +1162,8 @@ describe('Alerts Admin Pages', () => {
                     cy.get('[data-testid="alert-alert-preview-action-button"]').should('not.exist');
                 });
         });
-        it('can show a preview of a urgent permanent alert with link', () => {
-            cy.visit(
-                'http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqwebadminperson',
-            );
+        it('can show a preview of an urgent permanent alert with link', () => {
+            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')

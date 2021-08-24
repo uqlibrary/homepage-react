@@ -4,7 +4,6 @@ import MockAdapter from 'axios-mock-adapter';
 import Cookies from 'js-cookie';
 import * as routes from 'repositories/routes';
 import * as mockData from './data';
-import { spotlights } from './data/spotlights';
 import fetchMock from 'fetch-mock';
 
 import exams_FREN1010 from './data/records/examListFREN1010';
@@ -25,13 +24,15 @@ import {
     computerAvailability,
     incompleteNTROs,
     libHours,
-    libHoursNew,
     loans,
     possibleRecords,
     printBalance,
     training_object,
 } from './data/account';
 import { alertList } from './data/alerts';
+import { spotlights as spotlightsHomepage } from './data/spotlights';
+import { spotlightsLong } from './data/spotlightsLong';
+import { UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -107,7 +108,40 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.SPOTLIGHTS_API().apiUrl).reply(withDelay([200, [...spotlights]]));
+mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
+
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc',
+            start: '2021-01-08 15:05:00',
+            end: '2021-01-18 18:00:00',
+            title: 'Has been dragged to position #2',
+            url: 'https://web.library.uq.edu.au/library-services/covid-19',
+            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
+            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
+            weight: 20,
+            active: 0,
+        },
+    ]),
+);
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095b' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '480c5c20-6df0-11e7-86d1-31e8626e095b',
+            start: '2021-01-08 15:05:00',
+            end: '2021-01-18 18:00:00',
+            title: 'was in pos #2, dragging #1 moved this',
+            url: 'https://web.library.uq.edu.au/library-services/covid-19',
+            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
+            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
+            weight: 10,
+            active: 0,
+        },
+    ]),
+);
 
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
@@ -192,8 +226,8 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
         200,
         {
             id: '1db618c0-d897-11eb-a27e-df4e46db7245',
-            start: '2020-06-07 02:00:03',
-            end: '2020-06-07 03:00:03',
+            start: '2021-06-29 15:00:34',
+            end: '2031-07-02 18:30:34',
             title: 'Example alert:',
             body:
                 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
@@ -245,6 +279,39 @@ fetchMock.mock(
     'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
 );
+
+// spotlights
+mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(withDelay([200, spotlightsLong]));
+
+mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '5bc14170-e1e9-11ea-b88d-9bb67d805fd9',
+            start: '2020-08-19 00:01:32',
+            end: '2020-08-30 23:59:00',
+            title: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
+            url: 'https://web.library.uq.edu.au/blog/2020/08/announcing-2020-fryer-library-fellow',
+            img_url: 'http://localhost:2020/public/images/spotlights/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
+            img_alt: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
+            weight: 4,
+            active: 1,
+        },
+    ]),
+);
+// mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
+
+mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
+    {
+        key: '123456-123456-123456-123456-123456',
+        type: 'mimetype',
+        name: 'name',
+        size: 9999,
+    },
+]);
+// mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
+//     message: ['an error message from the api that describes what the problem was'],
+// });
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {

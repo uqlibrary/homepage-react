@@ -11,10 +11,8 @@ import ScriptTag from 'react-script-tag';
 
 export const NotFound = ({ account, accountLoading }) => {
     const location = useLocation();
-    console.log('NotFound location.pathname = ', location.pathname);
     const isValidRoute = flattedPathConfig.indexOf(location.pathname) >= 0;
     const isValidFileRoute = adminEditRegexConfig.test(location.pathname);
-    console.log('NotFound isValidRoute = ', isValidRoute);
     // if not known page, standard 404
     if (!(isValidRoute || isValidFileRoute)) {
         return (

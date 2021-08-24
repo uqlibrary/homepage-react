@@ -50,15 +50,5 @@ export default function alertReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log(
-        'alertReducer: ',
-        action.type,
-        ' - state = ',
-        state,
-        '; action = ',
-        action,
-        '; handler = ',
-        handler(state, action),
-    );
     return handler(state, action);
 }

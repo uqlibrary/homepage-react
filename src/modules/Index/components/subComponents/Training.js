@@ -1,5 +1,8 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
+import ContentLoader from 'react-content-loader';
+import moment from 'moment-timezone';
+
 import { makeStyles } from '@material-ui/styles';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Grid from '@material-ui/core/Grid';
@@ -12,9 +15,8 @@ import CloseIcon from '@material-ui/icons/Close';
 import EventIcon from '@material-ui/icons/Event';
 import EventAvailableIcon from '@material-ui/icons/EventAvailable';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+
 import { trainingLocale } from './Training.locale';
-import moment from 'moment-timezone';
-import ContentLoader from 'react-content-loader';
 
 const MyLoader = props => (
     <ContentLoader
@@ -73,7 +75,7 @@ const useStyles = makeStyles(theme => ({
         textTransform: 'none',
         textAlign: 'left',
         fontSize: 16,
-        color: theme.palette.accent.main,
+        color: theme.palette.primary.main,
         fontWeight: 300,
         lineHeight: 1.25,
     },

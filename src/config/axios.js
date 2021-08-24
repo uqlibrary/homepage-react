@@ -118,6 +118,7 @@ api.interceptors.response.use(
             if (!!error.response && !!error.response.status && error.response.status === 403) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
+                    Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     delete api.defaults.headers.common[TOKEN_NAME];
                 }
 
@@ -130,7 +131,10 @@ api.interceptors.response.use(
 
             if (!!error.message && !!error.response && !!error.response.status && error.response.status === 500) {
                 errorMessage =
-                    ((error.response || {}).data || {}).message || locale.global.errorMessages[error.response.status];
+                    !!error.response?.data && error.response?.data.length > 0
+                        ? { message: error.response.data.join(' ') }
+                        : ((error.response || {}).data || {}).message ||
+                          locale.global.errorMessages[error.response.status];
                 if (!alertDisplayAllowed(error)) {
                     // we dont display an error banner for these (the associated panel displays an error)
                 } else if (process.env.NODE_ENV === 'test' || process.env.NODE_ENV === 'cc') {

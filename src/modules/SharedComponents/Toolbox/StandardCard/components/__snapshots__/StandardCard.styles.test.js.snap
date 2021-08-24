@@ -13,7 +13,7 @@ Object {
     "paddingTop": "0px !important",
   },
   "cardHeaderAccent": Object {
-    "backgroundColor": "test4",
+    "backgroundColor": "test3",
     "borderRadius": "4px 4px 0px 0px",
     "color": "test2",
     "overflow": "hidden",
@@ -22,7 +22,7 @@ Object {
     "whiteSpace": "nowrap",
   },
   "cardHeaderPrimary": Object {
-    "backgroundColor": "test3",
+    "backgroundColor": "test4",
     "borderRadius": "4px 4px 0px 0px",
     "color": "test2",
     "overflow": "hidden",
