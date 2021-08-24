@@ -231,7 +231,7 @@ describe('Spotlight list actions', () => {
             await mockActionsStore.dispatch(
                 createSpotlightWithFile({
                     ...sendSpotlightRecord,
-                    uploadedFile: fileToUpload,
+                    uploadedFile: [fileToUpload],
                 }),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
