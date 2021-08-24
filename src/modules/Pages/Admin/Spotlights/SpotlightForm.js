@@ -427,7 +427,7 @@ export const SpotlightForm = ({
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.ariaTitle}>
+                        <FormControl fullWidth title={locale.form.tooltips.titleField}>
                             <InputLabel htmlFor="spotlightTitle">{locale.form.labels.titleField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
@@ -443,7 +443,7 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.tooltipMouseover}>
+                        <FormControl fullWidth title={locale.form.tooltips.ariaField}>
                             <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.ariaField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
@@ -457,7 +457,7 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.link}>
+                        <FormControl fullWidth title={locale.form.tooltips.linkField}>
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
                                 type="url"
@@ -506,7 +506,7 @@ export const SpotlightForm = ({
                     <Grid item xs={3} align="left">
                         <InputLabel
                             style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                            title={locale.form.tooltips.publishcheckbox}
+                            title={locale.form.tooltips.publishedCheckbox}
                         >
                             <Checkbox
                                 checked={values.active === 1}

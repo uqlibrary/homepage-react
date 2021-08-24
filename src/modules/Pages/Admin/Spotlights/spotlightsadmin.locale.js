@@ -12,10 +12,10 @@ export default {
             publishedCheckbox: 'Published?',
         },
         tooltips: {
-            ariaTitle: 'Help TBA',
-            tooltipMouseover: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
-            link: 'Please enter a valid URL',
-            publishcheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
+            titleField: 'Help TBA',
+            ariaField: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
+            linkField: 'Please enter a valid URL',
+            publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
         },
         add: {
             dragareaInstructions: "Drag 'n' drop your new Spotlight image here, or click to select an image",
