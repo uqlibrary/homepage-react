@@ -39,7 +39,7 @@ const deleteButton = {
     height: 80,
 };
 
-export function SpotlightUploader({ onAddFile, onClearFile }) {
+export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
     const [files, setFiles] = useState([]);
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
@@ -103,7 +103,7 @@ export function SpotlightUploader({ onAddFile, onClearFile }) {
     );
 }
 
-SpotlightUploader.propTypes = {
+SpotlightFileUploadDropzone.propTypes = {
     onAddFile: PropTypes.func,
     onClearFile: PropTypes.func,
 };

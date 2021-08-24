@@ -12,7 +12,7 @@ import { KeyboardDateTimePicker } from '@material-ui/pickers';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { SpotlightUploader } from 'modules/Pages/Admin/Spotlights/SpotlightUploader';
+import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
 import { default as locale } from './spotlightsadmin.locale';
 // import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
 import { formatDate } from './spotlighthelpers';
@@ -337,26 +337,27 @@ export const SpotlightForm = ({
         );
     }
 
-    const handleUploadedFiles = files => {
-        console.log('handleUploadedFiles files = ', files);
+    const handleSuppliedFiles = files => {
+        console.log('handleSuppliedFiles files = ', files);
+        // they can actually only provide a single file
         const file = !!files && files.length > 0 && files.shift();
-        console.log('handleUploadedFiles file = ', file);
+        console.log('handleSuppliedFiles file = ', file);
 
         setUploadedFiles(file);
 
         // const filename = !!file && file.name;
-        // console.log('handleUploadedFiles filename = ', filename);
+        // console.log('handleSuppliedFiles filename = ', filename);
         setValues({ ...values, ['uploadedFile']: file });
 
-        console.log('handleUploadedFiles values now = ', values);
+        console.log('handleSuppliedFiles values now = ', values);
         setFormValidity(validateValues({ ...values, ['uploadedFile']: file }));
 
         setTimeout(() => {
-            console.log('handleUploadedFiles setTimeout: uploadedFiles = ', uploadedFiles);
+            console.log('handleSuppliedFiles setTimeout: uploadedFiles = ', uploadedFiles);
         }, 1000);
     };
 
-    const clearUploadedFile = () => {
+    const clearSuppliedFile = () => {
         setFormValidity(validateValues({ ...values, ['uploadedFile']: '' }));
     };
 
@@ -499,7 +500,7 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={10} align="left">
-                        <SpotlightUploader onAddFile={handleUploadedFiles} onClearFile={clearUploadedFile} />
+                        <SpotlightFileUploadDropzone onAddFile={handleSuppliedFiles} onClearFile={clearSuppliedFile} />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
