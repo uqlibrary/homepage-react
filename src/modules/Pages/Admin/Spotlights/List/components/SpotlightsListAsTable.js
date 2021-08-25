@@ -73,10 +73,18 @@ const useStyles = makeStyles(() => ({
         padding: 0,
         textAlign: 'center',
     },
-    scheduledDisplay: {
+    h4: {
         fontWeight: '300',
-        '& h4': {
-            fontWeight: '300',
+        display: 'inline',
+    },
+    currentDisplay: {
+        '& td': {
+            '& span': {
+                fontWeight: 'bold',
+            },
+            '& h4': {
+                fontWeight: 'bold',
+            },
         },
     },
 }));
@@ -593,7 +601,11 @@ export const SpotlightsListAsTable = ({
                                                                 // key={spotlight.id}
                                                                 id={`spotlight-list-row-${spotlight.id}`}
                                                                 data-testid={`spotlight-list-row-${spotlight.id}`}
-                                                                className="spotlight-data-row"
+                                                                className={`spotlight-data-row ${
+                                                                    !!showScheduled && !isScheduled
+                                                                        ? classes.currentDisplay
+                                                                        : ''
+                                                                }`}
                                                                 // index={rowindex}
                                                                 {...draggableProvided.draggableProps}
                                                                 {...draggableProvided.dragHandleProps}
@@ -602,9 +614,7 @@ export const SpotlightsListAsTable = ({
                                                             >
                                                                 <TableCell
                                                                     component="td"
-                                                                    className={`${classes.checkboxCell} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.checkboxCell}`}
                                                                 >
                                                                     <Checkbox
                                                                         id={`spotlight-list-item-checkbox-${spotlight.id}`}
@@ -618,9 +628,7 @@ export const SpotlightsListAsTable = ({
                                                                 </TableCell>
                                                                 <TableCell
                                                                     component="td"
-                                                                    className={`${classes.tableCell} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.tableCell}`}
                                                                 >
                                                                     <img
                                                                         alt={spotlight.img_alt}
@@ -630,9 +638,7 @@ export const SpotlightsListAsTable = ({
                                                                 </TableCell>
                                                                 <TableCell
                                                                     component="td"
-                                                                    className={`${classes.tableCell} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.tableCell}`}
                                                                 >
                                                                     {isScheduled && (
                                                                         <div style={{ float: 'left', width: 30 }}>
@@ -642,16 +648,14 @@ export const SpotlightsListAsTable = ({
                                                                         </div>
                                                                     )}
                                                                     <h4
-                                                                        style={{ display: 'inline' }}
+                                                                        className={`${classes.h4}`}
                                                                         id={`spotlight-list-item-title-${spotlight.id}`}
                                                                     >{`${spotlight.title}`}</h4>{' '}
                                                                 </TableCell>
                                                                 <TableCell
                                                                     component="td"
                                                                     align="center"
-                                                                    className={`${classes.startDate} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.startDate}`}
                                                                 >
                                                                     <span title={spotlight.startDateLong}>
                                                                         {spotlight.startDateDisplay}
@@ -660,9 +664,7 @@ export const SpotlightsListAsTable = ({
                                                                 <TableCell
                                                                     component="td"
                                                                     align="center"
-                                                                    className={`${classes.endDate} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.endDate}`}
                                                                 >
                                                                     <span title={spotlight.endDateLong}>
                                                                         {spotlight.endDateDisplay}
@@ -670,9 +672,7 @@ export const SpotlightsListAsTable = ({
                                                                 </TableCell>
                                                                 <TableCell
                                                                     component="td"
-                                                                    className={`${classes.publishedCell} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.publishedCell}`}
                                                                 >
                                                                     <span>{!!spotlight.active ? 'yes' : 'no'}</span>
                                                                 </TableCell>
@@ -680,9 +680,7 @@ export const SpotlightsListAsTable = ({
                                                                     component="td"
                                                                     id={`spotlight-list-action-block-${spotlight.id}`}
                                                                     data-testid={`spotlight-list-action-block-${spotlight.id}`}
-                                                                    className={`${classes.tableCell} ${
-                                                                        !!isScheduled ? classes.scheduledDisplay : ''
-                                                                    }`}
+                                                                    className={`${classes.tableCell}`}
                                                                 >
                                                                     <SpotlightSplitButton
                                                                         spotlightId={spotlight.id}
@@ -723,7 +721,7 @@ export const SpotlightsListAsTable = ({
                                 <TableRow>
                                     <TablePagination
                                         rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
-                                        colSpan={4}
+                                        colSpan={5}
                                         count={userows.length}
                                         rowsPerPage={rowsPerPage}
                                         page={page}
