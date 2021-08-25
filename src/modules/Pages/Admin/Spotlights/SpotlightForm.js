@@ -499,7 +499,7 @@ export const SpotlightForm = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-                    <Grid item xs={3} align="left">
+                    <Grid item xs={12} align="right">
                         <InputLabel
                             style={{ color: 'rgba(0, 0, 0, 0.87)' }}
                             title={locale.form.tooltips.publishedCheckbox}
