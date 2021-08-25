@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
-import { getTimeNowFormatted, getTimeEndOfDayFormatted } from '../../spotlighthelpers';
+import { getStartOfDayFormatted, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { default as locale } from '../../spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 export const SpotlightsAdd = ({
     actions,
@@ -24,8 +24,8 @@ export const SpotlightsAdd = ({
 
     const defaults = {
         id: '',
-        startDateDefault: getTimeNowFormatted(),
-        endDateDefault: getTimeEndOfDayFormatted(),
+        startDateDefault: getStartOfDayFormatted(),
+        endDateDefault: getTimeSundayNextFormatted(),
         title: '',
         url: '',
         img_url: '',
@@ -33,7 +33,7 @@ export const SpotlightsAdd = ({
         weight: 0,
         active: 0,
         type: 'add',
-        minimumDate: getTimeNowFormatted(),
+        minimumDate: getStartOfDayFormatted(),
     };
     return (
         <StandardPage title="Spotlights Management">

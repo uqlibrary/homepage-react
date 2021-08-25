@@ -305,16 +305,12 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
 
-            // end date starts with the correct default
-            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should($input => {
-                const defaultDate = $input.val();
-                expect(defaultDate).to.include(moment().format('DD/MM/YYYY'));
-            });
-            // so does start date
+            // start date starts with the correct default
             cy.get('[data-testid="admin-spotlights-form-start-date"] input').should($input => {
                 const defaultDate = $input.val();
-                expect(defaultDate).to.include(moment().format('DD/MM/YYYY'));
+                expect(defaultDate).to.include(moment().format('DD/MM/YYYY 00:01'));
             });
+            // cant test end date here - would just be reimplementing the algorithm. Test in Jest
             cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
             // advance the start date one month
             cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
