@@ -493,6 +493,7 @@ export const SpotlightsListAsTable = ({
                                 >
                                     <Checkbox
                                         checked={showScheduled}
+                                        data-testid="spotlights-show-scheduled"
                                         onChange={showHideScheduled}
                                         name="showScheduled"
                                         inputProps={{
@@ -511,6 +512,7 @@ export const SpotlightsListAsTable = ({
                                 >
                                     <Checkbox
                                         checked={showUnPublished}
+                                        data-testid="spotlights-show-published"
                                         onChange={showHideUnPublished}
                                         name="showUnPublished"
                                         inputProps={{

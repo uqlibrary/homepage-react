@@ -16,7 +16,9 @@ function dragzoneIsReadyForDrag() {
 function dragFileToDropzone(uploadableFile) {
     dragzoneIsReadyForDrag();
     cy.fixture(uploadableFile, 'base64').then(content => {
-        cy.get('[data-testid="spotlights-form-upload-dropzone"]').uploadFile(content, uploadableFile);
+        cy.get('[data-testid="spotlights-form-upload-dropzone"]')
+            // uploadFile is a custom command - see commands.js
+            .uploadFile(content, uploadableFile);
     });
     cy.get('[data-testid="dropzone-dragarea"]').should('not.exist');
     cy.get('[data-testid="dropzone-preview"]').should('exist');
@@ -132,6 +134,129 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
                 getFooterLabel(totalCountPastRecords, totalCountPastRecords),
             );
+        });
+
+        it.skip('can reorder the list', () => {
+            // function moveRowTry3(dragSelector, x, y) {
+            //     console.log(dragSelector, x, y);
+            //     cy.get(dragSelector).should('exist');
+            //     cy.wait(1000);
+            //
+            //     cy.get(dragSelector)
+            //         .trigger('mousedown', { which: 1 })
+            //         .trigger('dragstart', {})
+            //         .trigger('drag', { clientX: 0, clientY: 500 });
+            //     cy.get(dragSelector)
+            //         .parent()
+            //         .trigger('dragover')
+            //         .trigger('drop')
+            //         .trigger('dragend')
+            //         .trigger('mouseup');
+            // }
+
+            // function moveRowTry2(dragSelector, x, y) {
+            //     console.log(dragSelector, x, y);
+            //     cy.get(dragSelector).should('exist');
+            //     console.log('parent 0 = ', cy.get(dragSelector).parent());
+            //     // console.log('parent 0 = ', cy.get(dragSelector).parent().eq(0));
+            //     // console.log('parent 1 = ', cy.get(dragSelector).parent().eq(1));
+            //
+            //     cy.window().then(win => {
+            //         console.log('dragSelector = ', cy.get(dragSelector));
+            //         cy.get(dragSelector)
+            //             .eq(0)
+            //             .then($element =>
+            //                 $element[0].dispatchEvent(
+            //                     // new win.MouseEvent('mousedown', { button: 1, clientX: 100, clientY: 100 }),
+            //                     new win.MouseEvent('mousedown'),
+            //                 ),
+            //             );
+            //         cy.get(dragSelector)
+            //             .parent()
+            //             .eq(0)
+            //             .then($element =>
+            //                 $element[0].dispatchEvent(new win.MouseEvent('mousemove', {clientX: x, clientY: y})),
+            //             )
+            //             .then($element =>
+            //                 // $element[0].dispatchEvent(
+            //                 // new win.MouseEvent('mouseup', { clientX: 100, clientY: 100 })),
+            //                 $element[0].dispatchEvent(new win.MouseEvent('mouseup')),
+            //             );
+            //     });
+            //     cy.log('after dragging');
+            //     // const draggable = dragSelector; // Cypress.$(dragSelector);
+            //     // console.log('draggable = ', draggable);
+            //     // draggable.dispatchEvent(new MouseEvent('mousedown'));
+            //     // draggable.dispatchEvent(new MouseEvent('mousemove', { clientX: x, clientY: y }));
+            //     // draggable.dispatchEvent(new MouseEvent('mouseup'));
+            // }
+
+            // function moveRowTry0(dragSelector, x, y) {
+            //     console.log(dragSelector, x, y);
+            //     // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/testing-dom__drag-drop/cypress/integration/drag_n_drop_spec.js
+            //
+            //     cy.get(dragSelector)
+            //         .should('exist')
+            //         // .parent()
+            //         .trigger('mousedown', { which: 1 })
+            //         .trigger('mousemove', { clientX: x, clientY: y })
+            //         .trigger('mouseup', { force: true });
+            // }
+
+            function moveRow(dragSelector, x, y) {
+                console.log(dragSelector, x, y);
+                // https://github.com/cypress-io/cypress-example-recipes/blob/master/examples/testing-dom__drag-drop/cypress/integration/drag_n_drop_spec.js
+
+                cy.get(dragSelector)
+                    .should('exist')
+                    .trigger('mouseover', { pageX: 600, pageY: 200 })
+                    .trigger('mousedown', { which: 1 })
+                    // .wait(1000)
+                    .trigger('mousemove', { clientX: x, clientY: y })
+                    .trigger('mouseup', { force: true });
+                cy.wait(1000);
+            }
+
+            // function moveRowTry5(dragSelector, x, y) {
+            // // from https://github.com/atlassian/react-beautiful-dnd/tree/master/cypress
+            //     const space = 32;
+            //     const arrowRight = 39;
+            //     console.log(dragSelector, x, y);
+            //     cy.get(dragSelector)
+            //         .focus()
+            //         .should('contain', 'Can be dragged')
+            //         .trigger('keydown', { keyCode: space })
+            //         .trigger('keydown', { keyCode: arrowRight, force: true })
+            //         // finishing before the movement time is fine - but this looks nice
+            //         // .wait(timings.outOfTheWay * 1000)
+            //         .trigger('keydown', { keyCode: space, force: true });
+            // }
+
+            // show all items
+            cy.get('[data-testid="spotlights-show-scheduled"] input').check();
+            cy.get('[data-testid="spotlights-show-published"] input').check();
+
+            // list is currently order 1, 2
+            cy.get('div[data-testid="spotlight-list-current"] tbody tr:first-child').should(
+                'contain',
+                'Can be dragged',
+            );
+            cy.get('div[data-testid="spotlight-list-current"] tbody tr:nth-child(2)').should('contain', 'break_01');
+            cy.wait(1000); // dev
+            // get 1, drag to 2
+            moveRow('[data-testid="spotlight-list-row-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]', 0, 500);
+            // cy.wait(1000); // dev
+
+            // list is now order 2, 1
+            cy.get('div[data-testid="spotlight-list-current"] tbody tr:first-child').should('contain', 'break_01');
+            cy.get('div[data-testid="spotlight-list-current"] tbody tr:nth-child(2)').should(
+                'contain',
+                'Can be dragged',
+            );
+            cy.get('div[data-testid="spotlight-list-current"] tbody tr:first-child').should(
+                'contain',
+                'blah blah blah',
+            ); // fail test
         });
     });
     context('Spotlight Admin Add page', () => {
