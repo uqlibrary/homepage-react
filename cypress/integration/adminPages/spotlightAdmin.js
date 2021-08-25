@@ -429,4 +429,76 @@ describe('Spotlights Admin Pages', () => {
             saveButtonNOTDisabled();
         });
     });
+    context('Spotlight Admin Edit page', () => {
+        beforeEach(() => {
+            cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
+            cy.viewport(1300, 1000);
+        });
+
+        it('is accessible', () => {
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('Edit spotlight');
+            cy.wait(1000);
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'Spotlights Admin Edit',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it.skip('can save a spotlight', () => {
+            cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
+            dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="admin-spotlights-form-button-save"]')
+                .should('not.be.disabled')
+                .click();
+            cy.wait(50);
+            cy.get('.MuiDialog-container').contains('A spotlight has been added');
+            // click 'add another alert' button in dialog
+            cy.get('[data-testid="confirm-spotlight-add-save-succeeded"]').click();
+            // the alert page reloads with a blank form
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
+            cy.get('[data-testid="admin-spotlights-form-title"]').should('have.value', '');
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', '');
+            dragzoneIsReadyForDrag();
+        });
+        it('the cancel button returns to the list page', () => {
+            cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
+                .should('exist')
+                .click();
+            cy.wait(100);
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
+            cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
+            cy.get('[data-testid="spotlight-list-current"] tbody')
+                .children()
+                .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
+        });
+        it('has a working Help button on the Edit page', () => {
+            cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
+            cy.get('[data-testid="admin-spotlights-help-button"]').click();
+            cy.get('[data-testid="admin-spotlights-help-example"]').should('be.visible');
+            cy.get('button:contains("Close")').click();
+            cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
+        });
+        it.skip('save button is disabled unless the form is valid', () => {
+            // fill out the form from the bottom up to double-check the "button enables properly"
+            saveButtonisDisabled();
+
+            dragFileToDropzone('test.jpg');
+            saveButtonisDisabled();
+
+            cy.get('[data-testid="admin-spotlights-form-title"]').type('alert title 5');
+            saveButtonisDisabled();
+
+            // start an url, but button are disabled while it isnt valid
+            cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://e');
+            saveButtonisDisabled();
+            // complete to a valid url
+            cy.get('[data-testid="admin-spotlights-form-link-url"]').type('xample.com');
+            saveButtonNOTDisabled();
+        });
+    });
 });

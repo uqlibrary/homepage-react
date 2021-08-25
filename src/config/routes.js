@@ -17,6 +17,7 @@ export const pathConfig = {
         alerts: '/admin/alerts',
         masquerade: '/admin/masquerade',
         spotlightsadd: '/admin/spotlights/add',
+        spotlightsedit: spotlightid => `/admin/spotlights/edit/${spotlightid}`,
         spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
@@ -35,6 +36,7 @@ export const flattedPathConfig = [
     '/admin/alerts',
     '/admin/masquerade',
     '/admin/spotlights/add',
+    '/admin/spotlights/edit',
     '/admin/spotlights',
     '/book-exam-booth',
     'https://www.library.uq.edu.au/404.js',
@@ -145,12 +147,24 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spotlightidRegExp = '.*';
+    const spotlightid = `:spotlightid(${alertidRegExp})`;
     const spotlightAddDisplay = [
         {
             path: pathConfig.admin.spotlightsadd,
             component: components.SpotlightsAdd,
             exact: true,
             pageTitle: locale.pages.admin.spotlights.form.add.title,
+        },
+    ];
+
+    const spotlightEditForm = [
+        {
+            path: pathConfig.admin.spotlightsedit(spotlightid),
+            component: components.SpotlightsEdit,
+            // exact: true,
+            pageTitle: locale.pages.admin.spotlights.form.edit.title,
+            regExPath: pathConfig.admin.spotlightsedit(`(${spotlightidRegExp})`),
         },
     ];
 
@@ -168,6 +182,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
         ...(canSeeSpotlightsAdmin ? spotlightsListDisplay : []),
         ...(canSeeSpotlightsAdmin ? spotlightAddDisplay : []),
+        ...(canSeeSpotlightsAdmin ? spotlightEditForm : []),
         {
             component: components.NotFound,
         },

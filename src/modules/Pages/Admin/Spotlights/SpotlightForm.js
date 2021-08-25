@@ -183,9 +183,12 @@ export const SpotlightForm = ({
     };
 
     const runAfterRender = () => {
-        // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
-        addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
-        addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
+        // even though the form should be available at onLoad, sometimes it isnt yet :(
+        setTimeout(() => {
+            // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
+            addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
+            addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
+        }, 50);
     };
 
     const clearForm = () => {
@@ -495,7 +498,14 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={10} align="left">
-                        <SpotlightFileUploadDropzone onAddFile={handleSuppliedFiles} onClearFile={clearSuppliedFile} />
+                        {!!values.img_url ? (
+                            <img style={{ width: '100%' }} alt="file preview" src={values.img_url} />
+                        ) : (
+                            <SpotlightFileUploadDropzone
+                                onAddFile={handleSuppliedFiles}
+                                onClearFile={clearSuppliedFile}
+                            />
+                        )}
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>

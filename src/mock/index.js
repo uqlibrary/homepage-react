@@ -32,7 +32,7 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
-import { UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
+import { SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -139,6 +139,23 @@ mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095b
             img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
             weight: 10,
             active: 0,
+        },
+    ]),
+);
+mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
+            start: '2021-03-15 00:02:00',
+            end: '2099-03-21 23:59:00',
+            title: 'Library spaces 2021 - Dorothy Hill Engineering and Sciences Library',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt:
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            weight: 0,
+            active: 1,
         },
     ]),
 );
