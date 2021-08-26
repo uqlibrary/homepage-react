@@ -24,22 +24,26 @@ export const pathConfig = {
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
 };
 
-// a duplicate list of routes for checking validity easily
-export const flattedPathConfig = [
+// a duplicate list of routes for checking validity easily, 2 sets: exact match and startswith
+export const flattedPathConfigExact = [
     '/',
     '/courseresources',
+    '/courseresources/', // maybe someone has bookmarked it with a '/'?
     '/payment-receipt',
     '/admin/alerts/add',
-    '/admin/alerts/edit',
-    '/admin/alerts/clone',
-    '/admin/alerts/view',
     '/admin/alerts',
     '/admin/masquerade',
+    '/admin/masquerade/',
     '/admin/spotlights/add',
-    '/admin/spotlights/edit',
     '/admin/spotlights',
     '/book-exam-booth',
     'https://www.library.uq.edu.au/404.js',
+];
+export const flattedPathConfig = [
+    '/admin/alerts/edit',
+    '/admin/alerts/clone',
+    '/admin/alerts/view',
+    '/admin/spotlights/edit',
 ];
 
 // TODO: will we even have roles?

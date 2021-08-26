@@ -47,6 +47,12 @@ describe('Spotlights Admin Pages', () => {
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Authentication required');
         });
+        it('the edit page is not available to public users', () => {
+            cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
+        });
     });
     context('Spotlights Admin unauthorised access ', () => {
         it('the list page is not available to non-authorised users', () => {
@@ -57,6 +63,14 @@ describe('Spotlights Admin Pages', () => {
         });
         it('the add page is not available to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/spotlights/add?user=uqstaffnonpriv');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
+        });
+        it('the edit page is not available to non-authorised users', () => {
+            cy.visit(
+                'http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaffnonpriv',
+            );
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Permission denied');

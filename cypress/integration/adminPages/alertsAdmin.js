@@ -899,7 +899,7 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=public');
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').contains('Page not found');
+            cy.get('h1').contains('Authentication required');
         });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit(
@@ -907,7 +907,7 @@ describe('Alerts Admin Pages', () => {
             );
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').contains('Page not found');
+            cy.get('h1').contains('Permission denied');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
@@ -1056,7 +1056,7 @@ describe('Alerts Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=public');
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').contains('Page not found');
+            cy.get('h1').contains('Authentication required');
         });
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit(
@@ -1064,7 +1064,7 @@ describe('Alerts Admin Pages', () => {
             );
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
-            cy.get('h1').contains('Page not found');
+            cy.get('h1').contains('Permission denied');
         });
         it('is accessible', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
