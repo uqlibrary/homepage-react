@@ -407,7 +407,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
         });
-        it('save button is disabled unless the form is valid', () => {
+        it('Add save button is disabled unless the form is valid', () => {
             // fill out the form from the bottom up to double-check the "button enables properly"
             saveButtonisDisabled();
 
@@ -443,22 +443,22 @@ describe('Spotlights Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it.skip('can save a spotlight', () => {
-            cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
-            cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
-            dragFileToDropzone('test.jpg');
+        it('can update a spotlight', () => {
+            cy.get('[data-testid="admin-spotlights-form-title"] input')
+                .clear()
+                .type('spotlight title 3');
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input')
+                .clear()
+                .type('http://example.com');
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
             cy.wait(50);
-            cy.get('.MuiDialog-container').contains('A spotlight has been added');
-            // click 'add another alert' button in dialog
-            cy.get('[data-testid="confirm-spotlight-add-save-succeeded"]').click();
-            // the alert page reloads with a blank form
-            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
-            cy.get('[data-testid="admin-spotlights-form-title"]').should('have.value', '');
-            cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', '');
-            dragzoneIsReadyForDrag();
+            cy.get('.MuiDialog-container').contains('The spotlight has been updated');
+            // click ''view list'' button in dialog
+            cy.get('[data-testid="confirm-spotlight-edit-save-succeeded"]').click();
+            // the list page reloads
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         });
         it('the cancel button returns to the list page', () => {
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
@@ -479,22 +479,48 @@ describe('Spotlights Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
         });
-        it.skip('save button is disabled unless the form is valid', () => {
-            // fill out the form from the bottom up to double-check the "button enables properly"
-            saveButtonisDisabled();
+        it('Edit save button is disabled when the form is invalid', () => {
+            // this is an edit page, so the page loads valid
+            // (this is different to Alerts, but I think its not worth the extra work)
+            saveButtonNOTDisabled();
 
-            dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="admin-spotlights-form-title"] input').clear();
             saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-title"] input').type('alert title 5');
+            saveButtonNOTDisabled();
+            cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'alert title 5');
 
-            cy.get('[data-testid="admin-spotlights-form-title"]').type('alert title 5');
-            saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').clear();
+            saveButtonNOTDisabled(); // the tooltip is not required
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').type('alert tooltip 5');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').should('have.value', 'alert tooltip 5');
 
             // start an url, but button are disabled while it isnt valid
-            cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://e');
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').clear();
+            saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://e');
             saveButtonisDisabled();
             // complete to a valid url
-            cy.get('[data-testid="admin-spotlights-form-link-url"]').type('xample.com');
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('xample.com');
             saveButtonNOTDisabled();
+            cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
+        });
+        it('the edit form presets the correct data', () => {
+            cy.wait(100);
+            cy.get('[data-testid="admin-spotlights-form-title"] input').should(
+                'have.value',
+                'Library spaces 2021 - Dorothy Hill Engineering and Sciences Library',
+            );
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').should(
+                'have.value',
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            );
+            cy.get('[data-testid="admin-spotlights-form-start-date"] input').should(
+                'have.value',
+                '15/03/2021 00:02 am',
+            );
+            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should('have.value', '21/03/2099 23:59 pm');
+            cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
         });
     });
 });

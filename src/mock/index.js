@@ -159,6 +159,22 @@ mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601
         },
     ]),
 );
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '480c5c20-6df0-11e7-86d1-31e8626e095b',
+            start: '2021-03-16 00:02:00',
+            end: '2099-03-20 23:59:00',
+            title: 'Library spaces 2021 - Dorothy Hill Engineering and Sciences Library updated',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library_updated',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet updated',
+            weight: 0,
+            active: 0,
+        },
+    ]),
+);
 
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));

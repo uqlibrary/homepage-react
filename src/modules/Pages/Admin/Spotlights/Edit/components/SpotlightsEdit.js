@@ -52,6 +52,7 @@ export const SpotlightsEdit = ({ actions, spotlight, spotlightError, spotlightsL
             img_alt: spotlight?.img_alt || '',
             weight: spotlight?.weight || 0,
             active: spotlight?.active || 0,
+            type: 'edit',
         };
     }
 

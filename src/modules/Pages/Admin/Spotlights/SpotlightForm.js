@@ -91,7 +91,7 @@ export const SpotlightForm = ({
 
     function isValidStartDate(param, startDate) {
         const momentStartDate = new moment(startDate);
-        const momentStartDateFormatted = momentStartDate.format('YYYY-MM-DDTHH:mm');
+        const momentStartDateFormatted = momentStartDate.format('YYYY-MM-DDTHH:mm:ss');
         return (
             startDate !== '' && momentStartDateFormatted >= defaults.startDateDefault && !!moment(startDate).isValid()
         );
@@ -115,28 +115,19 @@ export const SpotlightForm = ({
             // currentValues.img_alt.length > 0 && // set to title during save if blank
             // !!currentValues.localfilename &&
             // currentValues.localfilename.length > 0 &&
-            !!currentValues.uploadedFile &&
+            (defaults.type === 'edit' || !!currentValues.uploadedFile) &&
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
             isValidUrl(currentValues.url);
 
-        console.log('validateValues: isValid = ', isValid, currentValues);
-        // console.log(
-        //     'validateValues: isInvalidStartDate(',
-        //     currentValues.start,
-        //     ') = ',
-        //     isInvalidStartDate(currentValues.start),
-        // );
-        // console.log('validateValues: currentValues.end = ', currentValues.end);
-        // console.log(
-        //     'validateValues: isInvalidStartDate(',
-        //     currentValues.end,
-        //     ') = ',
-        //     isInvalidStartDate(currentValues.end),
-        // );
+        // console.log('validateValues: isValid = ', isValid, currentValues);
         // console.log('validateValues: spotlightsLoading = ', spotlightsLoading);
-        // console.log('validateValues: isValidTitle(', currentValues.title, ') = ', isValidTitle(currentValues.title));
+        // console.log('validateValues: isInvalidStartDate = ', !isInvalidStartDate(null, currentValues.start));
+        // console.log('validateValues: isInvalidEndDate = ',
+        //       !isInvalidEndDate(currentValues.end, currentValues.start));
+        // console.log('validateValues: isValidTitle = ', !!isValidTitle(currentValues.title));
+        // console.log('validateValues: uploadedFile = ', defaults.type === 'edit' || !!currentValues.uploadedFile);
         // console.log('validateValues: isValidUrl(', currentValues.url, ') = ', isValidUrl(currentValues.url));
         // console.log('validateValues: currentValues.img_alt = ', currentValues.img_alt);
         // console.log('validateValues: currentValues = ', currentValues);
@@ -232,11 +223,7 @@ export const SpotlightForm = ({
         console.log('handleSpotlightCreation 1: newValues = ', newValues);
         if (defaults.type === 'add') {
             console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
-            // only 1 file may be uploaded, but it comes in an array
-            // const uploadedFile = !!uploadedFiles && uploadedFiles.lengh > 0 && uploadedFiles.shift();
-            // newValues.uploadedFile = uploadedFile;
             console.log('handleSpotlightCreation 2: newValues = ', newValues);
-            // !!uploadedFile && actions.createSpotlightWithFile(newValues);
             actions.createSpotlightWithFile(newValues);
         } else {
             // newValues.img_url should be supplied by the form, because we preview the image in there
@@ -252,7 +239,7 @@ export const SpotlightForm = ({
             end: formatDate(values.end),
             title: values.title,
             url: values.url,
-            // img_url: values.img_url,
+            img_url: defaults.type === 'edit' ? values.img_url : null,
             img_alt: values.img_alt || values.title,
             weight: values.weight,
             active: !!values.active ? 1 : 0,
@@ -260,11 +247,6 @@ export const SpotlightForm = ({
         };
 
         console.log('saveSpotlight defaults.type = ', defaults.type);
-        console.log(
-            defaults.type === 'edit'
-                ? 'saveSpotlight actions.saveSpotlightChange: newValues = '
-                : 'saveSpotlight handleSpotlightCreation: newValues = ',
-        );
         console.log('saveSpotlight: newValues = ', newValues);
         defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : handleSpotlightCreation(newValues);
 
@@ -282,12 +264,21 @@ export const SpotlightForm = ({
             newValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
             newValue = !!event.target.value ? event.target.value : event.target.checked;
-            if (prop === 'active') {
+            if (['active', 'weight'].includes(prop)) {
                 newValue = !!newValue ? 1 : 0;
+            } else if (newValue === false) {
+                // it returns false when we clear a text field
+                newValue = '';
             }
         }
-        console.log('handleChange ', prop, ': newValue = ', newValue);
-        setValues({ ...values, [prop]: newValue });
+        console.log('handleChange prop = ', prop, ': newValue = ', newValue);
+        // we need the explicit setting of '' otherwise we get a 'false' in the field
+        setValues({
+            ...values,
+            start: values.start || defaults.startDateDefault,
+            end: values.end || defaults.endDateDefault,
+            [prop]: newValue,
+        });
 
         console.log('handleChange values now = ', values);
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
