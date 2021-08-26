@@ -34,60 +34,67 @@ const moment = require('moment');
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
 
-const useStyles = makeStyles(() => ({
-    table: {
-        // minWidth: 500,
-        // tableLayout: 'fixed',
-    },
-    tableCell: {
-        padding: 0,
-    },
-    scheduledIconCell: {
-        padding: 0,
-    },
-    startDate: {
-        whiteSpace: 'pre', // makes moment format able to take a carriage return
-        padding: 0,
-    },
-    endDate: {
-        whiteSpace: 'pre',
-        padding: 0,
-    },
-    headerRow: {
-        display: 'flex',
-        padding: '0 0.5rem',
-    },
-    iconHighlighted: {
-        color: '#fff',
-    },
-    checkboxCell: {
-        '& input[type="checkbox"]:checked + svg': {
-            fill: '#595959',
+const useStyles = makeStyles(
+    theme => ({
+        table: {
+            // minWidth: 500,
+            // tableLayout: 'fixed',
         },
-        padding: 0,
-    },
-    toggle: {
-        whiteSpace: 'nowrap',
-    },
-    publishedCell: {
-        padding: 0,
-        textAlign: 'center',
-    },
-    h4: {
-        fontWeight: '300',
-        display: 'inline',
-    },
-    currentDisplay: {
-        '& td': {
-            '& span': {
-                fontWeight: 'bold',
+        tableCell: {
+            padding: 0,
+        },
+        scheduledIconCell: {
+            padding: 0,
+        },
+        startDate: {
+            whiteSpace: 'pre', // makes moment format able to take a carriage return
+            padding: 0,
+        },
+        endDate: {
+            whiteSpace: 'pre',
+            padding: 0,
+        },
+        headerRow: {
+            display: 'flex',
+            padding: '0 0.5rem',
+        },
+        headerRowHighlighted: {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+        },
+        iconHighlighted: {
+            color: '#fff',
+        },
+        checkboxCell: {
+            '& input[type="checkbox"]:checked + svg': {
+                fill: '#595959',
             },
-            '& h4': {
-                fontWeight: 'bold',
+            padding: 0,
+        },
+        toggle: {
+            whiteSpace: 'nowrap',
+        },
+        publishedCell: {
+            padding: 0,
+            textAlign: 'center',
+        },
+        h4: {
+            fontWeight: '300',
+            display: 'inline',
+        },
+        currentDisplay: {
+            '& td': {
+                '& span': {
+                    fontWeight: 'bold',
+                },
+                '& h4': {
+                    fontWeight: 'bold',
+                },
             },
         },
-    },
-}));
+    }),
+    { withTheme: true },
+);
 export const SpotlightsListAsTable = ({
     rows,
     headertag,
@@ -247,6 +254,7 @@ export const SpotlightsListAsTable = ({
     }
 
     const handleCheckboxChange = e => {
+        console.log('handleCheckboxChange ', e.target);
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
@@ -256,7 +264,7 @@ export const SpotlightsListAsTable = ({
                 setDeleteActive(true);
             }
             // disable any checkboxes in a different spotlight list
-            const checkBoxList = document.querySelectorAll('#admin-spotlights-list input[type="checkbox"]');
+            const checkBoxList = document.querySelectorAll('#admin-spotlights-list table input[type="checkbox"]');
             checkBoxList.forEach(ii => {
                 const thetype = ii.closest('table').parentElement.id;
                 if (thetype !== thisType) {
@@ -467,65 +475,85 @@ export const SpotlightsListAsTable = ({
                 isOpen={isDeleteFailureConfirmationOpen}
                 locale={locale.listPage.deleteError}
             />
-            {!deleteActive && (
-                <Grid
-                    data-testid={`headerRow-${tableType}`}
-                    className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
-                    container
-                >
-                    <Grid item xs={12} md={allowFilter ? 5 : 12}>
-                        <h3 style={{ marginBottom: 6 }}>
-                            {headertag}
-                            <span
-                                style={{ fontSize: '0.9em', fontWeight: 300 }}
-                                data-testid={`headerRow-count-${tableType}`}
-                            >
-                                {headerCountIndicator}
-                            </span>
-                        </h3>
-                    </Grid>
-                    <Grid item xs={12} md={7} container justify="flex-end">
-                        {allowFilter && (
-                            <span className={classes.toggle}>
-                                <InputLabel
-                                    style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
-                                    title={locale.listPage.tooltips.hideShowScheduledCheckbox}
-                                >
-                                    <Checkbox
-                                        checked={showScheduled}
-                                        data-testid="spotlights-show-scheduled"
-                                        onChange={showHideScheduled}
-                                        name="showScheduled"
-                                        inputProps={{
-                                            'aria-label': locale.listPage.tooltips.hideShowScheduledCheckbox,
-                                        }}
-                                    />
-                                    {locale.listPage.labels.hideShowScheduledCheckbox}
-                                </InputLabel>
-                            </span>
-                        )}
-                        {allowFilter && (
-                            <span className={classes.toggle}>
-                                <InputLabel
-                                    style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
-                                    title={locale.listPage.tooltips.hideShowUnpublishedCheckbox}
-                                >
-                                    <Checkbox
-                                        checked={showUnPublished}
-                                        data-testid="spotlights-show-published"
-                                        onChange={showHideUnPublished}
-                                        name="showUnPublished"
-                                        inputProps={{
-                                            'aria-label': locale.listPage.tooltips.hideShowUnpublishedCheckbox,
-                                        }}
-                                    />
-                                    {locale.listPage.labels.hideShowUnpublishedCheckbox}
-                                </InputLabel>
-                            </span>
-                        )}
-                    </Grid>
+            <Grid
+                data-testid={`headerRow-${tableType}`}
+                className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
+                container
+            >
+                <Grid item xs={12} md={allowFilter ? 5 : 12}>
+                    <h3 style={{ marginBottom: 6 }}>
+                        {headertag}
+                        <span
+                            style={{ fontSize: '0.9em', fontWeight: 300 }}
+                            data-testid={`headerRow-count-${tableType}`}
+                        >
+                            {headerCountIndicator}
+                        </span>
+                    </h3>
                 </Grid>
-            )}
+                <Grid item xs={12} md={7} container justify="flex-end">
+                    {!deleteActive && !!allowFilter && (
+                        <span className={classes.toggle}>
+                            <InputLabel
+                                style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
+                                title={locale.listPage.tooltips.hideShowScheduledCheckbox}
+                            >
+                                <Checkbox
+                                    checked={showScheduled}
+                                    data-testid="spotlights-show-scheduled"
+                                    onChange={showHideScheduled}
+                                    name="showScheduled"
+                                    inputProps={{
+                                        'aria-label': locale.listPage.tooltips.hideShowScheduledCheckbox,
+                                    }}
+                                />
+                                {locale.listPage.labels.hideShowScheduledCheckbox}
+                            </InputLabel>
+                        </span>
+                    )}
+                    {!deleteActive && !!allowFilter && (
+                        <span className={classes.toggle}>
+                            <InputLabel
+                                style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
+                                title={locale.listPage.tooltips.hideShowUnpublishedCheckbox}
+                            >
+                                <Checkbox
+                                    checked={showUnPublished}
+                                    data-testid="spotlights-show-published"
+                                    onChange={showHideUnPublished}
+                                    name="showUnPublished"
+                                    inputProps={{
+                                        'aria-label': locale.listPage.tooltips.hideShowUnpublishedCheckbox,
+                                    }}
+                                />
+                                {locale.listPage.labels.hideShowUnpublishedCheckbox}
+                            </InputLabel>
+                        </span>
+                    )}
+                    {!!deleteActive && (
+                        <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
+                            <span>{spotlightNotice}</span>
+                            <IconButton
+                                onClick={showDeleteConfirmation}
+                                aria-label={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
+                                data-testid={`spotlight-list-${tableType}-delete-button`}
+                                title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
+                            >
+                                <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
+                            </IconButton>
+                            <IconButton
+                                onClick={clearAllCheckboxes}
+                                aria-label={locale.listPage.tooltips.clearSelectedSpotlightsButton}
+                                data-testid={`spotlight-list-${tableType}-deselect-button`}
+                                className={classes.iconHighlighted}
+                                title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </span>
+                    )}
+                </Grid>
+            </Grid>
             {/* {allowFilter && (*/}
             {/*    <Grid container>*/}
             {/*        <Grid item xs={0} md={6} />*/}
@@ -534,28 +562,6 @@ export const SpotlightsListAsTable = ({
             {/*        </Grid>*/}
             {/*    </Grid>*/}
             {/* )}*/}
-            {!!deleteActive && (
-                <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
-                    <span>{spotlightNotice}</span>
-                    <IconButton
-                        onClick={showDeleteConfirmation}
-                        aria-label={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
-                        data-testid={`spotlight-list-${tableType}-delete-button`}
-                        title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
-                    >
-                        <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
-                    </IconButton>
-                    <IconButton
-                        onClick={clearAllCheckboxes}
-                        aria-label={locale.listPage.tooltips.clearSelectedSpotlightsButton}
-                        data-testid={`spotlight-list-${tableType}-deselect-button`}
-                        className={classes.iconHighlighted}
-                        title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </span>
-            )}
             <DragDropContext onDragEnd={onDragEnd}>
                 <TableContainer
                     id={`spotlight-list-${tableType}`}
@@ -621,7 +627,7 @@ export const SpotlightsListAsTable = ({
                                                                     <Checkbox
                                                                         id={`spotlight-list-item-checkbox-${spotlight.id}`}
                                                                         inputProps={{
-                                                                            'aria-labelledby': `spotlight-list-item-title-${spotlight.id}`,
+                                                                            'aria-label': `Select spotlight "${spotlight.title}" as needs deletion`,
                                                                             'data-testid': `spotlight-list-item-checkbox-${spotlight.id}`,
                                                                         }}
                                                                         onChange={handleCheckboxChange}

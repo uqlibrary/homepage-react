@@ -78,11 +78,11 @@ describe('Spotlights Admin Pages', () => {
 
             // only the scheduled spotlight has a 'scheduled' icon
             // not currently visible - move to test to after toggle is turned on
-            // cy.get('svg[data-testid="spotlight-scheduled-icon-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]')
+            // cy.get('svg[data-testid="spotlight-current-icon-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]')
             // .should('exist');
-            // current alert exists, but it does not have a 'scheduled' icon
+            // current spotlight exists, but it does not have a 'scheduled' icon
             cy.get('tr[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
-            cy.get('svg[data-testid="spotlight-scheduled-icon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+            cy.get('svg[data-testid="spotlight-current-icon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
                 'not.exist',
             );
 
@@ -259,6 +259,200 @@ describe('Spotlights Admin Pages', () => {
             ); // fail test
         });
     });
+    context('Spotlight Admin deletion', () => {
+        /*
+            9eab3aa0-82c1-11eb-8896-eb36601837f5 #1 of current - can be deleted
+            1e7a5980-d7d6-11eb-a4f2-fd60c7694898 #2 of current
+            38cbf430-8693-11e9-98ab-9d52a58e86ca #3 of current
+            1e1b0e10-c400-11e6-a8f0-47525a49f469 #1 of past - can be deleted
+            d8ec8820-07b1-11e7-a7ef-ef4338d401a6 #2 of past - can be deleted
+            a7764f90-198d-11e7-9f30-3dc758d83fd5 #3 of past - can be deleted
+            f0a1de60-1999-11e7-af36-7d945160e88f #4 of past)
+
+         */
+        beforeEach(() => {
+            cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
+            cy.viewport(1300, 1000);
+        });
+        it('the user can select an spotlight to delete', () => {
+            // select one spotlight and every thing looks right
+            cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
+            cy.get('[data-testid="headerRow-current"] span.deleteManager').should('not.exist');
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').check();
+            cy.get('[data-testid="headerRow-current"]').should('have.css', 'background-color', 'rgb(35, 119, 203)');
+            cy.get('[data-testid="headerRow-current"] span.deleteManager span').contains('1 spotlight selected');
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').uncheck();
+            cy.get('[data-testid="headerRow-current"] span.deleteManager').should('not.exist');
+
+            // select two spotlights and every thing looks right
+            cy.get('[data-testid="spotlight-list-item-checkbox-38cbf430-8693-11e9-98ab-9d52a58e86ca"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-1e7a5980-d7d6-11eb-a4f2-fd60c7694898"]').check();
+            cy.get('[data-testid="headerRow-current"] span.deleteManager span').contains('2 spotlights selected');
+
+            // back down to one spotlight selected and every thing looks right
+            cy.get('[data-testid="spotlight-list-item-checkbox-38cbf430-8693-11e9-98ab-9d52a58e86ca"]').uncheck();
+            cy.get('[data-testid="headerRow-current"] span.deleteManager span').contains('1 spotlight selected');
+
+            // click the delete button and the delete confirmation dialog appears
+            cy.get('[data-testid="spotlight-list-current-delete-button"]').click();
+            cy.get('[data-testid="cancel-spotlight-delete-confirm"]').should('exist');
+            // close dialog (without deleting)
+            cy.get('[data-testid="cancel-spotlight-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+        });
+
+        it('the user can delete a spotlight', () => {
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').check();
+            cy.get('[data-testid="headerRow-current"] span span').contains('1 spotlight selected');
+
+            // click the Proceed button and the spotlight is deleted
+            cy.get('[data-testid="spotlight-list-current-delete-button"]').click();
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').contains('Proceed');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
+            // dialog disappears
+            cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            // cant test list further to show spotlight is gone as mock data doesnt actually delete
+        });
+
+        it('reports when a delete fails', () => {
+            cy.get('[data-testid="spotlight-list-item-checkbox-38cbf430-8693-11e9-98ab-9d52a58e86ca"]').check();
+            cy.get('[data-testid="headerRow-current"] span span').contains('1 spotlight selected');
+            // click bin icon
+            cy.get('[data-testid="spotlight-list-current-delete-button"]').click();
+            // a confirm dialog popsup
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').contains('Proceed');
+            // click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            // failure is reported in a dialog
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('exist');
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"] h2').contains(
+                'Record Deletion was not successful',
+            );
+            // dialog can be closed
+            cy.get('[data-testid="confirm-spotlight-delete-error-dialog"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-delete-error-dialog"]').click();
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+        });
+        it('sequential deletion of spotlights does not fail', () => {
+            cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').check();
+            cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
+            // click bin icon
+            cy.get('[data-testid="spotlight-list-past-delete-button"]').click();
+            // a confirm dialog popsup
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').contains('Proceed');
+            // click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            cy.wait(500);
+            // the error dialog doesnt appear
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            // subsequent deletes also succeed
+            cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').check();
+            cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
+            cy.get('[data-testid="spotlight-list-item-checkbox-a7764f90-198d-11e7-9f30-3dc758d83fd5"]').check();
+            cy.get('[data-testid="headerRow-past"] span span').contains('2 spotlights selected');
+            // click bin icon
+            cy.get('[data-testid="spotlight-list-past-delete-button"]').click();
+            // a confirm dialog popsup
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').contains('Proceed');
+            // click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
+            cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            cy.wait(500);
+            // the error dialog doesnt appear
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+        });
+        it('during delete section checkboxes in other sections are disabled', () => {
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-item-checkbox-a7764f90-198d-11e7-9f30-3dc758d83fd5"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').uncheck();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-item-checkbox-a7764f90-198d-11e7-9f30-3dc758d83fd5"]').uncheck();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').uncheck();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+        });
+        it('can unselect all checkboxes with the "X"', () => {
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-a7764f90-198d-11e7-9f30-3dc758d83fd5"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').check();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+
+            cy.get('[data-testid="spotlight-list-past-deselect-button"]').should('exist');
+            cy.get('[data-testid="spotlight-list-past-deselect-button"]').click();
+            cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-f0a1de60-1999-11e7-af36-7d945160e88f"]').should(
+                'not.be.disabled',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').should(
+                'not.be.checked',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-a7764f90-198d-11e7-9f30-3dc758d83fd5"]').should(
+                'not.be.checked',
+            );
+            cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').should(
+                'not.be.checked',
+            );
+        });
+    });
     context('Spotlight Admin Add page', () => {
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/spotlights/add?user=uqstaff');
@@ -382,9 +576,9 @@ describe('Spotlights Admin Pages', () => {
                 .click();
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('A spotlight has been added');
-            // click 'add another alert' button in dialog
+            // click 'add another spotlight' button in dialog
             cy.get('[data-testid="confirm-spotlight-add-save-succeeded"]').click();
-            // the alert page reloads with a blank form
+            // the spotlight page reloads with a blank form
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
             cy.get('[data-testid="admin-spotlights-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', '');
@@ -392,7 +586,7 @@ describe('Spotlights Admin Pages', () => {
         });
         it('the cancel button returns to the list page', () => {
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]').click();
-            cy.wait(50);
+            cy.wait(500);
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
@@ -414,7 +608,7 @@ describe('Spotlights Admin Pages', () => {
             dragFileToDropzone('test.jpg');
             saveButtonisDisabled();
 
-            cy.get('[data-testid="admin-spotlights-form-title"]').type('alert title 5');
+            cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 5');
             saveButtonisDisabled();
 
             // start an url, but button are disabled while it isnt valid
@@ -481,19 +675,19 @@ describe('Spotlights Admin Pages', () => {
         });
         it('Edit save button is disabled when the form is invalid', () => {
             // this is an edit page, so the page loads valid
-            // (this is different to Alerts, but I think its not worth the extra work)
+            // (this is different to spotlights, but I think its not worth the extra work)
             saveButtonNOTDisabled();
 
             cy.get('[data-testid="admin-spotlights-form-title"] input').clear();
             saveButtonisDisabled();
-            cy.get('[data-testid="admin-spotlights-form-title"] input').type('alert title 5');
+            cy.get('[data-testid="admin-spotlights-form-title"] input').type('spotlight title 5');
             saveButtonNOTDisabled();
-            cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'alert title 5');
+            cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'spotlight title 5');
 
             cy.get('[data-testid="admin-spotlights-form-tooltip"] input').clear();
             saveButtonNOTDisabled(); // the tooltip is not required
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').type('alert tooltip 5');
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').should('have.value', 'alert tooltip 5');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').type('spotlight tooltip 5');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').should('have.value', 'spotlight tooltip 5');
 
             // start an url, but button are disabled while it isnt valid
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').clear();

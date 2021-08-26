@@ -333,6 +333,17 @@ mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
     ]),
 );
 // mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
+console.log('delete mock url = ', routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9' }).apiUrl);
+
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'd8ec8820-07b1-11e7-a7ef-ef4338d401a6' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a7764f90-198d-11e7-9f30-3dc758d83fd5' }).apiUrl).reply(
+    withDelay([200, []]),
+);
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

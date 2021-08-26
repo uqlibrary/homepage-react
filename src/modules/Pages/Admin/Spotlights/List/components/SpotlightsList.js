@@ -119,8 +119,8 @@ export const SpotlightsList = ({
         );
     }
 
-    const deleteAlert = alertID => {
-        return actions.deleteAlert(alertID);
+    const deleteSpotlight = alertID => {
+        return actions.deleteSpotlight(alertID);
     };
 
     return (
@@ -155,7 +155,7 @@ export const SpotlightsList = ({
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
-                                    deleteAlert={deleteAlert}
+                                    deleteSpotlight={deleteSpotlight}
                                     alertOrder="forwardEnd"
                                     allowFilter
                                 />
@@ -169,7 +169,7 @@ export const SpotlightsList = ({
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
-                                    deleteAlert={deleteAlert}
+                                    deleteSpotlight={deleteSpotlight}
                                     alertOrder="reverseEnd"
                                     canDragRows={false}
                                 />
