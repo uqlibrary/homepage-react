@@ -655,6 +655,7 @@ describe('Spotlights Admin Pages', () => {
             });
         });
         it('can update a spotlight', () => {
+            cy.wait(1000); // these waits fix "this element is detached from the DOM" errors :(
             cy.get('[data-testid="admin-spotlights-form-title"] input')
                 .clear()
                 .type('spotlight title 3');
