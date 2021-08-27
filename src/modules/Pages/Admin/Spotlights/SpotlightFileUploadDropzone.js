@@ -86,7 +86,12 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
             {!thumbs || thumbs.length === 0 ? (
                 <div
                     {...getRootProps({ className: 'dropzone' })}
-                    style={{ border: 'thin solid black', backgroundColor: 'lightgrey', padding: '1rem' }}
+                    style={{
+                        border: 'thin solid black',
+                        backgroundColor: 'lightgrey',
+                        padding: '1rem',
+                        cursor: 'pointer',
+                    }}
                 >
                     <input data-testid="dropzone-dragarea" {...getInputProps()} />
                     <p>{locale.form.labels.dragareaInstructions}</p>
