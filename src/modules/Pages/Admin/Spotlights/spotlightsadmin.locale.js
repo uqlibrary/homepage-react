@@ -120,6 +120,8 @@ export default {
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
         },
+        dragAndDropRestrictionMessage:
+            'Drag and drop is only available when both Scheduled and Unpublished spotlights are displayed',
         help: {
             title: 'Spotlights listing',
             text: (

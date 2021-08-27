@@ -738,6 +738,7 @@ describe('Spotlights Admin Pages', () => {
         it('has a working Help button on the Edit page', () => {
             cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
+            cy.wait(100);
             cy.get('[data-testid="admin-spotlights-help-button"]').click();
             cy.get('[data-testid="admin-spotlights-help-example"]').should('be.visible');
             cy.get('button:contains("Close")').click();

@@ -160,7 +160,7 @@ export const SpotlightsList = ({
                                     actions={actions}
                                     deleteSpotlight={deleteSpotlight}
                                     alertOrder="forwardEnd"
-                                    allowFilter
+                                    canFilterByAttribute
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
