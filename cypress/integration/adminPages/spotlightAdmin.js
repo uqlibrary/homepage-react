@@ -3,9 +3,13 @@ import moment from 'moment';
 const numberCurrentPublishedSpotlights = 3;
 const totalCountPastRecords = 34;
 
-function getFooterLabel(totalCountRecordsAvailable, numberDisplayedOnPage = 5) {
+function getFooterLabel(
+    totalCountRecordsAvailable,
+    highestRecordNumberDisplayedOnPage = 5,
+    lowestRecordNumberDisplayedOnPage = 1,
+) {
     // eg '1-5 of 34'
-    return `1-${numberDisplayedOnPage} of ${totalCountRecordsAvailable}`;
+    return `${lowestRecordNumberDisplayedOnPage}-${highestRecordNumberDisplayedOnPage} of ${totalCountRecordsAvailable}`;
 }
 
 function dragzoneIsReadyForDrag() {
@@ -247,8 +251,8 @@ describe('Spotlights Admin Pages', () => {
             // }
 
             // show all items
-            cy.get('[data-testid="spotlights-show-scheduled"] input').check();
-            cy.get('[data-testid="spotlights-show-published"] input').check();
+            cy.get('[data-testid="spotlights-hideshow-scheduled"] input').check();
+            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check();
 
             // list is currently order 1, 2
             cy.get('div[data-testid="spotlight-list-current"] tbody tr:first-child').should(
@@ -271,6 +275,54 @@ describe('Spotlights Admin Pages', () => {
                 'contain',
                 'blah blah blah',
             ); // fail test
+        });
+        it('the pagination interacts with the filter checkboxes correctly', () => {
+            // if we show all in the filter checkboxes then we go to the last page,
+            // then we uncheck the filter boxes, it should show data, not a blank screen
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
+
+            // two runs, different orders of unchecking filter checkboxes
+
+            // FIRST RUN
+            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check(); // display unpublished
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(4, 4));
+
+            cy.get('[data-testid="spotlights-hideshow-scheduled"] input').check(); // display scheduled
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(13, 5));
+
+            // navigate to the last pane via the paginator
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot button:last-child').click();
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(13, 13, 11));
+
+            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').scrollIntoView();
+            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').uncheck(); // hide unpublished
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(9, 5));
+
+            // navigate to the last pane via the paginator
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot button:last-child').click();
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(9, 9, 6));
+
+            cy.get('[data-testid="spotlights-hideshow-scheduled"] input').uncheck(); // hide scheduled
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
+
+            // SECOND RUN - hide checkboxes in the other order
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
+
+            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check(); // display unpublished
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(4, 4));
+
+            cy.get('[data-testid="spotlights-hideshow-scheduled"] input').check(); // display scheduled
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(13, 5));
+
+            // navigate to the last pane via the paginator
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot button:last-child').click();
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(13, 13, 11));
+
+            cy.get('[data-testid="spotlights-hideshow-scheduled"] input').uncheck(); // hide scheduled
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(4, 4));
+
+            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').uncheck(); // hide unpublished
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
         });
     });
     context('Spotlight Admin deletion', () => {

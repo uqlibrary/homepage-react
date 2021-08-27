@@ -146,7 +146,10 @@ export const SpotlightsList = ({
                             data-testid="admin-spotlights-list"
                             className={classes.pageLayout}
                         >
-                            <div data-testid="admin-spotlights-list-current-list">
+                            <div
+                                id="admin-spotlights-list-current-list"
+                                data-testid="admin-spotlights-list-current-list"
+                            >
                                 <SpotlightsListAsTable
                                     rows={currentSpotlights}
                                     headertag="Current and scheduled spotlights"
@@ -160,7 +163,7 @@ export const SpotlightsList = ({
                                     allowFilter
                                 />
                             </div>
-                            <div data-testid="admin-spotlights-list-past-list">
+                            <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
                                 <SpotlightsListAsTable
                                     rows={pastSpotlights}
                                     tableType="past"

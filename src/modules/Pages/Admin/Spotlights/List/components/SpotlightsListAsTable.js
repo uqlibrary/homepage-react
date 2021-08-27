@@ -186,6 +186,7 @@ export const SpotlightsListAsTable = ({
 
     // React.useEffect(() => {
     //     console.log('useRows have changed ', userows);
+    //     userows.length === 0 && setPage(0);
     // }, [userows]);
 
     const handleChangePage = (event, newPage) => {
@@ -318,9 +319,11 @@ export const SpotlightsListAsTable = ({
     };
 
     const showHideScheduled = () => {
+        !!showScheduled && setPage(0); // if we are going from 'show' to 'hide', go to page 0
         setShowScheduled(prevState => !prevState);
     };
     const showHideUnPublished = () => {
+        !!showUnPublished && setPage(0); // if we are going from 'show' to 'hide', go to page 0
         setShowUnPublished(prevState => !prevState);
     };
 
@@ -342,6 +345,7 @@ export const SpotlightsListAsTable = ({
         actions
             .saveSpotlightChange(rowToUpdate)
             .then(() => {
+                // we have to visually update it manually (thats how react-beautiful-dnd works)
                 rows.forEach(row => {
                     filtereduserows.forEach(fr => {
                         if (fr.id === row.id && fr.weight !== row.weight) {
@@ -433,7 +437,7 @@ export const SpotlightsListAsTable = ({
         });
     };
 
-    const needsPaginator = userows.length > footerDisplayMinLength;
+    const needsPaginator = rows.length > footerDisplayMinLength;
 
     if (!!spotlightsLoading) {
         return (
@@ -500,7 +504,7 @@ export const SpotlightsListAsTable = ({
                             >
                                 <Checkbox
                                     checked={showScheduled}
-                                    data-testid="spotlights-show-scheduled"
+                                    data-testid="spotlights-hideshow-scheduled"
                                     onChange={showHideScheduled}
                                     name="showScheduled"
                                     inputProps={{
@@ -519,7 +523,7 @@ export const SpotlightsListAsTable = ({
                             >
                                 <Checkbox
                                     checked={showUnPublished}
-                                    data-testid="spotlights-show-published"
+                                    data-testid="spotlights-hideshow-unpublished"
                                     onChange={showHideUnPublished}
                                     name="showUnPublished"
                                     inputProps={{
