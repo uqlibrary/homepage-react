@@ -102,7 +102,12 @@ export const SpotlightForm = ({
     }
 
     function isInvalidEndDate(endDate, startDate) {
-        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
+        const startDateReformatted = startDate !== '' && moment(startDate).format('YYYY-MM-DDTHH:mm');
+        // console.log('isInvalidEndDate endDate < startDateReformatted: ', endDate, ' < ', startDateReformatted);
+        // console.log("isInvalidEndDate startDate !== '': ", startDate !== '');
+        // console.log('isInvalidEndDate together: ', endDate < startDateReformatted && startDate !== '');
+        // console.log('isInvalidEndDate !moment(endDate).isValid() = ', !moment(endDate).isValid());
+        return (startDate !== '' && endDate < startDateReformatted) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
@@ -123,9 +128,8 @@ export const SpotlightForm = ({
 
         // console.log('validateValues: isValid = ', isValid, currentValues);
         // console.log('validateValues: spotlightsLoading = ', spotlightsLoading);
-        // console.log('validateValues: isInvalidStartDate = ', !isInvalidStartDate(null, currentValues.start));
-        // console.log('validateValues: isInvalidEndDate = ',
-        //       !isInvalidEndDate(currentValues.end, currentValues.start));
+        // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
+        // console.log('validateValues: isValidEndDate = ', !isInvalidEndDate(currentValues.end, currentValues.start));
         // console.log('validateValues: isValidTitle = ', !!isValidTitle(currentValues.title));
         // console.log('validateValues: uploadedFile = ', defaults.type === 'edit' || !!currentValues.uploadedFile);
         // console.log('validateValues: isValidUrl(', currentValues.url, ') = ', isValidUrl(currentValues.url));
@@ -471,6 +475,7 @@ export const SpotlightForm = ({
                             minDate={defaults.minimumDate}
                             format="DD/MM/YYYY HH:mm a"
                             showTodayButton
+                            todayLabel={locale.form.labels.datePopupNowButton}
                             autoOk
                         />
                     </Grid>

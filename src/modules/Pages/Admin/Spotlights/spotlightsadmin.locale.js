@@ -10,7 +10,9 @@ export default {
             ariaField: 'Tooltip text - visible when user mouses over spotlight',
             linkField: 'Spotlight link *',
             publishedCheckbox: 'Published?',
-            dragareaInstructions: "Drag 'n' drop your new Spotlight image here, or click to select an image",
+            dragareaInstructions:
+                'Drag and drop a spotlight image, or click to select an image. Click the Help button for image requirements.',
+            datePopupNowButton: 'Now',
         },
         tooltips: {
             titleField: 'Help TBA',
