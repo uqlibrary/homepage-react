@@ -34,7 +34,7 @@ function saveButtonNOTDisabled() {
 
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
-    context('Spotlights Admin public access', () => {
+    context('Spotlights Admin public access blocked', () => {
         it('the list page is not available to public users', () => {
             cy.visit('http://localhost:2020/admin/spotlights?user=public');
             cy.viewport(1300, 1000);
@@ -54,7 +54,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('h1').contains('Authentication required');
         });
     });
-    context('Spotlights Admin unauthorised access ', () => {
+    context('Spotlights Admin unauthorised access blocked', () => {
         it('the list page is not available to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
