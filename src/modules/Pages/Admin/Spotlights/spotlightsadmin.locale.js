@@ -6,8 +6,8 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
-            titleField: 'Title - visible to assitive technology *',
-            ariaField: 'Tooltip text - visible when user mouses over spotlight',
+            titleField: 'Title - visible to assitive technology (appears on link)*',
+            ariaField: 'Tooltip text - visible when user mouses over spotlight (appears on image)',
             linkField: 'Spotlight link *',
             publishedCheckbox: 'Published?',
             dragareaInstructions:
