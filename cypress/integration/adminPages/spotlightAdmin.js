@@ -36,6 +36,13 @@ function saveButtonNOTDisabled() {
     cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
 }
 
+function showUnpublishedSpotlights() {
+    cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check();
+}
+function hideUnpublishedSpotlights() {
+    cy.get('[data-testid="spotlights-hideshow-unpublished"] input').uncheck();
+}
+
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Spotlights Admin public access blocked', () => {
@@ -252,7 +259,7 @@ describe('Spotlights Admin Pages', () => {
 
             // show all items
             cy.get('[data-testid="spotlights-hideshow-scheduled"] input').check();
-            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check();
+            showUnpublishedSpotlights();
 
             // list is currently order 1, 2
             cy.get('div[data-testid="spotlight-list-current"] tbody tr:first-child').should(
@@ -284,7 +291,7 @@ describe('Spotlights Admin Pages', () => {
             // two runs, different orders of unchecking filter checkboxes
 
             // FIRST RUN
-            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check(); // display unpublished
+            showUnpublishedSpotlights();
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(4, 4));
 
             cy.get('[data-testid="spotlights-hideshow-scheduled"] input').check(); // display scheduled
@@ -295,7 +302,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(13, 13, 11));
 
             cy.get('[data-testid="spotlights-hideshow-unpublished"] input').scrollIntoView();
-            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').uncheck(); // hide unpublished
+            hideUnpublishedSpotlights();
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(9, 5));
 
             // navigate to the last pane via the paginator
@@ -308,7 +315,7 @@ describe('Spotlights Admin Pages', () => {
             // SECOND RUN - hide checkboxes in the other order
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
 
-            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check(); // display unpublished
+            showUnpublishedSpotlights();
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(4, 4));
 
             cy.get('[data-testid="spotlights-hideshow-scheduled"] input').check(); // display scheduled
@@ -321,8 +328,41 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-hideshow-scheduled"] input').uncheck(); // hide scheduled
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(4, 4));
 
-            cy.get('[data-testid="spotlights-hideshow-unpublished"] input').uncheck(); // hide unpublished
+            hideUnpublishedSpotlights();
             cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
+        });
+        it('can publish and unpublish spotlights', () => {
+            cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'be.checked',
+            );
+            cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').uncheck();
+            cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
+                'not.be.checked',
+            );
+            // 3 published showing
+            cy.get('[data-testid="spotlight-list-current"] tbody')
+                .children()
+                .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+            // now only show published
+            showUnpublishedSpotlights();
+            hideUnpublishedSpotlights();
+            // 2 showing
+            cy.get('[data-testid="spotlight-list-current"] tbody')
+                .children()
+                .should('have.length', 2 + numRowsHiddenAsNoDatainfo);
+        });
+        it('an error displays when a save-on-change-publish api error occurs', () => {
+            cy.get('[data-testid="spotlight-list-item-publish-1e7a5980-d7d6-11eb-a4f2-fd60c7694898"]').uncheck();
+            cy.get('[data-testid="dialogbox-spotlight-save-confirm"]').should('not.exist');
+            // failure is reported in a dialog
+            cy.get('[data-testid="dialogbox-spotlight-save-error-dialog"]').should('exist');
+            cy.get('[data-testid="dialogbox-spotlight-save-error-dialog"] h2').contains(
+                'We are unable to save this change right now',
+            );
+            // dialog can be closed
+            cy.get('[data-testid="confirm-spotlight-save-error-dialog"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-save-error-dialog"]').click();
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
         });
     });
     context('Spotlight Admin deletion', () => {
@@ -334,7 +374,6 @@ describe('Spotlights Admin Pages', () => {
             d8ec8820-07b1-11e7-a7ef-ef4338d401a6 #2 of past - can be deleted
             a7764f90-198d-11e7-9f30-3dc758d83fd5 #3 of past - can be deleted
             f0a1de60-1999-11e7-af36-7d945160e88f #4 of past)
-
          */
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
@@ -378,6 +417,8 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
             // dialog disappears
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            cy.wait(500);
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
             // cant test list further to show spotlight is gone as mock data doesnt actually delete
         });
 
@@ -433,7 +474,7 @@ describe('Spotlights Admin Pages', () => {
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
         });
-        it('during delete section checkboxes in other sections are disabled', () => {
+        it('during delete, selection checkboxes in other sections are disabled', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
                 'not.be.disabled',
             );

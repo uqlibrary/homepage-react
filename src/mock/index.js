@@ -110,6 +110,10 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
 
 mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
 
+console.log('get ', routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl);
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
+    withDelay([500, []]),
+);
 mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
     withDelay([
         200,
@@ -222,7 +226,6 @@ mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' })
     ]),
 );
 // mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
-console.log('delete mock url = ', routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl);
 mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([200, []]),
 );
@@ -333,7 +336,9 @@ mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
     ]),
 );
 // mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-console.log('delete mock url = ', routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9' }).apiUrl);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9' }).apiUrl).reply(
+    withDelay([500, []]),
+);
 
 mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
     withDelay([200, []]),

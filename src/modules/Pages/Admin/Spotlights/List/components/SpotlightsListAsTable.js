@@ -108,6 +108,7 @@ export const SpotlightsListAsTable = ({
     history,
     actions,
     deleteSpotlight,
+    saveSpotlightChange,
     footerDisplayMinLength,
     canFilterByAttribute,
     canDragRows,
@@ -132,6 +133,11 @@ export const SpotlightsListAsTable = ({
         isDeleteFailureConfirmationOpen,
         showDeleteFailureConfirmation,
         hideDeleteFailureConfirmation,
+    ] = useConfirmationState();
+    const [
+        isSaveFailureConfirmationOpen,
+        showSaveFailureConfirmation,
+        hideSaveFailureConfirmation,
     ] = useConfirmationState();
 
     const displayTheRows = React.useCallback(
@@ -238,7 +244,7 @@ export const SpotlightsListAsTable = ({
     };
 
     const reEnableAllCheckboxes = () => {
-        const checkBoxList = document.querySelectorAll('#admin-spotlights-list input[type="checkbox"]');
+        const checkBoxList = document.querySelectorAll('.markForDeletion input[type="checkbox"]');
         checkBoxList.forEach(ii => {
             ii.disabled = false;
             ii.parentElement.parentElement.classList.remove('Mui-disabled');
@@ -246,7 +252,7 @@ export const SpotlightsListAsTable = ({
     };
 
     const clearAllCheckboxes = () => {
-        const checkBoxList = document.querySelectorAll('#admin-spotlights-list input[type="checkbox"]');
+        const checkBoxList = document.querySelectorAll('.markForDeletion input[type="checkbox"]');
         checkBoxList.forEach(ii => {
             if (ii.checked) {
                 ii.click();
@@ -255,11 +261,11 @@ export const SpotlightsListAsTable = ({
     };
 
     function getNumberCheckboxesSelected() {
-        return document.querySelectorAll('#admin-spotlights-list tr.spotlight-data-row :checked').length;
+        return document.querySelectorAll('.markForDeletion :checked').length;
     }
 
-    const handleCheckboxChange = e => {
-        console.log('handleCheckboxChange ', e.target);
+    const handleMarkForDeletion = e => {
+        console.log('handleMarkForDeletion ', e.target);
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
@@ -269,7 +275,7 @@ export const SpotlightsListAsTable = ({
                 setDeleteActive(true);
             }
             // disable any checkboxes in a different spotlight list
-            const checkBoxList = document.querySelectorAll('#admin-spotlights-list table input[type="checkbox"]');
+            const checkBoxList = document.querySelectorAll('.markForDeletion input[type="checkbox"]');
             checkBoxList.forEach(ii => {
                 const thetype = ii.closest('table').parentElement.id;
                 if (thetype !== thisType) {
@@ -304,7 +310,7 @@ export const SpotlightsListAsTable = ({
     }
 
     const deleteSelectedSpotlights = () => {
-        const checkboxes = document.querySelectorAll('#admin-spotlights-list input[type="checkbox"]:checked');
+        const checkboxes = document.querySelectorAll('.markForDeletion input[type="checkbox"]:checked');
         if (!!checkboxes && checkboxes.length > 0) {
             checkboxes.forEach(c => {
                 const spotlightID = c.value.replace(checkBoxIdPrefix, '');
@@ -331,7 +337,7 @@ export const SpotlightsListAsTable = ({
         setShowUnPublished(prevState => !prevState);
     };
 
-    function persistRow(r, filtereduserows) {
+    function persistRowReorder(r, filtereduserows) {
         const currentRow = rows.find(row => row.id === r.id);
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
         const rowToUpdate = {
@@ -346,8 +352,7 @@ export const SpotlightsListAsTable = ({
             weight: r.weight,
         };
         console.log('send for save: ', rowToUpdate);
-        actions
-            .saveSpotlightChange(rowToUpdate)
+        saveSpotlightChange(rowToUpdate)
             .then(() => {
                 // we have to visually update it manually (thats how react-beautiful-dnd works)
                 rows.forEach(row => {
@@ -361,12 +366,10 @@ export const SpotlightsListAsTable = ({
                     });
                 });
                 rows.sort((a, b) => a.weight - b.weight);
-                // setUserows(rows);
             })
             .catch(e => {
-                // TODO
-                console.log('spotlightError = ', spotlightError);
                 console.log('an error on save occurred: ', e);
+                showSaveFailureConfirmation();
             });
     }
 
@@ -439,10 +442,34 @@ export const SpotlightsListAsTable = ({
                 if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
                     // then do the save
                     console.log('persist ', reWeightedRow.id);
-                    persistRow(reWeightedRow, filtereduserows);
+                    persistRowReorder(reWeightedRow, filtereduserows);
                 }
             });
         });
+    };
+
+    const handlePublishCheckbox = () => event => {
+        const checkboxId = event.target?.id.replace('spotlight-published-', '');
+        console.log('handlePublishCheckbox checkboxId = ', checkboxId);
+        const newState = !!event.target && event.target.checked;
+        const updateableRow = rows.find(r => r.id === checkboxId);
+        updateableRow.active = !!newState ? 1 : 0;
+        saveSpotlightChange(updateableRow)
+            .then(() => {
+                console.log('saveSpotlightChange then');
+                const updatedrows = userows.map(r => {
+                    if (r.id === updateableRow.id) {
+                        r.active = updateableRow.active;
+                    }
+                    return r;
+                });
+                setUserows(updatedrows);
+            })
+            .catch(e => {
+                console.log('saveSpotlightChange error');
+                console.log('failed to update Publish field = ', e);
+                showSaveFailureConfirmation();
+            });
     };
 
     const needsPaginator = rows.length > footerDisplayMinLength;
@@ -489,12 +516,22 @@ export const SpotlightsListAsTable = ({
                 isOpen={isDeleteFailureConfirmationOpen}
                 locale={locale.listPage.deleteError}
             />
+            <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="spotlight-save-error-dialog"
+                onAction={hideSaveFailureConfirmation}
+                onClose={hideSaveFailureConfirmation}
+                hideCancelButton
+                isOpen={isSaveFailureConfirmationOpen}
+                locale={locale.listPage.saveError}
+            />
             <Grid
                 data-testid={`headerRow-${tableType}`}
                 className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                 container
             >
-                <Grid item xs={12} md={canFilterByAttribute ? 5 : 12}>
+                <Grid item xs={12} md={!!deleteActive || !!canFilterByAttribute ? 5 : 12}>
                     <h3 style={{ marginBottom: 6 }}>
                         {headertag}
                         <span
@@ -616,7 +653,7 @@ export const SpotlightsListAsTable = ({
                                         userows
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((spotlight, rowindex) => {
-                                                console.log('userows has ', spotlight);
+                                                // console.log('userows has ', spotlight);
                                                 const isScheduled = moment(spotlight.start).isAfter(moment());
                                                 return (
                                                     <Draggable
@@ -656,7 +693,7 @@ export const SpotlightsListAsTable = ({
                                                                 )}
                                                                 <TableCell
                                                                     component="td"
-                                                                    className={`${classes.checkboxCell}`}
+                                                                    className={`markForDeletion ${classes.checkboxCell}`}
                                                                     style={{ width: 50, padding: 0 }}
                                                                 >
                                                                     <Checkbox
@@ -665,7 +702,7 @@ export const SpotlightsListAsTable = ({
                                                                             'aria-label': `Select spotlight "${spotlight.title}" as needs deletion`,
                                                                             'data-testid': `spotlight-list-item-checkbox-${spotlight.id}`,
                                                                         }}
-                                                                        onChange={handleCheckboxChange}
+                                                                        onChange={handleMarkForDeletion}
                                                                         value={`${checkBoxIdPrefix}${spotlight.id}`}
                                                                     />
                                                                 </TableCell>
@@ -721,7 +758,16 @@ export const SpotlightsListAsTable = ({
                                                                     className={`${classes.publishedCell}`}
                                                                     style={{ width: 50, padding: 8 }}
                                                                 >
-                                                                    <span>{!!spotlight.active ? 'yes' : 'no'}</span>
+                                                                    <Checkbox
+                                                                        checked={!!spotlight.active}
+                                                                        id={`spotlight-published-${spotlight.id}`}
+                                                                        onChange={handlePublishCheckbox()}
+                                                                        inputProps={{
+                                                                            'aria-label': `Mark spotlight "${spotlight.title}" as published or unpublished`,
+                                                                            'data-testid': `spotlight-list-item-publish-${spotlight.id}`,
+                                                                        }}
+                                                                        // value={`spotlight-publish-${spotlight.id}`}
+                                                                    />
                                                                 </TableCell>
                                                                 <TableCell
                                                                     component="td"
@@ -802,6 +848,7 @@ SpotlightsListAsTable.propTypes = {
     history: PropTypes.object,
     actions: PropTypes.any,
     deleteSpotlight: PropTypes.any,
+    saveSpotlightChange: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
     canFilterByAttribute: PropTypes.bool,

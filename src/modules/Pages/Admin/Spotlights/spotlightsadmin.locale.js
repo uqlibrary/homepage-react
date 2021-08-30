@@ -120,6 +120,11 @@ export default {
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
         },
+        saveError: {
+            confirmationTitle: 'We are unable to save this change right now',
+            confirmationMessage: <Fragment>Please try again later</Fragment>,
+            confirmButtonLabel: 'OK',
+        },
         dragAndDropRestrictionMessage:
             'Drag and drop is only available when both Scheduled and Unpublished spotlights are displayed',
         help: {

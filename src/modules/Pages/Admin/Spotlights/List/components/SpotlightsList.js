@@ -123,6 +123,10 @@ export const SpotlightsList = ({
         return actions.deleteSpotlight(alertID);
     };
 
+    const saveSpotlightChange = spotlight => {
+        return actions.saveSpotlightChange(spotlight);
+    };
+
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -159,6 +163,7 @@ export const SpotlightsList = ({
                                     history={history}
                                     actions={actions}
                                     deleteSpotlight={deleteSpotlight}
+                                    saveSpotlightChange={saveSpotlightChange}
                                     alertOrder="forwardEnd"
                                     canFilterByAttribute
                                 />
@@ -173,6 +178,7 @@ export const SpotlightsList = ({
                                     history={history}
                                     actions={actions}
                                     deleteSpotlight={deleteSpotlight}
+                                    saveSpotlightChange={saveSpotlightChange}
                                     alertOrder="reverseEnd"
                                     canDragRows={false}
                                 />

@@ -70,7 +70,7 @@ export const createSpotlightWithoutFile = request => {
 export const createSpotlightWithFile = request => {
     console.log('action createSpotlightWithFile, request to save: ', request);
 
-    if (!request.uploadedFile) {
+    if (!request.uploadedFile || request.uploadedFile.length === 0) {
         return createSpotlightWithoutFile(request);
     }
 
@@ -93,7 +93,7 @@ export const createSpotlightWithFile = request => {
                     payload: response,
                 });
 
-                const firstresponse = response.shift();
+                const firstresponse = !!response && response.length > 0 && response.shift();
                 const apiProd = 'https://api.library.uq.edu.au/v1/';
                 const domain = API_URL === apiProd ? 'app.library.uq.edu.au' : 'app-testing.library.uq.edu.au';
                 request.img_url =
@@ -131,12 +131,12 @@ export const saveSpotlightChange = request => {
                 });
             })
             .catch(error => {
-                console.log('saveSpotlightChange action error returned: ', error);
+                console.log('saveSpotlightChange action FAILED, returned: ', error);
                 dispatch({
                     type: actions.SPOTLIGHT_FAILED,
-                    payload: error.message,
+                    payload: error,
                 });
-                console.log('saveSpotlightChange action error FAILED dispatched');
+                return Promise.reject(error);
             });
     };
 };

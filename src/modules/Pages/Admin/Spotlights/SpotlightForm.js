@@ -14,7 +14,6 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
 import { default as locale } from './spotlightsadmin.locale';
-// import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
 import { formatDate } from './spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
@@ -223,20 +222,8 @@ export const SpotlightForm = ({
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const handleSpotlightCreation = newValues => {
-        console.log('handleSpotlightCreation 1: newValues = ', newValues);
-        if (defaults.type === 'add') {
-            console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
-            console.log('handleSpotlightCreation 2: newValues = ', newValues);
-            actions.createSpotlightWithFile(newValues);
-        } else {
-            // newValues.img_url should be supplied by the form, because we preview the image in there
-            actions.createSpotlightWithoutFile(newValues);
-        }
-    };
-
     const saveSpotlight = () => {
-        console.log('saveSpotlight: values = ', values);
+        console.log('saveSpotlight: currentValues = ', values);
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             start: formatDate(values.start),
@@ -250,9 +237,23 @@ export const SpotlightForm = ({
             uploadedFile: values.uploadedFile,
         };
 
-        console.log('saveSpotlight defaults.type = ', defaults.type);
+        console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
-        defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : handleSpotlightCreation(newValues);
+        switch (defaults.type) {
+            case 'edit':
+                actions.saveSpotlightChange(newValues);
+                break;
+            case 'add':
+                // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
+                console.log('handleSpotlightCreation 2: newValues = ', newValues);
+                actions.createSpotlightWithFile(newValues);
+                break;
+            default:
+                // is this even needed???
+                console.log('handleSpotlightCreation 1: newValues = ', newValues);
+                // newValues.img_url should be supplied by the form, because we preview the image in there
+                actions.createSpotlightWithoutFile(newValues);
+        }
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
