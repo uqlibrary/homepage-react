@@ -453,13 +453,24 @@ export const SpotlightsListAsTable = ({
         console.log('handlePublishCheckbox checkboxId = ', checkboxId);
         const newState = !!event.target && event.target.checked;
         const updateableRow = rows.find(r => r.id === checkboxId);
-        updateableRow.active = !!newState ? 1 : 0;
-        saveSpotlightChange(updateableRow)
+        // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
+        const rowToUpdate = {
+            id: updateableRow.id,
+            start: updateableRow.start,
+            end: updateableRow.end,
+            title: updateableRow.title,
+            url: updateableRow.url,
+            img_url: updateableRow.img_url,
+            img_alt: updateableRow.img_alt,
+            weight: updateableRow.weight,
+            active: !!newState ? 1 : 0,
+        };
+        saveSpotlightChange(rowToUpdate)
             .then(() => {
                 console.log('saveSpotlightChange then');
                 const updatedrows = userows.map(r => {
                     if (r.id === updateableRow.id) {
-                        r.active = updateableRow.active;
+                        r.active = rowToUpdate.active;
                     }
                     return r;
                 });
