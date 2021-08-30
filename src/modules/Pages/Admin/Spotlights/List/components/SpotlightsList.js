@@ -181,6 +181,7 @@ export const SpotlightsList = ({
                                     saveSpotlightChange={saveSpotlightChange}
                                     alertOrder="reverseEnd"
                                     canDragRows={false}
+                                    canUnpublish={false}
                                 />
                             </div>
                         </Grid>

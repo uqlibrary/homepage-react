@@ -112,6 +112,7 @@ export const SpotlightsListAsTable = ({
     footerDisplayMinLength,
     canFilterByAttribute,
     canDragRows,
+    canUnpublish,
 }) => {
     console.log('spotlightError = ', spotlightError);
     const classes = useStyles();
@@ -503,7 +504,7 @@ export const SpotlightsListAsTable = ({
         );
     }
 
-    const isLocalDev = ['dev-homepage.library.uq.edu.au', 'localhost'].includes(location.hostname);
+    const isLocalDev = false; // ['dev-homepage.library.uq.edu.au', 'localhost'].includes(location.hostname);
     const dragandDropReorderUnavailable = (!showScheduled || !showUnPublished) && canFilterByAttribute;
     return (
         <Fragment>
@@ -650,9 +651,16 @@ export const SpotlightsListAsTable = ({
                                 <TableCell component="th" scope="row" align="center" style={{ padding: 8 }}>
                                     Unpublish date
                                 </TableCell>
-                                <TableCell component="th" scope="row" align="center" style={{ width: 50, padding: 8 }}>
-                                    Published?
-                                </TableCell>
+                                {!!canUnpublish && (
+                                    <TableCell
+                                        component="th"
+                                        scope="row"
+                                        align="center"
+                                        style={{ width: 50, padding: 8 }}
+                                    >
+                                        Published?
+                                    </TableCell>
+                                )}
                                 <TableCell component="th" scope="row" />
                             </TableRow>
                         </TableHead>
@@ -764,22 +772,23 @@ export const SpotlightsListAsTable = ({
                                                                         {spotlight.endDateDisplay}
                                                                     </span>
                                                                 </TableCell>
-                                                                <TableCell
-                                                                    component="td"
-                                                                    className={`${classes.publishedCell}`}
-                                                                    style={{ width: 50, padding: 8 }}
-                                                                >
-                                                                    <Checkbox
-                                                                        checked={!!spotlight.active}
-                                                                        id={`spotlight-published-${spotlight.id}`}
-                                                                        onChange={handlePublishCheckbox()}
-                                                                        inputProps={{
-                                                                            'aria-label': `Mark spotlight "${spotlight.title}" as published or unpublished`,
-                                                                            'data-testid': `spotlight-list-item-publish-${spotlight.id}`,
-                                                                        }}
-                                                                        // value={`spotlight-publish-${spotlight.id}`}
-                                                                    />
-                                                                </TableCell>
+                                                                {!!canUnpublish && (
+                                                                    <TableCell
+                                                                        component="td"
+                                                                        className={`${classes.publishedCell}`}
+                                                                        style={{ width: 50, padding: 8 }}
+                                                                    >
+                                                                        <Checkbox
+                                                                            checked={!!spotlight.active}
+                                                                            id={`spotlight-published-${spotlight.id}`}
+                                                                            onChange={handlePublishCheckbox()}
+                                                                            inputProps={{
+                                                                                'aria-label': `Mark spotlight "${spotlight.title}" as published or unpublished`,
+                                                                                'data-testid': `spotlight-list-item-publish-${spotlight.id}`,
+                                                                            }}
+                                                                        />
+                                                                    </TableCell>
+                                                                )}
                                                                 <TableCell
                                                                     component="td"
                                                                     id={`spotlight-list-action-block-${spotlight.id}`}
@@ -864,6 +873,7 @@ SpotlightsListAsTable.propTypes = {
     // spotlightOrder: PropTypes.any,
     canFilterByAttribute: PropTypes.bool,
     canDragRows: PropTypes.bool,
+    canUnpublish: PropTypes.bool,
 };
 
 SpotlightsListAsTable.defaultProps = {
@@ -871,6 +881,7 @@ SpotlightsListAsTable.defaultProps = {
     // spotlightOrder: false, // what order should we sort the spotlights in? false means unspecified
     canFilterByAttribute: false, // does this section display filtering of scheduled and unpublished spotlights?
     canDragRows: true, // does this section allow drag and drop
+    canUnpublish: true, // does this section allow the user to have a publish/unpublish checbox?
 };
 
 export default SpotlightsListAsTable;
