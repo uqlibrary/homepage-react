@@ -28,6 +28,12 @@ const useStyles = makeStyles(() => ({
             backgroundColor: 'rgba(0, 0, 0, 0.12)',
         },
     },
+    checkboxCell: {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#595959',
+        },
+        padding: 0,
+    },
 }));
 
 export const SpotlightForm = ({
@@ -517,8 +523,8 @@ export const SpotlightForm = ({
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={12} align="right">
                         <InputLabel
-                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
                             title={locale.form.tooltips.publishedCheckbox}
+                            className={`${classes.checkboxCell}`}
                         >
                             <Checkbox
                                 checked={values.active === 1}
