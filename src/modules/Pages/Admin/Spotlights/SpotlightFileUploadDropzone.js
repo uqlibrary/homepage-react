@@ -2,8 +2,12 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone';
 
-import Grid from '@material-ui/core/Grid';
+import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { useConfirmationState } from 'hooks';
+
+import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
+import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { default as locale } from './spotlightsadmin.locale';
 
@@ -15,7 +19,7 @@ const thumbsContainer = {
     height: 200,
     padding: 4,
     boxSizing: 'border-box',
-    minHeight: 320,
+    minHeight: 340,
 };
 
 const thumbInner = {
@@ -52,8 +56,11 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
     const [imageWidth, setImageWidth] = useState(0);
     const [imageHeight, setImageHeight] = useState(0);
 
+    const [isFileProblemConfirmOpen, showFileProblemConfirmation, hideFileProblemConfirmation] = useConfirmationState();
+
     const getDimensions = acceptedFiles => {
-        if (!acceptedFiles || acceptedFiles.ength === 0) {
+        // based on https://stackoverflow.com/a/8904008/1246313
+        if (!acceptedFiles || acceptedFiles.length === 0) {
             return;
         }
         const url = URL.createObjectURL(acceptedFiles[0]);
@@ -80,6 +87,14 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
             );
             onAddFile(acceptedFiles);
             getDimensions(acceptedFiles);
+            if (
+                !!acceptedFiles &&
+                acceptedFiles.length > 0 &&
+                acceptedFiles[0].size &&
+                acceptedFiles[0].size > locale.form.upload.maxSize
+            ) {
+                showFileProblemConfirmation();
+            }
         },
         maxFiles: 1,
     });
@@ -100,66 +115,99 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
         onClearFile();
     };
 
+    const closeFileProblemConfirmation = () => {
+        removeUpload();
+        hideFileProblemConfirmation();
+    };
+
+    const imageIsTooBig = (imageWidthIn, imageHeightIn) => {
+        return imageWidthIn > locale.form.image.maxWidth || imageHeightIn > locale.form.image.maxHeight;
+    };
+
     return (
-        <section className="container" data-testid="spotlights-form-upload-dropzone">
-            {!files || files.length === 0 ? (
-                <div
-                    {...getRootProps({ className: 'dropzone' })}
-                    style={{
-                        border: 'thin solid black',
-                        backgroundColor: 'lightgrey',
-                        padding: '1rem',
-                        cursor: 'pointer',
-                    }}
-                >
-                    <input data-testid="dropzone-dragarea" {...getInputProps()} />
-                    <p>{locale.form.labels.dragareaInstructions}</p>
-                </div>
-            ) : (
-                <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
-                    <Grid item xs={12}>
-                        <h3>Preview:</h3>
-                    </Grid>
-                    <Grid item xs={10}>
-                        {files.map(file => (
-                            <div style={thumbInner} key={file.name}>
-                                <img alt="preview of uploaded spotlight file" src={file.preview} style={thumbImg} />
-                            </div>
-                        ))}
-                    </Grid>
-                    <Grid item xs={2} align="center">
-                        <IconButton style={deleteButton} onClick={removeUpload} title={locale.form.tooltips.deleteIcon}>
-                            <DeleteIcon />
-                        </IconButton>
-                    </Grid>
-                    <Grid item xs={12}>
-                        {files.map(file => (
-                            <div key={`${file.name}-dimensions`}>
-                                {imageWidth > 0 && imageHeight > 0 && (
-                                    <div style={dimensionBox} data-testid="dropzone-dimension-warning">
-                                        <div
-                                            style={
-                                                imageWidth > locale.form.image.maxWidth ||
-                                                imageHeight > locale.form.image.maxHeight
-                                                    ? warningDimensions
-                                                    : okDimensions
-                                            }
-                                        >
-                                            Dimensions:{' '}
-                                            <strong>
-                                                {imageWidth}px x {imageHeight}px
-                                            </strong>
+        <React.Fragment>
+            <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="spotlight-form-file-upload-error-dialog"
+                onAction={() => closeFileProblemConfirmation()}
+                onClose={() => closeFileProblemConfirmation()}
+                hideCancelButton
+                isOpen={isFileProblemConfirmOpen}
+                locale={locale.form.upload.fileTooLarge}
+            />
+            <section className="container" data-testid="spotlights-form-upload-dropzone">
+                {!files || files.length === 0 ? (
+                    <div
+                        {...getRootProps({ className: 'dropzone' })}
+                        style={{
+                            border: 'thin solid black',
+                            backgroundColor: 'lightgrey',
+                            padding: '1rem',
+                            cursor: 'pointer',
+                        }}
+                    >
+                        <input data-testid="dropzone-dragarea" {...getInputProps()} />
+                        <p>{locale.form.labels.dragareaInstructions}</p>
+                    </div>
+                ) : (
+                    <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
+                        <Grid item xs={12}>
+                            <h3>Preview:</h3>
+                        </Grid>
+                        <Grid item xs={10}>
+                            {files.map(file => (
+                                <div style={thumbInner} key={file.name}>
+                                    <img alt="preview of uploaded spotlight file" src={file.preview} style={thumbImg} />
+                                </div>
+                            ))}
+                        </Grid>
+                        <Grid item xs={2} align="center">
+                            <IconButton
+                                style={deleteButton}
+                                onClick={removeUpload}
+                                title={locale.form.tooltips.deleteIcon}
+                            >
+                                <DeleteIcon />
+                            </IconButton>
+                        </Grid>
+                        <Grid item xs={12}>
+                            {files.map(file => (
+                                <div key={`${file.name}-dimensions`}>
+                                    {imageWidth > 0 && imageHeight > 0 && (
+                                        <div style={dimensionBox} data-testid="dropzone-dimension-warning">
+                                            <div
+                                                style={
+                                                    imageIsTooBig(imageWidth, imageHeight)
+                                                        ? warningDimensions
+                                                        : okDimensions
+                                                }
+                                            >
+                                                {!imageIsTooBig(imageWidth, imageHeight) && (
+                                                    <CheckIcon
+                                                        fontSize="small"
+                                                        style={{ color: 'green', height: 15 }}
+                                                    />
+                                                )}
+                                                Dimensions:{' '}
+                                                <strong>
+                                                    {imageWidth}px x {imageHeight}px
+                                                </strong>
+                                            </div>
+                                            {locale.form.image.dimensionsNotification}: {locale.form.image.maxWidth}px x{' '}
+                                            {locale.form.image.maxHeight}px
+                                            {imageIsTooBig(imageWidth, imageHeight) && (
+                                                <div>{locale.form.image.dimensionsWarning}</div>
+                                            )}
                                         </div>
-                                        {locale.form.image.dimensionsNotification}: {locale.form.image.maxWidth}px x{' '}
-                                        {locale.form.image.maxHeight}px
-                                    </div>
-                                )}
-                            </div>
-                        ))}
+                                    )}
+                                </div>
+                            ))}
+                        </Grid>
                     </Grid>
-                </Grid>
-            )}
-        </section>
+                )}
+            </section>
+        </React.Fragment>
     );
 }
 

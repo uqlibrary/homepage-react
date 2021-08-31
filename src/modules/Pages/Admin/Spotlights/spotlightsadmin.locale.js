@@ -29,6 +29,7 @@ export default {
             maxWidth: 800,
             maxHeight: 300,
             dimensionsNotification: 'Maximum recommended dimensions',
+            dimensionsWarning: 'Larger images will affect user experience',
         },
         add: {
             addSpotlightConfirmation: {
@@ -66,6 +67,11 @@ export default {
                 confirmationTitle: 'An error occurred while uploading the file',
                 confirmButtonLabel: 'OK',
             },
+            fileTooLarge: {
+                confirmationTitle: 'This file is too large - please try again',
+                confirmButtonLabel: 'OK',
+            },
+            maxSize: 300000,
         },
         help: {
             title: 'Add/Edit/Clone help',
