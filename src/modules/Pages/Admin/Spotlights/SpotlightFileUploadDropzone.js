@@ -128,7 +128,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
                         ))}
                     </Grid>
                     <Grid item xs={2} align="center">
-                        <IconButton style={deleteButton} onClick={removeUpload} title="Delete uploaded spotlight image">
+                        <IconButton style={deleteButton} onClick={removeUpload} title={locale.form.tooltips.deleteIcon}>
                             <DeleteIcon />
                         </IconButton>
                     </Grid>

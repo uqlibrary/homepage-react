@@ -23,6 +23,7 @@ export default {
             publishDate: 'Select publish date-time',
             unpublishDate: 'Select unpublish date-time',
             publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
+            deleteIcon: 'Remove image',
         },
         image: {
             maxWidth: 800,

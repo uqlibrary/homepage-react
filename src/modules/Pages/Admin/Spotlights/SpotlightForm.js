@@ -229,6 +229,9 @@ export const SpotlightForm = ({
     };
 
     const saveSpotlight = () => {
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+
         console.log('saveSpotlight: currentValues = ', values);
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
@@ -330,13 +333,11 @@ export const SpotlightForm = ({
                 xs={'auto'}
                 style={{
                     width: 80,
-                    marginRight: 20,
-                    marginBottom: 6,
-                    opacity: 0.3,
+                    margin: '0 auto',
                     height: 200, // default to some space for the blocks
                 }}
             >
-                <InlineLoader message="Loading" />
+                <InlineLoader message="Uploading" />
             </Grid>
         );
     }
