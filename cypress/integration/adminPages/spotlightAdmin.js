@@ -600,6 +600,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
 
             dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="dropzone-dimension-warning"] strong').should('contain', '1000');
+            cy.get('[data-testid="dropzone-dimension-warning"] strong').should('contain', 'px x ');
+            cy.get('[data-testid="dropzone-dimension-warning"] strong').should('contain', '500');
 
             saveButtonNOTDisabled();
 
@@ -640,41 +643,41 @@ describe('Spotlights Admin Pages', () => {
             // and the end date field now has an error, so the submit button is disabled
             saveButtonisDisabled();
             // and the end date has an error message
-            // cy.get('[data-testid="admin-spotlights-form-end-date"] p.Mui-error')
-            //     .should('exist')
-            //     .and('contain', 'Date should not be before minimal date');
-            // // open the end date so we can fix the date
-            // cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
-            // // advance the end date another month
-            // cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
-            //     .as('next-month-button')
-            //     .click();
-            // // and pick the first of the month
-            // cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
-            //     .first()
-            //     .contains('1')
-            //     .click();
-            // // the time dialog loads, but lets just ok out
-            // cy.get('.MuiDialogActions-spacing button:nth-child(2)')
-            //     .contains('OK')
-            //     .click();
-            // // and date is set to next month
-            // cy.get('[data-testid="admin-spotlights-form-end-date"] input').should($input => {
-            //     const defaultDate = $input.val();
-            //     const nextmonth = moment()
-            //         .add(2, 'M')
-            //         .startOf('month');
-            //     expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
-            // });
-            // // all is good so the create button enables
-            // saveButtonNOTDisabled();
-            //
-            // // can clear the upload with the Trashcan button
-            // cy.get('[data-testid="dropzone-preview"] button')
-            //     .should('exist')
-            //     .click();
-            // dragzoneIsReadyForDrag();
-            // saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-end-date"] p.Mui-error')
+                .should('exist')
+                .and('contain', 'Date should not be before minimal date');
+            // open the end date so we can fix the date
+            cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
+            // advance the end date another month
+            cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
+                .as('next-month-button')
+                .click();
+            // and pick the first of the month
+            cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
+                .first()
+                .contains('1')
+                .click();
+            // the time dialog loads, but lets just ok out
+            cy.get('.MuiDialogActions-spacing button:nth-child(2)')
+                .contains('OK')
+                .click();
+            // and date is set to next month
+            cy.get('[data-testid="admin-spotlights-form-end-date"] input').should($input => {
+                const defaultDate = $input.val();
+                const nextmonth = moment()
+                    .add(3, 'M')
+                    .startOf('month');
+                expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
+            });
+            // all is good so the create button enables
+            saveButtonNOTDisabled();
+
+            // can clear the upload with the Trashcan button
+            cy.get('[data-testid="dropzone-preview"] button')
+                .should('exist')
+                .click();
+            dragzoneIsReadyForDrag();
+            saveButtonisDisabled();
         });
 
         it('can save a spotlight', () => {

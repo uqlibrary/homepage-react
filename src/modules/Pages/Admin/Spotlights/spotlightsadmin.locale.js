@@ -20,6 +20,11 @@ export default {
             linkField: 'Please enter a valid URL',
             publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
         },
+        image: {
+            maxWidth: 800,
+            maxHeight: 300,
+            dimensionsNotification: 'Maximum recommended dimensions',
+        },
         add: {
             addSpotlightConfirmation: {
                 confirmationTitle: 'A spotlight has been added',
