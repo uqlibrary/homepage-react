@@ -39,11 +39,14 @@ export default function spotlightsReducer(state = initialState, action) {
     console.log(
         'spotlightsReducer: ',
         action.type,
-        ' - state = ',
+        '\n',
+        '- state before = ',
         state,
-        '; action = ',
+        '\n',
+        '- action = ',
         action,
-        '; handler = ',
+        '\n',
+        '- handler (state after) = ',
         handler(state, action),
     );
     return handler(state, action);

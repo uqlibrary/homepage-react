@@ -153,7 +153,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
                         }}
                     >
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
-                        <p>{locale.form.labels.dragareaInstructions}</p>
+                        <div>{locale.form.labels.dragareaInstructions}</div>
                     </div>
                 ) : (
                     <Grid container data-testid="dropzone-preview" style={thumbsContainer}>

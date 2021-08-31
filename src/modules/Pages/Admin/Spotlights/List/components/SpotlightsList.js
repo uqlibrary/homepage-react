@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
-import moment from 'moment';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
-// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import SpotlightsListAsTable from './SpotlightsListAsTable';
+import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/components/SpotlightsListAsTable';
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { default as locale } from '../../spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+
+import moment from 'moment';
 
 const useStyles = makeStyles(
     theme => ({
@@ -37,27 +36,20 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const SpotlightsList = ({
-    actions,
-    spotlights,
-    spotlightsLoading,
-    spotlightsError,
-    spotlightError,
-    history,
-}) => {
+export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlightsError, history }) => {
     const classes = useStyles();
 
     const [currentSpotlights, setCurrentSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
             actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!!spotlights && spotlights.length > 0) {
             setPastSpotlights([]);
             setCurrentSpotlights([]);
@@ -85,16 +77,10 @@ export const SpotlightsList = ({
                 const fullDateFormat = 'dddd D MMMM YYYY h.mma';
                 spotlight.startDateLong = moment(spotlight.start).format(fullDateFormat);
                 spotlight.endDateLong = moment(spotlight.end).format(fullDateFormat);
-                // // Strip markdown from the body
-                // const linkRegex = spotlight.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-                // spotlight.message = spotlight.body;
-                // if (!!linkRegex && linkRegex.length === 3) {
-                //     spotlight.message = spotlight.message.replace(linkRegex[0], '').replace('  ', ' ');
-                // }
                 if (moment(spotlight.end).isBefore(moment())) {
-                    setPastSpotlights(pastSpotlights => [...pastSpotlights, spotlight]);
+                    setPastSpotlights(pastSpotlightList => [...pastSpotlightList, spotlight]);
                 } else {
-                    setCurrentSpotlights(currentSpotlights => [...currentSpotlights, spotlight]);
+                    setCurrentSpotlights(currentSpotlightList => [...currentSpotlightList, spotlight]);
                 }
             });
         }
@@ -127,6 +113,13 @@ export const SpotlightsList = ({
         return actions.saveSpotlightChange(spotlight);
     };
 
+    // get the current highest weight spotlight so when we create one we can calc the new max
+    // and thus put it on the end of the list (without having to load spotlights again)
+    const maxWeight =
+        !!spotlights && spotlights.length > 0
+            ? spotlights.reduce((prev, current) => (prev.weight > current.weight ? prev : current)).weight
+            : 0;
+
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -140,6 +133,7 @@ export const SpotlightsList = ({
                     helpContent={locale.listPage.help}
                     history={history}
                     showAddButton
+                    maxWeight={maxWeight}
                 />
                 <StandardCard title="All spotlights" noPadding>
                     <Grid container>
@@ -158,7 +152,6 @@ export const SpotlightsList = ({
                                     rows={currentSpotlights}
                                     headertag="Current and scheduled spotlights"
                                     tableType="current"
-                                    spotlightError={spotlightError}
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
@@ -173,7 +166,6 @@ export const SpotlightsList = ({
                                     rows={pastSpotlights}
                                     tableType="past"
                                     headertag="Past spotlights"
-                                    spotlightError={spotlightError}
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     actions={actions}
@@ -197,7 +189,6 @@ SpotlightsList.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.any,
     spotlightsError: PropTypes.any,
-    spotlightError: PropTypes.any,
     history: PropTypes.object,
 };
 

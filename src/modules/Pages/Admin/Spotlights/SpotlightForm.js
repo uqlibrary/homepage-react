@@ -41,10 +41,12 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
+    maxWeight,
 }) => {
     console.log('uploadPublicFile: publicFileUploading = ', publicFileUploading);
     console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
     console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
+    console.log('maxWeight = ', maxWeight);
     // !!publicFileUploadResult
     //     ? console.log('uploadPublicFile: publicFileUploadResult join = ', publicFileUploadResult.join(' ').trim())
     //     : console.log('no join publicFileUploadResult = ', publicFileUploadResult);
@@ -241,7 +243,7 @@ export const SpotlightForm = ({
             url: values.url,
             img_url: defaults.type === 'edit' ? values.img_url : null,
             img_alt: values.img_alt || values.title,
-            weight: values.weight,
+            weight: defaults.type === 'edit' ? values.weight : Number(maxWeight) + 10,
             active: !!values.active ? 1 : 0,
             uploadedFile: values.uploadedFile,
         };
@@ -566,12 +568,14 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    maxWeight: PropTypes.number,
 };
 
 SpotlightForm.defaultProps = {
     publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
     publicFileUploadError: false,
     publicFileUploadResult: false,
+    maxWeight: 0, // the max weight currently found in the spotlights - calc new value on add
 };
 
 export default SpotlightForm;

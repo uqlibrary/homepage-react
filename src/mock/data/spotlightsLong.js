@@ -14,7 +14,7 @@ export const spotlightsLong = [{
     "end": "2018-08-19 23:59:00",
     "title": "Can be deleted past #2",
     "url": "https:\/\/web.library.uq.edu.au\/research-tools-techniques\/research-subject",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Library guides",
     "weight": 0,
     "active": 1
@@ -34,7 +34,7 @@ export const spotlightsLong = [{
     "end": "2017-04-17 17:00:00",
     "title": "Pay to publish?",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2017\/03\/pay-publish",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Pay to publish?",
     "weight": 0,
     "active": 1
@@ -54,7 +54,7 @@ export const spotlightsLong = [{
     "end": "2017-05-16 11:59:00",
     "title": "Referencing Style Guides",
     "url": "https:\/\/web.library.uq.edu.au\/research-tools-techniques\/referencing\/referencing-style-guides",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Referencing Style Guides",
     "weight": 0,
     "active": 0
@@ -74,7 +74,7 @@ export const spotlightsLong = [{
     "end": "2017-05-29 23:21:00",
     "title": "CDS Training - Drop in",
     "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/centre-digital-scholarship",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Drop in to the CDS",
     "weight": 0,
     "active": 0
@@ -94,7 +94,7 @@ export const spotlightsLong = [{
     "end": "2017-11-13 17:00:00",
     "title": "Fryer Library: celebrating 90 years of collecting",
     "url": "https:\/\/web.library.uq.edu.au\/collections\/stories-from-collection\/fryer-90th-anniversary",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Fryer Library: celebrating 90 years of collecting",
     "weight": 0,
     "active": 0
@@ -114,7 +114,7 @@ export const spotlightsLong = [{
     "end": "2017-06-12 17:00:00",
     "title": "Find a study space",
     "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/opening-hours",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Find a study space",
     "weight": 0,
     "active": 0
@@ -134,7 +134,7 @@ export const spotlightsLong = [{
     "end": "2018-09-30 23:59:00",
     "title": "Creative Writing Fellowship",
     "url": "https:\/\/web.library.uq.edu.au\/about-us\/awards-and-fellowships\/creative-writing-fellowship",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Creative Writing Fellowship",
     "weight": 0,
     "active": 0
@@ -154,7 +154,7 @@ export const spotlightsLong = [{
     "end": "2018-03-12 12:00:00",
     "title": "Study Space - UQ Book It",
     "url": "http:\/\/uqbookit.uq.edu.au\/",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Book a room with UQ Book It",
     "weight": 0,
     "active": 0
@@ -174,7 +174,7 @@ export const spotlightsLong = [{
     "end": "2099-07-30 18:39:00",
     "title": "What's changed over the break_01",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2017\/07\/welcome-back-catch-whats-changed-over-break",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "What's changed over the break",
     "weight": 0,
     "active": 0
@@ -194,7 +194,7 @@ export const spotlightsLong = [{
     "end": "2017-08-16 09:22:00",
     "title": "Guides to improve search techniques",
     "url": "https:\/\/web.library.uq.edu.au\/research-tools-techniques\/search-techniques",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Guides to improve search techniques",
     "weight": 0,
     "active": 0
@@ -214,7 +214,7 @@ export const spotlightsLong = [{
     "end": "2017-08-28 09:33:00",
     "title": "Computer availability and terms of use",
     "url": "https:\/\/web.library.uq.edu.au\/library-services\/it\/computers-library",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Computer availability and terms of use",
     "weight": 0,
     "active": 0
@@ -234,7 +234,7 @@ export const spotlightsLong = [{
     "end": "2018-03-05 09:00:00",
     "title": "How to find course materials & items on the shelves",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2017\/08\/tips-accessing-materials-your-studies",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "How to find course materials & items on the shelves",
     "weight": 0,
     "active": 0
@@ -254,7 +254,7 @@ export const spotlightsLong = [{
     "end": "2017-08-14 09:00:00",
     "title": "Reaxys database upgrade",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2017\/07\/reaxys-chemistry-database-improvements",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Reaxys database upgrade",
     "weight": 0,
     "active": 1
@@ -274,7 +274,7 @@ export const spotlightsLong = [{
     "end": "2017-09-04 12:52:00",
     "title": "Emerald Insight",
     "url": "http:\/\/www.emeraldinsight.com.ezproxy.library.uq.edu.au\/",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Emerald Insight",
     "weight": 0,
     "active": 0
@@ -294,7 +294,7 @@ export const spotlightsLong = [{
     "end": "2018-09-16 11:30:00",
     "title": "Dorothy Hill Online Exhibition",
     "url": "https:\/\/uqlibraryonlineexhibitions.omeka.net\/exhibits\/show\/dorothy-hill-online-exhibition",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Dorothy Hill Online Exhibition",
     "weight": 0,
     "active": 1
@@ -324,7 +324,7 @@ export const spotlightsLong = [{
     "end": "2021-01-24 23:59:00",
     "title": "Photography in Fryer - Online Exhibition",
     "url": "https:\/\/web.library.uq.edu.au\/collections\/stories-from-collection\/photography-fryer",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Photography in Fryer - Digital Story",
     "weight": 0,
     "active": 1
@@ -344,7 +344,7 @@ export const spotlightsLong = [{
     "end": "2019-12-30 23:59:00",
     "title": "JD Fryer Digital Story 2019",
     "url": "https:\/\/uqlibraryonlineexhibitions.omeka.net\/exhibits\/show\/jd-fryer-student-and-soldier",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "JD Fryer Digital Story 2019",
     "weight": 0,
     "active": 1
@@ -364,7 +364,7 @@ export const spotlightsLong = [{
     "end": "2099-03-21 23:59:00",
     "title": "Can be deleted and edited",
     "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/dorothy-hill-engineering-and-sciences-library",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.",
     "weight": 0,
     "active": 1
@@ -384,7 +384,7 @@ export const spotlightsLong = [{
     "end": "2099-02-14 00:01:00",
     "title": "Updates to borrowing rules - Jan 2021",
     "url": "https:\/\/web.library.uq.edu.au\/borrowing-requesting\/how-borrow\/borrowing-rules",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Updates to borrowing rules.",
     "weight": 0,
     "active": 0
@@ -404,7 +404,7 @@ export const spotlightsLong = [{
     "end": "2099-02-28 23:59:00",
     "title": "Postgrad locker draw - NOW OPEN 2021",
     "url": "https:\/\/web.library.uq.edu.au\/locations-hours\/lockers",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Postgrad locker draw now open. Apply by Sun 28 Feb. We'll notify successful applicants on 2 March.",
     "weight": 0,
     "active": 1
@@ -424,7 +424,7 @@ export const spotlightsLong = [{
     "end": "2099-03-31 23:59:00",
     "title": "Academic Integrity Modules 2021",
     "url": "https:\/\/web.library.uq.edu.au\/library-services\/it\/learnuq-blackboard-help\/academic-integrity-modules",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Have you completed your Academic Integrity Modules? Complete Part A by 31 March.",
     "weight": 1,
     "active": 1
@@ -444,7 +444,7 @@ export const spotlightsLong = [{
     "end": "2099-03-31 23:59:00",
     "title": "Rae and George Hammer Fellowship 2021",
     "url": "https:\/\/web.library.uq.edu.au\/about-us\/awards-and-fellowships\/rae-and-george-hammer-memorial-visiting-research-fellowship",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Rae and George Hammer Memorial Visiting Research Fellowship.",
     "weight": 2,
     "active": 1

@@ -22,6 +22,10 @@ export const SpotlightsAdd = ({
 }) => {
     console.log('SpotlightsAdd : spotlightsLoading = ', spotlightsLoading);
 
+    const params = new URL(document.location).searchParams;
+    const maxWeight = params.get('maxWeight');
+    console.log('param maxWeight = ', maxWeight);
+
     const defaults = {
         id: '',
         startDateDefault: getStartOfDayFormatted(),
@@ -51,6 +55,7 @@ export const SpotlightsAdd = ({
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
                         publicFileUploadResult={publicFileUploadResult}
+                        maxWeight={maxWeight}
                     />
                 </StandardCard>
             </section>

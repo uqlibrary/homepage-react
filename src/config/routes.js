@@ -174,7 +174,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
     const canSeeSpotlightsAdmin = account && seeSpotlightsAdmin(account);
-    console.log('canSeeSpotlightsAdmin = ', canSeeSpotlightsAdmin);
     return [
         ...publicPages,
         ...(account && seeCourseResources(account) ? courseResoures : []),

@@ -6,12 +6,10 @@ import * as actions from 'actions';
 import SpotlightsAdd from '../components/SpotlightsAdd';
 
 const mapStateToProps = state => {
-    const newVar = {
+    return {
         ...state.get('spotlightReducer'),
         ...state.get('publicFileUploadReducer'),
     };
-    console.log('SpotlightsAdd container mapStateToProps = ', newVar);
-    return newVar;
 };
 
 const mapDispatchToProps = dispatch => {

@@ -104,7 +104,6 @@ export const SpotlightsListAsTable = ({
     headertag,
     tableType,
     spotlightsLoading,
-    spotlightError,
     history,
     actions,
     deleteSpotlight,
@@ -114,7 +113,6 @@ export const SpotlightsListAsTable = ({
     canDragRows,
     canUnpublish,
 }) => {
-    console.log('spotlightError = ', spotlightError);
     const classes = useStyles();
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
@@ -864,7 +862,6 @@ SpotlightsListAsTable.propTypes = {
     headertag: PropTypes.string,
     tableType: PropTypes.string,
     spotlightsLoading: PropTypes.any,
-    spotlightError: PropTypes.any,
     history: PropTypes.object,
     actions: PropTypes.any,
     deleteSpotlight: PropTypes.any,
