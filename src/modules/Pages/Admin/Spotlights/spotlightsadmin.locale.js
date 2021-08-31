@@ -71,7 +71,7 @@ export default {
                 confirmationTitle: 'This file is too large - please try again',
                 confirmButtonLabel: 'OK',
             },
-            maxSize: 300000,
+            maxSize: 400000,
         },
         help: {
             title: 'Add/Edit/Clone help',
