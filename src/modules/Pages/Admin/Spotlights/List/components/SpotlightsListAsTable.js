@@ -558,6 +558,7 @@ export const SpotlightsListAsTable = ({
                             <InputLabel
                                 style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
                                 title={locale.listPage.tooltips.hideShowScheduledCheckbox}
+                                className={`${classes.checkboxCell}`}
                             >
                                 <Checkbox
                                     checked={showScheduled}
@@ -577,6 +578,7 @@ export const SpotlightsListAsTable = ({
                             <InputLabel
                                 style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
                                 title={locale.listPage.tooltips.hideShowUnpublishedCheckbox}
+                                className={`${classes.checkboxCell}`}
                             >
                                 <Checkbox
                                     checked={showUnPublished}
@@ -773,7 +775,7 @@ export const SpotlightsListAsTable = ({
                                                                 {!!canUnpublish && (
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={`${classes.publishedCell}`}
+                                                                        className={`${classes.publishedCell} ${classes.checkboxCell}`}
                                                                         style={{ width: 50, padding: 8 }}
                                                                     >
                                                                         <Checkbox
