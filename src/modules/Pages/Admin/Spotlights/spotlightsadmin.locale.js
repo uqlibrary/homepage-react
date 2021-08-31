@@ -12,8 +12,12 @@ export default {
             publishDate: 'Date published', // also on List page
             unpublishDate: 'Date unpublished', // also on List page
             publishedCheckbox: 'Published?', // also on List page
-            dragareaInstructions:
-                'Drag and drop a spotlight image, or click to select an image. Click the Help button for image requirements.',
+            dragareaInstructions: (
+                <Fragment>
+                    <p>Drag and drop a spotlight image, or click to select an image. </p>
+                    <p>Click the Help button for image requirements.</p>
+                </Fragment>
+            ),
             datePopupNowButton: 'Now',
         },
         tooltips: {
@@ -26,7 +30,7 @@ export default {
             deleteIcon: 'Remove image',
         },
         image: {
-            maxWidth: 800,
+            maxWidth: 813,
             maxHeight: 300,
             dimensionsNotification: 'Maximum recommended dimensions',
             dimensionsWarning: 'Larger images will affect user experience',

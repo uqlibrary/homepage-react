@@ -124,6 +124,11 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
         return imageWidthIn > locale.form.image.maxWidth || imageHeightIn > locale.form.image.maxHeight;
     };
 
+    const uploadErrorLocale = {
+        ...locale.form.upload.fileTooLarge,
+        confirmationTitle: `${locale.form.upload.fileTooLarge.confirmationTitle} (max ${locale.form.upload.maxSize /
+            1000}kb)`,
+    };
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -134,7 +139,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
                 onClose={() => closeFileProblemConfirmation()}
                 hideCancelButton
                 isOpen={isFileProblemConfirmOpen}
-                locale={locale.form.upload.fileTooLarge}
+                locale={uploadErrorLocale}
             />
             <section className="container" data-testid="spotlights-form-upload-dropzone">
                 {!files || files.length === 0 ? (
