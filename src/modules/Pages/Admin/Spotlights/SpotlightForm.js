@@ -180,8 +180,14 @@ export const SpotlightForm = ({
         // even though the form should be available at onLoad, sometimes it isnt yet :(
         setTimeout(() => {
             // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
-            addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
-            addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
+            addAriaLabelToMuiDatePickerButton(
+                'admin-spotlights-form-start-date-label',
+                locale.form.tooltips.publishDate,
+            );
+            addAriaLabelToMuiDatePickerButton(
+                'admin-spotlights-form-end-date-label',
+                locale.form.tooltips.unpublishDate,
+            );
         }, 50);
     };
 
@@ -471,7 +477,7 @@ export const SpotlightForm = ({
                             id="admin-spotlights-form-start-date"
                             data-testid="admin-spotlights-form-start-date"
                             value={values.start}
-                            label="Date published"
+                            label={locale.form.labels.publishDate}
                             onChange={handleChange('start')}
                             minDate={defaults.minimumDate}
                             format="DD/MM/YYYY HH:mm a"
@@ -484,7 +490,7 @@ export const SpotlightForm = ({
                         <KeyboardDateTimePicker
                             id="admin-spotlights-form-end-date"
                             data-testid="admin-spotlights-form-end-date"
-                            label="Date unpublished"
+                            label={locale.form.labels.unpublishDate}
                             onChange={handleChange('end')}
                             value={values.end}
                             minDate={values.start}

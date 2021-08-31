@@ -6,10 +6,12 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
-            titleField: 'Title - visible to assitive technology (appears on link)*',
+            titleField: 'Title - visible to assistive technology (appears on link) *',
             ariaField: 'Tooltip text - visible when user mouses over spotlight (appears on image)',
             linkField: 'Spotlight link *',
-            publishedCheckbox: 'Published?',
+            publishDate: 'Date published', // also on List page
+            unpublishDate: 'Date unpublished', // also on List page
+            publishedCheckbox: 'Published?', // also on List page
             dragareaInstructions:
                 'Drag and drop a spotlight image, or click to select an image. Click the Help button for image requirements.',
             datePopupNowButton: 'Now',
@@ -18,6 +20,8 @@ export default {
             titleField: 'Help TBA',
             ariaField: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
             linkField: 'Please enter a valid URL',
+            publishDate: 'Select publish date-time',
+            unpublishDate: 'Select unpublish date-time',
             publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
         },
         image: {

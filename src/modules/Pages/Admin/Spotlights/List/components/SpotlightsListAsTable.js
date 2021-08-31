@@ -646,10 +646,10 @@ export const SpotlightsListAsTable = ({
                                 </TableCell>
                                 <TableCell component="th" scope="row" />
                                 <TableCell component="th" scope="row" align="center" style={{ padding: 0 }}>
-                                    Publish date
+                                    {locale.form.labels.publishDate}
                                 </TableCell>
                                 <TableCell component="th" scope="row" align="center" style={{ padding: 8 }}>
-                                    Unpublish date
+                                    {locale.form.labels.unpublishDate}
                                 </TableCell>
                                 {!!canUnpublish && (
                                     <TableCell
@@ -658,7 +658,7 @@ export const SpotlightsListAsTable = ({
                                         align="center"
                                         style={{ width: 50, padding: 8 }}
                                     >
-                                        Published?
+                                        {locale.form.labels.publishedCheckbox}
                                     </TableCell>
                                 )}
                                 <TableCell component="th" scope="row" />
