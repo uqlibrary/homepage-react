@@ -446,6 +446,7 @@ describe('Spotlights Admin Pages', () => {
         it('sequential deletion of spotlights does not fail', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #1');
             // click bin icon
             cy.get('[data-testid="spotlight-list-past-delete-button"]').click();
             // a confirm dialog popsup
@@ -457,9 +458,13 @@ describe('Spotlights Admin Pages', () => {
             cy.wait(500);
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            // the row is gone
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #1');
             // subsequent deletes also succeed
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #2');
             cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #3');
             cy.get('[data-testid="spotlight-list-item-checkbox-a7764f90-198d-11e7-9f30-3dc758d83fd5"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('2 spotlights selected');
             // click bin icon
@@ -470,6 +475,8 @@ describe('Spotlights Admin Pages', () => {
             // click the Proceed button and delete is attempted
             cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #2');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #3');
             cy.wait(500);
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
