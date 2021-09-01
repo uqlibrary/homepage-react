@@ -162,9 +162,10 @@ export const SpotlightForm = ({
 
     useEffect(() => {
         if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
+            setValues(defaults); // save success - clear the form!
             showConfirmation();
         }
-    }, [showConfirmation, spotlightResponse, spotlightStatus]);
+    }, [showConfirmation, spotlightResponse, spotlightStatus, defaults]);
 
     useEffect(() => {
         if (!!spotlightError || spotlightStatus === 'error') {
@@ -201,19 +202,6 @@ export const SpotlightForm = ({
 
     const clearForm = () => {
         setValues(defaults);
-        // setValues({
-        //     ['title']: '',
-        //     ['url']: '',
-        //     ['start']: defaults.startDateDefault,
-        //     ['end']: defaults.endDateDefault,
-        //     ['urgent']: false,
-        //     ['img_alt']: '',
-        //     ['img_url']: '',
-        //     ['weight']: 0,
-        //     ['active']: 0,
-        //     startDateDefault: getTimeNowFormatted(),
-        //     endDateDefault: getTimeEndOfDayFormatted(),
-        // });
     };
 
     const navigateToListPage = () => {

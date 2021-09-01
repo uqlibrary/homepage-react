@@ -105,7 +105,6 @@ export const SpotlightsListAsTable = ({
     tableType,
     spotlightsLoading,
     history,
-    actions,
     deleteSpotlight,
     saveSpotlightChange,
     footerDisplayMinLength,
@@ -301,7 +300,13 @@ export const SpotlightsListAsTable = ({
             .then(() => {
                 setSpotlightNotice('');
                 setDeleteActive(false);
-                actions.loadAllSpotlights();
+                const indexOfRemovedSpotlight = userows.find(r => r.id === spotlightID);
+                setUserows(prevState => {
+                    console.log('prevState = ', prevState);
+                    const data = [...prevState];
+                    data.splice(indexOfRemovedSpotlight, 1);
+                    return data;
+                });
             })
             .catch(() => {
                 showDeleteFailureConfirmation();

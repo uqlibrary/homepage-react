@@ -14,7 +14,7 @@ export default {
             publishedCheckbox: 'Published?', // also on List page
             dragareaInstructions: (
                 <Fragment>
-                    <p>Drag and drop a spotlight image, or click to select an image. </p>
+                    <p>Drag and drop a spotlight image, or click to select an image. *</p>
                     <p>Click the Help button for image requirements.</p>
                 </Fragment>
             ),
