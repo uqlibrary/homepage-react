@@ -337,6 +337,7 @@ export const SpotlightsListAsTable = ({
                 const spotlightID = c.value.replace(checkBoxIdPrefix, '');
                 deleteSpotlightById(spotlightID);
             });
+            reEnableAllCheckboxes();
         }
     };
 

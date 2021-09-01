@@ -447,6 +447,10 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #2');
             cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
+            // checkbox in other section is disabled
+            cy.get(
+                '[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"] input[type="checkbox"]',
+            ).should('be.disabled');
             // click bin icon
             cy.get('[data-testid="spotlight-list-past-delete-button"]').click();
             // a confirm dialog popsup
@@ -482,6 +486,10 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
             // nothing on the screen is checked for deletion
             cy.get('.markForDeletion input[type="checkbox"]:checked').should('not.exist');
+            // checkbox in other section no longer disabled
+            cy.get(
+                '[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"] input[type="checkbox"]',
+            ).should('not.be.disabled');
         });
         it('during delete, selection checkboxes in other sections are disabled', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
