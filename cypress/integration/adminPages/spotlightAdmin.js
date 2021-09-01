@@ -769,10 +769,10 @@ describe('Spotlights Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         });
         it('the cancel button returns to the list page', () => {
+            cy.wait(100);
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
                 .should('exist')
                 .click();
-            cy.wait(100);
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
@@ -830,6 +830,26 @@ describe('Spotlights Admin Pages', () => {
             );
             cy.get('[data-testid="admin-spotlights-form-end-date"] input').should('have.value', '21/03/2099 23:59 pm');
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
+        });
+        it('can delete the current spotlight image and upload a different image', () => {
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
+                'not.contain',
+                'Drag and drop a spotlight image',
+            );
+            cy.get('button[data-testid="spotlights-form-remove-image"]').click();
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
+                'contain',
+                'Drag and drop a spotlight image',
+            );
+            dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
+                'not.contain',
+                'Drag and drop a spotlight image',
+            );
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
+                'contain',
+                'Maximum recommended dimensions',
+            );
         });
     });
 });

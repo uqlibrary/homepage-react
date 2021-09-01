@@ -33,11 +33,12 @@ export function loadAllSpotlights() {
 }
 
 function createSpotlight(request, dispatch) {
-    // as we are creating a new spotlight there should not be an id field
     if ('id' in request) {
+        // as we are creating a new spotlight there should not be an id field
         delete request.id;
     }
     console.log('createSpotlight: send request: ', request);
+    console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
     return post(SPOTLIGHT_CREATE_API(), request)
         .then(data => {
             console.log('createSpotlight action, returned data = ', data);
@@ -55,29 +56,55 @@ function createSpotlight(request, dispatch) {
         });
 }
 
-// possibly this isnt needed? the file should always exist?
-export const createSpotlightWithoutFile = request => {
-    console.log('action createSpotlight, request to save: ', request);
+const saveSpotlightChange = (request, dispatch) => {
+    console.log('saveSpotlightChange for request ', request);
+    console.log('action saveSpotlightChange action, SPOTLIGHT_SAVE_API() = ', SPOTLIGHT_SAVE_API({ id: request.id }));
+    return post(SPOTLIGHT_SAVE_API({ id: request.id }), request)
+        .then(data => {
+            console.log('saveSpotlightChange action, returned data = ', data);
+            dispatch({
+                type: actions.SPOTLIGHT_SAVED,
+                payload: data,
+            });
+        })
+        .catch(error => {
+            console.log('saveSpotlightChange action FAILED, returned: ', error);
+            dispatch({
+                type: actions.SPOTLIGHT_FAILED,
+                payload: error,
+            });
+            return Promise.reject(error);
+        });
+};
+
+export const saveSpotlightChangeWithoutFile = (request, spotlightSaveType) => {
+    console.log('action saveSpotlightChangeWithoutFile, request to save: ', request);
     return dispatch => {
-        console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
-        // console.log('dispatch = ', dispatch);
         console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
         dispatch({ type: actions.SPOTLIGHT_LOADING });
-        return createSpotlight(request, dispatch);
+        if (spotlightSaveType === 'create') {
+            // possibly this isnt needed? the file should always exist?
+            return createSpotlight(request, dispatch);
+        } else {
+            return saveSpotlightChange(request, dispatch);
+        }
     };
 };
 
-export const createSpotlightWithFile = request => {
-    console.log('action createSpotlightWithFile, request to save: ', request);
+/*
+this is called by both Update and Create to do a fileupload, then the save-the-spotlight action
+ */
+export const saveSpotlightWithFile = (request, spotlightSaveType) => {
+    console.log('action saveSpotlightWithFile, request to save: ', request);
 
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
-        return createSpotlightWithoutFile(request);
+        return saveSpotlightChangeWithoutFile(request, spotlightSaveType);
     }
 
     return async dispatch => {
-        dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
+        console.log('saveSpotlightWithFile: post data: ', request.uploadedFile);
 
-        console.log('createSpotlightWithFile: post data: ', request.uploadedFile);
+        dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
         const formData = new FormData();
         request.uploadedFile.map((file, index) => {
@@ -100,9 +127,13 @@ export const createSpotlightWithFile = request => {
                     !!firstresponse && !!firstresponse.key && `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
-                console.log('action createSpotlightWithFile, request to save: ', request);
+                console.log('action saveSpotlightWithFile, request to save: ', request);
                 dispatch({ type: actions.SPOTLIGHT_LOADING });
-                return createSpotlight(request, dispatch);
+                if (spotlightSaveType === 'create') {
+                    return createSpotlight(request, dispatch);
+                } else {
+                    return saveSpotlightChange(request, dispatch);
+                }
             })
             .catch(error => {
                 console.log('uploadPublicFile error = ', error);
@@ -110,33 +141,6 @@ export const createSpotlightWithFile = request => {
                     type: actions.PUBLIC_FILE_UPLOAD_FAILED,
                     payload: error,
                 });
-            });
-    };
-};
-
-export const saveSpotlightChange = request => {
-    console.log('saveSpotlightChange for request ', request);
-    return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHT_LOADING });
-        console.log(
-            'action saveSpotlightChange action, SPOTLIGHT_SAVE_API() = ',
-            SPOTLIGHT_SAVE_API({ id: request.id }),
-        );
-        return post(SPOTLIGHT_SAVE_API({ id: request.id }), request)
-            .then(data => {
-                console.log('saveSpotlightChange action, returned data = ', data);
-                dispatch({
-                    type: actions.SPOTLIGHT_SAVED,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                console.log('saveSpotlightChange action FAILED, returned: ', error);
-                dispatch({
-                    type: actions.SPOTLIGHT_FAILED,
-                    payload: error,
-                });
-                return Promise.reject(error);
             });
     };
 };

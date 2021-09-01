@@ -8,9 +8,8 @@ import {
     deleteSpotlight,
     loadAllSpotlights,
     loadASpotlight,
-    saveSpotlightChange,
-    createSpotlightWithFile,
-    createSpotlightWithoutFile,
+    saveSpotlightChangeWithoutFile,
+    saveSpotlightWithFile,
 } from './spotlightsActions';
 
 jest.mock('raven-js');
@@ -175,7 +174,7 @@ describe('Spotlight list actions', () => {
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
 
-            await mockActionsStore.dispatch(createSpotlightWithoutFile(sendSpotlightRecord));
+            await mockActionsStore.dispatch(saveSpotlightWithFile(sendSpotlightRecord, 'create'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -184,7 +183,7 @@ describe('Spotlight list actions', () => {
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_FAILED];
 
-            await mockActionsStore.dispatch(createSpotlightWithoutFile(sendSpotlightRecord));
+            await mockActionsStore.dispatch(saveSpotlightWithFile(sendSpotlightRecord, 'create'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -196,7 +195,7 @@ describe('Spotlight list actions', () => {
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
 
-            await mockActionsStore.dispatch(createSpotlightWithoutFile(sendSpotlightRecord));
+            await mockActionsStore.dispatch(saveSpotlightWithFile(sendSpotlightRecord, 'create'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -215,10 +214,13 @@ describe('Spotlight list actions', () => {
                 actions.SPOTLIGHT_SAVED,
             ];
             await mockActionsStore.dispatch(
-                createSpotlightWithFile({
-                    ...sendSpotlightRecord,
-                    uploadedFile: [fileToUpload],
-                }),
+                saveSpotlightWithFile(
+                    {
+                        ...sendSpotlightRecord,
+                        uploadedFile: [fileToUpload],
+                    },
+                    'create',
+                ),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
@@ -233,7 +235,7 @@ describe('Spotlight list actions', () => {
                 actions.PUBLIC_FILE_UPLOAD_FAILED,
             ];
             await mockActionsStore.dispatch(
-                createSpotlightWithFile({
+                saveSpotlightWithFile({
                     ...sendSpotlightRecord,
                     uploadedFile: [fileToUpload],
                 }),
@@ -249,6 +251,7 @@ describe('Spotlight list actions', () => {
 
             try {
                 await mockActionsStore.dispatch(deleteSpotlight('id'));
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             } catch (e) {
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             }
@@ -278,7 +281,10 @@ describe('Spotlight list actions', () => {
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
 
             await mockActionsStore.dispatch(
-                saveSpotlightChange({ ...sendSpotlightRecord, id: '88888-d62b-11e7-954e-57c2cc19d151' }),
+                saveSpotlightChangeWithoutFile(
+                    { ...sendSpotlightRecord, id: '88888-d62b-11e7-954e-57c2cc19d151' },
+                    'update',
+                ),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
@@ -287,10 +293,66 @@ describe('Spotlight list actions', () => {
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
 
             try {
-                await mockActionsStore.dispatch(saveSpotlightChange({ ...sendSpotlightRecord, id: 'id' }));
+                await mockActionsStore.dispatch(
+                    saveSpotlightChangeWithoutFile({ ...sendSpotlightRecord, id: 'id' }),
+                    'update',
+                );
+                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             } catch (e) {
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             }
+        });
+        it('handles a successful spotlight save request with File', async () => {
+            mockApi.onAny(repositories.routes.UPLOAD_PUBLIC_FILES_API().apiUrl).reply(200, {
+                payload: {
+                    ...sendSpotlightRecord,
+                    uploadedFile: ['dummy array of files'],
+                },
+            });
+            mockApi
+                .onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
+                .reply(200, {
+                    ...returnedSpotlightRecord,
+                    id: '88888-d62b-11e7-954e-57c2cc19d151',
+                });
+
+            const expectedActions = [
+                actions.PUBLIC_FILE_UPLOADING,
+                actions.PUBLIC_FILE_UPLOADED,
+                actions.SPOTLIGHT_LOADING,
+                actions.SPOTLIGHT_SAVED,
+            ];
+
+            await mockActionsStore.dispatch(
+                saveSpotlightWithFile(
+                    { ...sendSpotlightRecord, id: '88888-d62b-11e7-954e-57c2cc19d151', uploadedFile: [fileToUpload] },
+                    'update',
+                ),
+            );
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+        });
+        it('handles a failing spotlight save request with File', async () => {
+            mockApi.onAny(repositories.routes.UPLOAD_PUBLIC_FILES_API().apiUrl).reply(200, {
+                payload: {
+                    ...sendSpotlightRecord,
+                    uploadedFile: ['dummy array of files'],
+                },
+            });
+            mockApi.onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
+            const expectedActions = [
+                actions.PUBLIC_FILE_UPLOADING,
+                actions.PUBLIC_FILE_UPLOADED,
+                actions.SPOTLIGHT_LOADING,
+                actions.APP_ALERT_SHOW,
+                actions.SPOTLIGHT_FAILED,
+                actions.PUBLIC_FILE_UPLOAD_FAILED,
+            ];
+
+            await mockActionsStore.dispatch(
+                saveSpotlightWithFile({ ...sendSpotlightRecord, id: 'id', uploadedFile: [fileToUpload] }),
+                'update',
+            );
+            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
     });
 });

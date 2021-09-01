@@ -13,8 +13,8 @@ import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
-import { default as locale } from './spotlightsadmin.locale';
-import { formatDate } from './spotlighthelpers';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
 
@@ -251,25 +251,27 @@ export const SpotlightForm = ({
             img_alt: values.img_alt || values.title,
             weight: defaults.type === 'edit' ? values.weight : Number(maxWeight) + 10,
             active: !!values.active ? 1 : 0,
-            uploadedFile: values.uploadedFile,
         };
+        !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
         console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
         switch (defaults.type) {
             case 'edit':
-                actions.saveSpotlightChange(newValues);
+                if (!!values.uploadedFile) {
+                    actions.saveSpotlightWithFile(newValues, 'update');
+                } else {
+                    actions.saveSpotlightChangeWithoutFile(newValues, 'update');
+                }
                 break;
             case 'add':
                 // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
                 console.log('handleSpotlightCreation 2: newValues = ', newValues);
-                actions.createSpotlightWithFile(newValues);
+                actions.saveSpotlightWithFile(newValues, 'create');
                 break;
             default:
-                // is this even needed???
-                console.log('handleSpotlightCreation 1: newValues = ', newValues);
-                // newValues.img_url should be supplied by the form, because we preview the image in there
-                actions.createSpotlightWithoutFile(newValues);
+                console.log('an unhandled type of ', defaults.type, ' was provided at SpotlightForm.saveSpotlight');
+                return;
         }
 
         // force to the top of the page, because otherwise it looks a bit weird
@@ -510,14 +512,11 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={10} align="left">
-                        {!!values.img_url ? (
-                            <img style={{ width: '100%' }} alt="file preview" src={values.img_url} />
-                        ) : (
-                            <SpotlightFileUploadDropzone
-                                onAddFile={handleSuppliedFiles}
-                                onClearFile={clearSuppliedFile}
-                            />
-                        )}
+                        <SpotlightFileUploadDropzone
+                            onAddFile={handleSuppliedFiles}
+                            onClearFile={clearSuppliedFile}
+                            currentImage={values.img_url}
+                        />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>

@@ -9,6 +9,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
+import Warning from '@material-ui/icons/Warning';
 import { default as locale } from './spotlightsadmin.locale';
 
 const thumbsContainer = {
@@ -39,7 +40,7 @@ const deleteButton = {
 };
 
 const warningDimensions = {
-    color: 'red',
+    color: '#bf5000',
     fontWeight: 'bold',
 };
 const okDimensions = {
@@ -51,8 +52,17 @@ const dimensionBox = {
     padding: '1rem',
 };
 
-export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
-    const [files, setFiles] = useState([]);
+export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentImage }) {
+    const [files, setFiles] = useState(
+        !!currentImage
+            ? [
+                  {
+                      preview: currentImage,
+                      name: 'existingFile',
+                  },
+              ]
+            : [],
+    );
     const [imageWidth, setImageWidth] = useState(0);
     const [imageHeight, setImageHeight] = useState(0);
 
@@ -98,6 +108,17 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
         },
         maxFiles: 1,
     });
+
+    useEffect(() => {
+        if (!!currentImage) {
+            const img = new Image();
+            img.addEventListener('load', function setSizes() {
+                !!this.naturalWidth && setImageWidth(this.naturalWidth);
+                !!this.naturalHeight && setImageHeight(this.naturalHeight);
+            });
+            img.src = currentImage;
+        }
+    }, [currentImage]);
 
     useEffect(
         () => () => {
@@ -169,6 +190,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
                         </Grid>
                         <Grid item xs={2} align="center">
                             <IconButton
+                                data-testid="spotlights-form-remove-image"
                                 style={deleteButton}
                                 onClick={removeUpload}
                                 title={locale.form.tooltips.deleteIcon}
@@ -176,39 +198,41 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
                                 <DeleteIcon />
                             </IconButton>
                         </Grid>
-                        <Grid item xs={12}>
-                            {files.map(file => (
-                                <div key={`${file.name}-dimensions`}>
+                        {files.map(file => (
+                            <Grid item xs={12} key={`${file.name}-dimensions`}>
+                                <Grid container style={dimensionBox} data-testid="dropzone-dimension-warning">
                                     {imageWidth > 0 && imageHeight > 0 && (
-                                        <div style={dimensionBox} data-testid="dropzone-dimension-warning">
-                                            <div
-                                                style={
-                                                    imageIsTooBig(imageWidth, imageHeight)
-                                                        ? warningDimensions
-                                                        : okDimensions
-                                                }
-                                            >
-                                                {!imageIsTooBig(imageWidth, imageHeight) && (
-                                                    <CheckIcon
-                                                        fontSize="small"
-                                                        style={{ color: 'green', height: 15 }}
-                                                    />
-                                                )}
-                                                Dimensions:{' '}
-                                                <strong>
-                                                    {imageWidth}px x {imageHeight}px
-                                                </strong>
-                                            </div>
-                                            {locale.form.image.dimensionsNotification}: {locale.form.image.maxWidth}px x{' '}
-                                            {locale.form.image.maxHeight}px
-                                            {imageIsTooBig(imageWidth, imageHeight) && (
-                                                <div>{locale.form.image.dimensionsWarning}</div>
+                                        <Grid
+                                            item
+                                            style={
+                                                imageIsTooBig(imageWidth, imageHeight)
+                                                    ? warningDimensions
+                                                    : okDimensions
+                                            }
+                                        >
+                                            {!imageIsTooBig(imageWidth, imageHeight) ? (
+                                                <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
+                                            ) : (
+                                                <Warning fontSize="small" style={{ height: 15 }} />
                                             )}
-                                        </div>
+                                            Dimensions:{' '}
+                                            <strong>
+                                                {imageWidth}px x {imageHeight}px
+                                            </strong>
+                                        </Grid>
                                     )}
-                                </div>
-                            ))}
-                        </Grid>
+                                    <Grid item xs={12}>
+                                        {locale.form.image.dimensionsNotification}: {locale.form.image.maxWidth}px x{' '}
+                                        {locale.form.image.maxHeight}px
+                                    </Grid>
+                                    {imageWidth > 0 && imageHeight > 0 && imageIsTooBig(imageWidth, imageHeight) && (
+                                        <Grid item xs={12}>
+                                            {locale.form.image.dimensionsWarning}
+                                        </Grid>
+                                    )}
+                                </Grid>
+                            </Grid>
+                        ))}
                     </Grid>
                 )}
             </section>
@@ -219,4 +243,5 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile }) {
 SpotlightFileUploadDropzone.propTypes = {
     onAddFile: PropTypes.func,
     onClearFile: PropTypes.func,
+    currentImage: PropTypes.string,
 };

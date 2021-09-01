@@ -110,7 +110,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     };
 
     const saveSpotlightChange = spotlight => {
-        return actions.saveSpotlightChange(spotlight);
+        return actions.saveSpotlightChangeWithoutFile(spotlight, 'update');
     };
 
     // get the current highest weight spotlight so when we create one we can calc the new max
