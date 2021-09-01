@@ -140,11 +140,6 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
-            if (rowList.length === 0) {
-                setUserows([]);
-                return;
-            }
-
             let localRows = rowList
                 .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
                 .map((row, index) => {
@@ -186,15 +181,20 @@ export const SpotlightsListAsTable = ({
     );
 
     React.useEffect(() => {
+        if (rows.length === 0) {
+            setUserows([]);
+            setPage(0); // make it redraw when all displayed rows in a table are deleted
+            return;
+        }
+
         displayTheRows(rows);
 
-        // make it redraw when all displayed rows in a table are deleted
-        rows.length === 0 && setPage(0);
+        console.log('useEffect ', rows.length);
     }, [rows, displayTheRows]);
 
     // React.useEffect(() => {
     //     console.log('useRows have changed ', userows);
-    //     userows.length === 0 && setPage(0);
+    //     //     userows.length === 0 && setPage(0);
     // }, [userows]);
 
     const handleChangePage = (event, newPage) => {
@@ -298,17 +298,34 @@ export const SpotlightsListAsTable = ({
     function deleteSpotlightById(spotlightID) {
         deleteSpotlight(spotlightID)
             .then(() => {
+                console.log('deleteSpotlightById ', spotlightID);
                 setSpotlightNotice('');
                 setDeleteActive(false);
-                const indexOfRemovedSpotlight = userows.find(r => r.id === spotlightID);
+
+                // remove from current display
                 setUserows(prevState => {
                     console.log('prevState = ', prevState);
                     const data = [...prevState];
-                    data.splice(indexOfRemovedSpotlight, 1);
+                    const toDelete = userows
+                        .map(r => {
+                            return r.id;
+                        })
+                        .indexOf(spotlightID);
+                    delete data[toDelete];
+                    console.log('userows: ', spotlightID, ' toDelete ', toDelete);
                     return data;
                 });
+
+                // remove from display if they change attribute filters
+                const toDelete = rows
+                    .map(r => {
+                        return r.id;
+                    })
+                    .indexOf(spotlightID);
+                delete rows[toDelete];
             })
             .catch(() => {
+                console.log('failing ', spotlightID);
                 showDeleteFailureConfirmation();
             });
     }

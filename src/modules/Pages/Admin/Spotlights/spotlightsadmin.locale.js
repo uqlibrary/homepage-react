@@ -146,7 +146,7 @@ export default {
             confirmButtonLabel: 'OK',
         },
         dragAndDropRestrictionMessage:
-            'Drag and drop is only available when both Scheduled and Unpublished spotlights are displayed',
+            'Drag and drop reordering is only available when both Scheduled and Unpublished spotlights are displayed',
         help: {
             title: 'Spotlights listing',
             text: (
