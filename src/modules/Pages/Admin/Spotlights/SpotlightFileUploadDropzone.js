@@ -43,10 +43,6 @@ const warningDimensions = {
     color: '#bf5000',
     fontWeight: 'bold',
 };
-const okDimensions = {
-    // it doesnt like not having a style provided in the else
-    color: 'inherit',
-};
 
 const dimensionBox = {
     padding: '1rem',
@@ -204,11 +200,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                                     {imageWidth > 0 && imageHeight > 0 && (
                                         <Grid
                                             item
-                                            style={
-                                                imageIsTooBig(imageWidth, imageHeight)
-                                                    ? warningDimensions
-                                                    : okDimensions
-                                            }
+                                            style={imageIsTooBig(imageWidth, imageHeight) ? warningDimensions : null}
                                         >
                                             {!imageIsTooBig(imageWidth, imageHeight) ? (
                                                 <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
