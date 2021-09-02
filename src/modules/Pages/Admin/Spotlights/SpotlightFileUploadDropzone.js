@@ -11,6 +11,7 @@ import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Warning from '@material-ui/icons/Warning';
 import { default as locale } from './spotlightsadmin.locale';
+import { mui1theme } from '../../../../config';
 
 const thumbsContainer = {
     borderRadius: 2,
@@ -40,7 +41,7 @@ const deleteButton = {
 };
 
 const warningDimensions = {
-    color: '#bf5000',
+    color: mui1theme.palette.warning.main,
     fontWeight: 'bold',
 };
 
