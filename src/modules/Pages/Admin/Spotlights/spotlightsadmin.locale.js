@@ -32,7 +32,7 @@ export default {
         image: {
             maxWidth: 813,
             maxHeight: 300,
-            dimensionsNotification: 'Maximum recommended dimensions',
+            dimensionsNotification: 'Recommended dimensions',
             dimensionsWarning: 'Larger images will affect user experience',
         },
         add: {

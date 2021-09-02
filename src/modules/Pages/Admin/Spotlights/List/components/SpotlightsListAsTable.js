@@ -249,7 +249,7 @@ export const SpotlightsListAsTable = ({
         });
     };
 
-    const clearAllCheckboxes = () => {
+    const clearAllDeleteMarkingCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('.markForDeletion input[type="checkbox"]');
         checkBoxList.forEach(ii => {
             if (ii.checked) {
@@ -341,6 +341,7 @@ export const SpotlightsListAsTable = ({
                 deleteSpotlightById(spotlightID);
             });
             reEnableAllCheckboxes();
+            clearAllDeleteMarkingCheckboxes();
         }
     };
 
@@ -641,7 +642,7 @@ export const SpotlightsListAsTable = ({
                                 <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
                             </IconButton>
                             <IconButton
-                                onClick={clearAllCheckboxes}
+                                onClick={clearAllDeleteMarkingCheckboxes}
                                 aria-label={locale.listPage.tooltips.clearSelectedSpotlightsButton}
                                 data-testid={`spotlight-list-${tableType}-deselect-button`}
                                 className={classes.iconHighlighted}
