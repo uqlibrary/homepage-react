@@ -13,6 +13,12 @@ import Warning from '@material-ui/icons/Warning';
 import { default as locale } from './spotlightsadmin.locale';
 import { mui1theme } from '../../../../config';
 
+const emptyDropzone = {
+    border: 'thin solid black',
+    backgroundColor: 'lightgrey',
+    padding: '1rem',
+    cursor: 'pointer',
+};
 const thumbsContainer = {
     borderRadius: 2,
     border: '1px solid #eaeaea',
@@ -50,6 +56,7 @@ const dimensionBox = {
 };
 
 export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentImage }) {
+    // files is setup as an array, even though we only handle a single file here
     const [files, setFiles] = useState(
         !!currentImage
             ? [
@@ -65,7 +72,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
 
     const [isFileProblemConfirmOpen, showFileProblemConfirmation, hideFileProblemConfirmation] = useConfirmationState();
 
-    const getDimensions = acceptedFiles => {
+    const setDimensions = acceptedFiles => {
         // based on https://stackoverflow.com/a/8904008/1246313
         if (!acceptedFiles || acceptedFiles.length === 0) {
             return;
@@ -85,6 +92,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: acceptedFiles => {
+            console.log('ondrop');
             setFiles(
                 acceptedFiles.map(file =>
                     Object.assign(file, {
@@ -93,7 +101,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                 ),
             );
             onAddFile(acceptedFiles);
-            getDimensions(acceptedFiles);
+            setDimensions(acceptedFiles);
             if (
                 !!acceptedFiles &&
                 acceptedFiles.length > 0 &&
@@ -107,20 +115,25 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     });
 
     useEffect(() => {
+        const img = new Image();
+        function setSizes() {
+            !!this.naturalWidth && setImageWidth(this.naturalWidth);
+            !!this.naturalHeight && setImageHeight(this.naturalHeight);
+        }
         if (!!currentImage) {
-            const img = new Image();
-            img.addEventListener('load', function setSizes() {
-                !!this.naturalWidth && setImageWidth(this.naturalWidth);
-                !!this.naturalHeight && setImageHeight(this.naturalHeight);
-            });
+            img.addEventListener('load', setSizes);
             img.src = currentImage;
         }
+        return function cleanup() {
+            console.log('cleanup');
+            img.removeEventListener('load', setSizes);
+        };
     }, [currentImage]);
 
     useEffect(
         () => () => {
             // Make sure to revoke the data uris to avoid memory leaks
-            files.forEach(file => URL.revokeObjectURL(file.preview));
+            !!files && files.length > 0 && files.forEach(file => URL.revokeObjectURL(file.preview));
         },
         [files],
     );
@@ -138,6 +151,9 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         hideFileProblemConfirmation();
     };
 
+    // this is a bit of a misnomer - we dont want them to go smaller than this because that will make the image fuzzy
+    // when the spotlights are occupying the entire width of the screen (ipad view)
+    // but the bigger than this they get, the longer the page will take to load
     const imageIsTooBig = (imageWidthIn, imageHeightIn) => {
         return imageWidthIn > locale.form.image.maxWidth || imageHeightIn > locale.form.image.maxHeight;
     };
@@ -160,20 +176,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                 locale={uploadErrorLocale}
             />
             <section className="container" data-testid="spotlights-form-upload-dropzone">
-                {!files || files.length === 0 ? (
-                    <div
-                        {...getRootProps({ className: 'dropzone' })}
-                        style={{
-                            border: 'thin solid black',
-                            backgroundColor: 'lightgrey',
-                            padding: '1rem',
-                            cursor: 'pointer',
-                        }}
-                    >
-                        <input data-testid="dropzone-dragarea" {...getInputProps()} />
-                        <div>{locale.form.labels.dragareaInstructions}</div>
-                    </div>
-                ) : (
+                {!!files && files.length > 0 && !!files[0].preview ? (
                     <Grid container data-testid="dropzone-preview" style={thumbsContainer}>
                         <Grid item xs={12}>
                             <h3>Preview:</h3>
@@ -195,6 +198,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                                 <DeleteIcon />
                             </IconButton>
                         </Grid>
+                        {/* show the size info & possible warning */}
                         {files.map(file => (
                             <Grid item xs={12} key={`${file.name}-dimensions`}>
                                 <Grid container style={dimensionBox} data-testid="dropzone-dimension-warning">
@@ -227,6 +231,11 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                             </Grid>
                         ))}
                     </Grid>
+                ) : (
+                    <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
+                        <input data-testid="dropzone-dragarea" {...getInputProps()} />
+                        <div>{locale.form.labels.dragareaInstructions}</div>
+                    </div>
                 )}
             </section>
         </React.Fragment>

@@ -8,6 +8,7 @@ import SpotlightsEdit from '../components/SpotlightsEdit';
 const mapStateToProps = state => {
     return {
         ...state.get('spotlightReducer'),
+        ...state.get('publicFileUploadReducer'),
     };
 };
 

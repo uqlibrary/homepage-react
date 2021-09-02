@@ -38,7 +38,6 @@ const useStyles = makeStyles(() => ({
 
 export const SpotlightForm = ({
     actions,
-    spotlightsLoading,
     spotlightResponse,
     spotlightStatus,
     defaults,
@@ -120,7 +119,7 @@ export const SpotlightForm = ({
     const validateValues = currentValues => {
         console.log('validateValues: currentValues = ', currentValues);
         const isValid =
-            !spotlightsLoading &&
+            spotlightStatus !== 'loading' &&
             !isInvalidStartDate(null, currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
             !!isValidTitle(currentValues.title) &&
@@ -134,7 +133,6 @@ export const SpotlightForm = ({
             isValidUrl(currentValues.url);
 
         // console.log('validateValues: isValid = ', isValid, currentValues);
-        // console.log('validateValues: spotlightsLoading = ', spotlightsLoading);
         // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
         // console.log('validateValues: isValidEndDate = ', !isInvalidEndDate(currentValues.end, currentValues.start));
         // console.log('validateValues: isValidTitle = ', !!isValidTitle(currentValues.title));
@@ -557,7 +555,6 @@ SpotlightForm.propTypes = {
     publicFileUploadResult: PropTypes.any,
     spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,

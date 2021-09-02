@@ -926,10 +926,7 @@ describe('Spotlights Admin Pages', () => {
                 'not.contain',
                 'Drag and drop a spotlight image',
             );
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'contain',
-                'Maximum recommended dimensions',
-            );
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should('contain', 'Recommended dimensions');
         });
     });
 });

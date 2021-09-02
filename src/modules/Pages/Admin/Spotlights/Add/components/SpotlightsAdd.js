@@ -13,15 +13,12 @@ export const SpotlightsAdd = ({
     actions,
     spotlight,
     spotlightError,
-    spotlightsLoading,
     spotlightStatus,
     history,
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
 }) => {
-    console.log('SpotlightsAdd : spotlightsLoading = ', spotlightsLoading);
-
     const getUrlSearchParams = theUrl => {
         if (theUrl.search.startsWith('?')) {
             // prod and localhost
@@ -63,7 +60,6 @@ export const SpotlightsAdd = ({
                         actions={actions}
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError}
-                        spotlightsLoading={false}
                         spotlightStatus={spotlightStatus}
                         history={history}
                         defaults={defaults}
@@ -82,7 +78,6 @@ SpotlightsAdd.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
     spotlightError: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     history: PropTypes.object,
     publicFileUploading: PropTypes.any,

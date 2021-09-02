@@ -18,7 +18,20 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 //     },
 // }));
 
-export const SpotlightsEdit = ({ actions, spotlight, spotlightError, spotlightsLoading, spotlightStatus, history }) => {
+export const SpotlightsEdit = ({
+    actions,
+    spotlight,
+    spotlightError,
+    spotlightStatus,
+    history,
+    publicFileUploading,
+    publicFileUploadError,
+}) => {
+    console.log('SpotlightsEdit: spotlight =  ', spotlight);
+    console.log('SpotlightsEdit: spotlightStatus =  ', spotlightStatus);
+    console.log('SpotlightsEdit: spotlightError =  ', spotlightError);
+    console.log('SpotlightsEdit: publicFileUploading = ', publicFileUploading);
+    console.log('SpotlightsEdit: publicFileUploadError = ', publicFileUploadError);
     // const classes = useStyles();
     const { spotlightid } = useParams();
 
@@ -29,7 +42,7 @@ export const SpotlightsEdit = ({ actions, spotlight, spotlightError, spotlightsL
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
 
-    if (spotlightStatus === 'loading') {
+    if (spotlightStatus === 'loading' || !!publicFileUploading) {
         return (
             <div style={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
@@ -66,9 +79,8 @@ export const SpotlightsEdit = ({ actions, spotlight, spotlightError, spotlightsL
                     <StandardCard title="Edit spotlight">
                         <SpotlightForm
                             actions={actions}
-                            spotlightsLoading={spotlightsLoading}
                             spotlightResponse={spotlight}
-                            spotlightError={spotlightError}
+                            spotlightError={spotlightError || publicFileUploadError}
                             spotlightStatus={spotlightStatus}
                             defaults={defaults}
                             history={history}
@@ -84,9 +96,10 @@ SpotlightsEdit.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
     spotlightError: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     history: PropTypes.object,
+    publicFileUploading: PropTypes.any,
+    publicFileUploadError: PropTypes.any,
 };
 
 export default SpotlightsEdit;
