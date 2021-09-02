@@ -177,27 +177,6 @@ export const SpotlightForm = ({
         }
     }, [showConfirmation, publicFileUploadError]);
 
-    const addAriaLabelToMuiDatePickerButton = (idDiv, ariaLabel) => {
-        const theBlock = document.getElementById(idDiv);
-        const theButton = !!theBlock && theBlock.parentNode.querySelector('button');
-        !!theButton && !theButton.hasAttribute('aria-label') && theButton.setAttribute('aria-label', ariaLabel);
-    };
-
-    const runAfterRender = () => {
-        // even though the form should be available at onLoad, sometimes it isnt yet :(
-        setTimeout(() => {
-            // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
-            addAriaLabelToMuiDatePickerButton(
-                'admin-spotlights-form-start-date-label',
-                locale.form.tooltips.publishDate,
-            );
-            addAriaLabelToMuiDatePickerButton(
-                'admin-spotlights-form-end-date-label',
-                locale.form.tooltips.unpublishDate,
-            );
-        }, 50);
-    };
-
     const clearForm = () => {
         setValues(defaults);
     };
@@ -360,7 +339,7 @@ export const SpotlightForm = ({
 
     return (
         <Fragment>
-            <form onLoad={runAfterRender()}>
+            <form>
                 {spotlightStatus === 'error' && (
                     <ConfirmationBox
                         actionButtonColor="primary"
@@ -481,6 +460,9 @@ export const SpotlightForm = ({
                             showTodayButton
                             todayLabel={locale.form.labels.datePopupNowButton}
                             autoOk
+                            KeyboardButtonProps={{
+                                'aria-label': locale.form.tooltips.publishDate,
+                            }}
                         />
                     </Grid>
                     <Grid item md={5} xs={12}>
@@ -493,6 +475,9 @@ export const SpotlightForm = ({
                             minDate={values.start}
                             format="DD/MM/YYYY HH:mm a"
                             autoOk
+                            KeyboardButtonProps={{
+                                'aria-label': locale.form.tooltips.unpublishDate,
+                            }}
                         />
                     </Grid>
                 </Grid>
