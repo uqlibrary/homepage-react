@@ -437,7 +437,7 @@ describe('Spotlights Admin Pages', () => {
             cy.wait(500);
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
 
-            // and the screen has updated appropriately
+            // and the display has updated appropriately
             // deleted record is gone
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should(
                 'not.contain',
@@ -451,9 +451,18 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(33, 5));
         });
 
-        it('the user can delete a spotlight', () => {
+        it('the user can delete a spotlight using a checkbox', () => {
+            cy.get('[data-testid="admin-spotlights-list-current-list"]').should('contain', 'Can be deleted and edited');
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
+            cy.get(
+                '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
+            ).should('not.be.disabled');
+
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').check();
             cy.get('[data-testid="headerRow-current"] span span').contains('1 spotlight selected');
+            cy.get(
+                '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
+            ).should('be.disabled');
 
             // click the Proceed button and the spotlight is deleted
             cy.get('[data-testid="spotlight-list-current-delete-button"]').click();
@@ -464,7 +473,16 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
             cy.wait(500);
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
-            // cant test list further to show spotlight is gone as mock data doesnt actually delete
+
+            // and the display has updated appropriately
+            cy.get('[data-testid="admin-spotlights-list-current-list"]').should(
+                'not.contain',
+                'Can be deleted and edited',
+            );
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(2, 2));
+            cy.get(
+                '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
+            ).should('not.be.disabled');
         });
 
         it('reports when a delete fails', () => {
