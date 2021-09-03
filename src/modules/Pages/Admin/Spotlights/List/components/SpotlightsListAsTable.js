@@ -15,11 +15,13 @@ import TableFooter from '@material-ui/core/TableFooter';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
+import SortIcon from '@material-ui/icons/Sort';
 
 import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
@@ -108,6 +110,20 @@ export const SpotlightsListAsTable = ({
     canUnpublish,
 }) => {
     const classes = useStyles();
+
+    const orderByWeight = 'weight';
+    const orderByStartDate = 'start';
+    const orderByEndDate = 'end';
+    const orderByPublished = 'active';
+
+    const [sortOrder, setSetOrder] = React.useState(tableType === 'past' ? 'desc' : 'asc');
+    const orderByDefault = {
+        current: orderByWeight,
+        scheduled: orderByStartDate,
+        past: orderByEndDate,
+    };
+    const [orderBy, setOrderBy] = React.useState(orderByDefault[tableType] || orderByWeight);
+
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
@@ -517,6 +533,39 @@ export const SpotlightsListAsTable = ({
         );
     }
 
+    const createSortHandler = property => () => {
+        const isAsc = orderBy === property && sortOrder === 'asc';
+        setSetOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
+    };
+
+    function descendingComparator(a, b, orderBy) {
+        if (b[orderBy] < a[orderBy]) {
+            return -1;
+        }
+        if (b[orderBy] > a[orderBy]) {
+            return 1;
+        }
+        return 0;
+    }
+
+    function getComparator(order, orderBy) {
+        return order === 'desc'
+            ? (a, b) => descendingComparator(a, b, orderBy)
+            : (a, b) => -descendingComparator(a, b, orderBy);
+    }
+
+    function stableSort(array, comparator) {
+        const stabilizedThis = array.map((el, index) => [el, index]);
+        stabilizedThis.sort((a, b) => {
+            const order = comparator(a[0], b[0]);
+            if (order !== 0) return order;
+            return a[1] - b[1];
+        });
+        return stabilizedThis.map(el => el[0]);
+    }
+
+    const sortOrderAllowsDragAndDrop = orderBy === orderByWeight && sortOrder === 'asc';
     return (
         <Fragment>
             <ConfirmationBox
@@ -600,7 +649,25 @@ export const SpotlightsListAsTable = ({
                         <TableHead>
                             <TableRow md-row="" className="md-row">
                                 <TableCell component="th" scope="row" style={{ width: 10 }}>
-                                    Order
+                                    <TableSortLabel
+                                        active={orderBy === orderByWeight}
+                                        direction={orderBy === orderByWeight ? sortOrder : 'asc'}
+                                        onClick={createSortHandler(orderByWeight)}
+                                    >
+                                        {/* indicates drag and drop available - only when sorting by weight!! */}
+                                        {sortOrderAllowsDragAndDrop && (
+                                            <SortIcon
+                                                fontSize="small"
+                                                style={{
+                                                    transform: 'scaleX(-1)',
+                                                }}
+                                                // InputProps={{
+                                                //     'aria-label': 'order by weight. Drag and drop available',
+                                                // }}
+                                            />
+                                        )}
+                                        Order
+                                    </TableSortLabel>
                                 </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
                                 <TableCell component="th" scope="row" style={{ width: 200 }}>
@@ -608,10 +675,22 @@ export const SpotlightsListAsTable = ({
                                 </TableCell>
                                 <TableCell component="th" scope="row" />
                                 <TableCell component="th" scope="row" align="center" style={{ padding: 0 }}>
-                                    {locale.form.labels.publishDate}
+                                    <TableSortLabel
+                                        active={orderBy === orderByStartDate}
+                                        direction={orderBy === orderByStartDate ? sortOrder : 'asc'}
+                                        onClick={createSortHandler(orderByStartDate)}
+                                    >
+                                        {locale.form.labels.publishDate}
+                                    </TableSortLabel>
                                 </TableCell>
                                 <TableCell component="th" scope="row" align="center" style={{ padding: 8 }}>
-                                    {locale.form.labels.unpublishDate}
+                                    <TableSortLabel
+                                        active={orderBy === orderByEndDate}
+                                        direction={orderBy === orderByEndDate ? sortOrder : 'asc'}
+                                        onClick={createSortHandler(orderByEndDate)}
+                                    >
+                                        {locale.form.labels.unpublishDate}
+                                    </TableSortLabel>
                                 </TableCell>
                                 {!!canUnpublish && (
                                     <TableCell
@@ -620,7 +699,13 @@ export const SpotlightsListAsTable = ({
                                         align="center"
                                         style={{ width: 50, padding: 8 }}
                                     >
-                                        {locale.form.labels.publishedCheckbox}
+                                        <TableSortLabel
+                                            active={orderBy === orderByPublished}
+                                            direction={orderBy === orderByPublished ? sortOrder : 'asc'}
+                                            onClick={createSortHandler(orderByPublished)}
+                                        >
+                                            {locale.form.labels.publishedCheckbox}
+                                        </TableSortLabel>
                                     </TableCell>
                                 )}
                                 <TableCell component="th" scope="row" />
@@ -631,7 +716,7 @@ export const SpotlightsListAsTable = ({
                                 <TableBody ref={droppableProvided.innerRef} {...droppableProvided.droppableProps}>
                                     {rowsPerPage > 0 &&
                                         userows.length > 0 &&
-                                        userows
+                                        stableSort(userows, getComparator(sortOrder, orderBy))
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((spotlight, rowindex) => {
                                                 console.log('userows has ', spotlight.id);
@@ -640,7 +725,7 @@ export const SpotlightsListAsTable = ({
                                                         draggableId={spotlight.id}
                                                         index={rowindex}
                                                         key={spotlight.id}
-                                                        isDragDisabled={!canDragRows}
+                                                        isDragDisabled={!sortOrderAllowsDragAndDrop || !canDragRows}
                                                     >
                                                         {draggableProvided => {
                                                             return (
