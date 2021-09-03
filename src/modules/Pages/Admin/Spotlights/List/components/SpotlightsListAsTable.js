@@ -823,6 +823,7 @@ export const SpotlightsListAsTable = ({
                                                                         id={`spotlight-list-action-block-${spotlight.id}`}
                                                                         data-testid={`spotlight-list-action-block-${spotlight.id}`}
                                                                         className={classes.tableCell}
+                                                                        style={{ paddingRight: 10 }}
                                                                     >
                                                                         <SpotlightSplitButton
                                                                             spotlightId={spotlight.id}
