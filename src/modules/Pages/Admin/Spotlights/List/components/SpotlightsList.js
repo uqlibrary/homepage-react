@@ -40,6 +40,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     const classes = useStyles();
 
     const [currentSpotlights, setCurrentSpotlights] = useState([]);
+    const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
     useEffect(() => {
@@ -53,6 +54,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         if (!!spotlights && spotlights.length > 0) {
             setPastSpotlights([]);
             setCurrentSpotlights([]);
+            setScheduledSpotlights([]);
             spotlights.forEach(spotlight => {
                 const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
                 const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
@@ -78,9 +80,11 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                 spotlight.startDateLong = moment(spotlight.start).format(fullDateFormat);
                 spotlight.endDateLong = moment(spotlight.end).format(fullDateFormat);
                 if (moment(spotlight.end).isBefore(moment())) {
-                    setPastSpotlights(pastSpotlightList => [...pastSpotlightList, spotlight]);
+                    setPastSpotlights(pastState => [...pastState, spotlight]);
+                } else if (moment(spotlight.start).isAfter(moment())) {
+                    setScheduledSpotlights(pastState => [...pastState, spotlight]);
                 } else {
-                    setCurrentSpotlights(currentSpotlightList => [...currentSpotlightList, spotlight]);
+                    setCurrentSpotlights(pastState => [...pastState, spotlight]);
                 }
             });
         }
@@ -150,14 +154,29 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                             >
                                 <SpotlightsListAsTable
                                     rows={currentSpotlights}
-                                    headertag="Current and scheduled spotlights"
+                                    headertag="Current spotlights"
                                     tableType="current"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    alertOrder="forwardEnd"
-                                    canFilterByAttribute
+                                    // alertOrder="forwardEnd"
+                                    canDragRows
+                                />
+                            </div>
+                            <div
+                                id="admin-spotlights-list-scheduled-list"
+                                data-testid="admin-spotlights-list-scheduled-list"
+                            >
+                                <SpotlightsListAsTable
+                                    rows={scheduledSpotlights}
+                                    headertag="Scheduled spotlights"
+                                    tableType="scheduled"
+                                    spotlightsLoading={spotlightsLoading}
+                                    history={history}
+                                    deleteSpotlight={deleteSpotlight}
+                                    saveSpotlightChange={saveSpotlightChange}
+                                    // alertOrder="forwardEnd"
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -169,8 +188,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    alertOrder="reverseEnd"
-                                    canDragRows={false}
+                                    // alertOrder="reverseEnd"
                                     canUnpublish={false}
                                 />
                             </div>

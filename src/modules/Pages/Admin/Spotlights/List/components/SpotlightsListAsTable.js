@@ -7,7 +7,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import InputLabel from '@material-ui/core/InputLabel';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -18,7 +17,6 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
-import ScheduleIcon from '@material-ui/icons/Schedule';
 
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -28,8 +26,6 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
-
-const moment = require('moment');
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
@@ -108,7 +104,6 @@ export const SpotlightsListAsTable = ({
     deleteSpotlight,
     saveSpotlightChange,
     footerDisplayMinLength,
-    canFilterByAttribute,
     canDragRows,
     canUnpublish,
 }) => {
@@ -116,8 +111,6 @@ export const SpotlightsListAsTable = ({
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
-    const [showScheduled, setShowScheduled] = useState(false);
-    const [showUnPublished, setShowUnPublished] = useState(false);
     const [userows, setUserows] = useState([]);
     const [cookies, setCookie] = useCookies();
 
@@ -140,7 +133,7 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
-            let localRows = rowList
+            const localRows = rowList
                 .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
                 .map((row, index) => {
                     if (tableType !== 'past') {
@@ -151,12 +144,6 @@ export const SpotlightsListAsTable = ({
                     }
                     return row;
                 });
-            if (!!canFilterByAttribute && !showScheduled) {
-                localRows = localRows.filter(row => !moment(row.start).isAfter(moment()));
-            }
-            if (!!canFilterByAttribute && !showUnPublished) {
-                localRows = localRows.filter(row => !!row.active);
-            }
 
             // might be used by Past section if we add sortable columns?
             // if (!!spotlightOrder && !!rows && rows.length > 0) {
@@ -177,7 +164,7 @@ export const SpotlightsListAsTable = ({
             // console.log('userows = (will display rows): ', userows);
             setUserows(localRows);
         },
-        [canFilterByAttribute, showScheduled, showUnPublished, tableType],
+        [tableType],
     );
 
     React.useEffect(() => {
@@ -364,15 +351,6 @@ export const SpotlightsListAsTable = ({
         };
     };
 
-    const showHideScheduled = () => {
-        !!showScheduled && setPage(0); // if we are going from 'show' to 'hide', go to page 0
-        setShowScheduled(prevState => !prevState);
-    };
-    const showHideUnPublished = () => {
-        !!showUnPublished && setPage(0); // if we are going from 'show' to 'hide', go to page 0
-        setShowUnPublished(prevState => !prevState);
-    };
-
     function persistRowReorder(r, filtereduserows) {
         const currentRow = rows.find(row => row.id === r.id);
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
@@ -539,8 +517,6 @@ export const SpotlightsListAsTable = ({
         );
     }
 
-    const isLocalDev = false; // ['dev-homepage.library.uq.edu.au', 'localhost'].includes(location.hostname);
-    const dragandDropReorderUnavailable = (!showScheduled || !showUnPublished) && canFilterByAttribute;
     return (
         <Fragment>
             <ConfirmationBox
@@ -578,7 +554,7 @@ export const SpotlightsListAsTable = ({
                 className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                 container
             >
-                <Grid item xs={12} md={!!deleteActive || !!canFilterByAttribute ? 5 : 12}>
+                <Grid item xs={12} md={!!deleteActive ? 5 : 12}>
                     <h3 style={{ marginBottom: 6 }}>
                         {headertag}
                         <span
@@ -590,46 +566,6 @@ export const SpotlightsListAsTable = ({
                     </h3>
                 </Grid>
                 <Grid item xs={12} md={7} container justify="flex-end">
-                    {!deleteActive && !!canFilterByAttribute && (
-                        <span className={classes.toggle}>
-                            <InputLabel
-                                style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
-                                title={locale.listPage.tooltips.hideShowScheduledCheckbox}
-                                className={`${classes.checkboxCell}`}
-                            >
-                                <Checkbox
-                                    checked={showScheduled}
-                                    data-testid="spotlights-hideshow-scheduled"
-                                    onChange={showHideScheduled}
-                                    name="showScheduled"
-                                    inputProps={{
-                                        'aria-label': locale.listPage.tooltips.hideShowScheduledCheckbox,
-                                    }}
-                                />
-                                {locale.listPage.labels.hideShowScheduledCheckbox}
-                            </InputLabel>
-                        </span>
-                    )}
-                    {!deleteActive && !!canFilterByAttribute && (
-                        <span className={classes.toggle}>
-                            <InputLabel
-                                style={{ color: 'rgba(0, 0, 0, 0.87)', display: 'inline' }}
-                                title={locale.listPage.tooltips.hideShowUnpublishedCheckbox}
-                                className={`${classes.checkboxCell}`}
-                            >
-                                <Checkbox
-                                    checked={showUnPublished}
-                                    data-testid="spotlights-hideshow-unpublished"
-                                    onChange={showHideUnPublished}
-                                    name="showUnPublished"
-                                    inputProps={{
-                                        'aria-label': locale.listPage.tooltips.hideShowUnpublishedCheckbox,
-                                    }}
-                                />
-                                {locale.listPage.labels.hideShowUnpublishedCheckbox}
-                            </InputLabel>
-                        </span>
-                    )}
                     {!!deleteActive && (
                         <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
                             <span>{spotlightNotice}</span>
@@ -654,13 +590,6 @@ export const SpotlightsListAsTable = ({
                     )}
                 </Grid>
             </Grid>
-            {dragandDropReorderUnavailable && (
-                <Grid container>
-                    <Grid item xs={12} align="right" className={classes.reorderWarning}>
-                        {locale.listPage.dragAndDropRestrictionMessage}
-                    </Grid>
-                </Grid>
-            )}
             <DragDropContext onDragEnd={onDragEnd}>
                 <TableContainer
                     id={`spotlight-list-${tableType}`}
@@ -670,13 +599,9 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                {isLocalDev && canDragRows && (
-                                    <TableCell component="th" scope="row" style={{ width: 10 }}>
-                                        dev
-                                        <br />
-                                        order
-                                    </TableCell>
-                                )}
+                                <TableCell component="th" scope="row" style={{ width: 10 }}>
+                                    Order
+                                </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
                                 <TableCell component="th" scope="row" style={{ width: 200 }}>
                                     Spotlight
@@ -709,45 +634,33 @@ export const SpotlightsListAsTable = ({
                                         userows
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((spotlight, rowindex) => {
-                                                // console.log('userows has ', spotlight);
-                                                const isScheduled = moment(spotlight.start).isAfter(moment());
+                                                console.log('userows has ', spotlight.id);
                                                 return (
                                                     <Draggable
                                                         draggableId={spotlight.id}
                                                         index={rowindex}
                                                         key={spotlight.id}
-                                                        isDragDisabled={dragandDropReorderUnavailable || !canDragRows}
+                                                        isDragDisabled={!canDragRows}
                                                     >
                                                         {draggableProvided => {
                                                             return (
                                                                 <TableRow
-                                                                    // key={spotlight.id}
                                                                     id={`spotlight-list-row-${spotlight.id}`}
                                                                     data-testid={`spotlight-list-row-${spotlight.id}`}
-                                                                    className={`spotlight-data-row ${
-                                                                        !!showScheduled && !isScheduled
-                                                                            ? classes.currentDisplay
-                                                                            : ''
-                                                                    }`}
+                                                                    className={'spotlight-data-row'}
                                                                     // index={rowindex}
                                                                     {...draggableProvided.draggableProps}
                                                                     {...draggableProvided.dragHandleProps}
                                                                     ref={draggableProvided.innerRef}
                                                                     role="row"
                                                                 >
-                                                                    {isLocalDev && canDragRows && (
-                                                                        <TableCell
-                                                                            component="td"
-                                                                            className={`${classes.tableCell} ${
-                                                                                !!isScheduled
-                                                                                    ? classes.scheduledDisplay
-                                                                                    : ''
-                                                                            }`}
-                                                                        >
-                                                                            {' '}
-                                                                            {spotlight.weight}
-                                                                        </TableCell>
-                                                                    )}
+                                                                    <TableCell
+                                                                        component="td"
+                                                                        className={classes.tableCell}
+                                                                        style={{ textAlign: 'center' }}
+                                                                    >
+                                                                        {spotlight.weight}
+                                                                    </TableCell>
                                                                     <TableCell
                                                                         component="td"
                                                                         className={`markForDeletion ${classes.checkboxCell}`}
@@ -765,7 +678,7 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={`${classes.tableCell}`}
+                                                                        className={classes.tableCell}
                                                                         style={{ width: 200 }}
                                                                     >
                                                                         <img
@@ -776,24 +689,17 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={`${classes.tableCell}`}
+                                                                        className={classes.tableCell}
                                                                     >
-                                                                        {isScheduled && (
-                                                                            <div style={{ float: 'left', width: 30 }}>
-                                                                                <ScheduleIcon
-                                                                                    data-testid={`spotlight-scheduled-icon-${spotlight.id}`}
-                                                                                />
-                                                                            </div>
-                                                                        )}
                                                                         <h4
-                                                                            className={`${classes.h4}`}
+                                                                            className={classes.h4}
                                                                             id={`spotlight-list-item-title-${spotlight.id}`}
                                                                         >{`${spotlight.title}`}</h4>{' '}
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
                                                                         align="center"
-                                                                        className={`${classes.startDate}`}
+                                                                        className={classes.startDate}
                                                                         style={{ padding: 0 }}
                                                                     >
                                                                         <span title={spotlight.startDateLong}>
@@ -803,7 +709,7 @@ export const SpotlightsListAsTable = ({
                                                                     <TableCell
                                                                         component="td"
                                                                         align="center"
-                                                                        className={`${classes.endDate}`}
+                                                                        className={classes.endDate}
                                                                         style={{ padding: 8 }}
                                                                     >
                                                                         <span title={spotlight.endDateLong}>
@@ -831,7 +737,7 @@ export const SpotlightsListAsTable = ({
                                                                         component="td"
                                                                         id={`spotlight-list-action-block-${spotlight.id}`}
                                                                         data-testid={`spotlight-list-action-block-${spotlight.id}`}
-                                                                        className={`${classes.tableCell}`}
+                                                                        className={classes.tableCell}
                                                                     >
                                                                         <SpotlightSplitButton
                                                                             spotlightId={spotlight.id}
@@ -911,7 +817,6 @@ SpotlightsListAsTable.propTypes = {
     saveSpotlightChange: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
-    canFilterByAttribute: PropTypes.bool,
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
 };
@@ -919,8 +824,7 @@ SpotlightsListAsTable.propTypes = {
 SpotlightsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the spotlight list before we display the paginator
     // spotlightOrder: false, // what order should we sort the spotlights in? false means unspecified
-    canFilterByAttribute: false, // does this section display filtering of scheduled and unpublished spotlights?
-    canDragRows: true, // does this section allow drag and drop
+    canDragRows: false, // does this section allow drag and drop
     canUnpublish: true, // does this section allow the user to have a publish/unpublish checbox?
 };
 

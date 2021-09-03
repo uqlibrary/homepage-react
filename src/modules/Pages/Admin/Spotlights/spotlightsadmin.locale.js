@@ -145,8 +145,6 @@ export default {
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
         },
-        dragAndDropRestrictionMessage:
-            'Drag and drop reordering is only available when both Scheduled and Unpublished spotlights are displayed',
         help: {
             title: 'Spotlights listing',
             text: (
@@ -194,13 +192,7 @@ export default {
                 </div>
             ),
         },
-        labels: {
-            hideShowUnpublishedCheckbox: 'Show unpublished',
-            hideShowScheduledCheckbox: 'Show scheduled',
-        },
         tooltips: {
-            hideShowUnpublishedCheckbox: 'Check and uncheck to show and hide unpublished spotlights in the list',
-            hideShowScheduledCheckbox: 'Check and uncheck to show and hide scheduled spotlights in the list',
             deleteSelectedSpotlightsButton: 'Delete spotlight(s)',
             clearSelectedSpotlightsButton: 'Deselect all',
         },
