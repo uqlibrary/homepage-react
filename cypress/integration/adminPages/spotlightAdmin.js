@@ -527,6 +527,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
             // the row is gone
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #2');
+
             // subsequent deletes also succeed
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #1');
             cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').check();
@@ -553,6 +554,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get(
                 '[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"] input[type="checkbox"]',
             ).should('not.be.disabled');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(31, 5));
         });
         it('during delete, selection checkboxes in other sections are disabled', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
