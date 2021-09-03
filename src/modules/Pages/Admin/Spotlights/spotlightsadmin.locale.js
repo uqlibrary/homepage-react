@@ -72,7 +72,7 @@ export default {
                 confirmButtonLabel: 'OK',
             },
             fileTooLarge: {
-                confirmationTitle: 'This file is too large - please try again',
+                confirmationTitle: 'This file is too large - please try again (max [SIZE]kb)',
                 confirmButtonLabel: 'OK',
             },
             maxSize: 400000,

@@ -126,7 +126,7 @@ export const SpotlightForm = ({
             // currentValues.img_alt.length > 0 && // set to title during save if blank
             // !!currentValues.localfilename &&
             // currentValues.localfilename.length > 0 &&
-            (defaults.type === 'edit' || !!currentValues.uploadedFile) &&
+            (defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
@@ -136,7 +136,10 @@ export const SpotlightForm = ({
         // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
         // console.log('validateValues: isValidEndDate = ', !isInvalidEndDate(currentValues.end, currentValues.start));
         // console.log('validateValues: isValidTitle = ', !!isValidTitle(currentValues.title));
-        // console.log('validateValues: uploadedFile = ', defaults.type === 'edit' || !!currentValues.uploadedFile);
+        // console.log(
+        //     'validateValues: uploadedFile = ',
+        //     defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0),
+        // );
         // console.log('validateValues: isValidUrl(', currentValues.url, ') = ', isValidUrl(currentValues.url));
         // console.log('validateValues: currentValues.img_alt = ', currentValues.img_alt);
         // console.log('validateValues: currentValues = ', currentValues);
@@ -334,7 +337,10 @@ export const SpotlightForm = ({
     };
 
     const clearSuppliedFile = () => {
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: '' }));
+        setValues(prevState => {
+            return { ...prevState, ['uploadedFile']: [] };
+        });
+        setFormValidity(validateValues({ ...values, ['uploadedFile']: [] }));
     };
 
     return (
@@ -544,7 +550,7 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
-    maxWeight: PropTypes.number,
+    maxWeight: PropTypes.any,
 };
 
 SpotlightForm.defaultProps = {

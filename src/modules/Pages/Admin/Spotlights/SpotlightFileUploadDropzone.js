@@ -160,8 +160,10 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
 
     const uploadErrorLocale = {
         ...locale.form.upload.fileTooLarge,
-        confirmationTitle: `${locale.form.upload.fileTooLarge.confirmationTitle} (max ${locale.form.upload.maxSize /
-            1000}kb)`,
+        confirmationTitle: `${locale.form.upload.fileTooLarge.confirmationTitle.replace(
+            '[SIZE]',
+            locale.form.upload.maxSize / 1000,
+        )}`,
     };
     return (
         <React.Fragment>
