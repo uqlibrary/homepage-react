@@ -628,9 +628,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
 
             dragFileToDropzone('test.jpg');
-            cy.get('[data-testid="dropzone-dimension-warning"] strong').should('contain', '1000');
-            cy.get('[data-testid="dropzone-dimension-warning"] strong').should('contain', 'px x ');
-            cy.get('[data-testid="dropzone-dimension-warning"] strong').should('contain', '500');
+            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', '1000');
+            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', 'px x ');
+            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', '500');
 
             saveButtonNOTDisabled();
 

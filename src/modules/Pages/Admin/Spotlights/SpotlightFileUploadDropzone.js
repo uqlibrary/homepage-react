@@ -154,8 +154,42 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     // this is a bit of a misnomer - we dont want them to go smaller than this because that will make the image fuzzy
     // when the spotlights are occupying the entire width of the screen (ipad view)
     // but the bigger than this they get, the longer the page will take to load
-    const imageIsTooBig = (imageWidthIn, imageHeightIn) => {
-        return imageWidthIn > locale.form.image.maxWidth || imageHeightIn > locale.form.image.maxHeight;
+    const ImageSizeIsPoor = (imageWidthIn, imageHeightIn) => {
+        const ratio = (imageWidth / imageHeight).toFixed(2);
+        return (
+            imageWidthIn < locale.form.upload.ideal.width - locale.form.upload.heightWidthFlex ||
+            imageWidthIn > locale.form.upload.ideal.width + locale.form.upload.heightWidthFlex ||
+            imageHeightIn < locale.form.upload.ideal.height - locale.form.upload.heightWidthFlex ||
+            imageHeightIn > locale.form.upload.ideal.height + locale.form.upload.heightWidthFlex ||
+            ratio < locale.form.upload.minRatio ||
+            ratio > locale.form.upload.maxRatio
+        );
+    };
+
+    const actualDimensionsNotification = (imageWidthIn, imageHeightIn) => {
+        const ratio = (imageWidthIn / imageHeightIn).toFixed(2);
+        return (
+            <React.Fragment>
+                {!ImageSizeIsPoor(imageWidth, imageHeight) ? (
+                    <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
+                ) : (
+                    <Warning fontSize="small" style={{ height: 15 }} />
+                )}
+
+                {locale.form.upload.dimensionsNotification
+                    .replace('Recommended dimensions:', 'Dimensions:')
+                    .replace('[WIDTH]', imageWidthIn)
+                    .replace('[HEIGHT]', imageHeightIn)
+                    .replace('[RATIO]', ratio)}
+            </React.Fragment>
+        );
+    };
+
+    const idealDimensionsNotification = () => {
+        return locale.form.upload.dimensionsNotification
+            .replace('[WIDTH]', locale.form.upload.ideal.width)
+            .replace('[HEIGHT]', locale.form.upload.ideal.height)
+            .replace('[RATIO]', locale.form.upload.ideal.ratio);
     };
 
     const uploadErrorLocale = {
@@ -165,6 +199,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
             locale.form.upload.maxSize / 1000,
         )}`,
     };
+
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -207,26 +242,17 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                                     {imageWidth > 0 && imageHeight > 0 && (
                                         <Grid
                                             item
-                                            style={imageIsTooBig(imageWidth, imageHeight) ? warningDimensions : null}
+                                            style={ImageSizeIsPoor(imageWidth, imageHeight) ? warningDimensions : null}
                                         >
-                                            {!imageIsTooBig(imageWidth, imageHeight) ? (
-                                                <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
-                                            ) : (
-                                                <Warning fontSize="small" style={{ height: 15 }} />
-                                            )}
-                                            Dimensions:{' '}
-                                            <strong>
-                                                {imageWidth}px x {imageHeight}px
-                                            </strong>
+                                            {actualDimensionsNotification(imageWidth, imageHeight)}
                                         </Grid>
                                     )}
                                     <Grid item xs={12}>
-                                        {locale.form.image.dimensionsNotification}: {locale.form.image.maxWidth}px x{' '}
-                                        {locale.form.image.maxHeight}px
+                                        {idealDimensionsNotification()}
                                     </Grid>
-                                    {imageWidth > 0 && imageHeight > 0 && imageIsTooBig(imageWidth, imageHeight) && (
+                                    {imageWidth > 0 && imageHeight > 0 && ImageSizeIsPoor(imageWidth, imageHeight) && (
                                         <Grid item xs={12}>
-                                            {locale.form.image.dimensionsWarning}
+                                            {locale.form.upload.dimensionsWarning}
                                         </Grid>
                                     )}
                                 </Grid>
@@ -236,7 +262,9 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                 ) : (
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
-                        <div>{locale.form.labels.dragareaInstructions}</div>
+                        {locale.form.labels.dragareaInstructions.map(line => {
+                            return <p>{line.replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000)}</p>;
+                        })}
                     </div>
                 )}
             </section>

@@ -12,12 +12,18 @@ export default {
             publishDate: 'Date published', // also on List page
             unpublishDate: 'Date unpublished', // also on List page
             publishedCheckbox: 'Published?', // also on List page
-            dragareaInstructions: (
+            dragareaInstructions0: (
                 <Fragment>
                     <p>Drag and drop a spotlight image, or click to select an image. *</p>
+                    <p>Max size: [MAXFILESIZE]kb</p>
                     <p>Click the Help button for image requirements.</p>
                 </Fragment>
             ),
+            dragareaInstructions: [
+                'Drag and drop a spotlight image, or click to select an image. *',
+                'Max size: [MAXFILESIZE]kb',
+                'Click the Help button for image requirements.',
+            ],
             datePopupNowButton: 'Now',
         },
         tooltips: {
@@ -29,11 +35,27 @@ export default {
             publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
             deleteIcon: 'Remove image',
         },
-        image: {
-            maxWidth: 813,
-            maxHeight: 300,
-            dimensionsNotification: 'Recommended dimensions',
-            dimensionsWarning: 'Larger images will affect user experience',
+        upload: {
+            // the square bracket strings are swapped out for actual values - don't remove them!!
+            dimensionsNotification: 'Recommended dimensions: [WIDTH]px x [HEIGHT]px. Aspect Ratio: [RATIO].',
+            ideal: {
+                width: 813,
+                height: 300,
+                ratio: 2.71,
+            },
+            minRatio: 2.55,
+            maxRatio: 2.8,
+            heightWidthFlex: 50, // can go plus or minus this figure without it warning
+            dimensionsWarning: 'Larger images will affect page load time and smaller ones may be pixelated',
+            maxSize: 400000,
+            uploadError: {
+                confirmationTitle: 'An error occurred while uploading the file',
+                confirmButtonLabel: 'OK',
+            },
+            fileTooLarge: {
+                confirmationTitle: 'This file is too large - please try again (max [SIZE]kb)',
+                confirmButtonLabel: 'OK',
+            },
         },
         add: {
             addSpotlightConfirmation: {
@@ -65,17 +87,6 @@ export default {
                 confirmButtonLabel: 'Clone again',
                 cancelButtonLabel: 'View spotlight list',
             },
-        },
-        upload: {
-            uploadError: {
-                confirmationTitle: 'An error occurred while uploading the file',
-                confirmButtonLabel: 'OK',
-            },
-            fileTooLarge: {
-                confirmationTitle: 'This file is too large - please try again (max [SIZE]kb)',
-                confirmButtonLabel: 'OK',
-            },
-            maxSize: 400000,
         },
         help: {
             title: 'Add/Edit/Clone help',
