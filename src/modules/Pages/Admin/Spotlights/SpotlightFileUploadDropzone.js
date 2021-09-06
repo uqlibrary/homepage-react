@@ -195,7 +195,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     const uploadErrorLocale = {
         ...locale.form.upload.fileTooLarge,
         confirmationTitle: `${locale.form.upload.fileTooLarge.confirmationTitle.replace(
-            '[SIZE]',
+            '[MAXFILESIZE]',
             locale.form.upload.maxSize / 1000,
         )}`,
     };
@@ -262,8 +262,12 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                 ) : (
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
-                        {locale.form.labels.dragareaInstructions.map(line => {
-                            return <p>{line.replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000)}</p>;
+                        {locale.form.labels.dragareaInstructions.map((line, index) => {
+                            return (
+                                <p key={`instruction-${index}`}>
+                                    {line.replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000)}
+                                </p>
+                            );
                         })}
                     </div>
                 )}

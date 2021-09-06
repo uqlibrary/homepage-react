@@ -12,13 +12,6 @@ export default {
             publishDate: 'Date published', // also on List page
             unpublishDate: 'Date unpublished', // also on List page
             publishedCheckbox: 'Published?', // also on List page
-            dragareaInstructions0: (
-                <Fragment>
-                    <p>Drag and drop a spotlight image, or click to select an image. *</p>
-                    <p>Max size: [MAXFILESIZE]kb</p>
-                    <p>Click the Help button for image requirements.</p>
-                </Fragment>
-            ),
             dragareaInstructions: [
                 'Drag and drop a spotlight image, or click to select an image. *',
                 'Max size: [MAXFILESIZE]kb',
@@ -47,13 +40,13 @@ export default {
             maxRatio: 2.8,
             heightWidthFlex: 50, // can go plus or minus this figure without it warning
             dimensionsWarning: 'Larger images will affect page load time and smaller ones may be pixelated',
-            maxSize: 400000,
+            maxSize: 400000, // 400 x 1000 bytes = 400kb
             uploadError: {
                 confirmationTitle: 'An error occurred while uploading the file',
                 confirmButtonLabel: 'OK',
             },
             fileTooLarge: {
-                confirmationTitle: 'This file is too large - please try again (max [SIZE]kb)',
+                confirmationTitle: 'This file is too large - please try again (max [MAXFILESIZE]kb)',
                 confirmButtonLabel: 'OK',
             },
         },

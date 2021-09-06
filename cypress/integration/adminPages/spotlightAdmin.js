@@ -26,6 +26,11 @@ function dragFileToDropzone(uploadableFile) {
     });
     cy.get('[data-testid="dropzone-dragarea"]').should('not.exist');
     cy.get('[data-testid="dropzone-preview"]').should('exist');
+    cy.get('[data-testid="dropzone-dimension-warning"]')
+        .should('exist')
+        .should('contain', 'Dimensions')
+        .should('contain', 'Recommended dimensions')
+        .should('contain', 'Larger images will affect page load time and smaller ones may be pixelated');
 }
 
 function saveButtonisDisabled() {
