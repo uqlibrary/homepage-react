@@ -310,7 +310,7 @@ export const SpotlightsListAsTable = ({
         console.log('deleteSpotlightById ', spotlightID);
         deleteSpotlight(spotlightID)
             .then(() => {
-                console.log('deleteSpotlightById ', spotlightID);
+                console.log('deleteSpotlightById then ', spotlightID);
                 setSpotlightNotice('');
                 setDeleteActive(false);
 
@@ -318,27 +318,24 @@ export const SpotlightsListAsTable = ({
                 setUserows(prevState => {
                     console.log('prevState = ', prevState);
                     const data = [...prevState];
-                    const toDelete = userows
+                    const toDelete1 = userows
                         .map(r => {
                             return r.id;
                         })
                         .indexOf(spotlightID);
-                    data.splice(toDelete, 1);
-                    console.log('userows: ', spotlightID, ' toDelete row id: ', toDelete);
+                    data.splice(toDelete1, 1);
+                    console.log('userows: ', spotlightID, ' toDelete1 row id: ', toDelete1);
                     console.log('after delete, resetting userows to ', [...data]);
                     return data;
                 });
 
-                // remove from display if they change attribute filters
-                const toDelete = rows
-                    .map(r => {
-                        return r.id;
-                    })
-                    .indexOf(spotlightID);
-                delete rows[toDelete];
+                // Sometimes it fails to update the visual state from the data deletion
+                // even though the usestate updates correctly. Hack it so the row goes away
+                const rowThatShouldAlreadyBeGone = document.getElementById(`spotlight-list-row-${spotlightID}`);
+                !!rowThatShouldAlreadyBeGone && rowThatShouldAlreadyBeGone.remove();
             })
             .catch(() => {
-                console.log('failing ', spotlightID);
+                console.log('deleteSpotlightById failing ', spotlightID);
                 showDeleteFailureConfirmation();
             });
     }
@@ -662,27 +659,29 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                <TableCell component="th" scope="row" style={{ width: 10 }}>
-                                    <TableSortLabel
-                                        active={orderBy === orderByWeight}
-                                        direction={orderBy === orderByWeight ? sortOrder : 'asc'}
-                                        onClick={createSortHandler(orderByWeight)}
-                                    >
-                                        {/* indicates drag and drop available - only when sorting by weight!! */}
-                                        {sortOrderAllowsDragAndDrop && (
-                                            <SortIcon
-                                                fontSize="small"
-                                                style={{
-                                                    transform: 'scaleX(-1)',
-                                                }}
-                                                // InputProps={{
-                                                //     'aria-label': 'order by weight. Drag and drop available',
-                                                // }}
-                                            />
-                                        )}
-                                        Order
-                                    </TableSortLabel>
-                                </TableCell>
+                                {tableType !== 'past' && (
+                                    <TableCell component="th" scope="row" style={{ width: 10 }}>
+                                        <TableSortLabel
+                                            active={orderBy === orderByWeight}
+                                            direction={orderBy === orderByWeight ? sortOrder : 'asc'}
+                                            onClick={createSortHandler(orderByWeight)}
+                                        >
+                                            {/* indicates drag and drop available - only when sorting by weight!! */}
+                                            {sortOrderAllowsDragAndDrop && (
+                                                <SortIcon
+                                                    fontSize="small"
+                                                    style={{
+                                                        transform: 'scaleX(-1)',
+                                                    }}
+                                                    // InputProps={{
+                                                    //     'aria-label': 'order by weight. Drag and drop available',
+                                                    // }}
+                                                />
+                                            )}
+                                            Order
+                                        </TableSortLabel>
+                                    </TableCell>
+                                )}
                                 <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
                                 <TableCell component="th" scope="row" style={{ width: 200 }}>
                                     Spotlight
@@ -733,7 +732,7 @@ export const SpotlightsListAsTable = ({
                                         stableSort(userows, getComparator(sortOrder, orderBy))
                                             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                             .map((spotlight, rowindex) => {
-                                                console.log('userows has ', spotlight.id);
+                                                // console.log('userows has ', spotlight.id);
                                                 return (
                                                     <Draggable
                                                         draggableId={spotlight.id}
@@ -753,13 +752,15 @@ export const SpotlightsListAsTable = ({
                                                                     ref={draggableProvided.innerRef}
                                                                     role="row"
                                                                 >
-                                                                    <TableCell
-                                                                        component="td"
-                                                                        className={classes.tableCell}
-                                                                        style={{ textAlign: 'center' }}
-                                                                    >
-                                                                        {spotlight.weight}
-                                                                    </TableCell>
+                                                                    {tableType !== 'past' && (
+                                                                        <TableCell
+                                                                            component="td"
+                                                                            className={classes.tableCell}
+                                                                            style={{ textAlign: 'center' }}
+                                                                        >
+                                                                            {spotlight.weight}
+                                                                        </TableCell>
+                                                                    )}
                                                                     <TableCell
                                                                         component="td"
                                                                         className={`markForDeletion ${classes.checkboxCell}`}

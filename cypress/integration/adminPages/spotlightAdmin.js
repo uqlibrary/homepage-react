@@ -458,7 +458,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="confirm-spotlight-delete-error-dialog"]').click();
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
         });
-        it.skip('sequential deletion of spotlights does not fail', () => {
+        it('sequential deletion of spotlights does not fail', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #2');
             cy.get('[data-testid="spotlight-list-item-checkbox-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
@@ -489,15 +489,14 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="headerRow-past"] span span').contains('2 spotlights selected');
             // click bin icon
             cy.get('[data-testid="spotlight-list-past-delete-button"]').click();
-            // a confirm dialog popsup
-            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').should('exist');
-            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').contains('Proceed');
-            // click the Proceed button and delete is attempted
-            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
+            // a confirm dialog pops up - click the Proceed button and delete is attempted
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]')
+                .should('exist')
+                .contains('Proceed')
+                .click();
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #1');
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #3');
-            cy.wait(500);
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
             // nothing on the screen is checked for deletion
@@ -507,6 +506,8 @@ describe('Spotlights Admin Pages', () => {
                 '[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"] input[type="checkbox"]',
             ).should('not.be.disabled');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(31, 5));
+
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Past spotlights');
         });
         it('during delete, selection checkboxes in other sections are disabled', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
