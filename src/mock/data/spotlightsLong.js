@@ -1,7 +1,7 @@
 export const spotlightsLong = [{
     "id": "1e1b0e10-c400-11e6-a8f0-47525a49f469",
     "start": "2016-12-17 12:24:00",
-    "end": "2017-01-30 00:00:00",
+    "end": "2021-02-28 23:59:00",
     "title": "Can be deleted past #1",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2016\/12\/your-feedback-july-september-2016",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
@@ -11,7 +11,7 @@ export const spotlightsLong = [{
 }, {
     "id": "d8ec8820-07b1-11e7-a7ef-ef4338d401a6",
     "start": "2018-08-12 23:59:00",
-    "end": "2018-08-19 23:59:00",
+    "end": "2021-02-28 23:58:00",
     "title": "Can be deleted past #2",
     "url": "https:\/\/web.library.uq.edu.au\/research-tools-techniques\/research-subject",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
@@ -21,7 +21,7 @@ export const spotlightsLong = [{
 }, {
     "id": "a7764f90-198d-11e7-9f30-3dc758d83fd5",
     "start": "2017-04-05 09:22:00",
-    "end": "2017-04-12 09:22:00",
+    "end": "2021-02-28 23:57:00",
     "title": "Can be deleted past #3",
     "url": "https:\/\/web.library.uq.edu.au\/borrowing-requesting\/how-borrow\/find-item-shelf",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
@@ -31,7 +31,7 @@ export const spotlightsLong = [{
 }, {
     "id": "f0a1de60-1999-11e7-af36-7d945160e88f",
     "start": "2017-04-05 10:50:00",
-    "end": "2017-04-17 17:00:00",
+    "end": "2021-02-28 23:56:00",
     "title": "Pay to publish?",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2017\/03\/pay-publish",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
@@ -311,7 +311,7 @@ export const spotlightsLong = [{
 }, {
     "id": "38cbf430-8693-11e9-98ab-9d52a58e86cb",
     "start": "2021-02-08 00:01:00",
-    "end": "2021-02-28 23:59:00",
+    "end": "2021-02-28 23:50:00",
     "title": "Follow us social media 1",
     "url": "https:\/\/www.facebook.com\/uniofqldlibrary\/",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',

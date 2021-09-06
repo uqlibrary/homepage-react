@@ -358,7 +358,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
         });
 
-        it.skip('the user can delete a spotlight with the split button', () => {
+        it('the user can delete a spotlight with the split button', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #1');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(34, 5));
             cy.get(
@@ -403,7 +403,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(33, 5));
         });
 
-        it.skip('the user can delete a spotlight using a checkbox', () => {
+        it('the user can delete a spotlight using a checkbox', () => {
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should('contain', 'Can be deleted and edited');
             // cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
             cy.get(
@@ -508,7 +508,7 @@ describe('Spotlights Admin Pages', () => {
             ).should('not.be.disabled');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(31, 5));
         });
-        it.skip('during delete, selection checkboxes in other sections are disabled', () => {
+        it('during delete, selection checkboxes in other sections are disabled', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
                 'not.be.disabled',
             );
@@ -557,7 +557,7 @@ describe('Spotlights Admin Pages', () => {
                 'not.be.disabled',
             );
         });
-        it.skip('can unselect all checkboxes with the "X"', () => {
+        it('can unselect all checkboxes with the "X"', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
                 'not.be.disabled',
             );
