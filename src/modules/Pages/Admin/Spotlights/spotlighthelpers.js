@@ -34,3 +34,12 @@ export function getTimeSundayNextFormatted(baseDate = null) {
         .endOf('day')
         .format('YYYY-MM-DDTHH:mm');
 }
+
+export function getTimeMondayComing(baseDate = null) {
+    const today = baseDate || moment();
+    const monday = 1;
+    return today
+        .isoWeekday(monday)
+        .add(1, 'weeks')
+        .hour(9); // 9am
+}

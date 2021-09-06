@@ -557,7 +557,7 @@ SpotlightForm.defaultProps = {
     publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
     publicFileUploadError: false,
     publicFileUploadResult: false,
-    maxWeight: 0, // the max weight currently found in the spotlights - calc new value on add
+    maxWeight: 0, // the max weight currently found in the spotlights - used to calculate the new value when adding
 };
 
 export default SpotlightForm;

@@ -34,6 +34,8 @@ import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
 import { SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
+const moment = require('moment');
+
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 100 });
@@ -317,7 +319,22 @@ fetchMock.mock(
 );
 
 // spotlights
-mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(withDelay([200, spotlightsLong]));
+mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(
+    withDelay([
+        200,
+        spotlightsLong.map(r => {
+            // the first entry ends tooday
+            return r.id === '9eab3aa0-82c1-11eb-8896-eb36601837f5'
+                ? {
+                      ...r,
+                      end: moment()
+                          .endOf('day')
+                          .format('YYYY-MM-DDTHH:mm'),
+                  }
+                : r;
+        }),
+    ]),
+);
 
 mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
     withDelay([

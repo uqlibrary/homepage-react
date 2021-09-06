@@ -1,4 +1,4 @@
-import { getTimeSundayNextFormatted } from './spotlighthelpers';
+import { getTimeMondayComing, getTimeSundayNextFormatted } from './spotlighthelpers';
 const moment = require('moment');
 
 describe('spotlight helpers', () => {
@@ -19,5 +19,19 @@ describe('spotlight helpers', () => {
 
         expect(getTimeSundayNextFormatted(moment('08-27-2021'))).toEqual('2021-09-05T23:59'); // friday
         expect(getTimeSundayNextFormatted(moment('08-28-2021'))).toEqual('2021-09-05T23:59'); // saturday
+    });
+    it('correctly calculates next monday', () => {
+        expect(getTimeMondayComing(moment('08-15-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-16T09:00'); // sunday
+
+        expect(getTimeMondayComing(moment('08-16-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // monday
+        expect(getTimeMondayComing(moment('08-17-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // tuesday
+        expect(getTimeMondayComing(moment('08-18-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // wednesday
+        expect(getTimeMondayComing(moment('08-19-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // thursday
+        expect(getTimeMondayComing(moment('08-20-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // friday
+        expect(getTimeMondayComing(moment('08-21-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // saturday
+        expect(getTimeMondayComing(moment('08-22-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T09:00'); // sunday
+
+        expect(getTimeMondayComing(moment('08-23-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T09:00'); // monday
+        expect(getTimeMondayComing(moment('08-24-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T09:00'); // tuesday
     });
 });

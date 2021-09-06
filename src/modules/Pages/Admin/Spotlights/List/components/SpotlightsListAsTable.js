@@ -29,6 +29,9 @@ import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
+import moment from 'moment';
+import { getTimeMondayComing } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
 
@@ -51,6 +54,10 @@ const useStyles = makeStyles(
         endDate: {
             whiteSpace: 'pre',
             padding: 0,
+        },
+        thisWeekNotify: {
+            fontWeight: 'bold',
+            color: theme.palette.warning.main,
         },
         headerRow: {
             display: 'flex',
@@ -566,6 +573,13 @@ export const SpotlightsListAsTable = ({
     }
 
     const sortOrderAllowsDragAndDrop = orderBy === orderByWeight && sortOrder === 'asc';
+
+    const endsThisWeek = spotlight => {
+        // used to display to the user that come monday morning this spotlight will be gone
+        // (specifically meant to address when ALL the spotlights finish this week and none are scheduled)
+        return moment(spotlight.end) <= getTimeMondayComing();
+    };
+
     return (
         <Fragment>
             <ConfirmationBox
@@ -794,12 +808,24 @@ export const SpotlightsListAsTable = ({
                                                                     <TableCell
                                                                         component="td"
                                                                         align="center"
-                                                                        className={classes.endDate}
+                                                                        className={`${classes.endDate} ${tableType !==
+                                                                            'past' &&
+                                                                            !!endsThisWeek(spotlight) &&
+                                                                            classes.thisWeekNotify}`}
                                                                         style={{ padding: 8 }}
                                                                     >
-                                                                        <span title={spotlight.endDateLong}>
+                                                                        <span
+                                                                            title={`${spotlight.endDateLong} ${
+                                                                                tableType !== 'past' &&
+                                                                                endsThisWeek(spotlight)
+                                                                                    ? ' - ends this week'
+                                                                                    : ''
+                                                                            }`}
+                                                                        >
                                                                             {spotlight.endDateDisplay}
                                                                         </span>
+                                                                        {tableType !== 'past' &&
+                                                                            endsThisWeek(spotlight) && <span> *</span>}
                                                                     </TableCell>
                                                                     {!!canUnpublish && (
                                                                         <TableCell

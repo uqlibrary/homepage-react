@@ -93,7 +93,7 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
         });
 
-        it.skip('displays a list of spotlights to the authorised user', () => {
+        it('displays a list of spotlights to the authorised user', () => {
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.wait(100);
             cy.get('[data-testid="spotlight-list-current"] tbody')
@@ -111,14 +111,20 @@ describe('Spotlights Admin Pages', () => {
                 'not.exist',
             );
 
-            // cy.wait(500);
+            // the spotlight that ends today has the end date highlighted;
+            // one that does not end today has a normal color
+            cy.get('tr[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"] td:nth-child(6)')
+                .should('exist')
+                .should('have.css', 'color', 'rgb(191, 80, 0)');
+            cy.get('tr[data-testid="spotlight-list-row-fba95ec0-77f5-11eb-8c73-9734f9d4b368"] td:nth-child(6)')
+                .should('exist')
+                .should('have.css', 'color', 'rgba(0, 0, 0, 0.87)');
+
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('be.visible');
-            // cy.get('[data-testid="headerRow-count-past"]').contains('78 spotlights');
-            cy.get('[data-testid="admin-spotlights-list-past-list"] tbody').scrollIntoView();
             cy.get('[data-testid="admin-spotlights-list-past-list"] tbody ')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
-            // cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('not.exist');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').should('exist');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
                 getFooterLabel(totalCountPastRecords),
