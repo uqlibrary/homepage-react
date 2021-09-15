@@ -30,7 +30,8 @@ export default {
         },
         upload: {
             // the square bracket strings are swapped out for actual values - don't remove them!!
-            dimensionsNotification: 'Recommended dimensions: [WIDTH]px x [HEIGHT]px. Aspect Ratio: [RATIO].',
+            dimensionsNotification:
+                'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
             ideal: {
                 width: 813,
                 height: 300,
@@ -46,7 +47,8 @@ export default {
                 confirmButtonLabel: 'OK',
             },
             fileTooLarge: {
-                confirmationTitle: 'This file is too large - please try again (max [MAXFILESIZE]kb)',
+                confirmationTitle:
+                    'The file is too large. Please reduce the spotlight file size to [MAXFILESIZE] KB or less and try again.',
                 confirmButtonLabel: 'OK',
             },
         },

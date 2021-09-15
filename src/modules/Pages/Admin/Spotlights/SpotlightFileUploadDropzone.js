@@ -180,7 +180,8 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     .replace('Recommended dimensions:', 'Dimensions:')
                     .replace('[WIDTH]', imageWidthIn)
                     .replace('[HEIGHT]', imageHeightIn)
-                    .replace('[RATIO]', ratio)}
+                    .replace('[RATIO]', ratio)
+                    .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000)}
             </React.Fragment>
         );
     };
@@ -189,7 +190,8 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         return locale.form.upload.dimensionsNotification
             .replace('[WIDTH]', locale.form.upload.ideal.width)
             .replace('[HEIGHT]', locale.form.upload.ideal.height)
-            .replace('[RATIO]', locale.form.upload.ideal.ratio);
+            .replace('[RATIO]', locale.form.upload.ideal.ratio)
+            .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
     };
 
     const uploadErrorLocale = {
