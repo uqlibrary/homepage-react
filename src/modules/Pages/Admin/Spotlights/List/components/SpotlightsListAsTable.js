@@ -879,7 +879,12 @@ export const SpotlightsListAsTable = ({
                             <TableFooter>
                                 <TableRow>
                                     <TablePagination
-                                        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: rows.length }]}
+                                        // dont use
+                                        // { label: 'All', value: rows.length }
+                                        // as it gives a dupe key error when the length happens to match a value
+                                        // in the list. Nor do we want them loading vast numbers of records - they
+                                        // can jump to the next page
+                                        rowsPerPageOptions={[5, 10, 25, 100]}
                                         colSpan={5}
                                         count={userows.length}
                                         rowsPerPage={rowsPerPage}

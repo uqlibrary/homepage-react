@@ -153,10 +153,10 @@ describe('Spotlights Admin Pages', () => {
             );
             cy.get(
                 '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
-            ).select('All');
+            ).select('100');
             cy.get(
                 '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
-            ).should('have.value', totalCountPastRecords);
+            ).should('have.value', 100);
             cy.get('[data-testid="admin-spotlights-list-past-list"] tbody ')
                 .children()
                 .should('have.length', totalCountPastRecords + numRowsHiddenAsNoDatainfo);
