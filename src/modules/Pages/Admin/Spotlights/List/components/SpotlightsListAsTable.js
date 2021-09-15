@@ -677,7 +677,7 @@ export const SpotlightsListAsTable = ({
                                     Spotlight
                                 </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 260 }} />
-                                <TableCell component="th" scope="row" align="center" style={{ padding: 0 }}>
+                                <TableCell component="th" scope="row" style={{ padding: 0 }}>
                                     <TableSortLabel
                                         active={orderBy === orderByStartDate}
                                         direction={orderBy === orderByStartDate ? sortOrder : 'asc'}
@@ -686,7 +686,7 @@ export const SpotlightsListAsTable = ({
                                         {locale.form.labels.publishDate}
                                     </TableSortLabel>
                                 </TableCell>
-                                <TableCell component="th" scope="row" align="center" style={{ padding: 8 }}>
+                                <TableCell component="th" scope="row" style={{ padding: 8 }}>
                                     <TableSortLabel
                                         active={orderBy === orderByEndDate}
                                         direction={orderBy === orderByEndDate ? sortOrder : 'asc'}
@@ -696,12 +696,7 @@ export const SpotlightsListAsTable = ({
                                     </TableSortLabel>
                                 </TableCell>
                                 {!!canUnpublish && (
-                                    <TableCell
-                                        component="th"
-                                        scope="row"
-                                        align="center"
-                                        style={{ width: 50, padding: 8 }}
-                                    >
+                                    <TableCell component="th" scope="row" style={{ width: 50, padding: 8 }}>
                                         <TableSortLabel
                                             active={orderBy === orderByPublished}
                                             direction={orderBy === orderByPublished ? sortOrder : 'asc'}
@@ -794,7 +789,6 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        align="center"
                                                                         className={classes.startDate}
                                                                         style={{ padding: 0 }}
                                                                     >
@@ -804,7 +798,6 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        align="center"
                                                                         className={`${classes.endDate} ${tableType !==
                                                                             'past' &&
                                                                             !!endsThisWeek(spotlight) &&
