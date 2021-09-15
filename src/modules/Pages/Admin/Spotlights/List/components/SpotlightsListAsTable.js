@@ -159,32 +159,13 @@ export const SpotlightsListAsTable = ({
             const localRows = rowList
                 .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
                 .map((row, index) => {
-                    if (tableType !== 'past') {
-                        // change "!== past" to test by passed in attribute for 'candragdrop?
+                    if (tableType === 'current') {
                         row.weight = (index + 1) * 10;
                         // reset the weights to a clean 10 step, in case they arent already,
                         // so it is easy to insert one in the middle during drag and drop
                     }
                     return row;
                 });
-
-            // might be used by Past section if we add sortable columns?
-            // if (!!spotlightOrder && !!rows && rows.length > 0) {
-            //     if (spotlightOrder === 'reverseEnd') {
-            //         setUserows(userows.sort(
-            //             (a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
-            //         ));
-            //     } else if (spotlightOrder === 'forwardEnd') {
-            //         setUserows(userows.sort(
-            //             (a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'),
-            //         ));
-            //     } else if (spotlightOrder === 'forwardStart') {
-            //         setUserows(userows.sort(
-            //             (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
-            //         ));
-            //     }
-            // }
-            // console.log('userows = (will display rows): ', userows);
             setUserows(localRows);
         },
         [tableType],
@@ -517,7 +498,7 @@ export const SpotlightsListAsTable = ({
             });
     };
 
-    const needsPaginator = rows.length > footerDisplayMinLength;
+    const needsPaginator = tableType === 'past' && rows.length > footerDisplayMinLength;
 
     if (!!spotlightsLoading) {
         return (
@@ -730,7 +711,12 @@ export const SpotlightsListAsTable = ({
                                     {rowsPerPage > 0 &&
                                         userows.length > 0 &&
                                         stableSort(userows, getComparator(sortOrder, orderBy))
-                                            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                            .slice(
+                                                tableType === 'past' ? page * rowsPerPage : 0,
+                                                tableType === 'past'
+                                                    ? page * rowsPerPage + rowsPerPage
+                                                    : userows.length,
+                                            )
                                             .map((spotlight, rowindex) => {
                                                 // console.log('userows has ', spotlight.id);
                                                 return (
