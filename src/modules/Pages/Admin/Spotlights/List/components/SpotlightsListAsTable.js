@@ -766,7 +766,8 @@ export const SpotlightsListAsTable = ({
                                                                             className={classes.tableCell}
                                                                             style={{ textAlign: 'center' }}
                                                                         >
-                                                                            {spotlight.weight}
+                                                                            {spotlight.weight / 10}
+                                                                            {/* display a simple 1, 2, 3, ... */}
                                                                         </TableCell>
                                                                     )}
                                                                     <TableCell
