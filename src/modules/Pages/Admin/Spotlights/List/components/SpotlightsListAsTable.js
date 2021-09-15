@@ -656,7 +656,7 @@ export const SpotlightsListAsTable = ({
                                             onClick={createSortHandler(orderByWeight)}
                                         >
                                             {/* indicates drag and drop available - only when sorting by weight!! */}
-                                            {sortOrderAllowsDragAndDrop && (
+                                            {sortOrderAllowsDragAndDrop ? (
                                                 <SortIcon
                                                     fontSize="small"
                                                     style={{
@@ -666,6 +666,8 @@ export const SpotlightsListAsTable = ({
                                                     //     'aria-label': 'order by weight. Drag and drop available',
                                                     // }}
                                                 />
+                                            ) : (
+                                                <span style={{ width: 20 }} />
                                             )}
                                             Order
                                         </TableSortLabel>
