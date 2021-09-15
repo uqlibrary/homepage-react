@@ -636,12 +636,15 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
             cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'spotlight title 3');
 
+            cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 3');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').should('have.value', 'spotlight image alt 3');
+
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
 
             dragFileToDropzone('test.jpg');
             cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', '1000');
-            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', 'px x ');
+            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', 'px by ');
             cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', '500');
 
             saveButtonNOTDisabled();
@@ -721,7 +724,8 @@ describe('Spotlights Admin Pages', () => {
         });
 
         it('can save a spotlight', () => {
-            cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
+            cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 4');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
             dragFileToDropzone('test.jpg');
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
@@ -764,6 +768,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 5');
             saveButtonisDisabled();
 
+            cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight img alt 5');
+            saveButtonisDisabled();
+
             // start an url, but button are disabled while it isnt valid
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://e');
             saveButtonisDisabled();
@@ -795,6 +802,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-title"] input')
                 .clear()
                 .type('spotlight title 3');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input')
+                .clear()
+                .type('spotlight image alt 3');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input')
                 .clear()
                 .type('http://example.com');
@@ -840,9 +850,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-title"] input').should('have.value', 'spotlight title 5');
 
             cy.get('[data-testid="admin-spotlights-form-tooltip"] input').clear();
-            saveButtonNOTDisabled(); // the tooltip is not required
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').type('spotlight tooltip 5');
-            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').should('have.value', 'spotlight tooltip 5');
+            saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input').type('spotlight img alt 5');
+            saveButtonNOTDisabled();
 
             // start an url, but button are disabled while it isnt valid
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').clear();

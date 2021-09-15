@@ -6,8 +6,8 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
-            titleField: 'Title - visible to assistive technology (appears on link) *',
-            ariaField: 'Tooltip text - visible when user mouses over spotlight (appears on image)',
+            linkDescAriaField: 'Spotlight aria label - describes destination *',
+            imgAltField: 'Spotlight alt text - describes image *',
             linkField: 'Spotlight link *',
             publishDate: 'Date published', // also on List page
             unpublishDate: 'Date unpublished', // also on List page
@@ -20,8 +20,8 @@ export default {
             datePopupNowButton: 'Now',
         },
         tooltips: {
-            titleField: 'Help TBA',
-            ariaField: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
+            linkDescAriaField: 'Help TBA',
+            imgAltField: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
             linkField: 'Please enter a valid URL',
             publishDate: 'Select publish date-time',
             unpublishDate: 'Select unpublish date-time',

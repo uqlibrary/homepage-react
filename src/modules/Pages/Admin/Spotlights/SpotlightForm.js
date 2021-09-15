@@ -71,8 +71,12 @@ export const SpotlightForm = ({
         end: defaults.endDateDefault,
     });
 
-    const isValidTitle = title => {
+    const isValidLinkAria = title => {
         return title.length > 0;
+    };
+
+    const isValidImgAlt = imgAlt => {
+        return imgAlt.length > 0;
     };
 
     const isValidUrl = testurl => {
@@ -122,7 +126,8 @@ export const SpotlightForm = ({
             spotlightStatus !== 'loading' &&
             !isInvalidStartDate(null, currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
-            !!isValidTitle(currentValues.title) &&
+            !!isValidLinkAria(currentValues.title) &&
+            !!isValidImgAlt(currentValues.img_alt) &&
             // currentValues.img_alt.length > 0 && // set to title during save if blank
             // !!currentValues.localfilename &&
             // currentValues.localfilename.length > 0 &&
@@ -135,7 +140,8 @@ export const SpotlightForm = ({
         // console.log('validateValues: isValid = ', isValid, currentValues);
         // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
         // console.log('validateValues: isValidEndDate = ', !isInvalidEndDate(currentValues.end, currentValues.start));
-        // console.log('validateValues: isValidTitle = ', !!isValidTitle(currentValues.title));
+        // console.log('validateValues: isValidLinkAria = ', !!isValidLinkAria(currentValues.title));
+        // console.log('validateValues: isValidImgAlt = ', !!isValidImgAlt(currentValues.img_alt));
         // console.log(
         //     'validateValues: uploadedFile = ',
         //     defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0),
@@ -216,7 +222,7 @@ export const SpotlightForm = ({
             title: values.title,
             url: values.url,
             img_url: defaults.type === 'edit' ? values.img_url : null,
-            img_alt: values.img_alt || values.title,
+            img_alt: values.img_alt,
             weight: defaults.type === 'edit' ? values.weight : Number(maxWeight) + 10,
             active: !!values.active ? 1 : 0,
         };
@@ -410,12 +416,12 @@ export const SpotlightForm = ({
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.titleField}>
-                            <InputLabel htmlFor="spotlightTitle">{locale.form.labels.titleField}</InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
+                            <InputLabel htmlFor="spotlightTitle">{locale.form.labels.linkDescAriaField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
                                 data-testid="admin-spotlights-form-title"
-                                error={!isValidTitle(values.title)}
+                                error={!isValidLinkAria(values.title)}
                                 inputProps={{ maxLength: 100 }}
                                 onChange={handleChange('title')}
                                 required
@@ -426,11 +432,12 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.ariaField}>
-                            <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.ariaField}</InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.imgAltField}>
+                            <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.imgAltField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
                                 data-testid="admin-spotlights-form-tooltip"
+                                error={!isValidImgAlt(values.img_alt)}
                                 value={values.img_alt}
                                 onChange={handleChange('img_alt')}
                                 inputProps={{ maxLength: 100 }}
