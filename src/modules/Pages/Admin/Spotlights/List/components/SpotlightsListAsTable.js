@@ -21,6 +21,7 @@ import IconButton from '@material-ui/core/IconButton';
 
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteOutlinedIcon from '@material-ui/icons/DeleteOutlined';
 import SortIcon from '@material-ui/icons/Sort';
 
 import { TablePaginationActions } from './TablePaginationActions';
@@ -640,7 +641,13 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
+                                <TableCell
+                                    component="th"
+                                    scope="row"
+                                    style={{ width: 50, padding: 0, textAlign: 'center', color: '#666' }}
+                                >
+                                    <DeleteOutlinedIcon />
+                                </TableCell>
                                 {tableType === 'current' && (
                                     <TableCell component="th" scope="row" style={{ width: 10, padding: 0 }}>
                                         <TableSortLabel
