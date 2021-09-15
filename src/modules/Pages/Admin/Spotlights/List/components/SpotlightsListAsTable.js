@@ -659,8 +659,9 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                {tableType !== 'past' && (
-                                    <TableCell component="th" scope="row" style={{ width: 10 }}>
+                                <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
+                                {tableType === 'current' && (
+                                    <TableCell component="th" scope="row" style={{ width: 10, padding: 0 }}>
                                         <TableSortLabel
                                             active={orderBy === orderByWeight}
                                             direction={orderBy === orderByWeight ? sortOrder : 'asc'}
@@ -682,11 +683,10 @@ export const SpotlightsListAsTable = ({
                                         </TableSortLabel>
                                     </TableCell>
                                 )}
-                                <TableCell component="th" scope="row" style={{ width: 50, padding: 0 }} />
-                                <TableCell component="th" scope="row" style={{ width: 200 }}>
+                                <TableCell component="th" scope="row" style={{ width: 220 }}>
                                     Spotlight
                                 </TableCell>
-                                <TableCell component="th" scope="row" />
+                                <TableCell component="th" scope="row" style={{ width: 260 }} />
                                 <TableCell component="th" scope="row" align="center" style={{ padding: 0 }}>
                                     <TableSortLabel
                                         active={orderBy === orderByStartDate}
@@ -752,15 +752,6 @@ export const SpotlightsListAsTable = ({
                                                                     ref={draggableProvided.innerRef}
                                                                     role="row"
                                                                 >
-                                                                    {tableType !== 'past' && (
-                                                                        <TableCell
-                                                                            component="td"
-                                                                            className={classes.tableCell}
-                                                                            style={{ textAlign: 'center' }}
-                                                                        >
-                                                                            {spotlight.weight}
-                                                                        </TableCell>
-                                                                    )}
                                                                     <TableCell
                                                                         component="td"
                                                                         className={`markForDeletion ${classes.checkboxCell}`}
@@ -776,6 +767,15 @@ export const SpotlightsListAsTable = ({
                                                                             value={`${checkBoxIdPrefix}${spotlight.id}`}
                                                                         />
                                                                     </TableCell>
+                                                                    {tableType === 'current' && (
+                                                                        <TableCell
+                                                                            component="td"
+                                                                            className={classes.tableCell}
+                                                                            style={{ textAlign: 'center' }}
+                                                                        >
+                                                                            {spotlight.weight}
+                                                                        </TableCell>
+                                                                    )}
                                                                     <TableCell
                                                                         component="td"
                                                                         className={classes.tableCell}
