@@ -119,18 +119,18 @@ export const SpotlightsListAsTable = ({
 }) => {
     const classes = useStyles();
 
-    const orderByWeight = 'weight';
-    const orderByStartDate = 'start';
-    const orderByEndDate = 'end';
-    const orderByPublished = 'active';
+    const ORDERBY_WEIGHT = 'weight';
+    const ORDERBY_STARTDATE = 'start';
+    const ORDERBY_END_DATE = 'end';
+    const ORDERBY_PUBLISHEDFLAG = 'active';
 
     const [sortOrder, setSetOrder] = React.useState(tableType === 'past' ? 'desc' : 'asc');
     const orderByDefault = {
-        current: orderByWeight,
-        scheduled: orderByStartDate,
-        past: orderByEndDate,
+        current: ORDERBY_WEIGHT,
+        scheduled: ORDERBY_STARTDATE,
+        past: ORDERBY_END_DATE,
     };
-    const [orderBy, setOrderBy] = React.useState(orderByDefault[tableType] || orderByWeight);
+    const [orderBy, setOrderBy] = React.useState(orderByDefault[tableType] || ORDERBY_WEIGHT);
 
     const [page, setPage] = useState(0);
     const [deleteActive, setDeleteActive] = useState(false);
@@ -390,6 +390,7 @@ export const SpotlightsListAsTable = ({
     }
 
     // https://stackoverflow.com/a/5306832/1246313
+    let hasDraggedAndDropped = false;
     function arrayMove(arr, oldIndex, newIndex) {
         if (newIndex >= arr.length) {
             let k = newIndex - arr.length + 1;
@@ -398,6 +399,7 @@ export const SpotlightsListAsTable = ({
             }
         }
         arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+        hasDraggedAndDropped = true;
         return arr; // for testing
     }
 
@@ -542,6 +544,11 @@ export const SpotlightsListAsTable = ({
     }
 
     function stableSort(array, comparator) {
+        if (!!hasDraggedAndDropped) {
+            // we dont resort immediately after a drag and drop - it overrides the drag redisplay :(
+            hasDraggedAndDropped = false;
+            return array;
+        }
         const stabilizedThis = array.map((el, index) => [el, index]);
         stabilizedThis.sort((a, b) => {
             const order = comparator(a[0], b[0]);
@@ -551,7 +558,7 @@ export const SpotlightsListAsTable = ({
         return stabilizedThis.map(el => el[0]);
     }
 
-    const sortOrderAllowsDragAndDrop = orderBy === orderByWeight && sortOrder === 'asc';
+    const sortOrderAllowsDragAndDrop = orderBy === ORDERBY_WEIGHT && sortOrder === 'asc';
 
     const endsThisWeek = spotlight => {
         // used to display to the user that come monday morning this spotlight will be gone
@@ -651,9 +658,9 @@ export const SpotlightsListAsTable = ({
                                 {tableType === 'current' && (
                                     <TableCell component="th" scope="row" style={{ width: 10, padding: 0 }}>
                                         <TableSortLabel
-                                            active={orderBy === orderByWeight}
-                                            direction={orderBy === orderByWeight ? sortOrder : 'asc'}
-                                            onClick={createSortHandler(orderByWeight)}
+                                            active={orderBy === ORDERBY_WEIGHT}
+                                            direction={orderBy === ORDERBY_WEIGHT ? sortOrder : 'asc'}
+                                            onClick={createSortHandler(ORDERBY_WEIGHT)}
                                         >
                                             {/* indicates drag and drop available - only when sorting by weight!! */}
                                             {sortOrderAllowsDragAndDrop ? (
@@ -679,18 +686,18 @@ export const SpotlightsListAsTable = ({
                                 <TableCell component="th" scope="row" style={{ width: 260 }} />
                                 <TableCell component="th" scope="row" style={{ padding: 0 }}>
                                     <TableSortLabel
-                                        active={orderBy === orderByStartDate}
-                                        direction={orderBy === orderByStartDate ? sortOrder : 'asc'}
-                                        onClick={createSortHandler(orderByStartDate)}
+                                        active={orderBy === ORDERBY_STARTDATE}
+                                        direction={orderBy === ORDERBY_STARTDATE ? sortOrder : 'asc'}
+                                        onClick={createSortHandler(ORDERBY_STARTDATE)}
                                     >
                                         {locale.form.labels.publishDate}
                                     </TableSortLabel>
                                 </TableCell>
                                 <TableCell component="th" scope="row" style={{ padding: 8 }}>
                                     <TableSortLabel
-                                        active={orderBy === orderByEndDate}
-                                        direction={orderBy === orderByEndDate ? sortOrder : 'asc'}
-                                        onClick={createSortHandler(orderByEndDate)}
+                                        active={orderBy === ORDERBY_END_DATE}
+                                        direction={orderBy === ORDERBY_END_DATE ? sortOrder : 'asc'}
+                                        onClick={createSortHandler(ORDERBY_END_DATE)}
                                     >
                                         {locale.form.labels.unpublishDate}
                                     </TableSortLabel>
@@ -698,9 +705,9 @@ export const SpotlightsListAsTable = ({
                                 {!!canUnpublish && (
                                     <TableCell component="th" scope="row" style={{ width: 50, padding: 8 }}>
                                         <TableSortLabel
-                                            active={orderBy === orderByPublished}
-                                            direction={orderBy === orderByPublished ? sortOrder : 'asc'}
-                                            onClick={createSortHandler(orderByPublished)}
+                                            active={orderBy === ORDERBY_PUBLISHEDFLAG}
+                                            direction={orderBy === ORDERBY_PUBLISHEDFLAG ? sortOrder : 'asc'}
+                                            onClick={createSortHandler(ORDERBY_PUBLISHEDFLAG)}
                                         >
                                             {locale.form.labels.publishedCheckbox}
                                         </TableSortLabel>
