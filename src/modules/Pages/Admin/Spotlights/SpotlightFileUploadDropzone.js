@@ -176,8 +176,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     <Warning fontSize="small" style={{ height: 15 }} />
                 )}
 
-                {locale.form.upload.dimensionsNotification
-                    .replace('Recommended dimensions:', 'Dimensions:')
+                {locale.form.upload.currentDimensionsNotification
                     .replace('[WIDTH]', imageWidthIn)
                     .replace('[HEIGHT]', imageHeightIn)
                     .replace('[RATIO]', ratio)
@@ -187,7 +186,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     };
 
     const idealDimensionsNotification = () => {
-        return locale.form.upload.dimensionsNotification
+        return locale.form.upload.recommendedDimensionsNotification
             .replace('[WIDTH]', locale.form.upload.ideal.width)
             .replace('[HEIGHT]', locale.form.upload.ideal.height)
             .replace('[RATIO]', locale.form.upload.ideal.ratio)

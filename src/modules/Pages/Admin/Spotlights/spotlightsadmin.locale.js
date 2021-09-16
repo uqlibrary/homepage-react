@@ -30,7 +30,8 @@ export default {
         },
         upload: {
             // the square bracket strings are swapped out for actual values - don't remove them!!
-            dimensionsNotification:
+            currentDimensionsNotification: 'Dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
+            recommendedDimensionsNotification:
                 'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
             ideal: {
                 width: 813,
