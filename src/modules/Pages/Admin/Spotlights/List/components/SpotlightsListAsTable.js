@@ -317,10 +317,12 @@ export const SpotlightsListAsTable = ({
                     return data;
                 });
 
-                // Sometimes it fails to update the visual state from the data deletion
+                // Sometimes it fails to update the visual state from the data deletion, for no reason
                 // even though the usestate updates correctly. Hack it so the row goes away
                 const rowThatShouldAlreadyBeGone = document.getElementById(`spotlight-list-row-${spotlightID}`);
                 !!rowThatShouldAlreadyBeGone && rowThatShouldAlreadyBeGone.remove();
+
+                clearAllDeleteMarkingCheckboxes();
             })
             .catch(() => {
                 console.log('deleteSpotlightById failing ', spotlightID);
