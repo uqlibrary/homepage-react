@@ -147,16 +147,17 @@ describe('Spotlights Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('the footer paginator shows all links when "all" is selected', () => {
+        it('the footer paginator shows max links when max is selected', () => {
+            const highestDisplayCount = '100';
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
                 getFooterLabel(totalCountPastRecords),
             );
             cy.get(
                 '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
-            ).select('100');
+            ).select(highestDisplayCount);
             cy.get(
                 '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
-            ).should('have.value', 100);
+            ).should('have.value', highestDisplayCount);
             cy.get('[data-testid="admin-spotlights-list-past-list"] tbody ')
                 .children()
                 .should('have.length', totalCountPastRecords + numRowsHiddenAsNoDatainfo);
