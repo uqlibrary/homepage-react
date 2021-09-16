@@ -136,6 +136,7 @@ export const SpotlightsListAsTable = ({
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
     const [userows, setUserows] = useState([]);
+    const [selectedSpotlight, setSelectedSpotlight] = useState(null);
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
@@ -153,6 +154,11 @@ export const SpotlightsListAsTable = ({
         isSaveFailureConfirmationOpen,
         showSaveFailureConfirmation,
         hideSaveFailureConfirmation,
+    ] = useConfirmationState();
+    const [
+        isPublishUnpublishConfirmationOpen,
+        showPublishUnpublishConfirmation,
+        hidePublishUnpublishConfirmation,
     ] = useConfirmationState();
 
     const displayTheRows = React.useCallback(
@@ -467,10 +473,19 @@ export const SpotlightsListAsTable = ({
     };
 
     const handlePublishCheckbox = () => event => {
+        console.log('handlePublishCheckbox event = ', event);
         const checkboxId = event.target?.id.replace('spotlight-published-', '');
-        console.log('handlePublishCheckbox checkboxId = ', checkboxId);
-        const newState = !!event.target && event.target.checked;
-        const updateableRow = rows.find(r => r.id === checkboxId);
+        console.log('checkboxId = ', checkboxId);
+        setSelectedSpotlight(checkboxId);
+        showPublishUnpublishConfirmation(true);
+    };
+
+    const handlePublishCheckboxConfirmation = () => {
+        if (!selectedSpotlight) {
+            return;
+        }
+        const updateableRow = rows.find(r => r.id === selectedSpotlight);
+        const newState = !!updateableRow && !updateableRow.active ? 1 : 0;
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
         const rowToUpdate = {
             id: updateableRow.id,
@@ -481,8 +496,14 @@ export const SpotlightsListAsTable = ({
             img_url: updateableRow.img_url,
             img_alt: updateableRow.img_alt,
             weight: updateableRow.weight,
-            active: !!newState ? 1 : 0,
+            active: newState,
         };
+        setUserows(prevState => {
+            const data = [...prevState];
+            data.map(r => r.id === selectedSpotlight && (r.active = newState));
+            return data;
+        });
+
         saveSpotlightChange(rowToUpdate)
             .then(() => {
                 console.log('saveSpotlightChange then');
@@ -597,6 +618,16 @@ export const SpotlightsListAsTable = ({
                 hideCancelButton
                 isOpen={isSaveFailureConfirmationOpen}
                 locale={locale.listPage.saveError}
+            />
+            <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="spotlight-confirm-publish-unpublish-dialog"
+                onAction={hidePublishUnpublishConfirmation}
+                onClose={hidePublishUnpublishConfirmation}
+                onCancelAction={() => handlePublishCheckboxConfirmation()}
+                isOpen={isPublishUnpublishConfirmationOpen}
+                locale={locale.listPage.confirmPublishUnpublish}
             />
             <Grid
                 data-testid={`headerRow-${tableType}`}

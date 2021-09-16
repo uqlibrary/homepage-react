@@ -323,7 +323,7 @@ mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(
     withDelay([
         200,
         spotlightsLong.map(r => {
-            // the first entry ends tooday
+            // the first entry ends today
             return r.id === '9eab3aa0-82c1-11eb-8896-eb36601837f5'
                 ? {
                       ...r,
