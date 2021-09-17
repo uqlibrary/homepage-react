@@ -52,9 +52,6 @@ export const SpotlightForm = ({
     console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
     console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
     console.log('maxWeight = ', maxWeight);
-    // !!publicFileUploadResult
-    //     ? console.log('uploadPublicFile: publicFileUploadResult join = ', publicFileUploadResult.join(' ').trim())
-    //     : console.log('no join publicFileUploadResult = ', publicFileUploadResult);
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -449,7 +446,7 @@ export const SpotlightForm = ({
                                 error={!isValidImgAlt(values.img_alt)}
                                 value={values.img_alt}
                                 onChange={handleChange('img_alt')}
-                                inputProps={{ maxLength: 100 }}
+                                inputProps={{ maxLength: 255 }}
                             />
                         </FormControl>
                     </Grid>
