@@ -34,18 +34,18 @@ describe('spotlight helpers', () => {
         expect(getTimeMondayComing(moment('08-23-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T09:00'); // monday
         expect(getTimeMondayComing(moment('08-24-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T09:00'); // tuesday
     });
-    it('correctly calculates next monday mindight', () => {
-        expect(getTimeMondayMidnightNext(moment('08-15-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-16T00:01'); // sunday
+    it('correctly calculates next monday midnight', () => {
+        expect(getTimeMondayMidnightNext(moment('08-15-2021'))).toEqual('2021-08-16T00:01'); // sunday
 
-        expect(getTimeMondayMidnightNext(moment('08-16-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // monday
-        expect(getTimeMondayMidnightNext(moment('08-17-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // tuesday
-        expect(getTimeMondayMidnightNext(moment('08-18-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // wednesday
-        expect(getTimeMondayMidnightNext(moment('08-19-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // thursday
-        expect(getTimeMondayMidnightNext(moment('08-20-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // friday
-        expect(getTimeMondayMidnightNext(moment('08-21-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // saturday
-        expect(getTimeMondayMidnightNext(moment('08-22-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-23T00:01'); // sunday
+        expect(getTimeMondayMidnightNext(moment('08-16-2021'))).toEqual('2021-08-23T00:01'); // monday
+        expect(getTimeMondayMidnightNext(moment('08-17-2021'))).toEqual('2021-08-23T00:01'); // tuesday
+        expect(getTimeMondayMidnightNext(moment('08-18-2021'))).toEqual('2021-08-23T00:01'); // wednesday
+        expect(getTimeMondayMidnightNext(moment('08-19-2021'))).toEqual('2021-08-23T00:01'); // thursday
+        expect(getTimeMondayMidnightNext(moment('08-20-2021'))).toEqual('2021-08-23T00:01'); // friday
+        expect(getTimeMondayMidnightNext(moment('08-21-2021'))).toEqual('2021-08-23T00:01'); // saturday
+        expect(getTimeMondayMidnightNext(moment('08-22-2021'))).toEqual('2021-08-23T00:01'); // sunday
 
-        expect(getTimeMondayMidnightNext(moment('08-23-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T00:01'); // monday
-        expect(getTimeMondayMidnightNext(moment('08-24-2021')).format('YYYY-MM-DDTHH:mm')).toEqual('2021-08-30T00:01'); // tuesday
+        expect(getTimeMondayMidnightNext(moment('08-23-2021'))).toEqual('2021-08-30T00:01'); // monday
+        expect(getTimeMondayMidnightNext(moment('08-24-2021'))).toEqual('2021-08-30T00:01'); // tuesday
     });
 });
