@@ -391,6 +391,41 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
         });
 
+        it.only('can delete current', () => {
+            cy.get('[data-testid="admin-spotlights-list-current-list"]').should('contain', 'Can be deleted and edited');
+            cy.get(
+                '[data-testid="spotlight-list-row-38cbf430-8693-11e9-98ab-9d52a58e86ca"] input[type="checkbox"]',
+            ).should('not.be.disabled');
+
+            // open the split button
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').click();
+
+            // click the 'delete' action
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-delete-button"]').should('exist');
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-delete-button"]').click();
+
+            // click the Proceed button and the spotlight is deleted
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').should('exist');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').contains('Proceed');
+            cy.get('[data-testid="confirm-spotlight-delete-confirm"]').click();
+            // dialog disappears
+            cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
+            cy.wait(500);
+            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+
+            // and the display has updated appropriately
+            // deleted record is gone
+            cy.get('[data-testid="admin-spotlights-list-current-list"]').should(
+                'not.contain',
+                'Can be deleted and edited',
+            );
+            // the checkboxes in the other section have been enabled
+            cy.get(
+                '[data-testid="spotlight-list-row-38cbf430-8693-11e9-98ab-9d52a58e86ca"] input[type="checkbox"]',
+            ).should('not.be.disabled');
+            // the pagination updates
+        });
         it('the user can delete a spotlight with the split button', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #1');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(34, 5));

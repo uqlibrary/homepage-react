@@ -230,7 +230,8 @@ export const SpotlightForm = ({
             url: values.url,
             img_url: defaults.type === 'edit' ? values.img_url : null,
             img_alt: values.img_alt,
-            weight: defaults.type === 'edit' ? values.weight : Number(maxWeight) + 10,
+            // new weight on 'add' is high enough it will always drop in on the end
+            weight: defaults.type === 'edit' ? values.weight : 1000,
             active: !!values.active ? 1 : 0,
         };
         !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);

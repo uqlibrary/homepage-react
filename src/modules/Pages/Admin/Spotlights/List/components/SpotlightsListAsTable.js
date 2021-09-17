@@ -294,73 +294,33 @@ export const SpotlightsListAsTable = ({
         );
     };
 
-    function deleteSpotlightById(spotlightID) {
-        console.log('deleteSpotlightById ', spotlightID);
-        !!spotlightID &&
-            deleteSpotlight(spotlightID)
-                .then(() => {
-                    console.log('deleteSpotlightById then ', spotlightID);
-                    setSpotlightNotice('');
-                    setDeleteActive(false);
+    function handleSuccessfulDeletion(spotlightID) {
+        console.log('deleteSpotlightById then ', spotlightID);
+        setSpotlightNotice('');
+        setDeleteActive(false);
 
-                    // remove from current display
-                    setUserows(prevState => {
-                        console.log('prevState = ', prevState);
-                        const data = [...prevState];
-                        const toDelete1 = userows
-                            .map(r => {
-                                return r.id;
-                            })
-                            .indexOf(spotlightID);
-                        data.splice(toDelete1, 1);
-                        console.log('userows: ', spotlightID, ' toDelete1 row id: ', toDelete1);
-                        console.log('after delete, resetting userows to ', [...data]);
-                        return data;
-                    });
-
-                    // Sometimes it fails to update the visual state from the data deletion, for no reason
-                    // even though the usestate updates correctly. Hack it so the row goes away
-                    const rowThatShouldAlreadyBeGone = document.getElementById(`spotlight-list-row-${spotlightID}`);
-                    !!rowThatShouldAlreadyBeGone && rowThatShouldAlreadyBeGone.remove();
-
-                    clearAllDeleteMarkingCheckboxes();
+        // remove from current display
+        setUserows(prevState => {
+            console.log('prevState = ', prevState);
+            const data = [...prevState];
+            const toDelete1 = userows
+                .map(r => {
+                    return r.id;
                 })
-                .catch(() => {
-                    console.log('deleteSpotlightById failing ', spotlightID);
-                    showDeleteFailureConfirmation();
-                });
+                .indexOf(spotlightID);
+            data.splice(toDelete1, 1);
+            console.log('userows: ', spotlightID, ' toDelete1 row id: ', toDelete1);
+            console.log('after delete, resetting userows to ', [...data]);
+            return data;
+        });
+
+        // Sometimes it fails to update the visual state from the data deletion, for no reason
+        // even though the usestate updates correctly. Hack it so the row goes away
+        const rowThatShouldAlreadyBeGone = document.getElementById(`spotlight-list-row-${spotlightID}`);
+        !!rowThatShouldAlreadyBeGone && rowThatShouldAlreadyBeGone.remove();
+
+        clearAllDeleteMarkingCheckboxes();
     }
-
-    const deleteSelectedSpotlights = () => {
-        const checkboxes = document.querySelectorAll('.markForDeletion input[type="checkbox"]:checked');
-        if (!!checkboxes && checkboxes.length > 0) {
-            checkboxes.forEach(c => {
-                const spotlightID = !!c.value && c.value.replace(checkBoxIdPrefix, '');
-                !!spotlightID && deleteSpotlightById(spotlightID);
-            });
-            reEnableAllCheckboxes();
-            clearAllDeleteMarkingCheckboxes();
-        }
-    };
-
-    const handleDeleteSplitAction = spotlightID => {
-        !!spotlightID && deleteSpotlightById(spotlightID);
-        // if they check the checkbox and then use the action button to delete then the other section is left disabled
-        const checkboxes = document.querySelectorAll('.markForDeletion input[type="checkbox"]:checked');
-        if (!!checkboxes || checkboxes.length === 0) {
-            reEnableAllCheckboxes();
-        }
-        console.log('after handleDeleteSplitAction, userows = ', [...userows]);
-    };
-
-    const confirmDeleteLocale = numberOfCheckedBoxes => {
-        return {
-            ...locale.listPage.confirmDelete,
-            confirmationTitle: locale.listPage.confirmDelete.confirmationTitle
-                .replace('[N]', numberOfCheckedBoxes)
-                .replace('spotlights', numberOfCheckedBoxes === 1 ? 'spotlight' : 'spotlights'),
-        };
-    };
 
     function persistRowReorder(r, filtereduserows) {
         const currentRow = rows.find(row => row.id === r.id);
@@ -397,6 +357,75 @@ export const SpotlightsListAsTable = ({
                 showSaveFailureConfirmation();
             });
     }
+
+    const reweightSpotlights = () => {
+        console.log('reweightSpotlights', tableType, ' len = ', userows.length, userows);
+        let counter = 1;
+        console.log('userows = ', userows);
+        const localRows = userows.map(s => {
+            console.log('check weight', tableType, s.id, s.weight, 'counter = ', counter * 10, s.title.substr(0, 20));
+            if (s.weight !== counter * 10) {
+                console.log('weight mismatch', tableType, s.id, s.weight, counter, s.title.substr(0, 20));
+                s.weight = counter * 10;
+                persistRowReorder(s, userows);
+            }
+            counter++;
+            return s;
+        });
+        console.log('localRows = ', localRows);
+        setUserows(localRows);
+    };
+
+    const deleteSelectedSpotlights = () => {
+        const checkboxes = document.querySelectorAll('.markForDeletion input[type="checkbox"]:checked');
+        if (!!checkboxes && checkboxes.length > 0) {
+            checkboxes.forEach(c => {
+                const spotlightID = c.value.replace(checkBoxIdPrefix, '');
+                !!spotlightID &&
+                    console.log('deleteSpotlightById ', spotlightID) &&
+                    deleteSpotlight(spotlightID)
+                        .then(() => {
+                            handleSuccessfulDeletion(spotlightID);
+                        })
+                        .catch(() => {
+                            console.log('deleteSelectedSpotlights deleteSpotlightById failing ', spotlightID);
+                            showDeleteFailureConfirmation();
+                        });
+            });
+            reEnableAllCheckboxes();
+            clearAllDeleteMarkingCheckboxes();
+            console.log('deleteSelectedSpotlights', tableType, tableType, 'userows=', userows);
+            reweightSpotlights();
+        }
+    };
+
+    const handleDeleteSplitAction = spotlightID => {
+        console.log('deleteSpotlightById ', spotlightID);
+        !!spotlightID &&
+            deleteSpotlight(spotlightID)
+                .then(() => {
+                    handleSuccessfulDeletion(spotlightID);
+                })
+                .catch(() => {
+                    console.log('handleDeleteSplitAction deleteSpotlightById failing ', spotlightID);
+                    showDeleteFailureConfirmation();
+                });
+        // if they check the checkbox and then use the action button to delete then the other section is left disabled
+        const checkboxes = document.querySelectorAll('.markForDeletion input[type="checkbox"]:checked');
+        if (!!checkboxes || checkboxes.length === 0) {
+            reEnableAllCheckboxes();
+        }
+        console.log('after handleDeleteSplitAction, userows = ', [...userows]);
+    };
+
+    const confirmDeleteLocale = numberOfCheckedBoxes => {
+        return {
+            ...locale.listPage.confirmDelete,
+            confirmationTitle: locale.listPage.confirmDelete.confirmationTitle
+                .replace('[N]', numberOfCheckedBoxes)
+                .replace('spotlights', numberOfCheckedBoxes === 1 ? 'spotlight' : 'spotlights'),
+        };
+    };
 
     // https://stackoverflow.com/a/5306832/1246313
     let hasDraggedAndDropped = false;
