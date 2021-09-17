@@ -6,22 +6,22 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
-            linkDescAriaField: 'Spotlight aria label - describes destination *',
-            imgAltField: 'Spotlight alt text - describes image *',
+            linkDescAriaField: 'Spotlight title *',
+            imgAltField: 'Spotlight alt text *',
             linkField: 'Spotlight link *',
             publishDate: 'Date published', // also on List page
             unpublishDate: 'Date unpublished', // also on List page
             publishedCheckbox: 'Published?', // also on List page
             dragareaInstructions: [
                 'Drag and drop a spotlight image, or click to select an image. *',
-                'Max size: [MAXFILESIZE]kb',
+                'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
                 'Click the Help button for image requirements.',
             ],
             datePopupNowButton: 'Now',
         },
         tooltips: {
-            linkDescAriaField: 'Help TBA',
-            imgAltField: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
+            linkDescAriaField: 'Spotlight aria label - describe title and destination',
+            imgAltField: 'Spotlight alt text - include all text in image',
             linkField: 'Please enter a valid URL',
             publishDate: 'Select publish date-time',
             unpublishDate: 'Select unpublish date-time',
