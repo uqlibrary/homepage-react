@@ -680,12 +680,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
 
-            // start date starts with the correct default
-            cy.get('[data-testid="admin-spotlights-form-start-date"] input').should($input => {
-                const defaultDate = $input.val();
-                expect(defaultDate).to.include(moment().format('DD/MM/YYYY 00:01'));
-            });
-            // cant test end date initial value here - would just be reimplementing the algorithm. Test in Jest
+            // cant test end or start date initial value here - would just be reimplementing the algorithm. Test in Jest
             cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
             // advance the start date two months forward
             // (picking a date that far forward lets us test the error on the end date)

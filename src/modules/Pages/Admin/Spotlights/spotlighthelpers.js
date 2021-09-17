@@ -46,6 +46,17 @@ export function getTimeMondayComing(baseDate = null) {
         .hour(9); // 9am
 }
 
+export function getTimeMondayMidnightNext(baseDate = null) {
+    const today = baseDate || moment();
+    const monday = 1;
+    return today
+        .isoWeekday(monday)
+        .add(1, 'weeks')
+        .hour(0)
+        .minute(1) // 1 minute past midnight
+        .format('YYYY-MM-DDTHH:mm');
+}
+
 export const addConstantsToDisplayValues = (displayText, imageWidthIn = null, imageHeightIn = null, ratio = null) => {
     return displayText
         .replace('[WIDTH]', imageWidthIn || locale.form.upload.ideal.width)

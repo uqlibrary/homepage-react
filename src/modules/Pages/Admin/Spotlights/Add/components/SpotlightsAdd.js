@@ -3,7 +3,11 @@ import PropTypes from 'prop-types';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
-import { getStartOfDayFormatted, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import {
+    getStartOfDayFormatted,
+    getTimeMondayMidnightNext,
+    getTimeSundayNextFormatted,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -40,7 +44,7 @@ export const SpotlightsAdd = ({
 
     const defaults = {
         id: '',
-        startDateDefault: getStartOfDayFormatted(),
+        startDateDefault: getTimeMondayMidnightNext(),
         endDateDefault: getTimeSundayNextFormatted(),
         title: '',
         url: '',

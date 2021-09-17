@@ -99,16 +99,25 @@ export const SpotlightForm = ({
         return true;
     };
 
-    function isValidStartDate(param, startDate) {
+    function isValidStartDate(startDate) {
         const momentStartDate = new moment(startDate);
         const momentStartDateFormatted = momentStartDate.format('YYYY-MM-DDTHH:mm:ss');
+        // console.log('isValidStartDate: startDate = ', startDate);
+        // console.log('isValidStartDate: momentStartDateFormatted = ', momentStartDateFormatted);
+        // console.log('isValidStartDate: defaults.startDateDefault = ', defaults.startDateDefault);
+        // console.log('isValidStartDate: !!moment(startDate).isValid() = ', !!moment(startDate).isValid());
+        // console.log("isValidStartDate: startDate !== '' = ", startDate !== '');
+        // console.log(
+        //     'isValidStartDate: momentStartDateFormatted >= defaults.startDateDefault = ',
+        //     momentStartDateFormatted >= defaults.startDateDefault,
+        // );
         return (
             startDate !== '' && momentStartDateFormatted >= defaults.startDateDefault && !!moment(startDate).isValid()
         );
     }
 
-    function isInvalidStartDate(param, startDate) {
-        return !isValidStartDate(param, startDate);
+    function isInvalidStartDate(startDate) {
+        return !isValidStartDate(startDate);
     }
 
     function isInvalidEndDate(endDate, startDate) {
@@ -124,7 +133,7 @@ export const SpotlightForm = ({
         console.log('validateValues: currentValues = ', currentValues);
         const isValid =
             spotlightStatus !== 'loading' &&
-            !isInvalidStartDate(null, currentValues.start) &&
+            !isInvalidStartDate(currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
             !!isValidLinkAria(currentValues.title) &&
             !!isValidImgAlt(currentValues.img_alt) &&
