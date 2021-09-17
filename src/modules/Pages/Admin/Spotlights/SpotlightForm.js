@@ -33,6 +33,7 @@ const useStyles = makeStyles(() => ({
             fill: '#595959',
         },
         padding: 0,
+        color: 'rgba(0, 0, 0, 0.87)',
     },
 }));
 
