@@ -1,3 +1,5 @@
+import { default as locale } from './spotlightsadmin.locale';
+
 const moment = require('moment');
 
 export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
@@ -43,3 +45,11 @@ export function getTimeMondayComing(baseDate = null) {
         .add(1, 'weeks')
         .hour(9); // 9am
 }
+
+export const addConstantsToDisplayValues = (displayText, imageWidthIn = null, imageHeightIn = null, ratio = null) => {
+    return displayText
+        .replace('[WIDTH]', imageWidthIn || locale.form.upload.ideal.width)
+        .replace('[HEIGHT]', imageHeightIn || locale.form.upload.ideal.height)
+        .replace('[RATIO]', ratio || locale.form.upload.ideal.ratio)
+        .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
+};

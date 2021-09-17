@@ -12,6 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Warning from '@material-ui/icons/Warning';
 import { default as locale } from './spotlightsadmin.locale';
 import { mui1theme } from '../../../../config';
+import { addConstantsToDisplayValues } from './spotlighthelpers';
 
 const emptyDropzone = {
     border: 'thin solid black',
@@ -176,29 +177,23 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     <Warning fontSize="small" style={{ height: 15 }} />
                 )}
 
-                {locale.form.upload.currentDimensionsNotification
-                    .replace('[WIDTH]', imageWidthIn)
-                    .replace('[HEIGHT]', imageHeightIn)
-                    .replace('[RATIO]', ratio)
-                    .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000)}
+                {addConstantsToDisplayValues(
+                    locale.form.upload.currentDimensionsNotification,
+                    imageWidthIn,
+                    imageHeightIn,
+                    ratio,
+                )}
             </React.Fragment>
         );
     };
 
     const idealDimensionsNotification = () => {
-        return locale.form.upload.recommendedDimensionsNotification
-            .replace('[WIDTH]', locale.form.upload.ideal.width)
-            .replace('[HEIGHT]', locale.form.upload.ideal.height)
-            .replace('[RATIO]', locale.form.upload.ideal.ratio)
-            .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
+        return addConstantsToDisplayValues(locale.form.upload.recommendedDimensionsNotification);
     };
 
     const uploadErrorLocale = {
         ...locale.form.upload.fileTooLarge,
-        confirmationTitle: `${locale.form.upload.fileTooLarge.confirmationTitle.replace(
-            '[MAXFILESIZE]',
-            locale.form.upload.maxSize / 1000,
-        )}`,
+        confirmationTitle: addConstantsToDisplayValues(locale.form.upload.fileTooLarge.confirmationTitle),
     };
 
     return (
@@ -264,11 +259,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
                         {locale.form.labels.dragareaInstructions.map((line, index) => {
-                            return (
-                                <p key={`instruction-${index}`}>
-                                    {line.replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000)}
-                                </p>
-                            );
+                            return <p key={`instruction-${index}`}>{addConstantsToDisplayValues(line)}</p>;
                         })}
                     </div>
                 )}
