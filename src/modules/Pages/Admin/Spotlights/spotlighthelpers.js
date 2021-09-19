@@ -24,15 +24,14 @@ export function getTimeEndOfDayFormatted() {
         .format('YYYY-MM-DDTHH:mm');
 }
 
-// return sunday coming, unless it is fri-sat-sun, in which case return Next sunday
+// return the sunday after next monday
+// (next monday is the default start date, this is the default end date)
 export function getTimeSundayNextFormatted(baseDate = null) {
     const today = baseDate || moment();
-    const dayOfWeek = today.isoWeekday();
-    const [friday, saturday, sunday] = [5, 6, 7];
-    const numberOfWeeksToAdd = [friday, saturday, sunday].includes(dayOfWeek) ? 1 : 0;
+    const monday = 1;
     return today
-        .isoWeekday(sunday)
-        .add(numberOfWeeksToAdd, 'weeks')
+        .isoWeekday(monday)
+        .add(13, 'days')
         .endOf('day')
         .format('YYYY-MM-DDTHH:mm');
 }
