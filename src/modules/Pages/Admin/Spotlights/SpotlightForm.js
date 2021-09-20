@@ -14,7 +14,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { formatDate, reweightSpotlights } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
 
@@ -49,9 +49,10 @@ export const SpotlightForm = ({
     history,
     maxWeight,
 }) => {
-    console.log('uploadPublicFile: publicFileUploading = ', publicFileUploading);
-    console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
-    console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
+    // console.log('uploadPublicFile: publicFileUploading = ', publicFileUploading);
+    // console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
+    // console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
+    console.log('spotlightError = ', spotlightError);
     console.log('maxWeight = ', maxWeight);
     const classes = useStyles();
 
@@ -98,20 +99,33 @@ export const SpotlightForm = ({
     };
 
     function isValidStartDate(startDate) {
-        const momentStartDate = new moment(startDate);
-        const momentStartDateFormatted = momentStartDate.format('YYYY-MM-DDTHH:mm:ss');
+        const momentToday = new moment();
+        const formattedToday = momentToday.startOf('day').format('YYYYMMDDHHmmss');
+
+        const formattedstartdate = formatDate(startDate, 'YYYYMMDDHHmmss');
+        const formatteddefaultstartdate = formatDate(defaults.startDateDefault, 'YYYYMMDDHHmmss');
+        const result =
+            startDate !== '' &&
+            !!moment(startDate).isValid() &&
+            (formattedstartdate >= formattedToday || formattedstartdate >= formatteddefaultstartdate);
         // console.log('isValidStartDate: startDate = ', startDate);
-        // console.log('isValidStartDate: momentStartDateFormatted = ', momentStartDateFormatted);
         // console.log('isValidStartDate: defaults.startDateDefault = ', defaults.startDateDefault);
         // console.log('isValidStartDate: !!moment(startDate).isValid() = ', !!moment(startDate).isValid());
         // console.log("isValidStartDate: startDate !== '' = ", startDate !== '');
+        // console.log('isValidStartDate: moment(startDate) >= moment() ', moment(startDate) >= moment());
         // console.log(
-        //     'isValidStartDate: momentStartDateFormatted >= defaults.startDateDefault = ',
-        //     momentStartDateFormatted >= defaults.startDateDefault,
+        //     'isValidStartDate: formattedstartdate >= formattedToday = ',
+        //     formattedstartdate >= formattedToday,
         // );
-        return (
-            startDate !== '' && momentStartDateFormatted >= defaults.startDateDefault && !!moment(startDate).isValid()
-        );
+        // console.log(
+        //     'isValidStartDate: formattedstartdate >= formatteddefaultstartdate = ',
+        //     formattedstartdate >= formatteddefaultstartdate,
+        // );
+        // console.log('isValidStartDate: formattedstartdate = ', formattedstartdate);
+        // console.log('isValidStartDate: formattedToday = ', formattedToday);
+        // console.log('isValidStartDate: formatteddefaultstartdate = ', formatteddefaultstartdate);
+        // console.log('isValidStartDate: is valid', result);
+        return result;
     }
 
     function isInvalidStartDate(startDate) {
@@ -230,7 +244,8 @@ export const SpotlightForm = ({
             url: values.url,
             img_url: defaults.type === 'edit' ? values.img_url : null,
             img_alt: values.img_alt,
-            // new weight on 'add' is high enough it will always drop in on the end
+            // weight will update after save,
+            // but lets just use a number that sits at the end of the current spotlights, as requested
             weight: defaults.type === 'edit' ? values.weight : 1000,
             active: !!values.active ? 1 : 0,
         };
@@ -238,18 +253,25 @@ export const SpotlightForm = ({
 
         console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
+        const saveSpotlightChange = s => {
+            return actions.saveSpotlightChangeWithoutFile(s, 'update');
+        };
         switch (defaults.type) {
             case 'edit':
                 if (!!values.uploadedFile) {
-                    actions.saveSpotlightWithFile(newValues, 'update');
+                    actions
+                        .saveSpotlightWithFile(newValues, 'update')
+                        .then(() => reweightSpotlights(saveSpotlightChange));
                 } else {
-                    actions.saveSpotlightChangeWithoutFile(newValues, 'update');
+                    actions
+                        .saveSpotlightChangeWithoutFile(newValues, 'update')
+                        .then(() => reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             case 'add':
                 // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
                 console.log('handleSpotlightCreation 2: newValues = ', newValues);
-                actions.saveSpotlightWithFile(newValues, 'create');
+                actions.saveSpotlightWithFile(newValues, 'create').then(() => reweightSpotlights(saveSpotlightChange));
                 break;
             default:
                 console.log('an unhandled type of ', defaults.type, ' was provided at SpotlightForm.saveSpotlight');
@@ -292,7 +314,9 @@ export const SpotlightForm = ({
 
     const errorLocale = {
         ...locale.form.add.addSpotlightError,
-        confirmationTitle: `An error occurred: ${spotlightError}`,
+        confirmationTitle: `An error occurred: ${!!spotlightError &&
+            !!spotlightError.message &&
+            spotlightError.message}`,
     };
 
     const uploadErrorLocale = () => {
