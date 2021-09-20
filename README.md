@@ -50,16 +50,15 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
   - runs <http://localhost:2020/>
   - uses dev api for backend (<http://dev-api.library.uq.edu.au:8050/>) (requires additional setup of uqlibrary/api
     project)
-- `npm run start:mock`
+- `npm run start:mock` to use mock data from src/mock
   - runs <http://localhost:2020/>
-  - uses mock data from src/mock
-- `npm run start:url`
-
-  - runs <http://dev-homepage.library.uq.edu.au:2020/> (add `dev-homepage.library.uq.edu.au` to your /etc/hosts)
-  - uses staging data from the aws api as a backend (you will need to set API_URL in .env to `https://api.library.uq.edu.au/staging/`)
+- `npm run start:url`   to use api
+  - runs <http://dev-homepage.library.uq.edu.au:2020/#/>
+  - add `dev-homepage.library.uq.edu.au` to your /etc/hosts file using your external IP)
+  - to use staging data from the aws api as a backend set API_URL in .env to `https://api.library.uq.edu.au/staging/`
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
 
-    - you may need to block CORS errors - eg with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) Chrome Extension, or by launching the browser with CORS disabled.
+  - you may need to block CORS errors - eg with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) Chrome Extension, or by launching the browser with CORS disabled.
 
       ```sh
       google-chrome --disable-web-security --user-data-dir=/tmp/chrome-dev
