@@ -31,7 +31,7 @@ import { default as locale } from '../../spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
-import { getTimeMondayComing } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { getTimeMondayComing, reweightSpotlights } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { destroy } from 'repositories/generic';
 import { SPOTLIGHT_DELETE_API } from 'repositories/routes';
 
@@ -113,7 +113,6 @@ export const SpotlightsListAsTable = ({
     tableType,
     spotlightsLoading,
     history,
-    // deleteSpotlight,
     saveSpotlightChange,
     footerDisplayMinLength,
     canDragRows,
@@ -379,25 +378,6 @@ export const SpotlightsListAsTable = ({
             });
     }
 
-    // const reweightSpotlights = () => {
-    //     console.log('reweightSpotlights', tableType, ' len = ', userows.length, userows);
-    //     let counter = 1;
-    //     console.log('userows = ', userows);
-    //     const localRows = userows.map(s => {
-    //         console.log('check weight', tableType,
-    //         s.id, s.weight, 'counter = ', counter * 10, s.title.substr(0, 20));
-    //         if (s.weight !== counter * 10) {
-    //             console.log('weight mismatch', tableType, s.id, s.weight, counter, s.title.substr(0, 20));
-    //             s.weight = counter * 10;
-    //             persistRowReorder(s, userows);
-    //         }
-    //         counter++;
-    //         return s;
-    //     });
-    //     console.log('localRows = ', localRows);
-    //     setUserows(localRows);
-    // };
-
     function deleteListOfSpotlights(spotlightIDsToBeDeleted) {
         console.log('spotlightIDsToBeDeleted = ', spotlightIDsToBeDeleted);
         const successfulDelete = [];
@@ -429,7 +409,7 @@ export const SpotlightsListAsTable = ({
                     showDeleteFailureConfirmation();
                 } else {
                     console.log('NOT got an error');
-                    //     reweightSpotlights();
+                    reweightSpotlights(saveSpotlightChange);
                 }
                 reEnableAllCheckboxes();
                 clearAllDeleteMarkingCheckboxes();
@@ -879,7 +859,7 @@ export const SpotlightsListAsTable = ({
                                                                     {tableType === 'current' && (
                                                                         <TableCell
                                                                             component="td"
-                                                                            className={classes.tableCell}
+                                                                            className={`order ${classes.tableCell}`}
                                                                             style={{ textAlign: 'center' }}
                                                                         >
                                                                             {spotlight.weight / 10}
@@ -1038,8 +1018,6 @@ SpotlightsListAsTable.propTypes = {
     tableType: PropTypes.string,
     spotlightsLoading: PropTypes.any,
     history: PropTypes.object,
-    actions: PropTypes.any,
-    // deleteSpotlight: PropTypes.any,
     saveSpotlightChange: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,

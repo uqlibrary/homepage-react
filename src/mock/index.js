@@ -132,6 +132,22 @@ mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc
         },
     ]),
 );
+mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
+            start: '2021-03-01 00:01:00',
+            end: '2099-12-07 23:59:00',
+            title: 'Study outdoors in Duhig Place - Study space',
+            url: 'http://bit.ly/3uBIK7C',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
+            weight: 10,
+            active: 0,
+        },
+    ]),
+);
 mock.onAny(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095b' }).apiUrl).reply(
     withDelay([
         200,
