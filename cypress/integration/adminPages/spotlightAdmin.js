@@ -391,7 +391,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
         });
 
-        it.only('can delete current', () => {
+        it('can delete Current spotlights', () => {
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should('contain', 'Can be deleted and edited');
             cy.get(
                 '[data-testid="spotlight-list-row-38cbf430-8693-11e9-98ab-9d52a58e86ca"] input[type="checkbox"]',
@@ -519,7 +519,7 @@ describe('Spotlights Admin Pages', () => {
             // failure is reported in a dialog
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('exist');
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"] h2').contains(
-                'Record Deletion was not successful',
+                'Some records did not delete successfully',
             );
             // dialog can be closed
             cy.get('[data-testid="confirm-spotlight-delete-error-dialog"]').should('exist');

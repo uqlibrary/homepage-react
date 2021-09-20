@@ -143,8 +143,10 @@ export default {
             confirmButtonLabel: 'Proceed',
         },
         deleteError: {
-            confirmationTitle: 'Record Deletion was not successful',
-            confirmationMessage: <Fragment>Please try again later</Fragment>,
+            confirmationTitle: 'Some records did not delete successfully',
+            confirmationMessage: (
+                <Fragment>Refresh the page to see current status and try deletion again later</Fragment>
+            ),
             confirmButtonLabel: 'OK',
         },
         saveError: {
