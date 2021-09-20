@@ -528,6 +528,10 @@ export const SpotlightsListAsTable = ({
                     // then do the save
                     console.log('persist ', reWeightedRow.id);
                     persistRowReorder(reWeightedRow, filtereduserows);
+
+                    const weightCell = document.querySelector(`#spotlight-list-row-${reWeightedRow.id} .order`);
+                    console.log('weightCell = ', weightCell);
+                    !!weightCell && (weightCell.innerHTML = reWeightedRow.weight / 10);
                 }
             });
         });
