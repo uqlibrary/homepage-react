@@ -160,8 +160,8 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    // alertOrder="forwardEnd"
                                     canDragRows
+                                    canUnpublish
                                 />
                             </div>
                             <div
@@ -176,7 +176,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    // alertOrder="forwardEnd"
+                                    canUnpublish
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -188,8 +188,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    // alertOrder="reverseEnd"
-                                    canUnpublish={false}
+                                    canTextFilter
                                 />
                             </div>
                         </Grid>

@@ -118,6 +118,7 @@ export const SpotlightsListAsTable = ({
     footerDisplayMinLength,
     canDragRows,
     canUnpublish,
+    canTextFilter,
 }) => {
     const classes = useStyles();
 
@@ -777,7 +778,7 @@ export const SpotlightsListAsTable = ({
                                     Spotlight
                                 </TableCell>
                                 <TableCell component="th" scope="row" style={{ width: 260 }}>
-                                    {tableType === 'past' && (
+                                    {!!canTextFilter && (
                                         <div style={{ position: 'relative' }}>
                                             <TextField
                                                 data-testid="spotlights-list-clear-text-field"
@@ -1051,13 +1052,15 @@ SpotlightsListAsTable.propTypes = {
     // spotlightOrder: PropTypes.any,
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
+    canTextFilter: PropTypes.bool,
 };
 
 SpotlightsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the spotlight list before we display the paginator
     // spotlightOrder: false, // what order should we sort the spotlights in? false means unspecified
     canDragRows: false, // does this section allow drag and drop
-    canUnpublish: true, // does this section allow the user to have a publish/unpublish checbox?
+    canUnpublish: false, // does this section allow the user to have a publish/unpublish checbox?
+    canTextFilter: false, // show the 'text filter' input field
 };
 
 export default SpotlightsListAsTable;
