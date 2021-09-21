@@ -50,9 +50,30 @@ export const SpotlightsEdit = ({
         );
     }
 
+    const emptySpotlight = {
+        id: spotlightid,
+        startDateDefault: '',
+        endDateDefault: '',
+        title: '',
+        url: '',
+        // eslint-disable-next-line camelcase
+        img_url: '',
+        // eslint-disable-next-line camelcase
+        img_alt: '',
+        weight: 0,
+        active: 0,
+        type: 'edit',
+    };
+
     function setDefaults() {
         const startDateDefault = spotlight?.start ? formatDate(spotlight.start, 'YYYY-MM-DDTHH:mm:ss') : '';
         const endDateDefault = spotlight?.end ? formatDate(spotlight.end, 'YYYY-MM-DDTHH:mm:ss') : '';
+        if (spotlight?.id !== spotlightid) {
+            // after the save returns we (possibly) reweight the other spotlights
+            // they return into this page in the 'spotlight' variable
+            // we dont want to display them
+            return emptySpotlight;
+        }
         return {
             id: spotlight?.id || '',
             startDateDefault: startDateDefault,
