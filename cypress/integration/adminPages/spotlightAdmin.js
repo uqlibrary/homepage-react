@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { default as locale } from '../../../src/modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 const numberCurrentPublishedSpotlights = 4;
 const totalCountPastRecords = 34;
@@ -304,6 +305,10 @@ describe('Spotlights Admin Pages', () => {
 
             // dialog appears
             cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should('exist');
+            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should(
+                'contain',
+                locale.listPage.confirmUnpublish.confirmationMessage,
+            );
 
             // cancel the dialog
             cy.get('[data-testid="confirm-spotlight-confirm-publish-unpublish-dialog"]')
@@ -327,6 +332,19 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()
                 .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+
+            // also check the "publish" dialog is correct
+            cy.get('[data-testid="spotlight-list-item-publish-fba95ec0-77f5-11eb-8c73-9734f9d4b368"]').should(
+                'not.be.checked',
+            );
+            cy.get('[data-testid="spotlight-list-item-publish-fba95ec0-77f5-11eb-8c73-9734f9d4b368"]').check();
+
+            // dialog appears
+            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should('exist');
+            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should(
+                'contain',
+                locale.listPage.confirmPublish.confirmationMessage,
+            );
         });
         it('an error displays when a save-on-change-publish api error occurs', () => {
             cy.get('[data-testid="spotlight-list-item-publish-1e7a5980-d7d6-11eb-a4f2-fd60c7694898"]').uncheck();

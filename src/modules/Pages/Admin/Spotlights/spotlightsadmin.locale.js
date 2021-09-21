@@ -154,9 +154,15 @@ export default {
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
         },
-        confirmPublishUnpublish: {
-            confirmationTitle: 'Change the publication status',
-            confirmationMessage: 'Are you sure you want to change the publication status of this spotlight?',
+        confirmPublish: {
+            confirmationTitle: 'Confirm publish',
+            confirmationMessage: 'Are you sure you wish to publish this spotlight?',
+            cancelButtonLabel: 'OK',
+            confirmButtonLabel: 'Cancel',
+        },
+        confirmUnpublish: {
+            confirmationTitle: 'Confirm unpublish',
+            confirmationMessage: 'Are you sure you wish to unpublish this spotlight?',
             cancelButtonLabel: 'OK',
             confirmButtonLabel: 'Cancel',
         },

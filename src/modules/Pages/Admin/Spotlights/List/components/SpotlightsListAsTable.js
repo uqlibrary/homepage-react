@@ -138,6 +138,7 @@ export const SpotlightsListAsTable = ({
     const [spotlightNotice, setSpotlightNotice] = useState('');
     const [userows, setUserows] = useState([]);
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
+    const [publishUnpublishLocale, setPublishUnpublishLocale] = useState('');
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
@@ -537,10 +538,16 @@ export const SpotlightsListAsTable = ({
         });
     };
 
+    const confirmPublishUnpublishLocale = isCurrentlyActive => {
+        return !!isCurrentlyActive ? locale.listPage.confirmUnpublish : locale.listPage.confirmPublish;
+    };
+
     const handlePublishCheckbox = () => event => {
         console.log('handlePublishCheckbox event = ', event);
         const checkboxId = event.target?.id.replace('spotlight-published-', '');
         console.log('checkboxId = ', checkboxId);
+        const spotlight = userows.find(r => r.id === checkboxId);
+        setPublishUnpublishLocale(confirmPublishUnpublishLocale(spotlight.active));
         setSelectedSpotlight(checkboxId);
         showPublishUnpublishConfirmation(true);
     };
@@ -692,7 +699,7 @@ export const SpotlightsListAsTable = ({
                 onClose={hidePublishUnpublishConfirmation}
                 onCancelAction={() => handlePublishCheckboxConfirmation()}
                 isOpen={isPublishUnpublishConfirmationOpen}
-                locale={locale.listPage.confirmPublishUnpublish}
+                locale={publishUnpublishLocale}
             />
             <Grid
                 data-testid={`headerRow-${tableType}`}
