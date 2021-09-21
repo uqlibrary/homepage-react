@@ -47,17 +47,11 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
-    maxWeight,
 }) => {
-    // console.log('uploadPublicFile: publicFileUploading = ', publicFileUploading);
-    // console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
-    // console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
     console.log('spotlightError = ', spotlightError);
-    console.log('maxWeight = ', maxWeight);
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
-    // const [isOpenUploadFile, showErrorUploadFile, hideConfirmationUploadFile] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [uploadedFiles, setUploadedFiles] = useState(null);
@@ -589,14 +583,12 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
-    maxWeight: PropTypes.any,
 };
 
 SpotlightForm.defaultProps = {
     publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
     publicFileUploadError: false,
     publicFileUploadResult: false,
-    maxWeight: 0, // the max weight currently found in the spotlights - used to calculate the new value when adding
 };
 
 export default SpotlightForm;

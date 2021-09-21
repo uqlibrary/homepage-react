@@ -46,7 +46,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
-export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton, maxWeight }) => {
+export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton }) => {
     const classes = useStyles();
 
     const [lightboxOpen, setLightboxOpen] = useState(false);
@@ -61,7 +61,7 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
 
     const navigateToAddPage = () => {
         actions.clearASpotlight();
-        history.push(`/admin/spotlights/add?maxWeight=${maxWeight}`);
+        history.push('/admin/spotlights/add');
     };
 
     return (
@@ -126,7 +126,6 @@ SpotlightsUtilityArea.propTypes = {
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
-    maxWeight: PropTypes.number,
 };
 
 SpotlightsUtilityArea.defaultProps = {

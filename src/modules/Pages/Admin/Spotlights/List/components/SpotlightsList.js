@@ -117,13 +117,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         return actions.saveSpotlightChangeWithoutFile(spotlight, 'update');
     };
 
-    // get the current highest weight spotlight so when we create one we can calc the new max
-    // and thus put it on the end of the list (without having to load spotlights again)
-    const maxWeight =
-        !!spotlights && spotlights.length > 0
-            ? spotlights.reduce((prev, current) => (prev.weight > current.weight ? prev : current)).weight
-            : 0;
-
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -137,7 +130,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                     helpContent={locale.listPage.help}
                     history={history}
                     showAddButton
-                    maxWeight={maxWeight}
                 />
                 <StandardCard title="All spotlights" noPadding>
                     <Grid container>

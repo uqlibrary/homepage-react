@@ -23,25 +23,6 @@ export const SpotlightsAdd = ({
     publicFileUploadError,
     publicFileUploadResult,
 }) => {
-    const getUrlSearchParams = theUrl => {
-        if (theUrl.search.startsWith('?')) {
-            // prod and localhost
-            return new URLSearchParams(theUrl.search);
-        }
-        /* istanbul ignore next */
-        if (theUrl.hash.startsWith('#') && theUrl.hash.includes('?')) {
-            // staging & feature branches have the search params inside the hash :(
-            const search = theUrl.hash.split('?')[1];
-            return new URLSearchParams('?' + search);
-        }
-        return new URLSearchParams(theUrl);
-    };
-
-    const url = new URL(document.location);
-    const searchParams = getUrlSearchParams(url);
-    const maxWeight = searchParams.get('maxWeight');
-    console.log('maxWeight = ', maxWeight);
-
     const defaults = {
         id: '',
         startDateDefault: getTimeMondayMidnightNext(),
@@ -70,7 +51,6 @@ export const SpotlightsAdd = ({
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
                         publicFileUploadResult={publicFileUploadResult}
-                        maxWeight={maxWeight}
                     />
                 </StandardCard>
             </section>
