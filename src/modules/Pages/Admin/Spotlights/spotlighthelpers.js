@@ -125,20 +125,20 @@ export const reweightSpotlights = saveSpotlightChange => {
                 } else {
                     newWeight = (Number(index) + 1) * 10;
                 }
-                (!isPastSpotlight(s) || s.weight !== newWeight) &&
-                    console.log(
-                        'reWeightSpotlights updating ',
-                        index,
-                        // eslint-disable-next-line no-nested-ternary
-                        isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
-                        s.id,
-                        s.title.substr(0, 20),
-                        s.start,
-                        ' from ',
-                        s.weight,
-                        ' to ',
-                        newWeight,
-                    );
+                // (!isPastSpotlight(s) || s.weight !== newWeight) &&
+                //     console.log(
+                //         'reWeightSpotlights updating ',
+                //         index,
+                //         // eslint-disable-next-line no-nested-ternary
+                //         isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
+                //         s.id,
+                //         s.title.substr(0, 20),
+                //         s.start,
+                //         ' from ',
+                //         s.weight,
+                //         ' to ',
+                //         newWeight,
+                //     );
                 return {
                     ...s,
                     weight: newWeight,
