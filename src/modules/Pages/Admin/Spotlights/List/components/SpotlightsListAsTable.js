@@ -644,8 +644,12 @@ export const SpotlightsListAsTable = ({
         setTextSearch(filterTerm);
         setUserows(
             [...staticUserows].filter(r => {
-                const lowercase = r.title.toLowerCase();
-                return lowercase.includes(filterTerm.toLowerCase());
+                const lowercaseLinkAria = r.title.toLowerCase();
+                const lowercaseImgAlt = r.img_alt.toLowerCase();
+                return (
+                    lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
+                    lowercaseImgAlt.includes(filterTerm.toLowerCase())
+                );
             }),
         );
     };
@@ -903,6 +907,7 @@ export const SpotlightsListAsTable = ({
                                                                         <img
                                                                             alt={spotlight.img_alt}
                                                                             src={spotlight.img_url}
+                                                                            title={spotlight.img_alt}
                                                                             style={{ width: 220, minHeight: 80 }}
                                                                         />
                                                                     </TableCell>

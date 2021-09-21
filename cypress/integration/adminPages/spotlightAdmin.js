@@ -372,12 +372,16 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlight-list-past"] tbody')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
+                getFooterLabel(totalCountPastRecords),
+            );
 
             cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
             cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
             cy.get('[data-testid="spotlight-list-past"] tbody')
                 .children()
                 .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(3, 3));
 
             cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
                 .should('exist')
@@ -385,6 +389,22 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlight-list-past"] tbody')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(
+                getFooterLabel(totalCountPastRecords),
+            );
+
+            cy.get('[data-testid="spotlights-list-clear-text-field"] input')
+                .clear()
+                .type('u');
+            cy.get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(20));
+            // change the page-size selector and more records appear
+            cy.get(
+                '[data-testid="admin-spotlights-list-past-list"] [data-testid="admin-spotlights-list-paginator-select"]',
+            ).select('25');
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(20, 20));
         });
     });
     context('Spotlight Admin deletion', () => {
