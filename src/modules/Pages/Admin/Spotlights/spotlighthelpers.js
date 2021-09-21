@@ -84,13 +84,14 @@ export const reweightSpotlights = saveSpotlightChange => {
     // manually get the api and make the updates
     get(SPOTLIGHTS_ALL_API()).then(list0 => {
         console.log('reweightSpotlights response = ', list0);
+        // used to get the complete list back when the user clears the filter field
         const listUnchanged = list0.map(s => s);
         console.log('reweightSpotlights listUnchanged = ', listUnchanged);
-        let list = list0.map(s => s);
+        const list = list0.map(s => s);
         // temp for early dev
-        if (window.location.hostname === 'localhost') {
-            list = list0.filter(r => r.id !== '9eab3aa0-82c1-11eb-8896-eb36601837f5');
-        }
+        // if (window.location.hostname === 'localhost') {
+        //     list = list0.filter(r => r.id !== '9eab3aa0-82c1-11eb-8896-eb36601837f5');
+        // }
         list.map(s => {
             // sort current then scheduled and then past
             if (isPastSpotlight(s)) {

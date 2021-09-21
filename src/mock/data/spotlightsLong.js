@@ -306,7 +306,7 @@ export const spotlightsLong = [{
     "url": "https:\/\/web.library.uq.edu.au\/library-services\/students\/past-exam-papers",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Preparing for exams? Search past exam papers.",
-    "weight": 20,
+    "weight": 0,
     "active": 1
 }, {
     "id": "38cbf430-8693-11e9-98ab-9d52a58e86cb",

@@ -320,20 +320,28 @@ export const SpotlightsListAsTable = ({
         clearAllDeleteMarkingCheckboxes();
     }
 
+    const cleanSpotlight = s => {
+        // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
+        return {
+            id: s.id,
+            start: s.start,
+            end: s.end,
+            title: s.title,
+            url: s.url,
+            img_url: s.img_url,
+            img_alt: s.img_alt,
+            weight: s.weight,
+            active: s.active,
+        };
+    };
+
     function persistRowReorder(r, filtereduserows) {
         const currentRow = rows.find(row => row.id === r.id);
-        // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
         const rowToUpdate = {
-            id: currentRow.id,
-            start: currentRow.start,
-            end: currentRow.end,
-            title: currentRow.title,
-            url: currentRow.url,
-            img_url: currentRow.img_url,
-            img_alt: currentRow.img_alt,
-            active: currentRow.active,
+            ...cleanSpotlight(currentRow),
             weight: r.weight,
         };
+        console.log('rowToUpdate = ', r.weight, rowToUpdate.weight);
         console.log('send for save: ', rowToUpdate);
         saveSpotlightChange(rowToUpdate)
             .then(() => {
@@ -527,18 +535,12 @@ export const SpotlightsListAsTable = ({
         }
         const updateableRow = rows.find(r => r.id === selectedSpotlight);
         const newState = !!updateableRow && !updateableRow.active ? 1 : 0;
-        // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
         const rowToUpdate = {
-            id: updateableRow.id,
-            start: updateableRow.start,
-            end: updateableRow.end,
-            title: updateableRow.title,
-            url: updateableRow.url,
-            img_url: updateableRow.img_url,
-            img_alt: updateableRow.img_alt,
-            weight: updateableRow.weight,
+            ...cleanSpotlight(updateableRow),
             active: newState,
         };
+        console.log('rowToUpdate = ', newState, rowToUpdate.active);
+
         setUserows(prevState => {
             const data = [...prevState];
             data.map(r => r.id === selectedSpotlight && (r.active = newState));

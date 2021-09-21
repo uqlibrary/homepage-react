@@ -369,6 +369,7 @@ describe('Spotlights Admin Pages', () => {
         });
         it('can filter the Past Spotlights by text string', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
+            cy.wait(50);
             cy.get('[data-testid="spotlight-list-past"] tbody')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
@@ -847,7 +848,7 @@ describe('Spotlights Admin Pages', () => {
                 .should('not.be.disabled')
                 .click();
             cy.wait(50);
-            cy.get('.MuiDialog-container').contains('A spotlight has been added');
+            cy.get('body').contains('A spotlight has been added');
             // click 'add another spotlight' button in dialog
             cy.get('[data-testid="confirm-spotlight-add-save-succeeded"]').click();
             // the spotlight page reloads with a blank form
@@ -912,7 +913,7 @@ describe('Spotlights Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('can update a spotlight', () => {
+        it('can make changes to spotlight fields on the edit form', () => {
             cy.wait(1000); // these waits fix "this element is detached from the DOM" errors :(
             cy.get('[data-testid="admin-spotlights-form-title"] input')
                 .clear()
@@ -933,11 +934,14 @@ describe('Spotlights Admin Pages', () => {
                 .contains('OK')
                 .click();
 
+            cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
+        });
+        it('the save runs correctly', () => {
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
             cy.wait(50);
-            cy.get('.MuiDialog-container').contains('The spotlight has been updated');
+            cy.get('body').contains('The spotlight has been updated');
             // click ''view list'' button in dialog
             cy.get('[data-testid="confirm-spotlight-edit-save-succeeded"]').click();
             // the list page reloads
