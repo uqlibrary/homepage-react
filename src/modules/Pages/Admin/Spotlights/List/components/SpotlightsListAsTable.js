@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Checkbox from '@material-ui/core/Checkbox';
 import Grid from '@material-ui/core/Grid';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
+import TextField from '@material-ui/core/TextField';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -137,8 +138,10 @@ export const SpotlightsListAsTable = ({
     const [deleteActive, setDeleteActive] = useState(false);
     const [spotlightNotice, setSpotlightNotice] = useState('');
     const [userows, setUserows] = useState([]);
+    const [staticUserows, setStaticUserows] = useState([]);
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
     const [publishUnpublishLocale, setPublishUnpublishLocale] = useState('');
+    const [textSearch, setTextSearch] = useState('');
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
@@ -176,6 +179,7 @@ export const SpotlightsListAsTable = ({
                     return row;
                 });
             setUserows(localRows);
+            setStaticUserows(localRows);
         },
         [tableType],
     );
@@ -315,34 +319,6 @@ export const SpotlightsListAsTable = ({
         clearAllDeleteMarkingCheckboxes();
     }
 
-    // function handleSuccessfulDeletion(spotlightID) {
-    //     console.log('deleteSpotlightById then ', spotlightID);
-    //     setSpotlightNotice('');
-    //     setDeleteActive(false);
-    //
-    //     // remove from current display
-    //     setUserows(prevState => {
-    //         console.log('prevState = ', prevState);
-    //         const data = [...prevState];
-    //         const toDelete1 = userows
-    //             .map(r => {
-    //                 return r.id;
-    //             })
-    //             .indexOf(spotlightID);
-    //         data.splice(toDelete1, 1);
-    //         console.log('userows: ', spotlightID, ' toDelete1 row id: ', toDelete1);
-    //         console.log('after delete, resetting userows to ', [...data]);
-    //         return data;
-    //     });
-    //
-    //     // Sometimes it fails to update the visual state from the data deletion, for no reason
-    //     // even though the usestate updates correctly. Hack it so the row goes away
-    //     const rowThatShouldAlreadyBeGone = document.getElementById(`spotlight-list-row-${spotlightID}`);
-    //     !!rowThatShouldAlreadyBeGone && rowThatShouldAlreadyBeGone.remove();
-    //
-    //     clearAllDeleteMarkingCheckboxes();
-    // }
-
     function persistRowReorder(r, filtereduserows) {
         const currentRow = rows.find(row => row.id === r.id);
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
@@ -438,14 +414,6 @@ export const SpotlightsListAsTable = ({
     const handleDeleteSplitAction = spotlightID => {
         console.log('deleteSpotlightById ', spotlightID);
         deleteListOfSpotlights([spotlightID]);
-
-        // // if they check the checkbox and then use the action button to
-        // // delete then the other section is left disabled
-        // const checkboxes = document.querySelectorAll('.markForDeletion input[type="checkbox"]:checked');
-        // if (!!checkboxes || checkboxes.length === 0) {
-        //     reEnableAllCheckboxes();
-        // }
-        // console.log('after handleDeleteSplitAction, userows = ', [...userows]);
     };
 
     const confirmDeleteLocale = numberOfCheckedBoxes => {
@@ -659,6 +627,28 @@ export const SpotlightsListAsTable = ({
         return moment(spotlight.end) <= getTimeMondayComing();
     };
 
+    const clearFilter = () => {
+        setTextSearch('');
+        setUserows(staticUserows);
+    };
+
+    const filterRows = e => {
+        const filterTerm = e.target?.value;
+
+        if (filterTerm === '') {
+            clearFilter();
+            return;
+        }
+
+        setTextSearch(filterTerm);
+        setUserows(
+            [...staticUserows].filter(r => {
+                const lowercase = r.title.toLowerCase();
+                return lowercase.includes(filterTerm.toLowerCase());
+            }),
+        );
+    };
+
     return (
         <Fragment>
             <ConfirmationBox
@@ -786,7 +776,34 @@ export const SpotlightsListAsTable = ({
                                 <TableCell component="th" scope="row" style={{ width: 220 }}>
                                     Spotlight
                                 </TableCell>
-                                <TableCell component="th" scope="row" style={{ width: 260 }} />
+                                <TableCell component="th" scope="row" style={{ width: 260 }}>
+                                    {tableType === 'past' && (
+                                        <div style={{ position: 'relative' }}>
+                                            <TextField
+                                                data-testid="spotlights-list-clear-text-field"
+                                                inputProps={{
+                                                    maxLength: 25,
+                                                    'aria-label': locale.listPage.textSearch.ariaLabel,
+                                                }}
+                                                onChange={filterRows}
+                                                label={locale.listPage.textSearch.displayLabel}
+                                                value={textSearch}
+                                            />
+                                            <CloseIcon
+                                                id="spotlights-list-clear-text-filter-clear-button"
+                                                data-testid="spotlights-list-clear-text-filter-clear-button"
+                                                color="disabled"
+                                                fontSize="small"
+                                                style={{
+                                                    position: 'absolute',
+                                                    bottom: '10%',
+                                                    right: 50,
+                                                }}
+                                                onClick={clearFilter}
+                                            />
+                                        </div>
+                                    )}
+                                </TableCell>
                                 <TableCell component="th" scope="row" style={{ padding: 0 }}>
                                     <TableSortLabel
                                         active={orderBy === ORDERBY_STARTDATE}

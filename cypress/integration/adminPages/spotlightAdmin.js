@@ -367,6 +367,25 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="confirm-spotlight-save-error-dialog"]').click();
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
         });
+        it('can filter the Past Spotlights by text string', () => {
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
+            cy.get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+
+            cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
+            cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
+            cy.get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+
+            cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
+        });
     });
     context('Spotlight Admin deletion', () => {
         /*

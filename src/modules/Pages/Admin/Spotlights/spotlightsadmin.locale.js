@@ -217,5 +217,9 @@ export default {
             deleteSelectedSpotlightsButton: 'Delete spotlight(s)',
             clearSelectedSpotlightsButton: 'Deselect all',
         },
+        textSearch: {
+            displayLabel: 'Quick search',
+            ariaLabel: 'Filter spotlights by entering a word',
+        },
     },
 };
