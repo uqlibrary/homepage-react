@@ -923,6 +923,16 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input')
                 .clear()
                 .type('http://example.com');
+
+            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
+                .should('be.visible')
+                .contains(locale.form.labels.datePopupNowButton)
+                .click();
+            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
+                .contains('OK')
+                .click();
+
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
