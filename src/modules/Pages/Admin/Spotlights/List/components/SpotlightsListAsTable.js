@@ -141,7 +141,7 @@ export const SpotlightsListAsTable = ({
     const [userows, setUserows] = useState([]);
     const [staticUserows, setStaticUserows] = useState([]);
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
-    const [publishUnpublishLocale, setPublishUnpublishLocale] = useState('');
+    const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
     const [textSearch, setTextSearch] = useState('');
     const [cookies, setCookie] = useCookies();
 
