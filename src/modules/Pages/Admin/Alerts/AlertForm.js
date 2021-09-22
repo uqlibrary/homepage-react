@@ -466,11 +466,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl
-                            fullWidth
-                            title="Alert lead text. Appears in bold. Field length of 100 characters."
-                        >
-                            <InputLabel htmlFor="alertTitle">Title *</InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.title}>
+                            <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                             <Input
                                 id="alertTitle"
                                 data-testid="admin-alerts-form-title"
@@ -483,9 +480,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title="Regular body text. Field length of 550 characters.">
+                        <FormControl fullWidth title={locale.form.tooltips.message}>
                             <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
-                                Message *
+                                {locale.form.labels.message}
                             </InputLabel>
                             <Input
                                 id="alertBody"
@@ -509,7 +506,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         data-testid={`admin-alerts-form-start-date-${index}`}
                                         error={isInvalidStartDate(dateset.startDate)}
                                         InputLabelProps={{ shrink: true }}
-                                        label="Start date"
+                                        label={locale.form.labels.startdate}
                                         onChange={handleChange('startDate')}
                                         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                                         type="datetime-local"
@@ -525,7 +522,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         id={`endDate-${index}`}
                                         data-testid={`admin-alerts-form-end-date-${index}`}
                                         InputLabelProps={{ shrink: true }}
-                                        label="End date"
+                                        label={locale.form.labels.enddate}
                                         onChange={handleChange('endDate')}
                                         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                                         type="datetime-local"
@@ -543,7 +540,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         <IconButton
                                             data-testid={`admin-alerts-form-another-date-button-${index}`}
                                             onClick={addDateRow}
-                                            title="Add another alert with the same text but different start and end times"
+                                            title={locale.form.tooltips.addAnotherDateSet}
                                             style={{ minWidth: 60 }}
                                         >
                                             <AddCircleSharpIcon />
@@ -557,7 +554,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         <IconButton
                                             data-testid={`admin-alerts-form-remove-date-button-${index}`}
                                             onClick={() => removeDateRow(index)}
-                                            title="Remove this date/time set from the alert series"
+                                            title={locale.form.tooltips.removeDateSet}
                                         >
                                             <RemoveCircleSharpIcon />
                                         </IconButton>
@@ -573,21 +570,18 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     className={classes.checkboxes}
                 >
                     <Grid item sm={4} xs={12}>
-                        <InputLabel
-                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                            title="Check to add button to alert linking to more information. Displays extra form fields."
-                        >
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.link.checkbox}>
                             <Checkbox
                                 checked={values.linkRequired}
                                 data-testid="admin-alerts-form-checkbox-linkrequired"
                                 onChange={handleChange('linkRequired')}
                                 className={classes.checkbox}
                             />
-                            Add info link
+                            {locale.form.labels.link.checkbox}
                         </InputLabel>
                     </Grid>
                     <Grid item sm={4} xs={12}>
-                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.permanentTooltip}>
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.permanent}>
                             <Checkbox
                                 data-testid="admin-alerts-form-checkbox-permanent"
                                 checked={values.permanentAlert}
@@ -596,11 +590,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 title={locale.form.permanentTooltip}
                                 className={classes.checkbox}
                             />
-                            Permanent
+                            {locale.form.labels.permanent}
                         </InputLabel>
                     </Grid>
                     <Grid item sm={4} xs={12}>
-                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.urgentTooltip}>
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.urgent}>
                             <Checkbox
                                 checked={values.urgent}
                                 data-testid="admin-alerts-form-checkbox-urgent"
@@ -609,7 +603,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 title={locale.form.urgentTooltip}
                                 className={classes.checkbox}
                             />
-                            Urgent
+                            {locale.form.labels.urgent}
                         </InputLabel>
                     </Grid>
                 </Grid>
@@ -623,13 +617,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 >
                     <Grid item md={6} xs={12}>
                         <FormControl fullWidth>
-                            <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
+                            <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                             <Input
                                 id="linkTitle"
                                 data-testid="admin-alerts-form-link-title"
                                 value={values.linkTitle}
                                 onChange={handleChange('linkTitle')}
-                                title="Use destination page title or clear call to action. Minimise length; max length 55 characters."
+                                title={locale.form.tooltips.link.title}
                                 inputProps={{
                                     maxLength: 55,
                                 }}
@@ -638,7 +632,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                     <Grid item md={6} xs={12}>
                         <FormControl fullWidth>
-                            <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
+                            <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                             <Input
                                 type="url"
                                 id="linkUrl"
@@ -646,7 +640,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 value={values.linkUrl}
                                 onChange={handleChange('linkUrl')}
                                 error={!isValidUrl(values.linkUrl)}
-                                title="Please enter a valid URL"
+                                title={locale.form.tooltips.link.url}
                             />
                         </FormControl>
                     </Grid>
