@@ -797,6 +797,9 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-link-title"] input').should('not.be.visible');
             cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input').should('not.be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('not.be.checked');
         });
         it('has a working Edit form', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
@@ -804,6 +807,22 @@ describe('Alerts Admin Pages', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-title"]').type('Updated alert');
+            cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
+            cy.get('[data-testid="admin-alerts-form-button-save"').click();
+            cy.wait(500);
+            cy.get('[data-testid="dialogbox-alert-edit-save-succeeded"] h2').contains('The alert has been updated');
+            // can't do much checking here that it saves properly
+            cy.get('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+        });
+        it('changing a system enables the save button', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.wait(100);
+            cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input')
+                .should('not.be.checked')
+                .check();
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
             cy.wait(500);

@@ -45,7 +45,7 @@ const useStyles = makeStyles(
                 backgroundColor: 'rgba(0, 0, 0, 0.12)',
             },
         },
-        linkTitleWrapper: {
+        box: {
             border: '1px solid rgb(211, 211, 211)',
             marginTop: '1em',
             paddingBottom: '1em',
@@ -97,7 +97,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         return true;
     };
 
-    const handlePreview = showThePreview => {
+    const showHidePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
         if (!alertWrapper) {
@@ -130,7 +130,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
-        !isValid && !!showPreview && handlePreview(false);
+        !isValid && !!showPreview && showHidePreview(false);
 
         return isValid;
     };
@@ -172,6 +172,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     endDate: defaults.endDateDefault,
                 },
             ],
+            ['systems']: [],
         });
     };
 
@@ -223,6 +224,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ['linkUrl']: newLinkUrl,
             ['startDate']: newStartDate,
             ['endDate']: newEndDate,
+            ['systems']: expandableValues.systems || [],
         };
     }
 
@@ -239,7 +241,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
             dateList: values.dateList,
+            systems: values.systems || [],
         };
+        console.log('saveAlerts: newValues = ', newValues);
         newValues.dateList.forEach(dateset => {
             // an 'edit' event will only have one entry in the date array
             const saveableValues = {
@@ -253,7 +257,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
-        handlePreview(false);
+        showHidePreview(false);
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -267,11 +271,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
         if (!!showPreview) {
-            handlePreview(false);
+            showHidePreview(false);
             return;
         }
 
-        handlePreview(true);
+        showHidePreview(true);
         setValues(expandValues(values));
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
@@ -300,6 +304,24 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const handleChange = prop => event => {
+        if (prop === 'system') {
+            const systems = values.systems;
+            if (systems.includes(event.target.name) && !event.target.checked) {
+                // system exists in array and the checkbox has been unchecked. Remove.
+                const index = systems.indexOf(event.target.name);
+                index >= 0 && systems.splice(index, 1);
+            } else if (!systems.includes(event.target.name) && !!event.target.checked) {
+                // system doesnt exist in array and the checkbox has been checked. Add.
+                systems.push(event.target.name);
+            }
+            setValues({
+                ...values,
+                systems: systems,
+            });
+            setFormValidity(validateValues(values));
+            return;
+        }
+
         let dateListIndex = null;
         if (prop === 'startDate') {
             dateListIndex = event?.target?.id.replace('startDate-', '');
@@ -338,7 +360,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
 
         // if the form has changed, hide the Preview
-        handlePreview(false);
+        showHidePreview(false);
     };
 
     const removeDateRow = indexRowToBeRemoved => {
@@ -409,6 +431,23 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ),
         };
     }
+
+    // the slug is saved to the db, the title is displayed on the form
+    // note here what this list needs to be synced with
+    const systemList = [
+        {
+            slug: 'homepage',
+            title: 'Home page',
+        },
+        {
+            slug: 'espace',
+            title: 'eSpace *not yet available',
+        },
+        {
+            slug: 'primo',
+            title: 'Primo',
+        },
+    ];
 
     return (
         <Fragment>
@@ -607,7 +646,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 <Grid
                     container
                     spacing={2}
-                    className={classes.linkTitleWrapper}
+                    className={classes.box}
                     style={{
                         display: values.linkRequired ? 'flex' : 'none',
                     }}
@@ -640,6 +679,35 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 title={locale.form.tooltips.link.url}
                             />
                         </FormControl>
+                    </Grid>
+                </Grid>
+                <Grid container className={classes.box} spacing={2}>
+                    <Grid item xs={12}>
+                        <p>
+                            This alert should <strong>only</strong> appear on...
+                            <span style={{ fontSize: '0.8em' }}> (Leave all blank to show on all systems.)</span>
+                        </p>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {systemList.map(system => {
+                            const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                            return (
+                                <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} key={system.slug}>
+                                    <Checkbox
+                                        checked={!!isChecked}
+                                        data-testid={`admin-alerts-form-checkbox-system-${system.slug}`}
+                                        onChange={handleChange('system')}
+                                        name={system.slug}
+                                        title={system.title}
+                                        className={classes.checkbox}
+                                    />
+                                    {system.title}
+                                </InputLabel>
+                            );
+                        })}
+                    </Grid>
+                    <Grid item xs={12}>
+                        <p>This list is TBA!!</p>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
