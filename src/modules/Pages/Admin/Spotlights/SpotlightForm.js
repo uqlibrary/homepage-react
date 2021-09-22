@@ -51,7 +51,12 @@ export const SpotlightForm = ({
     console.log('spotlightError = ', spotlightError);
     const classes = useStyles();
 
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
+    const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
+    const [isEditOpen, showEditConfirmation, hideEditConfirmation] = useConfirmationState();
+    const [isCloneOpen, showCloneConfirmation, hideCloneConfirmation] = useConfirmationState();
+    const [isUploadOpen, showUploadConfirmation, hideUploadConfirmation] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [uploadedFiles, setUploadedFiles] = useState(null);
@@ -185,21 +190,38 @@ export const SpotlightForm = ({
     useEffect(() => {
         if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
             setValues(defaults); // save success - clear the form!
-            showConfirmation();
+            if (defaults.type === 'edit') {
+                showEditConfirmation();
+            } else if (!publicFileUploadError && defaults.type === 'add') {
+                showAddConfirmation();
+            } else if (defaults.type === 'clone') {
+                showCloneConfirmation();
+            } else if (!!publicFileUploadError) {
+                showUploadConfirmation();
+            }
         }
-    }, [showConfirmation, spotlightResponse, spotlightStatus, defaults]);
+    }, [
+        spotlightResponse,
+        spotlightStatus,
+        defaults,
+        publicFileUploadError,
+        showEditConfirmation,
+        showAddConfirmation,
+        showCloneConfirmation,
+        showUploadConfirmation,
+    ]);
 
     useEffect(() => {
         if (!!spotlightError || spotlightStatus === 'error') {
-            showConfirmation();
+            showErrorConfirmation();
         }
-    }, [showConfirmation, spotlightError, spotlightStatus]);
+    }, [showErrorConfirmation, spotlightError, spotlightStatus]);
 
     useEffect(() => {
         if (!!publicFileUploadError) {
-            showConfirmation();
+            showUploadConfirmation();
         }
-    }, [showConfirmation, publicFileUploadError]);
+    }, [showUploadConfirmation, publicFileUploadError]);
 
     const clearForm = () => {
         setValues(defaults);
@@ -314,26 +336,13 @@ export const SpotlightForm = ({
     };
 
     const uploadErrorLocale = () => {
-        console.log('uploadErrorLocale: publicFileUploadResult = ', publicFileUploadResult);
-        const errorMessage = (!!publicFileUploadResult && publicFileUploadResult[0]) || '';
+        const errorMessage = (!!publicFileUploadError && !!publicFileUploadResult && publicFileUploadResult[0]) || '';
         return {
             ...locale.form.upload.uploadError,
-            // confirmationTitle: 'An error occurred during the upload',
-            confirmationTitle: `An error occurred during the upload${!!errorMessage ? ': ' + errorMessage.trim() : ''}`,
+            confirmationTitle: `An error occurred during the upload${
+                !!errorMessage && typeof errorMessage === 'string' ? ': ' + errorMessage.trim() : ''
+            }`,
         };
-    };
-
-    const handleConfirmation = () => {
-        if (defaults.type === 'edit') {
-            // the action on edit page is always 'return to list'
-            navigateToListPage();
-        } else if (!!spotlightError) {
-            // On error on creation, the button just closes the notification dialog,
-            // allowing the user to correct and try again
-            hideConfirmation(); // form remains loaded
-        } else {
-            clearForm();
-        }
     };
 
     if (!!publicFileUploading) {
@@ -378,68 +387,56 @@ export const SpotlightForm = ({
     return (
         <Fragment>
             <form>
-                {spotlightStatus === 'error' && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-error"
-                        onAction={() =>
-                            spotlightError === 'The requested page could not be found.' && navigateToListPage()
-                        }
-                        onClose={hideConfirmation}
-                        hideCancelButton
-                        isOpen={isOpen}
-                        locale={errorLocale}
-                    />
-                )}
-                {spotlightStatus !== 'error' && defaults.type === 'edit' && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-edit-save-succeeded"
-                        onAction={handleConfirmation}
-                        onClose={hideConfirmation}
-                        hideCancelButton
-                        isOpen={isOpen}
-                        locale={locale.form.edit.editSpotlightConfirmation}
-                    />
-                )}
-                {spotlightStatus !== 'error' && !publicFileUploadError && defaults.type === 'add' && (
-                    <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-add-save-succeeded"
-                        onAction={handleConfirmation}
-                        onClose={hideConfirmation}
-                        onCancelAction={() => navigateToListPage()}
-                        isOpen={isOpen}
-                        locale={locale.form.add.addSpotlightConfirmation}
-                    />
-                )}
-                {spotlightStatus !== 'error' && defaults.type === 'clone' && (
-                    <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-clone-save-succeeded"
-                        onClose={hideConfirmation}
-                        onAction={() => reloadClonePage()}
-                        isOpen={isOpen}
-                        locale={locale.form.clone.cloneSpotlightConfirmation}
-                        onCancelAction={() => navigateToListPage()}
-                    />
-                )}
-                {!!publicFileUploadError && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-file-upload-failed"
-                        onClose={hideConfirmation}
-                        onAction={() => hideConfirmation()}
-                        isOpen={isOpen}
-                        locale={uploadErrorLocale()}
-                        hideCancelButton
-                    />
-                )}
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-error"
+                    onAction={() => spotlightError === 'The requested page could not be found.' && navigateToListPage()}
+                    onClose={hideErrorConfirmation}
+                    hideCancelButton
+                    isOpen={isErrorOpen}
+                    locale={errorLocale}
+                />
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-edit-save-succeeded"
+                    onAction={navigateToListPage}
+                    onClose={hideEditConfirmation}
+                    hideCancelButton
+                    isOpen={isEditOpen}
+                    locale={locale.form.edit.editSpotlightConfirmation}
+                />
+                <ConfirmationBox
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-add-save-succeeded"
+                    onAction={hideAddConfirmation}
+                    onClose={hideAddConfirmation}
+                    onCancelAction={() => navigateToListPage()}
+                    isOpen={isAddOpen}
+                    locale={locale.form.add.addSpotlightConfirmation}
+                />
+                <ConfirmationBox
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-clone-save-succeeded"
+                    onClose={hideCloneConfirmation}
+                    onAction={() => reloadClonePage()}
+                    isOpen={isCloneOpen}
+                    locale={locale.form.clone.cloneSpotlightConfirmation}
+                    onCancelAction={() => navigateToListPage()}
+                />
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-file-upload-failed"
+                    onClose={hideUploadConfirmation}
+                    onAction={() => hideUploadConfirmation()}
+                    isOpen={isUploadOpen}
+                    locale={uploadErrorLocale()}
+                    hideCancelButton
+                />
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
