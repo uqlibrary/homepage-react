@@ -18,6 +18,7 @@ export const pathConfig = {
         masquerade: '/admin/masquerade',
         spotlightsadd: '/admin/spotlights/add',
         spotlightsedit: spotlightid => `/admin/spotlights/edit/${spotlightid}`,
+        spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
         spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
@@ -44,6 +45,7 @@ export const flattedPathConfig = [
     '/admin/alerts/clone',
     '/admin/alerts/view',
     '/admin/spotlights/edit',
+    '/admin/spotlights/view',
 ];
 
 // TODO: will we even have roles?
@@ -172,6 +174,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spotlightViewDisplay = [
+        {
+            path: pathConfig.admin.spotlightsview(spotlightid),
+            component: components.SpotlightsView,
+            // exact: true,
+            pageTitle: locale.pages.admin.spotlights.form.view.title,
+            regExPath: pathConfig.admin.spotlightsview(`(${spotlightidRegExp})`),
+        },
+    ];
+
     const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
     const canSeeSpotlightsAdmin = account && seeSpotlightsAdmin(account);
     return [
@@ -186,6 +198,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(canSeeSpotlightsAdmin ? spotlightsListDisplay : []),
         ...(canSeeSpotlightsAdmin ? spotlightAddDisplay : []),
         ...(canSeeSpotlightsAdmin ? spotlightEditForm : []),
+        ...(canSeeSpotlightsAdmin ? spotlightViewDisplay : []),
         {
             component: components.NotFound,
         },

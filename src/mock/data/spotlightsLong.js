@@ -2,7 +2,7 @@ export const spotlightsLong = [{
     "id": "1e1b0e10-c400-11e6-a8f0-47525a49f469",
     "start": "2016-12-17 12:24:00",
     "end": "2021-02-28 23:59:00",
-    "title": "Can be deleted past #1",
+    "title": "Can be viewed or deleted past #1",
     "url": "https:\/\/web.library.uq.edu.au\/blog\/2016\/12\/your-feedback-july-september-2016",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Feedback on library services",
@@ -306,7 +306,7 @@ export const spotlightsLong = [{
     "url": "https:\/\/web.library.uq.edu.au\/library-services\/students\/past-exam-papers",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Preparing for exams? Search past exam papers.",
-    "weight": 0,
+    "weight": 20,
     "active": 1
 }, {
     "id": "38cbf430-8693-11e9-98ab-9d52a58e86cb",

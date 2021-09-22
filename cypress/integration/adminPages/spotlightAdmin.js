@@ -70,6 +70,12 @@ describe('Spotlights Admin Pages', () => {
             cy.get('h1').should('be.visible');
             cy.get('h1').contains('Authentication required');
         });
+        it('the view page is not available to public users', () => {
+            cy.visit('http://localhost:2020/admin/spotlights/view/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=public');
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Authentication required');
+        });
     });
     context('Spotlights Admin unauthorised access blocked', () => {
         it('the list page is not available to non-authorised users', () => {
@@ -87,6 +93,14 @@ describe('Spotlights Admin Pages', () => {
         it('the edit page is not available to non-authorised users', () => {
             cy.visit(
                 'http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaffnonpriv',
+            );
+            cy.viewport(1300, 1000);
+            cy.get('h1').should('be.visible');
+            cy.get('h1').contains('Permission denied');
+        });
+        it('the view page is not available to non-authorised users', () => {
+            cy.visit(
+                'http://localhost:2020/admin/spotlights/view/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaffnonpriv',
             );
             cy.viewport(1300, 1000);
             cy.get('h1').should('be.visible');
@@ -485,7 +499,10 @@ describe('Spotlights Admin Pages', () => {
             // the pagination updates
         });
         it('the user can delete a spotlight with the split button', () => {
-            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #1');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should(
+                'contain',
+                'Can be viewed or deleted past #1',
+            );
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(34, 5));
             cy.get(
                 '[data-testid="spotlight-list-row-38cbf430-8693-11e9-98ab-9d52a58e86ca"] input[type="checkbox"]',
@@ -519,7 +536,7 @@ describe('Spotlights Admin Pages', () => {
             // deleted record is gone
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should(
                 'not.contain',
-                'Can be deleted past #1',
+                'Can be viewed or deleted past #1',
             );
             // the checkboxes in the other section have been enabled
             cy.get(
@@ -607,7 +624,10 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #2');
 
             // subsequent deletes also succeed
-            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #1');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should(
+                'contain',
+                'Can be viewed or deleted past #1',
+            );
             cy.get('[data-testid="spotlight-list-item-checkbox-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').check();
             cy.get('[data-testid="headerRow-past"] span span').contains('1 spotlight selected');
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #3');
@@ -621,7 +641,10 @@ describe('Spotlights Admin Pages', () => {
                 .contains('Proceed')
                 .click();
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
-            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #1');
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should(
+                'not.contain',
+                'Can be viewed or deleted past #1',
+            );
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #3');
             // the error dialog doesnt appear
             cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
@@ -1026,6 +1049,60 @@ describe('Spotlights Admin Pages', () => {
                 'Drag and drop a spotlight image',
             );
             cy.get('[data-testid="spotlights-form-upload-dropzone"').should('contain', 'Recommended dimensions');
+        });
+    });
+    context('Spotlight Admin View page', () => {
+        beforeEach(() => {
+            cy.visit('http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469?user=uqstaff');
+            cy.viewport(1300, 1000);
+        });
+
+        it('is accessible', () => {
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+            cy.get('h2').should('be.visible');
+            cy.get('h2').contains('View spotlight');
+            cy.wait(1000);
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'Spotlights Admin View',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('the cancel button returns to the list page', () => {
+            cy.wait(100);
+            cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
+                .should('exist')
+                .click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
+            cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
+            cy.get('[data-testid="spotlight-list-current"] tbody')
+                .children()
+                .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
+        });
+        it('has a working Help button on the View page', () => {
+            cy.get('[data-testid="admin-spotlights-view-help-example"]').should('not.exist');
+            cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
+            cy.wait(100);
+            cy.get('[data-testid="admin-spotlights-help-button"]').click();
+            cy.get('[data-testid="admin-spotlights-view-help-example"]').should('be.visible');
+            cy.get('button:contains("Close")').click();
+            cy.get('[data-testid="admin-spotlights-view-help-example"]').should('not.exist');
+        });
+        it('the page displays the correct data', () => {
+            cy.wait(100);
+            cy.get('[data-testid="admin-spotlights-form-title"] input')
+                .should('exist')
+                .should('have.value', 'Can be viewed or deleted past #1');
+            cy.get('[data-testid="admin-spotlights-form-tooltip"] input')
+                .should('exist')
+                .should('have.value', 'Feedback on library services');
+            cy.get('[data-testid="admin-spotlights-form-start-date"] input')
+                .should('exist')
+                .should('have.value', '2016-12-17T12:24:00');
+            cy.get('[data-testid="admin-spotlights-form-end-date"] input')
+                .should('exist')
+                .should('have.value', '2021-02-28T23:59:00');
         });
     });
 });

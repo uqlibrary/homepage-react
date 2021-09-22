@@ -181,6 +181,22 @@ mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601
         },
     ]),
 );
+mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '1e1b0e10-c400-11e6-a8f0-47525a49f469',
+            start: '2016-12-17 12:24:00',
+            end: '2021-02-28 23:59:00',
+            title: 'Can be viewed or deleted past #1',
+            url: 'https://web.library.uq.edu.au/blog/2016/12/your-feedback-july-september-2016',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Feedback on library services',
+            weight: 0,
+            active: 0,
+        },
+    ]),
+);
 mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
     withDelay([
         200,
