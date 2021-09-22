@@ -9,7 +9,6 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
-import TextField from '@material-ui/core/TextField';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -149,25 +148,23 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                     <StandardCard title="View alert" squash>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormControl
-                                    fullWidth
-                                    title="Alert lead text. Appears in bold. Field length of 100 characters."
-                                >
-                                    <InputLabel htmlFor="alertTitle">Title *</InputLabel>
+                                <FormControl fullWidth title={locale.form.tooltips.title}>
+                                    <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                                     <Input
                                         id="alertTitle"
                                         data-testid="admin-alerts-form-title"
                                         value={values.alertTitle}
                                         disabled
+                                        style={{ color: '#333' }}
                                     />
                                 </FormControl>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
-                                <FormControl fullWidth title="Regular body text. Field length of 550 characters.">
+                                <FormControl fullWidth title={locale.form.tooltips.message}>
                                     <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
-                                        Message *
+                                        {locale.form.labels.message}
                                     </InputLabel>
                                     <Input
                                         id="alertBody"
@@ -176,31 +173,32 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                         multiline
                                         rows={2}
                                         disabled
+                                        style={{ color: '#333' }}
                                     />
                                 </FormControl>
                             </Grid>
                         </Grid>
                         <Grid container spacing={2} style={{ marginTop: 12 }}>
                             <Grid item md={6} xs={12}>
-                                <TextField
+                                <InputLabel htmlFor="startDate">{locale.form.labels.startdate}</InputLabel>
+                                <Input
                                     id="startDate"
                                     data-testid="admin-alerts-form-start-date"
-                                    InputLabelProps={{ shrink: true }}
-                                    label="Start date"
-                                    type="datetime-local"
-                                    value={values.startDate}
                                     disabled
+                                    style={{ color: '#333' }}
+                                    value={values.startDate}
+                                    type="datetime-local"
                                 />
                             </Grid>
                             <Grid item md={6} xs={12}>
-                                <TextField
+                                <InputLabel htmlFor="endDate">{locale.form.labels.startdate}</InputLabel>
+                                <Input
                                     id="endDate"
                                     data-testid="admin-alerts-form-end-date"
-                                    InputLabelProps={{ shrink: true }}
-                                    label="End date"
-                                    type="datetime-local"
-                                    value={values.endDate}
                                     disabled
+                                    style={{ color: '#333' }}
+                                    value={values.endDate}
+                                    type="datetime-local"
                                 />
                             </Grid>
                         </Grid>
@@ -211,46 +209,38 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                             className={classes.checkboxes}
                         >
                             <Grid item sm={4} xs={12}>
-                                <InputLabel
-                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                    title="Check to add button to alert linking to more information. Displays extra form fields."
-                                >
+                                <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.link.checkbox}>
                                     <Checkbox
                                         checked={values.linkRequired}
                                         data-testid="admin-alerts-form-checkbox-linkrequired"
                                         className={classes.checkbox}
                                         disabled
                                     />
-                                    Add info link
+                                    {locale.form.labels.link.checkbox}
                                 </InputLabel>
                             </Grid>
                             <Grid item sm={4} xs={12}>
-                                <InputLabel
-                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                                    title={locale.form.permanentTooltip}
-                                >
+                                <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.permanent}>
                                     <Checkbox
                                         data-testid="admin-alerts-form-checkbox-permanent"
                                         checked={values.permanentAlert}
                                         name="permanentAlert"
-                                        title={locale.form.permanentTooltip}
                                         className={classes.checkbox}
                                         disabled
                                     />
-                                    Permanent
+                                    {locale.form.labels.permanent}
                                 </InputLabel>
                             </Grid>
                             <Grid item sm={4} xs={12}>
-                                <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.urgentTooltip}>
+                                <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.urgent}>
                                     <Checkbox
                                         checked={values.urgent}
                                         data-testid="admin-alerts-form-checkbox-urgent"
                                         name="urgent"
-                                        title={locale.form.urgentTooltip}
                                         className={classes.checkbox}
                                         disabled
                                     />
-                                    Urgent
+                                    {locale.form.labels.urgent}
                                 </InputLabel>
                             </Grid>
                         </Grid>
@@ -264,25 +254,28 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                         >
                             <Grid item md={6} xs={12}>
                                 <FormControl fullWidth>
-                                    <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
+                                    <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                                     <Input
                                         id="linkTitle"
                                         data-testid="admin-alerts-form-link-title"
                                         value={values.linkTitle}
-                                        title="Use destination page title or clear call to action. Minimise length; max length 55 characters."
+                                        title={locale.form.tooltips.linktitle}
                                         disabled
+                                        style={{ color: '#333' }}
                                     />
                                 </FormControl>
                             </Grid>
                             <Grid item md={6} xs={12}>
                                 <FormControl fullWidth>
-                                    <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
+                                    <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                                     <Input
                                         type="url"
                                         id="linkUrl"
                                         data-testid="admin-alerts-form-link-url"
+                                        title={locale.form.tooltips.url}
                                         value={values.linkUrl}
                                         disabled
+                                        style={{ color: '#333' }}
                                     />
                                 </FormControl>
                             </Grid>
