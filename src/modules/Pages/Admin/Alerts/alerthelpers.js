@@ -97,4 +97,9 @@ export const systemList = [
         slug: 'primo',
         title: 'Primo',
     },
+    {
+        slug: 'spotlights',
+        title: 'Spotlights',
+        removed: true,
+    },
 ];

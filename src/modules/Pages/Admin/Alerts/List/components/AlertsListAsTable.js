@@ -67,6 +67,9 @@ const useStyles2 = makeStyles(
                 fill: '#595959',
             },
         },
+        removedChip: {
+            textDecoration: 'line-through',
+        },
     }),
     { withTheme: true },
 );
@@ -416,6 +419,8 @@ export const AlertsListAsTable = ({
                                                                     'Unrecognised'}`}
                                                                 title={`This alert is restricted to the ${systemDetails?.title ||
                                                                     'Unrecognised'} system`}
+                                                                className={`${!!systemDetails.removed &&
+                                                                    classes.removedChip}`}
                                                             />
                                                         );
                                                     })}
