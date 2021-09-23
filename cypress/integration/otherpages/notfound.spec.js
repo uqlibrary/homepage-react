@@ -3,7 +3,7 @@ context('ACCESSIBILITY', () => {
         cy.visit('/admin/alerts/?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[id="content-container"]').contains('Page not found');
+        cy.get('div[id="content-container"]').contains('Permission denied');
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Not found admin only',
             scopeName: 'Content',
@@ -48,10 +48,11 @@ context('ACCESSIBILITY', () => {
     });
 });
 context('authorisation errors', () => {
-    it('page that requires Admin returns a not found error to unprivileged users', () => {
-        cy.visit('/admin/alerts/?user=s1111111');
+    it('page that requires Admin returns an error to unprivileged users', () => {
+        cy.visit('/admin/alerts?user=s1111111');
         cy.viewport(1300, 1000);
-        cy.get('[data-testid=page-not-found]').should('exist');
+        cy.get('h1').should('be.visible');
+        cy.get('h1').contains('Permission denied');
     });
     it('page that requires Admin does not return a not found error to privileged users', () => {
         cy.visit('/admin/alerts/?user=uqstaff');
