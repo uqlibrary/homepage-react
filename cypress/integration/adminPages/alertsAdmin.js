@@ -86,14 +86,22 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="headerRow-count-current"]').contains('1 alert');
 
             // this alert has all 3 chips
-            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
-            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Urgent');
-            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
-            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Link');
-            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
-            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains(
-                'Permanent',
-            );
+            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .should('exist')
+                .contains('Urgent');
+            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .should('exist')
+                .contains('Link');
+            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .should('exist')
+                .contains('Permanent');
+            cy.get('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-espace"]')
+                .should('exist')
+                .contains('Systems: eSpace');
+
+            cy.get('[data-testid="alert-list-system-chip-d480b250-9cd8-11eb-88c0-a3882cd6c52e-all"]')
+                .should('exist')
+                .contains('Systems: All');
 
             cy.wait(500);
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
