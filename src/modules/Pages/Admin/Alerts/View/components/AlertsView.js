@@ -22,6 +22,7 @@ import {
     getBody,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
+    systemList,
 } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
@@ -135,6 +136,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'view',
         minimumDate: getTimeNowFormatted(),
+        systems: alert?.systems || [],
     };
 
     return (
@@ -152,7 +154,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                     <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                                     <Input
                                         id="alertTitle"
-                                        data-testid="admin-alerts-form-title"
+                                        data-testid="admin-alerts-view-title"
                                         value={values.alertTitle}
                                         disabled
                                         style={{ color: '#333' }}
@@ -168,7 +170,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                     </InputLabel>
                                     <Input
                                         id="alertBody"
-                                        data-testid="admin-alerts-form-body"
+                                        data-testid="admin-alerts-view-body"
                                         value={values.enteredbody}
                                         multiline
                                         rows={2}
@@ -183,7 +185,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 <InputLabel htmlFor="startDate">{locale.form.labels.startdate}</InputLabel>
                                 <Input
                                     id="startDate"
-                                    data-testid="admin-alerts-form-start-date"
+                                    data-testid="admin-alerts-view-start-date"
                                     disabled
                                     style={{ color: '#333' }}
                                     value={values.startDate}
@@ -194,7 +196,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 <InputLabel htmlFor="endDate">{locale.form.labels.startdate}</InputLabel>
                                 <Input
                                     id="endDate"
-                                    data-testid="admin-alerts-form-end-date"
+                                    data-testid="admin-alerts-view-end-date"
                                     disabled
                                     style={{ color: '#333' }}
                                     value={values.endDate}
@@ -212,7 +214,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.link.checkbox}>
                                     <Checkbox
                                         checked={values.linkRequired}
-                                        data-testid="admin-alerts-form-checkbox-linkrequired"
+                                        data-testid="admin-alerts-view-checkbox-linkrequired"
                                         className={classes.checkbox}
                                         disabled
                                     />
@@ -222,7 +224,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                             <Grid item sm={4} xs={12}>
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.permanent}>
                                     <Checkbox
-                                        data-testid="admin-alerts-form-checkbox-permanent"
+                                        data-testid="admin-alerts-view-checkbox-permanent"
                                         checked={values.permanentAlert}
                                         name="permanentAlert"
                                         className={classes.checkbox}
@@ -235,7 +237,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.urgent}>
                                     <Checkbox
                                         checked={values.urgent}
-                                        data-testid="admin-alerts-form-checkbox-urgent"
+                                        data-testid="admin-alerts-view-checkbox-urgent"
                                         name="urgent"
                                         className={classes.checkbox}
                                         disabled
@@ -257,7 +259,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                     <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                                     <Input
                                         id="linkTitle"
-                                        data-testid="admin-alerts-form-link-title"
+                                        data-testid="admin-alerts-view-link-title"
                                         value={values.linkTitle}
                                         title={locale.form.tooltips.linktitle}
                                         disabled
@@ -271,7 +273,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                     <Input
                                         type="url"
                                         id="linkUrl"
-                                        data-testid="admin-alerts-form-link-url"
+                                        data-testid="admin-alerts-view-link-url"
                                         title={locale.form.tooltips.url}
                                         value={values.linkUrl}
                                         disabled
@@ -280,12 +282,46 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </FormControl>
                             </Grid>
                         </Grid>
+                        <Grid container spacing={2} data-testid="admin-alerts-view-systems">
+                            {values?.systems?.length > 0 ? (
+                                <Fragment>
+                                    <Grid item xs={12}>
+                                        <p>This alert only appeared on...</p>
+                                    </Grid>
+                                    <Grid item xs={12}>
+                                        {values.systems.map(system => {
+                                            const thisSystem = systemList.find(s => s.slug === system);
+                                            return (
+                                                <InputLabel
+                                                    style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                                                    key={thisSystem.slug}
+                                                    data-testid={`admin-alerts-view-checkbox-system-${thisSystem.slug}`}
+                                                >
+                                                    <Checkbox
+                                                        checked
+                                                        name={system.slug}
+                                                        title={system.title}
+                                                        className={classes.checkbox}
+                                                        disabled
+                                                    />
+                                                    {thisSystem.title}
+                                                </InputLabel>
+                                            );
+                                        })}
+                                    </Grid>
+                                </Fragment>
+                            ) : (
+                                <Grid item xs={12}>
+                                    <p>This alert appeared on all systems</p>
+                                </Grid>
+                            )}
+                        </Grid>
                         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                             <Grid item xs={3} align="left">
                                 <Button
                                     color="secondary"
                                     children="Cancel"
-                                    data-testid="admin-alerts-form-button-cancel"
+                                    data-testid="admin-alerts-view-button-cancel"
                                     onClick={() => navigateToListPage()}
                                     variant="contained"
                                 />
@@ -293,7 +329,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                             <Grid item xs={9} align="right">
                                 <Button
                                     color="primary"
-                                    data-testid="admin-alerts-form-button-save"
+                                    data-testid="admin-alerts-view-button-save"
                                     variant="contained"
                                     children="Clone"
                                     onClick={() => navigateToCloneForm()}
