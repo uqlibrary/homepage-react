@@ -377,6 +377,26 @@ export const accounts = {
         "blocked": false,
         "user_group": "HON",
     },
+    uqsfc: {
+        "id": "uqsfc",
+        "class": ["IS_CURRENT"],
+        "type": 18,
+        "homeLib": "St Lucia",
+        "firstName": "SFC",
+        "lastName": "User",
+        "name": "SFC user",
+        "mail": "SFC@example.uq.edu.au",
+        "barcode": "111111111111119",
+        "groups": ["DC=uq","DC=edu","DC=au"],
+        "classes": [],
+        "expiryDate": "31-12-20",
+        "hasSession": true,
+        "tokenBased": false,
+        'canMasquerade': false,
+        'canMasqueradeType': 'none',
+        "blocked": false,
+        "user_group": "SFC",
+    },
     // upos
     // admins
 };
