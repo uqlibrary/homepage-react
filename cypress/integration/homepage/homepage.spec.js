@@ -1,9 +1,6 @@
-import {
-    expectUserToDisplayCorrectFirstName,
-    // hasMyLibraryButtonOptions,
-    hasPanels,
-    hasPersonalisedPanelOptions,
-} from '../../support/access';
+import { expectUserToDisplayCorrectFirstName, hasPanels, hasPersonalisedPanelOptions } from '../../support/access';
+
+// Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
 context('Homepage', () => {
     it('Renders an on-campus undergraduate home page correctly', () => {
@@ -19,19 +16,6 @@ context('Homepage', () => {
             'training',
         ]);
 
-        // this type of user will see these options on the Mylibrary Button:
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     'espace',
-        //     'print-balance',
-        //     'room-bookings',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
-
         // this type of user will see these lines in the Personalisation Panel
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -40,17 +24,6 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('s2222222', 'Jane');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'document-delivery',
-        //     'espace',
-        //     'print-balance',
-        //     'room-bookings',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -67,17 +40,6 @@ context('Homepage', () => {
             'training',
         ]);
 
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     'print-balance',
-        //     'room-bookings',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
-
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -92,17 +54,6 @@ context('Homepage', () => {
             'promo',
             'training',
         ]);
-
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     'espace',
-        //     'print-balance',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
 
         hasPersonalisedPanelOptions(['espace-possible', 'espace-orcid', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
@@ -119,19 +70,6 @@ context('Homepage', () => {
             'training',
         ]);
 
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     'espace',
-        //     'masquerade',
-        //     'print-balance',
-        //     'room-bookings',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
-
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
 
@@ -146,18 +84,6 @@ context('Homepage', () => {
             'promo',
             'training',
         ]);
-
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     // 'espace', // no author record
-        //     'print-balance',
-        //     'room-bookings',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -174,17 +100,6 @@ context('Homepage', () => {
             'training',
         ]);
 
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     'espace',
-        //     'print-balance',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
-
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
     });
 
@@ -192,8 +107,6 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('emcommunity', 'Community');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        // hasMyLibraryButtonOptions(['borrowing', 'print-balance', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -203,8 +116,6 @@ context('Homepage', () => {
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
-        // hasMyLibraryButtonOptions(['borrowing', 'print-balance', 'saved-items', 'saved-searches', 'feedback']);
-
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -212,15 +123,6 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('emhospital', 'Hospital');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'document-delivery',
-        //     'print-balance',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -230,15 +132,6 @@ context('Homepage', () => {
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
 
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'document-delivery',
-        //     'print-balance',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
-
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -246,8 +139,6 @@ context('Homepage', () => {
         expectUserToDisplayCorrectFirstName('emfryer', 'Fryer');
 
         hasPanels(['computer-availability', 'library-hours', 'library-services', 'promo', 'training']);
-
-        // hasMyLibraryButtonOptions(['borrowing', 'print-balance', 'saved-items', 'saved-searches', 'feedback']);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
@@ -264,17 +155,6 @@ context('Homepage', () => {
             'training',
         ]);
 
-        // hasMyLibraryButtonOptions([
-        //     'borrowing',
-        //     'course-resources',
-        //     'document-delivery',
-        //     // 'espace', // no author record
-        //     'print-balance',
-        //     'saved-items',
-        //     'saved-searches',
-        //     'feedback',
-        // ]);
-
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 
@@ -290,18 +170,26 @@ context('Homepage', () => {
         cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
     });
 
-    // it('The skip navigation link works', () => {
-    //     cy.visit('/?user=vanilla');
-    //     cy.wait(1000);
-    //     cy.viewport(1300, 1000);
-    //
-    //     // put focus on the top of the page, tab into the first element, which will be the skip element and hit enter
-    //     cy.get('#skipNavigation')
-    //         .first()
-    //         .focus()
-    //         .click();
-    //     // .type('{enter}', { force: true });
-    //     // current focus is now on an element after the header block
-    //     cy.focused().should('have.attr', 'id', 'primo-search-autocomplete');
-    // });
+    it('Renders a Short Form Credential course student home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
+
+        hasPanels([
+            'computer-availability',
+            'course-resources',
+            'library-hours',
+            'library-services',
+            'promo',
+            'training',
+        ]);
+
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+    });
+
+    it('Renders a new user group home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
+
+        hasPanels(['computer-availability', 'library-hours', 'promo', 'training']);
+
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+    });
 });
