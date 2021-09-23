@@ -897,6 +897,13 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
+        it('tells the user which systems the alert will appear on', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"]')
+                .should('exist')
+                .contains('eSpace');
+        });
     });
     context('Alert Admin Clone page', () => {
         beforeEach(() => {
@@ -1031,6 +1038,13 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-remove-date-button-1"]').click(); // remove a date field
             thisManyRemoveButtonsExist(2);
         });
+        it('tells the user which systems the alert will appear on', () => {
+            cy.visit('http://localhost:2020/admin/alerts/clone/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"]')
+                .should('exist')
+                .contains('eSpace');
+        });
     });
     context('Alert Admin View page', () => {
         beforeEach(() => {
@@ -1144,7 +1158,7 @@ describe('Alerts Admin Pages', () => {
                 });
         });
         it('tells the user when alert appeared on all systems', () => {
-            cy.visit('http://localhost:2020/admin/alerts/view/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.visit('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('[data-testid="admin-alerts-view-systems"]')
                 .should('exist')
