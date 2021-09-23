@@ -56,6 +56,11 @@ const useStyles = makeStyles(
                 fill: '#595959',
             },
         },
+        disabledCheckbox: {
+            '& input[type="checkbox"]:checked + svg': {
+                fill: '#ececec',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -675,15 +680,17 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     <Grid item xs={12}>
                         {systemList.map(system => {
                             const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                            const displayColor = !!system.removed ? null : 'rgba(0, 0, 0, 0.87)';
                             return (
-                                <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} key={system.slug}>
+                                <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
                                     <Checkbox
                                         checked={!!isChecked}
                                         data-testid={`admin-alerts-form-checkbox-system-${system.slug}`}
                                         onChange={handleChange('system')}
                                         name={system.slug}
-                                        title={system.title}
-                                        className={classes.checkbox}
+                                        title={system.title || system.slug || 'Unknown'}
+                                        className={`${!system.removed ? classes.checkbox : classes.disabledCheckbox}`}
+                                        disabled={!!system.removed}
                                     />
                                     {system.title}
                                 </InputLabel>

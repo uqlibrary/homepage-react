@@ -182,7 +182,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }
             title: 'Sample alert 2:',
             body: 'Has mock data.',
             urgent: 0,
-            systems: ['espace'],
+            systems: ['espace', 'spotlights'],
         },
     ]),
 );
