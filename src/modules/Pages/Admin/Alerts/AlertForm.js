@@ -305,7 +305,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const handleChange = prop => event => {
         if (prop === 'system') {
-            const systems = values.systems;
+            const systems = values.systems || [];
             if (systems.includes(event.target.name) && !event.target.checked) {
                 // system exists in array and the checkbox has been unchecked. Remove.
                 const index = systems.indexOf(event.target.name);
