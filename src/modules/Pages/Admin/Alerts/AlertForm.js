@@ -27,6 +27,7 @@ import {
     getTimeNowFormatted,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
+    systemList,
 } from './alerthelpers';
 
 const useStyles = makeStyles(
@@ -431,23 +432,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ),
         };
     }
-
-    // the slug is saved to the db, the title is displayed on the form
-    // note here what this list needs to be synced with
-    const systemList = [
-        {
-            slug: 'homepage',
-            title: 'Home page',
-        },
-        {
-            slug: 'espace',
-            title: 'eSpace *not yet available',
-        },
-        {
-            slug: 'primo',
-            title: 'Primo',
-        },
-    ];
 
     return (
         <Fragment>

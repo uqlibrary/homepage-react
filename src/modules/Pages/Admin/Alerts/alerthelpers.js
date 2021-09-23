@@ -81,3 +81,20 @@ export function extractFieldsFromBody(content) {
         message: theMessage,
     };
 }
+
+// the slug is saved to the db, the title is displayed on the form
+// note here what this list needs to be synced with, for other systems to call it (reusable-webcomponents somewhere?)
+export const systemList = [
+    {
+        slug: 'homepage',
+        title: 'Home page',
+    },
+    {
+        slug: 'espace',
+        title: 'eSpace *not yet available',
+    },
+    {
+        slug: 'primo',
+        title: 'Primo',
+    },
+];
