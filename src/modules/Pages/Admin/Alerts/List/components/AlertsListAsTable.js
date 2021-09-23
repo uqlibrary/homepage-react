@@ -25,6 +25,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
 import SplitButton from './SplitButton';
+import { systemList } from '../../alerthelpers';
 
 const moment = require('moment');
 
@@ -65,6 +66,9 @@ const useStyles2 = makeStyles(
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#595959',
             },
+        },
+        removedChip: {
+            textDecoration: 'line-through',
         },
     }),
     { withTheme: true },
@@ -390,6 +394,36 @@ export const AlertsListAsTable = ({
                                                         title="This alert cannot be dismissed"
                                                     />
                                                 )}
+                                                {(!alert.systems || alert.systems.length === 0) && (
+                                                    <Chip
+                                                        data-testid={`alert-list-system-chip-${alert.id}-all`}
+                                                        label="Systems: All"
+                                                        title="This alert displays on all systems"
+                                                    />
+                                                )}
+                                                {!!alert.systems &&
+                                                    alert.systems.length > 0 &&
+                                                    alert.systems.map((systemSlug, index) => {
+                                                        const systemDetails = systemList.find(
+                                                            s => s.slug === systemSlug,
+                                                        );
+                                                        return (
+                                                            <Chip
+                                                                key={`alert-list-system-chip-${systemDetails?.slug ||
+                                                                    index}`}
+                                                                data-testid={`alert-list-system-chip-${
+                                                                    alert.id
+                                                                }-${systemDetails?.slug || index}`}
+                                                                label={`Systems: ${systemDetails?.title ||
+                                                                    systemDetails?.slug ||
+                                                                    'Unrecognised'}`}
+                                                                title={`This alert is restricted to the ${systemDetails?.title ||
+                                                                    'Unrecognised'} system`}
+                                                                className={`${!!systemDetails.removed &&
+                                                                    classes.removedChip}`}
+                                                            />
+                                                        );
+                                                    })}
                                             </div>
                                         </TableCell>
                                         <TableCell component="td" align="center" className={classes.startDate}>

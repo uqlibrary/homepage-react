@@ -586,6 +586,7 @@ export const alertList = [
         "end": "2031-07-02 18:30:34",
         "title": "Example alert:",
         "body": "This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
-        "urgent": 1
+        "urgent": 1,
+        systems: ['espace'],
     },
 ];
