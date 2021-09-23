@@ -900,7 +900,8 @@ describe('Alerts Admin Pages', () => {
         it('tells the user which systems the alert will appear on', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"]')
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"]')
+                .parent()
                 .should('exist')
                 .contains('eSpace');
         });
@@ -1041,7 +1042,8 @@ describe('Alerts Admin Pages', () => {
         it('tells the user which systems the alert will appear on', () => {
             cy.visit('http://localhost:2020/admin/alerts/clone/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"]')
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"]')
+                .parent()
                 .should('exist')
                 .contains('eSpace');
         });
