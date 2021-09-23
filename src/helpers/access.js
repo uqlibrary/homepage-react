@@ -2,7 +2,7 @@ import { default as locale } from 'modules/Index/components/locale';
 
 /**
 
- * (matching ptype in breackets at start)
+ * (matching ptype in brackets at start, where itis an older )
  * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
  * (31) REMUG: remote undergraduate - sample users: s3333333
  * (5) ICTE: Institute of Continuing and TESOL Education - Students learning english
@@ -19,6 +19,8 @@ import { default as locale } from 'modules/Index/components/locale';
  * (27) FRYVISITOR: extra-mural users - special membership of Fryer Library - sample users: emfryer
  * (34) HON: extra-mural users - Honorary (inc. Adjunct and Indstury Fellow)
  * (32) VET: VET students - Vocational Education and Training
+ * SFC: Short Form Credential course students
+ * REMSFC: Remote Short Form Credential course students
  *
  * other types:
  * (?) ATH
@@ -29,6 +31,8 @@ const UNDERGRADUATE_GENERAL = 'UG';
 const UNDERGRADUATE_REMOTE = 'REMUG';
 const UNDERGRADUATE_TESOL = 'ICTE';
 const UNDERGRADUATE_VOCATIONAL = 'VET';
+const SHORT_FORM_CREDENTIAL_COURSE = 'SFC';
+const SHORT_FORM_CREDENTIAL_COURSE_REMOTE = 'REMSFC';
 
 const POSTGRAD_COURSEWORK = 'CWPG';
 const POSTGRAD_COURSEWORK_REMOTE = 'REMCWPG';
@@ -70,6 +74,8 @@ export const seeCourseResources = account => {
             POSTGRAD_COURSEWORK,
             POSTGRAD_COURSEWORK_REMOTE,
             EXTRAMURAL_HONORARY,
+            SHORT_FORM_CREDENTIAL_COURSE,
+            SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
         ].includes(account.user_group)
     );
 };
@@ -87,6 +93,8 @@ export const seeRoomBookings = account =>
         POSTGRAD_COURSEWORK_REMOTE,
         POSTGRAD_RESEARCH,
         POSTGRAD_RESEARCH_REMOTE,
+        SHORT_FORM_CREDENTIAL_COURSE,
+        SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
     ].includes(account.user_group);
 
 export const seeLoans = account => loggedinCanSee(account);
@@ -112,6 +120,8 @@ export const seeDocumentDelivery = account =>
         OTHER_STAFF,
         LIBRARY_STAFF,
         STAFF_AWAITING_AURION,
+        SHORT_FORM_CREDENTIAL_COURSE,
+        SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
     ].includes(account.user_group);
 
 export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
@@ -141,6 +151,8 @@ const userGroupServices = {
     [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
     [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
     [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
+    [SHORT_FORM_CREDENTIAL_COURSE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [SHORT_FORM_CREDENTIAL_COURSE_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
 
     [LIBRARY_STAFF]: [
         'servicesforstudents',

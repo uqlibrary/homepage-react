@@ -304,4 +304,19 @@ context('Homepage', () => {
     //     // current focus is now on an element after the header block
     //     cy.focused().should('have.attr', 'id', 'primo-search-autocomplete');
     // });
+
+    it('Renders a Short Form Credential course student home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
+
+        hasPanels([
+            'computer-availability',
+            'course-resources',
+            'library-hours',
+            'library-services',
+            'promo',
+            'training',
+        ]);
+
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+    });
 });
