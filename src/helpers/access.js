@@ -1,6 +1,8 @@
 import { default as locale } from 'modules/Index/components/locale';
 
 /**
+    Note: the mylibrary button is setup in reusable-webcomponents
+    User settings also need to be created in that repo
 
  * (matching ptype in brackets at start, where itis an older )
  * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
