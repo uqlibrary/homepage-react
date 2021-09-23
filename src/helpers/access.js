@@ -4,7 +4,7 @@ import { default as locale } from 'modules/Index/components/locale';
     Note: the mylibrary button is setup in reusable-webcomponents
     User settings also need to be created in that repo
 
- * (matching ptype in brackets at start, where itis an older )
+ * (matching ptype in brackets at start, where it is an older type )
  * (1) UG: undergraduate (on campus) - sample users: vanilla, s1111111
  * (31) REMUG: remote undergraduate - sample users: s3333333
  * (5) ICTE: Institute of Continuing and TESOL Education - Students learning english
@@ -55,6 +55,60 @@ const EXTRAMURAL_PROXY = 'PROXY';
 
 export const TRAINING_FILTER_GENERAL = 104;
 export const TRAINING_FILTER_HOSPITAL = 360;
+
+// what is displayed in the User Services panel on the homepage, determined per group
+const userGroupServices = {
+    [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
+    [UNDERGRADUATE_TESOL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [UNDERGRADUATE_VOCATIONAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [POSTGRAD_COURSEWORK]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
+    [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
+    [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
+    [SHORT_FORM_CREDENTIAL_COURSE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+    [SHORT_FORM_CREDENTIAL_COURSE_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
+
+    [LIBRARY_STAFF]: [
+        'servicesforstudents',
+        'servicesforhdrs',
+        'servicesforcommunity',
+        'servicesforhospital',
+        'servicesforprofessional',
+        'servicesforresearchers',
+        'servicesforsecondary',
+        'servicesforteaching',
+        'servicesforalumni',
+        'servicesforexternal',
+    ],
+    [OTHER_STAFF]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
+    [STAFF_AWAITING_AURION]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
+
+    [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
+    [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
+    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
+    [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
+    [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
+    [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
+    [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
+};
+
+export const getUserServices = (account, serviceLocale = null) => {
+    const thislocale = serviceLocale === null ? locale : serviceLocale;
+    const allLibraryServices = thislocale.LibraryServices?.links || [];
+    if (allLibraryServices.length === 0) {
+        return [];
+    }
+
+    if (!account || !account.user_group) {
+        return [];
+    }
+
+    const userGroupService = userGroupServices[account.user_group] || [];
+    return userGroupService
+        .map(service => allLibraryServices.find(i => (i.id || '') === service))
+        .filter(i => i !== undefined);
+};
 
 // everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
 // (this means if an option changes from everyone to logged in, we only need to change the call internally here)
@@ -128,7 +182,15 @@ export const seeDocumentDelivery = account =>
 
 export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
 
-export const seeLibraryServices = account => loggedinCanSee(account);
+export const seeLibraryServices = account => {
+    if (!loggedinCanSee(account)) {
+        return false;
+    }
+    // if the user has no services (should only be a brand new group we havent configured yet)
+    // then dont display the panel
+    const userServices = getUserServices(account);
+    return !!userServices && userServices.length > 0;
+};
 
 export const isHospitalUser = account =>
     !!account && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
@@ -141,60 +203,6 @@ const hasSpotlightsADAccess = account => {
 
 export const seeAlertsAdmin = account => {
     return !!account && !!hasSpotlightsADAccess(account);
-};
-
-// what is displayed in the User Services panel on the homepage, determined per group
-const userGroupServices = {
-    [UNDERGRADUATE_GENERAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_REMOTE]: ['servicesforstudents', 'servicesforexternal', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_TESOL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [UNDERGRADUATE_VOCATIONAL]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [POSTGRAD_COURSEWORK_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials', 'servicesforexternal'],
-    [POSTGRAD_RESEARCH]: ['servicesforhdrs', 'ithelp'],
-    [POSTGRAD_RESEARCH_REMOTE]: ['servicesforhdrs', 'ithelp', 'servicesforexternal'],
-    [SHORT_FORM_CREDENTIAL_COURSE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-    [SHORT_FORM_CREDENTIAL_COURSE_REMOTE]: ['servicesforstudents', 'ithelp', 'digitalessentials'],
-
-    [LIBRARY_STAFF]: [
-        'servicesforstudents',
-        'servicesforhdrs',
-        'servicesforcommunity',
-        'servicesforhospital',
-        'servicesforprofessional',
-        'servicesforresearchers',
-        'servicesforsecondary',
-        'servicesforteaching',
-        'servicesforalumni',
-        'servicesforexternal',
-    ],
-    [OTHER_STAFF]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-    [STAFF_AWAITING_AURION]: ['servicesforprofessional', 'servicesforresearchers', 'servicesforteaching'],
-
-    [EXTRAMURAL_COMMUNITY_PAID]: ['servicesforcommunity'],
-    [EXTRAMURAL_ALUMNI]: ['servicesforalumni'],
-    [EXTRAMURAL_HOSPITAL]: ['servicesforhospital', 'requestliteraturesearch'],
-    [EXTRAMURAL_ASSOCIATE]: ['servicesforcommunity'],
-    [EXTRAMURAL_FRYER]: ['servicesforcommunity'],
-    [EXTRAMURAL_HONORARY]: ['servicesforcommunity'],
-    [EXTRAMURAL_PROXY]: ['servicesforcommunity'],
-};
-
-export const getUserServices = (account, serviceLocale = null) => {
-    const thislocale = serviceLocale === null ? locale : serviceLocale;
-    const allLibraryServices = thislocale.LibraryServices?.links || [];
-    if (allLibraryServices.length === 0) {
-        return [];
-    }
-
-    if (!account || !account.user_group) {
-        return [];
-    }
-
-    const userGroupService = userGroupServices[account.user_group] || [];
-    return userGroupService
-        .map(service => allLibraryServices.find(i => (i.id || '') === service))
-        .filter(i => i !== undefined);
 };
 
 export const isHdrStudent = account =>

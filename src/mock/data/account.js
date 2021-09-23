@@ -397,6 +397,27 @@ export const accounts = {
         "blocked": false,
         "user_group": "SFC",
     },
+    newUserGroup: {
+        // if a new user group is created before we have a chance to add it to access.js, they will be like this
+        "id": "newUserGroup",
+        "class": ["IS_CURRENT"],
+        "type": 18,
+        "homeLib": "St Lucia",
+        "firstName": "New",
+        "lastName": "User Group",
+        "name": "New User Group",
+        "mail": "new@example.uq.edu.au",
+        "barcode": "111111111111118",
+        "groups": ["DC=uq","DC=edu","DC=au"],
+        "classes": [],
+        "expiryDate": "31-12-20",
+        "hasSession": true,
+        "tokenBased": false,
+        'canMasquerade': false,
+        'canMasqueradeType': 'none',
+        "blocked": false,
+        "user_group": "QWERTY",
+    },
     // upos
     // admins
 };
