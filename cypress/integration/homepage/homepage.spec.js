@@ -184,4 +184,12 @@ context('Homepage', () => {
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
+
+    it('Renders a new user group home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
+
+        hasPanels(['computer-availability', 'library-hours', 'promo', 'training']);
+
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+    });
 });
