@@ -214,6 +214,22 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f
         },
     ]),
 );
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '729df1a0-7dd0-11e9-a3a7-5fd844715207' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '729df1a0-7dd0-11e9-a3a7-5fd844715207',
+            start: '2021-01-25 00:00:00',
+            end: '2021-02-07 23:59:00',
+            title: 'Find past exam papers',
+            url: 'https://web.library.uq.edu.au/library-services/students/past-exam-papers',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Preparing for exams? Search past exam papers.',
+            weight: 20,
+            active: 1,
+        },
+    ]),
+);
 
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));

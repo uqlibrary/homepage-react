@@ -19,6 +19,7 @@ export const pathConfig = {
         spotlightsadd: '/admin/spotlights/add',
         spotlightsedit: spotlightid => `/admin/spotlights/edit/${spotlightid}`,
         spotlightsview: spotlightid => `/admin/spotlights/view/${spotlightid}`,
+        spotlightsclone: spotlightid => `/admin/spotlights/clone/${spotlightid}`,
         spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
@@ -46,6 +47,7 @@ export const flattedPathConfig = [
     '/admin/alerts/view',
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
+    '/admin/spotlights/clone',
 ];
 
 // TODO: will we even have roles?
@@ -174,6 +176,16 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
+    const spotlightCloneForm = [
+        {
+            path: pathConfig.admin.spotlightsclone(spotlightid),
+            component: components.SpotlightsClone,
+            // exact: true,
+            pageTitle: locale.pages.admin.spotlights.form.clone.title,
+            regExPath: pathConfig.admin.spotlightsclone(`(${spotlightidRegExp})`),
+        },
+    ];
+
     const spotlightViewDisplay = [
         {
             path: pathConfig.admin.spotlightsview(spotlightid),
@@ -198,6 +210,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         ...(canSeeSpotlightsAdmin ? spotlightsListDisplay : []),
         ...(canSeeSpotlightsAdmin ? spotlightAddDisplay : []),
         ...(canSeeSpotlightsAdmin ? spotlightEditForm : []),
+        ...(canSeeSpotlightsAdmin ? spotlightCloneForm : []),
         ...(canSeeSpotlightsAdmin ? spotlightViewDisplay : []),
         {
             component: components.NotFound,
