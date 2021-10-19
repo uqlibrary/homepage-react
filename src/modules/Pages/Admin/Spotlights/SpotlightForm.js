@@ -151,7 +151,9 @@ export const SpotlightForm = ({
             // currentValues.img_alt.length > 0 && // set to title during save if blank
             // !!currentValues.localfilename &&
             // currentValues.localfilename.length > 0 &&
-            (defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
+            (defaults.type === 'edit' ||
+                defaults.type === 'clone' ||
+                (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
@@ -253,12 +255,13 @@ export const SpotlightForm = ({
 
         console.log('saveSpotlight: currentValues = ', values);
         const newValues = {
-            id: defaults.type !== 'add' ? values.id : null,
+            id: defaults.type === 'edit' ? values.id : null,
             start: formatDate(values.start),
             end: formatDate(values.end),
             title: values.title,
             url: values.url,
-            img_url: defaults.type === 'edit' ? values.img_url : null,
+            // eslint-disable-next-line camelcase
+            img_url: values?.img_url ?? null,
             img_alt: values.img_alt,
             // weight will update after save,
             // but lets just use a number that sits at the end of the current spotlights, as requested
@@ -273,6 +276,11 @@ export const SpotlightForm = ({
             return actions.saveSpotlightChangeWithoutFile(s, 'update');
         };
         switch (defaults.type) {
+            case 'add':
+                // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
+                console.log('handleSpotlightCreation 2: newValues = ', newValues);
+                actions.saveSpotlightWithFile(newValues, 'create').then(() => reweightSpotlights(saveSpotlightChange));
+                break;
             case 'edit':
                 if (!!values.uploadedFile) {
                     actions
@@ -284,10 +292,16 @@ export const SpotlightForm = ({
                         .then(() => reweightSpotlights(saveSpotlightChange));
                 }
                 break;
-            case 'add':
-                // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
-                console.log('handleSpotlightCreation 2: newValues = ', newValues);
-                actions.saveSpotlightWithFile(newValues, 'create').then(() => reweightSpotlights(saveSpotlightChange));
+            case 'clone':
+                if (!!values.uploadedFile) {
+                    actions
+                        .saveSpotlightWithFile(newValues, 'create')
+                        .then(() => reweightSpotlights(saveSpotlightChange));
+                } else {
+                    actions
+                        .saveSpotlightChangeWithoutFile(newValues, 'create')
+                        .then(() => reweightSpotlights(saveSpotlightChange));
+                }
                 break;
             default:
                 console.log('an unhandled type of ', defaults.type, ' was provided at SpotlightForm.saveSpotlight');
@@ -446,8 +460,10 @@ export const SpotlightForm = ({
                                 data-testid="admin-spotlights-form-title"
                                 error={!isValidLinkAria(values.title)}
                                 inputProps={{ maxLength: 100 }}
+                                multiline
                                 onChange={handleChange('title')}
                                 required
+                                rows={2}
                                 value={values.title}
                             />
                         </FormControl>
@@ -464,6 +480,8 @@ export const SpotlightForm = ({
                                 value={values.img_alt}
                                 onChange={handleChange('img_alt')}
                                 inputProps={{ maxLength: 255 }}
+                                multiline
+                                rows={2}
                             />
                         </FormControl>
                     </Grid>
