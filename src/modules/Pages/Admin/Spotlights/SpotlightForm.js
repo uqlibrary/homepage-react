@@ -14,7 +14,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate, reweightSpotlights } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
 
@@ -70,15 +70,21 @@ export const SpotlightForm = ({
     });
 
     const isValidLinkAria = title => {
-        return title.length > 0;
+        return !!title && title.length > 0;
     };
 
     const isValidImgAlt = imgAlt => {
-        return imgAlt.length > 0;
+        return !!imgAlt && imgAlt.length > 0;
     };
 
     const isValidUrl = testurl => {
-        if (!!testurl && testurl.length < 'http://x.co'.length) {
+        if (!testurl) {
+            return false;
+        }
+        if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
+            return false;
+        }
+        if (testurl.length < 'http://x.co'.length) {
             // minimum possible url
             return false;
         }
@@ -279,28 +285,30 @@ export const SpotlightForm = ({
             case 'add':
                 // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
                 console.log('handleSpotlightCreation 2: newValues = ', newValues);
-                actions.saveSpotlightWithFile(newValues, 'create').then(() => reweightSpotlights(saveSpotlightChange));
+                actions
+                    .saveSpotlightWithFile(newValues, 'create')
+                    .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 break;
             case 'edit':
                 if (!!values.uploadedFile) {
                     actions
                         .saveSpotlightWithFile(newValues, 'update')
-                        .then(() => reweightSpotlights(saveSpotlightChange));
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
                     actions
                         .saveSpotlightChangeWithoutFile(newValues, 'update')
-                        .then(() => reweightSpotlights(saveSpotlightChange));
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             case 'clone':
                 if (!!values.uploadedFile) {
                     actions
                         .saveSpotlightWithFile(newValues, 'create')
-                        .then(() => reweightSpotlights(saveSpotlightChange));
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
                     actions
                         .saveSpotlightChangeWithoutFile(newValues, 'create')
-                        .then(() => reweightSpotlights(saveSpotlightChange));
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             default:
@@ -598,6 +606,7 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    spotlightsReweightingStatus: PropTypes.string,
 };
 
 SpotlightForm.defaultProps = {

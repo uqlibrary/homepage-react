@@ -154,6 +154,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     saveSpotlightChange={saveSpotlightChange}
                                     canDragRows
                                     canUnpublish
+                                    reweightSpotlights={actions.reweightSpotlights}
                                 />
                             </div>
                             <div
@@ -169,6 +170,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     canUnpublish
+                                    reweightSpotlights={actions.reweightSpotlights}
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -181,6 +183,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     canTextFilter
+                                    reweightSpotlights={actions.reweightSpotlights}
                                 />
                             </div>
                         </Grid>

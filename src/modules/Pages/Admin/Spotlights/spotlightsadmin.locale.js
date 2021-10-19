@@ -6,8 +6,8 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
-            linkDescAriaField: 'Spotlight title *',
-            imgAltField: 'Spotlight alt text *',
+            linkDescAriaField: 'Link title *',
+            imgAltField: 'Image alt text *',
             linkField: 'Spotlight link *',
             publishDate: 'Date published', // also on List page
             unpublishDate: 'Date unpublished', // also on List page
@@ -20,8 +20,8 @@ export default {
             datePopupNowButton: 'Now',
         },
         tooltips: {
-            linkDescAriaField: 'Spotlight aria label - describe title and destination',
-            imgAltField: 'Spotlight alt text - include all text in image',
+            linkDescAriaField: 'Link aria label - describe title and destination',
+            imgAltField: 'Image alt text - include all text in image',
             linkField: 'Please enter a valid URL',
             publishDate: 'Select publish date-time',
             unpublishDate: 'Select unpublish date-time',

@@ -93,6 +93,8 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
                                         value={values.title}
                                         disabled
                                         style={{ color: '#333' }}
+                                        multiline
+                                        rows={2}
                                     />
                                 </FormControl>
                             </Grid>
@@ -107,6 +109,8 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
                                         value={values.img_alt}
                                         disabled
                                         style={{ color: '#333' }}
+                                        multiline
+                                        rows={2}
                                     />
                                 </FormControl>
                             </Grid>
@@ -163,6 +167,7 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
                                 <div>
                                     <img
                                         alt="preview of uploaded spotlight file"
+                                        data-testid="admin-spotlights-view-img"
                                         src={values.img_url}
                                         style={{ maxWidth: '100%' }}
                                     />

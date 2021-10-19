@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
@@ -11,12 +11,6 @@ import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
 import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
-// const useStyles = makeStyles(() => ({
-//     previewWrapper: {
-//         transition: 'visibility 0s, opacity 0.5s linear',
-//     },
-// }));
-
 export const SpotlightsEdit = ({
     actions,
     spotlight,
@@ -25,13 +19,16 @@ export const SpotlightsEdit = ({
     history,
     publicFileUploading,
     publicFileUploadError,
+    publicFileUploadResult,
+    spotlightsReweightingStatus,
 }) => {
     console.log('SpotlightsEdit: spotlight =  ', spotlight);
     console.log('SpotlightsEdit: spotlightStatus =  ', spotlightStatus);
     console.log('SpotlightsEdit: spotlightError =  ', spotlightError);
     console.log('SpotlightsEdit: publicFileUploading = ', publicFileUploading);
     console.log('SpotlightsEdit: publicFileUploadError = ', publicFileUploadError);
-    // const classes = useStyles();
+    console.log('SpotlightsEdit: publicFileUploadResult = ', publicFileUploadResult);
+
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
@@ -92,23 +89,26 @@ export const SpotlightsEdit = ({
     const defaults = setDefaults();
 
     return (
-        <Fragment>
-            <StandardPage title="Spotlights Management">
-                <section aria-live="assertive">
-                    <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
-                    <StandardCard title="Edit spotlight">
-                        <SpotlightForm
-                            actions={actions}
-                            spotlightResponse={spotlight}
-                            spotlightError={spotlightError || publicFileUploadError}
-                            spotlightStatus={spotlightStatus}
-                            defaults={defaults}
-                            history={history}
-                        />
-                    </StandardCard>
-                </section>
-            </StandardPage>
-        </Fragment>
+        <StandardPage title="Spotlights Management">
+            <section aria-live="assertive">
+                <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                <StandardCard title="Edit spotlight">
+                    <SpotlightForm
+                        actions={actions}
+                        spotlightResponse={spotlight}
+                        spotlightError={spotlightError || publicFileUploadError}
+                        spotlightStatus={spotlightStatus}
+                        history={history}
+                        defaults={defaults}
+                        publicFileUploading={publicFileUploading}
+                        publicFileUploadError={publicFileUploadError}
+                        publicFileUploadResult={publicFileUploadResult}
+                        spotlightsReweightingStatus={spotlightsReweightingStatus}
+                    />
+                    />
+                </StandardCard>
+            </section>
+        </StandardPage>
     );
 };
 
@@ -120,6 +120,8 @@ SpotlightsEdit.propTypes = {
     history: PropTypes.object,
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
+    publicFileUploadResult: PropTypes.any,
+    spotlightsReweightingStatus: PropTypes.string,
 };
 
 export default SpotlightsEdit;

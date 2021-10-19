@@ -32,7 +32,7 @@ import { default as locale } from '../../spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
-import { getTimeMondayComing, reweightSpotlights } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { getTimeMondayComing } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { destroy } from 'repositories/generic';
 import { SPOTLIGHT_DELETE_API } from 'repositories/routes';
 
@@ -119,6 +119,7 @@ export const SpotlightsListAsTable = ({
     canDragRows,
     canUnpublish,
     canTextFilter,
+    reweightSpotlights,
 }) => {
     const classes = useStyles();
 
@@ -1060,6 +1061,7 @@ SpotlightsListAsTable.propTypes = {
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
+    reweightSpotlights: PropTypes.any,
 };
 
 SpotlightsListAsTable.defaultProps = {

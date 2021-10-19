@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
 
@@ -25,13 +25,17 @@ export const SpotlightsClone = ({
     history,
     publicFileUploading,
     publicFileUploadError,
+    publicFileUploadResult,
+    spotlightsReweightingStatus,
 }) => {
     console.log('SpotlightsClone: spotlight =  ', spotlight);
     console.log('SpotlightsClone: spotlightStatus =  ', spotlightStatus);
     console.log('SpotlightsClone: spotlightError =  ', spotlightError);
     console.log('SpotlightsClone: publicFileUploading = ', publicFileUploading);
     console.log('SpotlightsClone: publicFileUploadError = ', publicFileUploadError);
-    // const classes = useStyles();
+    console.log('SpotlightsClone: publicFileUploadResult = ', publicFileUploadResult);
+    console.log('SpotlightsClone: spotlightsReweightingStatus = ', spotlightsReweightingStatus);
+
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
@@ -92,23 +96,25 @@ export const SpotlightsClone = ({
     const defaults = setDefaults();
 
     return (
-        <Fragment>
-            <StandardPage title="Spotlights Management">
-                <section aria-live="assertive">
-                    <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
-                    <StandardCard title="Clone spotlight">
-                        <SpotlightForm
-                            actions={actions}
-                            spotlightResponse={spotlight}
-                            spotlightError={spotlightError || publicFileUploadError}
-                            spotlightStatus={spotlightStatus}
-                            defaults={defaults}
-                            history={history}
-                        />
-                    </StandardCard>
-                </section>
-            </StandardPage>
-        </Fragment>
+        <StandardPage title="Spotlights Management">
+            <section aria-live="assertive">
+                <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
+                <StandardCard title="Clone spotlight">
+                    <SpotlightForm
+                        actions={actions}
+                        spotlightResponse={spotlight}
+                        spotlightError={spotlightError || publicFileUploadError}
+                        spotlightStatus={spotlightStatus}
+                        history={history}
+                        defaults={defaults}
+                        publicFileUploading={publicFileUploading}
+                        publicFileUploadError={publicFileUploadError}
+                        publicFileUploadResult={publicFileUploadResult}
+                        spotlightsReweightingStatus={spotlightsReweightingStatus}
+                    />
+                </StandardCard>
+            </section>
+        </StandardPage>
     );
 };
 
@@ -120,6 +126,8 @@ SpotlightsClone.propTypes = {
     history: PropTypes.object,
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
+    publicFileUploadResult: PropTypes.any,
+    spotlightsReweightingStatus: PropTypes.string,
 };
 
 export default SpotlightsClone;

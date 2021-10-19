@@ -22,6 +22,7 @@ export const SpotlightsAdd = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
+    spotlightsReweightingStatus,
 }) => {
     const defaults = {
         id: '',
@@ -51,6 +52,7 @@ export const SpotlightsAdd = ({
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
                         publicFileUploadResult={publicFileUploadResult}
+                        spotlightsReweightingStatus={spotlightsReweightingStatus}
                     />
                 </StandardCard>
             </section>
@@ -67,6 +69,7 @@ SpotlightsAdd.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    spotlightsReweightingStatus: PropTypes.string,
 };
 
 export default SpotlightsAdd;
