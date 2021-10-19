@@ -193,7 +193,7 @@ describe('Spotlight list actions', () => {
                 id: '88888-d62b-11e7-954e-57c2cc19d151',
             });
 
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
+            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_CREATED];
 
             await mockActionsStore.dispatch(saveSpotlightWithFile(sendSpotlightRecord, 'create'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -211,7 +211,7 @@ describe('Spotlight list actions', () => {
                 actions.PUBLIC_FILE_UPLOADING,
                 actions.PUBLIC_FILE_UPLOADED,
                 actions.SPOTLIGHT_LOADING,
-                actions.SPOTLIGHT_SAVED,
+                actions.SPOTLIGHT_CREATED,
             ];
             await mockActionsStore.dispatch(
                 saveSpotlightWithFile(

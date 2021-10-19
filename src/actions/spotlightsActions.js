@@ -49,7 +49,7 @@ function createSpotlight(request, dispatch) {
         .then(data => {
             console.log('createSpotlight action, returned data = ', data);
             dispatch({
-                type: actions.SPOTLIGHT_SAVED,
+                type: actions.SPOTLIGHT_CREATED,
                 payload: data,
             });
         })

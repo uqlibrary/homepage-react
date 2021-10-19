@@ -27,6 +27,13 @@ const handlers = {
         spotlight: action.payload,
         spotlightStatus: 'saved',
     }),
+    [actions.SPOTLIGHT_CREATED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        spotlightError: false,
+        spotlight: action.payload,
+        spotlightStatus: 'created',
+    }),
     [actions.SPOTLIGHT_DELETED]: (state, action) => ({
         ...initialState,
         ...state,

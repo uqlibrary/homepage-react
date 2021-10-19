@@ -105,7 +105,6 @@ export const SpotlightsEdit = ({
                         publicFileUploadResult={publicFileUploadResult}
                         spotlightsReweightingStatus={spotlightsReweightingStatus}
                     />
-                    />
                 </StandardCard>
             </section>
         </StandardPage>
