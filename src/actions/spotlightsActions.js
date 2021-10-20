@@ -86,12 +86,14 @@ const saveSpotlightChange = (request, dispatch) => {
 export const saveSpotlightChangeWithoutFile = (request, spotlightSaveType) => {
     console.log('action saveSpotlightChangeWithoutFile, request to save: ', request);
     return dispatch => {
-        console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
-        dispatch({ type: actions.SPOTLIGHT_LOADING });
         if (spotlightSaveType === 'create') {
             // possibly this isnt needed? the file should always exist?
+            console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
+            dispatch({ type: actions.SPOTLIGHT_LOADING });
             return createSpotlight(request, dispatch);
         } else {
+            console.log('actions.SPOTLIGHT_SAVING = ', actions.SPOTLIGHT_SAVING);
+            dispatch({ type: actions.SPOTLIGHT_SAVING });
             return saveSpotlightChange(request, dispatch);
         }
     };
@@ -134,10 +136,11 @@ export const saveSpotlightWithFile = (request, spotlightSaveType) => {
 
                 delete request.uploadedFile;
                 console.log('action saveSpotlightWithFile, request to save: ', request);
-                dispatch({ type: actions.SPOTLIGHT_LOADING });
                 if (spotlightSaveType === 'create') {
+                    dispatch({ type: actions.SPOTLIGHT_LOADING });
                     return createSpotlight(request, dispatch);
                 } else {
+                    dispatch({ type: actions.SPOTLIGHT_SAVING });
                     return saveSpotlightChange(request, dispatch);
                 }
             })

@@ -20,6 +20,12 @@ const handlers = {
         spotlight: action.payload,
         spotlightStatus: 'loaded',
     }),
+    [actions.SPOTLIGHT_SAVING]: state => ({
+        ...initialState,
+        ...state,
+        spotlightStatus: 'saving',
+        spotlightError: false,
+    }),
     [actions.SPOTLIGHT_SAVED]: (state, action) => ({
         ...initialState,
         ...state,

@@ -278,7 +278,7 @@ describe('Spotlight list actions', () => {
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
                 });
 
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_SAVED];
+            const expectedActions = [actions.SPOTLIGHT_SAVING, actions.SPOTLIGHT_SAVED];
 
             await mockActionsStore.dispatch(
                 saveSpotlightChangeWithoutFile(
@@ -290,7 +290,7 @@ describe('Spotlight list actions', () => {
         });
         it('handles a failing spotlight save request', async () => {
             mockApi.onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
+            const expectedActions = [actions.SPOTLIGHT_SAVING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
 
             try {
                 await mockActionsStore.dispatch(
@@ -319,7 +319,7 @@ describe('Spotlight list actions', () => {
             const expectedActions = [
                 actions.PUBLIC_FILE_UPLOADING,
                 actions.PUBLIC_FILE_UPLOADED,
-                actions.SPOTLIGHT_LOADING,
+                actions.SPOTLIGHT_SAVING,
                 actions.SPOTLIGHT_SAVED,
             ];
 
@@ -342,7 +342,7 @@ describe('Spotlight list actions', () => {
             const expectedActions = [
                 actions.PUBLIC_FILE_UPLOADING,
                 actions.PUBLIC_FILE_UPLOADED,
-                actions.SPOTLIGHT_LOADING,
+                actions.SPOTLIGHT_SAVING,
                 actions.APP_ALERT_SHOW,
                 actions.SPOTLIGHT_FAILED,
                 actions.PUBLIC_FILE_UPLOAD_FAILED,
