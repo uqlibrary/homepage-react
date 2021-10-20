@@ -83,34 +83,37 @@ const saveSpotlightChange = (request, dispatch) => {
         });
 };
 
-export const saveSpotlightChangeWithoutFile = (request, spotlightSaveType) => {
-    console.log('action saveSpotlightChangeWithoutFile, request to save: ', request);
+export const createSpotlightWithExistingImage = request => {
+    console.log('action saveSpotlightChangeWithExistingImage, request to save: ', request);
     return dispatch => {
-        if (spotlightSaveType === 'create') {
-            // possibly this isnt needed? the file should always exist?
-            console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
-            dispatch({ type: actions.SPOTLIGHT_LOADING });
-            return createSpotlight(request, dispatch);
-        } else {
-            console.log('actions.SPOTLIGHT_SAVING = ', actions.SPOTLIGHT_SAVING);
-            dispatch({ type: actions.SPOTLIGHT_SAVING });
-            return saveSpotlightChange(request, dispatch);
-        }
+        console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
+        dispatch({ type: actions.SPOTLIGHT_LOADING });
+        return createSpotlight(request, dispatch);
     };
 };
 
-/*
-this is called by both Update and Create to do a fileupload, then the save-the-spotlight action
- */
-export const saveSpotlightWithFile = (request, spotlightSaveType) => {
-    console.log('action saveSpotlightWithFile, request to save: ', request);
+export const saveSpotlightChangeWithExistingImage = request => {
+    console.log('action saveSpotlightChangeWithExistingImage, request to save: ', request);
+    return dispatch => {
+        console.log('actions.SPOTLIGHT_SAVING = ', actions.SPOTLIGHT_SAVING);
+        dispatch({ type: actions.SPOTLIGHT_SAVING });
+        return saveSpotlightChange(request, dispatch);
+    };
+};
+
+export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update') => {
+    console.log('action saveSpotlightWithNewImage, request to save: ', spotlightSaveType, request);
 
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
-        return saveSpotlightChangeWithoutFile(request, spotlightSaveType);
+        if (spotlightSaveType === 'create') {
+            return createSpotlightWithExistingImage(request);
+        } else {
+            return saveSpotlightChangeWithExistingImage(request);
+        }
     }
 
     return async dispatch => {
-        console.log('saveSpotlightWithFile: post data: ', request.uploadedFile);
+        console.log('saveSpotlightWithNewImage: post data: ', request.uploadedFile);
 
         dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
@@ -135,7 +138,7 @@ export const saveSpotlightWithFile = (request, spotlightSaveType) => {
                     !!firstresponse && !!firstresponse.key && `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
-                console.log('action saveSpotlightWithFile, request to save: ', request);
+                console.log('action saveSpotlightWithNewImage, request to save: ', request);
                 if (spotlightSaveType === 'create') {
                     dispatch({ type: actions.SPOTLIGHT_LOADING });
                     return createSpotlight(request, dispatch);
@@ -152,6 +155,11 @@ export const saveSpotlightWithFile = (request, spotlightSaveType) => {
                 });
             });
     };
+};
+
+export const createSpotlightWithNewImage = request => {
+    console.log('action createSpotlightWithNewImage, request to save: ', request);
+    return saveSpotlightWithNewImage(request, 'create');
 };
 
 export const deleteSpotlight = spotlightID => {

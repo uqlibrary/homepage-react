@@ -114,7 +114,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     };
 
     const saveSpotlightChange = spotlight => {
-        return actions.saveSpotlightChangeWithoutFile(spotlight, 'update');
+        return actions.saveSpotlightChangeWithExistingImage(spotlight);
     };
 
     return (

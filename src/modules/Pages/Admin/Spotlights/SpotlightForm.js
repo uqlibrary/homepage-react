@@ -211,6 +211,7 @@ export const SpotlightForm = ({
                 showEditConfirmation();
                 actions.clearSpotlightReweighting();
                 setValues(defaults);
+                actions.clearASpotlight();
             } else if (defaults.type === 'clone') {
                 showCloneConfirmation();
                 actions.clearSpotlightReweighting();
@@ -291,35 +292,35 @@ export const SpotlightForm = ({
         console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
         const saveSpotlightChange = s => {
-            return actions.saveSpotlightChangeWithoutFile(s, 'update');
+            return actions.saveSpotlightChangeWithExistingImage(s);
         };
         switch (defaults.type) {
             case 'add':
                 // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
                 console.log('handleSpotlightCreation 2: newValues = ', newValues);
                 actions
-                    .saveSpotlightWithFile(newValues, 'create')
+                    .createSpotlightWithNewImage(newValues)
                     .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 break;
             case 'edit':
                 if (!!values.uploadedFile) {
                     actions
-                        .saveSpotlightWithFile(newValues, 'update')
+                        .saveSpotlightWithNewImage(newValues)
                         .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
                     actions
-                        .saveSpotlightChangeWithoutFile(newValues, 'update')
+                        .saveSpotlightChangeWithExistingImage(newValues)
                         .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             case 'clone':
                 if (!!values.uploadedFile) {
                     actions
-                        .saveSpotlightWithFile(newValues, 'create')
+                        .createSpotlightWithNewImage(newValues)
                         .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
                     actions
-                        .saveSpotlightChangeWithoutFile(newValues, 'create')
+                        .createSpotlightWithExistingImage(newValues)
                         .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
