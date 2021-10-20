@@ -50,6 +50,7 @@ export const SpotlightForm = ({
     spotlightsReweightingStatus,
 }) => {
     console.log('spotlightError = ', spotlightError);
+    console.log('spotlightsReweightingStatus = ', spotlightsReweightingStatus);
     const classes = useStyles();
 
     // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -118,10 +119,9 @@ export const SpotlightForm = ({
         // console.log('isValidStartDate: defaults.startDateDefault = ', defaults.startDateDefault);
         // console.log('isValidStartDate: !!moment(startDate).isValid() = ', !!moment(startDate).isValid());
         // console.log("isValidStartDate: startDate !== '' = ", startDate !== '');
-        // console.log('isValidStartDate: moment(startDate) >= moment() ', moment(startDate) >= moment());
+        // // console.log('isValidStartDate: moment(startDate) >= moment() ', moment(startDate) >= moment());
         // console.log(
-        //     'isValidStartDate: formattedstartdate >= formattedToday = ',
-        //     formattedstartdate >= formattedToday,
+        //     'isValidStartDate: formattedstartdate >= formattedToday = ', formattedstartdate >= formattedToday
         // );
         // console.log(
         //     'isValidStartDate: formattedstartdate >= formatteddefaultstartdate = ',
@@ -199,7 +199,7 @@ export const SpotlightForm = ({
     }, [values]);
 
     useEffect(() => {
-        console.log('useEffect reweighting?');
+        console.log('useEffect reweighting? spotlightsReweightingStatus = ', spotlightsReweightingStatus);
         // if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
         if (spotlightsReweightingStatus === 'complete') {
             setValues(defaults); // save success - clear the form!
@@ -213,9 +213,11 @@ export const SpotlightForm = ({
                 setValues(defaults);
                 actions.clearASpotlight();
             } else if (defaults.type === 'clone') {
+                console.log('useEffect reweighting clone complete');
                 showCloneConfirmation();
                 actions.clearSpotlightReweighting();
                 setValues(defaults);
+                // actions.clearASpotlight();
             } else if (!!publicFileUploadError) {
                 showUploadError();
             }
@@ -262,6 +264,7 @@ export const SpotlightForm = ({
     };
 
     const reloadClonePage = () => {
+        console.log('reloadClonePage defaults = ', defaults);
         setValues(defaults);
 
         const topOfPage = document.getElementById('StandardPage');

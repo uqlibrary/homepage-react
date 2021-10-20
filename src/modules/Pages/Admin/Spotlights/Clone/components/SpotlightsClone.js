@@ -11,12 +11,6 @@ import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
-// const useStyles = makeStyles(() => ({
-//     previewWrapper: {
-//         transition: 'visibility 0s, opacity 0.5s linear',
-//     },
-// }));
-
 export const SpotlightsClone = ({
     actions,
     spotlight,
@@ -53,30 +47,30 @@ export const SpotlightsClone = ({
         );
     }
 
-    const emptySpotlight = {
-        id: spotlightid,
-        startDateDefault: '',
-        endDateDefault: '',
-        title: '',
-        url: '',
-        // eslint-disable-next-line camelcase
-        img_url: '',
-        // eslint-disable-next-line camelcase
-        img_alt: '',
-        weight: 0,
-        active: 0,
-        type: 'clone',
-    };
+    // const emptySpotlight = {
+    //     id: spotlightid,
+    //     startDateDefault: '',
+    //     endDateDefault: '',
+    //     title: '',
+    //     url: '',
+    //     // eslint-disable-next-line camelcase
+    //     img_url: '',
+    //     // eslint-disable-next-line camelcase
+    //     img_alt: '',
+    //     weight: 0,
+    //     active: 0,
+    //     type: 'clone',
+    // };
 
     function setDefaults() {
         const startDateDefault = getTimeMondayMidnightNext();
         const endDateDefault = getTimeSundayNextFormatted();
-        if (spotlight?.id !== spotlightid) {
-            // after the save returns we (possibly) reweight the other spotlights
-            // they return into this page in the 'spotlight' variable
-            // we dont want to display them
-            return emptySpotlight;
-        }
+        // if (spotlight?.id !== spotlightid) {
+        //     // after the save returns we (possibly) reweight the other spotlights
+        //     // they return into this page in the 'spotlight' variable
+        //     // we dont want to display them
+        //     return emptySpotlight;
+        // }
         return {
             id: spotlight?.id || '',
             startDateDefault: startDateDefault,
