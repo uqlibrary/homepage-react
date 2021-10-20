@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
 
 export const SpotlightForm = ({
     actions,
-    spotlightResponse,
+    // spotlightResponse,
     spotlightStatus,
     defaults,
     spotlightError,
@@ -47,6 +47,7 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
+    spotlightsReweightingStatus,
 }) => {
     console.log('spotlightError = ', spotlightError);
     const classes = useStyles();
@@ -56,7 +57,7 @@ export const SpotlightForm = ({
     const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
     const [isEditOpen, showEditConfirmation, hideEditConfirmation] = useConfirmationState();
     const [isCloneOpen, showCloneConfirmation, hideCloneConfirmation] = useConfirmationState();
-    const [isUploadOpen, showUploadConfirmation, hideUploadConfirmation] = useConfirmationState();
+    const [isUploadErrorOpen, showUploadError, hideUploadError] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [uploadedFiles, setUploadedFiles] = useState(null);
@@ -77,7 +78,7 @@ export const SpotlightForm = ({
         return !!imgAlt && imgAlt.length > 0;
     };
 
-    const isValidUrl = testurl => {
+    const isValidImageUrl = testurl => {
         if (!testurl) {
             return false;
         }
@@ -163,7 +164,7 @@ export const SpotlightForm = ({
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
-            isValidUrl(currentValues.url);
+            isValidImageUrl(currentValues.url);
 
         // console.log('validateValues: isValid = ', isValid, currentValues);
         // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
@@ -174,19 +175,21 @@ export const SpotlightForm = ({
         //     'validateValues: uploadedFile = ',
         //     defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0),
         // );
-        // console.log('validateValues: isValidUrl(', currentValues.url, ') = ', isValidUrl(currentValues.url));
+        // console.log(
+        //     'validateValues: isValidImageUrl(', currentValues.url, ') = ', isValidImageUrl(currentValues.url)
+        // );
         // console.log('validateValues: currentValues.img_alt = ', currentValues.img_alt);
         // console.log('validateValues: currentValues = ', currentValues);
 
         return isValid;
     };
 
-    useEffect(() => {
-        if (!!defaults && defaults.type === 'clone') {
-            setFormValidity(validateValues(defaults));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     if (!!defaults && defaults.type === 'clone') {
+    //         setFormValidity(validateValues(defaults));
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     useEffect(() => {
         // console.log('uploadedFiles set to ', uploadedFiles);
@@ -196,27 +199,36 @@ export const SpotlightForm = ({
     }, [values]);
 
     useEffect(() => {
-        if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
+        console.log('useEffect reweighting?');
+        // if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
+        if (spotlightsReweightingStatus === 'complete') {
             setValues(defaults); // save success - clear the form!
-            if (defaults.type === 'edit') {
-                showEditConfirmation();
-            } else if (!publicFileUploadError && defaults.type === 'add') {
+            if (!publicFileUploadError && defaults.type === 'add') {
                 showAddConfirmation();
+                actions.clearSpotlightReweighting();
+            } else if (defaults.type === 'edit') {
+                console.log('useEffect reweighting edit');
+                showEditConfirmation();
+                actions.clearSpotlightReweighting();
+                setValues(defaults);
             } else if (defaults.type === 'clone') {
                 showCloneConfirmation();
+                actions.clearSpotlightReweighting();
+                setValues(defaults);
             } else if (!!publicFileUploadError) {
-                showUploadConfirmation();
+                showUploadError();
             }
         }
     }, [
-        spotlightResponse,
-        spotlightStatus,
+        spotlightsReweightingStatus,
+        // spotlightResponse,
+        // spotlightStatus,
         defaults,
         publicFileUploadError,
         showEditConfirmation,
         showAddConfirmation,
         showCloneConfirmation,
-        showUploadConfirmation,
+        showUploadError,
     ]);
 
     useEffect(() => {
@@ -227,9 +239,9 @@ export const SpotlightForm = ({
 
     useEffect(() => {
         if (!!publicFileUploadError) {
-            showUploadConfirmation();
+            showUploadError();
         }
-    }, [showUploadConfirmation, publicFileUploadError]);
+    }, [showUploadError, publicFileUploadError]);
 
     const clearForm = () => {
         setValues(defaults);
@@ -453,9 +465,9 @@ export const SpotlightForm = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="spotlight-file-upload-failed"
-                    onClose={hideUploadConfirmation}
-                    onAction={() => hideUploadConfirmation()}
-                    isOpen={isUploadOpen}
+                    onClose={hideUploadError}
+                    onAction={() => hideUploadError()}
+                    isOpen={isUploadErrorOpen}
                     locale={uploadErrorLocale()}
                     hideCancelButton
                 />
@@ -504,7 +516,7 @@ export const SpotlightForm = ({
                                 data-testid="admin-spotlights-form-link-url"
                                 value={values.url}
                                 onChange={handleChange('url')}
-                                error={!isValidUrl(values.url)}
+                                error={!isValidImageUrl(values.url)}
                             />
                         </FormControl>
                     </Grid>
@@ -601,7 +613,7 @@ SpotlightForm.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    spotlightResponse: PropTypes.any,
+    // spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
