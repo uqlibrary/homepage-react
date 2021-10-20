@@ -32,6 +32,8 @@ export const SpotlightsClone = ({
 
     const { spotlightid } = useParams();
 
+    const [defaults, setDefaults] = React.useState({});
+
     React.useEffect(() => {
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
@@ -39,55 +41,42 @@ export const SpotlightsClone = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
 
-    if (spotlightStatus === 'loading' || !!publicFileUploading) {
+    React.useEffect(() => {
+        console.log('*** useeffect, spotlightid = ', spotlightid, '; spotlight?.id = ', spotlight?.id);
+        if (!!spotlightid && spotlight?.id === spotlightid) {
+            console.log('load deaults:');
+            setDefaults({
+                id: spotlight?.id || '',
+                startDateDefault: getTimeMondayMidnightNext(),
+                endDateDefault: getTimeSundayNextFormatted(),
+                title: spotlight?.title || '',
+                url: spotlight?.url || '',
+                // eslint-disable-next-line camelcase
+                img_url: spotlight?.img_url || '',
+                // eslint-disable-next-line camelcase
+                img_alt: spotlight?.img_alt || '',
+                weight: spotlight?.weight || 0,
+                active: spotlight?.active || 0,
+                // minimumDate: getStartOfDayFormatted(),
+                type: 'clone',
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [spotlight]);
+
+    if (
+        spotlightStatus === 'loading' ||
+        spotlightStatus === null ||
+        !!publicFileUploading ||
+        !defaults ||
+        !defaults.id
+    ) {
         return (
             <div style={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
             </div>
         );
     }
-
-    // const emptySpotlight = {
-    //     id: spotlightid,
-    //     startDateDefault: '',
-    //     endDateDefault: '',
-    //     title: '',
-    //     url: '',
-    //     // eslint-disable-next-line camelcase
-    //     img_url: '',
-    //     // eslint-disable-next-line camelcase
-    //     img_alt: '',
-    //     weight: 0,
-    //     active: 0,
-    //     type: 'clone',
-    // };
-
-    function setDefaults() {
-        const startDateDefault = getTimeMondayMidnightNext();
-        const endDateDefault = getTimeSundayNextFormatted();
-        // if (spotlight?.id !== spotlightid) {
-        //     // after the save returns we (possibly) reweight the other spotlights
-        //     // they return into this page in the 'spotlight' variable
-        //     // we dont want to display them
-        //     return emptySpotlight;
-        // }
-        return {
-            id: spotlight?.id || '',
-            startDateDefault: startDateDefault,
-            endDateDefault: endDateDefault,
-            title: spotlight?.title || '',
-            url: spotlight?.url || '',
-            // eslint-disable-next-line camelcase
-            img_url: spotlight?.img_url || '',
-            // eslint-disable-next-line camelcase
-            img_alt: spotlight?.img_alt || '',
-            weight: spotlight?.weight || 0,
-            active: spotlight?.active || 0,
-            type: 'clone',
-        };
-    }
-
-    const defaults = setDefaults();
 
     return (
         <StandardPage title="Spotlights Management">

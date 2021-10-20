@@ -51,7 +51,7 @@ function hideUnpublishedSpotlights() {
 
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
-    context.skip('Spotlights Admin public access blocked', () => {
+    context('Spotlights Admin public access blocked', () => {
         it('the list page is not available to public users', () => {
             cy.visit('http://localhost:2020/admin/spotlights?user=public');
             cy.viewport(1300, 1000);
@@ -83,7 +83,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('h1').contains('Authentication required');
         });
     });
-    context.skip('Spotlights Admin unauthorised access blocked', () => {
+    context('Spotlights Admin unauthorised access blocked', () => {
         it('the list page is not available to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
@@ -121,7 +121,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('h1').contains('Permission denied');
         });
     });
-    context.skip('Spotlights list page', () => {
+    context('Spotlights list page', () => {
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
             cy.viewport(1300, 1000);
@@ -436,7 +436,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(20, 20));
         });
     });
-    context.skip('Spotlight Admin deletion', () => {
+    context('Spotlight Admin deletion', () => {
         /*
             9eab3aa0-82c1-11eb-8896-eb36601837f5 #1 of current - can be deleted
             1e7a5980-d7d6-11eb-a4f2-fd60c7694898 #2 of current
@@ -1229,7 +1229,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-form-upload-dropzone"').should('contain', 'Recommended dimensions');
         });
     });
-    context.skip('Spotlight Admin View page', () => {
+    context('Spotlight Admin View page', () => {
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469?user=uqstaff');
             cy.viewport(1300, 1000);
