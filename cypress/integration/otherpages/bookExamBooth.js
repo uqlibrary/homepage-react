@@ -8,23 +8,11 @@ context('ACCESSIBILITY', () => {
         cy.viewport(1300, 1000);
         cy.log('Book Exam Booth');
 
-        cy.log('Location');
-        cy.get('[data-testid="standard-card-where-would-you-like-to-sit-your-exam?"]').should('exist');
-        cy.checkA11y('[data-testid="standard-card-where-would-you-like-to-sit-your-exam?"]', {
-            reportName: 'Book Exam Booth',
-            scopeName: 'As loaded',
-            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-        });
-
         cy.log('Question');
-        // choose BSL location
-        cy.get('[data-testid="display-location-option-bsl"]')
-            .should('exist')
-            .click();
         cy.get('[data-testid="standard-card-booking-options"]').should('exist');
         cy.checkA11y('[data-testid="standard-card-booking-options"]', {
             reportName: 'Book Exam Booth',
-            scopeName: 'Location chosen',
+            scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
 
@@ -41,6 +29,18 @@ context('ACCESSIBILITY', () => {
 
         cy.log('Yes option');
         cy.get('[data-testid="display-decider-option-yes"]').click();
+
+        cy.log('Location');
+        cy.get('[data-testid="standard-card-booking-options"]').should('exist');
+        cy.checkA11y('[data-testid="standard-card-booking-options"]', {
+            reportName: 'Book Exam Booth',
+            scopeName: 'Location chosen',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+
+        cy.get('[data-testid="display-location-option-bsl"]') // choose BSL location
+            .should('exist')
+            .click();
         cy.get('[data-testid="booking-details"]').should('exist');
         cy.checkA11y('[data-testid="booking-details"]', {
             reportName: 'Book Exam Booth',
@@ -57,26 +57,20 @@ context('Book Exam Booth page', () => {
 
     it('should show initial view', () => {
         cy.get('[data-testid="StandardPage-title"]').contains(locale.pageTitle);
-        cy.get('[data-testid="StandardPage"]').contains(locale.locationDecider.heading);
     });
 
     it('should show message on selecting "am not sitting a ProctorU exam"', () => {
-        // choose BSL location
-        cy.get('[data-testid="display-location-option-gatton"]')
-            .should('exist')
-            .click();
-
         cy.get('[data-testid="display-decider-option-no"]').click();
         cy.get('[data-testid="no-booking-necessary"]').should('exist');
     });
 
     it('should display form for booking details on selecting "am sitting a ProctorU exam"', () => {
-        // choose BSL location
-        cy.get('[data-testid="display-location-option-bsl"]')
+        cy.get('[data-testid="display-decider-option-yes"]')
             .should('exist')
             .click();
-
-        cy.get('[data-testid="display-decider-option-yes"]').click();
+        cy.get('[data-testid="display-location-option-gatton"]') // choose Gatton location
+            .should('exist')
+            .click();
         cy.get('[data-testid="booking-details"]')
             .should('exist')
             .should('contain', locale.examType.label)
@@ -88,12 +82,12 @@ context('Book Exam Booth page', () => {
     it('should redirect to expected url on submit without changing values', () => {
         cy.intercept(/uqbookit/, 'done'); // Stub to block URL
 
-        // choose BSL location
-        cy.get('[data-testid="display-location-option-bsl"]')
+        cy.get('[data-testid="display-decider-option-yes"]')
             .should('exist')
             .click();
-
-        cy.get('[data-testid="display-decider-option-yes"]').click();
+        cy.get('[data-testid="display-location-option-bsl"]') // choose BSL location
+            .should('exist')
+            .click();
         cy.get('[data-testid="booth-search-submit-button"]').click();
 
         const selectedDate = moment()
@@ -111,12 +105,10 @@ context('Book Exam Booth page', () => {
 
     it('should redirect to expected url on submit with updated values', () => {
         cy.intercept(/uqbookit/, 'done'); // Stub to block URL
-
-        // choose BSL location
-        cy.get('[data-testid="display-location-option-bsl"]')
+        cy.get('[data-testid="display-decider-option-yes"]').click();
+        cy.get('[data-testid="display-location-option-bsl"]') // choose BSL location
             .should('exist')
             .click();
-        cy.get('[data-testid="display-decider-option-yes"]').click();
 
         // Opt to BYOD
         cy.get('[data-testid="exam-type-option-byod"]').click();

@@ -98,79 +98,82 @@ const BookExamBooth = ({
                     {locale.intro}
                 </Grid>
                 <Grid item xs={12}>
-                    <StandardCard title={locale.locationDecider.heading}>
-                        <div>
+                    <StandardCard title={locale.displayDecider.heading}>
+                        <div className="displayDecider">
+                            <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
+                            <br />
                             <FormControl component="fieldset" required>
                                 <RadioGroup
-                                    name="locationDecider"
-                                    id="locationDecider"
-                                    value={chosenLocationCode}
-                                    onChange={_handleLocationDeciderChange}
+                                    name="displayDecider"
+                                    id="displayDecider"
+                                    value={isProctorU}
+                                    onChange={_handleDisplayDeciderChange}
                                 >
-                                    {locale.locationDecider.locations.map(l => {
-                                        return (
-                                            <FormControlLabel
-                                                control={<Radio color="primary" />}
-                                                data-testid={`display-location-option-${l.value}`}
-                                                label={
-                                                    <React.Fragment>
-                                                        {l.label}
-                                                        <a
-                                                            style={{ paddingLeft: 5, marginTop: 5 }}
-                                                            href={l.mapLink}
-                                                            target="_blank"
-                                                            rel="noopener noreferrer"
-                                                            aria-label={`View a map showing the location of exams at ${
-                                                                l.needsDefiniteArticle ? 'the' : ''
-                                                            } ${l.label}`}
-                                                            title={`View a map showing the location of exams at ${
-                                                                l.needsDefiniteArticle ? 'the' : ''
-                                                            } ${l.label}`}
-                                                        >
-                                                            <MapIcon />
-                                                        </a>
-                                                    </React.Fragment>
-                                                }
-                                                key={`location-selector-${l.mapLink}`}
-                                                value={l.value}
-                                            />
-                                        );
-                                    })}
+                                    <FormControlLabel
+                                        control={<Radio color="primary" />}
+                                        data-testid="display-decider-option-yes"
+                                        label={locale.displayDecider.yesText}
+                                        value="yes"
+                                    />
+                                    <FormControlLabel
+                                        control={<Radio color="primary" />}
+                                        data-testid="display-decider-option-no"
+                                        label={locale.displayDecider.noText}
+                                        value="no"
+                                    />
                                 </RadioGroup>
                             </FormControl>
                         </div>
                     </StandardCard>
-                    <br />
-                    {chosenLocationCode !== 'unset' && (
-                        <StandardCard title={locale.displayDecider.heading}>
-                            <div className="displayDecider">
-                                <label htmlFor="displayDecider">{locale.displayDecider.label}</label>
-                                <br />
+                </Grid>
+
+                {isProctorU === 'yes' && (
+                    <Grid item xs={12}>
+                        <StandardCard title={locale.locationDecider.heading}>
+                            <div>
                                 <FormControl component="fieldset" required>
                                     <RadioGroup
-                                        name="displayDecider"
-                                        id="displayDecider"
-                                        value={isProctorU}
-                                        onChange={_handleDisplayDeciderChange}
+                                        name="locationDecider"
+                                        id="locationDecider"
+                                        value={chosenLocationCode}
+                                        onChange={_handleLocationDeciderChange}
                                     >
-                                        <FormControlLabel
-                                            control={<Radio color="primary" />}
-                                            data-testid="display-decider-option-yes"
-                                            label={locale.displayDecider.yesText}
-                                            value="yes"
-                                        />
-                                        <FormControlLabel
-                                            control={<Radio color="primary" />}
-                                            data-testid="display-decider-option-no"
-                                            label={locale.displayDecider.noText}
-                                            value="no"
-                                        />
+                                        {locale.locationDecider.locations.map(l => {
+                                            return (
+                                                <FormControlLabel
+                                                    control={<Radio color="primary" />}
+                                                    data-testid={`display-location-option-${l.value}`}
+                                                    label={
+                                                        <React.Fragment>
+                                                            {l.label}
+                                                            <a
+                                                                style={{ paddingLeft: 5, marginTop: 5 }}
+                                                                href={l.mapLink}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                aria-label={`View a map showing the location of exams at ${
+                                                                    l.needsDefiniteArticle ? 'the' : ''
+                                                                } ${l.label}`}
+                                                                title={`View a map showing the location of exams at ${
+                                                                    l.needsDefiniteArticle ? 'the' : ''
+                                                                } ${l.label}`}
+                                                            >
+                                                                <MapIcon />
+                                                            </a>
+                                                        </React.Fragment>
+                                                    }
+                                                    key={`location-selector-${l.mapLink}`}
+                                                    value={l.value}
+                                                />
+                                            );
+                                        })}
                                     </RadioGroup>
                                 </FormControl>
                             </div>
                         </StandardCard>
-                    )}
-                </Grid>
+                    </Grid>
+                )}
+
                 {isProctorU === 'no' && (
                     <Grid item xs={12}>
                         <StandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
@@ -179,7 +182,7 @@ const BookExamBooth = ({
                     </Grid>
                 )}
 
-                {isProctorU === 'yes' && (
+                {isProctorU === 'yes' && chosenLocationCode !== 'unset' && (
                     <Grid item xs={12}>
                         <StandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
