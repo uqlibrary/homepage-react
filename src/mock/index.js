@@ -112,9 +112,21 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
 
 mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
 
-console.log('post ', routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl);
 mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
-    withDelay([500, []]),
+    withDelay([
+        500,
+        {
+            id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898',
+            start: '2021-06-29 01:00:00',
+            end: '2031-07-30 06:00:00',
+            title: 'Have you got your mask? COVID-19',
+            url: 'https://about.uq.edu.au/coronavirus',
+            img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+            img_alt: 'Have you got your mask? Please continue to maintain physically distancing.',
+            weight: 30,
+            active: 1,
+        },
+    ]),
 );
 mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
     withDelay([

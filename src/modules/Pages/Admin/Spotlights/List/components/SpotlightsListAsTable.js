@@ -208,8 +208,6 @@ export const SpotlightsListAsTable = ({
         }
 
         displayTheRows(rows);
-
-        console.log('useEffect ', rows.length);
     }, [rows, displayTheRows]);
 
     // React.useEffect(() => {
@@ -529,6 +527,14 @@ export const SpotlightsListAsTable = ({
                 }
             });
         });
+
+        // briefly mark the dragged row with a style, so the user knows what they did
+        const draggedRow = document.getElementById(`spotlight-list-row-${draggableId}`);
+        !!draggedRow && (draggedRow.style.transition = 'background-color 3s');
+        !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
+        setTimeout(() => {
+            !!draggedRow && (draggedRow.style.backgroundColor = 'inherit');
+        }, 500);
     };
 
     const confirmPublishUnpublishLocale = isCurrentlyActive => {
@@ -724,7 +730,7 @@ export const SpotlightsListAsTable = ({
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
                             <TableRow md-row="" className="md-row">
-                                <TableCell component="th" scope="row" className={classes.tableHeader} colspan="8">
+                                <TableCell component="th" scope="row" className={classes.tableHeader} colSpan="8">
                                     <Grid
                                         data-testid={`headerRow-${tableType}`}
                                         className={`${classes.headerRow} ${
