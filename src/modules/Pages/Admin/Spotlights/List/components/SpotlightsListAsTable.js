@@ -48,6 +48,13 @@ const useStyles = makeStyles(
         tableCell: {
             padding: 0,
         },
+        tableHeader: {
+            width: 50,
+            padding: 0,
+            textAlign: 'center',
+            color: '#666',
+            borderColor: '#fff',
+        },
         scheduledIconCell: {
             padding: 0,
         },
@@ -700,55 +707,80 @@ export const SpotlightsListAsTable = ({
                 isOpen={isPublishUnpublishConfirmationOpen}
                 locale={publishUnpublishLocale}
             />
-            <Grid
-                data-testid={`headerRow-${tableType}`}
-                className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
-                container
-            >
-                <Grid item xs={12} md={!!deleteActive ? 5 : 12}>
-                    <h3 style={{ marginBottom: 6 }}>
-                        {headertag}
-                        <span
-                            style={{ fontSize: '0.9em', fontWeight: 300 }}
-                            data-testid={`headerRow-count-${tableType}`}
-                        >
-                            {headerCountIndicator}
-                        </span>
-                    </h3>
-                </Grid>
-                <Grid item xs={12} md={7} container justify="flex-end">
-                    {!!deleteActive && (
-                        <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
-                            <span>{spotlightNotice}</span>
-                            <IconButton
-                                onClick={showDeleteConfirmation}
-                                aria-label={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
-                                data-testid={`spotlight-list-${tableType}-delete-button`}
-                                title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
-                            >
-                                <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
-                            </IconButton>
-                            <IconButton
-                                onClick={clearAllDeleteMarkingCheckboxes}
-                                aria-label={locale.listPage.tooltips.clearSelectedSpotlightsButton}
-                                data-testid={`spotlight-list-${tableType}-deselect-button`}
-                                className={classes.iconHighlighted}
-                                title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
-                            >
-                                <CloseIcon />
-                            </IconButton>
-                        </span>
-                    )}
-                </Grid>
-            </Grid>
             <DragDropContext onDragEnd={onDragEnd}>
                 <TableContainer
                     id={`spotlight-list-${tableType}`}
                     data-testid={`spotlight-list-${tableType}`}
                     component={Paper}
+                    style={{ marginTop: 10 }}
                 >
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
+                            <TableRow md-row="" className="md-row">
+                                <TableCell component="th" scope="row" className={classes.tableHeader} colspan="8">
+                                    <Grid
+                                        data-testid={`headerRow-${tableType}`}
+                                        className={`${classes.headerRow} ${
+                                            !!deleteActive ? classes.headerRowHighlighted : ''
+                                        }`}
+                                        container
+                                    >
+                                        <Grid item xs={12} md={!!deleteActive ? 5 : 12}>
+                                            <h3
+                                                style={{
+                                                    marginBottom: 6,
+                                                    textAlign: 'left',
+                                                    fontSize: '1.5em',
+                                                    marginTop: '1.5em',
+                                                }}
+                                            >
+                                                {headertag}
+                                                <span
+                                                    style={{ fontSize: '0.9em', fontWeight: 300 }}
+                                                    data-testid={`headerRow-count-${tableType}`}
+                                                >
+                                                    {headerCountIndicator}
+                                                </span>
+                                            </h3>
+                                        </Grid>
+                                        <Grid item xs={12} md={7} container justify="flex-end">
+                                            {!!deleteActive && (
+                                                <span
+                                                    className="deleteManager"
+                                                    style={{ marginLeft: 'auto', paddingTop: 8 }}
+                                                >
+                                                    <span>{spotlightNotice}</span>
+                                                    <IconButton
+                                                        onClick={showDeleteConfirmation}
+                                                        aria-label={
+                                                            locale.listPage.tooltips.deleteSelectedSpotlightsButton
+                                                        }
+                                                        data-testid={`spotlight-list-${tableType}-delete-button`}
+                                                        title={locale.listPage.tooltips.deleteSelectedSpotlightsButton}
+                                                    >
+                                                        <DeleteIcon
+                                                            className={`${
+                                                                !!deleteActive ? classes.iconHighlighted : ''
+                                                            }`}
+                                                        />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        onClick={clearAllDeleteMarkingCheckboxes}
+                                                        aria-label={
+                                                            locale.listPage.tooltips.clearSelectedSpotlightsButton
+                                                        }
+                                                        data-testid={`spotlight-list-${tableType}-deselect-button`}
+                                                        className={classes.iconHighlighted}
+                                                        title={locale.listPage.tooltips.clearSelectedSpotlightsButton}
+                                                    >
+                                                        <CloseIcon />
+                                                    </IconButton>
+                                                </span>
+                                            )}
+                                        </Grid>
+                                    </Grid>
+                                </TableCell>
+                            </TableRow>
                             <TableRow md-row="" className="md-row">
                                 <TableCell
                                     component="th"
