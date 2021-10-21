@@ -199,6 +199,10 @@ export const SpotlightsListAsTable = ({
     }, [rows, displayTheRows]);
 
     // React.useEffect(() => {
+    //     console.log('*** useEffect useRows', tableType, userows.length);
+    // }, [tableType, userows]);
+
+    // React.useEffect(() => {
     //     console.log('useRows have changed ', userows);
     //     //     userows.length === 0 && setPage(0);
     // }, [userows]);
@@ -221,10 +225,7 @@ export const SpotlightsListAsTable = ({
         setPage(0);
     };
 
-    const headerCountIndicator = '';
-    // const headerCountIndicator = ' - [N] spotlight[s] total'
-    //     .replace('[N]', rows.length)
-    //     .replace('[s]', rows.length > 1 ? 's' : '');
+    const headerCountIndicator = ' ([N])'.replace('[N]', userows.length).replace('[s]', userows.length > 1 ? 's' : '');
 
     const navigateToEditForm = spotlightid => {
         history.push(`/admin/spotlights/edit/${spotlightid}`);
