@@ -1,6 +1,6 @@
 context('ACCESSIBILITY', () => {
     it('unprivileged user on an admin-only page', () => {
-        cy.visit('/admin/masquerade/?user=s1111111');
+        cy.visit('/admin/alerts/?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[id="content-container"]').contains('Page not found');
@@ -49,16 +49,12 @@ context('ACCESSIBILITY', () => {
 });
 context('authorisation errors', () => {
     it('page that requires Admin returns a not found error to unprivileged users', () => {
-        // masquerade may be a special case, but we dont have a better example atm
-        // if we end up with other admin pages, swap this out
-        cy.visit('/admin/masquerade/?user=s1111111');
+        cy.visit('/admin/alerts/?user=s1111111');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=page-not-found]').should('exist');
     });
     it('page that requires Admin does not return a not found error to privileged users', () => {
-        // masquerade may be a special case, but we dont have a better example atm
-        // if we end up with other admin pages, swap this out
-        cy.visit('/admin/masquerade/?user=uqstaff');
+        cy.visit('/admin/alerts/?user=uqstaff');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=page-not-found]').should('not.exist');
     });
