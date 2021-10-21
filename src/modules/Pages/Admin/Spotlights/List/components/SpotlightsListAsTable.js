@@ -78,6 +78,13 @@ const useStyles = makeStyles(
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },
+        tableHeading: {
+            marginBottom: -6,
+            textAlign: 'left',
+            fontSize: '1.5em',
+            marginTop: '0.9em',
+            marginLeft: 6,
+        },
         iconHighlighted: {
             color: '#fff',
         },
@@ -712,7 +719,7 @@ export const SpotlightsListAsTable = ({
                     id={`spotlight-list-${tableType}`}
                     data-testid={`spotlight-list-${tableType}`}
                     component={Paper}
-                    style={{ marginTop: 10 }}
+                    style={{ marginTop: 20 }}
                 >
                     <Table className={classes.table} aria-label="custom pagination table" style={{ minHeight: 200 }}>
                         <TableHead>
@@ -726,14 +733,7 @@ export const SpotlightsListAsTable = ({
                                         container
                                     >
                                         <Grid item xs={12} md={!!deleteActive ? 5 : 12}>
-                                            <h3
-                                                style={{
-                                                    marginBottom: 6,
-                                                    textAlign: 'left',
-                                                    fontSize: '1.5em',
-                                                    marginTop: '1.5em',
-                                                }}
-                                            >
+                                            <h3 className={classes.tableHeading}>
                                                 {headertag}
                                                 <span
                                                     style={{ fontSize: '0.9em', fontWeight: 300 }}
@@ -798,15 +798,7 @@ export const SpotlightsListAsTable = ({
                                         >
                                             {/* indicates drag and drop available - only when sorting by weight!! */}
                                             {sortOrderAllowsDragAndDrop ? (
-                                                <SortIcon
-                                                    fontSize="small"
-                                                    style={{
-                                                        transform: 'scaleX(-1)',
-                                                    }}
-                                                    // InputProps={{
-                                                    //     'aria-label': 'order by weight. Drag and drop available',
-                                                    // }}
-                                                />
+                                                <SortIcon fontSize="small" style={{ transform: 'scaleX(-1)' }} />
                                             ) : (
                                                 <span style={{ width: 20 }} />
                                             )}
@@ -835,11 +827,7 @@ export const SpotlightsListAsTable = ({
                                                 data-testid="spotlights-list-clear-text-filter-clear-button"
                                                 color="disabled"
                                                 fontSize="small"
-                                                style={{
-                                                    position: 'absolute',
-                                                    bottom: '10%',
-                                                    right: 50,
-                                                }}
+                                                style={{ position: 'absolute', bottom: '10%', right: 50 }}
                                                 onClick={clearFilter}
                                             />
                                         </div>

@@ -131,7 +131,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                     history={history}
                     showAddButton
                 />
-                <StandardCard title="All spotlights" noPadding customBackgroundColor="#ececec">
+                <StandardCard title="All spotlights" noPadding customBackgroundColor="#F7F7F7">
                     <Grid container>
                         <Grid
                             item
