@@ -326,6 +326,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     endDate: prop === 'endDate' ? event.target.value : values.dateList[dateListIndex].endDate,
                 },
             ]);
+
+            setFormValidity(validateValues({ ...values, dateList: tempDateList }));
+
             return;
         }
 
