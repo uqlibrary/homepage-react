@@ -47,12 +47,12 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    // const navigateToCloneForm = spotlightid => {
-    //     history.push(`/admin/spotlights/clone/${spotlightid}`);
-    //
-    //     const topOfPage = document.getElementById('StandardPage');
-    //     !!topOfPage && topOfPage.scrollIntoView();
-    // };
+    const navigateToCloneForm = () => {
+        history.push(`/admin/spotlights/clone/${spotlightid}`);
+
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+    };
 
     function setDefaults() {
         const startDateDefault = spotlight?.start ? formatDate(spotlight.start, 'YYYY-MM-DDTHH:mm:ss') : '';
@@ -184,15 +184,15 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
                                     variant="contained"
                                 />
                             </Grid>
-                            {/* <Grid item xs={9} align="right">*/}
-                            {/*    <Button*/}
-                            {/*        color="primary"*/}
-                            {/*        data-testid="admin-spotlights-form-button-save"*/}
-                            {/*        variant="contained"*/}
-                            {/*        children="Clone"*/}
-                            {/*        onClick={() => navigateToCloneForm()}*/}
-                            {/*    />*/}
-                            {/* </Grid>*/}
+                            <Grid item xs={9} align="right">
+                                <Button
+                                    color="primary"
+                                    data-testid="admin-spotlights-form-button-save"
+                                    variant="contained"
+                                    children="Clone"
+                                    onClick={() => navigateToCloneForm()}
+                                />
+                            </Grid>
                         </Grid>
                     </StandardCard>
                 </section>
