@@ -1,6 +1,25 @@
 import locale from '../../../src/modules/Pages/BookExamBooth/bookExamBooth.locale';
 import moment from 'moment';
 
+function selectFirstLocation() {
+    const firstLocation = locale.locationDecider.locations[0];
+    cy.get(`[data-testid="display-location-option-${firstLocation.value}"]`)
+        .should('exist')
+        .click();
+}
+
+function selectProctoredExam() {
+    cy.get('[data-testid="display-decider-option-yes"]')
+        .should('exist')
+        .click();
+}
+
+function selectNONProctoredExam() {
+    cy.get('[data-testid="display-decider-option-no"]')
+        .should('exist')
+        .click();
+}
+
 context('ACCESSIBILITY', () => {
     it('Book Exam Booth', () => {
         cy.visit('/book-exam-booth');
@@ -9,14 +28,14 @@ context('ACCESSIBILITY', () => {
         cy.log('Book Exam Booth');
 
         cy.log('Question');
+        cy.get('[data-testid="standard-card-booking-options"]').should('exist');
         cy.checkA11y('[data-testid="standard-card-booking-options"]', {
             reportName: 'Book Exam Booth',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
 
-        cy.log('No option');
-        cy.get('[data-testid="display-decider-option-no"]').click();
+        selectNONProctoredExam();
         cy.get('[data-testid="no-booking-necessary"]').should('exist');
         cy.checkA11y('[data-testid="no-booking-necessary"]', {
             reportName: 'Book Exam Booth',
@@ -24,8 +43,16 @@ context('ACCESSIBILITY', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
 
-        cy.log('Yes option');
-        cy.get('[data-testid="display-decider-option-yes"]').click();
+        selectProctoredExam();
+        cy.log('Location');
+        cy.get('[data-testid="standard-card-booking-options"]').should('exist');
+        cy.checkA11y('[data-testid="standard-card-booking-options"]', {
+            reportName: 'Book Exam Booth',
+            scopeName: 'Location chosen',
+            includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+        });
+
+        selectFirstLocation();
         cy.get('[data-testid="booking-details"]').should('exist');
         cy.checkA11y('[data-testid="booking-details"]', {
             reportName: 'Book Exam Booth',
@@ -45,12 +72,20 @@ context('Book Exam Booth page', () => {
     });
 
     it('should show message on selecting "am not sitting a ProctorU exam"', () => {
-        cy.get('[data-testid="display-decider-option-no"]').click();
+        selectNONProctoredExam();
         cy.get('[data-testid="no-booking-necessary"]').should('exist');
     });
 
-    it('should display form for booking details on selecting "am sitting a ProctorU exam"', () => {
-        cy.get('[data-testid="display-decider-option-yes"]').click();
+    it('should display location selector on selecting "am sitting a ProctorU exam"', () => {
+        selectProctoredExam();
+        cy.get('[data-testid="standard-card-where-would-you-like-to-sit-your-exam?"]')
+            .should('exist')
+            .should('contain', locale.locationDecider.heading);
+    });
+
+    it('should display form for booking details on selecting a location', () => {
+        selectProctoredExam();
+        selectFirstLocation();
         cy.get('[data-testid="booking-details"]')
             .should('exist')
             .should('contain', locale.examType.label)
@@ -61,7 +96,9 @@ context('Book Exam Booth page', () => {
 
     it('should redirect to expected url on submit without changing values', () => {
         cy.intercept(/uqbookit/, 'done'); // Stub to block URL
-        cy.get('[data-testid="display-decider-option-yes"]').click();
+
+        selectProctoredExam();
+        selectFirstLocation();
         cy.get('[data-testid="booth-search-submit-button"]').click();
 
         const selectedDate = moment()
@@ -79,9 +116,10 @@ context('Book Exam Booth page', () => {
 
     it('should redirect to expected url on submit with updated values', () => {
         cy.intercept(/uqbookit/, 'done'); // Stub to block URL
-        cy.get('[data-testid="display-decider-option-yes"]').click();
+        selectProctoredExam();
+        selectFirstLocation();
 
-        // Opt to use UQ computer
+        // Opt to BYOD
         cy.get('[data-testid="exam-type-option-byod"]').click();
 
         // Choose 90 minute session length
