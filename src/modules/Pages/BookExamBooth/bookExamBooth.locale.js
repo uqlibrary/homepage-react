@@ -2,21 +2,38 @@ import React from 'react';
 
 export default {
     title: 'Book an exam booth - Library - The University of Queensland',
-    pageTitle: 'Book an exam booth in the Biological Sciences Library',
+    pageTitle: 'Book an exam booth in the Library',
     intro: (
         <p>
-            Please use this form to find an available booth in which to sit your online invigilated (ProctorU) exam at
-            the{' '}
-            <a
-                href="https://use.mazemap.com/#v=1&config=uq&zlevel=1&center=153.013203,-27.497685&zoom=15.6&sharepoitype=poi&sharepoi=1000013772&campuses=uq&campusid=406"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Biological Sciences Library
-            </a>
-            .
+            Please use this form to find an available booth in which to sit your online invigilated (ProctorU) exam in
+            the Library.
         </p>
     ),
+    locationDecider: {
+        heading: 'Where would you like to sit your exam?',
+        locations: [
+            {
+                label: 'Biological Sciences Library',
+                value: 'bsl',
+                mapLink:
+                    'https://use.mazemap.com/#v=1&config=uq&zlevel=1&center=153.013203,-27.497685&zoom=15.6&sharepoitype=poi&sharepoi=1000013772&campuses=uq&campusid=406',
+                needsComputerBookitLink:
+                    'f30fe4d2-bb58-4426-9c38-843c40b2cd3c?group=2f31b1ff-c71c-4b90-a7ac-ad7973e732eb',
+                BYODBookitLink: 'ae12d42e-faae-4553-8c6a-be2fcddb4b26?group=8d38373a-ba28-4763-9758-7f93dc2211c6',
+                needsDefiniteArticle: true, // 'does need a 'the' in front to make a sensible sentence? (for help)
+            },
+            {
+                label: 'Gatton',
+                value: 'gatton',
+                mapLink:
+                    'https://use.mazemap.com/#v=1&config=uq&zlevel=1&center=152.335906,-27.553640&zoom=18&sharepoitype=poi&sharepoi=1000335081&campusid=467',
+                needsComputerBookitLink:
+                    'f30fe4d2-bb58-4426-9c38-843c40b2cd3c?group=67ffb237-c138-4adf-b714-ab60d751b77a',
+                BYODBookitLink: 'ae12d42e-faae-4553-8c6a-be2fcddb4b26?group=c8f374e1-9dfe-48c1-906f-bea82f9d0a95',
+                needsDefiniteArticle: false,
+            },
+        ],
+    },
     displayDecider: {
         heading: 'Booking options',
         label: 'Are you booking this booth to sit a scheduled ProctorU exam?',
