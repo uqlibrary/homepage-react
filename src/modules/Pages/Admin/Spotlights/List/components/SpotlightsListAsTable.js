@@ -530,9 +530,9 @@ export const SpotlightsListAsTable = ({
 
         // briefly mark the dragged row with a style, so the user knows what they did
         const draggedRow = document.getElementById(`spotlight-list-row-${draggableId}`);
-        !!draggedRow && (draggedRow.style.transition = 'background-color 3s');
         !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
         setTimeout(() => {
+            !!draggedRow && (draggedRow.style.transition = 'background-color 3s linear');
             !!draggedRow && (draggedRow.style.backgroundColor = 'inherit');
         }, 500);
     };
