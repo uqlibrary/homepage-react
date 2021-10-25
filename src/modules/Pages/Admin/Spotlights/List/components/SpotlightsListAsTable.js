@@ -450,7 +450,7 @@ export const SpotlightsListAsTable = ({
 
     // https://stackoverflow.com/a/5306832/1246313
     let hasDraggedAndDropped = false;
-    function arrayMove(arr, oldIndex, newIndex) {
+    function moveItemInArray(arr, oldIndex, newIndex) {
         if (newIndex >= arr.length) {
             let k = newIndex - arr.length + 1;
             while (k--) {
@@ -478,7 +478,7 @@ export const SpotlightsListAsTable = ({
         }
 
         let counter = 1;
-        let filtereduserows = [];
+        let reweightedRows = [];
         rows.forEach((row, index) => {
             // newrow is an array that has an updated weight for the affected rows
             // the shifted row will end in 5 and the unmoved rows be a multiple of 10, eg drop row 2 between 5 and 6
@@ -494,32 +494,32 @@ export const SpotlightsListAsTable = ({
             if (row.id !== draggableId) {
                 counter++;
             }
-            filtereduserows[index] = newrow;
+            reweightedRows[index] = newrow;
         });
 
         // now make them all even 10s (so future drags also works by putting '5' on a record)
-        filtereduserows = filtereduserows.sort((a, b) => {
+        reweightedRows = reweightedRows.sort((a, b) => {
             return a.weight - b.weight;
         });
-        filtereduserows.forEach((row, index) => {
+        reweightedRows.forEach((row, index) => {
             row.weight = (index + 1) * 10;
         });
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        filtereduserows.sort((a, b) => a.weight - b.weight);
+        reweightedRows.sort((a, b) => a.weight - b.weight);
         const oldIndex = rows.find(r => r.id === draggableId).weight / 10 - 1;
-        const newIndex = filtereduserows.find(r => r.id === draggableId).weight / 10 - 1;
+        const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
         console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
-        arrayMove(userows, oldIndex, newIndex);
+        moveItemInArray(userows, oldIndex, newIndex);
 
         // now persist the changed record to the DB
-        filtereduserows.forEach(reWeightedRow => {
+        reweightedRows.forEach(reWeightedRow => {
             rows.map(r => {
                 if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
                     // then do the save
                     console.log('persist ', reWeightedRow.id);
-                    persistRowReorder(reWeightedRow, filtereduserows);
+                    persistRowReorder(reWeightedRow, reweightedRows);
 
                     const weightCell = document.querySelector(`#spotlight-list-row-${reWeightedRow.id} .order`);
                     console.log('weightCell = ', weightCell);

@@ -90,6 +90,14 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         }
     }, [spotlights]);
 
+    const deleteSpotlight = spotlightID => {
+        return actions.deleteSpotlight(spotlightID);
+    };
+
+    const saveSpotlightChange = spotlight => {
+        return actions.saveSpotlightChangeWithExistingImage(spotlight);
+    };
+
     if (!!spotlightsError) {
         return (
             <StandardPage title="Spotlights Management">
@@ -108,14 +116,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
             </StandardPage>
         );
     }
-
-    const deleteSpotlight = alertID => {
-        return actions.deleteSpotlight(alertID);
-    };
-
-    const saveSpotlightChange = spotlight => {
-        return actions.saveSpotlightChangeWithExistingImage(spotlight);
-    };
 
     return (
         <StandardPage title="Spotlights Management">

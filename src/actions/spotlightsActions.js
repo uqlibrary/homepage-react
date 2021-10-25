@@ -279,13 +279,7 @@ export const reweightSpotlights = saveSpotlightChange => {
                 .forEach(s => {
                     const currentRow = listUnchanged.map(t => t).find(r => r.id === s.id);
                     const newValues = {
-                        id: currentRow.id,
-                        start: currentRow.start,
-                        end: currentRow.end,
-                        title: currentRow.title,
-                        url: currentRow.url,
-                        img_url: currentRow.img_url,
-                        img_alt: currentRow.img_alt,
+                        ...currentRow,
                         active: !!currentRow.active ? 1 : 0,
                         weight: s.weight,
                     };
