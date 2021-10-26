@@ -3,7 +3,7 @@ context('ACCESSIBILITY', () => {
         cy.visit('/admin/alerts/?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[id="content-container"]').contains('Permission denied');
+        cy.get('div[id="content-container"]').contains('Page not found');
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Not found admin only',
             scopeName: 'Content',
