@@ -821,10 +821,21 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
             // advance the start date two months forward
             // (picking a date that far forward lets us test the error on the end date)
-            cy.get('.MuiPickersCalendarHeader-switchHeader button:not([disabled])')
+            cy.get('.MuiPickersCalendarHeader-switchHeader button:nth-of-type(2)')
                 .as('next-month-button')
                 .click();
-            cy.get('@next-month-button').click(); // and on to the next month
+            cy.get('.MuiPickersCalendarHeader-switchHeader p').then($month => {
+                // towards the end of the month, the default start date is already into _next_ month,
+                // only click a second time if we need to to get Month 2
+                const nextmonth = moment()
+                    .add(1, 'M')
+                    .startOf('month');
+                if ($month.val() === nextmonth.format('MMMM YYYY')) {
+                    cy.get('@next-month-button').click(); // and on to the next month
+                } else {
+                    cy.log('2 months already', nextmonth);
+                }
+            });
 
             // and pick the first of the month
             cy.get('.MuiPickersCalendar-week button:not(.MuiPickersDay-hidden')
