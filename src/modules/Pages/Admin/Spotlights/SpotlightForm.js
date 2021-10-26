@@ -216,7 +216,11 @@ export const SpotlightForm = ({
                 console.log('useEffect reweighting clone complete');
                 showCloneConfirmation();
                 actions.clearSpotlightReweighting();
-                setValues(defaults);
+                setValues({
+                    ...defaults,
+                    start: defaults.startDateDefault,
+                    end: defaults.endDateDefault,
+                });
                 // actions.clearASpotlight();
             } else if (!!publicFileUploadError) {
                 showUploadError();
@@ -264,8 +268,18 @@ export const SpotlightForm = ({
     };
 
     const reloadClonePage = () => {
-        console.log('reloadClonePage defaults = ', defaults);
-        setValues(defaults);
+        console.log('reloadClonePage defaults = ', {
+            // the data displayed in the form
+            ...defaults,
+            start: defaults.startDateDefault,
+            end: defaults.endDateDefault,
+        });
+        setValues({
+            // the data displayed in the form
+            ...defaults,
+            start: defaults.startDateDefault,
+            end: defaults.endDateDefault,
+        });
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
