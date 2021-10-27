@@ -12,10 +12,9 @@ import { KeyboardDateTimePicker } from '@material-ui/pickers';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { SpotlightUploader } from 'modules/Pages/Admin/Spotlights/SpotlightUploader';
-import { default as locale } from './spotlightsadmin.locale';
-// import { formatDate, getTimeEndOfDayFormatted, getTimeNowFormatted } from './spotlighthelpers';
-import { formatDate } from './spotlighthelpers';
+import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
 
@@ -29,12 +28,18 @@ const useStyles = makeStyles(() => ({
             backgroundColor: 'rgba(0, 0, 0, 0.12)',
         },
     },
+    checkboxCell: {
+        '& input[type="checkbox"]:checked + svg': {
+            fill: '#595959',
+        },
+        padding: 0,
+        color: 'rgba(0, 0, 0, 0.87)',
+    },
 }));
 
 export const SpotlightForm = ({
     actions,
-    spotlightsLoading,
-    spotlightResponse,
+    // spotlightResponse,
     spotlightStatus,
     defaults,
     spotlightError,
@@ -42,17 +47,18 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
+    spotlightsReweightingStatus,
 }) => {
-    console.log('uploadPublicFile: publicFileUploading = ', publicFileUploading);
-    console.log('uploadPublicFile: publicFileUploadError = ', publicFileUploadError);
-    console.log('uploadPublicFile: publicFileUploadResult = ', publicFileUploadResult);
-    // !!publicFileUploadResult
-    //     ? console.log('uploadPublicFile: publicFileUploadResult join = ', publicFileUploadResult.join(' ').trim())
-    //     : console.log('no join publicFileUploadResult = ', publicFileUploadResult);
+    console.log('spotlightError = ', spotlightError);
+    console.log('spotlightsReweightingStatus = ', spotlightsReweightingStatus);
     const classes = useStyles();
 
-    const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
-    // const [isOpenUploadFile, showErrorUploadFile, hideConfirmationUploadFile] = useConfirmationState();
+    // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
+    const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
+    const [isEditOpen, showEditConfirmation, hideEditConfirmation] = useConfirmationState();
+    const [isCloneOpen, showCloneConfirmation, hideCloneConfirmation] = useConfirmationState();
+    const [isUploadErrorOpen, showUploadError, hideUploadError] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
     const [uploadedFiles, setUploadedFiles] = useState(null);
@@ -65,12 +71,22 @@ export const SpotlightForm = ({
         end: defaults.endDateDefault,
     });
 
-    const isValidTitle = title => {
-        return title.length > 0;
+    const isValidLinkAria = title => {
+        return !!title && title.length > 0;
     };
 
-    const isValidUrl = testurl => {
-        if (!!testurl && testurl.length < 'http://x.co'.length) {
+    const isValidImgAlt = imgAlt => {
+        return !!imgAlt && imgAlt.length > 0;
+    };
+
+    const isValidImageUrl = testurl => {
+        if (!testurl) {
+            return false;
+        }
+        if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
+            return false;
+        }
+        if (testurl.length < 'http://x.co'.length) {
             // minimum possible url
             return false;
         }
@@ -89,67 +105,91 @@ export const SpotlightForm = ({
         return true;
     };
 
-    function isValidStartDate(param, startDate) {
-        const momentStartDate = new moment(startDate);
-        const momentStartDateFormatted = momentStartDate.format('YYYY-MM-DDTHH:mm');
-        return (
-            startDate !== '' && momentStartDateFormatted >= defaults.startDateDefault && !!moment(startDate).isValid()
-        );
+    function isValidStartDate(startDate) {
+        const momentToday = new moment();
+        const formattedToday = momentToday.startOf('day').format('YYYYMMDDHHmmss');
+
+        const formattedstartdate = formatDate(startDate, 'YYYYMMDDHHmmss');
+        const formatteddefaultstartdate = formatDate(defaults.startDateDefault, 'YYYYMMDDHHmmss');
+        const result =
+            startDate !== '' &&
+            !!moment(startDate).isValid() &&
+            (formattedstartdate >= formattedToday || formattedstartdate >= formatteddefaultstartdate);
+        // console.log('isValidStartDate: startDate = ', startDate);
+        // console.log('isValidStartDate: defaults.startDateDefault = ', defaults.startDateDefault);
+        // console.log('isValidStartDate: !!moment(startDate).isValid() = ', !!moment(startDate).isValid());
+        // console.log("isValidStartDate: startDate !== '' = ", startDate !== '');
+        // // console.log('isValidStartDate: moment(startDate) >= moment() ', moment(startDate) >= moment());
+        // console.log(
+        //     'isValidStartDate: formattedstartdate >= formattedToday = ', formattedstartdate >= formattedToday
+        // );
+        // console.log(
+        //     'isValidStartDate: formattedstartdate >= formatteddefaultstartdate = ',
+        //     formattedstartdate >= formatteddefaultstartdate,
+        // );
+        // console.log('isValidStartDate: formattedstartdate = ', formattedstartdate);
+        // console.log('isValidStartDate: formattedToday = ', formattedToday);
+        // console.log('isValidStartDate: formatteddefaultstartdate = ', formatteddefaultstartdate);
+        // console.log('isValidStartDate: is valid', result);
+        return result;
     }
 
-    function isInvalidStartDate(param, startDate) {
-        return !isValidStartDate(param, startDate);
+    function isInvalidStartDate(startDate) {
+        return !isValidStartDate(startDate);
     }
 
     function isInvalidEndDate(endDate, startDate) {
-        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
+        const startDateReformatted = startDate !== '' && moment(startDate).format('YYYY-MM-DDTHH:mm');
+        // console.log('isInvalidEndDate endDate < startDateReformatted: ', endDate, ' < ', startDateReformatted);
+        // console.log("isInvalidEndDate startDate !== '': ", startDate !== '');
+        // console.log('isInvalidEndDate together: ', endDate < startDateReformatted && startDate !== '');
+        // console.log('isInvalidEndDate !moment(endDate).isValid() = ', !moment(endDate).isValid());
+        return (startDate !== '' && endDate < startDateReformatted) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
         console.log('validateValues: currentValues = ', currentValues);
         const isValid =
-            !spotlightsLoading &&
-            !isInvalidStartDate(null, currentValues.start) &&
+            spotlightStatus !== 'loading' &&
+            !isInvalidStartDate(currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
-            !!isValidTitle(currentValues.title) &&
+            !!isValidLinkAria(currentValues.title) &&
+            !!isValidImgAlt(currentValues.img_alt) &&
             // currentValues.img_alt.length > 0 && // set to title during save if blank
             // !!currentValues.localfilename &&
             // currentValues.localfilename.length > 0 &&
-            !!currentValues.uploadedFile &&
+            (defaults.type === 'edit' ||
+                defaults.type === 'clone' ||
+                (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
-            isValidUrl(currentValues.url);
+            isValidImageUrl(currentValues.url);
 
-        console.log('validateValues: isValid = ', isValid, currentValues);
+        // console.log('validateValues: isValid = ', isValid, currentValues);
+        // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
+        // console.log('validateValues: isValidEndDate = ', !isInvalidEndDate(currentValues.end, currentValues.start));
+        // console.log('validateValues: isValidLinkAria = ', !!isValidLinkAria(currentValues.title));
+        // console.log('validateValues: isValidImgAlt = ', !!isValidImgAlt(currentValues.img_alt));
         // console.log(
-        //     'validateValues: isInvalidStartDate(',
-        //     currentValues.start,
-        //     ') = ',
-        //     isInvalidStartDate(currentValues.start),
+        //     'validateValues: uploadedFile = ',
+        //     defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0),
         // );
-        // console.log('validateValues: currentValues.end = ', currentValues.end);
         // console.log(
-        //     'validateValues: isInvalidStartDate(',
-        //     currentValues.end,
-        //     ') = ',
-        //     isInvalidStartDate(currentValues.end),
+        //     'validateValues: isValidImageUrl(', currentValues.url, ') = ', isValidImageUrl(currentValues.url)
         // );
-        // console.log('validateValues: spotlightsLoading = ', spotlightsLoading);
-        // console.log('validateValues: isValidTitle(', currentValues.title, ') = ', isValidTitle(currentValues.title));
-        // console.log('validateValues: isValidUrl(', currentValues.url, ') = ', isValidUrl(currentValues.url));
         // console.log('validateValues: currentValues.img_alt = ', currentValues.img_alt);
         // console.log('validateValues: currentValues = ', currentValues);
 
         return isValid;
     };
 
-    useEffect(() => {
-        if (!!defaults && defaults.type === 'clone') {
-            setFormValidity(validateValues(defaults));
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    // useEffect(() => {
+    //     if (!!defaults && defaults.type === 'clone') {
+    //         setFormValidity(validateValues(defaults));
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, []);
 
     useEffect(() => {
         // console.log('uploadedFiles set to ', uploadedFiles);
@@ -159,51 +199,59 @@ export const SpotlightForm = ({
     }, [values]);
 
     useEffect(() => {
-        if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
-            showConfirmation();
+        console.log('useEffect reweighting? spotlightsReweightingStatus = ', spotlightsReweightingStatus);
+        // if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
+        if (spotlightsReweightingStatus === 'complete') {
+            setValues(defaults); // save success - clear the form!
+            if (!publicFileUploadError && defaults.type === 'add') {
+                showAddConfirmation();
+                actions.clearSpotlightReweighting();
+            } else if (defaults.type === 'edit') {
+                console.log('useEffect reweighting edit');
+                showEditConfirmation();
+                actions.clearSpotlightReweighting();
+                setValues(defaults);
+                actions.clearASpotlight();
+            } else if (defaults.type === 'clone') {
+                console.log('useEffect reweighting clone complete');
+                showCloneConfirmation();
+                actions.clearSpotlightReweighting();
+                setValues({
+                    ...defaults,
+                    start: defaults.startDateDefault,
+                    end: defaults.endDateDefault,
+                });
+                // actions.clearASpotlight();
+            } else if (!!publicFileUploadError) {
+                showUploadError();
+            }
         }
-    }, [showConfirmation, spotlightResponse, spotlightStatus]);
+    }, [
+        spotlightsReweightingStatus,
+        // spotlightResponse,
+        // spotlightStatus,
+        defaults,
+        publicFileUploadError,
+        showEditConfirmation,
+        showAddConfirmation,
+        showCloneConfirmation,
+        showUploadError,
+    ]);
 
     useEffect(() => {
         if (!!spotlightError || spotlightStatus === 'error') {
-            showConfirmation();
+            showErrorConfirmation();
         }
-    }, [showConfirmation, spotlightError, spotlightStatus]);
+    }, [showErrorConfirmation, spotlightError, spotlightStatus]);
 
     useEffect(() => {
         if (!!publicFileUploadError) {
-            showConfirmation();
+            showUploadError();
         }
-    }, [showConfirmation, publicFileUploadError]);
-
-    const addAriaLabelToMuiDatePickerButton = (idDiv, ariaLabel) => {
-        const theBlock = document.getElementById(idDiv);
-        const theButton = !!theBlock && theBlock.parentNode.querySelector('button');
-        !!theButton && !theButton.hasAttribute('aria-label') && theButton.setAttribute('aria-label', ariaLabel);
-        console.log('addAriaLabelToMuiDatePickerButton theButton = ', theButton);
-    };
-
-    const runAfterRender = () => {
-        // component doesnt allow pass of aria-label to the button, and we have 2, so they need distinct labels
-        addAriaLabelToMuiDatePickerButton('admin-spotlights-form-start-date-label', 'Select publish date-time');
-        addAriaLabelToMuiDatePickerButton('admin-spotlights-form-end-date-label', 'Select unpublish date-time');
-    };
+    }, [showUploadError, publicFileUploadError]);
 
     const clearForm = () => {
         setValues(defaults);
-        // setValues({
-        //     ['title']: '',
-        //     ['url']: '',
-        //     ['start']: defaults.startDateDefault,
-        //     ['end']: defaults.endDateDefault,
-        //     ['urgent']: false,
-        //     ['img_alt']: '',
-        //     ['img_url']: '',
-        //     ['weight']: 0,
-        //     ['active']: 0,
-        //     startDateDefault: getTimeNowFormatted(),
-        //     endDateDefault: getTimeEndOfDayFormatted(),
-        // });
     };
 
     const navigateToListPage = () => {
@@ -220,51 +268,83 @@ export const SpotlightForm = ({
     };
 
     const reloadClonePage = () => {
-        setValues(defaults);
+        console.log('reloadClonePage defaults = ', {
+            // the data displayed in the form
+            ...defaults,
+            start: defaults.startDateDefault,
+            end: defaults.endDateDefault,
+        });
+        setValues({
+            // the data displayed in the form
+            ...defaults,
+            start: defaults.startDateDefault,
+            end: defaults.endDateDefault,
+        });
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
     };
 
-    const handleSpotlightCreation = newValues => {
-        console.log('handleSpotlightCreation 1: newValues = ', newValues);
-        if (defaults.type === 'add') {
-            console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
-            // only 1 file may be uploaded, but it comes in an array
-            // const uploadedFile = !!uploadedFiles && uploadedFiles.lengh > 0 && uploadedFiles.shift();
-            // newValues.uploadedFile = uploadedFile;
-            console.log('handleSpotlightCreation 2: newValues = ', newValues);
-            // !!uploadedFile && actions.createSpotlightWithFile(newValues);
-            actions.createSpotlightWithFile(newValues);
-        } else {
-            // newValues.img_url should be supplied by the form, because we preview the image in there
-            actions.createSpotlightWithoutFile(newValues);
-        }
-    };
-
     const saveSpotlight = () => {
-        console.log('saveSpotlight: values = ', values);
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
+
+        console.log('saveSpotlight: currentValues = ', values);
         const newValues = {
-            id: defaults.type !== 'add' ? values.id : null,
+            id: defaults.type === 'edit' ? values.id : null,
             start: formatDate(values.start),
             end: formatDate(values.end),
             title: values.title,
             url: values.url,
-            // img_url: values.img_url,
-            img_alt: values.img_alt || values.title,
-            weight: values.weight,
+            // eslint-disable-next-line camelcase
+            img_url: values?.img_url ?? null,
+            img_alt: values.img_alt,
+            // weight will update after save,
+            // but lets just use a number that sits at the end of the current spotlights, as requested
+            weight: defaults.type === 'edit' ? values.weight : 1000,
             active: !!values.active ? 1 : 0,
-            uploadedFile: values.uploadedFile,
         };
+        !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
-        console.log('saveSpotlight defaults.type = ', defaults.type);
-        console.log(
-            defaults.type === 'edit'
-                ? 'saveSpotlight actions.saveSpotlightChange: newValues = '
-                : 'saveSpotlight handleSpotlightCreation: newValues = ',
-        );
+        console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
-        defaults.type === 'edit' ? actions.saveSpotlightChange(newValues) : handleSpotlightCreation(newValues);
+        const saveSpotlightChange = s => {
+            return actions.saveSpotlightChangeWithExistingImage(s);
+        };
+        switch (defaults.type) {
+            case 'add':
+                // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
+                console.log('handleSpotlightCreation 2: newValues = ', newValues);
+                actions
+                    .createSpotlightWithNewImage(newValues)
+                    .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                break;
+            case 'edit':
+                if (!!values.uploadedFile) {
+                    actions
+                        .saveSpotlightWithNewImage(newValues)
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                } else {
+                    actions
+                        .saveSpotlightChangeWithExistingImage(newValues)
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                }
+                break;
+            case 'clone':
+                if (!!values.uploadedFile) {
+                    actions
+                        .createSpotlightWithNewImage(newValues)
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                } else {
+                    actions
+                        .createSpotlightWithExistingImage(newValues)
+                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                }
+                break;
+            default:
+                console.log('an unhandled type of ', defaults.type, ' was provided at SpotlightForm.saveSpotlight');
+                return;
+        }
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -280,12 +360,21 @@ export const SpotlightForm = ({
             newValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
             newValue = !!event.target.value ? event.target.value : event.target.checked;
-            if (prop === 'active') {
+            if (['active', 'weight'].includes(prop)) {
                 newValue = !!newValue ? 1 : 0;
+            } else if (newValue === false) {
+                // it returns false when we clear a text field
+                newValue = '';
             }
         }
-        console.log('handleChange ', prop, ': newValue = ', newValue);
-        setValues({ ...values, [prop]: newValue });
+        console.log('handleChange prop = ', prop, ': newValue = ', newValue);
+        // we need the explicit setting of '' otherwise we get a 'false' in the field
+        setValues({
+            ...values,
+            start: values.start || defaults.startDateDefault,
+            end: values.end || defaults.endDateDefault,
+            [prop]: newValue,
+        });
 
         console.log('handleChange values now = ', values);
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
@@ -293,30 +382,19 @@ export const SpotlightForm = ({
 
     const errorLocale = {
         ...locale.form.add.addSpotlightError,
-        confirmationTitle: `An error occurred: ${spotlightError}`,
+        confirmationTitle: `An error occurred: ${!!spotlightError &&
+            !!spotlightError.message &&
+            spotlightError.message}`,
     };
 
     const uploadErrorLocale = () => {
-        console.log('uploadErrorLocale: publicFileUploadResult = ', publicFileUploadResult);
-        const errorMessage = (!!publicFileUploadResult && publicFileUploadResult[0]) || '';
+        const errorMessage = (!!publicFileUploadError && !!publicFileUploadResult && publicFileUploadResult[0]) || '';
         return {
             ...locale.form.upload.uploadError,
-            // confirmationTitle: 'An error occurred during the upload',
-            confirmationTitle: `An error occurred during the upload${!!errorMessage ? ': ' + errorMessage.trim() : ''}`,
+            confirmationTitle: `An error occurred during the upload${
+                !!errorMessage && typeof errorMessage === 'string' ? ': ' + errorMessage.trim() : ''
+            }`,
         };
-    };
-
-    const handleConfirmation = () => {
-        if (defaults.type === 'edit') {
-            // the action on edit page is always 'return to list'
-            navigateToListPage();
-        } else if (!!spotlightError) {
-            // On error on creation, the button just closes the notification dialog,
-            // allowing the user to correct and try again
-            hideConfirmation(); // form remains loaded
-        } else {
-            clearForm();
-        }
     };
 
     if (!!publicFileUploading) {
@@ -326,116 +404,104 @@ export const SpotlightForm = ({
                 xs={'auto'}
                 style={{
                     width: 80,
-                    marginRight: 20,
-                    marginBottom: 6,
-                    opacity: 0.3,
+                    margin: '0 auto',
                     height: 200, // default to some space for the blocks
                 }}
             >
-                <InlineLoader message="Loading" />
+                <InlineLoader message="Uploading" />
             </Grid>
         );
     }
 
-    const handleUploadedFiles = files => {
-        console.log('handleUploadedFiles files = ', files);
-        const file = !!files && files.length > 0 && files.shift();
-        console.log('handleUploadedFiles file = ', file);
+    const handleSuppliedFiles = files => {
+        console.log('handleSuppliedFiles files = ', files);
+        setUploadedFiles(files);
 
-        setUploadedFiles(file);
+        console.log('check: ', { ...values, ['uploadedFile']: files });
+        setValues({ ...values, ['uploadedFile']: files });
+        console.log('handleSuppliedFiles values now = ', values);
 
-        // const filename = !!file && file.name;
-        // console.log('handleUploadedFiles filename = ', filename);
-        setValues({ ...values, ['uploadedFile']: file });
-
-        console.log('handleUploadedFiles values now = ', values);
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: file }));
+        setFormValidity(validateValues({ ...values, ['uploadedFile']: files }));
 
         setTimeout(() => {
-            console.log('handleUploadedFiles setTimeout: uploadedFiles = ', uploadedFiles);
+            console.log('handleSuppliedFiles setTimeout: values = ', values);
+            console.log('handleSuppliedFiles setTimeout: uploadedFiles = ', uploadedFiles);
         }, 1000);
     };
 
-    const clearUploadedFile = () => {
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: '' }));
+    const clearSuppliedFile = () => {
+        setValues(prevState => {
+            return { ...prevState, ['uploadedFile']: [] };
+        });
+        setFormValidity(validateValues({ ...values, ['uploadedFile']: [] }));
     };
 
     return (
         <Fragment>
-            <form onLoad={runAfterRender()}>
-                {spotlightStatus === 'error' && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-error"
-                        onAction={() =>
-                            spotlightError === 'The requested page could not be found.' && navigateToListPage()
-                        }
-                        onClose={hideConfirmation}
-                        hideCancelButton
-                        isOpen={isOpen}
-                        locale={errorLocale}
-                    />
-                )}
-                {spotlightStatus !== 'error' && defaults.type === 'edit' && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-edit-save-succeeded"
-                        onAction={handleConfirmation}
-                        onClose={hideConfirmation}
-                        hideCancelButton
-                        isOpen={isOpen}
-                        locale={locale.form.edit.editSpotlightConfirmation}
-                    />
-                )}
-                {spotlightStatus !== 'error' && !publicFileUploadError && defaults.type === 'add' && (
-                    <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-add-save-succeeded"
-                        onAction={handleConfirmation}
-                        onClose={hideConfirmation}
-                        onCancelAction={() => navigateToListPage()}
-                        isOpen={isOpen}
-                        locale={locale.form.add.addSpotlightConfirmation}
-                    />
-                )}
-                {spotlightStatus !== 'error' && defaults.type === 'clone' && (
-                    <ConfirmationBox
-                        actionButtonColor="secondary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-clone-save-succeeded"
-                        onClose={hideConfirmation}
-                        onAction={() => reloadClonePage()}
-                        isOpen={isOpen}
-                        locale={locale.form.clone.cloneSpotlightConfirmation}
-                        onCancelAction={() => navigateToListPage()}
-                    />
-                )}
-                {!!publicFileUploadError && (
-                    <ConfirmationBox
-                        actionButtonColor="primary"
-                        actionButtonVariant="contained"
-                        confirmationBoxId="spotlight-file-upload-failed"
-                        onClose={hideConfirmation}
-                        onAction={() => hideConfirmation()}
-                        isOpen={isOpen}
-                        locale={uploadErrorLocale()}
-                        hideCancelButton
-                    />
-                )}
+            <form>
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-error"
+                    onAction={() => spotlightError === 'The requested page could not be found.' && navigateToListPage()}
+                    onClose={hideErrorConfirmation}
+                    hideCancelButton
+                    isOpen={isErrorOpen}
+                    locale={errorLocale}
+                />
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-edit-save-succeeded"
+                    onAction={navigateToListPage}
+                    onClose={hideEditConfirmation}
+                    hideCancelButton
+                    isOpen={isEditOpen}
+                    locale={locale.form.edit.editSpotlightConfirmation}
+                />
+                <ConfirmationBox
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-add-save-succeeded"
+                    onAction={hideAddConfirmation}
+                    onClose={hideAddConfirmation}
+                    onCancelAction={() => navigateToListPage()}
+                    isOpen={isAddOpen}
+                    locale={locale.form.add.addSpotlightConfirmation}
+                />
+                <ConfirmationBox
+                    actionButtonColor="secondary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-clone-save-succeeded"
+                    onClose={hideCloneConfirmation}
+                    onAction={() => reloadClonePage()}
+                    isOpen={isCloneOpen}
+                    locale={locale.form.clone.cloneSpotlightConfirmation}
+                    onCancelAction={() => navigateToListPage()}
+                />
+                <ConfirmationBox
+                    actionButtonColor="primary"
+                    actionButtonVariant="contained"
+                    confirmationBoxId="spotlight-file-upload-failed"
+                    onClose={hideUploadError}
+                    onAction={() => hideUploadError()}
+                    isOpen={isUploadErrorOpen}
+                    locale={uploadErrorLocale()}
+                    hideCancelButton
+                />
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.titleField}>
-                            <InputLabel htmlFor="spotlightTitle">{locale.form.labels.titleField}</InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
+                            <InputLabel htmlFor="spotlightTitle">{locale.form.labels.linkDescAriaField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
                                 data-testid="admin-spotlights-form-title"
-                                error={!isValidTitle(values.title)}
+                                error={!isValidLinkAria(values.title)}
                                 inputProps={{ maxLength: 100 }}
+                                multiline
                                 onChange={handleChange('title')}
                                 required
+                                rows={2}
                                 value={values.title}
                             />
                         </FormControl>
@@ -443,14 +509,17 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.ariaField}>
-                            <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.ariaField}</InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.imgAltField}>
+                            <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.imgAltField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
                                 data-testid="admin-spotlights-form-tooltip"
+                                error={!isValidImgAlt(values.img_alt)}
                                 value={values.img_alt}
                                 onChange={handleChange('img_alt')}
-                                inputProps={{ maxLength: 100 }}
+                                inputProps={{ maxLength: 255 }}
+                                multiline
+                                rows={2}
                             />
                         </FormControl>
                     </Grid>
@@ -465,7 +534,7 @@ export const SpotlightForm = ({
                                 data-testid="admin-spotlights-form-link-url"
                                 value={values.url}
                                 onChange={handleChange('url')}
-                                error={!isValidUrl(values.url)}
+                                error={!isValidImageUrl(values.url)}
                             />
                         </FormControl>
                     </Grid>
@@ -476,37 +545,49 @@ export const SpotlightForm = ({
                             id="admin-spotlights-form-start-date"
                             data-testid="admin-spotlights-form-start-date"
                             value={values.start}
-                            label="Date published"
+                            label={locale.form.labels.publishDate}
                             onChange={handleChange('start')}
                             minDate={defaults.minimumDate}
                             format="DD/MM/YYYY HH:mm a"
                             showTodayButton
+                            todayLabel={locale.form.labels.datePopupNowButton}
                             autoOk
+                            KeyboardButtonProps={{
+                                'aria-label': locale.form.tooltips.publishDate,
+                            }}
                         />
                     </Grid>
                     <Grid item md={5} xs={12}>
                         <KeyboardDateTimePicker
                             id="admin-spotlights-form-end-date"
                             data-testid="admin-spotlights-form-end-date"
-                            label="Date unpublished"
+                            label={locale.form.labels.unpublishDate}
                             onChange={handleChange('end')}
                             value={values.end}
                             minDate={values.start}
                             format="DD/MM/YYYY HH:mm a"
                             autoOk
+                            KeyboardButtonProps={{
+                                'aria-label': locale.form.tooltips.unpublishDate,
+                            }}
                         />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={10} align="left">
-                        <SpotlightUploader onAddFile={handleUploadedFiles} onClearFile={clearUploadedFile} />
+                        <SpotlightFileUploadDropzone
+                            onAddFile={handleSuppliedFiles}
+                            onClearFile={clearSuppliedFile}
+                            currentImage={values.img_url}
+                        />
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
-                    <Grid item xs={3} align="left">
+                    <Grid item xs={7} md={10} />
+                    <Grid item xs={5} md={2} align="right">
                         <InputLabel
-                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
                             title={locale.form.tooltips.publishedCheckbox}
+                            className={`${classes.checkboxCell}`}
                         >
                             <Checkbox
                                 checked={values.active === 1}
@@ -550,12 +631,12 @@ SpotlightForm.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    spotlightResponse: PropTypes.any,
+    // spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    spotlightsReweightingStatus: PropTypes.string,
 };
 
 SpotlightForm.defaultProps = {

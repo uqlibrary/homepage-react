@@ -1,5 +1,6 @@
 import spotlightReducer, { initialState } from './spotlightReducer';
 import * as actions from '../actions/actionTypes';
+import { SPOTLIGHT_CREATED } from '../actions/actionTypes';
 
 describe('spotlight reducer', () => {
     let emptyState;
@@ -22,6 +23,16 @@ describe('spotlight reducer', () => {
         });
     });
 
+    it('should set spotlights value when successfully created', () => {
+        const test = spotlightReducer(emptyState, { type: actions.SPOTLIGHT_CREATED, payload: mockSpotlightList });
+        expect(test).toEqual({
+            ...emptyState,
+            spotlight: mockSpotlightList,
+            spotlightStatus: 'created',
+            spotlightError: false,
+        });
+    });
+
     it('should set spotlights value when successfully saved', () => {
         const test = spotlightReducer(emptyState, { type: actions.SPOTLIGHT_SAVED, payload: mockSpotlightList });
         expect(test).toEqual({
@@ -32,7 +43,7 @@ describe('spotlight reducer', () => {
         });
     });
 
-    it('should set spotlights value when successfully saved', () => {
+    it('should set spotlights value when successfully deleted', () => {
         const test = spotlightReducer(emptyState, { type: actions.SPOTLIGHT_DELETED, payload: [] });
         expect(test).toEqual({
             ...emptyState,

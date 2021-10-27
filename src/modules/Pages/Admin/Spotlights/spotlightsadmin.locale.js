@@ -6,19 +6,54 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
-            titleField: 'Title - visible to assitive technology *',
-            ariaField: 'Tooltip text - visible when user mouses over spotlight',
+            linkDescAriaField: 'Link title *',
+            imgAltField: 'Image alt text *',
             linkField: 'Spotlight link *',
-            publishedCheckbox: 'Published?',
+            publishDate: 'Date published', // also on List page
+            unpublishDate: 'Date unpublished', // also on List page
+            publishedCheckbox: 'Published?', // also on List page
+            dragareaInstructions: [
+                'Drag and drop a spotlight image, or click to select an image. *',
+                'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
+                'Click the Help button for image requirements.',
+            ],
+            datePopupNowButton: 'Now',
         },
         tooltips: {
-            titleField: 'Help TBA',
-            ariaField: 'Tooltip TBA. Optional - if blank, Title will duplicate as tooltip',
+            linkDescAriaField: 'Link aria label - describe title and destination',
+            imgAltField: 'Image alt text - include all text in image',
             linkField: 'Please enter a valid URL',
+            publishDate: 'Select publish date-time',
+            unpublishDate: 'Select unpublish date-time',
             publishedCheckbox: 'Check to add button to alert linking to more information. Displays extra form fields.',
+            deleteIcon: 'Remove image',
+        },
+        upload: {
+            // the square bracket strings are swapped out for actual values - don't remove them!!
+            currentDimensionsNotification: 'Dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
+            recommendedDimensionsNotification:
+                'Max image size: [MAXFILESIZE] KB. Recommended dimensions: [WIDTH]px by [HEIGHT]px (aspect ratio: [RATIO]).',
+            ideal: {
+                width: 813,
+                height: 300,
+                ratio: 2.71,
+            },
+            minRatio: 2.55,
+            maxRatio: 2.8,
+            heightWidthFlex: 50, // can go plus or minus this figure without it warning
+            dimensionsWarning: 'Larger images will affect page load time and smaller ones may be pixelated',
+            maxSize: 400000, // 400 x 1000 bytes = 400kb
+            uploadError: {
+                confirmationTitle: 'An error occurred while uploading the file',
+                confirmButtonLabel: 'OK',
+            },
+            fileTooLarge: {
+                confirmationTitle:
+                    'The file is too large. Please reduce the spotlight file size to [MAXFILESIZE] KB or less and try again.',
+                confirmButtonLabel: 'OK',
+            },
         },
         add: {
-            dragareaInstructions: "Drag 'n' drop your new Spotlight image here, or click to select an image",
             addSpotlightConfirmation: {
                 confirmationTitle: 'A spotlight has been added',
                 confirmationMessage: '',
@@ -47,12 +82,6 @@ export default {
                 confirmationMessage: '',
                 confirmButtonLabel: 'Clone again',
                 cancelButtonLabel: 'View spotlight list',
-            },
-        },
-        upload: {
-            uploadError: {
-                confirmationTitle: 'An error occurred while uploading the file',
-                confirmButtonLabel: 'OK',
             },
         },
         help: {
@@ -114,9 +143,28 @@ export default {
             confirmButtonLabel: 'Proceed',
         },
         deleteError: {
-            confirmationTitle: 'Record Deletion was not successful',
+            confirmationTitle: 'Some records did not delete successfully',
+            confirmationMessage: (
+                <Fragment>Refresh the page to see current status and try deletion again later</Fragment>
+            ),
+            confirmButtonLabel: 'OK',
+        },
+        saveError: {
+            confirmationTitle: 'We are unable to save this change right now',
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
+        },
+        confirmPublish: {
+            confirmationTitle: 'Confirm publish',
+            confirmationMessage: 'Are you sure you wish to publish this spotlight?',
+            cancelButtonLabel: 'OK',
+            confirmButtonLabel: 'Cancel',
+        },
+        confirmUnpublish: {
+            confirmationTitle: 'Confirm unpublish',
+            confirmationMessage: 'Are you sure you wish to unpublish this spotlight?',
+            cancelButtonLabel: 'OK',
+            confirmButtonLabel: 'Cancel',
         },
         help: {
             title: 'Spotlights listing',
@@ -165,15 +213,40 @@ export default {
                 </div>
             ),
         },
-        labels: {
-            hideShowUnpublishedCheckbox: 'Show unpublished',
-            hideShowScheduledCheckbox: 'Show scheduled',
-        },
         tooltips: {
-            hideShowUnpublishedCheckbox: 'Check and uncheck to show and hide unpublished spotlights in the list',
-            hideShowScheduledCheckbox: 'Check and uncheck to show and hide scheduled spotlights in the list',
-            deleteCheckedSpotlightsButton: 'Delete spotlight(s)',
-            clearCheckedSpotlightsButton: 'Deselect all',
+            deleteSelectedSpotlightsButton: 'Delete spotlight(s)',
+            clearSelectedSpotlightsButton: 'Deselect all',
+        },
+        textSearch: {
+            displayLabel: 'Quick search',
+            ariaLabel: 'Filter spotlights by entering a word',
+        },
+    },
+    viewPage: {
+        help: {
+            title: 'View help',
+            text: (
+                <Fragment>
+                    <p data-testid="admin-spotlights-view-help-example">
+                        The View Spotlights page is read only as past spotlights cannot be edited. This is so they are
+                        preserved as a record of past notices to clients.
+                    </p>
+                    <h3>Copy and reuse (clone) a past spotlight</h3>
+                    <p>This will be available soon</p>
+                    <p>
+                        Press <b>Clone</b> to create a copy of the spotlight. The Clone spotlight form will appear and
+                        be prefilled with the same spotlight information, with updated dates.
+                    </p>
+                    <ul>
+                        <li>CHECK: The start date will be the current date and time now.</li>
+                        <li>CHECK: The end date will be set to tonight at 11.59pm.</li>
+                    </ul>
+                    <h3>Return to spotlights list</h3>
+                    <p>
+                        Press <b>Cancel</b> to return to the Spotlights listing page.
+                    </p>
+                </Fragment>
+            ),
         },
     },
 };

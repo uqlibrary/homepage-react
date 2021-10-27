@@ -20,12 +20,25 @@ const handlers = {
         spotlight: action.payload,
         spotlightStatus: 'loaded',
     }),
+    [actions.SPOTLIGHT_SAVING]: state => ({
+        ...initialState,
+        ...state,
+        spotlightStatus: 'saving',
+        spotlightError: false,
+    }),
     [actions.SPOTLIGHT_SAVED]: (state, action) => ({
         ...initialState,
         ...state,
         spotlightError: false,
         spotlight: action.payload,
         spotlightStatus: 'saved',
+    }),
+    [actions.SPOTLIGHT_CREATED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        spotlightError: false,
+        spotlight: action.payload,
+        spotlightStatus: 'created',
     }),
     [actions.SPOTLIGHT_DELETED]: (state, action) => ({
         ...initialState,
@@ -53,11 +66,14 @@ export default function spotlightReducer(state = initialState, action) {
     console.log(
         'spotlightReducer: ',
         action.type,
-        ' - state = ',
+        '\n',
+        '- state before = ',
         state,
-        '; action = ',
+        '\n',
+        '- action = ',
         action,
-        '; handler = ',
+        '\n',
+        '- handler (state after) = ',
         handler(state, action),
     );
     return handler(state, action);

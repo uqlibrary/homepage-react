@@ -1,17 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-
-import moment from 'moment';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
-// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import SpotlightsListAsTable from './SpotlightsListAsTable';
+import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/components/SpotlightsListAsTable';
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { default as locale } from '../../spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+
+import moment from 'moment';
 
 const useStyles = makeStyles(
     theme => ({
@@ -37,30 +36,25 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const SpotlightsList = ({
-    actions,
-    spotlights,
-    spotlightsLoading,
-    spotlightsError,
-    spotlightError,
-    history,
-}) => {
+export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlightsError, history }) => {
     const classes = useStyles();
 
     const [currentSpotlights, setCurrentSpotlights] = useState([]);
+    const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
             actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (!!spotlights && spotlights.length > 0) {
             setPastSpotlights([]);
             setCurrentSpotlights([]);
+            setScheduledSpotlights([]);
             spotlights.forEach(spotlight => {
                 const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
                 const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
@@ -85,20 +79,24 @@ export const SpotlightsList = ({
                 const fullDateFormat = 'dddd D MMMM YYYY h.mma';
                 spotlight.startDateLong = moment(spotlight.start).format(fullDateFormat);
                 spotlight.endDateLong = moment(spotlight.end).format(fullDateFormat);
-                // // Strip markdown from the body
-                // const linkRegex = spotlight.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-                // spotlight.message = spotlight.body;
-                // if (!!linkRegex && linkRegex.length === 3) {
-                //     spotlight.message = spotlight.message.replace(linkRegex[0], '').replace('  ', ' ');
-                // }
                 if (moment(spotlight.end).isBefore(moment())) {
-                    setPastSpotlights(pastSpotlights => [...pastSpotlights, spotlight]);
+                    setPastSpotlights(pastState => [...pastState, spotlight]);
+                } else if (moment(spotlight.start).isAfter(moment())) {
+                    setScheduledSpotlights(pastState => [...pastState, spotlight]);
                 } else {
-                    setCurrentSpotlights(currentSpotlights => [...currentSpotlights, spotlight]);
+                    setCurrentSpotlights(pastState => [...pastState, spotlight]);
                 }
             });
         }
     }, [spotlights]);
+
+    const deleteSpotlight = spotlightID => {
+        return actions.deleteSpotlight(spotlightID);
+    };
+
+    const saveSpotlightChange = spotlight => {
+        return actions.saveSpotlightChangeWithExistingImage(spotlight);
+    };
 
     if (!!spotlightsError) {
         return (
@@ -119,10 +117,6 @@ export const SpotlightsList = ({
         );
     }
 
-    const deleteAlert = alertID => {
-        return actions.deleteAlert(alertID);
-    };
-
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -137,7 +131,7 @@ export const SpotlightsList = ({
                     history={history}
                     showAddButton
                 />
-                <StandardCard title="All spotlights" noPadding>
+                <StandardCard title="All spotlights" noPadding customBackgroundColor="#F7F7F7">
                     <Grid container>
                         <Grid
                             item
@@ -146,32 +140,50 @@ export const SpotlightsList = ({
                             data-testid="admin-spotlights-list"
                             className={classes.pageLayout}
                         >
-                            <div data-testid="admin-spotlights-list-current-list">
+                            <div
+                                id="admin-spotlights-list-current-list"
+                                data-testid="admin-spotlights-list-current-list"
+                            >
                                 <SpotlightsListAsTable
                                     rows={currentSpotlights}
-                                    headertag="Current and scheduled spotlights"
+                                    headertag="Current spotlights"
                                     tableType="current"
-                                    spotlightError={spotlightError}
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
-                                    actions={actions}
-                                    deleteAlert={deleteAlert}
-                                    alertOrder="forwardEnd"
-                                    allowFilter
+                                    deleteSpotlight={deleteSpotlight}
+                                    saveSpotlightChange={saveSpotlightChange}
+                                    canDragRows
+                                    canUnpublish
+                                    reweightSpotlights={actions.reweightSpotlights}
                                 />
                             </div>
-                            <div data-testid="admin-spotlights-list-past-list">
+                            <div
+                                id="admin-spotlights-list-scheduled-list"
+                                data-testid="admin-spotlights-list-scheduled-list"
+                            >
+                                <SpotlightsListAsTable
+                                    rows={scheduledSpotlights}
+                                    headertag="Scheduled spotlights"
+                                    tableType="scheduled"
+                                    spotlightsLoading={spotlightsLoading}
+                                    history={history}
+                                    deleteSpotlight={deleteSpotlight}
+                                    saveSpotlightChange={saveSpotlightChange}
+                                    canUnpublish
+                                    reweightSpotlights={actions.reweightSpotlights}
+                                />
+                            </div>
+                            <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
                                 <SpotlightsListAsTable
                                     rows={pastSpotlights}
                                     tableType="past"
                                     headertag="Past spotlights"
-                                    spotlightError={spotlightError}
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
-                                    actions={actions}
-                                    deleteAlert={deleteAlert}
-                                    alertOrder="reverseEnd"
-                                    canDragRows={false}
+                                    deleteSpotlight={deleteSpotlight}
+                                    saveSpotlightChange={saveSpotlightChange}
+                                    canTextFilter
+                                    reweightSpotlights={actions.reweightSpotlights}
                                 />
                             </div>
                         </Grid>
@@ -187,7 +199,6 @@ SpotlightsList.propTypes = {
     spotlights: PropTypes.array,
     spotlightsLoading: PropTypes.any,
     spotlightsError: PropTypes.any,
-    spotlightError: PropTypes.any,
     history: PropTypes.object,
 };
 

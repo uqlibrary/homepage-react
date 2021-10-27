@@ -290,7 +290,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                     marginTop: -6,
                                 }}
                             >
-                                {mapSrc.library} - Level {mapSrc.level} ({mapSrc.available} of {mapSrc.total} free)
+                                {mapSrc.library} - Level {mapSrc.level} ({mapSrc.available} free of {mapSrc.total})
                             </Typography>
                         </Grid>
                         <Grid item xs={'auto'}>
@@ -407,7 +407,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                     : ''
                                                             }`,
                                                         }}
-                                                        aria-label={`${item.library} - ${buildingAvail} of ${buildingTotal} free. Click to review each level`}
+                                                        aria-label={`${item.library} - ${buildingAvail} free of{' '}
+                                                        ${buildingTotal}. Click to review each level`}
                                                         id={`computers-library-button-${index}`}
                                                         data-testid={`computers-library-button-${index}`}
                                                     >
@@ -415,7 +416,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                     </Button>
                                                 </Grid>
                                                 <Grid item xs={'auto'} style={{ fontSize: 14, marginRight: 16 }}>
-                                                    {buildingAvail} of {buildingTotal} free
+                                                    {buildingAvail} free of {buildingTotal}
                                                 </Grid>
                                             </Grid>
                                             {item.levels.length > 0 &&
@@ -440,8 +441,9 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                     data-testid={`computers-library-${index}-level-${level.level}-button`}
                                                                     aria-label={`${item.library} level ${
                                                                         level.level
-                                                                    }. ${level.available} of ${level.available +
-                                                                        level.occupied} computers free`}
+                                                                    }. ${level.available} free of{' '}
+                                                                        ${level.available + level.occupied}{' '}
+                                                                        computers`}
                                                                     disabled={!level.floorplan}
                                                                     onClick={() =>
                                                                         openMap(
@@ -472,8 +474,8 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                 xs={'auto'}
                                                                 style={{ fontSize: 14, marginRight: 16 }}
                                                             >
-                                                                {level.available} of {level.available + level.occupied}{' '}
-                                                                free
+                                                                {level.available} free of{' '}
+                                                                {level.available + level.occupied}
                                                             </Grid>
                                                         </Grid>
                                                     </Collapse>

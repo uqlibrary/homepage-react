@@ -1,43 +1,41 @@
 import * as actions from 'actions/actionTypes';
 
 export const initialState = {
-    spotlights: null,
-    spotlightsLoading: null,
+    spotlightsReweightingStatus: null,
     spotlightsError: null,
 };
 
 const handlers = {
-    [actions.SPOTLIGHTS_LOADING]: state => ({
+    [actions.SPOTLIGHT_REWEIGHTING_UNDERWAY]: state => ({
         ...initialState,
         ...state,
-        spotlightsLoading: true,
+        spotlightsReweightingStatus: 'underway',
         spotlightsError: false,
     }),
-    [actions.SPOTLIGHTS_LOADED]: (state, action) => ({
+    [actions.SPOTLIGHT_REWEIGHTING_SUCCEEDED]: state => ({
         ...initialState,
         ...state,
-        spotlightsLoading: false,
+        spotlightsReweightingStatus: 'complete',
         spotlightsError: false,
-        spotlights: action.payload,
     }),
-    [actions.SPOTLIGHTS_FAILED]: (state, action) => ({
+    [actions.SPOTLIGHTS_REWEIGHTING_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        spotlightsLoading: false,
+        spotlightsReweightingStatus: 'complete',
         spotlightsError: action.payload,
     }),
-    [actions.SPOTLIGHTS_CLEAR]: () => ({
+    [actions.SPOTLIGHTS_REWEIGHTING_CLEAR]: () => ({
         ...initialState,
     }),
 };
 
-export default function spotlightsReducer(state = initialState, action) {
+export default function spotlightReweightReducer(state = initialState, action) {
     const handler = handlers[action.type];
     if (!handler) {
         return state;
     }
     console.log(
-        'spotlightsReducer: ',
+        'spotlightReweightReducer: ',
         action.type,
         '\n',
         '- state before = ',

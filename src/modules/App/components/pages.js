@@ -12,6 +12,11 @@ export const AlertsView = React.lazy(() => import('modules/Pages/Admin/Alerts/Vi
 export const AlertsList = React.lazy(() => import('modules/Pages/Admin/Alerts/List/containers/AlertsList'));
 export const SpotlightsList = React.lazy(() => import('modules/Pages/Admin/Spotlights/List/containers/SpotlightsList'));
 export const SpotlightsAdd = React.lazy(() => import('modules/Pages/Admin/Spotlights/Add/containers/SpotlightsAdd'));
+export const SpotlightsEdit = React.lazy(() => import('modules/Pages/Admin/Spotlights/Edit/containers/SpotlightsEdit'));
+export const SpotlightsView = React.lazy(() => import('modules/Pages/Admin/Spotlights/View/containers/SpotlightsView'));
+export const SpotlightsClone = React.lazy(() =>
+    import('modules/Pages/Admin/Spotlights/Clone/containers/SpotlightsClone'),
+);
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';

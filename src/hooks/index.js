@@ -1,14 +1,8 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 import { useState, useCallback, useEffect } from 'react';
 import { useRecordContext, useAccountContext } from 'context';
-import { publicationTypes } from 'config';
 import { useTheme } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-
-export const usePublicationSubtype = (displayType = null) => {
-    const { record } = useRecordContext();
-    return publicationTypes()[displayType || record.rek_display_type].subtypes || [];
-};
 
 export const userIsAdmin = () => {
     const { account } = useAccountContext();

@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import SpotlightsAdd from '../components/SpotlightsAdd';
+import SpotlightsEdit from '../components/SpotlightsEdit';
 
 const mapStateToProps = state => {
     return {
@@ -19,7 +19,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SpotlightsAddContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsAdd);
-SpotlightsAddContainer = withRouter(SpotlightsAddContainer);
+let SpotlightsEditContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsEdit);
+SpotlightsEditContainer = withRouter(SpotlightsEditContainer);
 
-export default SpotlightsAddContainer;
+export default SpotlightsEditContainer;
