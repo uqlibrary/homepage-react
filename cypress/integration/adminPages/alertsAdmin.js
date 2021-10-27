@@ -95,13 +95,15 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .should('exist')
                 .contains('Permanent');
-            cy.get('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-espace"]')
-                .should('exist')
-                .contains('Systems: eSpace');
 
-            cy.get('[data-testid="alert-list-system-chip-d480b250-9cd8-11eb-88c0-a3882cd6c52e-all"]')
+            // the system chips display as expected
+            cy.get('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage"]')
                 .should('exist')
-                .contains('Systems: All');
+                .contains('System: eSpace');
+            cy.get('[data-testid="alert-list-system-chip-d480b250-9cd8-11eb-88c0-a3882cd6c52e-spotlights"]')
+                .should('exist')
+                .contains('System: Spotlights')
+                .should('have.attr', 'style', 'textDecoration: line-through;');
 
             cy.wait(500);
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
@@ -813,7 +815,7 @@ describe('Alerts Admin Pages', () => {
             cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input')
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input')
                 .should('not.be.checked')
                 .check();
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
@@ -900,10 +902,16 @@ describe('Alerts Admin Pages', () => {
         it('tells the user which systems the alert will appear on', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"]')
+                .parent()
+                .should('exist')
+                .contains('Home page');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"]')
                 .parent()
                 .should('exist')
                 .contains('eSpace');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input').should('be.checked');
         });
     });
     context('Alert Admin Clone page', () => {
@@ -1042,10 +1050,16 @@ describe('Alerts Admin Pages', () => {
         it('tells the user which systems the alert will appear on', () => {
             cy.visit('http://localhost:2020/admin/alerts/clone/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"]')
+                .parent()
+                .should('exist')
+                .contains('Home page');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"]')
                 .parent()
                 .should('exist')
                 .contains('eSpace');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input').should('be.checked');
         });
     });
     context('Alert Admin View page', () => {
@@ -1126,7 +1140,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
         });
-        it('can show a preview of an non-urgent non-permanent alert without link', () => {
+        it('can show a preview of a non-urgent non-permanent alert without link', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('exist');
@@ -1172,6 +1186,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"]')
                 .should('exist')
                 .contains('eSpace');
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"] input').should('be.checked');
         });
     });
 });

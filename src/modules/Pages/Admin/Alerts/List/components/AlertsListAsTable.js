@@ -62,6 +62,10 @@ const useStyles2 = makeStyles(
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },
+        system: {
+            backgroundColor: '#666666',
+            color: '#fff',
+        },
         checkboxCell: {
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#595959',
@@ -394,13 +398,6 @@ export const AlertsListAsTable = ({
                                                         title="This alert cannot be dismissed"
                                                     />
                                                 )}
-                                                {(!alert.systems || alert.systems.length === 0) && (
-                                                    <Chip
-                                                        data-testid={`alert-list-system-chip-${alert.id}-all`}
-                                                        label="Systems: All"
-                                                        title="This alert displays on all systems"
-                                                    />
-                                                )}
                                                 {!!alert.systems &&
                                                     alert.systems.length > 0 &&
                                                     alert.systems.map((systemSlug, index) => {
@@ -408,20 +405,25 @@ export const AlertsListAsTable = ({
                                                             s => s.slug === systemSlug,
                                                         );
                                                         return (
-                                                            <Chip
-                                                                key={`alert-list-system-chip-${systemDetails?.slug ||
-                                                                    index}`}
-                                                                data-testid={`alert-list-system-chip-${
-                                                                    alert.id
-                                                                }-${systemDetails?.slug || index}`}
-                                                                label={`Systems: ${systemDetails?.title ||
-                                                                    systemDetails?.slug ||
-                                                                    'Unrecognised'}`}
-                                                                title={`This alert is restricted to the ${systemDetails?.title ||
-                                                                    'Unrecognised'} system`}
-                                                                className={`${!!systemDetails.removed &&
-                                                                    classes.removedChip}`}
-                                                            />
+                                                            <div style={{ marginLeft: 3, display: 'inline' }}>
+                                                                <Chip
+                                                                    key={`alert-list-system-chip-${systemDetails?.slug ||
+                                                                        index}`}
+                                                                    data-testid={`alert-list-system-chip-${
+                                                                        alert.id
+                                                                    }-${systemDetails?.slug || index}`}
+                                                                    label={`System: ${systemDetails?.title ||
+                                                                        systemDetails?.slug ||
+                                                                        'Unrecognised'}`}
+                                                                    title={`This alert is restricted to the ${systemDetails?.title ||
+                                                                        systemDetails?.slug ||
+                                                                        'Unrecognised'} system`}
+                                                                    className={`${
+                                                                        classes.system
+                                                                    } ${!!systemDetails.removed &&
+                                                                        classes.removedChip}`}
+                                                                />
+                                                            </div>
                                                         );
                                                     })}
                                             </div>

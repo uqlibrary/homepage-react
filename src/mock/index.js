@@ -199,7 +199,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
             body:
                 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             urgent: 1,
-            systems: ['espace'],
+            systems: ['homepage'],
         },
     ]),
 );
