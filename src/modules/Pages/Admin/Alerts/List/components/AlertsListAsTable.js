@@ -58,6 +58,9 @@ const useStyles2 = makeStyles(
             '&>div': {
                 marginBottom: 4,
             },
+            '&>div>div': {
+                marginBottom: 4,
+            },
         },
         urgent: {
             backgroundColor: theme.palette.warning.main,
