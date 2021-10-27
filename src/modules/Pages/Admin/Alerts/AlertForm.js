@@ -700,9 +700,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             );
                         })}
                     </Grid>
-                    <Grid item xs={12}>
-                        <p>This list is TBA!!</p>
-                    </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">

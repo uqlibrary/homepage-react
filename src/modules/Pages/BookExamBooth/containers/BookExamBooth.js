@@ -10,15 +10,13 @@ const BookExamBoothContainer = () => {
      * @param bool isBYOD
      * @returns string
      */
-    const getBookingUrl = isBYOD => {
+    const getBookingUrl = (isBYOD, chosenLocationCode, locations) => {
         const urlRoot = 'https://uqbookit.uq.edu.au/#/app/booking-types/';
         // const urlRoot = 'https://uqbookit-dev.uq.edu.au/#/app/booking-types/';
 
-        const bookingCodes = {
-            byod: 'ae12d42e-faae-4553-8c6a-be2fcddb4b26',
-            uq: 'f30fe4d2-bb58-4426-9c38-843c40b2cd3c',
-        };
-        const bookingCode = isBYOD ? bookingCodes.byod : bookingCodes.uq;
+        const locationCode = chosenLocationCode === 'unset' ? locations[0].value : chosenLocationCode; // should not be unset
+        const locationOptions = locations.find(l => l.value === locationCode);
+        const bookingCode = isBYOD ? locationOptions.BYODBookitLink : locationOptions.needsComputerBookitLink;
         return urlRoot + bookingCode;
     };
 

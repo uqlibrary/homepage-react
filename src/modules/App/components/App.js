@@ -109,7 +109,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
                     </span>
                 </uq-site-header>
                 <div role="region" aria-label="UQ Library Alerts">
-                    <alert-list />
+                    <alert-list system="homepage" />
                 </div>
                 <div style={{ flexGrow: 1, marginTop: 16 }}>
                     <a name="content" />
