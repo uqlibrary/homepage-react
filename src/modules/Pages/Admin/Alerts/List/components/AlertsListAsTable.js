@@ -54,6 +54,11 @@ const useStyles2 = makeStyles(
         iconHighlighted: {
             color: '#fff',
         },
+        chipblock: {
+            '&>div': {
+                marginBottom: 4,
+            },
+        },
         urgent: {
             backgroundColor: theme.palette.warning.main,
             color: '#fff',
@@ -374,7 +379,7 @@ export const AlertsListAsTable = ({
                                                 id={`alert-list-item-title-${alert.id}`}
                                             >{`${alert.title}`}</h4>{' '}
                                             {`${alert.message.replace('[permanent]', '')}`}
-                                            <div>
+                                            <div className={classes.chipblock}>
                                                 {alert.body.includes('](') && (
                                                     <Chip
                                                         data-testid={`alert-list-link-chip-${alert.id}`}
