@@ -468,7 +468,7 @@ export const alertList = [
         "title": "We are open on-campus and online.",
         "body": "Access collections, services, and support to help you continue your work and study.[UQ Library COVID-19 Updates](https:\/\/web.library.uq.edu.au\/library-services\/covid-19)",
         "urgent": 0,
-        systems: ['primo', 'spotlights'],
+        systems: ['primo', 'homepage'],
     }, {
         "id": "857726b0-a19f-11eb-ab5b-bb33418ed6de",
         "start": "2031-04-20 16:10:00",

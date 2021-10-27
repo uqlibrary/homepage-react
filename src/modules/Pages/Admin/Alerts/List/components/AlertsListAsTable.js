@@ -405,10 +405,12 @@ export const AlertsListAsTable = ({
                                                             s => s.slug === systemSlug,
                                                         );
                                                         return (
-                                                            <div style={{ marginLeft: 3, display: 'inline' }}>
+                                                            <div
+                                                                key={`alert-list-system-chip-${systemDetails?.slug ||
+                                                                    index}`}
+                                                                style={{ marginLeft: 3, display: 'inline' }}
+                                                            >
                                                                 <Chip
-                                                                    key={`alert-list-system-chip-${systemDetails?.slug ||
-                                                                        index}`}
                                                                     data-testid={`alert-list-system-chip-${
                                                                         alert.id
                                                                     }-${systemDetails?.slug || index}`}
@@ -420,7 +422,7 @@ export const AlertsListAsTable = ({
                                                                         'Unrecognised'} system`}
                                                                     className={`${
                                                                         classes.system
-                                                                    } ${!!systemDetails.removed &&
+                                                                    } ${!!systemDetails?.removed &&
                                                                         classes.removedChip}`}
                                                                 />
                                                             </div>

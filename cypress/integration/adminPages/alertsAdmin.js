@@ -99,11 +99,7 @@ describe('Alerts Admin Pages', () => {
             // the system chips display as expected
             cy.get('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage"]')
                 .should('exist')
-                .contains('System: eSpace');
-            cy.get('[data-testid="alert-list-system-chip-d480b250-9cd8-11eb-88c0-a3882cd6c52e-spotlights"]')
-                .should('exist')
-                .contains('System: Spotlights')
-                .should('have.attr', 'style', 'textDecoration: line-through;');
+                .contains('System: Home page');
 
             cy.wait(500);
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
@@ -792,9 +788,8 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-link-title"] input').should('not.be.visible');
             cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('not.be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input').should('be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('not.be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
         it('has a working Edit form', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
@@ -815,7 +810,7 @@ describe('Alerts Admin Pages', () => {
             cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input')
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input')
                 .should('not.be.checked')
                 .check();
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
@@ -906,12 +901,12 @@ describe('Alerts Admin Pages', () => {
                 .parent()
                 .should('exist')
                 .contains('Home page');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('not.be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"]')
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"]')
                 .parent()
                 .should('exist')
-                .contains('eSpace');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input').should('be.checked');
+                .contains('Primo');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
     });
     context('Alert Admin Clone page', () => {
@@ -1054,12 +1049,12 @@ describe('Alerts Admin Pages', () => {
                 .parent()
                 .should('exist')
                 .contains('Home page');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('not.be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"]')
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"]')
                 .parent()
                 .should('exist')
-                .contains('eSpace');
-            cy.get('[data-testid="admin-alerts-form-checkbox-system-espace"] input').should('be.checked');
+                .contains('Primo');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
     });
     context('Alert Admin View page', () => {
@@ -1183,10 +1178,10 @@ describe('Alerts Admin Pages', () => {
         it('tells the user which systems the alert appeared on', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"]')
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-primo"]')
                 .should('exist')
-                .contains('eSpace');
-            cy.get('[data-testid="admin-alerts-view-checkbox-system-espace"] input').should('be.checked');
+                .contains('Primo');
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-primo"] input').should('be.checked');
         });
     });
 });
