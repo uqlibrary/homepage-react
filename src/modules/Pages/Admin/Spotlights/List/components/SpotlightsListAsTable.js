@@ -479,7 +479,6 @@ export const SpotlightsListAsTable = ({
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        reweightedRows.sort((a, b) => a.weight - b.weight);
         const oldIndex = rows.find(r => r.id === draggableId).weight / 10 - 1;
         const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
         console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
@@ -487,34 +486,34 @@ export const SpotlightsListAsTable = ({
 
         const rowsToPersist = [];
         reweightedRows.forEach(reWeightedRow => {
-            userows.map(r => {
-                if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
-                    // then do the save
-                    rowsToPersist.push(r);
-                }
-            });
+            const oldRow = userows.find(r => r.id === reWeightedRow.id);
+            if (!!oldRow && reWeightedRow.id === oldRow.id && reWeightedRow.weight !== oldRow.weight) {
+                // then add this row to the set to save
+                rowsToPersist.push(reWeightedRow);
+            }
         });
         console.log('persist:', rowsToPersist);
         // now persist the changed record to the DB
-        saveBatchReorder(rowsToPersist).then(() => {
-            // and then update the display
-            rows.forEach(row => {
-                reweightedRows.forEach(fr => {
-                    if (fr.id === row.id && fr.weight !== row.weight) {
-                        // we have the option here of setting all the values from the db
-                        // in case it has updated? but that seems overkill
-                        row.weight = fr.weight;
-                        console.log('setting ', fr.id, ' to ', fr.weight);
+        rowsToPersist.length > 0 &&
+            saveBatchReorder(rowsToPersist).then(() => {
+                // and then update the display
+                rows.forEach(row => {
+                    reweightedRows.forEach(fr => {
+                        if (fr.id === row.id && fr.weight !== row.weight) {
+                            // we have the option here of setting all the values from the db
+                            // in case it has updated? but that seems overkill
+                            row.weight = fr.weight;
+                            console.log('setting ', fr.id, ' to ', fr.weight);
 
-                        const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
-                        const newWeight = fr.weight / 10;
-                        console.log('weightCell = ', fr.id, fr.title, newWeight);
-                        !!weightCell && (weightCell.innerHTML = newWeight);
-                    }
+                            const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
+                            const newWeight = fr.weight / 10;
+                            console.log('weightCell = ', fr.id, fr.title, newWeight);
+                            !!weightCell && (weightCell.innerHTML = newWeight);
+                        }
+                    });
                 });
+                rows.sort((a, b) => a.weight - b.weight);
             });
-            rows.sort((a, b) => a.weight - b.weight);
-        });
 
         // briefly mark the dragged row with a style, so the user knows what they did
         const draggedRow = document.getElementById(`spotlight-list-row-${draggableId}`);
