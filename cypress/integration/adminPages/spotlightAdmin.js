@@ -824,13 +824,19 @@ describe('Spotlights Admin Pages', () => {
             cy.get('.MuiPickersCalendarHeader-switchHeader button:nth-of-type(2)')
                 .as('next-month-button')
                 .click();
-            cy.get('.MuiPickersCalendarHeader-switchHeader p').then($month => {
+            cy.get('.MuiPickersCalendarHeader-switchHeader p').then(monthLabel => {
                 // towards the end of the month, the default start date is already into _next_ month,
-                // only click a second time if we need to to get Month 2
+                // only click a second time if we need to, to get Month 2
                 const nextmonth = moment()
                     .add(1, 'M')
                     .startOf('month');
-                if ($month.val() === nextmonth.format('MMMM YYYY')) {
+                let month;
+                if (monthLabel.length > 1) {
+                    month = monthLabel[0].textContent || monthLabel[0].innerText || '';
+                } else {
+                    month = monthLabel.val();
+                }
+                if (month === nextmonth.format('MMMM YYYY')) {
                     cy.get('@next-month-button').click(); // and on to the next month
                 } else {
                     cy.log('2 months already', nextmonth);
