@@ -179,6 +179,9 @@ send payload:
  */
 
 export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
+
+// on reorder, send all the rows together, so the api can use its after-update-of-many-then-reweight
+export const SPOTLIGHT_SAVE_BULK_API = () => ({ apiUrl: 'spotlights' });
 /*
 send payload:
 {

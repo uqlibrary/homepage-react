@@ -98,6 +98,14 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         return actions.saveSpotlightChangeWithExistingImage(spotlight);
     };
 
+    const saveBatchReorder = spotlights => {
+        spotlights.forEach(s => {
+            console.log('saveBatchReorder', s.id, s.weight, s.title);
+        });
+        // console.log('saveBatchReorder', spotlights);
+        return actions.saveSpotlightBatch(spotlights);
+    };
+
     if (!!spotlightsError) {
         return (
             <StandardPage title="Spotlights Management">
@@ -152,6 +160,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
+                                    saveBatchReorder={saveBatchReorder}
                                     canDragRows
                                     canUnpublish
                                     reweightSpotlights={actions.reweightSpotlights}
@@ -169,6 +178,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
+                                    saveBatchReorder={saveBatchReorder}
                                     canUnpublish
                                     reweightSpotlights={actions.reweightSpotlights}
                                 />
@@ -182,6 +192,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
+                                    saveBatchReorder={saveBatchReorder}
                                     canTextFilter
                                     reweightSpotlights={actions.reweightSpotlights}
                                 />

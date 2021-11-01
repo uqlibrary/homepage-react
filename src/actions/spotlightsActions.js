@@ -7,6 +7,7 @@ import {
     SPOTLIGHT_GET_BY_ID_API,
     SPOTLIGHT_DELETE_API,
     UPLOAD_PUBLIC_FILES_API,
+    SPOTLIGHT_SAVE_BULK_API,
 } from 'repositories/routes';
 import { API_URL } from '../config';
 import {
@@ -81,6 +82,26 @@ const saveSpotlightChange = (request, dispatch) => {
             });
             return Promise.reject(error);
         });
+};
+
+// this route isnt used to save file changes, just reorder
+export const saveSpotlightBatch = request => {
+    return async dispatch => {
+        dispatch({ type: actions.SPOTLIGHT_SAVING });
+        return post(SPOTLIGHT_SAVE_BULK_API({ id: request.id }), request)
+            .then(data => {
+                dispatch({
+                    type: actions.SPOTLIGHT_SAVED,
+                    payload: data,
+                });
+            })
+            .catch(error => {
+                dispatch({
+                    type: actions.SPOTLIGHT_FAILED,
+                    payload: error,
+                });
+            });
+    };
 };
 
 export const createSpotlightWithExistingImage = request => {

@@ -129,6 +129,7 @@ export const SpotlightsListAsTable = ({
     spotlightsLoading,
     history,
     saveSpotlightChange,
+    saveBatchReorder,
     footerDisplayMinLength,
     canDragRows,
     canUnpublish,
@@ -349,35 +350,6 @@ export const SpotlightsListAsTable = ({
         };
     };
 
-    function persistRowReorder(r, filtereduserows) {
-        const currentRow = rows.find(row => row.id === r.id);
-        const rowToUpdate = {
-            ...cleanSpotlight(currentRow),
-            weight: r.weight,
-        };
-        console.log('rowToUpdate = ', r.weight, rowToUpdate.weight);
-        console.log('send for save: ', rowToUpdate);
-        saveSpotlightChange(rowToUpdate)
-            .then(() => {
-                // we have to visually update it manually (thats how react-beautiful-dnd works)
-                rows.forEach(row => {
-                    filtereduserows.forEach(fr => {
-                        if (fr.id === row.id && fr.weight !== row.weight) {
-                            // we have the option here of setting all the values from the db
-                            // in case it has updated? but that seems overkill
-                            row.weight = fr.weight;
-                            console.log('setting ', fr.id, ' to ', fr.weight);
-                        }
-                    });
-                });
-                rows.sort((a, b) => a.weight - b.weight);
-            })
-            .catch(e => {
-                console.log('an error on save occurred: ', e);
-                showSaveFailureConfirmation();
-            });
-    }
-
     function deleteListOfSpotlights(spotlightIDsToBeDeleted) {
         console.log('spotlightIDsToBeDeleted = ', spotlightIDsToBeDeleted);
         const successfulDelete = [];
@@ -513,19 +485,35 @@ export const SpotlightsListAsTable = ({
         console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
         moveItemInArray(userows, oldIndex, newIndex);
 
-        // now persist the changed record to the DB
+        const rowsToPersist = [];
         reweightedRows.forEach(reWeightedRow => {
-            rows.map(r => {
+            userows.map(r => {
                 if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
                     // then do the save
-                    console.log('persist ', reWeightedRow.id);
-                    persistRowReorder(reWeightedRow, reweightedRows);
-
-                    const weightCell = document.querySelector(`#spotlight-list-row-${reWeightedRow.id} .order`);
-                    console.log('weightCell = ', weightCell);
-                    !!weightCell && (weightCell.innerHTML = reWeightedRow.weight / 10);
+                    rowsToPersist.push(r);
                 }
             });
+        });
+        console.log('persist:', rowsToPersist);
+        // now persist the changed record to the DB
+        saveBatchReorder(rowsToPersist).then(() => {
+            // and then update the display
+            rows.forEach(row => {
+                reweightedRows.forEach(fr => {
+                    if (fr.id === row.id && fr.weight !== row.weight) {
+                        // we have the option here of setting all the values from the db
+                        // in case it has updated? but that seems overkill
+                        row.weight = fr.weight;
+                        console.log('setting ', fr.id, ' to ', fr.weight);
+
+                        const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
+                        const newWeight = fr.weight / 10;
+                        console.log('weightCell = ', fr.id, fr.title, newWeight);
+                        !!weightCell && (weightCell.innerHTML = newWeight);
+                    }
+                });
+            });
+            rows.sort((a, b) => a.weight - b.weight);
         });
 
         // briefly mark the dragged row with a style, so the user knows what they did
@@ -1083,6 +1071,7 @@ SpotlightsListAsTable.propTypes = {
     spotlightsLoading: PropTypes.any,
     history: PropTypes.object,
     saveSpotlightChange: PropTypes.any,
+    saveBatchReorder: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
     canDragRows: PropTypes.bool,
