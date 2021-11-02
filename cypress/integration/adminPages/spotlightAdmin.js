@@ -437,6 +437,86 @@ describe('Spotlights Admin Pages', () => {
             ).select('25');
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(20, 20));
         });
+        it('can change pages in the paginater', () => {
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').should('be.visible');
+
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tbody tr:first-child').should(
+                'contain',
+                'Can be viewed or deleted past #1',
+            );
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot button[aria-label="next page"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tbody tr:first-child').should(
+                'contain',
+                'Find past exam papers',
+            );
+            cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(34, 10, 6));
+        });
+        it('the add button loads the add page', () => {
+            cy.get('button[data-testid="admin-spotlights-help-display-button"]')
+                .should('exist')
+                .click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add');
+        });
+        it('the edit button loads the edit page', () => {
+            cy.get('button[data-testid="spotlight-list-item-edit-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                .should('exist')
+                .click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5',
+            );
+        });
+        it('the clone button loads the clone page', () => {
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                .should('exist')
+                .click();
+
+            // click the 'delete' action
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-clone-button"]')
+                .should('exist')
+                .click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/spotlights/clone/9eab3aa0-82c1-11eb-8896-eb36601837f5',
+            );
+        });
+        it('the split button closes when the user clicks away', () => {
+            // open the split button
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').click();
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-delete-button"]').should('exist');
+
+            // click away from the split button
+            cy.get('[data-testid="standard-card-all-spotlights-header"]').click();
+
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-delete-button"]').should('not.exist');
+        });
+        it('the view button loads the view page', () => {
+            cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
+            cy.get('button[data-testid="spotlight-list-item-view-1e1b0e10-c400-11e6-a8f0-47525a49f469"]')
+                .should('exist')
+                .click();
+            cy.location('href').should(
+                'eq',
+                'http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469',
+            );
+        });
+        it('can change sort order', () => {
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tbody tr:first-child').should(
+                'contain',
+                'Can be deleted and edited',
+            );
+            cy.get('[data-testid="admin-spotlights-list-current-list"] thead tr:nth-child(2) th:nth-child(5) span')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tbody tr:first-child').should(
+                'contain',
+                'Study outdoors in Duhig Place - Study space',
+            );
+        });
     });
     context('Spotlight Admin deletion', () => {
         /*

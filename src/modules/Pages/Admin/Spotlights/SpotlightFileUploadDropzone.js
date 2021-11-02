@@ -76,6 +76,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     const setDimensions = acceptedFiles => {
         // based on https://stackoverflow.com/a/8904008/1246313
         if (!acceptedFiles || acceptedFiles.length === 0) {
+            /* istanbul ignore next */
             return;
         }
         const url = URL.createObjectURL(acceptedFiles[0]);
@@ -103,6 +104,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
             );
             onAddFile(acceptedFiles);
             setDimensions(acceptedFiles);
+            /* istanbul ignore next */
             if (
                 !!acceptedFiles &&
                 acceptedFiles.length > 0 &&
@@ -147,6 +149,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         onClearFile();
     };
 
+    /* istanbul ignore next */
     const closeFileProblemConfirmation = () => {
         removeUpload();
         hideFileProblemConfirmation();
@@ -160,9 +163,13 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         return (
             imageWidthIn < locale.form.upload.ideal.width - locale.form.upload.heightWidthFlex ||
             imageWidthIn > locale.form.upload.ideal.width + locale.form.upload.heightWidthFlex ||
+            /* istanbul ignore next */
             imageHeightIn < locale.form.upload.ideal.height - locale.form.upload.heightWidthFlex ||
+            /* istanbul ignore next */
             imageHeightIn > locale.form.upload.ideal.height + locale.form.upload.heightWidthFlex ||
+            /* istanbul ignore next */
             ratio < locale.form.upload.minRatio ||
+            /* istanbul ignore next */
             ratio > locale.form.upload.maxRatio
         );
     };
@@ -172,6 +179,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         return (
             <React.Fragment>
                 {!ImageSizeIsPoor(imageWidth, imageHeight) ? (
+                    /* istanbul ignore next */
                     <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
                 ) : (
                     <Warning fontSize="small" style={{ height: 15 }} />
@@ -202,8 +210,8 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="spotlight-form-file-upload-error-dialog"
-                onAction={() => closeFileProblemConfirmation()}
-                onClose={() => closeFileProblemConfirmation()}
+                onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ closeFileProblemConfirmation()}
+                onClose={/* istanbul ignore next */ () => /* istanbul ignore next */ closeFileProblemConfirmation()}
                 hideCancelButton
                 isOpen={isFileProblemConfirmOpen}
                 locale={uploadErrorLocale}
@@ -238,7 +246,11 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                                     {imageWidth > 0 && imageHeight > 0 && (
                                         <Grid
                                             item
-                                            style={ImageSizeIsPoor(imageWidth, imageHeight) ? warningDimensions : null}
+                                            style={
+                                                ImageSizeIsPoor(imageWidth, imageHeight)
+                                                    ? warningDimensions
+                                                    : /* istanbul ignore next */ null
+                                            }
                                         >
                                             {actualDimensionsNotification(imageWidth, imageHeight)}
                                         </Grid>

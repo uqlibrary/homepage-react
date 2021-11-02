@@ -1,4 +1,9 @@
-import { getTimeMondayComing, getTimeMondayMidnightNext, getTimeSundayNextFormatted } from './spotlighthelpers';
+import {
+    getTimeEndOfDayFormatted,
+    getTimeMondayComing,
+    getTimeMondayMidnightNext,
+    getTimeSundayNextFormatted,
+} from './spotlighthelpers';
 const moment = require('moment');
 
 describe('spotlight helpers', () => {
@@ -53,5 +58,8 @@ describe('spotlight helpers', () => {
         expect(getTimeMondayMidnightNext(moment('08-26-2021'))).toEqual('2021-08-30T00:01'); // thursday
         expect(getTimeMondayMidnightNext(moment('08-27-2021'))).toEqual('2021-08-30T00:01'); // friday
         expect(getTimeMondayMidnightNext(moment('08-28-2021'))).toEqual('2021-08-30T00:01'); // saturday
+    });
+    it('correctly calculates end of day', () => {
+        expect(getTimeEndOfDayFormatted()).toEqual(moment().format('YYYY-MM-DDT23:59'));
     });
 });

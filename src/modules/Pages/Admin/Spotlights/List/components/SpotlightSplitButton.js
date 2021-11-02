@@ -47,6 +47,7 @@ export const SpotlightSplitButton = ({
     };
 
     const handleClose = event => {
+        /* istanbul ignore next */
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
@@ -102,7 +103,10 @@ export const SpotlightSplitButton = ({
                             <Grow
                                 {...TransitionProps}
                                 style={{
-                                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                                    transformOrigin:
+                                        placement === 'bottom'
+                                            ? 'center top'
+                                            : /* istanbul ignore next */ 'center bottom',
                                     zIndex: 1,
                                 }}
                             >
