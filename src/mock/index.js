@@ -32,7 +32,12 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
-import { SPOTLIGHT_GET_BY_ID_API, SPOTLIGHT_SAVE_BULK_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
+import {
+    SPOTLIGHT_DELETE_BULK_API,
+    SPOTLIGHT_GET_BY_ID_API,
+    SPOTLIGHT_SAVE_BULK_API,
+    UPLOAD_PUBLIC_FILES_API,
+} from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -176,14 +181,14 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095
         },
     ]),
 );
-mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
     withDelay([
         200,
         {
             id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
             start: '2021-03-15 00:02:00',
             end: '2099-03-21 23:59:00',
-            title: 'Library spaces 2021 - Dorothy Hill Engineering and Sciences Library',
+            title: 'Can be deleted and edited',
             url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
             img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
             img_alt:
@@ -449,6 +454,9 @@ mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ec
     withDelay([500, []]),
 );
 
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([200, []]),
+);
 mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
     withDelay([200, []]),
 );
@@ -483,6 +491,8 @@ mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'aa2fab10-7cb1-11eb-a9ab-d7c6324
 mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
     withDelay([200, []]),
 );
+
+mock.onDelete(routes.SPOTLIGHT_DELETE_BULK_API().apiUrl).reply(withDelay([200, []]));
 
 mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
     {

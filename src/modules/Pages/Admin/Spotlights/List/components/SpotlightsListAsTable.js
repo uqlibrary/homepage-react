@@ -32,9 +32,13 @@ import { default as locale } from '../../spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
-import { getTimeMondayComing } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { destroy } from 'repositories/generic';
-import { SPOTLIGHT_DELETE_API } from 'repositories/routes';
+import {
+    formatDate,
+    getTimeMondayComing,
+    isCurrentSpotlight,
+    isPastSpotlight,
+    isScheduledSpotlight,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
@@ -128,14 +132,17 @@ export const SpotlightsListAsTable = ({
     tableType,
     spotlightsLoading,
     history,
+    spotlightsError,
     saveSpotlightChange,
     saveBatchReorder,
+    deleteSpotlightBulk,
     footerDisplayMinLength,
     canDragRows,
     canUnpublish,
     canTextFilter,
-    reweightSpotlights,
 }) => {
+    console.log('top: spotlightsError = ', spotlightsError);
+    console.log('top: rows = ', rows);
     const classes = useStyles();
 
     const ORDERBY_WEIGHT = 'weight';
@@ -316,8 +323,8 @@ export const SpotlightsListAsTable = ({
         );
     };
 
-    function undisplayRemovedSpotlights(spotlightIDList) {
-        console.log('undisplayRemovedSpotlights then ', spotlightIDList);
+    function undisplayRemovedSpotlights(removedSpotlightsIdList) {
+        console.log('undisplayRemovedSpotlights then ', removedSpotlightsIdList);
         setSpotlightNotice('');
         setDeleteActive(false);
 
@@ -325,15 +332,106 @@ export const SpotlightsListAsTable = ({
         setUserows(prevState => {
             console.log('undisplayRemovedSpotlights prevState = ', prevState);
             let data = [...prevState];
-            spotlightIDList.forEach(s => {
+            removedSpotlightsIdList.forEach(s => {
                 data = data.filter(r => r.id !== s);
             });
             console.log('undisplayRemovedSpotlights, resetting userows to ', [...data]);
             return data;
         });
+        console.log('undisplayRemovedSpotlights then userows = ', userows);
+
+        // removedSpotlightsIdList.forEach(id => {
+        //     console.log('hide: ', `#spotlight-list-row-${id}`);
+        //     const htmlRow = document.getElementById(`spotlight-list-row-${id}`);
+        //     console.log('htmlRow = ', htmlRow);
+        //     !!htmlRow && htmlRow.delete();
+        // });
 
         clearAllDeleteMarkingCheckboxes();
     }
+
+    const reweightSpotlights = () => {
+        console.log('reweightSpotlights: userows=', userows);
+        const listUnchanged = userows.map(s => s);
+        // const list = userows.map(s => s);
+        setUserows(prevState => {
+            console.log('undisplayRemovedSpotlights prevState = ', prevState);
+            const data = [...prevState];
+
+            data.map(s => {
+                // sort current then scheduled and then past
+                if (isPastSpotlight(s)) {
+                    s.spotlightType = 3; // past
+                } else if (isScheduledSpotlight(s)) {
+                    // console.log('check scheduled', s.id, s.title.substr(0, 20), s.start, s.weight);
+                    s.spotlightType = 2; // scheduled
+                } else {
+                    // console.log('check current', s.id, s.title.substr(0, 20), s.start, s.weight);
+                    s.spotlightType = 1; // current
+                }
+                return s;
+            })
+                .sort((a, b) => {
+                    // sort by type then start date
+                    // this will make the scheduled spotlights appear as the last spotlight, as they become current
+                    const thisStartDate = formatDate(a.start, 'YYYYMMDDHHmmss');
+                    const prevStartDate = formatDate(b.start, 'YYYYMMDDHHmmss');
+                    const thisEndDate = formatDate(a.end, 'YYYYMMDDHHmmss');
+                    const prevEndDate = formatDate(b.end, 'YYYYMMDDHHmmss');
+                    if (isPastSpotlight(a)) {
+                        return a.spotlightType - b.spotlightType || Number(thisEndDate) - Number(prevEndDate);
+                    } else if (isScheduledSpotlight(a)) {
+                        return a.spotlightType - b.spotlightType || Number(thisStartDate) - Number(prevStartDate);
+                    } else {
+                        return a.spotlightType - b.spotlightType || a.weight - b.weight;
+                    }
+                })
+                .map((s, index) => {
+                    return {
+                        ...s,
+                        weight: isPastSpotlight(s) ? 0 : (Number(index) + 1) * 10,
+                    };
+                })
+                .forEach(s => {
+                    const currentRow = listUnchanged.map(t => t).find(r => r.id === s.id);
+                    const newValues = {
+                        ...currentRow,
+                        active: !!currentRow.active ? 1 : 0,
+                        weight: s.weight,
+                    };
+
+                    (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
+                        console.log(
+                            'will',
+                            s.weight === currentRow.weight ? 'NOT' : '',
+                            'update weight on',
+                            newValues.id,
+                            newValues.title.substr(0, 20),
+                            'start: ',
+                            newValues.start,
+                            'weight: ',
+                            newValues.weight,
+                            ' (was ',
+                            currentRow.weight,
+                            ')',
+                            // eslint-disable-next-line no-nested-ternary
+                            isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
+                        );
+
+                    // update the display of Order
+                    // only current spotlights display the order value
+                    if (!!isCurrentSpotlight(s)) {
+                        const weightCell = document.querySelector(`#spotlight-list-row-${currentRow.id} .order`);
+                        console.log('weightCell = ', weightCell);
+                        !!weightCell && (weightCell.innerHTML = newValues.weight / 10);
+                    }
+                });
+            console.log('reweight: setting userows to:', data);
+            return data;
+        });
+
+        console.log('after reweight: userows = ', userows);
+    };
 
     const cleanSpotlight = s => {
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
@@ -352,43 +450,29 @@ export const SpotlightsListAsTable = ({
 
     function deleteListOfSpotlights(spotlightIDsToBeDeleted) {
         console.log('spotlightIDsToBeDeleted = ', spotlightIDsToBeDeleted);
-        const successfulDelete = [];
-        // use allSettled ?
-        // this is in a loop, so it could be quite large - avoid the dispatch method and use Promises directly
-        Promise.all(
-            spotlightIDsToBeDeleted.map(spotlightID => {
-                console.log('call SPOTLIGHT_DELETE_API:', SPOTLIGHT_DELETE_API({ id: spotlightID }));
-                const result = destroy(SPOTLIGHT_DELETE_API({ id: spotlightID }))
-                    .then(() => {
-                        console.log('deleteSelectedSpotlights success', spotlightID);
-                        successfulDelete.push(spotlightID);
-                        return true;
-                    })
-                    .catch(() => {
-                        // we check this later to see if we should display an error dialog
-                        return false;
-                    });
-                console.log('SPOTLIGHT_DELETE_API', spotlightID, 'result = ', result);
-                return result;
-            }),
-        )
-            .then(result => {
-                console.log('Promise.all success bulk delete checkboxes: ', result);
-                console.log('deleteSelectedSpotlights', tableType, tableType, 'userows=', userows);
-                // did all promises return success?
-                if (!!result.includes(false)) {
-                    console.log('got an error');
+
+        deleteSpotlightBulk(spotlightIDsToBeDeleted)
+            .then(() => {
+                console.log('returned bulk delete checkboxes');
+                console.log('deleteSelectedSpotlights tableType=', tableType, 'userows=', userows);
+                console.log('deleteListOfSpotlights: spotlightsError = ', spotlightsError);
+                if (!!spotlightsError) {
+                    console.log('deleteSpotlightBulk failed!');
                     showDeleteFailureConfirmation();
                 } else {
-                    console.log('NOT got an error');
-                    reweightSpotlights(saveSpotlightChange);
+                    console.log('deleteSpotlightBulk success!');
+                    undisplayRemovedSpotlights(spotlightIDsToBeDeleted);
+                    console.log('deleteListOfSpotlights: will reorder');
+                    reweightSpotlights();
+                    console.log('deleteListOfSpotlights: reneable checkboxes');
+                    reEnableAllCheckboxes();
+                    console.log('deleteListOfSpotlights: clear delete marking');
+                    clearAllDeleteMarkingCheckboxes();
                 }
-                reEnableAllCheckboxes();
-                clearAllDeleteMarkingCheckboxes();
-                undisplayRemovedSpotlights(successfulDelete);
             })
             .catch(x => {
                 console.log('Promise.all fail', x);
+                showDeleteFailureConfirmation();
             });
     }
 
@@ -507,7 +591,7 @@ export const SpotlightsListAsTable = ({
 
                             const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
                             const newWeight = fr.weight / 10;
-                            console.log('weightCell = ', fr.id, fr.title, newWeight);
+                            console.log('weightCell fr = ', fr.id, fr.title, newWeight);
                             !!weightCell && (weightCell.innerHTML = newWeight);
                         }
                     });
@@ -1069,14 +1153,15 @@ SpotlightsListAsTable.propTypes = {
     tableType: PropTypes.string,
     spotlightsLoading: PropTypes.any,
     history: PropTypes.object,
+    spotlightsError: PropTypes.any,
     saveSpotlightChange: PropTypes.any,
     saveBatchReorder: PropTypes.any,
+    deleteSpotlightBulk: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
-    reweightSpotlights: PropTypes.any,
 };
 
 SpotlightsListAsTable.defaultProps = {

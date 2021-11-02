@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
 
 export const SpotlightForm = ({
     actions,
-    // spotlightResponse,
+    spotlightResponse,
     spotlightStatus,
     defaults,
     spotlightError,
@@ -47,10 +47,10 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
-    spotlightsReweightingStatus,
 }) => {
-    console.log('spotlightError = ', spotlightError);
-    console.log('spotlightsReweightingStatus = ', spotlightsReweightingStatus);
+    console.log('form: spotlightError = ', spotlightError);
+    console.log('form: spotlightResponse = ', spotlightResponse);
+    console.log('form: spotlightStatus = ', spotlightStatus);
     const classes = useStyles();
 
     // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -199,37 +199,24 @@ export const SpotlightForm = ({
     }, [values]);
 
     useEffect(() => {
-        console.log('useEffect reweighting? spotlightsReweightingStatus = ', spotlightsReweightingStatus);
-        // if (!!spotlightResponse && !!spotlightResponse.id && spotlightStatus === 'saved') {
-        if (spotlightsReweightingStatus === 'complete') {
+        if (!!spotlightResponse && !!spotlightResponse.id && ['saved', 'created'].includes(spotlightStatus)) {
             setValues(defaults); // save success - clear the form!
-            if (!publicFileUploadError && defaults.type === 'add') {
-                showAddConfirmation();
-                actions.clearSpotlightReweighting();
+            if (!!publicFileUploadError) {
+                showUploadError();
             } else if (defaults.type === 'edit') {
-                console.log('useEffect reweighting edit');
                 showEditConfirmation();
-                actions.clearSpotlightReweighting();
-                setValues(defaults);
+                actions.clearASpotlight();
+            } else if (defaults.type === 'add') {
+                showAddConfirmation();
                 actions.clearASpotlight();
             } else if (defaults.type === 'clone') {
-                console.log('useEffect reweighting clone complete');
                 showCloneConfirmation();
-                actions.clearSpotlightReweighting();
-                setValues({
-                    ...defaults,
-                    start: defaults.startDateDefault,
-                    end: defaults.endDateDefault,
-                });
                 // actions.clearASpotlight();
-            } else if (!!publicFileUploadError) {
-                showUploadError();
             }
         }
     }, [
-        spotlightsReweightingStatus,
-        // spotlightResponse,
-        // spotlightStatus,
+        spotlightResponse,
+        spotlightStatus,
         defaults,
         publicFileUploadError,
         showEditConfirmation,
@@ -308,37 +295,32 @@ export const SpotlightForm = ({
 
         console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
-        const saveSpotlightChange = s => {
-            return actions.saveSpotlightChangeWithExistingImage(s);
-        };
+        // const saveSpotlightChange = s => {
+        //     return actions.saveSpotlightChangeWithExistingImage(s);
+        // };
         switch (defaults.type) {
             case 'add':
                 // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
                 console.log('handleSpotlightCreation 2: newValues = ', newValues);
-                actions
-                    .createSpotlightWithNewImage(newValues)
-                    .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                actions.createSpotlightWithNewImage(newValues);
+                // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 break;
             case 'edit':
                 if (!!values.uploadedFile) {
-                    actions
-                        .saveSpotlightWithNewImage(newValues)
-                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                    actions.saveSpotlightWithNewImage(newValues);
+                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
-                    actions
-                        .saveSpotlightChangeWithExistingImage(newValues)
-                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                    actions.saveSpotlightChangeWithExistingImage(newValues);
+                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             case 'clone':
                 if (!!values.uploadedFile) {
-                    actions
-                        .createSpotlightWithNewImage(newValues)
-                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                    actions.createSpotlightWithNewImage(newValues);
+                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
-                    actions
-                        .createSpotlightWithExistingImage(newValues)
-                        .then(() => actions.reweightSpotlights(saveSpotlightChange));
+                    actions.createSpotlightWithExistingImage(newValues);
+                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             default:
@@ -631,12 +613,11 @@ SpotlightForm.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    // spotlightResponse: PropTypes.any,
+    spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
-    spotlightsReweightingStatus: PropTypes.string,
 };
 
 SpotlightForm.defaultProps = {

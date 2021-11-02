@@ -210,3 +210,4 @@ response:
  */
 
 export const SPOTLIGHT_DELETE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
+export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });

@@ -6,9 +6,11 @@ import * as actions from 'actions';
 import SpotlightsList from '../components/SpotlightsList';
 
 const mapStateToProps = state => {
-    return {
+    const newVar = {
         ...state.get('spotlightsReducer'),
     };
+    console.log('container result;', newVar);
+    return newVar;
 };
 
 const mapDispatchToProps = dispatch => {
