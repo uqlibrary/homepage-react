@@ -205,13 +205,10 @@ export const SpotlightForm = ({
                 showUploadError();
             } else if (defaults.type === 'edit') {
                 showEditConfirmation();
-                actions.clearASpotlight();
             } else if (defaults.type === 'add') {
                 showAddConfirmation();
-                actions.clearASpotlight();
             } else if (defaults.type === 'clone') {
                 showCloneConfirmation();
-                // actions.clearASpotlight();
             }
         }
     }, [

@@ -400,28 +400,29 @@ export const SpotlightsListAsTable = ({
                         weight: s.weight,
                     };
 
-                    (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
-                        console.log(
-                            'will',
-                            s.weight === currentRow.weight ? 'NOT' : '',
-                            'update weight on',
-                            newValues.id,
-                            newValues.title.substr(0, 20),
-                            'start: ',
-                            newValues.start,
-                            'weight: ',
-                            newValues.weight,
-                            ' (was ',
-                            currentRow.weight,
-                            ')',
-                            // eslint-disable-next-line no-nested-ternary
-                            isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
-                        );
+                    // (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
+                    //     console.log(
+                    //         'will',
+                    //         s.weight === currentRow.weight ? 'NOT' : '',
+                    //         'update weight on',
+                    //         newValues.id,
+                    //         newValues.title.substr(0, 20),
+                    //         'start: ',
+                    //         newValues.start,
+                    //         'weight: ',
+                    //         newValues.weight,
+                    //         ' (was ',
+                    //         currentRow.weight,
+                    //         ')',
+                    //         // eslint-disable-next-line no-nested-ternary
+                    //         isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
+                    //     );
 
                     // update the display of Order
                     // only current spotlights display the order value
                     if (!!isCurrentSpotlight(s)) {
-                        const weightCell = document.querySelector(`#spotlight-list-row-${currentRow.id} .order`);
+                        const selector = `#spotlight-list-row-${currentRow.id} .order`;
+                        const weightCell = document.querySelector(selector);
                         console.log('weightCell = ', weightCell);
                         !!weightCell && (weightCell.innerHTML = newValues.weight / 10);
                     }
