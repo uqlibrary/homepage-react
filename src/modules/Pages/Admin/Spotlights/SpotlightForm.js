@@ -364,9 +364,7 @@ export const SpotlightForm = ({
 
     const errorLocale = {
         ...locale.form.add.addSpotlightError,
-        confirmationTitle: `An error occurred: ${!!spotlightError &&
-            !!spotlightError.message &&
-            spotlightError.message}`,
+        confirmationTitle: !!spotlightError ? `An error occurred: ${spotlightError}` : 'An unknown error occurred',
     };
 
     const uploadErrorLocale = () => {

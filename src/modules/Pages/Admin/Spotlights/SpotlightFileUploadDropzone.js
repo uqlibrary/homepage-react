@@ -126,7 +126,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
             img.src = currentImage;
         }
         return function cleanup() {
-            console.log('cleanup');
+            console.log('dropzone cleanup');
             img.removeEventListener('load', setSizes);
         };
     }, [currentImage]);
