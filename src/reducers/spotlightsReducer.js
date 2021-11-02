@@ -26,6 +26,18 @@ const handlers = {
         spotlightsLoading: false,
         spotlightsError: action.payload,
     }),
+    [actions.SPOTLIGHTS_DELETION_SUCCESS]: () => ({
+        ...initialState,
+        // ...state,
+        spotlightsLoading: false,
+        spotlightsError: false,
+        // spotlights: action.payload,
+    }),
+    [actions.SPOTLIGHTS_DELETION_FAILED]: action => ({
+        ...initialState,
+        spotlightsLoading: false,
+        spotlightsError: { ...action.payload, errorType: 'deletion' },
+    }),
     [actions.SPOTLIGHTS_CLEAR]: () => ({
         ...initialState,
     }),

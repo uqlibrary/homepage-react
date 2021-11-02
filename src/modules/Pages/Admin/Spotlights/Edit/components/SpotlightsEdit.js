@@ -20,7 +20,6 @@ export const SpotlightsEdit = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
-    spotlightsReweightingStatus,
 }) => {
     console.log('SpotlightsEdit: spotlight =  ', spotlight);
     console.log('SpotlightsEdit: spotlightStatus =  ', spotlightStatus);
@@ -103,7 +102,6 @@ export const SpotlightsEdit = ({
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
                         publicFileUploadResult={publicFileUploadResult}
-                        spotlightsReweightingStatus={spotlightsReweightingStatus}
                     />
                 </StandardCard>
             </section>
@@ -120,7 +118,6 @@ SpotlightsEdit.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    spotlightsReweightingStatus: PropTypes.string,
 };
 
 export default SpotlightsEdit;

@@ -32,9 +32,13 @@ import { default as locale } from '../../spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
-import { getTimeMondayComing } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { destroy } from 'repositories/generic';
-import { SPOTLIGHT_DELETE_API } from 'repositories/routes';
+import {
+    formatDate,
+    getTimeMondayComing,
+    isCurrentSpotlight,
+    isPastSpotlight,
+    isScheduledSpotlight,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
@@ -128,13 +132,17 @@ export const SpotlightsListAsTable = ({
     tableType,
     spotlightsLoading,
     history,
+    spotlightsError,
     saveSpotlightChange,
+    saveBatchReorder,
+    deleteSpotlightBulk,
     footerDisplayMinLength,
     canDragRows,
     canUnpublish,
     canTextFilter,
-    reweightSpotlights,
 }) => {
+    console.log('top: spotlightsError = ', spotlightsError);
+    console.log('top: rows = ', rows);
     const classes = useStyles();
 
     const ORDERBY_WEIGHT = 'weight';
@@ -315,8 +323,8 @@ export const SpotlightsListAsTable = ({
         );
     };
 
-    function undisplayRemovedSpotlights(spotlightIDList) {
-        console.log('undisplayRemovedSpotlights then ', spotlightIDList);
+    function undisplayRemovedSpotlights(removedSpotlightsIdList) {
+        console.log('undisplayRemovedSpotlights then ', removedSpotlightsIdList);
         setSpotlightNotice('');
         setDeleteActive(false);
 
@@ -324,15 +332,107 @@ export const SpotlightsListAsTable = ({
         setUserows(prevState => {
             console.log('undisplayRemovedSpotlights prevState = ', prevState);
             let data = [...prevState];
-            spotlightIDList.forEach(s => {
+            removedSpotlightsIdList.forEach(s => {
                 data = data.filter(r => r.id !== s);
             });
             console.log('undisplayRemovedSpotlights, resetting userows to ', [...data]);
             return data;
         });
+        console.log('undisplayRemovedSpotlights then userows = ', userows);
+
+        // removedSpotlightsIdList.forEach(id => {
+        //     console.log('hide: ', `#spotlight-list-row-${id}`);
+        //     const htmlRow = document.getElementById(`spotlight-list-row-${id}`);
+        //     console.log('htmlRow = ', htmlRow);
+        //     !!htmlRow && htmlRow.delete();
+        // });
 
         clearAllDeleteMarkingCheckboxes();
     }
+
+    const reweightSpotlights = () => {
+        console.log('reweightSpotlights: userows=', userows);
+        const listUnchanged = userows.map(s => s);
+        // const list = userows.map(s => s);
+        setUserows(prevState => {
+            console.log('undisplayRemovedSpotlights prevState = ', prevState);
+            const data = [...prevState];
+
+            data.map(s => {
+                // sort current then scheduled and then past
+                if (isPastSpotlight(s)) {
+                    s.spotlightType = 3; // past
+                } else if (isScheduledSpotlight(s)) {
+                    // console.log('check scheduled', s.id, s.title.substr(0, 20), s.start, s.weight);
+                    s.spotlightType = 2; // scheduled
+                } else {
+                    // console.log('check current', s.id, s.title.substr(0, 20), s.start, s.weight);
+                    s.spotlightType = 1; // current
+                }
+                return s;
+            })
+                .sort((a, b) => {
+                    // sort by type then start date
+                    // this will make the scheduled spotlights appear as the last spotlight, as they become current
+                    const thisStartDate = formatDate(a.start, 'YYYYMMDDHHmmss');
+                    const prevStartDate = formatDate(b.start, 'YYYYMMDDHHmmss');
+                    const thisEndDate = formatDate(a.end, 'YYYYMMDDHHmmss');
+                    const prevEndDate = formatDate(b.end, 'YYYYMMDDHHmmss');
+                    if (isPastSpotlight(a)) {
+                        return a.spotlightType - b.spotlightType || Number(thisEndDate) - Number(prevEndDate);
+                    } else if (isScheduledSpotlight(a)) {
+                        return a.spotlightType - b.spotlightType || Number(thisStartDate) - Number(prevStartDate);
+                    } else {
+                        return a.spotlightType - b.spotlightType || a.weight - b.weight;
+                    }
+                })
+                .map((s, index) => {
+                    return {
+                        ...s,
+                        weight: isPastSpotlight(s) ? 0 : (Number(index) + 1) * 10,
+                    };
+                })
+                .forEach(s => {
+                    const currentRow = listUnchanged.map(t => t).find(r => r.id === s.id);
+                    const newValues = {
+                        ...currentRow,
+                        active: !!currentRow.active ? 1 : 0,
+                        weight: s.weight,
+                    };
+
+                    // (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
+                    //     console.log(
+                    //         'will',
+                    //         s.weight === currentRow.weight ? 'NOT' : '',
+                    //         'update weight on',
+                    //         newValues.id,
+                    //         newValues.title.substr(0, 20),
+                    //         'start: ',
+                    //         newValues.start,
+                    //         'weight: ',
+                    //         newValues.weight,
+                    //         ' (was ',
+                    //         currentRow.weight,
+                    //         ')',
+                    //         // eslint-disable-next-line no-nested-ternary
+                    //         isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
+                    //     );
+
+                    // update the display of Order
+                    // only current spotlights display the order value
+                    if (!!isCurrentSpotlight(s)) {
+                        const selector = `#spotlight-list-row-${currentRow.id} .order`;
+                        const weightCell = document.querySelector(selector);
+                        console.log('weightCell = ', weightCell);
+                        !!weightCell && (weightCell.innerHTML = newValues.weight / 10);
+                    }
+                });
+            console.log('reweight: setting userows to:', data);
+            return data;
+        });
+
+        console.log('after reweight: userows = ', userows);
+    };
 
     const cleanSpotlight = s => {
         // theres a fair bit of junk accumulated in rows for display - just pull out the right fields
@@ -349,74 +449,31 @@ export const SpotlightsListAsTable = ({
         };
     };
 
-    function persistRowReorder(r, filtereduserows) {
-        const currentRow = rows.find(row => row.id === r.id);
-        const rowToUpdate = {
-            ...cleanSpotlight(currentRow),
-            weight: r.weight,
-        };
-        console.log('rowToUpdate = ', r.weight, rowToUpdate.weight);
-        console.log('send for save: ', rowToUpdate);
-        saveSpotlightChange(rowToUpdate)
-            .then(() => {
-                // we have to visually update it manually (thats how react-beautiful-dnd works)
-                rows.forEach(row => {
-                    filtereduserows.forEach(fr => {
-                        if (fr.id === row.id && fr.weight !== row.weight) {
-                            // we have the option here of setting all the values from the db
-                            // in case it has updated? but that seems overkill
-                            row.weight = fr.weight;
-                            console.log('setting ', fr.id, ' to ', fr.weight);
-                        }
-                    });
-                });
-                rows.sort((a, b) => a.weight - b.weight);
-            })
-            .catch(e => {
-                console.log('an error on save occurred: ', e);
-                showSaveFailureConfirmation();
-            });
-    }
-
     function deleteListOfSpotlights(spotlightIDsToBeDeleted) {
         console.log('spotlightIDsToBeDeleted = ', spotlightIDsToBeDeleted);
-        const successfulDelete = [];
-        // use allSettled ?
-        // this is in a loop, so it could be quite large - avoid the dispatch method and use Promises directly
-        Promise.all(
-            spotlightIDsToBeDeleted.map(spotlightID => {
-                console.log('call SPOTLIGHT_DELETE_API:', SPOTLIGHT_DELETE_API({ id: spotlightID }));
-                const result = destroy(SPOTLIGHT_DELETE_API({ id: spotlightID }))
-                    .then(() => {
-                        console.log('deleteSelectedSpotlights success', spotlightID);
-                        successfulDelete.push(spotlightID);
-                        return true;
-                    })
-                    .catch(() => {
-                        // we check this later to see if we should display an error dialog
-                        return false;
-                    });
-                console.log('SPOTLIGHT_DELETE_API', spotlightID, 'result = ', result);
-                return result;
-            }),
-        )
-            .then(result => {
-                console.log('Promise.all success bulk delete checkboxes: ', result);
-                console.log('deleteSelectedSpotlights', tableType, tableType, 'userows=', userows);
-                // did all promises return success?
-                if (!!result.includes(false)) {
-                    console.log('got an error');
+
+        deleteSpotlightBulk(spotlightIDsToBeDeleted)
+            .then(() => {
+                console.log('returned bulk delete checkboxes');
+                console.log('deleteSelectedSpotlights tableType=', tableType, 'userows=', userows);
+                console.log('deleteListOfSpotlights: spotlightsError = ', spotlightsError);
+                if (!!spotlightsError) {
+                    console.log('deleteSpotlightBulk failed!');
                     showDeleteFailureConfirmation();
                 } else {
-                    console.log('NOT got an error');
-                    reweightSpotlights(saveSpotlightChange);
+                    console.log('deleteSpotlightBulk success!');
+                    undisplayRemovedSpotlights(spotlightIDsToBeDeleted);
+                    console.log('deleteListOfSpotlights: will reorder');
+                    reweightSpotlights();
+                    console.log('deleteListOfSpotlights: reneable checkboxes');
+                    reEnableAllCheckboxes();
+                    console.log('deleteListOfSpotlights: clear delete marking');
+                    clearAllDeleteMarkingCheckboxes();
                 }
-                reEnableAllCheckboxes();
-                clearAllDeleteMarkingCheckboxes();
-                undisplayRemovedSpotlights(successfulDelete);
             })
             .catch(x => {
                 console.log('Promise.all fail', x);
+                showDeleteFailureConfirmation();
             });
     }
 
@@ -507,26 +564,41 @@ export const SpotlightsListAsTable = ({
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        reweightedRows.sort((a, b) => a.weight - b.weight);
         const oldIndex = rows.find(r => r.id === draggableId).weight / 10 - 1;
         const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
         console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
         moveItemInArray(userows, oldIndex, newIndex);
 
-        // now persist the changed record to the DB
+        const rowsToPersist = [];
         reweightedRows.forEach(reWeightedRow => {
-            rows.map(r => {
-                if (reWeightedRow.id === r.id && reWeightedRow.weight !== r.weight) {
-                    // then do the save
-                    console.log('persist ', reWeightedRow.id);
-                    persistRowReorder(reWeightedRow, reweightedRows);
-
-                    const weightCell = document.querySelector(`#spotlight-list-row-${reWeightedRow.id} .order`);
-                    console.log('weightCell = ', weightCell);
-                    !!weightCell && (weightCell.innerHTML = reWeightedRow.weight / 10);
-                }
-            });
+            const oldRow = userows.find(r => r.id === reWeightedRow.id);
+            if (!!oldRow && reWeightedRow.id === oldRow.id && reWeightedRow.weight !== oldRow.weight) {
+                // then add this row to the set to save
+                rowsToPersist.push(reWeightedRow);
+            }
         });
+        console.log('persist:', rowsToPersist);
+        // now persist the changed record to the DB
+        rowsToPersist.length > 0 &&
+            saveBatchReorder(rowsToPersist).then(() => {
+                // and then update the display
+                rows.forEach(row => {
+                    reweightedRows.forEach(fr => {
+                        if (fr.id === row.id && fr.weight !== row.weight) {
+                            // we have the option here of setting all the values from the db
+                            // in case it has updated? but that seems overkill
+                            row.weight = fr.weight;
+                            console.log('setting ', fr.id, ' to ', fr.weight);
+
+                            const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
+                            const newWeight = fr.weight / 10;
+                            console.log('weightCell fr = ', fr.id, fr.title, newWeight);
+                            !!weightCell && (weightCell.innerHTML = newWeight);
+                        }
+                    });
+                });
+                rows.sort((a, b) => a.weight - b.weight);
+            });
 
         // briefly mark the dragged row with a style, so the user knows what they did
         const draggedRow = document.getElementById(`spotlight-list-row-${draggableId}`);
@@ -1082,13 +1154,15 @@ SpotlightsListAsTable.propTypes = {
     tableType: PropTypes.string,
     spotlightsLoading: PropTypes.any,
     history: PropTypes.object,
+    spotlightsError: PropTypes.any,
     saveSpotlightChange: PropTypes.any,
+    saveBatchReorder: PropTypes.any,
+    deleteSpotlightBulk: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
-    reweightSpotlights: PropTypes.any,
 };
 
 SpotlightsListAsTable.defaultProps = {

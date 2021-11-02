@@ -11,4 +11,3 @@ export { default as examReducer } from './examReducer';
 export { default as publicFileUploadReducer } from './publicFileUploadReducer';
 export { default as spotlightReducer } from './spotlightReducer';
 export { default as spotlightsReducer } from './spotlightsReducer';
-export { default as spotlightReweightReducer } from './spotlightReweightReducer';

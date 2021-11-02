@@ -94,11 +94,23 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         return actions.deleteSpotlight(spotlightID);
     };
 
+    const deleteSpotlightBulk = spotlights => {
+        return actions.deleteSpotlightBatch(spotlights);
+    };
+
     const saveSpotlightChange = spotlight => {
         return actions.saveSpotlightChangeWithExistingImage(spotlight);
     };
 
-    if (!!spotlightsError) {
+    const saveBatchReorder = spotlights => {
+        spotlights.forEach(s => {
+            console.log('saveBatchReorder', s.id, s.weight, s.title);
+        });
+        // console.log('saveBatchReorder', spotlights);
+        return actions.saveSpotlightBatch(spotlights);
+    };
+
+    if (!!spotlightsError && (!spotlightsError.errorType || spotlightsError.errorType !== 'deletion')) {
         return (
             <StandardPage title="Spotlights Management">
                 <section aria-live="assertive">
@@ -117,6 +129,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         );
     }
 
+    console.log('spotlightsError:', spotlightsError);
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -150,11 +163,14 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     tableType="current"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
+                                    spotlightsError={spotlightsError}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
+                                    saveBatchReorder={saveBatchReorder}
+                                    deleteSpotlightBulk={deleteSpotlightBulk}
                                     canDragRows
                                     canUnpublish
-                                    reweightSpotlights={actions.reweightSpotlights}
+                                    // reweightSpotlights={reweightSpotlights}
                                 />
                             </div>
                             <div
@@ -167,10 +183,13 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     tableType="scheduled"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
+                                    spotlightsError={spotlightsError}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
+                                    saveBatchReorder={saveBatchReorder}
+                                    deleteSpotlightBulk={deleteSpotlightBulk}
                                     canUnpublish
-                                    reweightSpotlights={actions.reweightSpotlights}
+                                    // reweightSpotlights={reweightSpotlights}
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -180,10 +199,13 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     headertag="Past spotlights"
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
+                                    spotlightsError={spotlightsError}
                                     deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
+                                    saveBatchReorder={saveBatchReorder}
+                                    deleteSpotlightBulk={deleteSpotlightBulk}
                                     canTextFilter
-                                    reweightSpotlights={actions.reweightSpotlights}
+                                    // reweightSpotlights={reweightSpotlights}
                                 />
                             </div>
                         </Grid>

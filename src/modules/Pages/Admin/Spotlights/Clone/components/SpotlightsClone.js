@@ -20,7 +20,6 @@ export const SpotlightsClone = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
-    spotlightsReweightingStatus,
 }) => {
     console.log('SpotlightsClone: spotlight =  ', spotlight);
     console.log('SpotlightsClone: spotlightStatus =  ', spotlightStatus);
@@ -28,7 +27,6 @@ export const SpotlightsClone = ({
     console.log('SpotlightsClone: publicFileUploading = ', publicFileUploading);
     console.log('SpotlightsClone: publicFileUploadError = ', publicFileUploadError);
     console.log('SpotlightsClone: publicFileUploadResult = ', publicFileUploadResult);
-    console.log('SpotlightsClone: spotlightsReweightingStatus = ', spotlightsReweightingStatus);
 
     const { spotlightid } = useParams();
 
@@ -42,9 +40,16 @@ export const SpotlightsClone = ({
     }, [spotlightid]);
 
     React.useEffect(() => {
-        console.log('*** useeffect, spotlightid = ', spotlightid, '; spotlight?.id = ', spotlight?.id);
+        console.log(
+            '*** useeffect, spotlightid = ',
+            spotlightid,
+            '; spotlightStatus = ',
+            spotlightStatus,
+            '; spotlight?.id = ',
+            spotlight?.id,
+        );
         if (!!spotlightid && spotlight?.id === spotlightid) {
-            console.log('load deaults:');
+            console.log('load defaults:');
             setDefaults({
                 id: spotlight?.id || '',
                 startDateDefault: getTimeMondayMidnightNext(),
@@ -60,6 +65,8 @@ export const SpotlightsClone = ({
                 // minimumDate: getStartOfDayFormatted(),
                 type: 'clone',
             });
+        } else {
+            console.log('SpotlightsClone: useffect did nothing');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlight]);
@@ -93,7 +100,6 @@ export const SpotlightsClone = ({
                         publicFileUploading={publicFileUploading}
                         publicFileUploadError={publicFileUploadError}
                         publicFileUploadResult={publicFileUploadResult}
-                        spotlightsReweightingStatus={spotlightsReweightingStatus}
                     />
                 </StandardCard>
             </section>
@@ -110,7 +116,6 @@ SpotlightsClone.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    spotlightsReweightingStatus: PropTypes.string,
 };
 
 export default SpotlightsClone;
