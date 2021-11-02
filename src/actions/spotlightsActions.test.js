@@ -14,7 +14,6 @@ import {
     saveSpotlightBatch,
     deleteSpotlightBatch,
 } from './spotlightsActions';
-// import { SPOTLIGHT_DELETE_BULK_API } from '../repositories/routes';
 
 jest.mock('raven-js');
 
@@ -77,11 +76,7 @@ describe('Spotlight list actions', () => {
         it('dispatches expected actions when all spotlights call fails', async () => {
             mockApi.onGet(repositories.routes.SPOTLIGHTS_ALL_API()).reply(500);
 
-            const expectedActions = [
-                actions.SPOTLIGHTS_CLEAR,
-                actions.SPOTLIGHTS_LOADING,
-                actions.SPOTLIGHTS_DELETION_FAILED,
-            ];
+            const expectedActions = [actions.SPOTLIGHTS_CLEAR, actions.SPOTLIGHTS_LOADING, actions.SPOTLIGHTS_FAILED];
 
             await mockActionsStore.dispatch(loadAllSpotlights());
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -267,7 +262,7 @@ describe('Spotlight list actions', () => {
                 .onAny(repositories.routes.SPOTLIGHT_DELETE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
                 .reply(200, []);
 
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHTS_DELETION_SUCCESS];
+            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_DELETED];
 
             await mockActionsStore.dispatch(deleteSpotlight('88888-d62b-11e7-954e-57c2cc19d151'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -277,7 +272,11 @@ describe('Spotlight list actions', () => {
     describe('Spotlight Bulk Deletion', () => {
         it('dispatches expected actions when spotlight bulk delete call fails', async () => {
             mockApi.onDelete(repositories.routes.SPOTLIGHT_DELETE_BULK_API().apiUrl).reply(500);
-            const expectedActions = [actions.SPOTLIGHT_SAVING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
+            const expectedActions = [
+                actions.SPOTLIGHT_SAVING,
+                actions.APP_ALERT_SHOW,
+                actions.SPOTLIGHTS_DELETION_FAILED,
+            ];
 
             try {
                 await mockActionsStore.dispatch(deleteSpotlightBatch(['id1']));

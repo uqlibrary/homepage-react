@@ -187,7 +187,7 @@ export const createSpotlightWithNewImage = request => {
 export const deleteSpotlightBatch = request => {
     console.log('deleteSpotlightBatch', request);
     return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_LOADING });
+        dispatch({ type: actions.SPOTLIGHT_SAVING });
         console.log('calling ', SPOTLIGHT_DELETE_BULK_API(), request);
         return destroy(SPOTLIGHT_DELETE_BULK_API(), request)
             .then(data => {
