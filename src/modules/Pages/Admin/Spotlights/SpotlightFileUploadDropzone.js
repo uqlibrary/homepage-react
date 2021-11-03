@@ -75,8 +75,8 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
 
     const setDimensions = acceptedFiles => {
         // based on https://stackoverflow.com/a/8904008/1246313
+        /* istanbul ignore next */
         if (!acceptedFiles || acceptedFiles.length === 0) {
-            /* istanbul ignore next */
             return;
         }
         const url = URL.createObjectURL(acceptedFiles[0]);

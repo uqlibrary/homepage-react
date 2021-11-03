@@ -31,6 +31,7 @@ export const SpotlightsEdit = ({
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
         }
@@ -70,17 +71,17 @@ export const SpotlightsEdit = ({
             return emptySpotlight;
         }
         return {
-            id: spotlight?.id || '',
+            id: spotlight?.id || /* istanbul ignore next */ '',
             startDateDefault: startDateDefault,
             endDateDefault: endDateDefault,
-            title: spotlight?.title || '',
-            url: spotlight?.url || '',
+            title: spotlight?.title || /* istanbul ignore next */ '',
+            url: spotlight?.url || /* istanbul ignore next */ '',
             // eslint-disable-next-line camelcase
-            img_url: spotlight?.img_url || '',
+            img_url: spotlight?.img_url || /* istanbul ignore next */ '',
             // eslint-disable-next-line camelcase
-            img_alt: spotlight?.img_alt || '',
+            img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
             weight: spotlight?.weight || 0,
-            active: spotlight?.active || 0,
+            active: spotlight?.active || /* istanbul ignore next */ 0,
             type: 'edit',
         };
     }

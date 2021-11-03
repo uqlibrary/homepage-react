@@ -317,8 +317,8 @@ export const SpotlightForm = ({
                 }
                 break;
             case 'clone':
+                /* istanbul ignore next */
                 if (!!values.uploadedFile) {
-                    /* istanbul ignore next */
                     actions.createSpotlightWithNewImage(newValues);
                     // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {

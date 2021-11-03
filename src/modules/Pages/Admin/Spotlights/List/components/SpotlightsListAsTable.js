@@ -312,7 +312,7 @@ export const SpotlightsListAsTable = ({
                     ii.parentElement.parentElement.classList.add('Mui-disabled');
                 }
             });
-        } else if (!!e.target && !e.target.checked) {
+        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
             // handle a checkbox being turned off
             if (numberCheckboxesSelected === 0) {
                 setDeleteActive(false);
