@@ -1,5 +1,7 @@
 import { expectUserToDisplayCorrectFirstName, hasPanels, hasPersonalisedPanelOptions } from '../../support/access';
 
+// Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
+
 // we test that each user type gets the correct elements on the homepage
 // we shouldnt test the mylibrary button here, same, as that is built in reusable-webcomponents
 context('Personalised Homepage', () => {
@@ -165,5 +167,28 @@ context('Personalised Homepage', () => {
         cy.get('div#content-container').contains('Library hours');
 
         hasPanels(['computer-availability', 'library-hours', 'training', 'promo']);
+    });
+
+    it('Renders a Short Form Credential course student home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('uqsfc', 'SFC');
+
+        hasPanels([
+            'computer-availability',
+            'course-resources',
+            'library-hours',
+            'library-services',
+            'promo',
+            'training',
+        ]);
+
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
+    });
+
+    it('Renders a new user group home page correctly', () => {
+        expectUserToDisplayCorrectFirstName('newUserGroup', 'New');
+
+        hasPanels(['computer-availability', 'library-hours', 'promo', 'training']);
+
+        hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
     });
 });

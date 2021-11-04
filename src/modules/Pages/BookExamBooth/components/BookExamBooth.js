@@ -4,6 +4,7 @@ import moment from 'moment';
 
 import { Button, FormControl, FormControlLabel, Grid, MenuItem, Radio, RadioGroup, Select } from '@material-ui/core';
 import { DatePicker } from '@material-ui/pickers';
+import MapIcon from '@material-ui/icons/Map';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -30,6 +31,12 @@ const BookExamBooth = ({
     const yesterday = moment()
         .subtract(1, 'days')
         .format(dateFormat);
+
+    // store the exam location
+    const [chosenLocationCode, setLocation] = React.useState('unset');
+    const _handleLocationDeciderChange = e => {
+        setLocation(e.target.value);
+    };
 
     // the exam type is either byod (bring your own device) or uq (use a uq provided device)
     const [isProctorU, setIsProctorU] = React.useState('unset');
@@ -74,11 +81,11 @@ const BookExamBooth = ({
 
     const encodeTime = momentObj => encodeURIComponent(momentObj.format('HH:mm'));
     const _getAddress = () => {
-        const bookingUrl = getBookingUrl(isBYOD);
+        const bookingUrl = getBookingUrl(isBYOD, chosenLocationCode, locale.locationDecider.locations);
         const startTimeStr = encodeTime(getStartTime(startDate, startTimeHours, startTimeMinutes, setupAllowance));
         const endTimeStr = encodeTime(getEndTime(startDate, startTimeHours, startTimeMinutes, sessionLength));
 
-        const address = bookingUrl + '?firstDay=' + startDate + '&fromTime=' + startTimeStr + '&toTime=' + endTimeStr;
+        const address = bookingUrl + '&firstDay=' + startDate + '&fromTime=' + startTimeStr + '&toTime=' + endTimeStr;
 
         // alert('we would visit ' + address);
         window.location.assign(address);
@@ -119,6 +126,54 @@ const BookExamBooth = ({
                         </div>
                     </StandardCard>
                 </Grid>
+
+                {isProctorU === 'yes' && (
+                    <Grid item xs={12}>
+                        <StandardCard title={locale.locationDecider.heading}>
+                            <div>
+                                <FormControl component="fieldset" required>
+                                    <RadioGroup
+                                        name="locationDecider"
+                                        id="locationDecider"
+                                        value={chosenLocationCode}
+                                        onChange={_handleLocationDeciderChange}
+                                    >
+                                        {locale.locationDecider.locations.map(l => {
+                                            return (
+                                                <FormControlLabel
+                                                    control={<Radio color="primary" />}
+                                                    data-testid={`display-location-option-${l.value}`}
+                                                    label={
+                                                        <React.Fragment>
+                                                            {l.label}
+                                                            <a
+                                                                style={{ paddingLeft: 5, marginTop: 5 }}
+                                                                href={l.mapLink}
+                                                                target="_blank"
+                                                                rel="noopener noreferrer"
+                                                                aria-label={`View a map showing the location of exams at ${
+                                                                    l.needsDefiniteArticle ? 'the' : ''
+                                                                } ${l.label}`}
+                                                                title={`View a map showing the location of exams at ${
+                                                                    l.needsDefiniteArticle ? 'the' : ''
+                                                                } ${l.label}`}
+                                                            >
+                                                                <MapIcon />
+                                                            </a>
+                                                        </React.Fragment>
+                                                    }
+                                                    key={`location-selector-${l.mapLink}`}
+                                                    value={l.value}
+                                                />
+                                            );
+                                        })}
+                                    </RadioGroup>
+                                </FormControl>
+                            </div>
+                        </StandardCard>
+                    </Grid>
+                )}
+
                 {isProctorU === 'no' && (
                     <Grid item xs={12}>
                         <StandardCard title={locale.noBookingMessage.title} standardCardId="no-booking-necessary">
@@ -127,7 +182,7 @@ const BookExamBooth = ({
                     </Grid>
                 )}
 
-                {isProctorU === 'yes' && (
+                {isProctorU === 'yes' && chosenLocationCode !== 'unset' && (
                     <Grid item xs={12}>
                         <StandardCard title={locale.detailsSectionHeading} standardCardId="booking-details">
                             <Grid container spacing={3}>
