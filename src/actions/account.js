@@ -141,17 +141,17 @@ export function loadCurrentAccount() {
  */
 export function loadSpotlights() {
     return dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_LOADING });
+        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
         return get(SPOTLIGHTS_API_CURRENT())
             .then(spotlightsResponse => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_LOADED,
+                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
                     payload: spotlightsResponse,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_FAILED,
+                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
                     payload: error.message,
                 });
             });

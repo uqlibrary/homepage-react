@@ -46,7 +46,17 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     useEffect(() => {
         /* istanbul ignore else */
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
+            console.log('@@@ kick off spotlights load');
             actions.loadAllSpotlights();
+        } else {
+            console.log(
+                '@@@ useeeffect []; spotlightsError = ',
+                spotlightsError,
+                '; spotlightsLoading = ',
+                spotlightsLoading,
+                '; spotlights = ',
+                spotlights,
+            );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
