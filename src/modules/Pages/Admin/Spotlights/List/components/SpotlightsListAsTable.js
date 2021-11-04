@@ -142,7 +142,7 @@ export const SpotlightsListAsTable = ({
     canTextFilter,
 }) => {
     console.log('top: spotlightsError = ', spotlightsError);
-    console.log('top: rows = ', rows);
+    console.log('top: ', tableType, ' rows = ', rows);
     const classes = useStyles();
 
     const ORDERBY_WEIGHT = 'weight';
@@ -326,39 +326,12 @@ export const SpotlightsListAsTable = ({
         );
     };
 
-    function undisplayRemovedSpotlights(removedSpotlightsIdList) {
-        console.log('undisplayRemovedSpotlights then ', removedSpotlightsIdList);
-        setSpotlightNotice('');
-        setDeleteActive(false);
-
-        // remove from current display
-        setUserows(prevState => {
-            console.log('undisplayRemovedSpotlights prevState = ', prevState);
-            let data = [...prevState];
-            removedSpotlightsIdList.forEach(s => {
-                data = data.filter(r => r.id !== s);
-            });
-            console.log('undisplayRemovedSpotlights, resetting userows to ', [...data]);
-            return data;
-        });
-        console.log('undisplayRemovedSpotlights then userows = ', userows);
-
-        // removedSpotlightsIdList.forEach(id => {
-        //     console.log('hide: ', `#spotlight-list-row-${id}`);
-        //     const htmlRow = document.getElementById(`spotlight-list-row-${id}`);
-        //     console.log('htmlRow = ', htmlRow);
-        //     !!htmlRow && htmlRow.delete();
-        // });
-
-        clearAllDeleteMarkingCheckboxes();
-    }
-
     const reweightSpotlights = () => {
         console.log('reweightSpotlights: userows=', userows);
         const listUnchanged = userows.map(s => s);
         // const list = userows.map(s => s);
         setUserows(prevState => {
-            console.log('undisplayRemovedSpotlights prevState = ', prevState);
+            console.log('reweightSpotlights prevState = ', prevState);
             const data = [...prevState];
 
             data.map(s => {
@@ -466,7 +439,6 @@ export const SpotlightsListAsTable = ({
                     showDeleteFailureConfirmation();
                 } else {
                     console.log('deleteSpotlightBulk success!');
-                    undisplayRemovedSpotlights(spotlightIDsToBeDeleted);
                     console.log('deleteListOfSpotlights: will reorder');
                     reweightSpotlights();
                     console.log('deleteListOfSpotlights: reneable checkboxes');

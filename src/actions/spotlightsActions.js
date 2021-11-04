@@ -85,20 +85,21 @@ const saveSpotlightChange = (request, dispatch) => {
         });
 };
 
-// this route isnt used to save file changes, just reorder
+// the only batch save action atm is to reorder
 export const saveSpotlightBatch = request => {
     return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHT_SAVING });
+        dispatch({ type: actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY });
         return post(SPOTLIGHT_SAVE_BULK_API(), request)
             .then(data => {
+                console.log('saveSpotlightBatch: post reorder, spotlights will be:', data);
                 dispatch({
-                    type: actions.SPOTLIGHT_SAVED,
+                    type: actions.SPOTLIGHTS_REWEIGHTING_SUCCEEDED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SPOTLIGHT_FAILED,
+                    type: actions.SPOTLIGHTS_REWEIGHTING_FAILED,
                     payload: error,
                 });
             });
@@ -192,9 +193,11 @@ export const deleteSpotlightBatch = request => {
         return destroy(SPOTLIGHT_DELETE_BULK_API(), request)
             .then(data => {
                 console.log('deleteSpotlightBatch success', data);
+                console.log('deleteSpotlightBatch request', request);
                 dispatch({
                     type: actions.SPOTLIGHTS_DELETION_SUCCESS,
-                    payload: data,
+                    // return the request so we can delete those entry from the display
+                    payload: request,
                 });
             })
             .catch(error => {

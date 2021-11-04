@@ -13,6 +13,12 @@ const handlers = {
         spotlightsLoading: true,
         spotlightsError: false,
     }),
+    [actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY]: state => ({
+        ...initialState,
+        ...state,
+        spotlightsLoading: true,
+        spotlightsError: false,
+    }),
     [actions.SPOTLIGHTS_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
@@ -26,12 +32,28 @@ const handlers = {
         spotlightsLoading: false,
         spotlightsError: action.payload,
     }),
-    [actions.SPOTLIGHTS_DELETION_SUCCESS]: () => ({
+    [actions.SPOTLIGHTS_REWEIGHTING_FAILED]: (state, action) => ({
+        ...initialState,
+        ...state,
+        spotlightsLoading: false,
+        spotlightsError: action.payload,
+    }),
+    [actions.SPOTLIGHTS_DELETION_SUCCESS]: (state, action) => ({
         ...initialState,
         // ...state,
         spotlightsLoading: false,
         spotlightsError: false,
-        // spotlights: action.payload,
+        // set of spotlights requested for deletion returned as payload
+        spotlights: state.spotlights.filter(s => !action.payload.find(r => r === s.id)),
+    }),
+    [actions.SPOTLIGHTS_REWEIGHTING_SUCCEEDED]: (state, action) => ({
+        ...initialState,
+        // ...state,
+        spotlightsLoading: false,
+        spotlightsError: false,
+        // set of spotlights reweighted returned as payload
+        // spotlights: state.spotlights.map(s => action.payload.find(r => r === s.id) || s),
+        spotlights: state.spotlights.map(s => action.payload.find(r => r === s.id) || s),
     }),
     [actions.SPOTLIGHTS_DELETION_FAILED]: action => ({
         ...initialState,
