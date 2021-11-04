@@ -20,7 +20,7 @@ function selectNONProctoredExam() {
         .click();
 }
 
-context('ACCESSIBILITY', () => {
+context('Book Exam Booth Accessibility', () => {
     it('Book Exam Booth', () => {
         cy.visit('/book-exam-booth');
         cy.injectAxe();

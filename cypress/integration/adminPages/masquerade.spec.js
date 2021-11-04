@@ -1,5 +1,5 @@
-context('ACCESSIBILITY', () => {
-    it('Homepage Admin', () => {
+context('Masquerade', () => {
+    it('Masquerade Admin Accessibility', () => {
         cy.visit('/admin/masquerade?user=uqstaff');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -12,7 +12,7 @@ context('ACCESSIBILITY', () => {
         });
     });
 
-    it('Homepage Readonly', () => {
+    it('Masquerade Readonly Accessibility', () => {
         cy.visit('/admin/masquerade?user=uqmasquerade');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -24,8 +24,7 @@ context('ACCESSIBILITY', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-});
-context('Masquerade', () => {
+
     it('unprivileged users cant masquerade', () => {
         cy.visit('/admin/masquerade?user=s1111111');
         cy.viewport(1300, 1000);
