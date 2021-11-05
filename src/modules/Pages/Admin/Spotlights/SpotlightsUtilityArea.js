@@ -102,8 +102,8 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
             >
                 <Fade in={lightboxOpen}>
                     <div className={classes.paper}>
-                        <h2>{helpContent?.title || 'TBA'}</h2>
-                        <div>{helpContent?.text || ''}</div>
+                        <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
+                        <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                         <div>
                             <Button
                                 variant="contained"

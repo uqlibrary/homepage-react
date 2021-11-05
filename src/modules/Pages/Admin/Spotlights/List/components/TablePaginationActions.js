@@ -18,6 +18,7 @@ const useStyles1 = makeStyles(theme => ({
     },
 }));
 
+/* istanbul ignore next */
 export function TablePaginationActions(props) {
     const classes = useStyles1();
     const theme = useTheme();

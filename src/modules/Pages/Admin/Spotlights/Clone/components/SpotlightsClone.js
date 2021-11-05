@@ -33,6 +33,7 @@ export const SpotlightsClone = ({
     const [defaults, setDefaults] = React.useState({});
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
         }
@@ -51,15 +52,15 @@ export const SpotlightsClone = ({
         if (!!spotlightid && spotlight?.id === spotlightid) {
             console.log('load defaults:');
             setDefaults({
-                id: spotlight?.id || '',
+                id: spotlight?.id || /* istanbul ignore next */ '',
                 startDateDefault: getTimeMondayMidnightNext(),
                 endDateDefault: getTimeSundayNextFormatted(),
-                title: spotlight?.title || '',
-                url: spotlight?.url || '',
+                title: spotlight?.title || /* istanbul ignore next */ '',
+                url: spotlight?.url || /* istanbul ignore next */ '',
                 // eslint-disable-next-line camelcase
-                img_url: spotlight?.img_url || '',
+                img_url: spotlight?.img_url || /* istanbul ignore next */ '',
                 // eslint-disable-next-line camelcase
-                img_alt: spotlight?.img_alt || '',
+                img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
                 weight: spotlight?.weight || 0,
                 active: spotlight?.active || 0,
                 // minimumDate: getStartOfDayFormatted(),

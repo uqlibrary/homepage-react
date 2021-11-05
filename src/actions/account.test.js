@@ -251,7 +251,7 @@ describe('Account action creators', () => {
     it('dispatches expected actions when loading spotlights fails', async () => {
         mockApi.onGet(repositories.routes.SPOTLIGHTS_API).reply(500);
 
-        const expectedActions = [actions.SPOTLIGHTS_LOADING, actions.SPOTLIGHTS_FAILED];
+        const expectedActions = [actions.SPOTLIGHTS_HOMEPAGE_LOADING, actions.SPOTLIGHTS_HOMEPAGE_FAILED];
 
         await mockActionsStore.dispatch(loadSpotlights());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);

@@ -244,30 +244,30 @@ describe('Spotlight list actions', () => {
         });
     });
 
-    describe('Spotlight Deletion', () => {
-        it('dispatches expected actions when spotlight delete call fails', async () => {
-            mockApi.onDelete(repositories.routes.SPOTLIGHT_DELETE_API({ id: 'id' }).apiUrl).reply(500);
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
-
-            try {
-                await mockActionsStore.dispatch(deleteSpotlight('id'));
-                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-            } catch (e) {
-                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-            }
-        });
-
-        it('handles a spotlight delete request', async () => {
-            mockApi
-                .onAny(repositories.routes.SPOTLIGHT_DELETE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
-                .reply(200, []);
-
-            const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_DELETED];
-
-            await mockActionsStore.dispatch(deleteSpotlight('88888-d62b-11e7-954e-57c2cc19d151'));
-            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-        });
-    });
+    // describe('Spotlight Deletion', () => {
+    //     it('dispatches expected actions when spotlight delete call fails', async () => {
+    //         mockApi.onDelete(repositories.routes.SPOTLIGHT_DELETE_API({ id: 'id' }).apiUrl).reply(500);
+    //         const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
+    //
+    //         try {
+    //             await mockActionsStore.dispatch(deleteSpotlight('id'));
+    //             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    //         } catch (e) {
+    //             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    //         }
+    //     });
+    //
+    //     it('handles a spotlight delete request', async () => {
+    //         mockApi
+    //             .onAny(repositories.routes.SPOTLIGHT_DELETE_API({ id: '88888-d62b-11e7-954e-57c2cc19d151' }).apiUrl)
+    //             .reply(200, []);
+    //
+    //         const expectedActions = [actions.SPOTLIGHT_LOADING, actions.SPOTLIGHT_DELETED];
+    //
+    //         await mockActionsStore.dispatch(deleteSpotlight('88888-d62b-11e7-954e-57c2cc19d151'));
+    //         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    //     });
+    // });
 
     describe('Spotlight Bulk Deletion', () => {
         it('dispatches expected actions when spotlight bulk delete call fails', async () => {
@@ -392,7 +392,7 @@ describe('Spotlight list actions', () => {
                 },
             ]);
 
-            const expectedActions = [actions.SPOTLIGHT_SAVING, actions.SPOTLIGHT_SAVED];
+            const expectedActions = [actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY, actions.SPOTLIGHTS_REWEIGHTING_SUCCEEDED];
 
             await mockActionsStore.dispatch(
                 saveSpotlightBatch([
@@ -406,7 +406,7 @@ describe('Spotlight list actions', () => {
         });
         it('handles a failing spotlight bulk save request', async () => {
             mockApi.onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
-            const expectedActions = [actions.SPOTLIGHT_SAVING, actions.SPOTLIGHT_FAILED];
+            const expectedActions = [actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY, actions.SPOTLIGHTS_REWEIGHTING_FAILED];
 
             try {
                 await mockActionsStore.dispatch(saveSpotlightBatch([{ ...sendSpotlightRecord, id: 'id' }]));

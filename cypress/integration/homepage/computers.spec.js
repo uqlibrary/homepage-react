@@ -1,4 +1,4 @@
-context('ACCESSIBILITY', () => {
+context('Computer availability Accessibility', () => {
     it('Computer availability', () => {
         cy.visit('/');
         cy.injectAxe();

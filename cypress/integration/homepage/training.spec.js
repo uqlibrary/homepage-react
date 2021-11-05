@@ -1,5 +1,5 @@
-context('', () => {
-    it('Training ACCESSIBILITY', () => {
+context('Training', () => {
+    it('Training Accessibility', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);

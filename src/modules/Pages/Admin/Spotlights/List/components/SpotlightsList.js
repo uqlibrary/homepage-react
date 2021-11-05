@@ -44,8 +44,19 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
     useEffect(() => {
+        /* istanbul ignore else */
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
+            console.log('@@@ kick off spotlights load');
             actions.loadAllSpotlights();
+        } else {
+            console.log(
+                '@@@ useeeffect []; spotlightsError = ',
+                spotlightsError,
+                '; spotlightsLoading = ',
+                spotlightsLoading,
+                '; spotlights = ',
+                spotlights,
+            );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -90,9 +101,9 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         }
     }, [spotlights]);
 
-    const deleteSpotlight = spotlightID => {
-        return actions.deleteSpotlight(spotlightID);
-    };
+    // const deleteSpotlight = spotlightID => {
+    //     return actions.deleteSpotlight(spotlightID);
+    // };
 
     const deleteSpotlightBulk = spotlights => {
         return actions.deleteSpotlightBatch(spotlights);
@@ -102,6 +113,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         return actions.saveSpotlightChangeWithExistingImage(spotlight);
     };
 
+    /* istanbul ignore next */
     const saveBatchReorder = spotlights => {
         spotlights.forEach(s => {
             console.log('saveBatchReorder', s.id, s.weight, s.title);
@@ -110,6 +122,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         return actions.saveSpotlightBatch(spotlights);
     };
 
+    /* istanbul ignore next */
     if (!!spotlightsError && (!spotlightsError.errorType || spotlightsError.errorType !== 'deletion')) {
         return (
             <StandardPage title="Spotlights Management">
@@ -164,7 +177,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    deleteSpotlight={deleteSpotlight}
+                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
@@ -184,7 +197,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    deleteSpotlight={deleteSpotlight}
+                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
@@ -200,7 +213,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    deleteSpotlight={deleteSpotlight}
+                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}

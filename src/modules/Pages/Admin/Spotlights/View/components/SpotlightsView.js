@@ -24,6 +24,7 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
         }

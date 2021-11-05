@@ -1,5 +1,5 @@
-context('ACCESSIBILITY', () => {
-    it('Personalised panel', () => {
+context('Personalised panel accessibility', () => {
+    it('Main Personalised panel', () => {
         cy.visit('/?user=uqresearcher');
         cy.wait(3000);
         cy.injectAxe();
@@ -51,7 +51,7 @@ context('ACCESSIBILITY', () => {
         });
     });
 });
-context('Header', () => {
+context('Personalised panel Header', () => {
     it('location button changes location', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
