@@ -561,7 +561,7 @@ describe('Spotlights Admin Pages', () => {
 
         it('can delete Current spotlights', () => {
             // header count is correct initially
-            cy.get('[data-testid="headerRow-current"] span').should('contain', '(4)');
+            cy.get('[data-testid="headerRow-current"] span').should('contain', '- 4 spotlights');
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should('contain', 'Can be deleted and edited');
             cy.get(
                 '[data-testid="spotlight-list-row-38cbf430-8693-11e9-98ab-9d52a58e86ca"] input[type="checkbox"]',
@@ -596,7 +596,7 @@ describe('Spotlights Admin Pages', () => {
             ).should('not.be.disabled');
             // the pagination updates
             // header count has updated
-            cy.get('[data-testid="headerRow-current"] span').should('contain', '(3)');
+            cy.get('[data-testid="headerRow-current"] span').should('contain', '- 3 spotlights');
         });
         it('the user can delete a spotlight with the split button', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should(

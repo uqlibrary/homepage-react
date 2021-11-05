@@ -88,6 +88,10 @@ const useStyles = makeStyles(
             fontSize: '1.5em',
             marginTop: '0.9em',
             marginLeft: 6,
+            '& span': {
+                fontSize: '0.8em',
+                fontWeight: 300,
+            },
         },
         iconHighlighted: {
             color: '#fff',
@@ -106,17 +110,10 @@ const useStyles = makeStyles(
             textAlign: 'center',
         },
         h4: {
-            fontWeight: '300',
-            display: 'inline',
-        },
-        currentDisplay: {
-            '& td': {
-                '& span': {
-                    fontWeight: 'bold',
-                },
-                '& h4': {
-                    fontWeight: 'bold',
-                },
+            paddingRight: 10,
+            '& h4': {
+                fontWeight: '300',
+                display: 'inline',
             },
         },
         reorderWarning: {
@@ -247,7 +244,9 @@ export const SpotlightsListAsTable = ({
         setPage(0);
     };
 
-    const headerCountIndicator = ' ([N])'.replace('[N]', userows.length).replace('[s]', userows.length > 1 ? 's' : '');
+    const headerCountIndicator = ' - [N] spotlights'
+        .replace('[N]', userows.length)
+        .replace('[s]', userows.length > 1 ? 's' : '');
 
     const navigateToEditForm = spotlightid => {
         console.log('navigateToEditForm');
@@ -799,10 +798,7 @@ export const SpotlightsListAsTable = ({
                                         <Grid item xs={12} md={!!deleteActive ? 5 : 12}>
                                             <h3 className={classes.tableHeading}>
                                                 {headertag}
-                                                <span
-                                                    style={{ fontSize: '0.9em', fontWeight: 300 }}
-                                                    data-testid={`headerRow-count-${tableType}`}
-                                                >
+                                                <span data-testid={`headerRow-count-${tableType}`}>
                                                     {headerCountIndicator}
                                                 </span>
                                             </h3>
@@ -1009,10 +1005,9 @@ export const SpotlightsListAsTable = ({
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
-                                                                        className={classes.tableCell}
+                                                                        className={`${classes.tableCell} ${classes.h4}`}
                                                                     >
                                                                         <h4
-                                                                            className={classes.h4}
                                                                             id={`spotlight-list-item-title-${spotlight.id}`}
                                                                         >{`${spotlight.title}`}</h4>{' '}
                                                                     </TableCell>

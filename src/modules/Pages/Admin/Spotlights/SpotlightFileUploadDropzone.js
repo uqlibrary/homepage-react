@@ -28,7 +28,7 @@ const thumbsContainer = {
     height: 200,
     padding: 4,
     boxSizing: 'border-box',
-    minHeight: 340,
+    minHeight: 400,
 };
 
 const thumbInner = {
@@ -256,7 +256,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                                         </Grid>
                                     )}
                                     <Grid item xs={12}>
-                                        {idealDimensionsNotification()}
+                                        <p>{idealDimensionsNotification()}</p>
                                     </Grid>
                                     {imageWidth > 0 && imageHeight > 0 && ImageSizeIsPoor(imageWidth, imageHeight) && (
                                         <Grid item xs={12}>
@@ -271,7 +271,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
                         {locale.form.labels.dragareaInstructions.map((line, index) => {
-                            return <p key={`instruction-${index}`}>{addConstantsToDisplayValues(line)}</p>;
+                            return <p key={`instruction-${index}`}>{addConstantsToDisplayValues(line)}xxx</p>;
                         })}
                     </div>
                 )}
