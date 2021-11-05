@@ -271,7 +271,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
                         {locale.form.labels.dragareaInstructions.map((line, index) => {
-                            return <p key={`instruction-${index}`}>{addConstantsToDisplayValues(line)}xxx</p>;
+                            return <p key={`instruction-${index}`}>{addConstantsToDisplayValues(line)}</p>;
                         })}
                     </div>
                 )}
