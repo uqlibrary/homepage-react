@@ -139,19 +139,19 @@ export function loadCurrentAccount() {
  * Loads the spotlight data
  * @returns {function(*)}
  */
-export function loadSpotlights() {
+export function loadCurrentSpotlights() {
     return dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
+        dispatch({ type: actions.SPOTLIGHTS_CURRENT_LOADING });
         return get(SPOTLIGHTS_API_CURRENT())
             .then(spotlightsResponse => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
+                    type: actions.SPOTLIGHTS_CURRENT_LOADED,
                     payload: spotlightsResponse,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
+                    type: actions.SPOTLIGHTS_CURRENT_FAILED,
                     payload: error.message,
                 });
             });

@@ -22,7 +22,10 @@ export const SpotlightsAdd = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
+    currentSpotlights,
+    currentSpotlightsLoading,
 }) => {
+    console.log('component:', currentSpotlights);
     const defaults = {
         id: '',
         startDateDefault: getTimeMondayMidnightNext(),
@@ -36,6 +39,15 @@ export const SpotlightsAdd = ({
         type: 'add',
         minimumDate: getStartOfDayFormatted(),
     };
+
+    React.useEffect(() => {
+        /* istanbul ignore else */
+        if (!currentSpotlightsLoading && !currentSpotlights) {
+            actions.loadCurrentSpotlights();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -46,6 +58,8 @@ export const SpotlightsAdd = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError}
                         spotlightStatus={spotlightStatus}
+                        currentSpotlights={currentSpotlights}
+                        currentSpotlightsLoading={currentSpotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -67,6 +81,8 @@ SpotlightsAdd.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    currentSpotlights: PropTypes.any,
+    currentSpotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsAdd;

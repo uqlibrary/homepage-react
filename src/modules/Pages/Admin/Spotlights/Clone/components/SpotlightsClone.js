@@ -20,6 +20,8 @@ export const SpotlightsClone = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
+    currentSpotlights,
+    currentSpotlightsLoading,
 }) => {
     console.log('SpotlightsClone: spotlight =  ', spotlight);
     console.log('SpotlightsClone: spotlightStatus =  ', spotlightStatus);
@@ -36,6 +38,7 @@ export const SpotlightsClone = ({
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
+            actions.loadCurrentSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
@@ -96,6 +99,8 @@ export const SpotlightsClone = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError || publicFileUploadError}
                         spotlightStatus={spotlightStatus}
+                        currentSpotlights={currentSpotlights}
+                        currentSpotlightsLoading={currentSpotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -117,6 +122,8 @@ SpotlightsClone.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    currentSpotlights: PropTypes.any,
+    currentSpotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsClone;

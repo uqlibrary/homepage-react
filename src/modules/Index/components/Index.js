@@ -9,7 +9,7 @@ import {
     loadLoans,
     searcheSpacePossiblePublications,
     searcheSpaceIncompleteNTROPublications,
-    loadSpotlights,
+    loadCurrentSpotlights,
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
@@ -44,8 +44,8 @@ export const Index = ({
     account,
     accountLoading,
     author,
-    spotlightsCurrent,
-    spotlightsCurrentLoading,
+    currentSpotlights,
+    currentSpotlightsLoading,
     libHours,
     libHoursLoading,
     libHoursError,
@@ -65,11 +65,11 @@ export const Index = ({
     incompleteNTROLoading,
 }) => {
     const dispatch = useDispatch();
-    console.log('homepage: spotlightsCurrent = ', spotlightsCurrent);
+    console.log('homepage: currentSpotlights = ', currentSpotlights);
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {
-            dispatch(loadSpotlights());
+            dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
         }
@@ -136,8 +136,8 @@ export const Index = ({
                 )}
                 <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                     <Spotlights
-                        spotlights={spotlightsCurrent}
-                        spotlightsLoading={spotlightsCurrentLoading}
+                        spotlights={currentSpotlights}
+                        spotlightsLoading={currentSpotlightsLoading}
                         account={account}
                     />
                 </Grid>
@@ -225,9 +225,9 @@ Index.propTypes = {
     accountLoading: PropTypes.bool,
     author: PropTypes.object,
     actions: PropTypes.any,
-    spotlightsCurrent: PropTypes.any,
-    // spotlightsCurrentError: PropTypes.any,
-    spotlightsCurrentLoading: PropTypes.bool,
+    currentSpotlights: PropTypes.any,
+    // currentSpotlightsError: PropTypes.any,
+    currentSpotlightsLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,

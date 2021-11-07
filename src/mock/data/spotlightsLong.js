@@ -372,7 +372,7 @@ export const spotlightsLong = [{
     "id": "298288b0-605c-11eb-ad87-357f112348ef",
     "start": "2031-01-27 00:01:00",
     "end": "2099-02-07 23:59:00",
-    "title": "Changes to Library loans and rules",
+    "title": "Changes to Library loans and rules (can be edited)",
     "url": "https:\/\/web.library.uq.edu.au\/borrowing-requesting\/how-borrow\/borrowing-rules",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Changes to Library loans and rules",

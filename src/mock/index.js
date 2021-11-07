@@ -198,6 +198,22 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601
         },
     ]),
 );
+mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '298288b0-605c-11eb-ad87-357f112348ef' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '298288b0-605c-11eb-ad87-357f112348ef',
+            start: '2031-01-27 00:01:00',
+            end: '2099-02-07 23:59:00',
+            title: 'Changes to Library loans and rules (can be edited)',
+            url: 'https://web.library.uq.edu.au/borrowing-requesting/how-borrow/borrowing-rules',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Changes to Library loans and rules',
+            weight: 50,
+            active: 0,
+        },
+    ]),
+);
 mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
     withDelay([
         200,
@@ -228,6 +244,22 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 10,
             active: 1,
+        },
+    ]),
+);
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '298288b0-605c-11eb-ad87-357f112348ef' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '298288b0-605c-11eb-ad87-357f112348ef',
+            start: '2031-01-27 00:01:00',
+            end: '2099-02-07 23:59:00',
+            title: 'Changes to Library loans and rules (can be edited)',
+            url: 'https://web.library.uq.edu.au/borrowing-requesting/how-borrow/borrowing-rules',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Changes to Library loans and rules',
+            weight: 50,
+            active: 0,
         },
     ]),
 );

@@ -9,8 +9,10 @@ const mapStateToProps = state => {
     return {
         ...state.get('spotlightReducer'),
         ...state.get('publicFileUploadReducer'),
+        ...state.get('spotlightsCurrentReducer'),
     };
 };
+console.log('mapStateToProps = ', mapStateToProps);
 
 const mapDispatchToProps = dispatch => {
     return {
