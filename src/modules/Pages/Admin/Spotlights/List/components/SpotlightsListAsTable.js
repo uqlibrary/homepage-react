@@ -444,6 +444,8 @@ export const SpotlightsListAsTable = ({
                     reEnableAllCheckboxes();
                     console.log('deleteListOfSpotlights: clear delete marking');
                     clearAllDeleteMarkingCheckboxes();
+                    setSpotlightNotice('');
+                    setDeleteActive(false);
                 }
             })
             .catch(
