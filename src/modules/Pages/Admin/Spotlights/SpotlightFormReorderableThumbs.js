@@ -77,6 +77,10 @@ export const SpotlightFormReorderableThumbs = ({
         return values.img_url;
     };
 
+    const isUploadProvided = values => {
+        return !!values.uploadedFile && !!values.uploadedFile[0] && !!values.uploadedFile[0].preview;
+    };
+
     console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
     if (!!currentSpotlights) {
         return (
@@ -99,23 +103,24 @@ export const SpotlightFormReorderableThumbs = ({
                         />
                     );
                 })}
-                {isAddAction(tableType) && (
+                {isAddAction(tableType) && !isUploadProvided(currentValues) && (
                     <span id="reorder-img-placeholder" className={classes.placeholderBlock}>
                         {' '}
                     </span>
                 )}
-                {!isAddAction(tableType) &&
+                {((!isAddAction(tableType) &&
                     currentSpotlights.length > 0 &&
-                    !currentSpotlights.find(s => s.id === currentValues.id) && (
-                        <img
-                            id={`reorder-img-${currentValues.id}`}
-                            alt={currentValues.img_alt}
-                            key={`reorder-img-${currentValues.id}`}
-                            src={currentValues.img_url}
-                            title={currentValues.img_alt}
-                            className={classes.hasBorder}
-                        />
-                    )}
+                    !currentSpotlights.find(s => s.id === currentValues.id)) ||
+                    (isAddAction(tableType) && isUploadProvided(currentValues))) && (
+                    <img
+                        id={`reorder-img-${currentValues.id}`}
+                        alt={currentValues.img_alt}
+                        key={`reorder-img-${currentValues.id}`}
+                        src={currentImage(currentValues)}
+                        title={currentValues.img_alt}
+                        className={classes.hasBorder}
+                    />
+                )}
             </Grid>
         );
     }
