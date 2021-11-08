@@ -655,6 +655,7 @@ describe('Spotlights Admin Pages', () => {
 
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').check();
             cy.get('[data-testid="headerRow-current"] span span').contains('1 spotlight selected');
+            cy.get('[data-testid="spotlight-list-current-delete-button"]').should('exist');
             cy.get(
                 '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
             ).should('be.disabled');
@@ -678,6 +679,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get(
                 '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
             ).should('not.be.disabled');
+
+            cy.get('[data-testid="headerRow-current"]').should('not.contain', '1 spotlight selected');
+            cy.get('[data-testid="spotlight-list-current-delete-button"]').should('not.exist');
         });
 
         // now that we are requesting a bulk delete method from api, we can only test one: success or failure :(
@@ -758,6 +762,9 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(31, 5));
 
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Past spotlights');
+
+            cy.get('[data-testid="headerRow-past"]').should('not.contain', '1 spotlight selected');
+            cy.get('[data-testid="spotlight-list-past-delete-button"]').should('not.exist');
         });
         it('during delete, selection checkboxes in other sections are disabled', () => {
             cy.get('[data-testid="spotlight-list-item-checkbox-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
