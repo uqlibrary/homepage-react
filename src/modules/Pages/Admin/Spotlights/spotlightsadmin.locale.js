@@ -53,6 +53,11 @@ export default {
                 confirmButtonLabel: 'OK',
             },
         },
+        reorderThumbs: {
+            header: 'Set display order',
+            usesPlaceholder: 'Drag and drop the placeholder to set the display order for this spotlight.',
+            usesCurrentImage: 'Drag and drop the highlighted image to set the display order for this spotlight.',
+        },
         add: {
             addSpotlightConfirmation: {
                 confirmationTitle: 'A spotlight has been added',

@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
+
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { isCurrentSpotlight } from './spotlighthelpers';
 
 const useStyles = makeStyles(() => ({
@@ -64,11 +66,17 @@ export const SpotlightFormReorderableThumbs = ({
         );
     }
 
+    const isAddAction = tableType => !['edit', 'clone'].includes(tableType);
+
     if (!!currentSpotlights) {
         return (
             <Grid item xs={'auto'}>
-                <p>Current spotlights:</p>
-                <p>(Drag and drop the placeholder to re-order this spotlight)</p>
+                <h3>{locale.form.header}</h3>
+                <p>
+                    {isAddAction(tableType)
+                        ? locale.form.reorderThumbs.usesPlaceholder
+                        : locale.form.reorderThumbs.usesCurrentImage}
+                </p>
                 {currentSpotlights.map(s => (
                     <img
                         id={`reorder-img-${s.id}`}
@@ -79,13 +87,13 @@ export const SpotlightFormReorderableThumbs = ({
                         className={`${s.id === currentValues.id ? classes.hasBorder : classes.noBorder}`}
                     />
                 ))}
-                {!!isCurrentSpotlight(currentValues) && tableType === 'add' && (
+                {!!isCurrentSpotlight(currentValues) && isAddAction(tableType) && (
                     <span id="reorder-img-placeholder" className={classes.placeholderBlock}>
                         {' '}
                     </span>
                 )}
                 {!!isCurrentSpotlight(currentValues) &&
-                    ['edit', 'clone'].includes(tableType) &&
+                    !isAddAction(tableType) &&
                     currentSpotlights.length > 0 &&
                     !currentSpotlights.find(s => s.id === currentValues.id) && (
                         <img
