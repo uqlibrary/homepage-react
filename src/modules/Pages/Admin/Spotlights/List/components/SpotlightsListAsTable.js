@@ -165,6 +165,9 @@ export const SpotlightsListAsTable = ({
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
     const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
     const [textSearch, setTextSearch] = useState('');
+
+    const [draggedId, setDraggedId] = useState(false);
+
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
@@ -203,8 +206,25 @@ export const SpotlightsListAsTable = ({
                 });
             setUserows(localRows);
             setStaticUserows(localRows);
+
+            if (!!draggedId) {
+                // briefly mark the dragged row with a style, so the user knows what they did
+                setTimeout(() => {
+                    // rows arent immediately available :(
+                    const draggedRow = document.getElementById(`spotlight-list-row-${draggedId}`);
+                    console.log('displayTheRows: draggedRow = ', draggedRow);
+                    !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
+                }, 200);
+                setTimeout(() => {
+                    const draggedRow = document.getElementById(`spotlight-list-row-${draggedId}`);
+                    !!draggedRow && (draggedRow.style.transition = 'background-color 3s linear');
+                    !!draggedRow && (draggedRow.style.backgroundColor = 'inherit');
+                }, 700);
+
+                setDraggedId(false);
+            }
         },
-        [tableType],
+        [tableType, draggedId],
     );
 
     React.useEffect(() => {
@@ -216,15 +236,6 @@ export const SpotlightsListAsTable = ({
 
         displayTheRows(rows);
     }, [rows, displayTheRows]);
-
-    // React.useEffect(() => {
-    //     console.log('*** useEffect useRows', tableType, userows.length);
-    // }, [tableType, userows]);
-
-    // React.useEffect(() => {
-    //     console.log('useRows have changed ', userows);
-    //     //     userows.length === 0 && setPage(0);
-    // }, [userows]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -516,6 +527,9 @@ export const SpotlightsListAsTable = ({
             return;
         }
 
+        // so we can briefly mark the dragged row with a style, so the user knows what they did, when the save returns
+        setDraggedId(draggableId);
+
         let counter = 1;
         let reweightedRows = [];
         rows.forEach((row, index) => {
@@ -581,14 +595,6 @@ export const SpotlightsListAsTable = ({
                 });
                 rows.sort((a, b) => a.weight - b.weight);
             });
-
-        // briefly mark the dragged row with a style, so the user knows what they did
-        const draggedRow = document.getElementById(`spotlight-list-row-${draggableId}`);
-        !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
-        setTimeout(() => {
-            !!draggedRow && (draggedRow.style.transition = 'background-color 3s linear');
-            !!draggedRow && (draggedRow.style.backgroundColor = 'inherit');
-        }, 500);
     };
 
     const confirmPublishUnpublishLocale = isCurrentlyActive => {
@@ -961,8 +967,6 @@ export const SpotlightsListAsTable = ({
                                                                 <TableRow
                                                                     id={`spotlight-list-row-${spotlight.id}`}
                                                                     data-testid={`spotlight-list-row-${spotlight.id}`}
-                                                                    className={'spotlight-data-row'}
-                                                                    // index={rowindex}
                                                                     {...draggableProvided.draggableProps}
                                                                     {...draggableProvided.dragHandleProps}
                                                                     ref={draggableProvided.innerRef}
