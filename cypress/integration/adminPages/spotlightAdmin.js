@@ -1410,4 +1410,65 @@ describe('Spotlights Admin Pages', () => {
             );
         });
     });
+    context.only('temp thumbnail reorder context', () => {
+        // put this in the individual contaxts for edit clone add when good
+        it('edit shows the right reorder block', () => {
+            cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
+            cy.viewport(1300, 1000);
+
+            cy.get('[data-testid="spotlights-thumbs-reorder"]')
+                .should('exist')
+                .scrollIntoView();
+            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 3);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] img:first-child').should(
+                'have.css', // proxy for "the img is highlighted"
+                'border-left-style',
+                'solid',
+            );
+        });
+        it('clone shows the right reorder block', () => {
+            cy.visit('http://localhost:2020/admin/spotlights/clone/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
+            cy.viewport(1300, 1000);
+
+            // set date to now
+            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
+                .should('be.visible')
+                .contains(locale.form.labels.datePopupNowButton)
+                .click();
+            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
+                .contains('OK')
+                .click();
+
+            cy.get('[data-testid="spotlights-thumbs-reorder"]')
+                .should('exist')
+                .scrollIntoView();
+            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 4);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] img:last-child')
+                .should('exist')
+                .and('have.css', 'border-left-style', 'solid'); // proxy for "the img is highlighted"
+        });
+        it('add shows the right reorder block', () => {
+            cy.visit('http://localhost:2020/admin/spotlights/add?user=uqstaff');
+            cy.viewport(1300, 1000);
+
+            // set date to now
+            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
+                .should('be.visible')
+                .contains(locale.form.labels.datePopupNowButton)
+                .click();
+            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
+                .contains('OK')
+                .click();
+
+            cy.get('[data-testid="spotlights-thumbs-reorder"]')
+                .should('exist')
+                .scrollIntoView();
+            cy.get('[data-testid="spotlights-thumbs-reorder"] *').should('have.length', 4);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
+                .should('exist')
+                .and('have.css', 'border-left-style', 'solid'); // proxy for "the span is highlighted"
+        });
+    });
 });

@@ -66,8 +66,6 @@ export const SpotlightFormReorderableThumbs = ({
         );
     }
 
-    const isAddAction = tableType => !['edit', 'clone'].includes(tableType);
-
     // if they drag a new image in, reuse this as the thumb
     const currentImage = values => {
         const firstFile = !!values.uploadedFile && !!values.uploadedFile[0] ? values.uploadedFile[0] : false;
@@ -87,40 +85,51 @@ export const SpotlightFormReorderableThumbs = ({
             <Grid item xs={'auto'}>
                 <h3>{locale.form.header}</h3>
                 <p>
-                    {isAddAction(tableType)
+                    {tableType === 'add'
                         ? locale.form.reorderThumbs.usesPlaceholder
                         : locale.form.reorderThumbs.usesCurrentImage}
                 </p>
-                {currentSpotlights.map(s => {
-                    return (
+                <div data-testid="spotlights-thumbs-reorder">
+                    {currentSpotlights.map(s => {
+                        const isThisImage = s.id === currentValues.id && tableType !== 'clone';
+                        return (
+                            <img
+                                id={`reorder-img-${s.id}`}
+                                data-testid={`reorder-img-${s.id}`}
+                                alt={isThisImage ? currentValues.img_alt : s.img_alt}
+                                key={`reorder-img-${s.id}`}
+                                src={isThisImage ? currentImage(currentValues) : s.img_url}
+                                title={isThisImage ? currentValues.img_alt : s.img_alt}
+                                className={`${isThisImage ? classes.hasBorder : classes.noBorder}`}
+                            />
+                        );
+                    })}
+                    {tableType === 'add' && !isUploadProvided(currentValues) && (
+                        <span id="reorder-img-placeholder" className={classes.placeholderBlock}>
+                            {' '}
+                        </span>
+                    )}
+                    {tableType === 'add' && isUploadProvided(currentValues) && (
                         <img
-                            id={`reorder-img-${s.id}`}
-                            alt={s.id === currentValues.id ? currentValues.img_alt : s.img_alt}
-                            key={`reorder-img-${s.id}`}
-                            src={s.id === currentValues.id ? currentImage(currentValues) : s.img_url}
-                            title={s.id === currentValues.id ? currentValues.img_alt : s.img_alt}
-                            className={`${s.id === currentValues.id ? classes.hasBorder : classes.noBorder}`}
+                            id={`reorder-img-${currentValues.id}`}
+                            alt={currentValues.img_alt}
+                            key={`reorder-img-${currentValues.id}`}
+                            src={currentImage(currentValues)}
+                            title={currentValues.img_alt}
+                            className={classes.hasBorder}
                         />
-                    );
-                })}
-                {isAddAction(tableType) && !isUploadProvided(currentValues) && (
-                    <span id="reorder-img-placeholder" className={classes.placeholderBlock}>
-                        {' '}
-                    </span>
-                )}
-                {((!isAddAction(tableType) &&
-                    currentSpotlights.length > 0 &&
-                    !currentSpotlights.find(s => s.id === currentValues.id)) ||
-                    (isAddAction(tableType) && isUploadProvided(currentValues))) && (
-                    <img
-                        id={`reorder-img-${currentValues.id}`}
-                        alt={currentValues.img_alt}
-                        key={`reorder-img-${currentValues.id}`}
-                        src={currentImage(currentValues)}
-                        title={currentValues.img_alt}
-                        className={classes.hasBorder}
-                    />
-                )}
+                    )}
+                    {tableType === 'clone' && (
+                        <img
+                            id="reorder-img-new"
+                            alt={currentValues.img_alt}
+                            key={`reorder-img-${currentValues.id}`}
+                            src={currentImage(currentValues)}
+                            title={currentValues.img_alt}
+                            className={classes.hasBorder}
+                        />
+                    )}
+                </div>
             </Grid>
         );
     }
