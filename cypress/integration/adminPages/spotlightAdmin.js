@@ -204,6 +204,8 @@ describe('Spotlights Admin Pages', () => {
 
         // it seems cypress doesnt support "drag and drop" as a function yet :(
         // test left as pre work in case this changes in future
+        // try https://github.com/atlassian/react-beautiful-dnd/blob/master/docs/sensors/keyboard.md
+        // or does the tab hold it up?
         it.skip('can drag and drop to reorder the list', () => {
             // function moveRowTry3(dragSelector, x, y) {
             //     console.log(dragSelector, x, y);
@@ -858,7 +860,7 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
         });
 
-        it('is accessible', () => {
+        it('add page is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -990,7 +992,7 @@ describe('Spotlights Admin Pages', () => {
             saveButtonisDisabled();
         });
 
-        it('can save a spotlight', () => {
+        it('can save a spotlight on the add page', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 4');
             cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
@@ -1008,7 +1010,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', '');
             dragzoneIsReadyForDrag();
         });
-        it('the cancel button returns to the list page', () => {
+        it('the cancel button on the add page returns to the list page', () => {
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]').click();
             cy.wait(500);
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
@@ -1025,7 +1027,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
         });
-        it('Add save button is disabled unless the form is valid', () => {
+        it('save button on the add page is disabled unless the form is valid', () => {
             // fill out the form from the bottom up to double-check the "button enables properly"
             saveButtonisDisabled();
 
@@ -1052,7 +1054,7 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
         });
 
-        it('is accessible', () => {
+        it('edit page is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -1099,7 +1101,7 @@ describe('Spotlights Admin Pages', () => {
                 .click(); // click 'view list' button in dialog
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights'); // the list page reloads
         });
-        it('the cancel button returns to the list page', () => {
+        it('the cancel button on the edit page returns to the list page', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
                 .should('exist')
@@ -1166,7 +1168,7 @@ describe('Spotlights Admin Pages', () => {
             saveButtonNOTDisabled();
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
         });
-        it('can delete the current spotlight image and upload a different image', () => {
+        it('can delete the current spotlight image on the edit form and upload a different image', () => {
             cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
                 'not.contain',
                 'Drag and drop a spotlight image',
@@ -1190,7 +1192,7 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
         });
 
-        it('is accessible', () => {
+        it('clone page is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -1202,7 +1204,7 @@ describe('Spotlights Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('the cancel button returns to the list page', () => {
+        it('the cancel button on the clone page returns to the list page', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
                 .should('exist')
@@ -1292,7 +1294,7 @@ describe('Spotlights Admin Pages', () => {
 
             cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
         });
-        it('the save runs correctly and can reclone', () => {
+        it('the save on the clone page runs correctly and can reclone', () => {
             cy.get('[data-testid="admin-spotlights-form-title"] textarea')
                 .clear()
                 .type('a cloned spotlight');
@@ -1319,7 +1321,7 @@ describe('Spotlights Admin Pages', () => {
                 'Can be deleted and edited',
             );
         });
-        it('the save runs correctly and can return to list', () => {
+        it('the save on the clone form runs correctly and can return to list', () => {
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
@@ -1330,7 +1332,7 @@ describe('Spotlights Admin Pages', () => {
             // the list page reloads
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         });
-        it('can delete the current spotlight image and upload a different image', () => {
+        it('can delete the current spotlight image on the clone form and upload a different image', () => {
             cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
                 'not.contain',
                 'Drag and drop a spotlight image',
@@ -1354,7 +1356,7 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
         });
 
-        it('is accessible', () => {
+        it('view page is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
@@ -1366,7 +1368,7 @@ describe('Spotlights Admin Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('the cancel button returns to the list page', () => {
+        it('the cancel button on the view page returns to the list page', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
                 .should('exist')
@@ -1386,7 +1388,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-spotlights-view-help-example"]').should('not.exist');
         });
-        it('the page displays the correct data', () => {
+        it('the view page displays the correct data', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-spotlights-form-title"] textarea')
                 .should('exist')
@@ -1417,7 +1419,7 @@ describe('Spotlights Admin Pages', () => {
             );
         });
     });
-    context.only('temp thumbnail reorder context', () => {
+    context('temp thumbnail reorder context', () => {
         // put this in the individual contaxts for edit clone add when good
         it('edit shows the right reorder block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');

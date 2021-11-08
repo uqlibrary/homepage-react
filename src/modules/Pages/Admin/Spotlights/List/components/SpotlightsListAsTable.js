@@ -38,6 +38,7 @@ import {
     isCurrentSpotlight,
     isPastSpotlight,
     isScheduledSpotlight,
+    moveItemInArray,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // original based on https://codesandbox.io/s/hier2
@@ -168,6 +169,7 @@ export const SpotlightsListAsTable = ({
 
     const [draggedId, setDraggedId] = useState(false);
 
+    const [hasDraggedAndDropped, markAsDraggedAndDropped] = useState(false);
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
@@ -496,21 +498,6 @@ export const SpotlightsListAsTable = ({
         };
     };
 
-    // https://stackoverflow.com/a/5306832/1246313
-    let hasDraggedAndDropped = false;
-    /* istanbul ignore next */
-    function moveItemInArray(arr, oldIndex, newIndex) {
-        if (newIndex >= arr.length) {
-            let k = newIndex - arr.length + 1;
-            while (k--) {
-                arr.push(undefined);
-            }
-        }
-        arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-        hasDraggedAndDropped = true;
-        return arr; // for testing
-    }
-
     /* istanbul ignore next */
     const onDragEnd = result => {
         console.log('onDragEnd ', result);
@@ -595,6 +582,8 @@ export const SpotlightsListAsTable = ({
                 });
                 rows.sort((a, b) => a.weight - b.weight);
             });
+
+        markAsDraggedAndDropped(true);
     };
 
     const confirmPublishUnpublishLocale = isCurrentlyActive => {
@@ -697,7 +686,7 @@ export const SpotlightsListAsTable = ({
     function stableSort(array, comparator) {
         if (!!hasDraggedAndDropped) {
             // we dont resort immediately after a drag and drop - it overrides the drag redisplay :(
-            hasDraggedAndDropped = false;
+            markAsDraggedAndDropped(false);
             return array;
         }
         const stabilizedThis = array.map((el, index) => [el, index]);
@@ -722,14 +711,8 @@ export const SpotlightsListAsTable = ({
         setUserows(staticUserows);
     };
 
-    const filterRows = e => {
+    const filterRowsByText = e => {
         const filterTerm = e.target?.value;
-
-        // if (filterTerm === '') {
-        //     clearFilter();
-        //     return;
-        // }
-
         setTextSearch(filterTerm);
         setUserows(
             [...staticUserows].filter(r => {
@@ -888,7 +871,7 @@ export const SpotlightsListAsTable = ({
                                                     maxLength: 25,
                                                     'aria-label': locale.listPage.textSearch.ariaLabel,
                                                 }}
-                                                onChange={filterRows}
+                                                onChange={filterRowsByText}
                                                 label={locale.listPage.textSearch.displayLabel}
                                                 value={textSearch}
                                             />

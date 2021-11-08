@@ -584,6 +584,7 @@ export const SpotlightForm = ({
                             currentSpotlights={currentSpotlights}
                             currentSpotlightsLoading={currentSpotlightsLoading}
                             currentValues={values}
+                            setValues={setValues}
                             tableType={defaults.type}
                         />
                     </Grid>

@@ -75,3 +75,18 @@ export function isScheduledSpotlight(spotlight) {
 export function isCurrentSpotlight(spotlight) {
     return !isPastSpotlight(spotlight) && !isScheduledSpotlight(spotlight);
 }
+
+// https://stackoverflow.com/a/5306832/1246313
+// let hasDraggedAndDropped = false;
+/* istanbul ignore next */
+export function moveItemInArray(arr, oldIndex, newIndex) {
+    if (newIndex >= arr.length) {
+        let k = newIndex - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+    // hasDraggedAndDropped = true;
+    return arr; // for testing
+}
