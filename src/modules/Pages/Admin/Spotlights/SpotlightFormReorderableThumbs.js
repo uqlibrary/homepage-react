@@ -68,6 +68,16 @@ export const SpotlightFormReorderableThumbs = ({
 
     const isAddAction = tableType => !['edit', 'clone'].includes(tableType);
 
+    // if they drag a new image in, reuse this as the thumb
+    const currentImage = values => {
+        const firstFile = !!values.uploadedFile && !!values.uploadedFile[0] ? values.uploadedFile[0] : false;
+        if (!!firstFile && !!firstFile.preview) {
+            return firstFile.preview;
+        }
+        return values.img_url;
+    };
+
+    console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
     if (!!currentSpotlights) {
         return (
             <Grid item xs={'auto'}>
@@ -77,23 +87,24 @@ export const SpotlightFormReorderableThumbs = ({
                         ? locale.form.reorderThumbs.usesPlaceholder
                         : locale.form.reorderThumbs.usesCurrentImage}
                 </p>
-                {currentSpotlights.map(s => (
-                    <img
-                        id={`reorder-img-${s.id}`}
-                        alt={s.id === currentValues.id ? currentValues.img_alt : s.img_alt}
-                        key={`reorder-img-${s.id}`}
-                        src={s.id === currentValues.id ? currentValues.img_url : s.img_url}
-                        title={s.id === currentValues.id ? currentValues.img_alt : s.img_alt}
-                        className={`${s.id === currentValues.id ? classes.hasBorder : classes.noBorder}`}
-                    />
-                ))}
-                {!!isCurrentSpotlight(currentValues) && isAddAction(tableType) && (
+                {currentSpotlights.map(s => {
+                    return (
+                        <img
+                            id={`reorder-img-${s.id}`}
+                            alt={s.id === currentValues.id ? currentValues.img_alt : s.img_alt}
+                            key={`reorder-img-${s.id}`}
+                            src={s.id === currentValues.id ? currentImage(currentValues) : s.img_url}
+                            title={s.id === currentValues.id ? currentValues.img_alt : s.img_alt}
+                            className={`${s.id === currentValues.id ? classes.hasBorder : classes.noBorder}`}
+                        />
+                    );
+                })}
+                {isAddAction(tableType) && (
                     <span id="reorder-img-placeholder" className={classes.placeholderBlock}>
                         {' '}
                     </span>
                 )}
-                {!!isCurrentSpotlight(currentValues) &&
-                    !isAddAction(tableType) &&
+                {!isAddAction(tableType) &&
                     currentSpotlights.length > 0 &&
                     !currentSpotlights.find(s => s.id === currentValues.id) && (
                         <img
