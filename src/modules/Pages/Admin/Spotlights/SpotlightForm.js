@@ -17,6 +17,7 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
+import SpotlightFormReorderableThumbs from './SpotlightFormReorderableThumbs';
 
 const moment = require('moment');
 
@@ -74,10 +75,14 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
+    currentSpotlights,
+    currentSpotlightsLoading,
 }) => {
     console.log('form: spotlightError = ', spotlightError);
     console.log('form: spotlightResponse = ', spotlightResponse);
     console.log('form: spotlightStatus = ', spotlightStatus);
+    console.log('form: currentSpotlights = ', currentSpotlights);
+    console.log('form: currentSpotlightsLoading = ', currentSpotlightsLoading);
     const classes = useStyles();
 
     // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -574,6 +579,16 @@ export const SpotlightForm = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid item xs={10} align="left">
+                        <SpotlightFormReorderableThumbs
+                            currentSpotlights={currentSpotlights}
+                            currentSpotlightsLoading={currentSpotlightsLoading}
+                            currentValues={values}
+                            tableType={defaults.type}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={7} md={10} />
                     <Grid item xs={5} md={2} align="right">
                         <InputLabel
@@ -627,6 +642,8 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    currentSpotlights: PropTypes.any,
+    currentSpotlightsLoading: PropTypes.any,
 };
 
 SpotlightForm.defaultProps = {
