@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
@@ -43,47 +43,6 @@ export const SpotlightFormReorderableThumbs = ({
     console.log('SpotlightFormReorderableThumbs currentSpotlightsLoading = ', currentSpotlightsLoading);
     const classes = useStyles();
 
-    const imgUrlPlaceholder =
-        'https://app-testing.library.uq.edu.au/file/public/3530e810-40e5-11ec-b167-ad28af8d7358.png';
-
-    const [thumbableSpotlights, setThumbableSpotlights] = useState(currentSpotlights);
-
-    const placeholderThumbnailId = 'placeholder-thumbnail';
-
-    useEffect(() => {
-        if (!!currentSpotlights) {
-            if (tableType === 'edit') {
-                setThumbableSpotlights([...currentSpotlights]);
-            } else {
-                if (tableType === 'add') {
-                    setThumbableSpotlights([
-                        ...currentSpotlights,
-                        {
-                            id: placeholderThumbnailId,
-                            img_url: imgUrlPlaceholder,
-                            img_alt: 'Grey placeholder for image-to-be-uploaded when adding',
-                            weight: 1000,
-                        },
-                    ]);
-                } else {
-                    // clone
-                    setThumbableSpotlights([
-                        ...currentSpotlights,
-                        {
-                            id: placeholderThumbnailId,
-                            // eslint-disable-next-line camelcase
-                            img_url: currentValues?.img_url,
-                            // eslint-disable-next-line camelcase
-                            img_alt: currentValues?.img_alt,
-                            weight: 1000,
-                        },
-                    ]);
-                }
-            }
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [currentSpotlights]);
-
     if (!isCurrentSpotlight(currentValues)) {
         return (
             <Grid item xs={10} align="left">
@@ -108,26 +67,46 @@ export const SpotlightFormReorderableThumbs = ({
             console.log('onDragEnd: result.destination was unchanged');
             return;
         }
-        const thisspotlight = thumbableSpotlights.find(s => s.id === draggableId);
-        console.log('thisspotlight = ', thisspotlight);
-        // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
-        let newWeight;
-        if (destination.index > source.index) {
-            // moving right
-            newWeight = destination.index * 10 + 15;
-        } else {
-            // moving  left
-            newWeight = destination.index * 10 + 5;
-        }
-        // const newWeight = destination.index * 10 + 5;
+
+        let counter = 1;
+        let reweightedRows = [];
+        currentSpotlights.forEach((row, index) => {
+            // newrow is an array that has an updated weight for the affected rows
+            // the shifted row will end in 5 and the unmoved rows be a multiple of 10, eg drop row 2 between 5 and 6
+            // and the new row will have weight 45, was-row 5 will have weight 40 and was-row 6 will have weight 50
+            const newWeight =
+                row.id !== draggableId
+                    ? counter * 10 // apart from the moved item, we just count through the items, in 10s
+                    : destination.index * 10 + 5; // set moved item to the nearest item plus 5 to insert between 2 rows
+            const newrow = {
+                ...row,
+                weight: newWeight,
+            };
+            if (row.id !== draggableId) {
+                counter++;
+            }
+            reweightedRows[index] = newrow;
+        });
+
+        // now make them all even 10s (so future drags also works by putting '5' on a record)
+        reweightedRows = reweightedRows.sort((a, b) => {
+            return a.weight - b.weight;
+        });
+        reweightedRows.forEach((row, index) => {
+            row.weight = (index + 1) * 10;
+        });
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        moveItemInArray(thumbableSpotlights, source.index, destination.index);
-        console.log('weight was ', thisspotlight.weight);
+        const oldIndex = currentSpotlights.find(r => r.id === draggableId).weight / 10 - 1;
+        const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
+        console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
+        moveItemInArray(currentSpotlights, oldIndex, newIndex);
+
+        // set the weight on the edited spotlight to one-to-the-left + 5, then let the Backend resort it on save
+        console.log('will set weight to ', reweightedRows.find(r => r.id === draggableId).weight - 5);
         setValues(prevState => {
-            console.log('setting current values to ', newWeight);
-            return { ...prevState, ['weight']: newWeight };
+            return { ...prevState, ['weight']: reweightedRows.find(r => r.id === draggableId).weight - 5 };
         });
     };
 
@@ -162,8 +141,7 @@ export const SpotlightFormReorderableThumbs = ({
     };
 
     console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
-    if (!!thumbableSpotlights) {
-        console.log('thumbableSpotlights = ', thumbableSpotlights);
+    if (!!currentSpotlights) {
         return (
             <Grid item xs={'auto'} style={{ maxWidth: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
                 <h3>{locale.form.reorderThumbs.header}</h3>
@@ -180,11 +158,8 @@ export const SpotlightFormReorderableThumbs = ({
                                 ref={droppableProvided.innerRef} // innerRef={droppableProvided.innerRef}
                                 {...droppableProvided.droppableProps}
                             >
-                                {thumbableSpotlights.map((s, thumbIndex) => {
-                                    console.log('thumbableSpotlights.map s = ', s);
-                                    const isThisImage =
-                                        s?.id === placeholderThumbnailId ||
-                                        (s?.id === currentValues.id && tableType !== 'clone');
+                                {currentSpotlights.map((s, thumbIndex) => {
+                                    const isThisImage = s.id === currentValues.id && tableType !== 'clone';
                                     return (
                                         <Draggable
                                             draggableId={s.id}
@@ -210,7 +185,7 @@ export const SpotlightFormReorderableThumbs = ({
                                 })}
                                 {/* now add extra displays outside the list of current spotlights */}
                                 {tableType === 'add' && !isUploadProvided(currentValues) && (
-                                    <Draggable draggableId="reorder-img-placeholder" index={thumbableSpotlights.length}>
+                                    <Draggable draggableId="reorder-img-placeholder" index={currentSpotlights.length}>
                                         {draggableProvided => (
                                             <span
                                                 id="reorder-img-placeholder"
@@ -225,7 +200,7 @@ export const SpotlightFormReorderableThumbs = ({
                                     </Draggable>
                                 )}
                                 {tableType === 'add' && isUploadProvided(currentValues) && (
-                                    <Draggable draggableId="reorder-img-placeholder" index={thumbableSpotlights.length}>
+                                    <Draggable draggableId="reorder-img-placeholder" index={currentSpotlights.length}>
                                         {draggableProvided => (
                                             <img
                                                 id={`reorder-img-${currentValues.id}`}
@@ -241,24 +216,23 @@ export const SpotlightFormReorderableThumbs = ({
                                         )}
                                     </Draggable>
                                 )}
-                                {/* {tableType === 'clone' && (*/}
-                                {/*    <Draggable draggableId="reorder-img-placeholder"
-                                index={thumbableSpotlights.length}>*/}
-                                {/*        {draggableProvided => (*/}
-                                {/*            <img*/}
-                                {/*                id="reorder-img-new"*/}
-                                {/*                alt={currentValues.img_alt}*/}
-                                {/*                key={`reorder-img-${currentValues.id}`}*/}
-                                {/*                src={currentImage(currentValues)}*/}
-                                {/*                title={currentValues.img_alt}*/}
-                                {/*                className={classes.hasBorder}*/}
-                                {/*                {...draggableProvided.draggableProps}*/}
-                                {/*                {...draggableProvided.dragHandleProps}*/}
-                                {/*                ref={draggableProvided.innerRef}*/}
-                                {/*            />*/}
-                                {/*        )}*/}
-                                {/*    </Draggable>*/}
-                                {/* )}*/}
+                                {tableType === 'clone' && (
+                                    <Draggable draggableId="reorder-img-placeholder" index={currentSpotlights.length}>
+                                        {draggableProvided => (
+                                            <img
+                                                id="reorder-img-new"
+                                                alt={currentValues.img_alt}
+                                                key={`reorder-img-${currentValues.id}`}
+                                                src={currentImage(currentValues)}
+                                                title={currentValues.img_alt}
+                                                className={classes.hasBorder}
+                                                {...draggableProvided.draggableProps}
+                                                {...draggableProvided.dragHandleProps}
+                                                ref={draggableProvided.innerRef}
+                                            />
+                                        )}
+                                    </Draggable>
+                                )}
                                 {droppableProvided.placeholder}
                             </div>
                         )}
