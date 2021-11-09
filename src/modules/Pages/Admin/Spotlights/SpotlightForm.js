@@ -301,34 +301,25 @@ export const SpotlightForm = ({
 
         console.log('saveSpotlight editType = ', defaults.type);
         console.log('saveSpotlight: newValues = ', newValues);
-        // const saveSpotlightChange = s => {
-        //     return actions.saveSpotlightChangeWithExistingImage(s);
-        // };
         switch (defaults.type) {
             case 'add':
-                // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
                 console.log('handleSpotlightCreation 2: newValues = ', newValues);
                 actions.createSpotlightWithNewImage(newValues);
-                // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 break;
             case 'edit':
                 /* istanbul ignore next */
                 if (!!values.uploadedFile) {
                     actions.saveSpotlightWithNewImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
                     actions.saveSpotlightChangeWithExistingImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             case 'clone':
                 /* istanbul ignore next */
                 if (!!values.uploadedFile) {
                     actions.createSpotlightWithNewImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 } else {
                     actions.createSpotlightWithExistingImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 }
                 break;
             /* istanbul ignore next */

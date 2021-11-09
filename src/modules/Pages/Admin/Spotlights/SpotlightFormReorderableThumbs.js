@@ -53,7 +53,7 @@ export const SpotlightFormReorderableThumbs = ({
     useEffect(() => {
         if (!!currentSpotlights) {
             if (tableType === 'edit') {
-                setThumbableSpotlights(currentSpotlights);
+                setThumbableSpotlights([...currentSpotlights]);
             } else {
                 if (tableType === 'add') {
                     setThumbableSpotlights([
@@ -108,48 +108,26 @@ export const SpotlightFormReorderableThumbs = ({
             console.log('onDragEnd: result.destination was unchanged');
             return;
         }
-
-        let counter = 1;
-        let reweightedRows = [];
-        thumbableSpotlights.forEach((row, index) => {
-            // newrow is an array that has an updated weight for the affected rows
-            // the shifted row will end in 5 and the unmoved rows be a multiple of 10, eg drop row 2 between 5 and 6
-            // and the new row will have weight 45, was-row 5 will have weight 40 and was-row 6 will have weight 50
-            const newWeight =
-                row.id !== draggableId
-                    ? counter * 10 // apart from the moved item, we just count through the items, in 10s
-                    : destination.index * 10 + 5; // set moved item to the nearest item plus 5 to insert between 2 rows
-            const newrow = {
-                ...row,
-                weight: newWeight,
-            };
-            if (row.id !== draggableId) {
-                counter++;
-            }
-            reweightedRows[index] = newrow;
-        });
-
-        // now make them all even 10s (so future drags also works by putting '5' on a record)
-        reweightedRows = reweightedRows.sort((a, b) => {
-            return a.weight - b.weight;
-        });
-        reweightedRows.forEach((row, index) => {
-            row.weight = (index + 1) * 10;
-        });
+        const thisspotlight = thumbableSpotlights.find(s => s.id === draggableId);
+        console.log('thisspotlight = ', thisspotlight);
+        // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
+        let newWeight;
+        if (destination.index > source.index) {
+            // moving right
+            newWeight = destination.index * 10 + 15;
+        } else {
+            // moving  left
+            newWeight = destination.index * 10 + 5;
+        }
+        // const newWeight = destination.index * 10 + 5;
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        console.log('move: thumbableSpotlights = ', thumbableSpotlights);
-        console.log('move: draggableId = ', draggableId);
-        const oldIndex = thumbableSpotlights.find(r => r.id === draggableId).weight / 10 - 1;
-        const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
-        console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
-        moveItemInArray(thumbableSpotlights, oldIndex, newIndex);
-
-        // set the weight on the edited spotlight to one-to-the-left + 5, then let the Backend resort it on save
-        console.log('will set weight to ', reweightedRows.find(r => r.id === draggableId).weight - 5);
+        moveItemInArray(thumbableSpotlights, source.index, destination.index);
+        console.log('weight was ', thisspotlight.weight);
         setValues(prevState => {
-            return { ...prevState, ['weight']: reweightedRows.find(r => r.id === draggableId).weight - 5 };
+            console.log('setting current values to ', newWeight);
+            return { ...prevState, ['weight']: newWeight };
         });
     };
 
