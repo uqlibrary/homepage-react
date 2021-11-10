@@ -17,6 +17,8 @@ export default {
             },
             permanent: 'Permanent',
             urgent: 'Urgent',
+            systems:
+                'Use these checkboxes to target your alert to selected systems only. Leave checkboxes blank to show alert on all systems.',
         },
         tooltips: {
             title: 'Alert lead text. Appears in bold. Field length of 100 characters.',

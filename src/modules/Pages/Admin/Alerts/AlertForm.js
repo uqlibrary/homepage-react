@@ -675,10 +675,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </Grid>
                 <Grid container className={classes.box} spacing={2}>
                     <Grid item xs={12}>
-                        <p>
-                            This alert should <strong>only</strong> appear on...
-                            <span style={{ fontSize: '0.8em' }}> (Leave all blank to show on all systems.)</span>
-                        </p>
+                        <p>{locale.form.labels.systems}</p>
                     </Grid>
                     <Grid item xs={12}>
                         {systemList.map(system => {
