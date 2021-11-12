@@ -467,7 +467,8 @@ export const alertList = [
         "end": "2031-05-20 17:00:41",
         "title": "We are open on-campus and online.",
         "body": "Access collections, services, and support to help you continue your work and study.[UQ Library COVID-19 Updates](https:\/\/web.library.uq.edu.au\/library-services\/covid-19)",
-        "urgent": 0
+        "urgent": 0,
+        systems: ['primo', 'homepage'],
     }, {
         "id": "857726b0-a19f-11eb-ab5b-bb33418ed6de",
         "start": "2031-04-20 16:10:00",
@@ -586,6 +587,7 @@ export const alertList = [
         "end": "2031-07-02 18:30:34",
         "title": "Example alert:",
         "body": "This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
-        "urgent": 1
+        "urgent": 1,
+        systems: ['homepage'],
     },
 ];
