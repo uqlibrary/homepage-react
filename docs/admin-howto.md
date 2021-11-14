@@ -3,7 +3,7 @@ This document describes how changes can be made to various areas of the Homepage
 # General instructions:
 
 1. Edit the file specific to the area you want to change (see below) in the correct branch and commit your change.
-The branch to use is `user-admin-manage`
+The correct branch to use is `user-admin-manage`
 If you are using Github to edit, then your screen should look like this:
 ![Demonstrating selecting the UX Services branch](https://raw.githubusercontent.com/uqlibrary/homepage-react/user-admin-manage/docs/demo-user-edit.png "Demonstrating selecting the UX Services branch")
 2. Check the build passes on Amazon by checking the `System - Deployments` channel on Teams (if you have access, you can also check it on [Amazon](https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/homepage-user-admin-manage/view?region=ap-southeast-2))
@@ -24,11 +24,11 @@ Notes:
 
 ## To edit the Mega menu
 
-Visit the [reusable webcomonents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
+Visit the [Reusable Webcomponents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
 
 ## To edit the Footer
 
-Visit the [reusable webcomonents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
+Visit the [Reusable Webcomponents instructions](https://github.com/uqlibrary/reusable-webcomponents/blob/user-admin-manage/docs/admin-howto.md)
 
 ## Viewing what each user type sees
 
@@ -37,3 +37,6 @@ Visit [the homepage test file](https://github.com/uqlibrary/homepage-react/blob/
 ## Alerts Admin system
 
 Need to add or remove users? Request LTS staff update the AD entry for the specific user
+
+To edit the Alerts Admin Help (and other on page labels), edit [alertsadmin.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/Pages/Admin/Alerts/alertsadmin.locale.js).
+ When the build succeeds, you will be able to see your changes [here](https://homepage-development.library.uq.edu.au/user-admin-manage/#/admin/alerts).
