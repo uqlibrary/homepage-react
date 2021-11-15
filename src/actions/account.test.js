@@ -9,7 +9,7 @@ import {
     loadLibHours,
     loadLoans,
     loadPrintBalance,
-    loadSpotlights,
+    loadCurrentSpotlights,
     loadTrainingEvents,
     searcheSpaceIncompleteNTROPublications,
     searcheSpacePossiblePublications,
@@ -253,7 +253,7 @@ describe('Account action creators', () => {
 
         const expectedActions = [actions.SPOTLIGHTS_HOMEPAGE_LOADING, actions.SPOTLIGHTS_HOMEPAGE_FAILED];
 
-        await mockActionsStore.dispatch(loadSpotlights());
+        await mockActionsStore.dispatch(loadCurrentSpotlights());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
