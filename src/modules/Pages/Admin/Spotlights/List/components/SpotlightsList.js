@@ -105,8 +105,8 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     //     return actions.deleteSpotlight(spotlightID);
     // };
 
-    const deleteSpotlightBulk = spotlights => {
-        return actions.deleteSpotlightBatch(spotlights);
+    const deleteSpotlightBulk = slist => {
+        return actions.deleteSpotlightBatch(slist);
     };
 
     const saveSpotlightChange = spotlight => {
@@ -114,12 +114,12 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     };
 
     /* istanbul ignore next */
-    const saveBatchReorder = spotlights => {
-        spotlights.forEach(s => {
+    const saveBatchReorder = slist => {
+        slist.forEach(s => {
             console.log('saveBatchReorder', s.id, s.weight, s.title);
         });
-        // console.log('saveBatchReorder', spotlights);
-        return actions.saveSpotlightBatch(spotlights);
+        // console.log('saveBatchReorder', slist);
+        return actions.saveSpotlightBatch(slist);
     };
 
     /* istanbul ignore next */

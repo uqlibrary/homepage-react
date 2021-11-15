@@ -132,7 +132,6 @@ export const SpotlightsListAsTable = ({
     history,
     spotlightsError,
     saveSpotlightChange,
-    saveBatchReorder,
     deleteSpotlightBulk,
     footerDisplayMinLength,
     canDragRows,
@@ -522,70 +521,44 @@ export const SpotlightsListAsTable = ({
         // so we can briefly mark the dragged row with a style, so the user knows what they did, when the save returns
         setDraggedId(draggableId);
 
-        let counter = 1;
-        let reweightedRows = [];
-        rows.forEach((row, index) => {
-            // newrow is an array that has an updated weight for the affected rows
-            // the shifted row will end in 5 and the unmoved rows be a multiple of 10, eg drop row 2 between 5 and 6
-            // and the new row will have weight 45, was-row 5 will have weight 40 and was-row 6 will have weight 50
-            const newWeight =
-                row.id !== draggableId
-                    ? counter * 10 // apart from the moved item, we just count through the items, in 10s
-                    : destination.index * 10 + 5; // set moved item to the nearest item plus 5 to insert between 2 rows
-            const newrow = {
-                ...row,
-                weight: newWeight,
-            };
-            if (row.id !== draggableId) {
-                counter++;
-            }
-            reweightedRows[index] = newrow;
-        });
-
-        // now make them all even 10s (so future drags also works by putting '5' on a record)
-        reweightedRows = reweightedRows.sort((a, b) => {
-            return a.weight - b.weight;
-        });
-        reweightedRows.forEach((row, index) => {
-            row.weight = (index + 1) * 10;
-        });
+        const thisspotlight = [...userows].find(s => s.id === draggableId);
+        console.log('thisspotlight = ', thisspotlight);
+        // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
+        let newWeight;
+        if (destination.index > source.index) {
+            newWeight = destination.index * 10 + 15; // dragging right
+        } else {
+            newWeight = destination.index * 10 + 5; // dragging left
+        }
+        const thisspotlight2 = {
+            ...cleanSpotlight(thisspotlight),
+            weight: newWeight,
+        };
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        const oldIndex = rows.find(r => r.id === draggableId).weight / 10 - 1;
+        const reweightedRows = [...userows]
+            .map((r, index) => {
+                if (index === source.index) {
+                    console.log('source: ', index, ' from ', source.index, ' to ', destination.index);
+                    r.weight = destination.index * 10 + 5;
+                }
+                return r;
+            })
+            .sort((a, b) => {
+                return a.weight - b.weight;
+            });
+        const oldIndex = userows.find(r => r.id === draggableId).weight / 10 - 1;
         const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
-        console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
         moveItemInArray(userows, oldIndex, newIndex);
 
-        const rowsToPersist = [];
-        reweightedRows.forEach(reWeightedRow => {
-            const oldRow = userows.find(r => r.id === reWeightedRow.id);
-            if (!!oldRow && reWeightedRow.id === oldRow.id && reWeightedRow.weight !== oldRow.weight) {
-                // then add this row to the set to save
-                rowsToPersist.push(reWeightedRow);
-            }
-        });
-        console.log('persist:', rowsToPersist);
-        // now persist the changed record to the DB
-        rowsToPersist.length > 0 &&
-            saveBatchReorder(rowsToPersist).then(() => {
-                // and then update the display
-                rows.forEach(row => {
-                    reweightedRows.forEach(fr => {
-                        if (fr.id === row.id && fr.weight !== row.weight) {
-                            // we have the option here of setting all the values from the db
-                            // in case it has updated? but that seems overkill
-                            row.weight = fr.weight;
-                            console.log('setting ', fr.id, ' to ', fr.weight);
-
-                            const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
-                            const newWeight = fr.weight / 10;
-                            console.log('weightCell fr = ', fr.id, fr.title, newWeight);
-                            !!weightCell && (weightCell.innerHTML = newWeight);
-                        }
-                    });
-                });
-                rows.sort((a, b) => a.weight - b.weight);
+        saveSpotlightChange(thisspotlight2)
+            .then(() => {
+                // do nothing, we assume success
+                console.log('saveSpotlightChange success');
+            })
+            .catch(() => {
+                showSaveFailureConfirmation();
             });
 
         markAsDraggedAndDropped(true);
@@ -1083,7 +1056,7 @@ export const SpotlightsListAsTable = ({
                                         id={`spotlight-list-no-spotlights-${tableType}`}
                                         data-testid={`spotlight-list-no-spotlights-${tableType}`}
                                         style={
-                                            rowsPerPage > 0 && userows.length > 0
+                                            !spotlightsLoading && rowsPerPage > 0 && userows.length > 0
                                                 ? { display: 'none' }
                                                 : { display: 'table-row' }
                                         }
@@ -1139,7 +1112,6 @@ SpotlightsListAsTable.propTypes = {
     history: PropTypes.object,
     spotlightsError: PropTypes.any,
     saveSpotlightChange: PropTypes.any,
-    saveBatchReorder: PropTypes.any,
     deleteSpotlightBulk: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     // spotlightOrder: PropTypes.any,
