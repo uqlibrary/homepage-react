@@ -139,7 +139,7 @@ export function loadCurrentAccount() {
  * Loads the spotlight data
  * @returns {function(*)}
  */
-export function loadSpotlights() {
+export function loadCurrentSpotlights() {
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
         return get(SPOTLIGHTS_API_CURRENT())

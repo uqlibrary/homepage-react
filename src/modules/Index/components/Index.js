@@ -9,7 +9,7 @@ import {
     loadLoans,
     searcheSpacePossiblePublications,
     searcheSpaceIncompleteNTROPublications,
-    loadSpotlights,
+    loadCurrentSpotlights,
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
@@ -69,7 +69,7 @@ export const Index = ({
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {
-            dispatch(loadSpotlights());
+            dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
         }
