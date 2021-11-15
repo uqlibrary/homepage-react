@@ -66,6 +66,8 @@ function createSpotlight(request, dispatch) {
 
 const saveSpotlightChange = (request, dispatch) => {
     console.log('saveSpotlightChange for request ', request);
+    console.log('saveSpotlightChange for request.id ', request.id);
+    !!request.updated && delete request.updated;
     console.log('action saveSpotlightChange action, SPOTLIGHT_SAVE_API() = ', SPOTLIGHT_SAVE_API({ id: request.id }));
     return post(SPOTLIGHT_SAVE_API({ id: request.id }), request)
         .then(data => {
@@ -88,18 +90,18 @@ const saveSpotlightChange = (request, dispatch) => {
 // the only batch save action atm is to reorder
 export const saveSpotlightBatch = request => {
     return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY });
+        dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY });
         return post(SPOTLIGHT_SAVE_BULK_API(), request)
             .then(data => {
                 console.log('saveSpotlightBatch: post reorder, spotlights will be:', data);
                 dispatch({
-                    type: actions.SPOTLIGHTS_REWEIGHTING_SUCCEEDED,
+                    type: actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_REWEIGHTING_FAILED,
+                    type: actions.SPOTLIGHTS_BATCHUPDATE_FAILED,
                     payload: error,
                 });
             });
@@ -280,7 +282,7 @@ export function clearASpotlight() {
 //     let failureOccured = false;
 //     return dispatch => {
 //         console.log('reweightSpotlights getting ', SPOTLIGHTS_ALL_API());
-//         dispatch({ type: actions.SPOTLIGHT_REWEIGHTING_UNDERWAY });
+//         dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY });
 //         get(SPOTLIGHTS_ALL_API()).then(list0 => {
 //             console.log('reweightSpotlights response = ', list0);
 //             // used to get the complete list back when the user clears the filter field
@@ -375,10 +377,10 @@ export function clearASpotlight() {
 //         });
 //         !!failureOccured
 //             ? dispatch({
-//                   type: actions.SPOTLIGHTS_REWEIGHTING_FAILED,
+//                   type: actions.SPOTLIGHTS_BATCHUPDATE_FAILED,
 //               })
 //             : dispatch({
-//                   type: actions.SPOTLIGHT_REWEIGHTING_SUCCEEDED,
+//                   type: actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED,
 //               });
 //     };
 // };
@@ -387,6 +389,6 @@ export function clearASpotlight() {
 //     console.log('action clearSpotlightReweighting');
 //     return dispatch => {
 //         console.log('action dispatch clearSpotlightReweighting');
-//         dispatch({ type: actions.SPOTLIGHTS_REWEIGHTING_CLEAR });
+//         dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_CLEAR });
 //     };
 // }
