@@ -196,6 +196,11 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
+            console.log('rowList = ', rowList);
+            if (!rowList) {
+                return;
+            }
+
             const localRows = rowList
                 .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
                 .map((row, index) => {
@@ -230,7 +235,7 @@ export const SpotlightsListAsTable = ({
     );
 
     React.useEffect(() => {
-        if (rows.length === 0) {
+        if (!!rows && rows.length === 0) {
             setUserows([]);
             setPage(0); // make it redraw when all displayed rows in a table are deleted
             return;
@@ -1151,4 +1156,4 @@ SpotlightsListAsTable.defaultProps = {
     canTextFilter: false, // show the 'text filter' input field
 };
 
-export default SpotlightsListAsTable;
+export default React.memo(SpotlightsListAsTable);
