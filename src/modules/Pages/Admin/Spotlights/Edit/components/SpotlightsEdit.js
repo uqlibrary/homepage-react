@@ -20,8 +20,8 @@ export const SpotlightsEdit = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
-    currentSpotlights,
-    currentSpotlightsLoading,
+    spotlights,
+    spotlightsLoading,
 }) => {
     // console.log('SpotlightsEdit: spotlight =  ', spotlight);
     // console.log('SpotlightsEdit: spotlightStatus =  ', spotlightStatus);
@@ -29,8 +29,8 @@ export const SpotlightsEdit = ({
     // console.log('SpotlightsEdit: publicFileUploading = ', publicFileUploading);
     // console.log('SpotlightsEdit: publicFileUploadError = ', publicFileUploadError);
     // console.log('SpotlightsEdit: publicFileUploadResult = ', publicFileUploadResult);
-    // console.log('SpotlightsEdit: currentSpotlights = ', currentSpotlights);
-    // console.log('SpotlightsEdit: currentSpotlightsLoading = ', currentSpotlightsLoading);
+    // console.log('SpotlightsEdit: spotlights = ', spotlights);
+    // console.log('SpotlightsEdit: spotlightsLoading = ', spotlightsLoading);
 
     const { spotlightid } = useParams();
 
@@ -38,7 +38,7 @@ export const SpotlightsEdit = ({
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
-            actions.loadCurrentSpotlights();
+            actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
@@ -103,8 +103,8 @@ export const SpotlightsEdit = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError || publicFileUploadError}
                         spotlightStatus={spotlightStatus}
-                        currentSpotlights={currentSpotlights}
-                        currentSpotlightsLoading={currentSpotlightsLoading}
+                        spotlights={spotlights}
+                        spotlightsLoading={spotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -126,8 +126,8 @@ SpotlightsEdit.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    currentSpotlights: PropTypes.any,
-    currentSpotlightsLoading: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsEdit;

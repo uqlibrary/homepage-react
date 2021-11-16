@@ -22,10 +22,11 @@ export const SpotlightsAdd = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
-    currentSpotlights,
-    currentSpotlightsLoading,
+    spotlights,
+    spotlightsLoading,
 }) => {
-    console.log('component:', currentSpotlights);
+    console.log('component:', spotlights);
+
     const defaults = {
         id: '',
         startDateDefault: getTimeMondayMidnightNext(),
@@ -42,8 +43,8 @@ export const SpotlightsAdd = ({
 
     React.useEffect(() => {
         /* istanbul ignore else */
-        if (!currentSpotlightsLoading && !currentSpotlights) {
-            actions.loadCurrentSpotlights();
+        if (!spotlightsLoading && !spotlights) {
+            actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -58,8 +59,8 @@ export const SpotlightsAdd = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError}
                         spotlightStatus={spotlightStatus}
-                        currentSpotlights={currentSpotlights}
-                        currentSpotlightsLoading={currentSpotlightsLoading}
+                        spotlights={spotlights}
+                        spotlightsLoading={spotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -81,8 +82,8 @@ SpotlightsAdd.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    currentSpotlights: PropTypes.any,
-    currentSpotlightsLoading: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsAdd;

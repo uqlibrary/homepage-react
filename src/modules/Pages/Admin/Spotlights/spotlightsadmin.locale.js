@@ -57,6 +57,7 @@ export default {
             header: 'Set display order',
             usesPlaceholder: 'Drag and drop the placeholder to set the display order for this spotlight.',
             usesCurrentImage: 'Drag and drop the highlighted image to set the display order for this spotlight.',
+            unavailable: 'Reordering only available for current spotlights.',
         },
         add: {
             addSpotlightConfirmation: {

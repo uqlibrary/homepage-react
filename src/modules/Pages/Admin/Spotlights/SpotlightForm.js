@@ -75,15 +75,24 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
-    currentSpotlights,
-    currentSpotlightsLoading,
+    spotlights,
+    spotlightsLoading,
 }) => {
     console.log('form: spotlightError = ', spotlightError);
     console.log('form: spotlightResponse = ', spotlightResponse);
     console.log('form: spotlightStatus = ', spotlightStatus);
-    console.log('form: currentSpotlights = ', currentSpotlights);
-    console.log('form: currentSpotlightsLoading = ', currentSpotlightsLoading);
+    console.log('form: spotlights = ', spotlights);
+    console.log('form: spotlightsLoading = ', spotlightsLoading);
     const classes = useStyles();
+
+    // we cant just use the Current Spotlights api because it doesnt return unpublished records :(
+    const currentSpotlights =
+        !spotlightsLoading &&
+        !!spotlights &&
+        spotlights
+            .filter(s => moment(s.start).isBefore(moment()) && moment(s.end).isAfter(moment()))
+            .sort((a, b) => a.weight - b.weight);
+    console.log('form: currentSpotlights = ', currentSpotlights);
 
     // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
@@ -294,7 +303,9 @@ export const SpotlightForm = ({
             img_alt: values.img_alt,
             // weight will update after save,
             // but lets just use a number that sits at the end of the current spotlights, as requested
-            weight: defaults.type === 'edit' ? values.weight : 1000,
+            // weight: defaults.type === 'edit' ? values.weight : 1000, // weight,
+            weight: values.weight,
+            // TODO does this account for future dates when they dont have the drop down available?
             active: !!values.active ? 1 : 0,
         };
         !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
@@ -336,7 +347,18 @@ export const SpotlightForm = ({
         });
     };
 
+    const updateWeightInValues = newWeight => {
+        console.log('updateWeightInValues ', newWeight);
+        setValues(prevState => {
+            console.log('updateWeightInValues was  ', prevState);
+            const newVar = { ...prevState, weight: newWeight };
+            console.log('updateWeightInValues will be: ', newVar);
+            return newVar;
+        });
+    };
+
     const handleChange = prop => event => {
+        console.log('handleChange prop = ', prop, ' event = ', event.target);
         let newValue;
         if (['start', 'end'].includes(prop)) {
             newValue = event.format('YYYY/MM/DD hh:mm a');
@@ -350,16 +372,16 @@ export const SpotlightForm = ({
             }
         }
         console.log('handleChange prop = ', prop, ': newValue = ', newValue);
-        // we need the explicit setting of '' otherwise we get a 'false' in the field
-        setValues({
+        const newValues = {
             ...values,
             start: values.start || /* istanbul ignore next */ defaults.startDateDefault,
             end: values.end || /* istanbul ignore next */ defaults.endDateDefault,
             [prop]: newValue,
-        });
+        };
+        setValues(newValues);
 
         console.log('handleChange values now = ', values);
-        setFormValidity(validateValues({ ...values, [prop]: newValue }));
+        setFormValidity(validateValues(newValues));
     };
 
     const errorLocale = {
@@ -573,9 +595,9 @@ export const SpotlightForm = ({
                     <Grid item xs={10} align="left">
                         <SpotlightFormReorderableThumbs
                             currentSpotlights={currentSpotlights}
-                            currentSpotlightsLoading={currentSpotlightsLoading}
+                            spotlightsLoading={spotlightsLoading}
                             currentValues={values}
-                            setValues={setValues}
+                            updateWeightInValues={updateWeightInValues}
                             tableType={defaults.type}
                         />
                     </Grid>
@@ -634,8 +656,8 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
-    currentSpotlights: PropTypes.any,
-    currentSpotlightsLoading: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 SpotlightForm.defaultProps = {

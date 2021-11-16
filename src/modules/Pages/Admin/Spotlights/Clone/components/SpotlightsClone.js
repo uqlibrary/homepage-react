@@ -20,8 +20,8 @@ export const SpotlightsClone = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
-    currentSpotlights,
-    currentSpotlightsLoading,
+    spotlights,
+    spotlightsLoading,
 }) => {
     console.log('SpotlightsClone: spotlight =  ', spotlight);
     console.log('SpotlightsClone: spotlightStatus =  ', spotlightStatus);
@@ -38,7 +38,7 @@ export const SpotlightsClone = ({
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
-            actions.loadCurrentSpotlights();
+            actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
@@ -64,7 +64,7 @@ export const SpotlightsClone = ({
                 img_url: spotlight?.img_url || /* istanbul ignore next */ '',
                 // eslint-disable-next-line camelcase
                 img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
-                weight: spotlight?.weight || 0,
+                weight: spotlight?.weight || 1000,
                 active: spotlight?.active || 0,
                 // minimumDate: getStartOfDayFormatted(),
                 type: 'clone',
@@ -99,8 +99,8 @@ export const SpotlightsClone = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError || publicFileUploadError}
                         spotlightStatus={spotlightStatus}
-                        currentSpotlights={currentSpotlights}
-                        currentSpotlightsLoading={currentSpotlightsLoading}
+                        spotlights={spotlights}
+                        spotlightsLoading={spotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -122,8 +122,8 @@ SpotlightsClone.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
-    currentSpotlights: PropTypes.any,
-    currentSpotlightsLoading: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsClone;
