@@ -526,9 +526,9 @@ export const SpotlightsListAsTable = ({
         // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
         let newWeight;
         if (destination.index > source.index) {
-            newWeight = destination.index * 10 + 15; // dragging right
+            newWeight = destination.index * 10 + 15; // dragging down
         } else {
-            newWeight = destination.index * 10 + 5; // dragging left
+            newWeight = destination.index * 10 + 5; // dragging up
         }
         const thisspotlight2 = {
             ...cleanSpotlight(thisspotlight),
@@ -540,8 +540,7 @@ export const SpotlightsListAsTable = ({
         const reweightedRows = [...userows]
             .map((r, index) => {
                 if (index === source.index) {
-                    console.log('source: ', index, ' from ', source.index, ' to ', destination.index);
-                    r.weight = destination.index * 10 + 5;
+                    r.weight = newWeight;
                 }
                 return r;
             })
@@ -1056,7 +1055,7 @@ export const SpotlightsListAsTable = ({
                                         id={`spotlight-list-no-spotlights-${tableType}`}
                                         data-testid={`spotlight-list-no-spotlights-${tableType}`}
                                         style={
-                                            !spotlightsLoading && rowsPerPage > 0 && userows.length > 0
+                                            !spotlightsLoading && !!rows && rows.length > 0
                                                 ? { display: 'none' }
                                                 : { display: 'table-row' }
                                         }

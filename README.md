@@ -46,17 +46,15 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 - `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server` - initial setup
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this
   clears & reinstalls npm packages
-- `npm run start`
-  - runs <http://localhost:2020/>
-  - uses dev api for backend (<http://dev-api.library.uq.edu.au:8050/>) (requires additional setup of uqlibrary/api
-    project)
 - `npm run start:mock` to use mock data from src/mock
   - runs <http://localhost:2020/>
-- `npm run start:url`   to use api
+- `npm run start:url` to use api
   - runs <http://dev-homepage.library.uq.edu.au:2020/#/>
   - add `dev-homepage.library.uq.edu.au` to your /etc/hosts file using your external IP)
   - to use staging data from the aws api as a backend set API_URL in .env to `https://api.library.uq.edu.au/staging/`
+  - to use local api as a backend set API_URL in .env to `http://dev-api.library.uq.edu.au:8050/` and bring up api repo [(cf)](https://github.com/uqlibrary/api)
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
+    ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
 
   - you may need to block CORS errors - eg with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) Chrome Extension, or by launching the browser with CORS disabled.
 
@@ -64,8 +62,6 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
       google-chrome --disable-web-security --user-data-dir=/tmp/chrome-dev
       ```
 
-    - session token x-uql-token can easily be found by logging in at <https://www.library.uq.edu.au/> and
-      observing the header value in Network tab of Inspections
     - You will also need to run Chrome in no-security mode by adding the alias `alias chrome-no-cors='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --disable-web-security --user-data-dir=~/chrome-dev-profile > /dev/null 2>&1'` and then running chrome by `chrome-no-cors`. or `open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security`
 
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
