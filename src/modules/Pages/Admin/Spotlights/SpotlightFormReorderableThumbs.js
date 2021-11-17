@@ -152,7 +152,7 @@ export const SpotlightFormReorderableThumbs = ({
 
         // set the weight on the edited spotlight to +5/+15, then let the Backend resort it to 10s on save
         const isDraggingToRight = destination.index > source.index;
-        const newWeight = destination.index * 10 + (isDraggingToRight ? 15 : 5);
+        const newWeight = destination.index * 10 + (tableType === 'edit' && isDraggingToRight ? 15 : 5);
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
