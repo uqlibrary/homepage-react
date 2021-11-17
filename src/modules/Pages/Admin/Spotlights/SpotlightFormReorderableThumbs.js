@@ -67,7 +67,16 @@ export const SpotlightFormReorderableThumbs = ({
         console.log('currentSpotlights have updated');
         if (!!currentSpotlights) {
             if (tableType === 'edit') {
-                setThumbableSpotlights([...currentSpotlights]);
+                setThumbableSpotlights(
+                    currentSpotlights
+                        .map(s => {
+                            return { ...s, weight: s?.id === currentValues.id ? currentValues?.weight : s.weight };
+                        })
+                        .sort((a, b) => {
+                            console.log('sorting thumbs');
+                            return a.weight - b.weight;
+                        }),
+                );
             } else if (tableType === 'add') {
                 setThumbableSpotlights(
                     [
