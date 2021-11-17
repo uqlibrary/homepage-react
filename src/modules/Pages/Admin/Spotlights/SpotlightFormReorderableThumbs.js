@@ -39,9 +39,11 @@ export const SpotlightFormReorderableThumbs = ({
     console.log('SpotlightFormReorderableThumbs TOP currentValues = ', currentValues);
     console.log('SpotlightFormReorderableThumbs TOP currentSpotlights = ', currentSpotlights);
     console.log('SpotlightFormReorderableThumbs TOP !!currentSpotlights = ', !!currentSpotlights);
-    !!currentSpotlights &&
+    if (!!currentSpotlights) {
         console.log('SpotlightFormReorderableThumbs TOP currentSpotlights.length = ', currentSpotlights.length);
+    }
     console.log('SpotlightFormReorderableThumbs TOP currentSpotlightsLoading = ', currentSpotlightsLoading);
+
     const classes = useStyles();
 
     const placeholderThumbnailId = 'placeholder-thumbnail';
