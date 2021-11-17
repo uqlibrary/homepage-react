@@ -1428,7 +1428,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
-            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 3);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 4);
             cy.get('[data-testid="spotlights-thumbs-reorder"] img:first-child').should(
                 'have.css', // proxy for "the img is highlighted"
                 'border-left-style',
@@ -1452,7 +1452,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
-            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 4);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 5);
             cy.get('[data-testid="spotlights-thumbs-reorder"] img:last-child')
                 .should('exist')
                 .and('have.css', 'border-left-style', 'solid'); // proxy for "the img is highlighted"
@@ -1474,10 +1474,25 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
-            cy.get('[data-testid="spotlights-thumbs-reorder"] *').should('have.length', 4);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] *').should('have.length', 5);
             cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
                 .should('exist')
                 .and('have.css', 'border-left-style', 'solid'); // proxy for "the span is highlighted"
+
+            // the grey place holder shows as the last img
+            cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
+                .invoke('attr', 'src')
+                .then(src => {
+                    expect(src).to.contains('https://app-testing.library.uq.edu.au/');
+                });
+
+            // drag in a new image and it is reflected in the 'reorderable thumbs'
+            dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
+                .invoke('attr', 'src')
+                .then(src => {
+                    expect(src).to.contains('blob:http://localhost:2020');
+                });
         });
     });
 });

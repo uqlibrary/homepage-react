@@ -32,6 +32,7 @@ export const SpotlightFormReorderableThumbs = ({
     currentSpotlights,
     currentSpotlightsLoading,
     currentValues,
+    defaultWeight,
     updateWeightInValues,
     tableType,
 }) => {
@@ -44,16 +45,19 @@ export const SpotlightFormReorderableThumbs = ({
     const classes = useStyles();
 
     const placeholderThumbnailId = 'placeholder-thumbnail';
+    // this is an image we have uploaded for use as a placeholder - its a simple grey box
     const imgUrlPlaceholder =
         'https://app-testing.library.uq.edu.au/file/public/3530e810-40e5-11ec-b167-ad28af8d7358.png';
 
+    const [chosenWeight, setChosenWeight] = useState(null);
     const [thumbableSpotlights, setThumbableSpotlights] = useState(
         !!currentSpotlights
             ? currentSpotlights
                   .map(s => {
                       return {
                           ...s,
-                          weight: s.id === placeholderThumbnailId ? currentValues.weight : s.weight,
+                          // weight: s.id === placeholderThumbnailId ? currentValues.weight : s.weight,
+                          weight: defaultWeight,
                       };
                   })
                   .sort((a, b) => {
@@ -62,6 +66,8 @@ export const SpotlightFormReorderableThumbs = ({
                   })
             : [],
     );
+    console.log('SpotlightFormReorderableThumbs TOP currentValues?.weight = ', currentValues?.weight);
+    console.log('SpotlightFormReorderableThumbs TOP thumbableSpotlights = ', thumbableSpotlights);
 
     useEffect(() => {
         console.log('currentSpotlights have updated');
@@ -85,7 +91,7 @@ export const SpotlightFormReorderableThumbs = ({
                             id: placeholderThumbnailId,
                             img_url: imgUrlPlaceholder,
                             img_alt: 'Grey placeholder for image-to-be-uploaded when adding',
-                            weight: currentValues?.weight || 1000,
+                            weight: !!chosenWeight ? chosenWeight : defaultWeight,
                         },
                     ].sort((a, b) => {
                         console.log('sorting thumbs');
@@ -103,7 +109,7 @@ export const SpotlightFormReorderableThumbs = ({
                             img_url: currentValues?.img_url,
                             // eslint-disable-next-line camelcase
                             img_alt: currentValues?.img_alt,
-                            weight: currentValues?.weight || 1000,
+                            weight: !!chosenWeight ? chosenWeight : defaultWeight,
                         },
                     ].sort((a, b) => {
                         console.log('sorting thumbs');
@@ -152,8 +158,8 @@ export const SpotlightFormReorderableThumbs = ({
         moveItemInArray(thumbableSpotlights, source.index, destination.index);
         console.log('after array fix ', [...thumbableSpotlights]);
         console.log('weight was ', thisspotlight?.weight || 'weight missing', '; will be ', newWeight);
-        // updateWeightInValues(newWeight, new Event('fake'));
         updateWeightInValues(newWeight);
+        setChosenWeight(newWeight);
     };
 
     if (!!currentSpotlightsLoading) {
@@ -173,20 +179,29 @@ export const SpotlightFormReorderableThumbs = ({
         );
     }
 
-    // if they drag a new image in, reuse this as the thumb
-    const currentImage = values => {
-        const firstFile = !!values.uploadedFile && !!values.uploadedFile[0] ? values.uploadedFile[0] : false;
-        if (!!firstFile && !!firstFile.preview) {
-            return firstFile.preview;
-        }
-        return values.img_url;
-    };
-
     const isUploadProvided = values => {
         return !!values.uploadedFile && !!values.uploadedFile[0] && !!values.uploadedFile[0].preview;
     };
 
     console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
+
+    // if they drag a new image in, reuse this as the thumb
+    const currentImage = (values, defaultImage) => {
+        const firstFile = !!values.uploadedFile && !!values.uploadedFile[0] ? values.uploadedFile[0] : false;
+        if (!!firstFile && !!firstFile.preview) {
+            return firstFile.preview;
+        }
+        // eslint-disable-next-line camelcase
+        return defaultImage;
+    };
+
+    function getCurrentImage(isThisImage, spotlight) {
+        if (tableType !== 'add') {
+            return isThisImage ? currentImage(currentValues, currentValues.img_url) : spotlight.img_url;
+        }
+        return isThisImage ? currentImage(currentValues, spotlight.img_url) : spotlight.img_url;
+    }
+
     if (!!thumbableSpotlights) {
         console.log('thumbableSpotlights = ', thumbableSpotlights);
         console.log('isUploadProvided(currentValues) = ', isUploadProvided(currentValues));
@@ -209,8 +224,9 @@ export const SpotlightFormReorderableThumbs = ({
                                 {thumbableSpotlights.map((s, thumbIndex) => {
                                     console.log('thumbableSpotlights.map s = ', s);
                                     const isThisImage =
-                                        (tableType !== 'clone' && s?.id === currentValues.id) ||
-                                        (tableType === 'clone' && s?.id === placeholderThumbnailId);
+                                        tableType === 'edit'
+                                            ? s?.id === currentValues.id
+                                            : s?.id === placeholderThumbnailId;
                                     return (
                                         <Draggable
                                             draggableId={s.id}
@@ -222,10 +238,8 @@ export const SpotlightFormReorderableThumbs = ({
                                                 <img
                                                     id={`reorder-img-${s.id}`}
                                                     data-testid={`reorder-img-${s.id}`}
-                                                    alt={`${isThisImage ? currentValues.img_alt : s.img_alt}
-                                                    {' img '}
-                                                    ${thumbIndex}`}
-                                                    src={isThisImage ? currentImage(currentValues) : s.img_url}
+                                                    alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
+                                                    src={getCurrentImage(isThisImage, s)}
                                                     title={isThisImage ? currentValues.img_alt : s.img_alt}
                                                     className={`${isThisImage ? classes.hasBorder : classes.noBorder}`}
                                                     {...draggableProvided.draggableProps}
@@ -236,39 +250,6 @@ export const SpotlightFormReorderableThumbs = ({
                                         </Draggable>
                                     );
                                 })}
-                                {/* now add extra displays outside the list of current spotlights */}
-                                {tableType === 'add' && !isUploadProvided(currentValues) && (
-                                    <Draggable draggableId="reorder-img-placeholder" index={thumbableSpotlights.length}>
-                                        {draggableProvided => (
-                                            <span
-                                                id="reorder-img-placeholder"
-                                                className={classes.placeholderBlock}
-                                                {...draggableProvided.draggableProps}
-                                                {...draggableProvided.dragHandleProps}
-                                                ref={draggableProvided.innerRef}
-                                            >
-                                                {' '}
-                                            </span>
-                                        )}
-                                    </Draggable>
-                                )}
-                                {tableType === 'add' && isUploadProvided(currentValues) && (
-                                    <Draggable draggableId="reorder-img-placeholder" index={thumbableSpotlights.length}>
-                                        {draggableProvided => (
-                                            <img
-                                                id={`reorder-img-${currentValues.id}`}
-                                                alt={currentValues.img_alt}
-                                                key={`reorder-img-${currentValues.id}`}
-                                                src={currentImage(currentValues)}
-                                                title={currentValues.img_alt}
-                                                className={classes.hasBorder}
-                                                {...draggableProvided.draggableProps}
-                                                {...draggableProvided.dragHandleProps}
-                                                ref={draggableProvided.innerRef}
-                                            />
-                                        )}
-                                    </Draggable>
-                                )}
                                 {droppableProvided.placeholder}
                             </div>
                         )}
@@ -287,8 +268,9 @@ SpotlightFormReorderableThumbs.propTypes = {
     currentSpotlights: PropTypes.any,
     currentSpotlightsLoading: PropTypes.any,
     currentValues: PropTypes.any,
+    defaultWeight: PropTypes.any,
     updateWeightInValues: PropTypes.any,
     tableType: PropTypes.string,
 };
 
-export default SpotlightFormReorderableThumbs;
+export default React.memo(SpotlightFormReorderableThumbs);

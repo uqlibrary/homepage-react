@@ -596,6 +596,7 @@ export const SpotlightForm = ({
                         <SpotlightFormReorderableThumbs
                             currentSpotlights={currentSpotlights}
                             spotlightsLoading={spotlightsLoading}
+                            defaultWeight={defaults.type === 'edit' ? values.weight : 1000}
                             currentValues={values}
                             updateWeightInValues={updateWeightInValues}
                             tableType={defaults.type}
