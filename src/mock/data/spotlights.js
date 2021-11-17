@@ -6,7 +6,7 @@ export const spotlights = [{
     'url': 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
     'img_url': 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     'img_alt':
-        'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+        'Academic Integrity Modules - Everything you need to know about academic integrity at UQ',
     'weight': 10,
     'active': 1,
 }, {

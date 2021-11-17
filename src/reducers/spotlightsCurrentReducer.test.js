@@ -12,13 +12,13 @@ describe('current spotlight reducer', () => {
 
     it('should handle a failing Spotlights API call', () => {
         const test = spotlightCurrentReducer(emptyState, {
-            type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
+            type: actions.SPOTLIGHTS_CURRENT_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({
             ...emptyState,
-            spotlightsCurrentLoading: false,
-            spotlightsCurrentError: 'failed!',
+            currentSpotlightsLoading: false,
+            currentSpotlightsError: 'failed!',
         });
     });
 });
