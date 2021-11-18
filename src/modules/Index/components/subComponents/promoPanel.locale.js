@@ -7,30 +7,30 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Open online!',
+        title: 'Exams',
         content: (
             <div>
-                <p>We are here online to help you. Access the Library from home, including:</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support. Help is available on exam days between 6 and 19 November.</p>
                 <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
-                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
-                    <li>Tips for <a href="https://web.library.uq.edu.au/library-services/students/how-study-online">studying online</a>.</li>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">Find past exam papers</a></li>
+                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and on-campus.</li>
                 </ul>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a>, including on chat or by phone during business hours, if you need assistance.</p>
+                <p>Good luck with your exams!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Open online!',
+        title: 'Exams',
         content: (
             <div>
-                <p>We are here online to help you. Access the Library from home, including:</p>
+               <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support. Help is available on exam days between 6 and 19 November.</p>
                 <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
-                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
-                    <li>Tips for <a href="https://web.library.uq.edu.au/library-services/students/how-study-online">studying online</a>.</li>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">Find past exam papers</a></li>
+                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the Library and on-campus.</li>
                 </ul>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a>, including on chat or by phone during business hours, if you need assistance.</p>
+                <p>Good luck with your exams!</p> 
             </div>
         ),
     },
