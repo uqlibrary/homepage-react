@@ -198,13 +198,7 @@ export const isHospitalUser = account =>
 export const seeFeedback = account => everyoneCanSee(account);
 
 const hasWebContentAdminAccess = account => {
-    const homepageStagingDomain = 'homepage-staging.library.uq.edu.au';
-    return (
-        !!account &&
-        ((!!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))) ||
-            // hack until we get the AD group mock working in api E2ESessions.php
-            (!!account.id && account.id === 'admin_test' && window.location.hostname === homepageStagingDomain))
-    );
+    return !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));
 };
 
 export const seeSpotlightsAdmin = account => {
