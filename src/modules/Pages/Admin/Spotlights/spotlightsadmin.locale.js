@@ -191,8 +191,8 @@ export default {
                             homepage).
                         </li>
                         <li>
-                            <strong>Scheduled spotlights:</strong> displays future spotlights based on based on the Date
-                            published field. By default, the list is ordered by Date published.{' '}
+                            <strong>Scheduled spotlights:</strong> displays future spotlights based on the Date
+                            published field. By default, the list is ordered by Date published.
                         </li>
                         <li>
                             <strong>Past spotlights:</strong> displays past spotlights. By default, the list is ordered
@@ -224,7 +224,7 @@ export default {
                     </p>
                     <p>
                         Saved spotlights will appear on the website within two minutes of their start time. Hard refresh
-                        your browser to view the alert.
+                        your browser to view the spotlight.
                     </p>
 
                     <h2>Edit a spotlight</h2>
@@ -234,10 +234,10 @@ export default {
                     </p>
                     <ul>
                         <li>
-                            Press <strong>Cancel</strong> or your browser’s Back button to exit.
+                            Press <strong>Cancel</strong> or your browser’s Back button to exit
                         </li>
                         <li>
-                            Press <strong>Save</strong> to update the spotlight.
+                            Press <strong>Save</strong> to update the spotlight
                         </li>
                     </ul>
                     <p>
@@ -248,7 +248,7 @@ export default {
                     <h2>Clone (copy) a spotlight</h2>
                     <p>
                         Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
-                        <strong>Clone</strong>. The Clone spotlight form will appear with the alert information
+                        <strong>Clone</strong>. The Clone spotlight form will appear with the fields 
                         prefilled and the dates automatically updated to be:
                     </p>
                     <ul>
@@ -283,8 +283,7 @@ export default {
                     <ol>
                         <li>Drag and drop current spotlights to adjust their order</li>
                         <li>
-                            The display order will update and blue fading highlight will indicate the reordered
-                            spotlights new order
+                            The display order will update. The reordered row will be highlighted in blue for a short time.
                         </li>
                     </ol>
 
@@ -292,7 +291,7 @@ export default {
                     <p>To quickly unpublish a current spotlight from the listing screen:</p>
                     <ol>
                         <li>
-                            Click on the checked <strong>Published?</strong> checkbox on the listing screen
+                            Click on the checked <strong>Published?</strong> checkbox for that spotlight
                         </li>
                         <li>Confirm you wish to unpublish the spotlight.</li>
                     </ol>
@@ -311,6 +310,7 @@ export default {
                         on the Link title and Image alt text fields.
                     </p>
                     <p>Past spotlights will be filtered based on your keywords.</p>
+                    <p>Search results will be retained for one hour and then cleared.</p>
 
                     <h2>Remove alerts</h2>
                     <p>Deleted spotlights cannot be restored. In general, limit deletions to:</p>
@@ -319,7 +319,7 @@ export default {
                             recently created spotlights with errors and spotlights which have not yet been published and
                             are no longer required
                         </li>
-                        <li>very old past spotlights as part of a organised and scheduled clean up.</li>
+                        <li>very old past spotlights as part of an clean up.</li>
                     </ul>
                     <p>
                         <strong>To unpublish a current spotlight:</strong> see publish/unpublish current spotlights
@@ -328,13 +328,13 @@ export default {
                     <p>To delete spotlights:</p>
                     <ul>
                         <li>
-                            <strong>One only:</strong> press the More actions button beside a spotlight, then press
-                            Delete
+                            <strong>One only:</strong> press the <strongMore actions</strong> button beside a spotlight, then press
+                            <strong>Delete</strong>
                         </li>
                         <li>
                             <strong>Multiple:</strong> use the Delete checkboxes to select multiple spotlights within
                             one table. Your selection will appear in the table’s title row with a Delete button (bin)
-                            and a Deselect button (cross). Press Delete to proceed.
+                            and a Deselect button (cross). Press <strong>Delete</strong> to proceed.
                         </li>
                     </ul>
                     <p>
