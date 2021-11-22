@@ -520,7 +520,9 @@ describe('Spotlights Admin Pages', () => {
     });
     context('Spotlight Admin session storage', () => {
         beforeEach(() => {
-            sessionStorage.removeItem('filter');
+            // match to SpotlightsListAsTable
+            const FILTER_STORAGE_NAME = 'alert-admin-filter-term';
+            sessionStorage.removeItem(FILTER_STORAGE_NAME);
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
             cy.viewport(1300, 1000);
         });
@@ -552,6 +554,9 @@ describe('Spotlights Admin Pages', () => {
                 'eq',
                 'http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469',
             );
+            cy.get('h2')
+                .should('be.visible')
+                .contains('View spotlight');
             cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
                 .should('exist')
                 .click();
@@ -564,6 +569,13 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlight-list-past"] tbody')
                 .children()
                 .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+            // the current and scheduled lists arent filtered
+            cy.get('[data-testid="admin-spotlights-list-current-list"] tbody')
+                .children()
+                .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-spotlights-list-scheduled-list"] tbody')
+                .children()
+                .should('have.length', 9 + numRowsHiddenAsNoDatainfo);
 
             // we use the 'x' button to clear the text field which restores the rows to 5
             cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
@@ -971,11 +983,9 @@ describe('Spotlights Admin Pages', () => {
         it('is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.get('h2').should('be.visible');
-            cy.get('h2').contains('Create a new spotlight');
-            cy.log(
-                'This test fails locally occasionally because we had to add the aria-label to the buttons manually - try it again',
-            );
+            cy.get('h2')
+                .should('be.visible')
+                .contains('Create a new spotlight');
             cy.wait(1000);
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Spotlights Admin Add',
