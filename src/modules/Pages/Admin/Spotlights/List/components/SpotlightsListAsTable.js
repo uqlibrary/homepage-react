@@ -163,7 +163,43 @@ export const SpotlightsListAsTable = ({
     const [staticUserows, setStaticUserows] = useState([]);
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
     const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
-    const [textSearch, setTextSearch] = useState('');
+
+    const FILTER_STORAGE_NAME = 'filter';
+    const getFilterTermFromSession = () => {
+        console.log('## GET getFilterTermFromSession');
+        const filter = JSON.parse(sessionStorage.getItem(FILTER_STORAGE_NAME));
+        console.log('## sessionStorage filter = ', filter);
+        if (!filter) {
+            return '';
+        }
+        const now = new Date().getTime();
+        console.log('## now = ', now);
+        console.log('## filter.expiryDate = ', filter.expiryDate);
+        console.log('## filter.term = ', filter.term);
+        if (!filter.expiryDate || filter.expiryDate < now) {
+            console.log('## remove session store');
+            sessionStorage.removeItem(FILTER_STORAGE_NAME);
+            return '';
+        }
+        return filter.term;
+    };
+    const setFilterTermToSession = (filterTerm, numberOfHoursUntilExpiry = 1) => {
+        console.log('## SET setFilterTermToSession: filterTerm = ', filterTerm);
+        // write filter term to local storage so we can recover it if they cancel out
+        const millisecondsUntilExpiry =
+            numberOfHoursUntilExpiry * 60 /* min */ * 60 /* sec */ * 1000; /* milliseconds */
+        const expiryDate = {
+            expiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
+        };
+        let filterStorage = {
+            term: filterTerm,
+            ...expiryDate,
+        };
+        console.log('## filterStorage = ', filterStorage);
+        filterStorage = JSON.stringify(filterStorage);
+        sessionStorage.setItem(FILTER_STORAGE_NAME, filterStorage);
+    };
+    const [textSearch, setTextSearch] = useState(getFilterTermFromSession());
 
     const [draggedId, setDraggedId] = useState(false);
 
@@ -173,6 +209,7 @@ export const SpotlightsListAsTable = ({
     const [rowsPerPage, setRowsPerPage] = useState(
         (!cookies[paginatorCookieName] && footerDisplayMinLength) || parseInt(cookies[paginatorCookieName], 10),
     );
+    const [savedTextTerm, setSavedTextTerm] = useState('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -199,7 +236,7 @@ export const SpotlightsListAsTable = ({
             }
 
             const localRows = rowList
-                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
+                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it
                 .map((row, index) => {
                     if (tableType === 'current') {
                         row.weight = (index + 1) * 10;
@@ -208,15 +245,28 @@ export const SpotlightsListAsTable = ({
                     }
                     return row;
                 });
-            setUserows(localRows);
             setStaticUserows(localRows);
+            setUserows(
+                localRows.filter(r => {
+                    console.log('#### in filter, textSearch = ', textSearch);
+                    if (textSearch === '') {
+                        return true;
+                    }
+                    const lowercaseLinkAria = r.title.toLowerCase();
+                    const lowercaseImgAlt = r.img_alt.toLowerCase();
+                    return (
+                        lowercaseLinkAria.includes(textSearch.toLowerCase()) ||
+                        lowercaseImgAlt.includes(textSearch.toLowerCase())
+                    );
+                }),
+            );
 
             if (!!draggedId) {
                 // briefly mark the dragged row with a style, so the user knows what they did
                 setTimeout(() => {
                     // rows arent immediately available :(
                     const draggedRow = document.getElementById(`spotlight-list-row-${draggedId}`);
-                    console.log('displayTheRows: draggedRow = ', draggedRow);
+                    // console.log('displayTheRows: draggedRow = ', draggedRow);
                     !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
                 }, 200);
                 setTimeout(() => {
@@ -239,6 +289,8 @@ export const SpotlightsListAsTable = ({
         }
 
         displayTheRows(rows);
+
+        setSavedTextTerm(localStorage.getItem('savedTextTerm') || '');
     }, [rows, displayTheRows]);
 
     const handleChangePage = (event, newPage) => {
@@ -272,6 +324,8 @@ export const SpotlightsListAsTable = ({
     };
 
     const navigateToCloneForm = spotlightid => {
+        setFilterTermToSession(textSearch);
+
         history.push(`/admin/spotlights/clone/${spotlightid}`);
 
         const topOfPage = document.getElementById('StandardPage');
@@ -279,7 +333,11 @@ export const SpotlightsListAsTable = ({
     };
 
     const navigateToView = spotlightid => {
+        setFilterTermToSession(textSearch);
+
         history.push(`/admin/spotlights/view/${spotlightid}`);
+
+        localStorage.setItem('savedTextTerm');
 
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
@@ -389,24 +447,6 @@ export const SpotlightsListAsTable = ({
                         active: !!currentRow.active ? 1 : 0,
                         weight: s.weight,
                     };
-
-                    // (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
-                    //     console.log(
-                    //         'will',
-                    //         s.weight === currentRow.weight ? 'NOT' : '',
-                    //         'update weight on',
-                    //         newValues.id,
-                    //         newValues.title.substr(0, 20),
-                    //         'start: ',
-                    //         newValues.start,
-                    //         'weight: ',
-                    //         newValues.weight,
-                    //         ' (was ',
-                    //         currentRow.weight,
-                    //         ')',
-                    //         // eslint-disable-next-line no-nested-ternary
-                    //         isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
-                    //     );
 
                     // update the display of Order
                     // only current spotlights display the order value
@@ -695,17 +735,14 @@ export const SpotlightsListAsTable = ({
     };
 
     const clearFilter = () => {
+        console.log('## clearFilter - filterterm');
         setTextSearch('');
+        sessionStorage.removeItem(FILTER_STORAGE_NAME);
         setUserows(staticUserows);
     };
 
     const filterRows = e => {
         const filterTerm = e.target?.value;
-
-        // if (filterTerm === '') {
-        //     clearFilter();
-        //     return;
-        // }
 
         setTextSearch(filterTerm);
         setUserows(
@@ -867,7 +904,7 @@ export const SpotlightsListAsTable = ({
                                                 }}
                                                 onChange={filterRows}
                                                 label={locale.listPage.textSearch.displayLabel}
-                                                value={textSearch}
+                                                value={savedTextTerm || textSearch}
                                             />
                                             <CloseIcon
                                                 id="spotlights-list-clear-text-filter-clear-button"
