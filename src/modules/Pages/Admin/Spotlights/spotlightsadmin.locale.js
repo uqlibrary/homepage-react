@@ -248,8 +248,8 @@ export default {
                     <h2>Clone (copy) a spotlight</h2>
                     <p>
                         Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
-                        <strong>Clone</strong>. The Clone spotlight form will appear with the fields 
-                        prefilled and the dates automatically updated to be:
+                        <strong>Clone</strong>. The Clone spotlight form will appear with the fields prefilled and the
+                        dates automatically updated to be:
                     </p>
                     <ul>
                         <li>Date published: 12.01am next Monday</li>
@@ -283,7 +283,8 @@ export default {
                     <ol>
                         <li>Drag and drop current spotlights to adjust their order</li>
                         <li>
-                            The display order will update. The reordered row will be highlighted in blue for a short time.
+                            The display order will update. The reordered row will be highlighted in blue for a short
+                            time.
                         </li>
                     </ol>
 
@@ -328,8 +329,8 @@ export default {
                     <p>To delete spotlights:</p>
                     <ul>
                         <li>
-                            <strong>One only:</strong> press the <strongMore actions</strong> button beside a spotlight, then press
-                            <strong>Delete</strong>
+                            <strong>One only:</strong> press the <strong>More actions</strong> button beside a
+                            spotlight, then press <strong>Delete</strong>
                         </li>
                         <li>
                             <strong>Multiple:</strong> use the Delete checkboxes to select multiple spotlights within
