@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
         minHeight: 50,
     },
     menuWrapper: {
-        marginTop: -50,
+        marginTop: -75,
     },
 }));
 export const SpotlightSplitButton = ({
@@ -36,6 +36,8 @@ export const SpotlightSplitButton = ({
     navigateToEditForm,
     navigateToView,
     confirmDeleteLocale,
+    showLightbox,
+    spotlightImgUrl,
 }) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -127,6 +129,13 @@ export const SpotlightSplitButton = ({
                                             >
                                                 Delete
                                             </MenuItem>
+                                            <MenuItem
+                                                data-testid={`${spotlightId}-lightbox-button`}
+                                                key={`${spotlightId}-lightbox-button`}
+                                                onClick={() => showLightbox(spotlightImgUrl)}
+                                            >
+                                                Lightbox
+                                            </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>
@@ -141,6 +150,7 @@ export const SpotlightSplitButton = ({
 
 SpotlightSplitButton.propTypes = {
     spotlightId: PropTypes.string,
+    spotlightImgUrl: PropTypes.string,
     mainButtonLabel: PropTypes.string,
     deleteSpotlightById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
@@ -148,6 +158,7 @@ SpotlightSplitButton.propTypes = {
     navigateToView: PropTypes.func,
     navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.func,
+    showLightbox: PropTypes.func,
 };
 
 SpotlightSplitButton.defaultProps = {

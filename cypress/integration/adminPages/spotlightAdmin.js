@@ -519,6 +519,61 @@ describe('Spotlights Admin Pages', () => {
                 'Study outdoors in Duhig Place - Study space',
             );
         });
+        it('it shows a lightbox and can exit with the close button', () => {
+            // open the split button
+            cy.get('[data-testid="admin-spotlights-list-scheduled-list"]').scrollIntoView();
+            cy.get('[data-testid="spotlight-list-arrowicon-be8e7020-6501-11eb-98b3-ab6777f4b8d3"]').should('exist');
+            cy.get('[data-testid="spotlight-list-arrowicon-be8e7020-6501-11eb-98b3-ab6777f4b8d3"]').click();
+
+            // click the 'lightbox' action
+            cy.get('[data-testid="be8e7020-6501-11eb-98b3-ab6777f4b8d3-lightbox-button"]')
+                .should('exist')
+                .click();
+
+            // lightbox loads
+            cy.get('[data-testid="spotlights-lightbox-title"]').contains('Previous entries for this image');
+            cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
+                'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
+            );
+
+            cy.get('[data-testid="spotlights-lightbox-holder"] ul')
+                .children()
+                .should('have.length', 5);
+
+            // use the close button
+            cy.get('[data-testid="spotlights-lightbox-close-button"]')
+                .should('exist')
+                .click();
+            cy.location('href').should('eq', `${Cypress.config('baseUrl')}/admin/spotlights?user=uqstaff`);
+            cy.get('[data-testid="spotlights-lightbox-title"]').should('not.exist');
+        });
+        it('it shows a lightbox and can open clone form', () => {
+            cy.get('[data-testid="admin-spotlights-list-current-list"]').scrollIntoView();
+            // open the split button
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                .should('exist')
+                .click();
+
+            // click the 'lightbox' action
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-lightbox-button"]')
+                .should('exist')
+                .click();
+
+            // lightbox loads
+            cy.get('[data-testid="spotlights-lightbox-title"]').contains('Previous entries for this image');
+            cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
+                'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
+            );
+
+            cy.get('[data-testid="spotlights-lightbox-holder"] ul')
+                .children()
+                .should('have.length', 2);
+
+            cy.get('li:first-child button')
+                .should('exist')
+                .click();
+            cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/clone`);
+        });
     });
     context('Spotlight Admin session storage', () => {
         beforeEach(() => {

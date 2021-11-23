@@ -390,4 +390,13 @@ export default {
             ),
         },
     },
+    lightbox: {
+        title: 'Previous entries for this image',
+        linkTitle: 'Link title',
+        ariaLabel: 'Image Aria label',
+        date: {
+            endsInPast: 'Ran from [START_DATE] to [END_DATE]',
+            endsInFuture: 'Will run from [START_DATE] to [END_DATE]',
+        },
+    },
 };
