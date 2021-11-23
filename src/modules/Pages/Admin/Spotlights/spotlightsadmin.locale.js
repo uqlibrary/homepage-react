@@ -173,49 +173,184 @@ export default {
             confirmButtonLabel: 'Cancel',
         },
         help: {
-            title: 'Spotlights listing',
+            title: 'Spotlights',
             text: (
                 <div data-testid="admin-spotlights-help-example">
-                    <p>Note: this help is out of date and will be updated as part of the development process</p>
-                    <h2>About</h2>
                     <p>
                         UQ Library's Spotlight Management application provides authorised users with an interface to
-                        add, update and remove spotlights. These spotlights are displayed on the UQ Library homepage.
+                        add, update and remove spotlights (promotional images in the carousel). These spotlights are
+                        displayed for clients on the UQ Library homepage.
                     </p>
-                    <h2>Spotlight listing</h2>
+
+                    <h2>Listing screen</h2>
                     <p>
-                        All spotlights are listed on the main page in grid view where users can easily filter content
-                        using the buttons located in the header.
+                        Spotlights are listed in three tables, Current spotlights, Scheduled spotlights and Past
+                        spotlights based on their Date published (start) and Date unpublished (end) date and time. Check
+                        full date information by mousing over the short date display.
+                    </p>
+
+                    <ul>
+                        <li>
+                            <strong>Current spotlights:</strong> lists spotlights published on the website now based on
+                            the Date published, Date unpublished and Published? fields. By default, the list is ordered
+                            by Display order (the order in which clients will see the spotlights after loading the
+                            homepage).
+                        </li>
+                        <li>
+                            <strong>Scheduled spotlights:</strong> displays future spotlights based on the Date
+                            published field. By default, the list is ordered by Date published.
+                        </li>
+                        <li>
+                            <strong>Past spotlights:</strong> displays past spotlights. By default, the list is ordered
+                            by Date unpublished (newest to oldest).
+                        </li>
+                    </ul>
+
+                    <h3>Spotlight action buttons</h3>
+                    <p>
+                        Each spotlight has two action buttons. There is a primary action and a More actions button
+                        (downward arrow). Use the actions to interact with spotlights:
                     </p>
                     <ul>
                         <li>
-                            <b>Quick search</b> offers a text input to filter the grid view via spotlight title
+                            <strong>Current:</strong> Edit (primary), Clone and Delete
                         </li>
                         <li>
-                            <b>Show Current Spotlights</b> will only display published spotlights within a valid and
-                            current date range
+                            <strong>Future:</strong> Edit (primary), Clone and Delete
                         </li>
                         <li>
-                            The <b>Reorder</b> button will allow users to re-index the spotlight display order on the
-                            library's homepage
-                        </li>
-                        <li>
-                            <b>Add New</b> allows users to insert a new spotlight
-                        </li>
-                        <li>
-                            <b>Help/Info</b> displays this guide
+                            <strong>Past:</strong> View (primary), Clone and Delete.
                         </li>
                     </ul>
-                    <h2>Removing spotlights</h2>
+
+                    <h2>Add a spotlight</h2>
                     <p>
-                        The removal of spotlights is carried out in the main spotlight grid view. Simply click on the
-                        respective spotlight mode_edit button to delete an individual spotlight or use the first column
-                        check boxes to remove multiple spotlights at once. A confirmation screen will be displayed
-                        requesting the user to confirm this action.
+                        Press the <strong>Add spotlight</strong> button on the listing screen. The Create a new
+                        spotlight form will appear.
                     </p>
                     <p>
-                        <strong>Warning! Removed spotlights cannot be restored.</strong>
+                        Saved spotlights will appear on the website within two minutes of their start time. Hard refresh
+                        your browser to view the spotlight.
                     </p>
+
+                    <h2>Edit a spotlight</h2>
+                    <p>
+                        Press <strong>Edit</strong> beside a spotlight on the listing screen. The Edit spotlight form
+                        will appear with the fields prefilled.
+                    </p>
+                    <ul>
+                        <li>
+                            Press <strong>Cancel</strong> or your browser’s Back button to exit
+                        </li>
+                        <li>
+                            Press <strong>Save</strong> to update the spotlight
+                        </li>
+                    </ul>
+                    <p>
+                        Updated spotlights will change on the website within two minutes. Hard refresh your browser to
+                        view the spotlight.
+                    </p>
+
+                    <h2>Clone (copy) a spotlight</h2>
+                    <p>
+                        Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
+                        <strong>Clone</strong>. The Clone spotlight form will appear with the fields prefilled and the
+                        dates automatically updated to be:
+                    </p>
+                    <ul>
+                        <li>Date published: 12.01am next Monday</li>
+                        <li>Date unpublished: 11.59pm the following Sunday.</li>
+                    </ul>
+                    <p>
+                        A cloned spotlight will appear on the website within two minutes of its start time. Hard refresh
+                        your browser to view the spotlight.
+                    </p>
+
+                    <h2>View a past spotlight</h2>
+                    <p>
+                        Press <strong>View</strong> beside a past spotlight. The View spotlight form will appear in read
+                        only mode to ensure past spotlights are retained as a record of past messages to clients.
+                    </p>
+                    <ul>
+                        <li>
+                            Press <strong>Clone</strong> to create a copy of this spotlight. The Clone spotlight form
+                            will appear with alert information prefilled and the dates automatically updated.
+                        </li>
+                        <li>
+                            Press <strong>Cancel</strong> to return to the listing screen.
+                        </li>
+                    </ul>
+
+                    <h2>Reorder current spotlights</h2>
+                    <p>
+                        Current spotlights can be reordered when the Current spotlights table is ordered in the default
+                        Display order (ascending) only.
+                    </p>
+                    <ol>
+                        <li>Drag and drop current spotlights to adjust their order</li>
+                        <li>
+                            The display order will update. The reordered row will be highlighted in blue for a short
+                            time.
+                        </li>
+                    </ol>
+
+                    <h2>Publish/unpublish current spotlights</h2>
+                    <p>To quickly unpublish a current spotlight from the listing screen:</p>
+                    <ol>
+                        <li>
+                            Click on the checked <strong>Published?</strong> checkbox for that spotlight
+                        </li>
+                        <li>Confirm you wish to unpublish the spotlight.</li>
+                    </ol>
+                    <p>
+                        Unpublished spotlights will be removed from the homepage within two minutes. Hard refresh your
+                        browser to view the spotlight.
+                    </p>
+                    <p>
+                        Similarly, current spotlights that are not published can be published by clicking the{' '}
+                        <strong>Published?</strong> checkbox and confirming the change.
+                    </p>
+
+                    <h2>Search past spotlights</h2>
+                    <p>
+                        Enter keywords into the Quick search text field above the Past spotlights table to search based
+                        on the Link title and Image alt text fields.
+                    </p>
+                    <p>Past spotlights will be filtered based on your keywords.</p>
+                    <p>Search results will be retained for one hour and then cleared.</p>
+
+                    <h2>Remove alerts</h2>
+                    <p>Deleted spotlights cannot be restored. In general, limit deletions to:</p>
+                    <ul>
+                        <li>
+                            recently created spotlights with errors and spotlights which have not yet been published and
+                            are no longer required
+                        </li>
+                        <li>very old past spotlights as part of an clean up.</li>
+                    </ul>
+                    <p>
+                        <strong>To unpublish a current spotlight:</strong> see publish/unpublish current spotlights
+                        (above, on this page).
+                    </p>
+                    <p>To delete spotlights:</p>
+                    <ul>
+                        <li>
+                            <strong>One only:</strong> press the <strong>More actions</strong> button beside a
+                            spotlight, then press <strong>Delete</strong>
+                        </li>
+                        <li>
+                            <strong>Multiple:</strong> use the Delete checkboxes to select multiple spotlights within
+                            one table. Your selection will appear in the table’s title row with a Delete button (bin)
+                            and a Deselect button (cross). Press <strong>Delete</strong> to proceed.
+                        </li>
+                    </ul>
+                    <p>
+                        In both cases, you will be asked to confirm you wish to proceed. The system will confirm the
+                        spotlights are permanently deleted.
+                    </p>
+
+                    <h2>User permissions</h2>
+                    <p>Contact the Manager, Engagement and Communication about access to this system.</p>
                 </div>
             ),
         },

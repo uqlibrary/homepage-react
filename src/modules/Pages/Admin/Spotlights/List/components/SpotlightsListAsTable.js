@@ -164,7 +164,35 @@ export const SpotlightsListAsTable = ({
     const [staticUserows, setStaticUserows] = useState([]);
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
     const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
-    const [textSearch, setTextSearch] = useState('');
+
+    const FILTER_STORAGE_NAME = 'alert-admin-filter-term';
+    const getFilterTermFromSession = () => {
+        const filter = JSON.parse(sessionStorage.getItem(FILTER_STORAGE_NAME));
+        if (!filter) {
+            return '';
+        }
+        const now = new Date().getTime();
+        if (!filter.expiryDate || filter.expiryDate < now) {
+            sessionStorage.removeItem(FILTER_STORAGE_NAME);
+            return '';
+        }
+        return filter.term;
+    };
+    const setFilterTermToSession = (filterTerm, numberOfHoursUntilExpiry = 1) => {
+        // write filter term to local storage so we can recover it if they cancel out
+        const millisecondsUntilExpiry =
+            numberOfHoursUntilExpiry * 60 /* min */ * 60 /* sec */ * 1000; /* milliseconds */
+        const expiryDate = {
+            expiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
+        };
+        let filterStorage = {
+            term: filterTerm,
+            ...expiryDate,
+        };
+        filterStorage = JSON.stringify(filterStorage);
+        sessionStorage.setItem(FILTER_STORAGE_NAME, filterStorage);
+    };
+    const [textSearch, setTextSearch] = useState(getFilterTermFromSession());
 
     const [draggedId, setDraggedId] = useState(false);
 
@@ -175,6 +203,7 @@ export const SpotlightsListAsTable = ({
     const [rowsPerPage, setRowsPerPage] = useState(
         (!cookies[paginatorCookieName] && footerDisplayMinLength) || parseInt(cookies[paginatorCookieName], 10),
     );
+    const [savedTextTerm, setSavedTextTerm] = useState('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -201,7 +230,7 @@ export const SpotlightsListAsTable = ({
             }
 
             const localRows = rowList
-                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
+                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it
                 .map((row, index) => {
                     if (tableType === 'current') {
                         row.weight = (index + 1) * 10;
@@ -210,15 +239,26 @@ export const SpotlightsListAsTable = ({
                     }
                     return row;
                 });
-            setUserows(localRows);
             setStaticUserows(localRows);
+            setUserows(
+                localRows.filter(r => {
+                    if (!canTextFilter || textSearch === '') {
+                        return true;
+                    }
+                    const lowercaseLinkAria = r.title.toLowerCase();
+                    const lowercaseImgAlt = r.img_alt.toLowerCase();
+                    return (
+                        lowercaseLinkAria.includes(textSearch.toLowerCase()) ||
+                        lowercaseImgAlt.includes(textSearch.toLowerCase())
+                    );
+                }),
+            );
 
             if (!!draggedId) {
                 // briefly mark the dragged row with a style, so the user knows what they did
                 setTimeout(() => {
                     // rows arent immediately available :(
                     const draggedRow = document.getElementById(`spotlight-list-row-${draggedId}`);
-                    console.log('displayTheRows: draggedRow = ', draggedRow);
                     !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
                 }, 200);
                 setTimeout(() => {
@@ -230,7 +270,7 @@ export const SpotlightsListAsTable = ({
                 setDraggedId(false);
             }
         },
-        [tableType, draggedId],
+        [tableType, draggedId, canTextFilter, textSearch],
     );
 
     React.useEffect(() => {
@@ -241,6 +281,8 @@ export const SpotlightsListAsTable = ({
         }
 
         displayTheRows(rows);
+
+        setSavedTextTerm(localStorage.getItem('savedTextTerm') || '');
     }, [rows, displayTheRows]);
 
     const handleChangePage = (event, newPage) => {
@@ -265,26 +307,26 @@ export const SpotlightsListAsTable = ({
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
 
-    const navigateToEditForm = spotlightid => {
-        console.log('navigateToEditForm');
-        history.push(`/admin/spotlights/edit/${spotlightid}`);
-
+    function scrollToTopOfPage() {
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
+    }
+
+    const navigateToEditForm = spotlightid => {
+        history.push(`/admin/spotlights/edit/${spotlightid}`);
+        scrollToTopOfPage();
     };
 
     const navigateToCloneForm = spotlightid => {
+        !!canTextFilter && setFilterTermToSession(textSearch);
         history.push(`/admin/spotlights/clone/${spotlightid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToView = spotlightid => {
+        setFilterTermToSession(textSearch);
         history.push(`/admin/spotlights/view/${spotlightid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reEnableAllCheckboxes = () => {
@@ -391,24 +433,6 @@ export const SpotlightsListAsTable = ({
                         active: !!currentRow.active ? 1 : 0,
                         weight: s.weight,
                     };
-
-                    // (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
-                    //     console.log(
-                    //         'will',
-                    //         s.weight === currentRow.weight ? 'NOT' : '',
-                    //         'update weight on',
-                    //         newValues.id,
-                    //         newValues.title.substr(0, 20),
-                    //         'start: ',
-                    //         newValues.start,
-                    //         'weight: ',
-                    //         newValues.weight,
-                    //         ' (was ',
-                    //         currentRow.weight,
-                    //         ')',
-                    //         // eslint-disable-next-line no-nested-ternary
-                    //         isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
-                    //     );
 
                     // update the display of Order
                     // only current spotlights display the order value
@@ -685,6 +709,7 @@ export const SpotlightsListAsTable = ({
 
     const clearFilter = () => {
         setTextSearch('');
+        sessionStorage.removeItem(FILTER_STORAGE_NAME);
         setUserows(staticUserows);
     };
 
@@ -850,7 +875,7 @@ export const SpotlightsListAsTable = ({
                                                 }}
                                                 onChange={filterRowsByText}
                                                 label={locale.listPage.textSearch.displayLabel}
-                                                value={textSearch}
+                                                value={savedTextTerm || textSearch}
                                             />
                                             <CloseIcon
                                                 id="spotlights-list-clear-text-filter-clear-button"
@@ -914,7 +939,6 @@ export const SpotlightsListAsTable = ({
                                                     : userows.length,
                                             )
                                             .map((spotlight, rowindex) => {
-                                                // console.log('userows has ', spotlight.id);
                                                 return (
                                                     <Draggable
                                                         draggableId={spotlight.id}
@@ -1113,7 +1137,6 @@ SpotlightsListAsTable.propTypes = {
     saveSpotlightChange: PropTypes.any,
     deleteSpotlightBulk: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
-    // spotlightOrder: PropTypes.any,
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
@@ -1121,7 +1144,6 @@ SpotlightsListAsTable.propTypes = {
 
 SpotlightsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the spotlight list before we display the paginator
-    // spotlightOrder: false, // what order should we sort the spotlights in? false means unspecified
     canDragRows: false, // does this section allow drag and drop
     canUnpublish: false, // does this section allow the user to have a publish/unpublish checbox?
     canTextFilter: false, // show the 'text filter' input field
