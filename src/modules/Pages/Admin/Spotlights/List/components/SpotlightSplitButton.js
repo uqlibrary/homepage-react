@@ -134,7 +134,7 @@ export const SpotlightSplitButton = ({
                                                 key={`${spotlightId}-lightbox-button`}
                                                 onClick={() => showLightbox(spotlightImgUrl)}
                                             >
-                                                Lightbox
+                                                View history
                                             </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>

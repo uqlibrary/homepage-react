@@ -29,7 +29,7 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../spotlightsadmin.locale';
-import SpotlightLightbox from './SpotlightLightbox';
+import SpotlightViewHistory from './SpotlightViewHistory';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
@@ -1145,7 +1145,7 @@ export const SpotlightsListAsTable = ({
                     </Table>
                 </TableContainer>
             </DragDropContext>
-            <SpotlightLightbox
+            <SpotlightViewHistory
                 spotlightImgUrl={lightBoxFocus}
                 spotlights={lightBoxRows}
                 isLightboxOpen={isLightboxOpen}

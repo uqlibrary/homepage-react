@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const SpotlightLightbox = ({
+export const SpotlightViewHistory = ({
     isLightboxOpen,
     handleLightboxClose,
     navigateToCloneForm,
@@ -174,7 +174,7 @@ export const SpotlightLightbox = ({
     );
 };
 
-SpotlightLightbox.propTypes = {
+SpotlightViewHistory.propTypes = {
     isLightboxOpen: PropTypes.bool,
     handleLightboxClose: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
@@ -182,8 +182,8 @@ SpotlightLightbox.propTypes = {
     spotlights: PropTypes.array,
 };
 
-SpotlightLightbox.defaultProps = {
+SpotlightViewHistory.defaultProps = {
     spotlights: [],
 };
 
-export default React.memo(SpotlightLightbox);
+export default React.memo(SpotlightViewHistory);
