@@ -363,22 +363,21 @@ export default {
             text: (
                 <Fragment>
                     <p data-testid="admin-spotlights-view-help-example">
-                        The View Spotlights page is read only as past spotlights cannot be edited. This is so they are
+                        The View spotlights page is read only as past spotlights cannot be edited. This is so they are
                         preserved as a record of past notices to clients.
                     </p>
                     <h3>Copy and reuse (clone) a past spotlight</h3>
-                    <p>This will be available soon</p>
                     <p>
-                        Press <b>Clone</b> to create a copy of the spotlight. The Clone spotlight form will appear and
-                        be prefilled with the same spotlight information, with updated dates.
+                        Press <strong>Clone</strong> to create a copy of the spotlight. The Clone spotlight form will appear and
+                        be prefilled with the same spotlight information. The dates will be set as:
                     </p>
                     <ul>
-                        <li>CHECK: The start date will be the current date and time now.</li>
-                        <li>CHECK: The end date will be set to tonight at 11.59pm.</li>
+                        <li>Date published: 12.01am next Monday</li>
+                        <li>Date unpublished: 11.59pm the following Sunday.</li>
                     </ul>
                     <h3>Return to spotlights list</h3>
                     <p>
-                        Press <b>Cancel</b> to return to the Spotlights listing page.
+                        Press <strong>Cancel</strong> to return to the Spotlights listing page.
                     </p>
                 </Fragment>
             ),
