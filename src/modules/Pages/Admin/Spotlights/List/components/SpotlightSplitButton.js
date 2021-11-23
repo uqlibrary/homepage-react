@@ -16,6 +16,7 @@ import MenuList from '@material-ui/core/MenuList';
 import { useConfirmationState } from 'hooks';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 // based on https://material-ui.com/components/button-group/ "Split button"
 
@@ -120,21 +121,21 @@ export const SpotlightSplitButton = ({
                                                 key={`${spotlightId}-clone-button`}
                                                 onClick={() => navigateToCloneForm(spotlightId)}
                                             >
-                                                Clone
+                                                {locale.form.splitButton.labels.clone}
                                             </MenuItem>
                                             <MenuItem
                                                 data-testid={`${spotlightId}-delete-button`}
                                                 key={`${spotlightId}-delete-button`}
                                                 onClick={showDeleteConfirmation}
                                             >
-                                                Delete
+                                                {locale.form.splitButton.labels.delete}
                                             </MenuItem>
                                             <MenuItem
                                                 data-testid={`${spotlightId}-lightbox-button`}
                                                 key={`${spotlightId}-lightbox-button`}
                                                 onClick={() => showLightbox(spotlightImgUrl)}
                                             >
-                                                View history
+                                                {locale.form.splitButton.labels.history}
                                             </MenuItem>
                                         </MenuList>
                                     </ClickAwayListener>

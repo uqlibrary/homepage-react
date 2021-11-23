@@ -134,6 +134,13 @@ export default {
                 </div>
             ),
         },
+        splitButton: {
+            labels: {
+                clone: 'Clone',
+                delete: 'Delete',
+                history: 'View history',
+            },
+        },
     },
     listPage: {
         confirmDelete: {
@@ -399,9 +406,5 @@ export default {
         endDate: 'Date unpublished',
         dateDivider: ' | ',
         publicationStatus: 'Published?',
-        // date: {
-        //     endsInPast: 'Ran from [START_DATE] to [END_DATE]',
-        //     endsInFuture: 'Will run from [START_DATE] to [END_DATE]',
-        // },
     },
 };
