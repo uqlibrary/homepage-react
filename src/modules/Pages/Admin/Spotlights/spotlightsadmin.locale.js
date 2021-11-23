@@ -88,35 +88,67 @@ export default {
             title: 'Add/Edit/Clone help',
             text: (
                 <div data-testid="admin-spotlights-help-example">
-                    <p>Note: this help is out of date and will be updated as part of the development process</p>
-                    <h2 id="adding-spotlight">Adding an spotlight</h2>
-                    <p>
-                        Adding spotlights is done via the <b>+ADD NEW</b> button located at the top right hand corner of
-                        the main spotlight list view. A spotlight consists of the following fields:
-                    </p>
+                    
+                    <h2 id="adding-spotlight">Add a spotlight</h2>
+                    <ol>
+                        <li>
+                            Create a spotlight file using the recommended dimensions 813px x 300px (max image size of 400 KB).
+                        </li>
+                        <li>
+                            Set the Image alt text field based on the text in the spotlight and the Link title and Spotlight link fields based on the destination URL.
+                        </li>
+                        <li>
+                            Set the date/time and Publish fields and click <strong>Create</strong>
+                        </li>
+                    </ol>
+                
+                    <h3>Fields</h3>
                     <dl>
-                        <dt>Title</dt>
-                        <dd className="description">(required)</dd>
-                        <dt>Start date/time</dt>
+                        <dt>Link title</dt>
                         <dd className="description">
-                            format: day/month/year - 24hs(required. date/time has to be before End Date)
+                            <p>Spotlight link title (ARIA label for accessibility). Enter destination webpage title. </p>
+                            <p>Required field. Maximum length of 100 characters.</p>
+                        </dd>
+                        <dt>Image alt text</dt>
+                        <dd className="description">
+                            <p>Spotlight alternative text for accessbility. Enter all text in spotlight.</p>
+                            <p>Required field. Max length of 255 characters.</p>
+                        </dd>
+                        <dt>Spotlight link</dt>
+                        <dd className="description">
+                            <p>Spotlight hyperlink address.</p>
+                            <p>Required field. Accepts a full URL only.</p>
+                        </dd>                
+                
+                        <dt>Date published (start)</dt>
+                        <dd className="description">
+                            <p>Date and time when the spotlight should run on the homepage. Requires the Published? Field to be checked for the spotlight to be visible to clients.</p>
+                            <p>Defaults to 12.01am next Monday. Cannot be in the past. Must be before Date unpublished.</p>
+                            <ul>
+                                <li>Set Now to create a current alert</li>
+                                <li>Set into the future to schedule an alert</li>
+                            </ul>
+                            <p>Required field. Format: day/month/year HH:MM - 24hs</p>
                         </dd>
 
-                        <dt>End date/time</dt>
+                        <dt>Date unpublished (end)</dt>
                         <dd className="description">
-                            format: day/month/year - 24hs(required. date/time has to be after Start Date)
+                            <p>DDate and time when spotlight should be removed from the homepage.</p>
+                            <p>Defaults to 11.59pm the Sunday after creation. Must be after Date published (starte).</p>
+                            <p>Required field. Format: day/month/year HH:MM - 24hs</p>
                         </dd>
 
-                        <dt>Link</dt>
-                        <dd className="description">(required. Target link when spotlight is clicked)</dd>
-                        <dt>Image Title</dt>
-                        <dd className="description">(required)</dd>
-                        <dt>Image URL</dt>
-                        <dd className="description">(read only field - displays the image url)</dd>
-                        <dt>File Upload</dt>
-                        <dd className="description">upload an image to be used in the spotlight</dd>
+                        <dt>File upload</dt>
+                        <dd className="description">
+                            <p>Drag and drop or click to upload a spotlight image.</p>
+                            <p>Max image size: 400 KB. Recommended dimensions: 813px by 300px (aspect ratio: 2.71).</p>
+                            <p>Required field. Replace uploaded image using the Remove image button.</p>
+                        </dd>
                         <dt>Published</dt>
-                        <dd className="description">Enable / Disable the spotlight</dd>
+                        <dd className="description">
+                            <p>Enables/disables content on the homepage between Date published and Date unpublished.</p>
+                            <p>Check to publish, uncheck to unpublish. Can also be set from the listing screen.</p>
+                        </dd>
                     </dl>
                     <h2>Editing an spotlight</h2>
                     <p>
