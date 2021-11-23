@@ -131,7 +131,6 @@ export const SpotlightsListAsTable = ({
     history,
     spotlightsError,
     saveSpotlightChange,
-    saveBatchReorder,
     deleteSpotlightBulk,
     footerDisplayMinLength,
     canDragRows,
@@ -164,13 +163,45 @@ export const SpotlightsListAsTable = ({
     const [staticUserows, setStaticUserows] = useState([]);
     const [selectedSpotlight, setSelectedSpotlight] = useState(null);
     const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
-    const [textSearch, setTextSearch] = useState('');
+
+    const FILTER_STORAGE_NAME = 'alert-admin-filter-term';
+    const getFilterTermFromSession = () => {
+        const filter = JSON.parse(sessionStorage.getItem(FILTER_STORAGE_NAME));
+        if (!filter) {
+            return '';
+        }
+        const now = new Date().getTime();
+        if (!filter.expiryDate || filter.expiryDate < now) {
+            sessionStorage.removeItem(FILTER_STORAGE_NAME);
+            return '';
+        }
+        return filter.term;
+    };
+    const setFilterTermToSession = (filterTerm, numberOfHoursUntilExpiry = 1) => {
+        // write filter term to local storage so we can recover it if they cancel out
+        const millisecondsUntilExpiry =
+            numberOfHoursUntilExpiry * 60 /* min */ * 60 /* sec */ * 1000; /* milliseconds */
+        const expiryDate = {
+            expiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
+        };
+        let filterStorage = {
+            term: filterTerm,
+            ...expiryDate,
+        };
+        filterStorage = JSON.stringify(filterStorage);
+        sessionStorage.setItem(FILTER_STORAGE_NAME, filterStorage);
+    };
+    const [textSearch, setTextSearch] = useState(getFilterTermFromSession());
+
+    const [draggedId, setDraggedId] = useState(false);
+
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
     const [rowsPerPage, setRowsPerPage] = useState(
         (!cookies[paginatorCookieName] && footerDisplayMinLength) || parseInt(cookies[paginatorCookieName], 10),
     );
+    const [savedTextTerm, setSavedTextTerm] = useState('');
 
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -191,8 +222,13 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
+            console.log('rowList = ', rowList);
+            if (!rowList) {
+                return;
+            }
+
             const localRows = rowList
-                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it?!?!
+                .sort((a, b) => a.weight - b.weight) // the api doesnt sort it
                 .map((row, index) => {
                     if (tableType === 'current') {
                         row.weight = (index + 1) * 10;
@@ -201,30 +237,51 @@ export const SpotlightsListAsTable = ({
                     }
                     return row;
                 });
-            setUserows(localRows);
             setStaticUserows(localRows);
+            setUserows(
+                localRows.filter(r => {
+                    if (!canTextFilter || textSearch === '') {
+                        return true;
+                    }
+                    const lowercaseLinkAria = r.title.toLowerCase();
+                    const lowercaseImgAlt = r.img_alt.toLowerCase();
+                    return (
+                        lowercaseLinkAria.includes(textSearch.toLowerCase()) ||
+                        lowercaseImgAlt.includes(textSearch.toLowerCase())
+                    );
+                }),
+            );
+
+            if (!!draggedId) {
+                // briefly mark the dragged row with a style, so the user knows what they did
+                setTimeout(() => {
+                    // rows arent immediately available :(
+                    const draggedRow = document.getElementById(`spotlight-list-row-${draggedId}`);
+                    !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
+                }, 200);
+                setTimeout(() => {
+                    const draggedRow = document.getElementById(`spotlight-list-row-${draggedId}`);
+                    !!draggedRow && (draggedRow.style.transition = 'background-color 3s linear');
+                    !!draggedRow && (draggedRow.style.backgroundColor = 'inherit');
+                }, 700);
+
+                setDraggedId(false);
+            }
         },
-        [tableType],
+        [tableType, draggedId, canTextFilter, textSearch],
     );
 
     React.useEffect(() => {
-        if (rows.length === 0) {
+        if (!!rows && rows.length === 0) {
             setUserows([]);
             setPage(0); // make it redraw when all displayed rows in a table are deleted
             return;
         }
 
         displayTheRows(rows);
+
+        setSavedTextTerm(localStorage.getItem('savedTextTerm') || '');
     }, [rows, displayTheRows]);
-
-    // React.useEffect(() => {
-    //     console.log('*** useEffect useRows', tableType, userows.length);
-    // }, [tableType, userows]);
-
-    // React.useEffect(() => {
-    //     console.log('useRows have changed ', userows);
-    //     //     userows.length === 0 && setPage(0);
-    // }, [userows]);
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
@@ -248,26 +305,26 @@ export const SpotlightsListAsTable = ({
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
 
-    const navigateToEditForm = spotlightid => {
-        console.log('navigateToEditForm');
-        history.push(`/admin/spotlights/edit/${spotlightid}`);
-
+    function scrollToTopOfPage() {
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
+    }
+
+    const navigateToEditForm = spotlightid => {
+        history.push(`/admin/spotlights/edit/${spotlightid}`);
+        scrollToTopOfPage();
     };
 
     const navigateToCloneForm = spotlightid => {
+        !!canTextFilter && setFilterTermToSession(textSearch);
         history.push(`/admin/spotlights/clone/${spotlightid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToView = spotlightid => {
+        setFilterTermToSession(textSearch);
         history.push(`/admin/spotlights/view/${spotlightid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reEnableAllCheckboxes = () => {
@@ -375,24 +432,6 @@ export const SpotlightsListAsTable = ({
                         weight: s.weight,
                     };
 
-                    // (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
-                    //     console.log(
-                    //         'will',
-                    //         s.weight === currentRow.weight ? 'NOT' : '',
-                    //         'update weight on',
-                    //         newValues.id,
-                    //         newValues.title.substr(0, 20),
-                    //         'start: ',
-                    //         newValues.start,
-                    //         'weight: ',
-                    //         newValues.weight,
-                    //         ' (was ',
-                    //         currentRow.weight,
-                    //         ')',
-                    //         // eslint-disable-next-line no-nested-ternary
-                    //         isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
-                    //     );
-
                     // update the display of Order
                     // only current spotlights display the order value
                     if (!!isCurrentSpotlight(s)) {
@@ -444,6 +483,8 @@ export const SpotlightsListAsTable = ({
                     reEnableAllCheckboxes();
                     console.log('deleteListOfSpotlights: clear delete marking');
                     clearAllDeleteMarkingCheckboxes();
+                    setSpotlightNotice('');
+                    setDeleteActive(false);
                 }
             })
             .catch(
@@ -514,79 +555,47 @@ export const SpotlightsListAsTable = ({
             return;
         }
 
-        let counter = 1;
-        let reweightedRows = [];
-        rows.forEach((row, index) => {
-            // newrow is an array that has an updated weight for the affected rows
-            // the shifted row will end in 5 and the unmoved rows be a multiple of 10, eg drop row 2 between 5 and 6
-            // and the new row will have weight 45, was-row 5 will have weight 40 and was-row 6 will have weight 50
-            const newWeight =
-                row.id !== draggableId
-                    ? counter * 10 // apart from the moved item, we just count through the items, in 10s
-                    : destination.index * 10 + 5; // set moved item to the nearest item plus 5 to insert between 2 rows
-            const newrow = {
-                ...row,
-                weight: newWeight,
-            };
-            if (row.id !== draggableId) {
-                counter++;
-            }
-            reweightedRows[index] = newrow;
-        });
+        // so we can briefly mark the dragged row with a style, so the user knows what they did, when the save returns
+        setDraggedId(draggableId);
 
-        // now make them all even 10s (so future drags also works by putting '5' on a record)
-        reweightedRows = reweightedRows.sort((a, b) => {
-            return a.weight - b.weight;
-        });
-        reweightedRows.forEach((row, index) => {
-            row.weight = (index + 1) * 10;
-        });
+        const thisspotlight = [...userows].find(s => s.id === draggableId);
+        console.log('thisspotlight = ', thisspotlight);
+        // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
+        let newWeight;
+        if (destination.index > source.index) {
+            newWeight = destination.index * 10 + 15; // dragging down
+        } else {
+            newWeight = destination.index * 10 + 5; // dragging up
+        }
+        const thisspotlight2 = {
+            ...cleanSpotlight(thisspotlight),
+            weight: newWeight,
+        };
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        const oldIndex = rows.find(r => r.id === draggableId).weight / 10 - 1;
+        const reweightedRows = [...userows]
+            .map((r, index) => {
+                if (index === source.index) {
+                    r.weight = newWeight;
+                }
+                return r;
+            })
+            .sort((a, b) => {
+                return a.weight - b.weight;
+            });
+        const oldIndex = userows.find(r => r.id === draggableId).weight / 10 - 1;
         const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
-        console.log('reorder ', draggableId, ' from ', oldIndex, ' to ', newIndex);
         moveItemInArray(userows, oldIndex, newIndex);
 
-        const rowsToPersist = [];
-        reweightedRows.forEach(reWeightedRow => {
-            const oldRow = userows.find(r => r.id === reWeightedRow.id);
-            if (!!oldRow && reWeightedRow.id === oldRow.id && reWeightedRow.weight !== oldRow.weight) {
-                // then add this row to the set to save
-                rowsToPersist.push(reWeightedRow);
-            }
-        });
-        console.log('persist:', rowsToPersist);
-        // now persist the changed record to the DB
-        rowsToPersist.length > 0 &&
-            saveBatchReorder(rowsToPersist).then(() => {
-                // and then update the display
-                rows.forEach(row => {
-                    reweightedRows.forEach(fr => {
-                        if (fr.id === row.id && fr.weight !== row.weight) {
-                            // we have the option here of setting all the values from the db
-                            // in case it has updated? but that seems overkill
-                            row.weight = fr.weight;
-                            console.log('setting ', fr.id, ' to ', fr.weight);
-
-                            const weightCell = document.querySelector(`#spotlight-list-row-${fr.id} .order`);
-                            const newWeight = fr.weight / 10;
-                            console.log('weightCell fr = ', fr.id, fr.title, newWeight);
-                            !!weightCell && (weightCell.innerHTML = newWeight);
-                        }
-                    });
-                });
-                rows.sort((a, b) => a.weight - b.weight);
+        saveSpotlightChange(thisspotlight2)
+            .then(() => {
+                // do nothing, we assume success
+                console.log('saveSpotlightChange success');
+            })
+            .catch(() => {
+                showSaveFailureConfirmation();
             });
-
-        // briefly mark the dragged row with a style, so the user knows what they did
-        const draggedRow = document.getElementById(`spotlight-list-row-${draggableId}`);
-        !!draggedRow && (draggedRow.style.backgroundColor = '#bbd8f5'); // colour: info light
-        setTimeout(() => {
-            !!draggedRow && (draggedRow.style.transition = 'background-color 3s linear');
-            !!draggedRow && (draggedRow.style.backgroundColor = 'inherit');
-        }, 500);
     };
 
     const confirmPublishUnpublishLocale = isCurrentlyActive => {
@@ -711,16 +720,12 @@ export const SpotlightsListAsTable = ({
 
     const clearFilter = () => {
         setTextSearch('');
+        sessionStorage.removeItem(FILTER_STORAGE_NAME);
         setUserows(staticUserows);
     };
 
     const filterRows = e => {
         const filterTerm = e.target?.value;
-
-        // if (filterTerm === '') {
-        //     clearFilter();
-        //     return;
-        // }
 
         setTextSearch(filterTerm);
         setUserows(
@@ -882,7 +887,7 @@ export const SpotlightsListAsTable = ({
                                                 }}
                                                 onChange={filterRows}
                                                 label={locale.listPage.textSearch.displayLabel}
-                                                value={textSearch}
+                                                value={savedTextTerm || textSearch}
                                             />
                                             <CloseIcon
                                                 id="spotlights-list-clear-text-filter-clear-button"
@@ -946,7 +951,6 @@ export const SpotlightsListAsTable = ({
                                                     : userows.length,
                                             )
                                             .map((spotlight, rowindex) => {
-                                                // console.log('userows has ', spotlight.id);
                                                 return (
                                                     <Draggable
                                                         draggableId={spotlight.id}
@@ -959,8 +963,6 @@ export const SpotlightsListAsTable = ({
                                                                 <TableRow
                                                                     id={`spotlight-list-row-${spotlight.id}`}
                                                                     data-testid={`spotlight-list-row-${spotlight.id}`}
-                                                                    className={'spotlight-data-row'}
-                                                                    // index={rowindex}
                                                                     {...draggableProvided.draggableProps}
                                                                     {...draggableProvided.dragHandleProps}
                                                                     ref={draggableProvided.innerRef}
@@ -1089,7 +1091,7 @@ export const SpotlightsListAsTable = ({
                                         id={`spotlight-list-no-spotlights-${tableType}`}
                                         data-testid={`spotlight-list-no-spotlights-${tableType}`}
                                         style={
-                                            rowsPerPage > 0 && userows.length > 0
+                                            !spotlightsLoading && !!rows && rows.length > 0
                                                 ? { display: 'none' }
                                                 : { display: 'table-row' }
                                         }
@@ -1145,10 +1147,8 @@ SpotlightsListAsTable.propTypes = {
     history: PropTypes.object,
     spotlightsError: PropTypes.any,
     saveSpotlightChange: PropTypes.any,
-    saveBatchReorder: PropTypes.any,
     deleteSpotlightBulk: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
-    // spotlightOrder: PropTypes.any,
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
@@ -1156,10 +1156,9 @@ SpotlightsListAsTable.propTypes = {
 
 SpotlightsListAsTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the spotlight list before we display the paginator
-    // spotlightOrder: false, // what order should we sort the spotlights in? false means unspecified
     canDragRows: false, // does this section allow drag and drop
     canUnpublish: false, // does this section allow the user to have a publish/unpublish checbox?
     canTextFilter: false, // show the 'text filter' input field
 };
 
-export default SpotlightsListAsTable;
+export default React.memo(SpotlightsListAsTable);

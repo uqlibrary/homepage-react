@@ -392,7 +392,7 @@ describe('Spotlight list actions', () => {
                 },
             ]);
 
-            const expectedActions = [actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY, actions.SPOTLIGHTS_REWEIGHTING_SUCCEEDED];
+            const expectedActions = [actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY, actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED];
 
             await mockActionsStore.dispatch(
                 saveSpotlightBatch([
@@ -406,7 +406,7 @@ describe('Spotlight list actions', () => {
         });
         it('handles a failing spotlight bulk save request', async () => {
             mockApi.onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
-            const expectedActions = [actions.SPOTLIGHTS_REWEIGHTING_UNDERWAY, actions.SPOTLIGHTS_REWEIGHTING_FAILED];
+            const expectedActions = [actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY, actions.SPOTLIGHTS_BATCHUPDATE_FAILED];
 
             try {
                 await mockActionsStore.dispatch(saveSpotlightBatch([{ ...sendSpotlightRecord, id: 'id' }]));
