@@ -332,29 +332,6 @@ describe('Spotlights Admin Pages', () => {
                 'be.checked',
             );
             cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').uncheck();
-
-            // dialog appears
-            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should('exist');
-            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should(
-                'contain',
-                locale.listPage.confirmUnpublish.confirmationMessage,
-            );
-
-            // cancel the dialog
-            cy.get('[data-testid="confirm-spotlight-confirm-publish-unpublish-dialog"]')
-                .should('exist')
-                .click();
-            // checkbox is unchanged
-            cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
-                'be.checked',
-            );
-
-            // uncheck the checkbox again, this time we will ok
-            cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').uncheck();
-            cy.get('[data-testid="cancel-spotlight-confirm-publish-unpublish-dialog"]')
-                .should('exist')
-                .click();
-
             cy.get('[data-testid="spotlight-list-item-publish-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
                 'not.be.checked',
             );
@@ -368,30 +345,19 @@ describe('Spotlights Admin Pages', () => {
                 'not.be.checked',
             );
             cy.get('[data-testid="spotlight-list-item-publish-fba95ec0-77f5-11eb-8c73-9734f9d4b368"]').check();
-
-            // dialog appears
-            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should('exist');
-            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should(
-                'contain',
-                locale.listPage.confirmPublish.confirmationMessage,
+            cy.get('[data-testid="spotlight-list-item-publish-fba95ec0-77f5-11eb-8c73-9734f9d4b368"]').should(
+                'be.checked',
             );
         });
         it('an error displays when a save-on-change-publish api error occurs', () => {
             cy.get('[data-testid="spotlight-list-item-publish-1e7a5980-d7d6-11eb-a4f2-fd60c7694898"]').uncheck();
 
-            // dialog appears
-            cy.get('[data-testid="dialogbox-spotlight-confirm-publish-unpublish-dialog"]').should('exist');
-            // click ok
-            cy.get('[data-testid="cancel-spotlight-confirm-publish-unpublish-dialog"]')
-                .should('exist')
-                .click();
-
-            cy.get('[data-testid="dialogbox-spotlight-save-confirm"]').should('not.exist');
             // failure is reported in a dialog
             cy.get('[data-testid="dialogbox-spotlight-save-error-dialog"]').should('exist');
             cy.get('[data-testid="dialogbox-spotlight-save-error-dialog"] h2').contains(
                 'We are unable to save this change right now',
             );
+
             // dialog can be closed
             cy.get('[data-testid="confirm-spotlight-save-error-dialog"]').should('exist');
             cy.get('[data-testid="confirm-spotlight-save-error-dialog"]').click();

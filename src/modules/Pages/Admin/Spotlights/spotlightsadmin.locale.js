@@ -154,18 +154,6 @@ export default {
             confirmationMessage: <Fragment>Please try again later</Fragment>,
             confirmButtonLabel: 'OK',
         },
-        confirmPublish: {
-            confirmationTitle: 'Confirm publish',
-            confirmationMessage: 'Are you sure you wish to publish this spotlight?',
-            cancelButtonLabel: 'OK',
-            confirmButtonLabel: 'Cancel',
-        },
-        confirmUnpublish: {
-            confirmationTitle: 'Confirm unpublish',
-            confirmationMessage: 'Are you sure you wish to unpublish this spotlight?',
-            cancelButtonLabel: 'OK',
-            confirmButtonLabel: 'Cancel',
-        },
         help: {
             title: 'Spotlights',
             text: (
