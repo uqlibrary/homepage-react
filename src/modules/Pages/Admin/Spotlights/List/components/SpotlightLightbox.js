@@ -12,11 +12,7 @@ import { default as locale } from '../../spotlightsadmin.locale';
 
 import moment from 'moment';
 
-import {
-    addConstantsToDisplayValues,
-    ImageSizeIsPoor,
-    isPastSpotlight,
-} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { addConstantsToDisplayValues, ImageSizeIsPoor } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(theme => ({
     lightboxStyle: {
@@ -159,12 +155,15 @@ export const SpotlightLightbox = ({
                                     <strong>{locale.lightbox.ariaLabel}</strong>: {s.img_alt}
                                 </p>
                                 <p>
-                                    {(isPastSpotlight(s)
-                                        ? locale.lightbox.date.endsInPast
-                                        : locale.lightbox.date.endsInFuture
-                                    )
-                                        .replace('[START_DATE]', startDateDisplay)
-                                        .replace('[END_DATE]', endDateDisplay)}
+                                    <strong>{locale.lightbox.link}</strong>: {s.link}
+                                </p>
+                                <p>
+                                    <strong>{locale.lightbox.startDate}</strong>: {startDateDisplay}
+                                    {locale.lightbox.dateDivider}
+                                    <strong>{locale.lightbox.endDate}</strong>: {endDateDisplay}
+                                </p>
+                                <p>
+                                    <strong>{locale.lightbox.publicationStatus}</strong>: {s.active ? 'yes' : 'no'}
                                 </p>
                             </li>
                         );

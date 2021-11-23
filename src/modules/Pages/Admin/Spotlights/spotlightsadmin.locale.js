@@ -393,10 +393,15 @@ export default {
     lightbox: {
         title: 'Previous entries for this image',
         linkTitle: 'Link title',
-        ariaLabel: 'Image Aria label',
-        date: {
-            endsInPast: 'Ran from [START_DATE] to [END_DATE]',
-            endsInFuture: 'Will run from [START_DATE] to [END_DATE]',
-        },
+        ariaLabel: 'Image alt text',
+        link: 'Spotlight link',
+        startDate: 'Date published',
+        endDate: 'Date unpublished',
+        dateDivider: ' | ',
+        publicationStatus: 'Published?',
+        // date: {
+        //     endsInPast: 'Ran from [START_DATE] to [END_DATE]',
+        //     endsInFuture: 'Will run from [START_DATE] to [END_DATE]',
+        // },
     },
 };
