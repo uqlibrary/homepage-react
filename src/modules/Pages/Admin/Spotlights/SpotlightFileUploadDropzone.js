@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Warning from '@material-ui/icons/Warning';
 import { default as locale } from './spotlightsadmin.locale';
 import { mui1theme } from '../../../../config';
-import { addConstantsToDisplayValues } from './spotlighthelpers';
+import { addConstantsToDisplayValues, ImageSizeIsPoor } from './spotlighthelpers';
 
 const emptyDropzone = {
     border: 'thin solid black',
@@ -155,29 +155,10 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         hideFileProblemConfirmation();
     };
 
-    // this is a bit of a misnomer - we dont want them to go smaller than this because that will make the image fuzzy
-    // when the spotlights are occupying the entire width of the screen (ipad view)
-    // but the bigger than this they get, the longer the page will take to load
-    const ImageSizeIsPoor = (imageWidthIn, imageHeightIn) => {
-        const ratio = (imageWidth / imageHeight).toFixed(2);
-        return (
-            imageWidthIn < locale.form.upload.ideal.width - locale.form.upload.heightWidthFlex ||
-            imageWidthIn > locale.form.upload.ideal.width + locale.form.upload.heightWidthFlex ||
-            /* istanbul ignore next */
-            imageHeightIn < locale.form.upload.ideal.height - locale.form.upload.heightWidthFlex ||
-            /* istanbul ignore next */
-            imageHeightIn > locale.form.upload.ideal.height + locale.form.upload.heightWidthFlex ||
-            /* istanbul ignore next */
-            ratio < locale.form.upload.minRatio ||
-            /* istanbul ignore next */
-            ratio > locale.form.upload.maxRatio
-        );
-    };
-
     const actualDimensionsNotification = (imageWidthIn, imageHeightIn) => {
         const ratio = (imageWidthIn / imageHeightIn).toFixed(2);
         return (
-            <React.Fragment>
+            <div style={ImageSizeIsPoor(imageWidth, imageHeight) ? warningDimensions : /* istanbul ignore next */ null}>
                 {!ImageSizeIsPoor(imageWidth, imageHeight) ? (
                     /* istanbul ignore next */
                     <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
@@ -191,7 +172,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     imageHeightIn,
                     ratio,
                 )}
-            </React.Fragment>
+            </div>
         );
     };
 
@@ -244,16 +225,7 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                             <Grid item xs={12} key={`${file.name}-dimensions`}>
                                 <Grid container style={dimensionBox} data-testid="dropzone-dimension-warning">
                                     {imageWidth > 0 && imageHeight > 0 && (
-                                        <Grid
-                                            item
-                                            style={
-                                                ImageSizeIsPoor(imageWidth, imageHeight)
-                                                    ? warningDimensions
-                                                    : /* istanbul ignore next */ null
-                                            }
-                                        >
-                                            {actualDimensionsNotification(imageWidth, imageHeight)}
-                                        </Grid>
+                                        <Grid item>{actualDimensionsNotification(imageWidth, imageHeight)}</Grid>
                                     )}
                                     <Grid item xs={12}>
                                         <p>{idealDimensionsNotification()}</p>

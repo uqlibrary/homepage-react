@@ -29,6 +29,7 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../spotlightsadmin.locale';
+import SpotlightLightbox from './SpotlightLightbox';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
@@ -166,6 +167,12 @@ export const SpotlightsListAsTable = ({
     const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
     const [textSearch, setTextSearch] = useState('');
 
+    const [isLightboxOpen, setLightboxOpen] = React.useState(false);
+    const handleLightboxOpen = () => setLightboxOpen(true);
+    const handleLightboxClose = () => setLightboxOpen(false);
+    const [lightBoxFocus, setLightBoxFocus] = React.useState('');
+    const [lightBoxRows, setLightBoxEntries] = React.useState([]);
+
     const [draggedId, setDraggedId] = useState(false);
 
     const [hasDraggedAndDropped, markAsDraggedAndDropped] = useState(false);
@@ -265,26 +272,37 @@ export const SpotlightsListAsTable = ({
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
 
-    const navigateToEditForm = spotlightid => {
-        console.log('navigateToEditForm');
-        history.push(`/admin/spotlights/edit/${spotlightid}`);
-
+    function scrollToTopOfPage() {
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
+    }
+
+    const navigateToEditForm = spotlightid => {
+        history.push(`/admin/spotlights/edit/${spotlightid}`);
+        scrollToTopOfPage();
     };
 
     const navigateToCloneForm = spotlightid => {
         history.push(`/admin/spotlights/clone/${spotlightid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToView = spotlightid => {
         history.push(`/admin/spotlights/view/${spotlightid}`);
+        scrollToTopOfPage();
+    };
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+    const showLightbox = spotlightImgUrl => {
+        console.log('showLightbox for ', spotlightImgUrl);
+        const filteredRows = [...rows].filter(r => r.img_url === spotlightImgUrl);
+        console.log('filteredRows = ', filteredRows);
+        /* istanbul ignore else */
+        if (filteredRows.length > 0) {
+            // because its fired by clicking on a spotlight, it should never be 0
+            setLightBoxFocus(spotlightImgUrl);
+            setLightBoxEntries(filteredRows);
+            handleLightboxOpen();
+        }
     };
 
     const reEnableAllCheckboxes = () => {
@@ -1043,6 +1061,8 @@ export const SpotlightsListAsTable = ({
                                                                             navigateToEditForm={navigateToEditForm}
                                                                             navigateToView={navigateToView}
                                                                             confirmDeleteLocale={confirmDeleteLocale}
+                                                                            showLightbox={showLightbox}
+                                                                            spotlightImgUrl={spotlight.img_url}
                                                                         />
                                                                     </TableCell>
                                                                 </TableRow>
@@ -1099,6 +1119,13 @@ export const SpotlightsListAsTable = ({
                     </Table>
                 </TableContainer>
             </DragDropContext>
+            <SpotlightLightbox
+                spotlightImgUrl={lightBoxFocus}
+                spotlights={lightBoxRows}
+                isLightboxOpen={isLightboxOpen}
+                handleLightboxClose={handleLightboxClose}
+                navigateToCloneForm={navigateToCloneForm}
+            />
         </Fragment>
     );
 };

@@ -90,3 +90,22 @@ export function moveItemInArray(arr, oldIndex, newIndex) {
     // hasDraggedAndDropped = true;
     return arr; // for testing
 }
+
+// this is a bit of a misnomer - we dont want them to go smaller than this because that will make the image fuzzy
+// when the spotlights are occupying the entire width of the screen (ipad view)
+// but the bigger than this they get, the longer the page will take to load
+export const ImageSizeIsPoor = (imageWidthIn, imageHeightIn) => {
+    const ratio = (imageWidthIn / imageWidthIn).toFixed(2);
+    return (
+        imageWidthIn < locale.form.upload.ideal.width - locale.form.upload.heightWidthFlex ||
+        imageWidthIn > locale.form.upload.ideal.width + locale.form.upload.heightWidthFlex ||
+        /* istanbul ignore next */
+        imageHeightIn < locale.form.upload.ideal.height - locale.form.upload.heightWidthFlex ||
+        /* istanbul ignore next */
+        imageHeightIn > locale.form.upload.ideal.height + locale.form.upload.heightWidthFlex ||
+        /* istanbul ignore next */
+        ratio < locale.form.upload.minRatio ||
+        /* istanbul ignore next */
+        ratio > locale.form.upload.maxRatio
+    );
+};
