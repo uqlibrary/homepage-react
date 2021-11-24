@@ -88,25 +88,28 @@ export default {
             title: 'Add/Edit/Clone help',
             text: (
                 <div data-testid="admin-spotlights-help-example">
-                    
                     <h3 id="adding-spotlight">Add a spotlight</h3>
                     <ol>
                         <li>
-                            Create a spotlight file using the recommended dimensions 813px x 300px (max image size of 400 KB).
+                            Create a spotlight file using the recommended dimensions 813px x 300px (max image size of
+                            400 KB).
                         </li>
                         <li>
-                            Set the Image alt text field based on the text in the spotlight and the Link title and Spotlight link fields based on the destination URL.
+                            Set the Image alt text field based on the text in the spotlight and the Link title and
+                            Spotlight link fields based on the destination URL.
                         </li>
                         <li>
                             Set the date/time and Published? fields and click <strong>Create</strong>
                         </li>
                     </ol>
-                
-                    <h4>Fields</h3>
+
+                    <h4>Fields</h4>
                     <dl>
                         <dt>Link title</dt>
                         <dd className="description">
-                            <p>Spotlight link title (ARIA label for accessibility). Enter destination webpage title. </p>
+                            <p>
+                                Spotlight link title (ARIA label for accessibility). Enter destination webpage title.{' '}
+                            </p>
                             <p>Required field. Maximum length of 100 characters.</p>
                         </dd>
                         <dt>Image alt text</dt>
@@ -118,14 +121,22 @@ export default {
                         <dd className="description">
                             <p>Spotlight hyperlink address.</p>
                             <p>Required field. Accepts a full URL only.</p>
-                        </dd>                
-                
+                        </dd>
+
                         <dt>Date published (start)</dt>
                         <dd className="description">
-                            <p>Date and time when the spotlight should run on the homepage. Requires the Published? field to be checked for the spotlight to be visible to clients.</p>
-                            <p>Defaults to 12.01am next Monday. Cannot be in the past. Must be before Date unpublished (end).</p>
+                            <p>
+                                Date and time when the spotlight should run on the homepage. Requires the Published?
+                                field to be checked for the spotlight to be visible to clients.
+                            </p>
+                            <p>
+                                Defaults to 12.01am next Monday. Cannot be in the past. Must be before Date unpublished
+                                (end).
+                            </p>
                             <ul>
-                                <li>Use the <strong>Now</strong> button to create a current alert</li>
+                                <li>
+                                    Use the <strong>Now</strong> button to create a current alert
+                                </li>
                                 <li>Set into the future to schedule an alert</li>
                             </ul>
                             <p>Required field. Format: day/month/year HH:MM - 24hs.</p>
@@ -141,9 +152,11 @@ export default {
                         <dt>File upload</dt>
                         <dd className="description">
                             <p>Drag and drop into or click the box to upload a spotlight image.</p>
-                            <p>Max image size: 400 KB. Larger files will be rejected.</p> 
+                            <p>Max image size: 400 KB. Larger files will be rejected.</p>
                             <p>Recommended dimensions: 813px by 300px (aspect ratio: 2.71).</p>
-                            <p>Required field. Replace uploaded image using the <strong>Remove image</strong> button.</p>
+                            <p>
+                                Required field. Replace uploaded image using the <strong>Remove image</strong> button.
+                            </p>
                         </dd>
                         <dt>Published?</dt>
                         <dd className="description">
@@ -154,33 +167,34 @@ export default {
                     <h3>Edit a spotlight</h3>
                     <ol>
                         <li>Update any of the fields, dates or spotlight image</li>
-                        <li>Press <strong>Save</strong> to finish. You will be prompted to return to the listing screen.</li>
+                        <li>
+                            Press <strong>Save</strong> to finish. You will be prompted to return to the listing screen.
+                        </li>
                     </ol>
                     <p>
-                        The changes will be live on the website within 2 minutes of its Date published date/time. Hard refresh your browser to the see the spotlight.
+                        The changes will be live on the website within 2 minutes of its Date published date/time. Hard
+                        refresh your browser to the see the spotlight.
                     </p>
-                            
-                    <p>
-                        Please see the Adding a spotlight section for information on the form fields.</p>
-                    </p>
-                            
+
+                    <p>Please see the Adding a spotlight section for information on the form fields.</p>
+
                     <h3>Clone (copy) a spotlight</h3>
-                    <p>
-                        Review all form fields:
-                    </p>
+                    <p>Review all form fields:</p>
                     <ul>
                         <li>Update Date published/Date unpublished</li>
                         <li>
-                            Use the <strong>Remove image</strong> button to replace images with old branding, overly large dimensions beyond those recommended or the wrong aspect ratio.
+                            Use the <strong>Remove image</strong> button to replace images with old branding, overly
+                            large dimensions beyond those recommended or the wrong aspect ratio.
                         </li>
-                        <li>Ensure the <strong>Published?</strong> button is checked as needed.
+                        <li>
+                            Ensure the <strong>Published?</strong> button is checked as needed.
+                        </li>
                     </ul>
                     <p>
-                        Press <strong>Save<strong> to finish. You can then clone another spotlight or return to the listing screen.
-                        The spotlight will be live on the website within 2 minutes of its Date published date/time. Hard refresh your browser to the see the spotlight.
+                        Press <strong>Save</strong> to finish. You can then clone another spotlight or return to the
+                        listing screen. The spotlight will be live on the website within 2 minutes of its Date published
+                        date/time. Hard refresh your browser to the see the spotlight.
                     </p>
-                            
-                        
                 </div>
             ),
         },
@@ -256,7 +270,7 @@ export default {
                         </li>
                     </ul>
 
-                    <h4>Spotlight action buttons</h3>
+                    <h4>Spotlight action buttons</h4>
                     <p>
                         Each spotlight has two action buttons. There is a primary action and a More actions button
                         (downward arrow). Use the actions to interact with spotlights:
@@ -424,8 +438,8 @@ export default {
                     </p>
                     <h3>Copy and reuse (clone) a past spotlight</h3>
                     <p>
-                        Press <strong>Clone</strong> to create a copy of the spotlight. The Clone spotlight form will appear and
-                        be prefilled with the same spotlight information. The dates will be set as:
+                        Press <strong>Clone</strong> to create a copy of the spotlight. The Clone spotlight form will
+                        appear and be prefilled with the same spotlight information. The dates will be set as:
                     </p>
                     <ul>
                         <li>Date published: 12.01am next Monday</li>
