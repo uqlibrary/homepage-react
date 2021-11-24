@@ -89,12 +89,15 @@ export default {
             text: (
                 <div data-testid="admin-spotlights-help-example">
                     <p>
-                        If a spotlight image already exists, we recommend that you clone that spotlight and reuse the image file rather than upload another copy.
-                        To do this, use the Quick search box to search past spotlights, then use the <strong>Clone</strong> button.
+                        If a spotlight image already exists, we recommend that you clone that spotlight and reuse the
+                        image file rather than upload another copy. To do this, use the Quick search box to search past
+                        spotlights, then use the <strong>Clone</strong> button.
                     </p>
-                    <p>This will also enable you to see how many times a spotlight has been run using the View history feature.</p>
+                    <p>
+                        This will also enable you to see how many times a spotlight has been run using the View history
+                        feature.
+                    </p>
 
-                
                     <h3 id="adding-spotlight">Add a spotlight</h3>
                     <ol>
                         <li>
@@ -102,13 +105,17 @@ export default {
                             400 KB).
                         </li>
                         <li>
-                            Complete the form fields as per the field descriptions (below, on this page) and upload your spotlight file.
+                            Complete the form fields as per the field descriptions (below, on this page) and upload your
+                            spotlight file.
                         </li>
                         <li>
-                            Click the <strong>Create</strong> button to finish. 
+                            Click the <strong>Create</strong> button to finish.
                         </li>
                     </ol>
-                    <p>The spotlight will be live on the website within 2 minutes of its Date published date/time. Hard refresh your browser to the see the spotlight.</p>
+                    <p>
+                        The spotlight will be live on the website within 2 minutes of its Date published date/time. Hard
+                        refresh your browser to the see the spotlight.
+                    </p>
 
                     <h4>Fields</h4>
                     <dl>
@@ -190,8 +197,8 @@ export default {
                     <ul>
                         <li>Update Date published/Date unpublished</li>
                         <li>
-                            Use the <strong>Remove image</strong> button to replace any spotlight image with old branding, overly
-                            large dimensions beyond those recommended or the wrong aspect ratio
+                            Use the <strong>Remove image</strong> button to replace any spotlight image with old
+                            branding, overly large dimensions beyond those recommended or the wrong aspect ratio
                         </li>
                         <li>
                             Ensure the <strong>Published?</strong> button is checked as needed.
@@ -269,24 +276,25 @@ export default {
                         </li>
                         <li>
                             <strong>Scheduled spotlights:</strong> displays future spotlights based on the Date
-                            published field. By default, the list is ordered by Date published. All spotlights are displayed.
+                            published field. By default, the list is ordered by Date published. All spotlights are
+                            displayed.
                         </li>
                         <li>
                             <strong>Past spotlights:</strong> displays past spotlights. By default, the list is ordered
-                            by Date unpublished (newest to oldest). Use pagination to increase the number of past spotlights displayed.
+                            by Date unpublished (newest to oldest). Use pagination to increase the number of past
+                            spotlights displayed.
                         </li>
                     </ul>
-            
+
                     <h4>Sort spotlights by table column heading</h4>
                     <p>
-                        Click one of the column heading tables to sort spotlights by that label. An up or down arrow will appear beside the label
-                        to indicate the current sort.
+                        Click one of the column heading tables to sort spotlights by that label. An up or down arrow
+                        will appear beside the label to indicate the current sort.
                     </p>
                     <p>
-                        Sortable columns include: Display order (Current spotlights only), Date published (start date/time), Date unpublished (end date/time) and Published?
+                        Sortable columns include: Display order (Current spotlights only), Date published (start
+                        date/time), Date unpublished (end date/time) and Published?
                     </p>
-                        
-                        
 
                     <h4>Spotlight action buttons</h4>
                     <p>
@@ -307,12 +315,15 @@ export default {
 
                     <h3>Add a spotlight</h3>
                     <p>
-                        If a spotlight image already exists, we recommend that you <strong>clone</strong> that spotlight and reuse the image file rather than upload another copy.
-                        To do this, use the Quick search box to search past spotlights, then use the <strong>Clone</strong> button.
+                        If a spotlight image already exists, we recommend that you <strong>clone</strong> that spotlight
+                        and reuse the image file rather than upload another copy. To do this, use the Quick search box
+                        to search past spotlights, then use the <strong>Clone</strong> button.
                     </p>
-                    <p>This will also enable you to see how many times a spotlight has been run using the View history feature.</p>        
-            
-            
+                    <p>
+                        This will also enable you to see how many times a spotlight has been run using the View history
+                        feature.
+                    </p>
+
                     <p>
                         Press the <strong>Add spotlight</strong> button on the listing screen. The Create a new
                         spotlight form will appear.
