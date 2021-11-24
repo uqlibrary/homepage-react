@@ -1,18 +1,15 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import Box from '@material-ui/core/Box';
-import CheckIcon from '@material-ui/icons/Check';
-import Warning from '@material-ui/icons/Warning';
 
-import { default as locale } from '../../spotlightsadmin.locale';
+import SpotlightSizeWarningByUrl from 'modules/Pages/Admin/Spotlights/SpotlightSizeWarningByUrl';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
-
-import { addConstantsToDisplayValues, ImageSizeIsPoor } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(theme => ({
     lightboxStyle: {
@@ -46,10 +43,10 @@ const useStyles = makeStyles(theme => ({
     lightboxModalStyle: {
         overflow: 'scroll',
     },
-    warningDimensions: {
-        color: theme.palette.warning.main,
-        fontWeight: 'bold',
-    },
+    // warningDimensions: {
+    //     color: theme.palette.warning.main,
+    //     fontWeight: 'bold',
+    // },
     marginSpecial: styleProps => ({
         marginTop: styleProps.marginSpecial.marginTop,
     }),
@@ -74,47 +71,6 @@ export const SpotlightViewHistory = ({
     // per https://mui.com/styles/basics/#adapting-based-on-props
     const classes = useStyles(styleProps);
 
-    const [imgWeight, setImgWeight] = useState(null);
-    const [imgHeight, setImgHeight] = useState(null);
-    const [imgRatio, setImgRatio] = useState(null);
-
-    const getDimensionsSentenceFromUrl = imgUrl => {
-        if (imgUrl === '') {
-            return '';
-        }
-
-        // from https://stackoverflow.com/questions/11442712/get-width-height-of-remote-image-from-url
-        const img = new Image();
-        function setSizes() {
-            !!this.naturalWidth && setImgWeight(this.naturalWidth);
-            !!this.naturalHeight && setImgHeight(this.naturalHeight);
-            !!this.naturalWidth && setImgRatio((this.naturalWidth / this.naturalHeight).toFixed(2));
-        }
-        img.addEventListener('load', setSizes);
-        imgUrl.startsWith('http') && (img.src = imgUrl);
-
-        return (
-            <div
-                className={`${
-                    ImageSizeIsPoor(imgWeight, imgHeight) ? classes.warningDimensions : /* istanbul ignore next */ ''
-                }`}
-            >
-                {!ImageSizeIsPoor(imgWeight, imgHeight) ? (
-                    /* istanbul ignore next */
-                    <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
-                ) : (
-                    <Warning fontSize="small" style={{ height: 15 }} />
-                )}
-                {addConstantsToDisplayValues(
-                    locale.form.upload.currentDimensionsNotification,
-                    imgWeight,
-                    imgHeight,
-                    imgRatio,
-                )}
-            </div>
-        );
-    };
-
     return (
         <Modal
             open={isLightboxOpen}
@@ -127,7 +83,7 @@ export const SpotlightViewHistory = ({
             <Box className={`${classes.lightboxStyle} ${classes.marginSpecial}`}>
                 <img src={spotlightImgUrl} alt="The image we can see previous usages of" />
                 <div data-testid="spotlights-lightbox-dimensions" style={{ textAlign: 'center' }}>
-                    {getDimensionsSentenceFromUrl(spotlightImgUrl)}
+                    <SpotlightSizeWarningByUrl spotlightImgUrl={spotlightImgUrl} />
                 </div>
                 <h2 id="lightboxTitle" data-testid="spotlights-lightbox-title">
                     {locale.lightbox.title}

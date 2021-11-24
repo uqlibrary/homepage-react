@@ -5,14 +5,12 @@ import { useDropzone } from 'react-dropzone';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 
-import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import Warning from '@material-ui/icons/Warning';
 import { default as locale } from './spotlightsadmin.locale';
-import { mui1theme } from '../../../../config';
 import { addConstantsToDisplayValues, ImageSizeIsPoor } from './spotlighthelpers';
+import { SpotlightSizeWarning } from './SpotlightSizeWarning';
 
 const emptyDropzone = {
     border: 'thin solid black',
@@ -47,10 +45,10 @@ const deleteButton = {
     height: 80,
 };
 
-const warningDimensions = {
-    color: mui1theme.palette.warning.main,
-    fontWeight: 'bold',
-};
+// const warningDimensions = {
+//     color: mui1theme.palette.warning.main,
+//     fontWeight: 'bold',
+// };
 
 const dimensionBox = {
     padding: '1rem',
@@ -155,34 +153,23 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         hideFileProblemConfirmation();
     };
 
-    const actualDimensionsNotification = (imageWidthIn, imageHeightIn) => {
-        const ratio = (imageWidthIn / imageHeightIn).toFixed(2);
-        return (
-            <div style={ImageSizeIsPoor(imageWidth, imageHeight) ? warningDimensions : /* istanbul ignore next */ null}>
-                {!ImageSizeIsPoor(imageWidth, imageHeight) ? (
-                    /* istanbul ignore next */
-                    <CheckIcon fontSize="small" style={{ color: 'green', height: 15 }} />
-                ) : (
-                    <Warning fontSize="small" style={{ height: 15 }} />
-                )}
-
-                {addConstantsToDisplayValues(
-                    locale.form.upload.currentDimensionsNotification,
-                    imageWidthIn,
-                    imageHeightIn,
-                    ratio,
-                )}
-            </div>
-        );
-    };
-
     const idealDimensionsNotification = () => {
-        return addConstantsToDisplayValues(locale.form.upload.recommendedDimensionsNotification);
+        return addConstantsToDisplayValues(
+            locale.form.upload.recommendedDimensionsNotification,
+            locale.form.upload.ideal.width,
+            locale.form.upload.ideal.height,
+            locale.form.upload.ideal.ratio,
+        );
     };
 
     const uploadErrorLocale = {
         ...locale.form.upload.fileTooLarge,
-        confirmationTitle: addConstantsToDisplayValues(locale.form.upload.fileTooLarge.confirmationTitle),
+        confirmationTitle: addConstantsToDisplayValues(
+            locale.form.upload.fileTooLarge.confirmationTitle,
+            locale.form.upload.ideal.width,
+            locale.form.upload.ideal.height,
+            locale.form.upload.ideal.ratio,
+        ),
     };
 
     return (
@@ -225,7 +212,9 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                             <Grid item xs={12} key={`${file.name}-dimensions`}>
                                 <Grid container style={dimensionBox} data-testid="dropzone-dimension-warning">
                                     {imageWidth > 0 && imageHeight > 0 && (
-                                        <Grid item>{actualDimensionsNotification(imageWidth, imageHeight)}</Grid>
+                                        <Grid item>
+                                            <SpotlightSizeWarning imgWidth={imageWidth} imgHeight={imageHeight} />
+                                        </Grid>
                                     )}
                                     <Grid item xs={12}>
                                         <p>{idealDimensionsNotification()}</p>
@@ -243,7 +232,16 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     <div {...getRootProps({ className: 'dropzone' })} style={emptyDropzone}>
                         <input data-testid="dropzone-dragarea" {...getInputProps()} />
                         {locale.form.labels.dragareaInstructions.map((line, index) => {
-                            return <p key={`instruction-${index}`}>{addConstantsToDisplayValues(line)}</p>;
+                            return (
+                                <p key={`instruction-${index}`}>
+                                    {addConstantsToDisplayValues(
+                                        line,
+                                        locale.form.upload.ideal.width,
+                                        locale.form.upload.ideal.height,
+                                        locale.form.upload.ideal.ratio,
+                                    )}
+                                </p>
+                            );
                         })}
                     </div>
                 )}

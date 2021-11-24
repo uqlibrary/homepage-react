@@ -45,8 +45,11 @@ function saveButtonNOTDisabled() {
 function showUnpublishedSpotlights() {
     cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check();
 }
-function hideUnpublishedSpotlights() {
-    cy.get('[data-testid="spotlights-hideshow-unpublished"] input').uncheck();
+
+function warningIconIsPresent(dataTestid) {
+    cy.get(`[data-testid="${dataTestid}"]`)
+        .find('svg path[d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"]')
+        .should('exist');
 }
 
 describe('Spotlights Admin Pages', () => {
@@ -535,6 +538,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
                 'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
             );
+            warningIconIsPresent('spotlights-lightbox-dimensions');
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
                 .children()
@@ -564,6 +568,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
                 'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
             );
+            warningIconIsPresent('spotlights-lightbox-dimensions');
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
                 .children()
@@ -1172,6 +1177,10 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
             dragFileToDropzone('test.jpg');
+            cy.get('[data-testid="dropzone-dimension-warning"]').contains(
+                'Dimensions: 1000px by 500px (aspect ratio: 2.00).',
+            );
+            warningIconIsPresent('dropzone-dimension-warning');
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();

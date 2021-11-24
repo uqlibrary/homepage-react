@@ -56,11 +56,11 @@ export function getTimeMondayMidnightNext(baseDate = null) {
         .format('YYYY-MM-DDTHH:mm');
 }
 
-export const addConstantsToDisplayValues = (displayText, imageWidthIn = null, imageHeightIn = null, ratio = null) => {
+export const addConstantsToDisplayValues = (displayText, imageWidthIn, imageHeightIn, ratio) => {
     return displayText
-        .replace('[WIDTH]', imageWidthIn || locale.form.upload.ideal.width)
-        .replace('[HEIGHT]', imageHeightIn || locale.form.upload.ideal.height)
-        .replace('[RATIO]', ratio || locale.form.upload.ideal.ratio)
+        .replace('[WIDTH]', imageWidthIn)
+        .replace('[HEIGHT]', imageHeightIn)
+        .replace('[RATIO]', ratio)
         .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
 };
 
