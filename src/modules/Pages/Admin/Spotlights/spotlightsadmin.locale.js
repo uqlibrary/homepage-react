@@ -89,7 +89,7 @@ export default {
             text: (
                 <div data-testid="admin-spotlights-help-example">
                     
-                    <h2 id="adding-spotlight">Add a spotlight</h2>
+                    <h3 id="adding-spotlight">Add a spotlight</h3>
                     <ol>
                         <li>
                             Create a spotlight file using the recommended dimensions 813px x 300px (max image size of 400 KB).
@@ -98,11 +98,11 @@ export default {
                             Set the Image alt text field based on the text in the spotlight and the Link title and Spotlight link fields based on the destination URL.
                         </li>
                         <li>
-                            Set the date/time and Publish fields and click <strong>Create</strong>
+                            Set the date/time and Published? fields and click <strong>Create</strong>
                         </li>
                     </ol>
                 
-                    <h3>Fields</h3>
+                    <h4>Fields</h3>
                     <dl>
                         <dt>Link title</dt>
                         <dd className="description">
@@ -122,41 +122,65 @@ export default {
                 
                         <dt>Date published (start)</dt>
                         <dd className="description">
-                            <p>Date and time when the spotlight should run on the homepage. Requires the Published? Field to be checked for the spotlight to be visible to clients.</p>
-                            <p>Defaults to 12.01am next Monday. Cannot be in the past. Must be before Date unpublished.</p>
+                            <p>Date and time when the spotlight should run on the homepage. Requires the Published? field to be checked for the spotlight to be visible to clients.</p>
+                            <p>Defaults to 12.01am next Monday. Cannot be in the past. Must be before Date unpublished (end).</p>
                             <ul>
-                                <li>Set Now to create a current alert</li>
+                                <li>Use the <strong>Now</strong> button to create a current alert</li>
                                 <li>Set into the future to schedule an alert</li>
                             </ul>
-                            <p>Required field. Format: day/month/year HH:MM - 24hs</p>
+                            <p>Required field. Format: day/month/year HH:MM - 24hs.</p>
                         </dd>
 
                         <dt>Date unpublished (end)</dt>
                         <dd className="description">
-                            <p>DDate and time when spotlight should be removed from the homepage.</p>
-                            <p>Defaults to 11.59pm the Sunday after creation. Must be after Date published (starte).</p>
-                            <p>Required field. Format: day/month/year HH:MM - 24hs</p>
+                            <p>Date and time when spotlight should be removed from the homepage.</p>
+                            <p>Defaults to 11.59pm the Sunday after creation. Must be after Date published (start).</p>
+                            <p>Required field. Format: day/month/year HH:MM - 24hs.</p>
                         </dd>
 
                         <dt>File upload</dt>
                         <dd className="description">
-                            <p>Drag and drop or click to upload a spotlight image.</p>
-                            <p>Max image size: 400 KB. Recommended dimensions: 813px by 300px (aspect ratio: 2.71).</p>
-                            <p>Required field. Replace uploaded image using the Remove image button.</p>
+                            <p>Drag and drop into or click the box to upload a spotlight image.</p>
+                            <p>Max image size: 400 KB. Larger files will be rejected.</p> 
+                            <p>Recommended dimensions: 813px by 300px (aspect ratio: 2.71).</p>
+                            <p>Required field. Replace uploaded image using the <strong>Remove image</strong> button.</p>
                         </dd>
-                        <dt>Published</dt>
+                        <dt>Published?</dt>
                         <dd className="description">
                             <p>Enables/disables content on the homepage between Date published and Date unpublished.</p>
                             <p>Check to publish, uncheck to unpublish. Can also be set from the listing screen.</p>
                         </dd>
                     </dl>
-                    <h2>Editing an spotlight</h2>
+                    <h3>Edit a spotlight</h3>
+                    <ol>
+                        <li>Update any of the fields, dates or spotlight image</li>
+                        <li>Press <strong>Save</strong> to finish. You will be prompted to return to the listing screen.</li>
+                    </ol>
                     <p>
-                        Editing an existing spotlight is done by pressing the mode_edit button on the specific spotlight
-                        row in the main spotlight grid view. This will take the user to the "Edit Spotlight" view, which
-                        is functionally identical to the "Add Spotlight" view. Please see the "Adding a spotlight"
-                        section for more details.
+                        The changes will be live on the website within 2 minutes of its Date published date/time. Hard refresh your browser to the see the spotlight.
                     </p>
+                            
+                    <p>
+                        Please see the Adding a spotlight section for information on the form fields.</p>
+                    </p>
+                            
+                    <h3>Clone (copy) a spotlight</h3>
+                    <p>
+                        Review all form fields:
+                    </p>
+                    <ul>
+                        <li>Update Date published/Date unpublished</li>
+                        <li>
+                            Use the <strong>Remove image</strong> button to replace images with old branding, overly large dimensions beyond those recommended or the wrong aspect ratio.
+                        </li>
+                        <li>Ensure the <strong>Published?</strong> button is checked as needed.
+                    </ul>
+                    <p>
+                        Press <strong>Save<strong> to finish. You can then clone another spotlight or return to the listing screen.
+                        The spotlight will be live on the website within 2 minutes of its Date published date/time. Hard refresh your browser to the see the spotlight.
+                    </p>
+                            
+                        
                 </div>
             ),
         },
@@ -208,7 +232,7 @@ export default {
                         displayed for clients on the UQ Library homepage.
                     </p>
 
-                    <h2>Listing screen</h2>
+                    <h3>Listing screen</h3>
                     <p>
                         Spotlights are listed in three tables, Current spotlights, Scheduled spotlights and Past
                         spotlights based on their Date published (start) and Date unpublished (end) date and time. Check
@@ -232,7 +256,7 @@ export default {
                         </li>
                     </ul>
 
-                    <h3>Spotlight action buttons</h3>
+                    <h4>Spotlight action buttons</h3>
                     <p>
                         Each spotlight has two action buttons. There is a primary action and a More actions button
                         (downward arrow). Use the actions to interact with spotlights:
@@ -249,7 +273,7 @@ export default {
                         </li>
                     </ul>
 
-                    <h2>Add a spotlight</h2>
+                    <h3>Add a spotlight</h3>
                     <p>
                         Press the <strong>Add spotlight</strong> button on the listing screen. The Create a new
                         spotlight form will appear.
@@ -259,7 +283,7 @@ export default {
                         your browser to view the spotlight.
                     </p>
 
-                    <h2>Edit a spotlight</h2>
+                    <h3>Edit a spotlight</h3>
                     <p>
                         Press <strong>Edit</strong> beside a spotlight on the listing screen. The Edit spotlight form
                         will appear with the fields prefilled.
@@ -277,7 +301,7 @@ export default {
                         view the spotlight.
                     </p>
 
-                    <h2>Clone (copy) a spotlight</h2>
+                    <h3>Clone (copy) a spotlight</h3>
                     <p>
                         Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
                         <strong>Clone</strong>. The Clone spotlight form will appear with the fields prefilled and the
@@ -292,7 +316,7 @@ export default {
                         your browser to view the spotlight.
                     </p>
 
-                    <h2>View a past spotlight</h2>
+                    <h3>View a past spotlight</h3>
                     <p>
                         Press <strong>View</strong> beside a past spotlight. The View spotlight form will appear in read
                         only mode to ensure past spotlights are retained as a record of past messages to clients.
@@ -307,7 +331,7 @@ export default {
                         </li>
                     </ul>
 
-                    <h2>Reorder current spotlights</h2>
+                    <h3>Reorder current spotlights</h3>
                     <p>
                         Current spotlights can be reordered when the Current spotlights table is ordered in the default
                         Display order (ascending) only.
@@ -320,7 +344,7 @@ export default {
                         </li>
                     </ol>
 
-                    <h2>Publish/unpublish current spotlights</h2>
+                    <h3>Publish/unpublish current spotlights</h3>
                     <p>To quickly unpublish a current spotlight from the listing screen:</p>
                     <ol>
                         <li>
@@ -337,7 +361,7 @@ export default {
                         <strong>Published?</strong> checkbox and confirming the change.
                     </p>
 
-                    <h2>Search past spotlights</h2>
+                    <h3>Search past spotlights</h3>
                     <p>
                         Enter keywords into the Quick search text field above the Past spotlights table to search based
                         on the Link title and Image alt text fields.
@@ -345,7 +369,7 @@ export default {
                     <p>Past spotlights will be filtered based on your keywords.</p>
                     <p>Search results will be retained for one hour and then cleared.</p>
 
-                    <h2>Remove alerts</h2>
+                    <h3>Remove alerts</h3>
                     <p>Deleted spotlights cannot be restored. In general, limit deletions to:</p>
                     <ul>
                         <li>
@@ -375,7 +399,7 @@ export default {
                         spotlights are permanently deleted.
                     </p>
 
-                    <h2>User permissions</h2>
+                    <h3>User permissions</h3>
                     <p>Contact the Manager, Engagement and Communication about access to this system.</p>
                 </div>
             ),
