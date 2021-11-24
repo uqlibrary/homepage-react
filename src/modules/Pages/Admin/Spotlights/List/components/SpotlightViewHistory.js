@@ -50,6 +50,9 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.warning.main,
         fontWeight: 'bold',
     },
+    marginSpecial: styleProps => ({
+        marginTop: styleProps.marginSpecial.marginTop,
+    }),
 }));
 
 export const SpotlightViewHistory = ({
@@ -59,7 +62,17 @@ export const SpotlightViewHistory = ({
     spotlights,
     spotlightImgUrl,
 }) => {
-    const classes = useStyles();
+    // modal does something weird - when there are a lot of spotlights (> 3) the top sits just off the screen
+    // supply a margin top value that varies wih how many spotlights we have
+    const multiSpotlightMarginSize = ((spotlights.length > 2 ? spotlights.length - 2 : 0) / 2) * 100;
+    const styleProps = {
+        marginSpecial: {
+            marginTop: multiSpotlightMarginSize,
+        },
+    };
+
+    // per https://mui.com/styles/basics/#adapting-based-on-props
+    const classes = useStyles(styleProps);
 
     const [imgWeight, setImgWeight] = useState(null);
     const [imgHeight, setImgHeight] = useState(null);
@@ -107,19 +120,11 @@ export const SpotlightViewHistory = ({
             open={isLightboxOpen}
             onClose={handleLightboxClose}
             aria-labelledby="lightboxTitle"
-            aria-label="See past usages of this image"
             className={classes.lightboxModalStyle}
             data-testid="spotlights-lightbox-holder"
+            disableScrollLock
         >
-            <Box className={classes.lightboxStyle}>
-                <Button
-                    children="Close"
-                    color="primary"
-                    data-testid="spotlights-lightbox-close-button"
-                    onClick={handleLightboxClose}
-                    style={{ float: 'right' }}
-                    variant="contained"
-                />
+            <Box className={`${classes.lightboxStyle} ${classes.marginSpecial}`}>
                 <img src={spotlightImgUrl} alt="The image we can see previous usages of" />
                 <div data-testid="spotlights-lightbox-dimensions" style={{ textAlign: 'center' }}>
                     {getDimensionsSentenceFromUrl(spotlightImgUrl)}
@@ -155,7 +160,7 @@ export const SpotlightViewHistory = ({
                                     <strong>{locale.lightbox.ariaLabel}</strong>: {s.img_alt}
                                 </p>
                                 <p>
-                                    <strong>{locale.lightbox.link}</strong>: {s.link}
+                                    <strong>{locale.lightbox.link}</strong>: {s.url}
                                 </p>
                                 <p>
                                     <strong>{locale.lightbox.startDate}</strong>: {startDateDisplay}
@@ -169,6 +174,16 @@ export const SpotlightViewHistory = ({
                         );
                     })}
                 </ul>
+                <div>
+                    <Button
+                        children="Close"
+                        color="secondary"
+                        data-testid="spotlights-lightbox-close-button"
+                        onClick={handleLightboxClose}
+                        style={{ float: 'right' }}
+                        variant="contained"
+                    />
+                </div>
             </Box>
         </Modal>
     );

@@ -1145,13 +1145,15 @@ export const SpotlightsListAsTable = ({
                     </Table>
                 </TableContainer>
             </DragDropContext>
-            <SpotlightViewHistory
-                spotlightImgUrl={lightBoxFocus}
-                spotlights={lightBoxRows}
-                isLightboxOpen={isLightboxOpen}
-                handleLightboxClose={handleLightboxClose}
-                navigateToCloneForm={navigateToCloneForm}
-            />
+            {isLightboxOpen && (
+                <SpotlightViewHistory
+                    spotlightImgUrl={lightBoxFocus}
+                    spotlights={lightBoxRows}
+                    isLightboxOpen={isLightboxOpen}
+                    handleLightboxClose={handleLightboxClose}
+                    navigateToCloneForm={navigateToCloneForm}
+                />
+            )}
         </Fragment>
     );
 };
