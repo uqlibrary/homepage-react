@@ -95,7 +95,7 @@ export function moveItemInArray(arr, oldIndex, newIndex) {
 // when the spotlights are occupying the entire width of the screen (ipad view)
 // but the bigger than this they get, the longer the page will take to load
 export const ImageSizeIsPoor = (imageWidthIn, imageHeightIn) => {
-    const ratio = (imageWidthIn / imageWidthIn).toFixed(2);
+    const ratio = (imageWidthIn / imageHeightIn).toFixed(2);
     return (
         imageWidthIn < locale.form.upload.ideal.width - locale.form.upload.heightWidthFlex ||
         imageWidthIn > locale.form.upload.ideal.width + locale.form.upload.heightWidthFlex ||

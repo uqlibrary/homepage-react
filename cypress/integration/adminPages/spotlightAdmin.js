@@ -27,11 +27,6 @@ function dragFileToDropzone(uploadableFile) {
     });
     cy.get('[data-testid="dropzone-dragarea"]').should('not.exist');
     cy.get('[data-testid="dropzone-preview"]').should('exist');
-    cy.get('[data-testid="dropzone-dimension-warning"]')
-        .should('exist')
-        .should('contain', 'Dimensions')
-        .should('contain', 'Recommended dimensions')
-        .should('contain', 'Larger images will affect page load time and smaller ones may be pixelated');
 }
 
 function saveButtonisDisabled() {
@@ -46,9 +41,27 @@ function showUnpublishedSpotlights() {
     cy.get('[data-testid="spotlights-hideshow-unpublished"] input').check();
 }
 
-function warningIconIsPresent(dataTestid) {
+// we test on 2 different images:
+// spotlight-just-right.png and spotlight-too-large.jpg
+// we know what the specific dimensions are for each, so can hard code them
+function imageWarningIsPresent(dataTestid, isUpload = true) {
     cy.get(`[data-testid="${dataTestid}"]`)
+        .should('exist')
         .find('svg path[d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"]')
+        .should('exist');
+    cy.get(`[data-testid="${dataTestid}"]`).should('contain', 'Dimensions: 1967px by 721px (aspect ratio: 2.73).');
+    if (isUpload) {
+        cy.get(`[data-testid="${dataTestid}"]`).should(
+            'contain',
+            'Larger images will affect page load time and smaller ones may be pixelated',
+        );
+    }
+}
+function imageOKIsPresent(dataTestid) {
+    cy.get(`[data-testid="${dataTestid}"]`)
+        .should('exist')
+        .should('contain', 'Dimensions: 813px by 298px (aspect ratio: 2.73).')
+        .find('svg path[d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"]')
         .should('exist');
 }
 
@@ -535,10 +548,7 @@ describe('Spotlights Admin Pages', () => {
 
             // lightbox loads
             cy.get('[data-testid="spotlights-lightbox-title"]').contains('Previous entries for this image');
-            cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
-                'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
-            );
-            warningIconIsPresent('spotlights-lightbox-dimensions');
+            imageWarningIsPresent('spotlights-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
                 .children()
@@ -568,7 +578,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
                 'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
             );
-            warningIconIsPresent('spotlights-lightbox-dimensions');
+            imageWarningIsPresent('spotlights-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
                 .children()
@@ -1079,11 +1089,8 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
 
-            dragFileToDropzone('test.jpg');
-            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', '1000');
-            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', 'px by ');
-            cy.get('[data-testid="dropzone-dimension-warning"]').should('contain', '500');
-
+            dragFileToDropzone('spotlight-too-large.jpg');
+            imageWarningIsPresent('dropzone-dimension-warning');
             saveButtonNOTDisabled();
 
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
@@ -1176,11 +1183,11 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 4');
             cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
-            dragFileToDropzone('test.jpg');
+            dragFileToDropzone('spotlight-too-large.jpg');
             cy.get('[data-testid="dropzone-dimension-warning"]').contains(
-                'Dimensions: 1000px by 500px (aspect ratio: 2.00).',
+                'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
             );
-            warningIconIsPresent('dropzone-dimension-warning');
+            imageWarningIsPresent('dropzone-dimension-warning');
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
@@ -1215,7 +1222,8 @@ describe('Spotlights Admin Pages', () => {
             // fill out the form from the bottom up to double-check the "button enables properly"
             saveButtonisDisabled();
 
-            dragFileToDropzone('test.jpg');
+            dragFileToDropzone('spotlight-just-right.png');
+            imageOKIsPresent('dropzone-dimension-warning');
             saveButtonisDisabled();
 
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 5');
@@ -1261,7 +1269,8 @@ describe('Spotlights Admin Pages', () => {
                 });
 
             // drag in a new image and it is reflected in the 'reorderable thumbs'
-            dragFileToDropzone('test.jpg');
+            dragFileToDropzone('spotlight-just-right.png');
+            imageOKIsPresent('dropzone-dimension-warning');
             cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
                 .invoke('attr', 'src')
                 .then(src => {
@@ -1399,12 +1408,12 @@ describe('Spotlights Admin Pages', () => {
                 'contain',
                 'Drag and drop a spotlight image',
             );
-            dragFileToDropzone('test.jpg');
+            dragFileToDropzone('spotlight-just-right.png');
             cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
                 'not.contain',
                 'Drag and drop a spotlight image',
             );
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should('contain', 'Recommended dimensions');
+            imageOKIsPresent('dropzone-dimension-warning');
         });
         it('edit shows the right reorder block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
@@ -1577,12 +1586,12 @@ describe('Spotlights Admin Pages', () => {
                 'contain',
                 'Drag and drop a spotlight image',
             );
-            dragFileToDropzone('test.jpg');
+            dragFileToDropzone('spotlight-just-right.png');
             cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
                 'not.contain',
                 'Drag and drop a spotlight image',
             );
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should('contain', 'Recommended dimensions');
+            imageOKIsPresent('dropzone-dimension-warning');
         });
         it('clone shows the right reorder block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/clone/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
