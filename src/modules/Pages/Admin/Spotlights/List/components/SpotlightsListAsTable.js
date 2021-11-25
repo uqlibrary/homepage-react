@@ -101,6 +101,9 @@ const useStyles = makeStyles(
                 fill: '#595959',
             },
             padding: 0,
+            '& .MuiTouchRipple-root': {
+                color: theme.palette.primary.main,
+            },
         },
         toggle: {
             whiteSpace: 'nowrap',
@@ -378,7 +381,6 @@ export const SpotlightsListAsTable = ({
     const reweightSpotlights = () => {
         console.log('reweightSpotlights: userows=', userows);
         const listUnchanged = userows.map(s => s);
-        // const list = userows.map(s => s);
         setUserows(prevState => {
             console.log('reweightSpotlights prevState = ', prevState);
             const data = [...prevState];
@@ -388,10 +390,8 @@ export const SpotlightsListAsTable = ({
                 if (isPastSpotlight(s)) {
                     s.spotlightType = 3; // past
                 } /* istanbul ignore next */ else if (isScheduledSpotlight(s)) {
-                    // console.log('check scheduled', s.id, s.title.substr(0, 20), s.start, s.weight);
                     s.spotlightType = 2; // scheduled
                 } else {
-                    // console.log('check current', s.id, s.title.substr(0, 20), s.start, s.weight);
                     s.spotlightType = 1; // current
                 }
                 return s;
