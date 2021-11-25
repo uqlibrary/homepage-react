@@ -10,14 +10,13 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import { isCurrentSpotlight, moveItemInArray } from './spotlighthelpers';
 
 const useStyles = makeStyles(() => ({
-    hasBorder: {
+    reorderableThumb: {
         height: 60,
         marginRight: 5,
-        border: '3px solid black',
+        maxWidth: 164,
     },
-    noBorder: {
-        height: 60,
-        marginRight: 5,
+    hasBorder: {
+        border: '3px solid black',
     },
     placeholderBlock: {
         height: 54,
@@ -242,7 +241,9 @@ export const SpotlightFormReorderableThumbs = ({
                                                     alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
                                                     src={getCurrentImage(isThisImage, s)}
                                                     title={isThisImage ? currentValues.img_alt : s.img_alt}
-                                                    className={`${isThisImage ? classes.hasBorder : classes.noBorder}`}
+                                                    className={`${classes.reorderableThumb} ${
+                                                        isThisImage ? classes.hasBorder : ''
+                                                    }`}
                                                     {...draggableProvided.draggableProps}
                                                     {...draggableProvided.dragHandleProps}
                                                     ref={draggableProvided.innerRef}
