@@ -38,6 +38,9 @@ const useStyles = makeStyles(() => ({
         paddingTop: 5,
         paddingRight: 1,
     },
+    currentReorderableOrderNumber: {
+        backgroundColor: 'rgb(35, 119, 203, 0.6)', // uqblue, translucent
+    },
 }));
 
 export const SpotlightFormReorderableThumbs = ({
@@ -244,7 +247,11 @@ export const SpotlightFormReorderableThumbs = ({
                                                         {...draggableProvided.dragHandleProps}
                                                         ref={draggableProvided.innerRef}
                                                     />
-                                                    <span className={classes.reorderableOrderNumber}>
+                                                    <span
+                                                        className={`${classes.reorderableOrderNumber} ${
+                                                            isThisImage ? classes.currentReorderableOrderNumber : ''
+                                                        }`}
+                                                    >
                                                         {thumbIndex + 1}
                                                     </span>
                                                 </span>
