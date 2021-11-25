@@ -1208,16 +1208,19 @@ describe('Spotlights Admin Pages', () => {
                 .contains('OK')
                 .click();
 
+            // we cant current do any interactive testing, so a basic check is the best we can do
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
-            cy.get('[data-testid="spotlights-thumbs-reorder"] *').should('have.length', 5);
-            cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
+            cy.get('[data-testid="spotlights-thumbs-reorder"]')
+                .children()
+                .should('have.length', 5);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .should('exist')
                 .and('have.css', 'border-left-style', 'solid'); // proxy for "the span is highlighted"
 
             // the grey place holder shows as the last img
-            cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .invoke('attr', 'src')
                 .then(src => {
                     expect(src).to.contains('https://app-testing.library.uq.edu.au/');
@@ -1226,7 +1229,7 @@ describe('Spotlights Admin Pages', () => {
             // drag in a new image and it is reflected in the 'reorderable thumbs'
             dragFileToDropzone('spotlight-just-right.png');
             imageOKIsPresent('dropzone-dimension-warning');
-            cy.get('[data-testid="spotlights-thumbs-reorder"] *:last-child')
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .invoke('attr', 'src')
                 .then(src => {
                     expect(src).to.contains('blob:http://localhost:2020');
@@ -1376,15 +1379,22 @@ describe('Spotlights Admin Pages', () => {
             );
             imageOKIsPresent('dropzone-dimension-warning');
         });
-        it('edit shows the right reorder block', () => {
+        it('edit form shows the right reorder block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
             cy.viewport(1300, 1000);
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
+                'not.contain',
+                'Drag and drop a spotlight image',
+            );
 
+            // we cant current do any interactive testing, so a basic check is the best we can do
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
-            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 4);
-            cy.get('[data-testid="spotlights-thumbs-reorder"] img:first-child').should(
+            cy.get('[data-testid="spotlights-thumbs-reorder"]')
+                .children()
+                .should('have.length', 4);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:first-child img').should(
                 'have.css', // proxy for "the img is highlighted"
                 'border-left-style',
                 'solid',
@@ -1563,8 +1573,12 @@ describe('Spotlights Admin Pages', () => {
         it('clone shows the right reorder block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/clone/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
             cy.viewport(1300, 1000);
+            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
+                'not.contain',
+                'Drag and drop a spotlight image',
+            );
 
-            // set date to now
+            // set date to now so the thumbs are available
             cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
             cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
                 .should('be.visible')
@@ -1574,11 +1588,14 @@ describe('Spotlights Admin Pages', () => {
                 .contains('OK')
                 .click();
 
+            // we cant current do any interactive testing, so a basic check is the best we can do
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
-            cy.get('[data-testid="spotlights-thumbs-reorder"] img').should('have.length', 5);
-            cy.get('[data-testid="spotlights-thumbs-reorder"] img:last-child')
+            cy.get('[data-testid="spotlights-thumbs-reorder"]')
+                .children()
+                .should('have.length', 5);
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .should('exist')
                 .and('have.css', 'border-left-style', 'solid'); // proxy for "the img is highlighted"
         });
