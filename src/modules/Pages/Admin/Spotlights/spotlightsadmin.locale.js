@@ -273,12 +273,11 @@ export default {
                             <strong>Current spotlights:</strong> lists spotlights published on the website now based on
                             the Date published, Date unpublished and Published? fields. By default, the list is ordered
                             by Display order (the order in which clients will see the spotlights after loading the
-                            homepage). All spotlights are displayed.
+                            homepage). The table displays all current spotlights.
                         </li>
                         <li>
                             <strong>Scheduled spotlights:</strong> displays future spotlights based on the Date
-                            published field. By default, the list is ordered by Date published. All spotlights are
-                            displayed.
+                            published field. By default, the list is ordered by Date published. The table displays all scheduled spotlights.
                         </li>
                         <li>
                             <strong>Past spotlights:</strong> displays past spotlights. By default, the list is ordered
@@ -289,12 +288,12 @@ export default {
 
                     <h4>Sort spotlights by table column heading</h4>
                     <p>
-                        Click one of the column heading tables to sort spotlights by that label. An up or down arrow
-                        will appear beside the label to indicate the current sort.
+                        In any of the spotlight tables, click one of the column lables to sort spotlights by that label. 
+                        An up or down arrow will appear beside the label to indicate the current sort.
                     </p>
                     <p>
-                        Sortable columns include: Display order (Current spotlights only), Date published (start
-                        date/time), Date unpublished (end date/time) and Published?
+                        Sortable columns include: Display order (current spotlights only), Date published (start
+                        date/time), Date unpublished (end date/time) and Published?.
                     </p>
 
                     <h4>Spotlight action buttons</h4>
@@ -325,14 +324,16 @@ export default {
                         feature.
                     </p>
 
-                    <p>
-                        Press the <strong>Add spotlight</strong> button on the listing screen. The Create a new
-                        spotlight form will appear.
-                    </p>
-                    <p>
-                        Saved spotlights will appear on the website within two minutes of their start time. Hard refresh
-                        your browser to view the spotlight.
-                    </p>
+                    <ol>
+                        <li>
+                            Press the <strong>Add spotlight</strong> button on the listing screen. The Create a new
+                            spotlight form will appear.
+                        </li>
+                        <li>
+                            Saved spotlights will appear on the website within two minutes of their start time. Hard refresh
+                            your browser to view the spotlight.
+                        </li>
+                    </ol>
 
                     <h3>Edit a spotlight</h3>
                     <p>
@@ -396,20 +397,17 @@ export default {
                     </ol>
 
                     <h3>Publish/unpublish current spotlights</h3>
-                    <p>To quickly unpublish a current spotlight from the listing screen:</p>
-                    <ol>
+                    <ul>
                         <li>
-                            Click on the checked <strong>Published?</strong> checkbox for that spotlight
+                            <strong>Unpublish:</strong> click on the checked <strong>Published?</strong> checkbox for that spotlight
                         </li>
-                        <li>Confirm you wish to unpublish the spotlight.</li>
-                    </ol>
+                        <li><strong>Publish:</strong> click on the unchecked <strong>Published?</strong> checkbox for that spotlight</li>
+                    </ul>
                     <p>
-                        Unpublished spotlights will be removed from the homepage within two minutes. Hard refresh your
-                        browser to view the spotlight.
+                        The checkbox will change and you will see a coloured ripple indicate that the checkbox state has changed.
                     </p>
                     <p>
-                        Similarly, current spotlights that are not published can be published by clicking the{' '}
-                        <strong>Published?</strong> checkbox and confirming the change.
+                        The adjusted spotlight will change on the website within 2 minutes. Hard refresh your browser to see the change.
                     </p>
 
                     <h3>Search past spotlights</h3>
@@ -451,7 +449,7 @@ export default {
                     </p>
 
                     <h3>User permissions</h3>
-                    <p>Contact the Manager, Engagement and Communication about access to this system.</p>
+                    <p>Contact the Manager, Engagement and Communication to request access to this system.</p>
                 </div>
             ),
         },
