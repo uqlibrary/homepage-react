@@ -103,6 +103,9 @@ const useStyles = makeStyles(
                 fill: '#595959',
             },
             padding: 0,
+            '& .MuiTouchRipple-root': {
+                color: theme.palette.primary.main,
+            },
         },
         toggle: {
             whiteSpace: 'nowrap',
@@ -163,8 +166,6 @@ export const SpotlightsListAsTable = ({
     const [spotlightNotice, setSpotlightNotice] = useState('');
     const [userows, setUserows] = useState([]);
     const [staticUserows, setStaticUserows] = useState([]);
-    const [selectedSpotlight, setSelectedSpotlight] = useState(null);
-    const [publishUnpublishLocale, setPublishUnpublishLocale] = useState({});
 
     const FILTER_STORAGE_NAME = 'alert-admin-filter-term';
     const getFilterTermFromSession = () => {
@@ -222,11 +223,6 @@ export const SpotlightsListAsTable = ({
         isSaveFailureConfirmationOpen,
         showSaveFailureConfirmation,
         hideSaveFailureConfirmation,
-    ] = useConfirmationState();
-    const [
-        isPublishUnpublishConfirmationOpen,
-        showPublishUnpublishConfirmation,
-        hidePublishUnpublishConfirmation,
     ] = useConfirmationState();
 
     const displayTheRows = React.useCallback(
@@ -407,7 +403,6 @@ export const SpotlightsListAsTable = ({
     const reweightSpotlights = () => {
         console.log('reweightSpotlights: userows=', userows);
         const listUnchanged = userows.map(s => s);
-        // const list = userows.map(s => s);
         setUserows(prevState => {
             console.log('reweightSpotlights prevState = ', prevState);
             const data = [...prevState];
@@ -417,10 +412,8 @@ export const SpotlightsListAsTable = ({
                 if (isPastSpotlight(s)) {
                     s.spotlightType = 3; // past
                 } /* istanbul ignore next */ else if (isScheduledSpotlight(s)) {
-                    // console.log('check scheduled', s.id, s.title.substr(0, 20), s.start, s.weight);
                     s.spotlightType = 2; // scheduled
                 } else {
-                    // console.log('check current', s.id, s.title.substr(0, 20), s.start, s.weight);
                     s.spotlightType = 1; // current
                 }
                 return s;
@@ -607,26 +600,12 @@ export const SpotlightsListAsTable = ({
         markAsDraggedAndDropped(true);
     };
 
-    const confirmPublishUnpublishLocale = isCurrentlyActive => {
-        return !!isCurrentlyActive ? locale.listPage.confirmUnpublish : locale.listPage.confirmPublish;
-    };
-
     const handlePublishCheckbox = () => event => {
         console.log('handlePublishCheckbox event = ', event);
         const checkboxId = event.target?.id.replace('spotlight-published-', '');
         console.log('checkboxId = ', checkboxId);
-        const spotlight = userows.find(r => r.id === checkboxId);
-        setPublishUnpublishLocale(confirmPublishUnpublishLocale(spotlight.active));
-        setSelectedSpotlight(checkboxId);
-        showPublishUnpublishConfirmation(true);
-    };
 
-    const handlePublishCheckboxConfirmation = () => {
-        /* istanbul ignore next */
-        if (!selectedSpotlight) {
-            return;
-        }
-        const updateableRow = rows.find(r => r.id === selectedSpotlight);
+        const updateableRow = rows.find(r => r.id === checkboxId);
         /* istanbul ignore next */
         const newState = !!updateableRow && !updateableRow.active ? 1 : 0;
         const rowToUpdate = {
@@ -637,7 +616,7 @@ export const SpotlightsListAsTable = ({
 
         setUserows(prevState => {
             const data = [...prevState];
-            data.map(r => r.id === selectedSpotlight && (r.active = newState));
+            data.map(r => r.id === checkboxId && (r.active = newState));
             return data;
         });
 
@@ -779,16 +758,6 @@ export const SpotlightsListAsTable = ({
                 hideCancelButton
                 isOpen={isSaveFailureConfirmationOpen}
                 locale={locale.listPage.saveError}
-            />
-            <ConfirmationBox
-                actionButtonColor="secondary"
-                actionButtonVariant="contained"
-                confirmationBoxId="spotlight-confirm-publish-unpublish-dialog"
-                onAction={hidePublishUnpublishConfirmation}
-                onClose={hidePublishUnpublishConfirmation}
-                onCancelAction={() => handlePublishCheckboxConfirmation()}
-                isOpen={isPublishUnpublishConfirmationOpen}
-                locale={publishUnpublishLocale}
             />
             <DragDropContext onDragEnd={onDragEnd}>
                 <TableContainer
