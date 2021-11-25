@@ -23,15 +23,6 @@ export const SpotlightsEdit = ({
     spotlights,
     spotlightsLoading,
 }) => {
-    // console.log('SpotlightsEdit: spotlight =  ', spotlight);
-    // console.log('SpotlightsEdit: spotlightStatus =  ', spotlightStatus);
-    // console.log('SpotlightsEdit: spotlightError =  ', spotlightError);
-    // console.log('SpotlightsEdit: publicFileUploading = ', publicFileUploading);
-    // console.log('SpotlightsEdit: publicFileUploadError = ', publicFileUploadError);
-    // console.log('SpotlightsEdit: publicFileUploadResult = ', publicFileUploadResult);
-    // console.log('SpotlightsEdit: spotlights = ', spotlights);
-    // console.log('SpotlightsEdit: spotlightsLoading = ', spotlightsLoading);
-
     const { spotlightid } = useParams();
 
     React.useEffect(() => {

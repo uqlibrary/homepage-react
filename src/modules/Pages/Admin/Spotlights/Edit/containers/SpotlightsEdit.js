@@ -12,7 +12,6 @@ const mapStateToProps = state => {
         ...state.get('spotlightsReducer'),
     };
 };
-console.log('mapStateToProps = ', mapStateToProps);
 
 const mapDispatchToProps = dispatch => {
     return {

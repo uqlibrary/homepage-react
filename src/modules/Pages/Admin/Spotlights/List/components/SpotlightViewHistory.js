@@ -43,13 +43,6 @@ const useStyles = makeStyles(theme => ({
     lightboxModalStyle: {
         overflow: 'scroll',
     },
-    // warningDimensions: {
-    //     color: theme.palette.warning.main,
-    //     fontWeight: 'bold',
-    // },
-    marginSpecial: styleProps => ({
-        marginTop: styleProps.marginSpecial.marginTop,
-    }),
 }));
 
 export const SpotlightViewHistory = ({

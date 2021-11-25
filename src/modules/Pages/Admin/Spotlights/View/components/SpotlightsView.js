@@ -16,11 +16,7 @@ import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/Spotlights
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { formatDate } from '../../spotlighthelpers';
 
-export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightStatus, history }) => {
-    console.log('SpotlightsView: spotlight =  ', spotlight);
-    console.log('SpotlightsView: spotlightStatus =  ', spotlightStatus);
-    console.log('SpotlightsView: spotlightError =  ', spotlightError);
-
+export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history }) => {
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
@@ -205,7 +201,6 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
 SpotlightsView.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
-    spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
     history: PropTypes.object,
 };

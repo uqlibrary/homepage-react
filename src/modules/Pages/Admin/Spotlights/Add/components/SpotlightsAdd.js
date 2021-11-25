@@ -25,8 +25,6 @@ export const SpotlightsAdd = ({
     spotlights,
     spotlightsLoading,
 }) => {
-    console.log('component:', spotlights);
-
     const defaults = {
         id: '',
         startDateDefault: getTimeMondayMidnightNext(),

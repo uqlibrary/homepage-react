@@ -46,17 +46,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     useEffect(() => {
         /* istanbul ignore else */
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
-            console.log('@@@ kick off spotlights load');
             actions.loadAllSpotlights();
-        } else {
-            console.log(
-                '@@@ useeeffect []; spotlightsError = ',
-                spotlightsError,
-                '; spotlightsLoading = ',
-                spotlightsLoading,
-                '; spotlights = ',
-                spotlights,
-            );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -101,10 +91,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         }
     }, [spotlights]);
 
-    // const deleteSpotlight = spotlightID => {
-    //     return actions.deleteSpotlight(spotlightID);
-    // };
-
     const deleteSpotlightBulk = slist => {
         return actions.deleteSpotlightBatch(slist);
     };
@@ -115,10 +101,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
 
     /* istanbul ignore next */
     const saveBatchReorder = slist => {
-        slist.forEach(s => {
-            console.log('saveBatchReorder', s.id, s.weight, s.title);
-        });
-        // console.log('saveBatchReorder', slist);
         return actions.saveSpotlightBatch(slist);
     };
 
@@ -142,7 +124,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         );
     }
 
-    console.log('spotlightsError:', spotlightsError);
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -177,13 +158,11 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canDragRows
                                     canUnpublish
-                                    // reweightSpotlights={reweightSpotlights}
                                 />
                             </div>
                             <div
@@ -197,12 +176,10 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canUnpublish
-                                    // reweightSpotlights={reweightSpotlights}
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -213,12 +190,10 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canTextFilter
-                                    // reweightSpotlights={reweightSpotlights}
                                 />
                             </div>
                         </Grid>

@@ -58,7 +58,6 @@ export const SpotlightFormReorderableThumbs = ({
                   .map(s => {
                       return {
                           ...s,
-                          // weight: s.id === placeholderThumbnailId ? currentValues.weight : s.weight,
                           weight: defaultWeight,
                       };
                   })
@@ -220,7 +219,7 @@ export const SpotlightFormReorderableThumbs = ({
                         {droppableProvided => (
                             <div
                                 data-testid="spotlights-thumbs-reorder"
-                                ref={droppableProvided.innerRef} // innerRef={droppableProvided.innerRef}
+                                ref={droppableProvided.innerRef}
                                 {...droppableProvided.droppableProps}
                             >
                                 {thumbableSpotlights.map((s, thumbIndex) => {

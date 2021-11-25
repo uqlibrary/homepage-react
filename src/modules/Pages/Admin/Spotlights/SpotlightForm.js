@@ -78,11 +78,6 @@ export const SpotlightForm = ({
     spotlights,
     spotlightsLoading,
 }) => {
-    console.log('form: spotlightError = ', spotlightError);
-    console.log('form: spotlightResponse = ', spotlightResponse);
-    console.log('form: spotlightStatus = ', spotlightStatus);
-    console.log('form: spotlights = ', spotlights);
-    console.log('form: spotlightsLoading = ', spotlightsLoading);
     const classes = useStyles();
 
     // we cant just use the Current Spotlights api because it doesnt return unpublished records :(
@@ -92,9 +87,7 @@ export const SpotlightForm = ({
         spotlights
             .filter(s => moment(s.start).isBefore(moment()) && moment(s.end).isAfter(moment()))
             .sort((a, b) => a.weight - b.weight);
-    console.log('form: currentSpotlights = ', currentSpotlights);
 
-    // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
     const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
     const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
     const [isEditOpen, showEditConfirmation, hideEditConfirmation] = useConfirmationState();
@@ -102,9 +95,7 @@ export const SpotlightForm = ({
     const [isUploadErrorOpen, showUploadError, hideUploadError] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [uploadedFiles, setUploadedFiles] = useState(null);
 
-    console.log('defaults = ', defaults);
     const [values, setValues] = useState({
         // the data displayed in the form
         ...defaults,
@@ -199,16 +190,7 @@ export const SpotlightForm = ({
         return isValid;
     };
 
-    // useEffect(() => {
-    //     if (!!defaults && defaults.type === 'clone') {
-    //         setFormValidity(validateValues(defaults));
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     useEffect(() => {
-        // console.log('uploadedFiles set to ', uploadedFiles);
-        console.log('values have been changed to: ', values);
         setFormValidity(validateValues(values));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values]);
@@ -270,12 +252,6 @@ export const SpotlightForm = ({
     };
 
     const reloadClonePage = () => {
-        console.log('reloadClonePage defaults = ', {
-            // the data displayed in the form
-            ...defaults,
-            start: defaults.startDateDefault,
-            end: defaults.endDateDefault,
-        });
         setValues({
             // the data displayed in the form
             ...defaults,
@@ -291,7 +267,6 @@ export const SpotlightForm = ({
         const topOfPage = document.getElementById('StandardPage');
         !!topOfPage && topOfPage.scrollIntoView();
 
-        console.log('saveSpotlight: currentValues = ', values);
         const newValues = {
             id: defaults.type === 'edit' ? values.id : null,
             start: formatDate(values.start),
@@ -310,11 +285,8 @@ export const SpotlightForm = ({
         };
         !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
-        console.log('saveSpotlight editType = ', defaults.type);
-        console.log('saveSpotlight: newValues = ', newValues);
         switch (defaults.type) {
             case 'add':
-                console.log('handleSpotlightCreation 2: newValues = ', newValues);
                 actions.createSpotlightWithNewImage(newValues);
                 break;
             case 'edit':
@@ -335,7 +307,6 @@ export const SpotlightForm = ({
                 break;
             /* istanbul ignore next */
             default:
-                console.log('an unhandled type of ', defaults.type, ' was provided at SpotlightForm.saveSpotlight');
                 return;
         }
 
@@ -348,17 +319,12 @@ export const SpotlightForm = ({
     };
 
     const updateWeightInValues = newWeight => {
-        console.log('updateWeightInValues ', newWeight);
         setValues(prevState => {
-            console.log('updateWeightInValues was  ', prevState);
-            const newVar = { ...prevState, weight: newWeight };
-            console.log('updateWeightInValues will be: ', newVar);
-            return newVar;
+            return { ...prevState, weight: newWeight };
         });
     };
 
     const handleChange = prop => event => {
-        console.log('handleChange prop = ', prop, ' event = ', event.target);
         let newValue;
         if (['start', 'end'].includes(prop)) {
             newValue = event.format('YYYY/MM/DD hh:mm a');
@@ -371,7 +337,6 @@ export const SpotlightForm = ({
                 newValue = '';
             }
         }
-        console.log('handleChange prop = ', prop, ': newValue = ', newValue);
         const newValues = {
             ...values,
             start: values.start || /* istanbul ignore next */ defaults.startDateDefault,
@@ -380,7 +345,6 @@ export const SpotlightForm = ({
         };
         setValues(newValues);
 
-        console.log('handleChange values now = ', values);
         setFormValidity(validateValues(newValues));
     };
 
@@ -419,19 +383,9 @@ export const SpotlightForm = ({
     }
 
     const handleSuppliedFiles = files => {
-        console.log('handleSuppliedFiles files = ', files);
-        setUploadedFiles(files);
-
-        console.log('check: ', { ...values, ['uploadedFile']: files });
         setValues({ ...values, ['uploadedFile']: files });
-        console.log('handleSuppliedFiles values now = ', values);
 
         setFormValidity(validateValues({ ...values, ['uploadedFile']: files }));
-
-        setTimeout(() => {
-            console.log('handleSuppliedFiles setTimeout: values = ', values);
-            console.log('handleSuppliedFiles setTimeout: uploadedFiles = ', uploadedFiles);
-        }, 1000);
     };
 
     const clearSuppliedFile = () => {

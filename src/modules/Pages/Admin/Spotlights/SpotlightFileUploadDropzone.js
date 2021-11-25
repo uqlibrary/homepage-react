@@ -45,11 +45,6 @@ const deleteButton = {
     height: 80,
 };
 
-// const warningDimensions = {
-//     color: mui1theme.palette.warning.main,
-//     fontWeight: 'bold',
-// };
-
 const dimensionBox = {
     padding: '1rem',
 };
@@ -92,7 +87,6 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: acceptedFiles => {
-            console.log('ondrop');
             setFiles(
                 acceptedFiles.map(file =>
                     Object.assign(file, {
@@ -126,7 +120,6 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
             img.src = currentImage;
         }
         return function cleanup() {
-            console.log('dropzone cleanup');
             img.removeEventListener('load', setSizes);
         };
     }, [currentImage]);
@@ -140,7 +133,6 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
     );
 
     const removeUpload = () => {
-        console.log('remove uploaded file ', files);
         files.forEach(file => URL.revokeObjectURL(file.preview));
         setFiles([]);
 

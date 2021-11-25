@@ -149,17 +149,8 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()
                 .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
-            // cy.get('[data-testid="headerRow-count-current"]').contains('1 spotlight');
 
-            // only the scheduled spotlight has a 'scheduled' icon
-            // not currently visible - move to test to after toggle is turned on
-            // cy.get('svg[data-testid="spotlight-current-icon-3fa92cc0-6ab9-11e7-839f-a1392c2927cc"]')
-            // .should('exist');
-            // current spotlight exists, but it does not have a 'scheduled' icon
             cy.get('tr[data-testid="spotlight-list-row-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
-            cy.get('svg[data-testid="spotlight-current-icon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should(
-                'not.exist',
-            );
 
             // the spotlight that ends today has the end date highlighted;
             // one that does not end today has a normal color
@@ -636,7 +627,7 @@ describe('Spotlights Admin Pages', () => {
                 getFooterLabel(totalCountPastRecords),
             );
 
-            // we reduce the numbr of rows to 3 by typing into the filter input field
+            // we reduce the number of rows to 3 by typing into the filter input field
             cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
             cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
             cy.get('[data-testid="spotlight-list-past"] tbody')
@@ -808,7 +799,6 @@ describe('Spotlights Admin Pages', () => {
 
         it('the user can delete a spotlight using a checkbox', () => {
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should('contain', 'Can be deleted and edited');
-            // cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(3, 3));
             cy.get(
                 '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
             ).should('not.be.disabled');
@@ -835,7 +825,6 @@ describe('Spotlights Admin Pages', () => {
                 'not.contain',
                 'Can be deleted and edited',
             );
-            // cy.get('[data-testid="admin-spotlights-list-current-list"] tfoot').contains(getFooterLabel(2, 2));
             cy.get(
                 '[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"] input[type="checkbox"]',
             ).should('not.be.disabled');
@@ -1531,7 +1520,7 @@ describe('Spotlights Admin Pages', () => {
                 .click();
             cy.wait(50);
             cy.get('body').contains('The spotlight has been cloned');
-            // click ''view list'' button in dialog
+            // click 'view list' button in dialog
             cy.wait(50);
             cy.get('[data-testid="confirm-spotlight-clone-save-succeeded"]')
                 .should('exist')

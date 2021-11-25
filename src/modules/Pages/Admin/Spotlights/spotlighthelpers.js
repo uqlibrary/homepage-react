@@ -7,10 +7,6 @@ export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     return newMoment.format(dateFormat);
 }
 
-// export function getTimeNowFormatted() {
-//     return moment().format('YYYY-MM-DDTHH:mm');
-// }
-
 export function getStartOfDayFormatted() {
     return moment()
         .startOf('day')
@@ -87,7 +83,6 @@ export function moveItemInArray(arr, oldIndex, newIndex) {
         }
     }
     arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-    // hasDraggedAndDropped = true;
     return arr; // for testing
 }
 

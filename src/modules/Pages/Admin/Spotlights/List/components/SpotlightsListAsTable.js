@@ -47,10 +47,6 @@ import {
 
 const useStyles = makeStyles(
     theme => ({
-        table: {
-            // minWidth: 500,
-            // tableLayout: 'fixed',
-        },
         tableCell: {
             padding: 0,
         },
@@ -142,8 +138,6 @@ export const SpotlightsListAsTable = ({
     canUnpublish,
     canTextFilter,
 }) => {
-    console.log('top: spotlightsError = ', spotlightsError);
-    console.log('top: ', tableType, ' rows = ', rows);
     const classes = useStyles();
 
     const ORDERBY_WEIGHT = 'weight';
@@ -227,7 +221,6 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
-            console.log('rowList = ', rowList);
             if (!rowList) {
                 return;
             }
@@ -333,9 +326,7 @@ export const SpotlightsListAsTable = ({
     };
 
     const showLightbox = spotlightImgUrl => {
-        console.log('showLightbox for ', spotlightImgUrl);
         const filteredRows = [...rows].filter(r => r.img_url === spotlightImgUrl);
-        console.log('filteredRows = ', filteredRows);
         /* istanbul ignore else */
         if (filteredRows.length > 0) {
             // because its fired by clicking on a spotlight, it should never be 0
@@ -368,7 +359,6 @@ export const SpotlightsListAsTable = ({
     }
 
     const handleMarkForDeletion = e => {
-        console.log('handleMarkForDeletion ', e.target);
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
@@ -401,10 +391,8 @@ export const SpotlightsListAsTable = ({
     };
 
     const reweightSpotlights = () => {
-        console.log('reweightSpotlights: userows=', userows);
         const listUnchanged = userows.map(s => s);
         setUserows(prevState => {
-            console.log('reweightSpotlights prevState = ', prevState);
             const data = [...prevState];
 
             data.map(s => {
@@ -452,15 +440,11 @@ export const SpotlightsListAsTable = ({
                     if (!!isCurrentSpotlight(s)) {
                         const selector = `#spotlight-list-row-${currentRow.id} .order`;
                         const weightCell = document.querySelector(selector);
-                        console.log('weightCell = ', weightCell);
                         !!weightCell && (weightCell.innerHTML = newValues.weight / 10);
                     }
                 });
-            console.log('reweight: setting userows to:', data);
             return data;
         });
-
-        console.log('after reweight: userows = ', userows);
     };
 
     const cleanSpotlight = s => {
@@ -479,32 +463,21 @@ export const SpotlightsListAsTable = ({
     };
 
     function deleteListOfSpotlights(spotlightIDsToBeDeleted) {
-        console.log('spotlightIDsToBeDeleted = ', spotlightIDsToBeDeleted);
-
         deleteSpotlightBulk(spotlightIDsToBeDeleted)
             .then(() => {
-                console.log('returned bulk delete checkboxes');
-                console.log('deleteSelectedSpotlights tableType=', tableType, 'userows=', userows);
-                console.log('deleteListOfSpotlights: spotlightsError = ', spotlightsError);
                 /* istanbul ignore next */
                 if (!!spotlightsError) {
-                    console.log('deleteSpotlightBulk failed!');
                     showDeleteFailureConfirmation();
                 } else {
-                    console.log('deleteSpotlightBulk success!');
-                    console.log('deleteListOfSpotlights: will reorder');
                     reweightSpotlights();
-                    console.log('deleteListOfSpotlights: reneable checkboxes');
                     reEnableAllCheckboxes();
-                    console.log('deleteListOfSpotlights: clear delete marking');
                     clearAllDeleteMarkingCheckboxes();
                     setSpotlightNotice('');
                     setDeleteActive(false);
                 }
             })
             .catch(
-                /* istanbul ignore next */ x => {
-                    console.log('Promise.all fail', x);
+                /* istanbul ignore next */ () => {
                     showDeleteFailureConfirmation();
                 },
             );
@@ -518,7 +491,6 @@ export const SpotlightsListAsTable = ({
             const spotlightIDsToBeDeleted = [];
             for (const c of checkboxes) {
                 const spotlightID = c.value.replace(checkBoxIdPrefix, '');
-                console.log('checkbox ', c.value, spotlightID);
                 spotlightIDsToBeDeleted.push(spotlightID);
             }
             deleteListOfSpotlights(spotlightIDsToBeDeleted);
@@ -526,7 +498,6 @@ export const SpotlightsListAsTable = ({
     };
 
     const handleDeleteSplitAction = spotlightID => {
-        console.log('deleteSpotlightById ', spotlightID);
         deleteListOfSpotlights([spotlightID]);
     };
 
@@ -541,17 +512,14 @@ export const SpotlightsListAsTable = ({
 
     /* istanbul ignore next */
     const onDragEnd = result => {
-        console.log('onDragEnd ', result);
         // must synchronously update state (and server) to reflect drag result
         const { destination, source, draggableId } = result;
         if (!destination) {
-            console.log('onDragEnd: result.destination was not set');
             return;
         }
         console.log('DRAGGING ', source.index + 1, ' TO ', destination.index + 1);
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            console.log('onDragEnd: result.destination was unchanged');
             return;
         }
 
@@ -559,7 +527,6 @@ export const SpotlightsListAsTable = ({
         setDraggedId(draggableId);
 
         const thisspotlight = [...userows].find(s => s.id === draggableId);
-        console.log('thisspotlight = ', thisspotlight);
         // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
         let newWeight;
         if (destination.index > source.index) {
@@ -601,9 +568,7 @@ export const SpotlightsListAsTable = ({
     };
 
     const handlePublishCheckbox = () => event => {
-        console.log('handlePublishCheckbox event = ', event);
         const checkboxId = event.target?.id.replace('spotlight-published-', '');
-        console.log('checkboxId = ', checkboxId);
 
         const updateableRow = rows.find(r => r.id === checkboxId);
         /* istanbul ignore next */
@@ -612,7 +577,6 @@ export const SpotlightsListAsTable = ({
             ...cleanSpotlight(updateableRow),
             active: newState,
         };
-        console.log('rowToUpdate = ', newState, rowToUpdate.active);
 
         setUserows(prevState => {
             const data = [...prevState];
@@ -622,7 +586,6 @@ export const SpotlightsListAsTable = ({
 
         saveSpotlightChange(rowToUpdate)
             .then(() => {
-                console.log('saveSpotlightChange then');
                 const updatedrows = userows.map(r => {
                     if (r.id === updateableRow.id) {
                         r.active = rowToUpdate.active;
@@ -631,9 +594,7 @@ export const SpotlightsListAsTable = ({
                 });
                 setUserows(updatedrows);
             })
-            .catch(e => {
-                console.log('saveSpotlightChange error');
-                console.log('failed to update Publish field = ', e);
+            .catch(() => {
                 showSaveFailureConfirmation();
             });
     };
