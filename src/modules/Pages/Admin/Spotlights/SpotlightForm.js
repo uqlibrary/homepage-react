@@ -549,7 +549,7 @@ export const SpotlightForm = ({
                     <Grid item xs={10} align="left">
                         <SpotlightFormReorderableThumbs
                             currentSpotlights={currentSpotlights}
-                            spotlightsLoading={spotlightsLoading}
+                            currentSpotlightsLoading={spotlightsLoading}
                             defaultWeight={defaults.type === 'edit' ? values.weight : 1000}
                             currentValues={values}
                             updateWeightInValues={updateWeightInValues}

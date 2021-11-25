@@ -25,6 +25,19 @@ const useStyles = makeStyles(() => ({
         border: '3px solid black',
         display: 'inline-block',
     },
+    reorderableOrderNumber: {
+        color: 'white',
+        backgroundColor: 'rgb(128, 128, 128, 0.7)',
+        textAlign: 'center',
+        position: 'absolute',
+        bottom: 8,
+        left: 8,
+        width: 30,
+        height: 23,
+        borderRadius: 14,
+        paddingTop: 5,
+        paddingRight: 1,
+    },
 }));
 
 export const SpotlightFormReorderableThumbs = ({
@@ -235,19 +248,24 @@ export const SpotlightFormReorderableThumbs = ({
                                             isDragDisabled={!isThisImage}
                                         >
                                             {draggableProvided => (
-                                                <img
-                                                    id={`reorder-img-${s.id}`}
-                                                    data-testid={`reorder-img-${s.id}`}
-                                                    alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
-                                                    src={getCurrentImage(isThisImage, s)}
-                                                    title={isThisImage ? currentValues.img_alt : s.img_alt}
-                                                    className={`${classes.reorderableThumb} ${
-                                                        isThisImage ? classes.hasBorder : ''
-                                                    }`}
-                                                    {...draggableProvided.draggableProps}
-                                                    {...draggableProvided.dragHandleProps}
-                                                    ref={draggableProvided.innerRef}
-                                                />
+                                                <span style={{ position: 'relative' }}>
+                                                    <img
+                                                        id={`reorder-img-${s.id}`}
+                                                        data-testid={`reorder-img-${s.id}`}
+                                                        alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
+                                                        src={getCurrentImage(isThisImage, s)}
+                                                        title={isThisImage ? currentValues.img_alt : s.img_alt}
+                                                        className={`${classes.reorderableThumb} ${
+                                                            isThisImage ? classes.hasBorder : ''
+                                                        }`}
+                                                        {...draggableProvided.draggableProps}
+                                                        {...draggableProvided.dragHandleProps}
+                                                        ref={draggableProvided.innerRef}
+                                                    />
+                                                    <span className={classes.reorderableOrderNumber}>
+                                                        {thumbIndex + 1}
+                                                    </span>
+                                                </span>
                                             )}
                                         </Draggable>
                                     );
