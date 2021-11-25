@@ -126,6 +126,15 @@ export const SpotlightFormReorderableThumbs = ({
                     }),
                 );
             }
+            setThumbableSpotlights(previousState =>
+                previousState.map((s, index) => {
+                    // console.log('set order to ', index);
+                    return {
+                        ...s,
+                        order: index + 1,
+                    };
+                }),
+            );
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currentSpotlights]);
@@ -252,7 +261,7 @@ export const SpotlightFormReorderableThumbs = ({
                                                             isThisImage ? classes.currentReorderableOrderNumber : ''
                                                         }`}
                                                     >
-                                                        {thumbIndex + 1}
+                                                        {s.order}
                                                     </span>
                                                 </span>
                                             )}
