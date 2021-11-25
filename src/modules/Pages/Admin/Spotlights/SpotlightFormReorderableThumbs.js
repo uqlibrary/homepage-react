@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { isCurrentSpotlight, moveItemInArray } from './spotlighthelpers';
+import { isCurrentSpotlight, moveItemInArray, getWeightAfterDrag } from './spotlighthelpers';
 
 const useStyles = makeStyles(() => ({
     reorderableThumb: {
@@ -48,13 +48,13 @@ export const SpotlightFormReorderableThumbs = ({
     updateWeightInValues,
     tableType,
 }) => {
-    console.log('SpotlightFormReorderableThumbs TOP currentValues = ', currentValues);
-    console.log('SpotlightFormReorderableThumbs TOP currentSpotlights = ', currentSpotlights);
-    console.log('SpotlightFormReorderableThumbs TOP !!currentSpotlights = ', !!currentSpotlights);
-    if (!!currentSpotlights) {
-        console.log('SpotlightFormReorderableThumbs TOP currentSpotlights.length = ', currentSpotlights.length);
-    }
-    console.log('SpotlightFormReorderableThumbs TOP currentSpotlightsLoading = ', currentSpotlightsLoading);
+    // console.log('SpotlightFormReorderableThumbs TOP currentValues = ', currentValues);
+    // console.log('SpotlightFormReorderableThumbs TOP currentSpotlights = ', currentSpotlights);
+    // console.log('SpotlightFormReorderableThumbs TOP !!currentSpotlights = ', !!currentSpotlights);
+    // if (!!currentSpotlights) {
+    //     console.log('SpotlightFormReorderableThumbs TOP currentSpotlights.length = ', currentSpotlights.length);
+    // }
+    // console.log('SpotlightFormReorderableThumbs TOP currentSpotlightsLoading = ', currentSpotlightsLoading);
 
     const classes = useStyles();
 
@@ -74,16 +74,12 @@ export const SpotlightFormReorderableThumbs = ({
                       };
                   })
                   .sort((a, b) => {
-                      console.log('sorting thumbs');
                       return a.weight - b.weight;
                   })
             : [],
     );
-    console.log('SpotlightFormReorderableThumbs TOP currentValues?.weight = ', currentValues?.weight);
-    console.log('SpotlightFormReorderableThumbs TOP thumbableSpotlights = ', thumbableSpotlights);
 
     useEffect(() => {
-        console.log('currentSpotlights have updated');
         if (!!currentSpotlights) {
             if (tableType === 'edit') {
                 setThumbableSpotlights(
@@ -92,7 +88,6 @@ export const SpotlightFormReorderableThumbs = ({
                             return { ...s, weight: s?.id === currentValues.id ? currentValues?.weight : s.weight };
                         })
                         .sort((a, b) => {
-                            console.log('sorting thumbs');
                             return a.weight - b.weight;
                         }),
                 );
@@ -107,7 +102,6 @@ export const SpotlightFormReorderableThumbs = ({
                             weight: !!chosenWeight ? chosenWeight : defaultWeight,
                         },
                     ].sort((a, b) => {
-                        console.log('sorting thumbs');
                         return a.weight - b.weight;
                     }),
                 );
@@ -125,7 +119,6 @@ export const SpotlightFormReorderableThumbs = ({
                             weight: !!chosenWeight ? chosenWeight : defaultWeight,
                         },
                     ].sort((a, b) => {
-                        console.log('sorting thumbs');
                         return a.weight - b.weight;
                     }),
                 );
@@ -145,32 +138,24 @@ export const SpotlightFormReorderableThumbs = ({
     const onDragEnd = result => {
         console.log('onDragEnd ', result);
         // must synchronously update state to reflect drag result
-        const { destination, source, draggableId } = result;
+        const { destination, source } = result;
         if (!destination) {
-            console.log('onDragEnd: result.destination was not set');
             return;
         }
-        console.log('DRAGGING ', source.index + 1, ' TO ', destination.index + 1);
-        console.log('destination = ', destination);
-        console.log('source = ', source);
+        console.log('DRAGGING ', source.index, ' TO ', destination.index);
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            console.log('onDragEnd: result.destination was unchanged');
             return;
         }
-        const thisspotlight = thumbableSpotlights.find(s => s.id === draggableId);
-        console.log('thisspotlight = ', thisspotlight);
+        // const thisspotlight = thumbableSpotlights.find(s => s.id === draggableId);
+        // console.log('thisspotlight = ', thisspotlight);
 
         // set the weight on the edited spotlight to +5/+15, then let the Backend resort it to 10s on save
-        const isDraggingToRight = destination.index > source.index;
-        const newWeight = destination.index * 10 + (tableType === 'edit' && isDraggingToRight ? 15 : 5);
+        const newWeight = getWeightAfterDrag(destination.index, tableType);
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
-        console.log('before array fix ', [...thumbableSpotlights]);
         moveItemInArray(thumbableSpotlights, source.index, destination.index);
-        console.log('after array fix ', [...thumbableSpotlights]);
-        console.log('weight was ', thisspotlight?.weight || 'weight missing', '; will be ', newWeight);
         updateWeightInValues(newWeight);
         setChosenWeight(newWeight);
     };
@@ -192,11 +177,11 @@ export const SpotlightFormReorderableThumbs = ({
         );
     }
 
-    const isUploadProvided = values => {
-        return !!values.uploadedFile && !!values.uploadedFile[0] && !!values.uploadedFile[0].preview;
-    };
-
-    console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
+    // const isUploadProvided = values => {
+    //     return !!values.uploadedFile && !!values.uploadedFile[0] && !!values.uploadedFile[0].preview;
+    // };
+    //
+    // console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
 
     // if they drag a new image in, reuse this as the thumb
     const currentImage = (values, defaultImage) => {
@@ -216,8 +201,6 @@ export const SpotlightFormReorderableThumbs = ({
     }
 
     if (!!thumbableSpotlights) {
-        console.log('thumbableSpotlights = ', thumbableSpotlights);
-        console.log('isUploadProvided(currentValues) = ', isUploadProvided(currentValues));
         return (
             <Grid item xs={'auto'} style={{ maxWidth: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
                 <h3>{locale.form.reorderThumbs.header}</h3>
@@ -235,7 +218,6 @@ export const SpotlightFormReorderableThumbs = ({
                                 {...droppableProvided.droppableProps}
                             >
                                 {thumbableSpotlights.map((s, thumbIndex) => {
-                                    console.log('thumbableSpotlights.map s = ', s);
                                     const isThisImage =
                                         tableType === 'edit'
                                             ? s?.id === currentValues.id
@@ -278,8 +260,6 @@ export const SpotlightFormReorderableThumbs = ({
             </Grid>
         );
     }
-
-    console.log('currentSpotlights = ', currentSpotlights);
 
     return <p>No current spotlights</p>;
 };

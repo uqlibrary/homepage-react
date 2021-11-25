@@ -85,3 +85,7 @@ export function moveItemInArray(arr, oldIndex, newIndex) {
     arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
     return arr; // for testing
 }
+
+export const getWeightAfterDrag = (destination, tableType) => {
+    return destination * 10 + (tableType === 'edit' ? 15 : 5);
+};

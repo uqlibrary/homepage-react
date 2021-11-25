@@ -3,7 +3,9 @@ import {
     getTimeMondayComing,
     getTimeMondayMidnightNext,
     getTimeSundayNextFormatted,
+    getWeightAfterDrag,
 } from './spotlighthelpers';
+
 const moment = require('moment');
 
 describe('spotlight helpers', () => {
@@ -61,5 +63,19 @@ describe('spotlight helpers', () => {
     });
     it('correctly calculates end of day', () => {
         expect(getTimeEndOfDayFormatted()).toEqual(moment().format('YYYY-MM-DDT23:59'));
+    });
+    it('correctly calculates the new weight after a drag', () => {
+        // drag left to right on edit form
+        expect(getWeightAfterDrag(5, 'edit')).toEqual(65);
+        // drag right to left on edit form
+        expect(getWeightAfterDrag(2, 'edit')).toEqual(35);
+        // drag left to right on clone form
+        expect(getWeightAfterDrag(5, 'clone')).toEqual(55);
+        // drag right to left on clone form
+        expect(getWeightAfterDrag(1, 'clone')).toEqual(15);
+        // drag left to right on add form
+        expect(getWeightAfterDrag(5, 'add')).toEqual(55);
+        // drag right to left on add form
+        expect(getWeightAfterDrag(2, 'add')).toEqual(25);
     });
 });
