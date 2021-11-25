@@ -101,9 +101,6 @@ const useStyles = makeStyles(
                 fill: '#595959',
             },
             padding: 0,
-            '& .MuiTouchRipple-root': {
-                color: theme.palette.primary.main,
-            },
         },
         toggle: {
             whiteSpace: 'nowrap',
@@ -111,6 +108,9 @@ const useStyles = makeStyles(
         publishedCell: {
             padding: 0,
             textAlign: 'center',
+            '& .MuiTouchRipple-root': {
+                color: theme.palette.primary.main,
+            },
         },
         h4: {
             paddingRight: 10,
