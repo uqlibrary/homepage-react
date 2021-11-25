@@ -325,12 +325,12 @@ export const SpotlightsListAsTable = ({
         scrollToTopOfPage();
     };
 
-    const showLightbox = spotlightImgUrl => {
-        const filteredRows = [...rows].filter(r => r.img_url === spotlightImgUrl);
+    const showLightbox = spotlightImageUrl => {
+        const filteredRows = [...rows].filter(r => r.img_url === spotlightImageUrl);
         /* istanbul ignore else */
         if (filteredRows.length > 0) {
             // because its fired by clicking on a spotlight, it should never be 0
-            setLightBoxFocus(spotlightImgUrl);
+            setLightBoxFocus(spotlightImageUrl);
             setLightBoxEntries(filteredRows);
             handleLightboxOpen();
         }
@@ -1018,7 +1018,7 @@ export const SpotlightsListAsTable = ({
                                                                             navigateToView={navigateToView}
                                                                             confirmDeleteLocale={confirmDeleteLocale}
                                                                             showLightbox={showLightbox}
-                                                                            spotlightImgUrl={spotlight.img_url}
+                                                                            spotlightImageUrl={spotlight.img_url}
                                                                         />
                                                                     </TableCell>
                                                                 </TableRow>
@@ -1077,7 +1077,7 @@ export const SpotlightsListAsTable = ({
             </DragDropContext>
             {isLightboxOpen && (
                 <SpotlightViewHistory
-                    spotlightImgUrl={lightBoxFocus}
+                    spotlightImageUrl={lightBoxFocus}
                     spotlights={lightBoxRows}
                     isLightboxOpen={isLightboxOpen}
                     handleLightboxClose={handleLightboxClose}

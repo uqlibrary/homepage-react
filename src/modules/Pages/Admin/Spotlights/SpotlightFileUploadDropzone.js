@@ -9,7 +9,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import { default as locale } from './spotlightsadmin.locale';
-import { addConstantsToDisplayValues, ImageSizeIsPoor } from './spotlighthelpers';
+import { addConstantsToDisplayValues } from './spotlighthelpers';
 import { SpotlightSizeWarning } from './SpotlightSizeWarning';
 
 const emptyDropzone = {
@@ -201,22 +201,17 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                         </Grid>
                         {/* show the size info & possible warning */}
                         {files.map(file => (
-                            <Grid item xs={12} key={`${file.name}-dimensions`}>
-                                <Grid container style={dimensionBox} data-testid="dropzone-dimension-warning">
-                                    {imageWidth > 0 && imageHeight > 0 && (
-                                        <Grid item>
-                                            <SpotlightSizeWarning imgWidth={imageWidth} imgHeight={imageHeight} />
-                                        </Grid>
-                                    )}
-                                    <Grid item xs={12}>
-                                        <p>{idealDimensionsNotification()}</p>
-                                    </Grid>
-                                    {imageWidth > 0 && imageHeight > 0 && ImageSizeIsPoor(imageWidth, imageHeight) && (
-                                        <Grid item xs={12}>
-                                            {locale.form.upload.dimensionsWarning}
-                                        </Grid>
-                                    )}
-                                </Grid>
+                            <Grid
+                                item
+                                xs={12}
+                                key={`${file.name}-dimensions`}
+                                style={dimensionBox}
+                                data-testid="dropzone-dimension-warning"
+                            >
+                                {imageWidth > 0 && imageHeight > 0 && (
+                                    <SpotlightSizeWarning imgWidth={imageWidth} imgHeight={imageHeight} />
+                                )}
+                                <p>{idealDimensionsNotification()}</p>
                             </Grid>
                         ))}
                     </Grid>

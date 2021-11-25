@@ -532,9 +532,6 @@ describe('Spotlights Admin Pages', () => {
 
             // lightbox loads
             cy.get('[data-testid="spotlights-lightbox-title"]').contains('Previous entries for this image');
-            cy.get('[data-testid="spotlights-lightbox-dimensions"]').contains(
-                'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
-            );
             imageWarningIsPresent('spotlights-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
@@ -1139,9 +1136,6 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
             dragFileToDropzone('spotlight-too-large.jpg');
-            cy.get('[data-testid="dropzone-dimension-warning"]').contains(
-                'Dimensions: 1967px by 721px (aspect ratio: 2.73).',
-            );
             imageWarningIsPresent('dropzone-dimension-warning');
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')

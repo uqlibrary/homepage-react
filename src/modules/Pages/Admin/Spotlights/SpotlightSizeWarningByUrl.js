@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 
 import SpotlightSizeWarning from 'modules/Pages/Admin/Spotlights/SpotlightSizeWarning';
 
-export const SpotlightSizeWarningByUrl = ({ spotlightImgUrl }) => {
+export const SpotlightSizeWarningByUrl = ({ spotlightImageUrl }) => {
     const [imgWidth, setImgWidth] = useState(null);
     const [imgHeight, setImgHeight] = useState(null);
 
-    if (!spotlightImgUrl) {
+    if (!spotlightImageUrl) {
         return null;
     }
 
@@ -19,13 +19,13 @@ export const SpotlightSizeWarningByUrl = ({ spotlightImgUrl }) => {
     // from https://stackoverflow.com/questions/11442712/get-width-height-of-remote-image-from-url
     const img = new Image();
     img.addEventListener('load', setSizes);
-    spotlightImgUrl.startsWith('http') && (img.src = spotlightImgUrl);
+    spotlightImageUrl.startsWith('http') && (img.src = spotlightImageUrl);
 
     return <SpotlightSizeWarning imgWidth={imgWidth} imgHeight={imgHeight} />;
 };
 
 SpotlightSizeWarningByUrl.propTypes = {
-    spotlightImgUrl: PropTypes.string,
+    spotlightImageUrl: PropTypes.string,
 };
 
 export default React.memo(SpotlightSizeWarningByUrl);

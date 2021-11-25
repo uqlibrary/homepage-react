@@ -50,7 +50,7 @@ export const SpotlightViewHistory = ({
     handleLightboxClose,
     navigateToCloneForm,
     spotlights,
-    spotlightImgUrl,
+    spotlightImageUrl,
 }) => {
     // modal does something weird - when there are a lot of spotlights (> 3) the top sits just off the screen
     // supply a margin top value that varies wih how many spotlights we have
@@ -74,9 +74,9 @@ export const SpotlightViewHistory = ({
             disableScrollLock
         >
             <Box className={`${classes.lightboxStyle} ${classes.marginSpecial}`}>
-                <img src={spotlightImgUrl} alt="The image we can see previous usages of" />
+                <img src={spotlightImageUrl} alt="The image we can see previous usages of" />
                 <div data-testid="spotlights-lightbox-dimensions" style={{ textAlign: 'center' }}>
-                    <SpotlightSizeWarningByUrl spotlightImgUrl={spotlightImgUrl} />
+                    <SpotlightSizeWarningByUrl spotlightImageUrl={spotlightImageUrl} />
                 </div>
                 <h2 id="lightboxTitle" data-testid="spotlights-lightbox-title">
                     {locale.lightbox.title}
@@ -142,7 +142,7 @@ SpotlightViewHistory.propTypes = {
     isLightboxOpen: PropTypes.bool,
     handleLightboxClose: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
-    spotlightImgUrl: PropTypes.string,
+    spotlightImageUrl: PropTypes.string,
     spotlights: PropTypes.array,
 };
 

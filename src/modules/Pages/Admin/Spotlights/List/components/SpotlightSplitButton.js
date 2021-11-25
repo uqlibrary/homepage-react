@@ -38,7 +38,7 @@ export const SpotlightSplitButton = ({
     navigateToView,
     confirmDeleteLocale,
     showLightbox,
-    spotlightImgUrl,
+    spotlightImageUrl,
 }) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -133,7 +133,7 @@ export const SpotlightSplitButton = ({
                                             <MenuItem
                                                 data-testid={`${spotlightId}-lightbox-button`}
                                                 key={`${spotlightId}-lightbox-button`}
-                                                onClick={() => showLightbox(spotlightImgUrl)}
+                                                onClick={() => showLightbox(spotlightImageUrl)}
                                             >
                                                 {locale.form.splitButton.labels.history}
                                             </MenuItem>
@@ -151,7 +151,7 @@ export const SpotlightSplitButton = ({
 
 SpotlightSplitButton.propTypes = {
     spotlightId: PropTypes.string,
-    spotlightImgUrl: PropTypes.string,
+    spotlightImageUrl: PropTypes.string,
     mainButtonLabel: PropTypes.string,
     deleteSpotlightById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
