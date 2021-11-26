@@ -190,10 +190,61 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601
             end: '2099-03-21 23:59:00',
             title: 'Can be deleted and edited',
             url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+            img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+            img_alt:
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            weight: 10,
+            active: 1,
+        },
+    ]),
+);
+mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
+            start: '2021-03-15 00:02:00',
+            end: '2099-03-21 23:59:00',
+            title: 'Can be deleted and edited',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
             img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
             img_alt:
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-            weight: 0,
+            weight: 20,
+            active: 1,
+        },
+    ]),
+);
+mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898',
+            start: '2021-03-15 00:02:00',
+            end: '2099-03-21 23:59:00',
+            title: 'Can be deleted and edited',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+            img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+            img_alt:
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            weight: 30,
+            active: 1,
+        },
+    ]),
+);
+mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '38cbf430-8693-11e9-98ab-9d52a58e86ca' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '38cbf430-8693-11e9-98ab-9d52a58e86ca',
+            start: '2021-03-15 00:02:00',
+            end: '2099-03-21 23:59:00',
+            title: 'Can be deleted and edited',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+            img_url: 'http://localhost:2020/public/images/spotlights/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
+            img_alt:
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            weight: 40,
             active: 1,
         },
     ]),

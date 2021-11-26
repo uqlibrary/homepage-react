@@ -73,7 +73,6 @@ export function isCurrentSpotlight(spotlight) {
 }
 
 // https://stackoverflow.com/a/5306832/1246313
-// let hasDraggedAndDropped = false;
 /* istanbul ignore next */
 export function moveItemInArray(arr, oldIndex, newIndex) {
     if (newIndex >= arr.length) {
@@ -86,8 +85,10 @@ export function moveItemInArray(arr, oldIndex, newIndex) {
     return arr; // for testing
 }
 
-export const getWeightAfterDrag = (destination, tableType) => {
-    return destination * 10 + (tableType === 'edit' ? 15 : 5);
+export const getWeightAfterDrag = (destination, tableType, originalWeight) => {
+    const isDestinationLeftOfOriginal = destination * 10 < originalWeight;
+    const addToWeight = tableType !== 'edit' || isDestinationLeftOfOriginal ? 5 : 15;
+    return destination * 10 + addToWeight;
 };
 
 export function scrollToTopOfPage() {

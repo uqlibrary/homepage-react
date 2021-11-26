@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
         left: 8,
         width: 30,
         height: 23,
-        borderRadius: 14,
+        borderRadius: '50%',
         paddingTop: 5,
         paddingRight: 1,
         fontWeight: 'bold',
@@ -45,6 +45,7 @@ export const SpotlightFormReorderableThumbs = ({
     defaultWeight,
     updateWeightInValues,
     tableType,
+    originalWeight,
 }) => {
     // console.log('SpotlightFormReorderableThumbs TOP currentValues = ', currentValues);
     // console.log('SpotlightFormReorderableThumbs TOP currentSpotlights = ', currentSpotlights);
@@ -157,14 +158,23 @@ export const SpotlightFormReorderableThumbs = ({
         // const thisspotlight = thumbableSpotlights.find(s => s.id === draggableId);
         // console.log('thisspotlight = ', thisspotlight);
 
+        // const thisspotlight = [...thumbableSpotlights].find(s => s.id === draggableId);
+        // console.log('getWeightAfterDrag before ', thisspotlight.id, thisspotlight.weight, thisspotlight.order);
         // set the weight on the edited spotlight to +5/+15, then let the Backend resort it to 10s on save
-        const newWeight = getWeightAfterDrag(destination.index, tableType);
+        const newWeight = getWeightAfterDrag(destination.index, tableType, originalWeight);
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
         moveItemInArray(thumbableSpotlights, source.index, destination.index);
         updateWeightInValues(newWeight);
         setChosenWeight(newWeight);
+        // // setTimeout(() => {
+        // [...thumbableSpotlights].forEach(s =>
+        //     console.log('getWeightAfterDrag ', s.id, s.weight, s.order, s.id === draggableId ? '*' : ''),
+        // );
+        // const thisspotlight1 = [...thumbableSpotlights].find(s => s.id === draggableId);
+        // console.log('getWeightAfterDrag after ', thisspotlight1.id, thisspotlight1.weight, thisspotlight1.order);
+        // // }, 500);
     };
 
     if (!!currentSpotlightsLoading) {
@@ -282,6 +292,7 @@ SpotlightFormReorderableThumbs.propTypes = {
     defaultWeight: PropTypes.any,
     updateWeightInValues: PropTypes.any,
     tableType: PropTypes.string,
+    originalWeight: PropTypes.number,
 };
 
 export default React.memo(SpotlightFormReorderableThumbs);

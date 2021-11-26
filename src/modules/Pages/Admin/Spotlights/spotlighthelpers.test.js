@@ -65,17 +65,37 @@ describe('spotlight helpers', () => {
         expect(getTimeEndOfDayFormatted()).toEqual(moment().format('YYYY-MM-DDT23:59'));
     });
     it('correctly calculates the new weight after a drag', () => {
-        // drag left to right on edit form
-        expect(getWeightAfterDrag(5, 'edit')).toEqual(65);
-        // drag right to left on edit form
-        expect(getWeightAfterDrag(2, 'edit')).toEqual(35);
-        // drag left to right on clone form
-        expect(getWeightAfterDrag(5, 'clone')).toEqual(55);
-        // drag right to left on clone form
-        expect(getWeightAfterDrag(1, 'clone')).toEqual(15);
-        // drag left to right on add form
-        expect(getWeightAfterDrag(5, 'add')).toEqual(55);
-        // drag right to left on add form
-        expect(getWeightAfterDrag(2, 'add')).toEqual(25);
+        expect(getWeightAfterDrag(0, 'edit', 10)).toEqual(5);
+        expect(getWeightAfterDrag(1, 'edit', 10)).toEqual(25);
+        expect(getWeightAfterDrag(2, 'edit', 10)).toEqual(35);
+        expect(getWeightAfterDrag(3, 'edit', 10)).toEqual(45);
+
+        expect(getWeightAfterDrag(0, 'edit', 20)).toEqual(5);
+        expect(getWeightAfterDrag(1, 'edit', 20)).toEqual(15);
+        expect(getWeightAfterDrag(2, 'edit', 20)).toEqual(35);
+        expect(getWeightAfterDrag(3, 'edit', 20)).toEqual(45);
+
+        expect(getWeightAfterDrag(0, 'edit', 30)).toEqual(5);
+        expect(getWeightAfterDrag(1, 'edit', 30)).toEqual(15);
+        expect(getWeightAfterDrag(2, 'edit', 30)).toEqual(25);
+        expect(getWeightAfterDrag(3, 'edit', 30)).toEqual(45);
+
+        expect(getWeightAfterDrag(0, 'edit', 40)).toEqual(5);
+        expect(getWeightAfterDrag(1, 'edit', 40)).toEqual(15);
+        expect(getWeightAfterDrag(2, 'edit', 40)).toEqual(25);
+        expect(getWeightAfterDrag(3, 'edit', 40)).toEqual(35);
+
+        expect(getWeightAfterDrag(0, 'add', 1000)).toEqual(5);
+        expect(getWeightAfterDrag(1, 'add', 1000)).toEqual(15);
+        expect(getWeightAfterDrag(2, 'add', 1000)).toEqual(25);
+        expect(getWeightAfterDrag(3, 'add', 1000)).toEqual(35);
+        expect(getWeightAfterDrag(3, 'add', 1000)).toEqual(35);
+        expect(getWeightAfterDrag(4, 'add', 1000)).toEqual(45);
+
+        expect(getWeightAfterDrag(0, 'clone', 1000)).toEqual(5);
+        expect(getWeightAfterDrag(1, 'clone', 1000)).toEqual(15);
+        expect(getWeightAfterDrag(2, 'clone', 1000)).toEqual(25);
+        expect(getWeightAfterDrag(3, 'clone', 1000)).toEqual(35);
+        expect(getWeightAfterDrag(4, 'clone', 1000)).toEqual(45);
     });
 });

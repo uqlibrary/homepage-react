@@ -96,6 +96,12 @@ export const SpotlightForm = ({
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
+    const [originalWeight, setOriginalWeight] = useState(0);
+    useEffect(() => {
+        setOriginalWeight(defaults.type === 'edit' ? defaults.weight : 1000);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaults]);
+
     const [values, setValues] = useState({
         // the data displayed in the form
         ...defaults,
@@ -316,6 +322,7 @@ export const SpotlightForm = ({
     };
 
     const updateWeightInValues = newWeight => {
+        console.log('updateWeightInValues newWeight = ', newWeight);
         setValues(prevState => {
             return { ...prevState, weight: newWeight };
         });
@@ -551,6 +558,7 @@ export const SpotlightForm = ({
                             currentValues={values}
                             updateWeightInValues={updateWeightInValues}
                             tableType={defaults.type}
+                            originalWeight={originalWeight}
                         />
                     </Grid>
                 </Grid>
