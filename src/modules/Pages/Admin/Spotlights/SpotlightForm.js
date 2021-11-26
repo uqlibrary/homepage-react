@@ -14,7 +14,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
 import SpotlightFormReorderableThumbs from './SpotlightFormReorderableThumbs';
@@ -247,8 +247,7 @@ export const SpotlightForm = ({
 
         history.push('/admin/spotlights');
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reloadClonePage = () => {
@@ -259,13 +258,11 @@ export const SpotlightForm = ({
             end: defaults.endDateDefault,
         });
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const saveSpotlight = () => {
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
 
         const newValues = {
             id: defaults.type === 'edit' ? values.id : null,

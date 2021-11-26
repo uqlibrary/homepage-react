@@ -89,3 +89,8 @@ export function moveItemInArray(arr, oldIndex, newIndex) {
 export const getWeightAfterDrag = (destination, tableType) => {
     return destination * 10 + (tableType === 'edit' ? 15 : 5);
 };
+
+export function scrollToTopOfPage() {
+    const topOfPage = document.getElementById('StandardPage');
+    !!topOfPage && topOfPage.scrollIntoView();
+}

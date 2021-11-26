@@ -14,7 +14,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate } from '../../spotlighthelpers';
+import { formatDate, scrollToTopOfPage } from '../../spotlighthelpers';
 
 export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history }) => {
     const { spotlightid } = useParams();
@@ -40,15 +40,13 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
 
         history.push('/admin/spotlights');
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToCloneForm = () => {
         history.push(`/admin/spotlights/clone/${spotlightid}`);
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     function setDefaults() {

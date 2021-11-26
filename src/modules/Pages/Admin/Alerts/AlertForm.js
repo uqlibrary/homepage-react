@@ -28,6 +28,7 @@ import {
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
 } from './alerthelpers';
+import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -184,8 +185,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
         history.push('/admin/alerts');
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reloadClonePage = () => {
@@ -199,8 +199,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ],
         });
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     function expandValues(expandableValues) {

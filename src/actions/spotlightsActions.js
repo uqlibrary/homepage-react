@@ -11,12 +11,6 @@ import {
     SPOTLIGHT_DELETE_BULK_API,
 } from 'repositories/routes';
 import { API_URL } from '../config';
-// import {
-//     formatDate,
-//     isCurrentSpotlight,
-//     isPastSpotlight,
-//     isScheduledSpotlight,
-// } from '../modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 export function loadAllSpotlights() {
     console.log('action loadAllSpotlights: Loading Spotlights');

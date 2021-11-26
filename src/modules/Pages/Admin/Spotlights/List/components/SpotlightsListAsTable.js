@@ -40,6 +40,7 @@ import {
     isPastSpotlight,
     isScheduledSpotlight,
     moveItemInArray,
+    scrollToTopOfPage,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // original based on https://codesandbox.io/s/hier2
@@ -302,11 +303,6 @@ export const SpotlightsListAsTable = ({
     const headerCountIndicator = ' - [N] spotlights'
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
-
-    function scrollToTopOfPage() {
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
-    }
 
     const navigateToEditForm = spotlightid => {
         history.push(`/admin/spotlights/edit/${spotlightid}`);

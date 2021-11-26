@@ -11,6 +11,7 @@ import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/Spotlights
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
+import { scrollToTopOfPage } from '../../spotlighthelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -47,6 +48,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         /* istanbul ignore else */
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
             actions.loadAllSpotlights();
+            scrollToTopOfPage();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
