@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
     reorderableThumb: {
         height: 60,
         marginRight: 5,
-        maxWidth: 164,
+        maxWidth: 144,
     },
     hasBorder: {
         height: 54,
