@@ -31,6 +31,7 @@ const useStyles = makeStyles(() => ({
         borderRadius: 14,
         paddingTop: 5,
         paddingRight: 1,
+        fontWeight: 'bold',
     },
     currentReorderableOrderNumber: {
         backgroundColor: 'rgb(35, 119, 203, 0.6)', // uqblue, translucent
