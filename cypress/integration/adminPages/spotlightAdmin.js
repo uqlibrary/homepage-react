@@ -1333,7 +1333,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-form-upload-dropzone"] img').should(
                 'have.attr',
                 'src',
-                'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+                'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
             );
             cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
         });
@@ -1464,7 +1464,7 @@ describe('Spotlights Admin Pages', () => {
                 .and(
                     'have.attr',
                     'src',
-                    'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+                    'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
                 );
         });
         it('Save button is disabled when the clone form is invalid', () => {
