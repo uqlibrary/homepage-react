@@ -16,14 +16,8 @@ const useStyles = makeStyles(() => ({
         maxWidth: 164,
     },
     hasBorder: {
-        border: '3px solid black',
-    },
-    placeholderBlock: {
         height: 54,
-        width: 157,
-        backgroundColor: 'grey',
         border: '3px solid black',
-        display: 'inline-block',
     },
     reorderableOrderNumber: {
         color: 'white',
