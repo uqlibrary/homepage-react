@@ -161,7 +161,7 @@ export const SpotlightForm = ({
     }
 
     const validateValues = currentValues => {
-        console.log('validateValues: currentValues = ', currentValues);
+        // console.log('validateValues: currentValues = ', currentValues);
         const isValid =
             spotlightStatus !== 'loading' &&
             !isInvalidStartDate(currentValues.start) &&
@@ -295,22 +295,19 @@ export const SpotlightForm = ({
                 break;
             case 'edit':
                 /* istanbul ignore next */
-                if (!!values.uploadedFile) {
-                    actions.saveSpotlightWithNewImage(newValues);
-                } else {
-                    actions.saveSpotlightChangeWithExistingImage(newValues);
-                }
+                !!values.uploadedFile
+                    ? actions.saveSpotlightWithNewImage(newValues)
+                    : actions.saveSpotlightChangeWithExistingImage(newValues);
                 break;
             case 'clone':
                 /* istanbul ignore next */
-                if (!!values.uploadedFile) {
-                    actions.createSpotlightWithNewImage(newValues);
-                } else {
-                    actions.createSpotlightWithExistingImage(newValues);
-                }
+                !!values.uploadedFile
+                    ? actions.createSpotlightWithNewImage(newValues)
+                    : actions.createSpotlightWithExistingImage(newValues);
                 break;
             /* istanbul ignore next */
             default:
+                // never happens
                 return;
         }
 
@@ -388,12 +385,15 @@ export const SpotlightForm = ({
     }
 
     const handleSuppliedFiles = files => {
+        console.log('for SpotlightFileUploadDropzone in handleSuppliedFiles files=', files);
+        console.log('handleSuppliedFiles values=', values);
         setValues({ ...values, ['uploadedFile']: files });
 
         setFormValidity(validateValues({ ...values, ['uploadedFile']: files }));
     };
 
     const clearSuppliedFile = () => {
+        console.log('for SpotlightFileUploadDropzone in clearSuppliedFile');
         setValues(prevState => {
             return { ...prevState, ['uploadedFile']: [] };
         });

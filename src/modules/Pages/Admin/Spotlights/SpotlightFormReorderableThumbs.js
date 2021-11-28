@@ -169,11 +169,7 @@ export const SpotlightFormReorderableThumbs = ({
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
             return;
         }
-        // const thisspotlight = thumbableSpotlights.find(s => s.id === draggableId);
-        // console.log('thisspotlight = ', thisspotlight);
 
-        // const thisspotlight = [...thumbableSpotlights].find(s => s.id === draggableId);
-        // console.log('getWeightAfterDrag before ', thisspotlight.id, thisspotlight.weight, thisspotlight.order);
         // set the weight on the edited spotlight to +5/+15, then let the Backend resort it to 10s on save
         const newWeight = getWeightAfterDrag(destination.index, tableType, originalValues.weight);
 
@@ -182,13 +178,6 @@ export const SpotlightFormReorderableThumbs = ({
         moveItemInArray(thumbableSpotlights, source.index, destination.index);
         updateWeightInValues(newWeight);
         setChosenWeight(newWeight);
-        // // setTimeout(() => {
-        // [...thumbableSpotlights].forEach(s =>
-        //     console.log('getWeightAfterDrag ', s.id, s.weight, s.order, s.id === draggableId ? '*' : ''),
-        // );
-        // const thisspotlight1 = [...thumbableSpotlights].find(s => s.id === draggableId);
-        // console.log('getWeightAfterDrag after ', thisspotlight1.id, thisspotlight1.weight, thisspotlight1.order);
-        // // }, 500);
     };
 
     if (!!currentSpotlightsLoading) {
