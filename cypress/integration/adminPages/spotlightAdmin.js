@@ -495,11 +495,11 @@ describe('Spotlights Admin Pages', () => {
         it('it shows a lightbox and can exit with the close button', () => {
             // open the split button
             cy.get('[data-testid="admin-spotlights-list-scheduled-list"]').scrollIntoView();
-            cy.get('[data-testid="spotlight-list-arrowicon-be8e7020-6501-11eb-98b3-ab6777f4b8d3"]').should('exist');
-            cy.get('[data-testid="spotlight-list-arrowicon-be8e7020-6501-11eb-98b3-ab6777f4b8d3"]').click();
+            cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]').should('exist');
+            cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]').click();
 
             // click the 'lightbox' action
-            cy.get('[data-testid="be8e7020-6501-11eb-98b3-ab6777f4b8d3-lightbox-button"]')
+            cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-lightbox-button"]')
                 .should('exist')
                 .click();
 
@@ -509,7 +509,7 @@ describe('Spotlights Admin Pages', () => {
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
                 .children()
-                .should('have.length', 5);
+                .should('have.length', 2);
 
             // use the close button
             cy.get('[data-testid="spotlights-lightbox-close-button"]')
@@ -536,7 +536,7 @@ describe('Spotlights Admin Pages', () => {
 
             cy.get('[data-testid="spotlights-lightbox-holder"] ul')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 23);
 
             cy.get('li:first-child button')
                 .should('exist')

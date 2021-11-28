@@ -138,6 +138,7 @@ export const SpotlightsListAsTable = ({
     canDragRows,
     canUnpublish,
     canTextFilter,
+    allSpotlights,
 }) => {
     const classes = useStyles();
 
@@ -322,7 +323,7 @@ export const SpotlightsListAsTable = ({
     };
 
     const showLightbox = spotlightImageUrl => {
-        const filteredRows = [...rows].filter(r => r.img_url === spotlightImageUrl);
+        const filteredRows = [...allSpotlights].filter(r => r.img_url === spotlightImageUrl);
         /* istanbul ignore else */
         if (filteredRows.length > 0) {
             // because its fired by clicking on a spotlight, it should never be 0
@@ -1097,6 +1098,7 @@ SpotlightsListAsTable.propTypes = {
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
+    allSpotlights: PropTypes.array,
 };
 
 SpotlightsListAsTable.defaultProps = {

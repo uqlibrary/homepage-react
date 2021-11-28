@@ -374,7 +374,7 @@ export const spotlightsLong = [{
     "end": "2099-02-07 23:59:00",
     "title": "Changes to Library loans and rules (can be edited)",
     "url": "https:\/\/web.library.uq.edu.au\/borrowing-requesting\/how-borrow\/borrowing-rules",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
     "img_alt": "Changes to Library loans and rules",
     "weight": 50,
     "active": 0
@@ -394,7 +394,7 @@ export const spotlightsLong = [{
     "end": "2099-02-14 12:03:00",
     "title": "Digital Practices Lab",
     "url": "https:\/\/web.library.uq.edu.au\/library-services\/teaching-staff\/digital-practices-lab",
-    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+    'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
     "img_alt": "Digital Practices Lab",
     "weight": 70,
     "active": 1
