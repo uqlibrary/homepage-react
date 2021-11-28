@@ -96,9 +96,10 @@ export const SpotlightForm = ({
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
 
-    const [originalWeight, setOriginalWeight] = useState(0);
+    const [originalValues, setOriginalValues] = useState({});
     useEffect(() => {
-        setOriginalWeight(defaults.type === 'edit' ? defaults.weight : 1000);
+        const newVar = { weight: defaults.type === 'edit' ? defaults.weight : 1000, start: defaults.startDateDefault };
+        setOriginalValues(newVar);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [defaults]);
 
@@ -554,11 +555,13 @@ export const SpotlightForm = ({
                         <SpotlightFormReorderableThumbs
                             currentSpotlights={currentSpotlights}
                             currentSpotlightsLoading={spotlightsLoading}
-                            defaultWeight={defaults.type === 'edit' ? values.weight : 1000}
+                            defaultWeight={
+                                defaults.type === 'edit' && originalValues.start === values.start ? values.weight : 1000
+                            }
                             currentValues={values}
                             updateWeightInValues={updateWeightInValues}
                             tableType={defaults.type}
-                            originalWeight={originalWeight}
+                            originalValues={originalValues}
                         />
                     </Grid>
                 </Grid>

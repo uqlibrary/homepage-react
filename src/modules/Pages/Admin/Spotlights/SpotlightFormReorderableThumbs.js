@@ -45,7 +45,7 @@ export const SpotlightFormReorderableThumbs = ({
     defaultWeight,
     updateWeightInValues,
     tableType,
-    originalWeight,
+    originalValues,
 }) => {
     // console.log('SpotlightFormReorderableThumbs TOP currentValues = ', currentValues);
     // console.log('SpotlightFormReorderableThumbs TOP currentSpotlights = ', currentSpotlights);
@@ -81,15 +81,29 @@ export const SpotlightFormReorderableThumbs = ({
     useEffect(() => {
         if (!!currentSpotlights) {
             if (tableType === 'edit') {
-                setThumbableSpotlights(
-                    currentSpotlights
+                const currentSpotlightThumbsForEdit = [...currentSpotlights];
+                if (currentValues.start !== originalValues.start) {
+                    const spotlightThumbPlaceholder = {
+                        id: placeholderThumbnailId,
+                        // eslint-disable-next-line camelcase
+                        img_url: currentValues?.img_url,
+                        // eslint-disable-next-line camelcase
+                        img_alt: currentValues?.img_alt,
+                        weight: !!chosenWeight ? chosenWeight : defaultWeight,
+                    };
+                    currentSpotlightThumbsForEdit.push(spotlightThumbPlaceholder);
+                }
+
+                const spotlightThumbsForEdit =
+                    !!currentSpotlightThumbsForEdit &&
+                    currentSpotlightThumbsForEdit
                         .map(s => {
                             return { ...s, weight: s?.id === currentValues.id ? currentValues?.weight : s.weight };
                         })
                         .sort((a, b) => {
                             return a.weight - b.weight;
-                        }),
-                );
+                        });
+                setThumbableSpotlights(spotlightThumbsForEdit);
             } else if (tableType === 'add') {
                 setThumbableSpotlights(
                     [
@@ -122,9 +136,9 @@ export const SpotlightFormReorderableThumbs = ({
                     }),
                 );
             }
+            // add the order field for display as small number on thumbnail
             setThumbableSpotlights(previousState =>
                 previousState.map((s, index) => {
-                    // console.log('set order to ', index);
                     return {
                         ...s,
                         order: index + 1,
@@ -161,7 +175,7 @@ export const SpotlightFormReorderableThumbs = ({
         // const thisspotlight = [...thumbableSpotlights].find(s => s.id === draggableId);
         // console.log('getWeightAfterDrag before ', thisspotlight.id, thisspotlight.weight, thisspotlight.order);
         // set the weight on the edited spotlight to +5/+15, then let the Backend resort it to 10s on save
-        const newWeight = getWeightAfterDrag(destination.index, tableType, originalWeight);
+        const newWeight = getWeightAfterDrag(destination.index, tableType, originalValues.weight);
 
         // react-beautiful-dnd relies on the order of the array, rather than an index
         // reorder the array so we dont get a flash of the original order while we wait for the new array to load
@@ -292,7 +306,7 @@ SpotlightFormReorderableThumbs.propTypes = {
     defaultWeight: PropTypes.any,
     updateWeightInValues: PropTypes.any,
     tableType: PropTypes.string,
-    originalWeight: PropTypes.number,
+    originalValues: PropTypes.any,
 };
 
 export default React.memo(SpotlightFormReorderableThumbs);
