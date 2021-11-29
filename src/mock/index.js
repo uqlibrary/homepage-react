@@ -30,8 +30,16 @@ import {
     training_object,
 } from './data/account';
 import { alertList } from './data/alerts';
-import { spotlights } from './data/spotlights';
-// import { spotlightsLong } from './data/spotlightsLong';
+import { spotlights as spotlightsHomepage } from './data/spotlights';
+import { spotlightsLong } from './data/spotlightsLong';
+import {
+    SPOTLIGHT_DELETE_BULK_API,
+    SPOTLIGHT_GET_BY_ID_API,
+    SPOTLIGHT_SAVE_BULK_API,
+    UPLOAD_PUBLIC_FILES_API,
+} from 'repositories/routes';
+
+const moment = require('moment');
 
 const queryString = require('query-string');
 const mock = new MockAdapter(api, { delayResponse: 100 });
@@ -107,7 +115,169 @@ mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
     return [404, {}];
 });
 
-mock.onGet(routes.SPOTLIGHTS_API().apiUrl).reply(withDelay([200, [...spotlights]]));
+mock.onGet(routes.SPOTLIGHTS_API_CURRENT().apiUrl).reply(withDelay([200, [...spotlightsHomepage]]));
+
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
+    withDelay([
+        500,
+        {
+            id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898',
+            start: '2021-06-29 01:00:00',
+            end: '2031-07-30 06:00:00',
+            title: 'Have you got your mask? COVID-19',
+            url: 'https://about.uq.edu.au/coronavirus',
+            img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+            img_alt: 'Have you got your mask? Please continue to maintain physically distancing.',
+            weight: 30,
+            active: 1,
+        },
+    ]),
+);
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc',
+            start: '2021-01-08 15:05:00',
+            end: '2021-01-18 18:00:00',
+            title: 'Has been dragged to position #2',
+            url: 'https://web.library.uq.edu.au/library-services/covid-19',
+            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
+            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
+            weight: 20,
+            active: 0,
+        },
+    ]),
+);
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
+            start: '2021-03-01 00:01:00',
+            end: '2099-12-07 23:59:00',
+            title: 'Study outdoors in Duhig Place - Study space',
+            url: 'http://bit.ly/3uBIK7C',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
+            weight: 10,
+            active: 0,
+        },
+    ]),
+);
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095b' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '480c5c20-6df0-11e7-86d1-31e8626e095b',
+            start: '2021-01-08 15:05:00',
+            end: '2021-01-18 18:00:00',
+            title: 'was in pos #2, dragging #1 moved this',
+            url: 'https://web.library.uq.edu.au/library-services/covid-19',
+            img_url: 'https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg',
+            img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
+            weight: 10,
+            active: 0,
+        },
+    ]),
+);
+mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
+            start: '2021-03-15 00:02:00',
+            end: '2099-03-21 23:59:00',
+            title: 'Can be deleted and edited',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt:
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            weight: 0,
+            active: 1,
+        },
+    ]),
+);
+mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '1e1b0e10-c400-11e6-a8f0-47525a49f469',
+            start: '2016-12-17 12:24:00',
+            end: '2021-02-28 23:59:00',
+            title: 'Can be viewed or deleted past #1',
+            url: 'https://web.library.uq.edu.au/blog/2016/12/your-feedback-july-september-2016',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Feedback on library services',
+            weight: 0,
+            active: 0,
+        },
+    ]),
+);
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
+            start: '2021-03-15 00:02:00',
+            end: '2099-03-21 23:59:00',
+            title: 'Can be deleted and edited',
+            url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+            img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+            img_alt:
+                'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+            weight: 10,
+            active: 1,
+        },
+    ]),
+);
+// the user drags spotlight 1 to position 2
+mock.onPost(routes.SPOTLIGHT_SAVE_BULK_API().apiUrl).reply(
+    withDelay([
+        200,
+        [
+            {
+                id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
+                start: '2021-03-01 00:01:00',
+                end: '2099-12-07 23:59:00',
+                title: 'Study outdoors in Duhig Place - Study space',
+                url: 'http://bit.ly/3uBIK7C',
+                img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+                img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
+                weight: 10,
+                active: 0,
+            },
+            {
+                id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
+                start: '2021-03-15 00:02:00',
+                end: '2099-03-21 23:59:00',
+                title: 'Can be deleted and edited',
+                url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
+                img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+                img_alt:
+                    'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
+                weight: 20,
+                active: 1,
+            },
+        ],
+    ]),
+);
+mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '729df1a0-7dd0-11e9-a3a7-5fd844715207' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '729df1a0-7dd0-11e9-a3a7-5fd844715207',
+            start: '2021-01-25 00:00:00',
+            end: '2021-02-07 23:59:00',
+            title: 'Find past exam papers',
+            url: 'https://web.library.uq.edu.au/library-services/students/past-exam-papers',
+            img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+            img_alt: 'Preparing for exams? Search past exam papers.',
+            weight: 20,
+            active: 1,
+        },
+    ]),
+);
 
 mock.onGet(routes.TRAINING_API(10).apiUrl).reply(withDelay([200, training_object]));
 // .reply(withDelay([200, training_array]));
@@ -155,7 +325,6 @@ mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' })
     ]),
 );
 // mock.onAny(routes.ALERT_SAVE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(withDelay([500, {}]));
-console.log('delete mock url = ', routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl);
 mock.onDelete(routes.ALERT_DELETE_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }).apiUrl).reply(
     withDelay([200, []]),
 );
@@ -262,6 +431,97 @@ fetchMock.mock(
     'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
 );
+
+// spotlights
+mock.onGet(routes.SPOTLIGHTS_ALL_API().apiUrl).reply(
+    withDelay([
+        200,
+        spotlightsLong.map(r => {
+            // the first entry ends today
+            return r.id === '9eab3aa0-82c1-11eb-8896-eb36601837f5'
+                ? {
+                      ...r,
+                      end: moment()
+                          .endOf('day')
+                          .format('YYYY-MM-DDTHH:mm'),
+                  }
+                : r;
+        }),
+    ]),
+);
+
+mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '5bc14170-e1e9-11ea-b88d-9bb67d805fd9',
+            start: '2020-08-19 00:01:32',
+            end: '2020-08-30 23:59:00',
+            title: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
+            url: 'https://web.library.uq.edu.au/blog/2020/08/announcing-2020-fryer-library-fellow',
+            img_url: 'http://localhost:2020/public/images/spotlights/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
+            img_alt: 'Announcing the 2020 Fryer Library Fellow - Dr N.A.J. Taylor',
+            weight: 4,
+            active: 1,
+        },
+    ]),
+);
+// mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9' }).apiUrl).reply(
+    withDelay([500, []]),
+);
+
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'd8ec8820-07b1-11e7-a7ef-ef4338d401a6' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a7764f90-198d-11e7-9f30-3dc758d83fd5' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '5ee86730-6f2a-11eb-8e97-5b9edc0aaa73' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '7d40b830-668d-11eb-b0fd-e19d76f2843b' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '5ee86730-6f2a-11eb-8e97-5b9edc0aaa73' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '48727c20-7fa8-11eb-ae0f-0b60018ec35f' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'aa2fab10-7cb1-11eb-a9ab-d7c632403564' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
+    withDelay([200, []]),
+);
+
+mock.onDelete(routes.SPOTLIGHT_DELETE_BULK_API().apiUrl).reply(withDelay([200, []]));
+
+mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(200, [
+    {
+        key: '123456-123456-123456-123456-123456',
+        type: 'mimetype',
+        name: 'name',
+        size: 9999,
+    },
+]);
+// mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
+//     message: ['an error message from the api that describes what the problem was'],
+// });
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {

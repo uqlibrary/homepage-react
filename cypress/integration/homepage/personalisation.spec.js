@@ -2,7 +2,9 @@ import { expectUserToDisplayCorrectFirstName, hasPanels, hasPersonalisedPanelOpt
 
 // Note: the Mylibrary Button is supplied by reusable-webcomponents. Testing is done over there.
 
-context('Homepage', () => {
+// we test that each user type gets the correct elements on the homepage
+// we shouldnt test the mylibrary button here, same, as that is built in reusable-webcomponents
+context('Personalised Homepage', () => {
     it('Renders an on-campus undergraduate home page correctly', () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
@@ -165,9 +167,6 @@ context('Homepage', () => {
         cy.get('div#content-container').contains('Library hours');
 
         hasPanels(['computer-availability', 'library-hours', 'training', 'promo']);
-
-        // no mylibrary button
-        cy.get('button[data-testid="mylibrary-button"]').should('not.exist');
     });
 
     it('Renders a Short Form Credential course student home page correctly', () => {

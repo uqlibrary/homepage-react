@@ -1,4 +1,4 @@
-import homeReducer, { initialState } from './homeIndex';
+import homeReducer, { initialState } from './homeReducer';
 import * as actions from '../actions/actionTypes';
 
 describe('account reducer', () => {
@@ -12,13 +12,13 @@ describe('account reducer', () => {
 
     it('should handle a failing Spotlights API call', () => {
         const test = homeReducer(emptyState, {
-            type: actions.SPOTLIGHTS_FAILED,
+            type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({
             ...emptyState,
-            spotlightsLoading: false,
-            spotlightsError: 'failed!',
+            spotlightsCurrentLoading: false,
+            spotlightsCurrentError: 'failed!',
         });
     });
 
