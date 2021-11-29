@@ -1,4 +1,4 @@
-context('ACCESSIBILITY', () => {
+context('Spotlights homepage Accessibility', () => {
     it('Spotlights', () => {
         cy.visit('/');
         cy.injectAxe();
@@ -17,7 +17,7 @@ context('ACCESSIBILITY', () => {
         });
     });
 });
-context('Spotlights', () => {
+context('Spotlights homepage', () => {
     it('Renders as expected', () => {
         cy.visit('/');
         cy.injectAxe();

@@ -341,7 +341,7 @@ function FREN1010_loads_properly_for_s111111_user() {
     course_links_panel_loads_correctly_for_a_subject(FREN1010ReadingList);
 }
 
-context('ACCESSIBILITY', () => {
+context('Course Resources Accessibility', () => {
     it('User with classes', () => {
         cy.visit('/courseresources?user=s1111111');
         cy.injectAxe();

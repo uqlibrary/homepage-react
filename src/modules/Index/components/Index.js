@@ -9,7 +9,7 @@ import {
     loadLoans,
     searcheSpacePossiblePublications,
     searcheSpaceIncompleteNTROPublications,
-    loadSpotlights,
+    loadCurrentSpotlights,
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
@@ -44,8 +44,8 @@ export const Index = ({
     account,
     accountLoading,
     author,
-    spotlights,
-    spotlightsLoading,
+    spotlightsCurrent,
+    spotlightsCurrentLoading,
     libHours,
     libHoursLoading,
     libHoursError,
@@ -65,10 +65,11 @@ export const Index = ({
     incompleteNTROLoading,
 }) => {
     const dispatch = useDispatch();
+    console.log('homepage: spotlightsCurrent = ', spotlightsCurrent);
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {
-            dispatch(loadSpotlights());
+            dispatch(loadCurrentSpotlights());
             dispatch(loadLibHours());
             dispatch(loadCompAvail());
         }
@@ -134,7 +135,11 @@ export const Index = ({
                     </Hidden>
                 )}
                 <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
-                    <Spotlights spotlights={spotlights} spotlightsLoading={spotlightsLoading} account={account} />
+                    <Spotlights
+                        spotlights={spotlightsCurrent}
+                        spotlightsLoading={spotlightsCurrentLoading}
+                        account={account}
+                    />
                 </Grid>
                 {/* Personalisation panel or hours */}
                 {!!accountLoading && (
@@ -220,9 +225,9 @@ Index.propTypes = {
     accountLoading: PropTypes.bool,
     author: PropTypes.object,
     actions: PropTypes.any,
-    spotlights: PropTypes.any,
-    spotlightsError: PropTypes.any,
-    spotlightsLoading: PropTypes.bool,
+    spotlightsCurrent: PropTypes.any,
+    // spotlightsCurrentError: PropTypes.any,
+    spotlightsCurrentLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,

@@ -5,7 +5,7 @@ import {
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
     LIB_HOURS_API,
-    SPOTLIGHTS_API,
+    SPOTLIGHTS_API_CURRENT,
     COMP_AVAIL_API,
     TRAINING_API,
     PRINTING_API,
@@ -139,19 +139,19 @@ export function loadCurrentAccount() {
  * Loads the spotlight data
  * @returns {function(*)}
  */
-export function loadSpotlights() {
+export function loadCurrentSpotlights() {
     return dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_LOADING });
-        return get(SPOTLIGHTS_API())
+        dispatch({ type: actions.SPOTLIGHTS_HOMEPAGE_LOADING });
+        return get(SPOTLIGHTS_API_CURRENT())
             .then(spotlightsResponse => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_LOADED,
+                    type: actions.SPOTLIGHTS_HOMEPAGE_LOADED,
                     payload: spotlightsResponse,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.SPOTLIGHTS_FAILED,
+                    type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
                     payload: error.message,
                 });
             });

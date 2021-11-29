@@ -46,27 +46,22 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 - `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server` - initial setup
 - `npm ci` - when weird errors happen your local npm probably doesnt match the latest project requirements, this
   clears & reinstalls npm packages
-- `npm run start`
+- `npm run start:mock` to use mock data from src/mock
   - runs <http://localhost:2020/>
-  - uses dev api for backend (<http://dev-api.library.uq.edu.au:8050/>) (requires additional setup of uqlibrary/api
-    project)
-- `npm run start:mock`
-  - runs <http://localhost:2020/>
-  - uses mock data from src/mock
-- `npm run start:url`
-
-  - runs <http://dev-homepage.library.uq.edu.au:2020/> (add `dev-homepage.library.uq.edu.au` to your /etc/hosts)
-  - uses staging data from the aws api as a backend (you will need to set API_URL in .env to `https://api.library.uq.edu.au/staging/`)
+- `npm run start:url` to use api
+  - runs <http://dev-homepage.library.uq.edu.au:2020/#/>
+  - add `dev-homepage.library.uq.edu.au` to your /etc/hosts file using your external IP)
+  - to use staging data from the aws api as a backend set API_URL in .env to `https://api.library.uq.edu.au/staging/`
+  - to use local api as a backend set API_URL in .env to `http://dev-api.library.uq.edu.au:8050/` and bring up api repo [(cf)](https://github.com/uqlibrary/api)
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
+    ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
 
-    - you may need to block CORS errors - eg with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) Chrome Extension, or by launching the browser with CORS disabled.
+  - you may need to block CORS errors - eg with [Allow CORS: Access-Control-Allow-Origin](https://chrome.google.com/webstore/detail/allow-cors-access-control/lhobafahddgcelffkeicbaginigeejlf) Chrome Extension, or by launching the browser with CORS disabled.
 
       ```sh
       google-chrome --disable-web-security --user-data-dir=/tmp/chrome-dev
       ```
 
-    - session token x-uql-token can easily be found by logging in at <https://www.library.uq.edu.au/> and
-      observing the header value in Network tab of Inspections
     - You will also need to run Chrome in no-security mode by adding the alias `alias chrome-no-cors='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --disable-web-security --user-data-dir=~/chrome-dev-profile > /dev/null 2>&1'` and then running chrome by `chrome-no-cors`. or `open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security`
 
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
@@ -196,15 +191,15 @@ TBA
 
 ### Gotchas
 
-- Because FE is served from cloudFront, add a behaviour to serve css/js filename patterns. E.g. behaviours have been
+- Because FE is served from Cloudfront, add a behaviour to Cloudfront to serve any css/js filename patterns. E.g. behaviours have been
   added for `main-*` and `commons-*` files.
+- Content Security Policies (CSP) are provided from Cloudfront - https://github.com/uqlibrary/cffx-add-security-headers
 
 #### Optimisation Guidelines
 
-- do not use functional components
 - try to simplify props
-- component should extend React.PureComponent if props are simple
-- component should extend React.Component, shouldComponentUpdate() should be implemented if props have objects
+- components should extend React.PureComponent if props are simple (if you fallback to a Class component)
+- class components should extend React.Component, shouldComponentUpdate() should be implemented if props have objects
 - import explicit and specific components (do not import all):
   - _DO NOT_ `import { Button } from 'material-ui';`
   - _DO_ `import { Button } from 'material-ui/Button';`
