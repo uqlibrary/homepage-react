@@ -58,7 +58,7 @@ export const SpotlightFormReorderableThumbs = ({
     const classes = useStyles();
 
     const placeholderThumbnailId = 'placeholder-thumbnail';
-    // this is an image we have uploaded for use as a placeholder - its a simple grey box
+    // this is an image we have uploaded for use as a placeholder in the list of thumbs - its a simple grey box
     const imgUrlPlaceholder =
         'https://app-testing.library.uq.edu.au/file/public/3530e810-40e5-11ec-b167-ad28af8d7358.png';
 
@@ -209,12 +209,14 @@ export const SpotlightFormReorderableThumbs = ({
         if (!!firstFile && !!firstFile.preview) {
             return firstFile.preview;
         }
-        // eslint-disable-next-line camelcase
+        if (!values.hasImage) {
+            return imgUrlPlaceholder;
+        }
         return defaultImage;
     };
 
     function getCurrentImage(isThisImage, spotlight) {
-        if (tableType !== 'add') {
+        if (tableType === 'edit') {
             return isThisImage ? currentImage(currentValues, currentValues.img_url) : spotlight.img_url;
         }
         return isThisImage ? currentImage(currentValues, spotlight.img_url) : spotlight.img_url;

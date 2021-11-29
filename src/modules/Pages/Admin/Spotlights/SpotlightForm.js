@@ -104,10 +104,10 @@ export const SpotlightForm = ({
     }, [defaults]);
 
     const [values, setValues] = useState({
-        // the data displayed in the form
         ...defaults,
         start: defaults.startDateDefault,
         end: defaults.endDateDefault,
+        hasImage: defaults.type !== 'add',
     });
 
     const isValidLinkAria = title => {
@@ -177,7 +177,8 @@ export const SpotlightForm = ({
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
-            isValidImageUrl(currentValues.url);
+            isValidImageUrl(currentValues.url) &&
+            !!currentValues.hasImage;
 
         // console.log('validateValues: isValid = ', isValid, currentValues);
         // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
@@ -346,8 +347,6 @@ export const SpotlightForm = ({
             [prop]: newValue,
         };
         setValues(newValues);
-
-        setFormValidity(validateValues(newValues));
     };
 
     const errorLocale = {
@@ -386,18 +385,14 @@ export const SpotlightForm = ({
 
     const handleSuppliedFiles = files => {
         console.log('for SpotlightFileUploadDropzone in handleSuppliedFiles files=', files);
-        console.log('handleSuppliedFiles values=', values);
-        setValues({ ...values, ['uploadedFile']: files });
-
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: files }));
+        setValues({ ...values, ['uploadedFile']: files, hasImage: true });
     };
 
     const clearSuppliedFile = () => {
         console.log('for SpotlightFileUploadDropzone in clearSuppliedFile');
         setValues(prevState => {
-            return { ...prevState, ['uploadedFile']: [] };
+            return { ...prevState, ['uploadedFile']: [], hasImage: false };
         });
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: [] }));
     };
 
     return (

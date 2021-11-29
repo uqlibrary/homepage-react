@@ -16,6 +16,12 @@ function getFooterLabel(
 function dragzoneIsReadyForDrag() {
     cy.get('[data-testid="dropzone-dragarea"]').should('exist');
     cy.get('[data-testid="dropzone-preview"]').should('not.exist');
+    cy.get('[data-testid="spotlights-form-upload-dropzone"').should('contain', 'Drag and drop a spotlight image');
+}
+function dragzoneContainsAnImage() {
+    cy.get('[data-testid="dropzone-dragarea"]').should('not.exist');
+    cy.get('[data-testid="dropzone-preview"]').should('exist');
+    cy.get('[data-testid="spotlights-form-upload-dropzone"').should('not.contain', 'Drag and drop a spotlight image');
 }
 
 function dragFileToDropzone(uploadableFile) {
@@ -64,6 +70,12 @@ function imageOKIsPresent(dataTestid) {
         .find('svg path[d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"]')
         .should('exist');
 }
+
+function removeImageFromDragzone() {
+    cy.get('button[data-testid="spotlights-form-remove-image"]').click();
+}
+
+const placeholderImage = 'https://app-testing.library.uq.edu.au/file/public/3530e810-40e5-11ec-b167-ad28af8d7358.png';
 
 describe('Spotlights Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
@@ -1190,11 +1202,37 @@ describe('Spotlights Admin Pages', () => {
             // start an url, but button are disabled while it isnt valid
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://e');
             saveButtonisDisabled();
+
             // complete to a valid url
             cy.get('[data-testid="admin-spotlights-form-link-url"]').type('xample.com');
+
+            saveButtonNOTDisabled(); // OK!!!!
+
+            // as we clear fields the form is not valid
+            removeImageFromDragzone();
+            saveButtonisDisabled();
+            dragFileToDropzone('spotlight-just-right.png');
+            imageOKIsPresent('dropzone-dimension-warning');
+            saveButtonNOTDisabled();
+
+            cy.get('[data-testid="admin-spotlights-form-title"]')
+                .type('y')
+                .clear();
+            saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-title"]').type('xxx');
+            saveButtonNOTDisabled();
+
+            cy.get('[data-testid="admin-spotlights-form-tooltip"]').clear();
+            saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('xxx');
+            saveButtonNOTDisabled();
+
+            cy.get('[data-testid="admin-spotlights-form-link-url"]').clear();
+            saveButtonisDisabled();
+            cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
             saveButtonNOTDisabled();
         });
-        it('add shows the right reorder block', () => {
+        it('add form shows the reorderable thumbs block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/add?user=uqstaff');
             cy.viewport(1300, 1000);
 
@@ -1218,13 +1256,14 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .should('exist')
                 .and('have.css', 'border-left-style', 'solid'); // proxy for "the span is highlighted"
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child span')
+                .should('exist')
+                .should('contain', '5');
 
             // the grey place holder shows as the last img
-            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
-                .invoke('attr', 'src')
-                .then(src => {
-                    expect(src).to.contains('https://app-testing.library.uq.edu.au/');
-                });
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:last-child img')
+                .should('exist')
+                .and('have.attr', 'src', placeholderImage);
 
             // drag in a new image and it is reflected in the 'reorderable thumbs'
             dragFileToDropzone('spotlight-just-right.png');
@@ -1232,6 +1271,26 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .invoke('attr', 'src')
                 .then(src => {
+                    expect(src).to.contains('blob:http://localhost:2020');
+                });
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:last-child img')
+                .should('exist')
+                .invoke('attr', 'src')
+                .then(src => {
+                    // this is as close as we can get to the actual image
+                    expect(src).to.contains('blob:http://localhost:2020');
+                });
+
+            removeImageFromDragzone();
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:last-child img')
+                .should('exist')
+                .and('have.attr', 'src', placeholderImage);
+            dragFileToDropzone('spotlight-too-large.jpg');
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:last-child img')
+                .should('exist')
+                .invoke('attr', 'src')
+                .then(src => {
+                    // this is as close as we can get to the actual image
                     expect(src).to.contains('blob:http://localhost:2020');
                 });
         });
@@ -1363,29 +1422,21 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', 'http://example.com');
         });
         it('can delete the current spotlight image on the edit form and upload a different image', () => {
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'not.contain',
-                'Drag and drop a spotlight image',
-            );
-            cy.get('button[data-testid="spotlights-form-remove-image"]').click();
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'contain',
-                'Drag and drop a spotlight image',
-            );
+            dragzoneContainsAnImage();
+            removeImageFromDragzone();
+            saveButtonisDisabled();
+
+            dragzoneIsReadyForDrag();
             dragFileToDropzone('spotlight-just-right.png');
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'not.contain',
-                'Drag and drop a spotlight image',
-            );
+            dragzoneContainsAnImage();
+            saveButtonNOTDisabled();
+
             imageOKIsPresent('dropzone-dimension-warning');
         });
-        it('edit form shows the right reorder block', () => {
+        it('edit form shows the reorderable thumbs block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/edit/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'not.contain',
-                'Drag and drop a spotlight image',
-            );
+            dragzoneContainsAnImage();
 
             // we cant current do any interactive testing, so a basic check is the best we can do
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
@@ -1399,6 +1450,27 @@ describe('Spotlights Admin Pages', () => {
                 'border-left-style',
                 'solid',
             );
+
+            // the thumb for the current spotlight changes correctly as we load and unload the dragzone
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:first-child img')
+                .should('exist')
+                .and(
+                    'have.attr',
+                    'src',
+                    'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
+                );
+            removeImageFromDragzone();
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:first-child img')
+                .should('exist')
+                .and('have.attr', 'src', placeholderImage);
+            dragFileToDropzone('spotlight-too-large.jpg');
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:first-child img')
+                .should('exist')
+                .invoke('attr', 'src')
+                .then(src => {
+                    // this is as close as we can get to the actual image
+                    expect(src).to.contains('blob:http://localhost:2020');
+                });
         });
     });
     context('Spotlight Admin Clone page', () => {
@@ -1554,29 +1626,17 @@ describe('Spotlights Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         });
         it('can delete the current spotlight image on the clone form and upload a different image', () => {
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'not.contain',
-                'Drag and drop a spotlight image',
-            );
-            cy.get('button[data-testid="spotlights-form-remove-image"]').click();
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'contain',
-                'Drag and drop a spotlight image',
-            );
+            dragzoneContainsAnImage();
+            removeImageFromDragzone();
+            dragzoneIsReadyForDrag();
             dragFileToDropzone('spotlight-just-right.png');
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'not.contain',
-                'Drag and drop a spotlight image',
-            );
+            dragzoneContainsAnImage();
             imageOKIsPresent('dropzone-dimension-warning');
         });
-        it('clone shows the right reorder block', () => {
+        it('clone form shows the reorderable thumbs block', () => {
             cy.visit('http://localhost:2020/admin/spotlights/clone/9eab3aa0-82c1-11eb-8896-eb36601837f5?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.get('[data-testid="spotlights-form-upload-dropzone"').should(
-                'not.contain',
-                'Drag and drop a spotlight image',
-            );
+            dragzoneContainsAnImage();
 
             // set date to now so the thumbs are available
             cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
@@ -1598,6 +1658,23 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                 .should('exist')
                 .and('have.css', 'border-left-style', 'solid'); // proxy for "the img is highlighted"
+            cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child span')
+                .should('exist')
+                .should('contain', '5');
+
+            // the thumb for the current spotlight changes correctly as we load and unload the dragzone
+            removeImageFromDragzone();
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:last-child img')
+                .should('exist')
+                .and('have.attr', 'src', placeholderImage);
+            dragFileToDropzone('spotlight-too-large.jpg');
+            cy.get('[data-testid="spotlights-thumbs-reorder"] > span:last-child img')
+                .should('exist')
+                .invoke('attr', 'src')
+                .then(src => {
+                    // this is as close as we can get to the actual image
+                    expect(src).to.contains('blob:http://localhost:2020');
+                });
         });
     });
     context('Spotlight Admin View page', () => {
