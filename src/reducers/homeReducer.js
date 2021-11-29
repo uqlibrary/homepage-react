@@ -1,9 +1,9 @@
 import * as actions from 'actions/actionTypes';
 
 export const initialState = {
-    spotlights: null,
-    spotlightsLoading: null,
-    spotlightsError: null,
+    spotlightsCurrent: null,
+    spotlightsCurrentLoading: null,
+    spotlightsCurrentError: null,
     printBalance: null,
     printBalanceLoading: null,
     loans: null,
@@ -15,21 +15,21 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.SPOTLIGHTS_LOADING]: state => ({
+    [actions.SPOTLIGHTS_HOMEPAGE_LOADING]: state => ({
         ...state,
-        spotlightsLoading: true,
+        spotlightsCurrentLoading: true,
     }),
 
-    [actions.SPOTLIGHTS_LOADED]: (state, action) => ({
+    [actions.SPOTLIGHTS_HOMEPAGE_LOADED]: (state, action) => ({
         ...state,
-        spotlights: action.payload,
-        spotlightsLoading: false,
+        spotlightsCurrent: action.payload,
+        spotlightsCurrentLoading: false,
     }),
 
-    [actions.SPOTLIGHTS_FAILED]: (state, action) => ({
+    [actions.SPOTLIGHTS_HOMEPAGE_FAILED]: (state, action) => ({
         ...state,
-        spotlightsLoading: false,
-        spotlightsError: action.payload,
+        spotlightsCurrentLoading: false,
+        spotlightsCurrentError: action.payload,
     }),
 
     // Print balance
@@ -114,5 +114,18 @@ export default function homeReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
+    console.log(
+        'homeReducer: ',
+        action.type,
+        '\n',
+        '- state before = ',
+        state,
+        '\n',
+        '- action = ',
+        action,
+        '\n',
+        '- handler (state after) = ',
+        handler(state, action),
+    );
     return handler(state, action);
 }

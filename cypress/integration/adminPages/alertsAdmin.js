@@ -316,6 +316,18 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
             // cant test display further as mock data doesnt actually delete
         });
+        it('the footer paginator shows all links when "all" is selected', () => {
+            cy.get(
+                '[data-testid="admin-alerts-list-past-list"] [data-testid="admin-alerts-list-paginator-select"]',
+            ).select('All');
+            cy.get(
+                '[data-testid="admin-alerts-list-past-list"] [data-testid="admin-alerts-list-paginator-select"]',
+            ).should('have.value', 78);
+            cy.get('[data-testid="admin-alerts-list-past-list"] tbody ')
+                .children()
+                .should('have.length', 78 + numRowsHiddenAsNoDatainfo);
+            cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-78 of 78');
+        });
     });
     context('Alert Admin deletion', () => {
         beforeEach(() => {
@@ -758,8 +770,6 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('the edit form presets the correct data', () => {
-            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
-            cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
@@ -792,8 +802,6 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
         it('has a working Edit form', () => {
-            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
-            cy.viewport(1300, 1000);
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-title"]').type('Updated alert');

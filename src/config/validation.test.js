@@ -1,8 +1,6 @@
 import * as validation from './validation';
 import { locale } from 'locale';
 import { APP_URL } from 'config';
-import Immutable from 'immutable';
-import { MEDIATED_ACCESS_ID } from 'config/general';
 
 describe('Validation method', () => {
     it('should validate required', () => {
@@ -69,28 +67,6 @@ describe('Validation method', () => {
         expect(testFailValue6).toEqual(locale.validationErrors.maxLength.replace('[max]', '2000'));
     });
 
-    it('should validate Issn', () => {
-        const testFailValue = validation.isValidIssn('sdjflsjdlfjsl');
-        expect(testFailValue).toEqual(locale.validationErrors.issn);
-
-        let testValue = validation.isValidIssn('1234-1243');
-        expect(testValue).toEqual('');
-
-        testValue = validation.isValidIssn('ISSN 1234-1243');
-        expect(testValue).toEqual('');
-    });
-
-    it('should validate Isbn', () => {
-        const testFailValue = validation.isValidIsbn('sdjflsjdlfjsl');
-        expect(testFailValue).toEqual(locale.validationErrors.isbn);
-
-        let testValue = validation.isValidIsbn('ISBN 0-14-020652-3');
-        expect(testValue).toEqual('');
-
-        testValue = validation.isValidIsbn('0-14-020652-3');
-        expect(testValue).toEqual('');
-    });
-
     it('should validate max length', () => {
         expect(validation.maxLength10('sdjflsjdlfjslsdjflsjdlfjslsdjflsjdlfjslsdjflsjdlfjsl')).toEqual(
             locale.validationErrors.maxLength.replace('[max]', 10),
@@ -99,81 +75,6 @@ describe('Validation method', () => {
         expect(validation.maxLength10('abc def gji')).toEqual(undefined);
         expect(validation.maxLength10(1234)).toEqual(undefined);
         expect(validation.maxLength10(12345678901)).toEqual(locale.validationErrors.maxLength.replace('[max]', 10));
-    });
-
-    it('should validate publication title', () => {
-        expect(validation.isValidPublicationTitle(' global    ')).toBeFalsy();
-        expect(validation.isValidPublicationTitle(' global war ')).toBeTruthy();
-    });
-
-    it('should validate person selected', () => {
-        expect(validation.peopleRequired([], 'Error', true)).toEqual('Error');
-        expect(validation.peopleRequired([{ name: 'First person' }], 'Error', true)).toEqual('Error');
-        expect(validation.peopleRequired([{ name: 'First person', selected: true }], 'Error', true)).toBeFalsy();
-        expect(validation.peopleRequired([], 'Error', false)).toEqual('Error');
-        expect(validation.peopleRequired([{ name: 'First person' }], 'Error', false)).toBeFalsy();
-    });
-
-    it('should validate author/contributor link', () => {
-        const contributorLinkValid = {
-            authors: [
-                {
-                    rek_contributor_id_id: null,
-                    rek_contributor_id_pid: 'UQ:641272',
-                    rek_contributor_id: 410,
-                    rek_contributor_id_order: 1,
-                },
-            ],
-            valid: true,
-        };
-        const authorLinkValid = {
-            authors: [
-                {
-                    rek_contributor_id_id: null,
-                    rek_contributor_id_pid: 'UQ:641272',
-                    rek_contributor_id: 410,
-                    rek_contributor_id_order: 1,
-                },
-            ],
-            valid: true,
-        };
-
-        expect(validation.isValidAuthorLink(authorLinkValid)).toEqual('');
-        expect(validation.isValidAuthorLink('Invalid data')).toEqual(locale.validationErrors.authorLinking);
-        expect(validation.isValidContributorLink(contributorLinkValid)).toEqual('');
-        expect(validation.isValidContributorLink('Invalid data')).toEqual('');
-        expect(validation.isValidContributorLink('Invalid data', true)).toEqual(
-            locale.validationErrors.contributorLinking,
-        );
-    });
-
-    it('should validate google scholar id', () => {
-        expect(validation.isValidGoogleScholarId('231234252345')).toEqual('');
-        expect(validation.isValidGoogleScholarId('rtgtwDFRjuHn')).toEqual('');
-        expect(validation.isValidGoogleScholarId('-31234252345')).toEqual('');
-        expect(validation.isValidGoogleScholarId('12345vbgHJ0p')).toEqual('');
-        expect(validation.isValidGoogleScholarId('rtgtwDFRjuH')).toEqual(locale.validationErrors.googleScholarId);
-    });
-
-    it('should validate if the grants form is currently poplated', () => {
-        expect(validation.grantFormIsPopulated(true)).toEqual(locale.validationErrors.grants);
-        expect(validation.grantFormIsPopulated({ grantAgencyName: '', grantId: '', grantAgencyType: '' })).toEqual(
-            undefined,
-        );
-    });
-
-    it('should conditionally validate file uploader based on open access value', () => {
-        expect(validation.fileUploadNotRequiredForMediated(undefined, Immutable.Map({}))).toEqual(
-            locale.validationErrors.fileUploadRequired,
-        );
-        expect(
-            validation.fileUploadNotRequiredForMediated(
-                undefined,
-                Immutable.Map({
-                    fez_record_search_key_access_conditions: { rek_access_conditions: MEDIATED_ACCESS_ID },
-                }),
-            ),
-        ).toEqual(undefined);
     });
 });
 
@@ -245,23 +146,5 @@ describe('getErrorAlertProps ', () => {
 
         const emptyMessage = validation.translateFormErrorsToText('');
         expect(emptyMessage).toBeNull();
-    });
-});
-
-describe('checkDigit ', () => {
-    it('should check checksum digit of ISMN values correctly', () => {
-        const testCases = ['9790123456785', '979-0-1234-5678-5', '979-0-123-45678-5', 'M-2306-7118-7'];
-
-        testCases.forEach(testCase => {
-            expect(validation.checkDigit(testCase)).toBeTruthy();
-        });
-    });
-
-    it('should check checksum digit of ISMN values incorrectly', () => {
-        const testCases = ['ISMN 979-0-1234-5678-5', 'THIS IS NOT A VALID ISMN', '12345', 12345];
-
-        testCases.forEach(testCase => {
-            expect(validation.checkDigit(testCase)).toBeFalsy();
-        });
     });
 });
