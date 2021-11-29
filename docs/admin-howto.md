@@ -36,7 +36,10 @@ Visit [the homepage test file](https://github.com/uqlibrary/homepage-react/blob/
 
 ## Alerts Admin system
 
-Need to add or remove users? Request LTS staff update the AD entry for the specific user
+Need to add or remove a user? Ask Work Station Support to add or remove the "SpotlightAdmins" AD group for the user (the one group covers Spotlights and Alerts). Include the username in the request (eg uqjtilse).
 
-To edit the Alerts Admin Help (and other on page labels), edit [alertsadmin.locale.js](https://github.com/uqlibrary/homepage-react/blob/user-admin-manage/src/modules/Pages/Admin/Alerts/alertsadmin.locale.js).
- When the build succeeds, you will be able to see your changes [here](https://homepage-development.library.uq.edu.au/user-admin-manage/#/admin/alerts).
+## Spotlights Admin system
+
+Need to add or remove a user?  Ask Work Station Support to add or remove the "SpotlightAdmins" AD group for the user. Include the username in the request (eg uqjtilse). These users will also be able to load the Alerts Admin system.
+
+
