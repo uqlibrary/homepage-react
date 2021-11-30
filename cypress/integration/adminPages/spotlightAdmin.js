@@ -504,49 +504,53 @@ describe('Spotlights Admin Pages', () => {
                 'Study outdoors in Duhig Place - Study space',
             );
         });
-        it('it shows a lightbox and can exit with the close button', () => {
+        it('it shows a view-by-history lightbox and can exit with the close button', () => {
             // open the split button
             cy.get('[data-testid="admin-spotlights-list-scheduled-list"]').scrollIntoView();
             cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]').should('exist');
             cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]').click();
 
-            // click the 'lightbox' action
-            cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-lightbox-button"]')
+            // click the 'view by history' action
+            cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-viewbyhistory-button"]')
                 .should('exist')
                 .click();
 
-            // lightbox loads
-            cy.get('[data-testid="spotlights-lightbox-title"]').contains('Previous entries for this image');
-            imageWarningIsPresent('spotlights-lightbox-dimensions', false);
+            // view-by-history lightbox loads
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains(
+                'Previous entries for this image',
+            );
+            imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
-            cy.get('[data-testid="spotlights-lightbox-holder"] ul')
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
                 .children()
                 .should('have.length', 2);
 
             // use the close button
-            cy.get('[data-testid="spotlights-lightbox-close-button"]')
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-close-button"]')
                 .should('exist')
                 .click();
             cy.location('href').should('eq', `${Cypress.config('baseUrl')}/admin/spotlights?user=uqstaff`);
-            cy.get('[data-testid="spotlights-lightbox-title"]').should('not.exist');
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('not.exist');
         });
-        it('it shows a lightbox and can open clone form', () => {
+        it('it shows a view-by-history and can open clone form', () => {
             cy.get('[data-testid="admin-spotlights-list-current-list"]').scrollIntoView();
             // open the split button
             cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
                 .should('exist')
                 .click();
 
-            // click the 'lightbox' action
-            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-lightbox-button"]')
+            // click the 'view by history' action
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-viewbyhistory-button"]')
                 .should('exist')
                 .click();
 
-            // lightbox loads
-            cy.get('[data-testid="spotlights-lightbox-title"]').contains('Previous entries for this image');
-            imageWarningIsPresent('spotlights-lightbox-dimensions', false);
+            // view-by-history lightbox loads
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains(
+                'Previous entries for this image',
+            );
+            imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
-            cy.get('[data-testid="spotlights-lightbox-holder"] ul')
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
                 .children()
                 .should('have.length', 23);
 

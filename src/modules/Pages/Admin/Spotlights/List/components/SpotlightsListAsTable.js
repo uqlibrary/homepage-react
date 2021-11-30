@@ -192,11 +192,11 @@ export const SpotlightsListAsTable = ({
     };
     const [textSearch, setTextSearch] = useState(getFilterTermFromSession());
 
-    const [isLightboxOpen, setLightboxOpen] = React.useState(false);
-    const handleLightboxOpen = () => setLightboxOpen(true);
-    const handleLightboxClose = () => setLightboxOpen(false);
-    const [lightBoxFocus, setLightBoxFocus] = React.useState('');
-    const [lightBoxRows, setLightBoxEntries] = React.useState([]);
+    const [isViewByHistoryLightboxOpen, setViewByHistoryLightboxOpen] = React.useState(false);
+    const handleViewByHistoryLightboxOpen = () => setViewByHistoryLightboxOpen(true);
+    const handleViewByHistoryLightboxClose = () => setViewByHistoryLightboxOpen(false);
+    const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
+    const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
 
     const [draggedId, setDraggedId] = useState(false);
 
@@ -322,14 +322,14 @@ export const SpotlightsListAsTable = ({
         scrollToTopOfPage();
     };
 
-    const showLightbox = spotlightImageUrl => {
+    const showViewByHistoryLightbox = spotlightImageUrl => {
         const filteredRows = [...allSpotlights].filter(r => r.img_url === spotlightImageUrl);
         /* istanbul ignore else */
         if (filteredRows.length > 0) {
             // because its fired by clicking on a spotlight, it should never be 0
-            setLightBoxFocus(spotlightImageUrl);
-            setLightBoxEntries(filteredRows);
-            handleLightboxOpen();
+            setViewByHistoryLightBoxFocus(spotlightImageUrl);
+            setViewByHistoryLightBoxEntries(filteredRows);
+            handleViewByHistoryLightboxOpen();
         }
     };
 
@@ -1014,7 +1014,9 @@ export const SpotlightsListAsTable = ({
                                                                             navigateToEditForm={navigateToEditForm}
                                                                             navigateToView={navigateToView}
                                                                             confirmDeleteLocale={confirmDeleteLocale}
-                                                                            showLightbox={showLightbox}
+                                                                            showViewByHistoryOption={
+                                                                                showViewByHistoryLightbox
+                                                                            }
                                                                             spotlightImageUrl={spotlight.img_url}
                                                                         />
                                                                     </TableCell>
@@ -1072,12 +1074,12 @@ export const SpotlightsListAsTable = ({
                     </Table>
                 </TableContainer>
             </DragDropContext>
-            {isLightboxOpen && (
+            {isViewByHistoryLightboxOpen && (
                 <SpotlightViewHistory
-                    spotlightImageUrl={lightBoxFocus}
-                    spotlights={lightBoxRows}
-                    isLightboxOpen={isLightboxOpen}
-                    handleLightboxClose={handleLightboxClose}
+                    spotlightImageUrl={viewByHistoryLightBoxFocus}
+                    spotlights={viewByHistoryLightBoxRows}
+                    isLightboxOpen={isViewByHistoryLightboxOpen}
+                    handleLightboxClose={handleViewByHistoryLightboxClose}
                     navigateToCloneForm={navigateToCloneForm}
                 />
             )}

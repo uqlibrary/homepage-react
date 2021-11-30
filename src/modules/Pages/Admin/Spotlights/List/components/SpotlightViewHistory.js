@@ -55,13 +55,13 @@ export const SpotlightViewHistory = ({
             open={isLightboxOpen}
             onClose={handleLightboxClose}
             aria-labelledby="lightboxTitle"
-            data-testid="spotlights-lightbox-holder"
+            data-testid="spotlights-viewbyhistory-lightbox-holder"
         >
             <DialogTitle>
                 <Button
                     children="Close"
                     color="secondary"
-                    data-testid="spotlights-lightbox-close-button"
+                    data-testid="spotlights-viewbyhistory-lightbox-close-button"
                     onClick={handleLightboxClose}
                     style={{ float: 'right' }}
                     variant="contained"
@@ -74,11 +74,11 @@ export const SpotlightViewHistory = ({
                         src={spotlightImageUrl}
                         alt="The image we can see previous usages of"
                     />
-                    <div data-testid="spotlights-lightbox-dimensions" style={{ textAlign: 'center' }}>
+                    <div data-testid="spotlights-viewbyhistory-lightbox-dimensions" style={{ textAlign: 'center' }}>
                         <SpotlightSizeWarningByUrl spotlightImageUrl={spotlightImageUrl} />
                     </div>
-                    <h2 id="lightboxTitle" data-testid="spotlights-lightbox-title">
-                        {locale.lightbox.title}
+                    <h2 id="lightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
+                        {locale.viewByHistory.title}
                     </h2>
                     <ul>
                         {spotlights.map(s => {
@@ -94,29 +94,30 @@ export const SpotlightViewHistory = ({
                             return (
                                 <li key={`${s.id}-lightbox`}>
                                     <p>
-                                        <strong>{locale.lightbox.linkTitle}</strong>: {s.title}
+                                        <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
                                         <Button
                                             style={{ float: 'right' }}
                                             children="Clone"
                                             color="primary"
-                                            data-testid="spotlights-lightbox-clone-button"
+                                            data-testid="spotlights-viewbyhistory-lightbox-clone-button"
                                             onClick={() => navigateToCloneForm(s.id)}
                                             variant="contained"
                                         />
                                     </p>
                                     <p>
-                                        <strong>{locale.lightbox.ariaLabel}</strong>: {s.img_alt}
+                                        <strong>{locale.viewByHistory.ariaLabel}</strong>: {s.img_alt}
                                     </p>
                                     <p>
-                                        <strong>{locale.lightbox.link}</strong>: {s.url}
+                                        <strong>{locale.viewByHistory.link}</strong>: {s.url}
                                     </p>
                                     <p>
-                                        <strong>{locale.lightbox.startDate}</strong>: {startDateDisplay}
-                                        {locale.lightbox.dateDivider}
-                                        <strong>{locale.lightbox.endDate}</strong>: {endDateDisplay}
+                                        <strong>{locale.viewByHistory.startDate}</strong>: {startDateDisplay}
+                                        {locale.viewByHistory.dateDivider}
+                                        <strong>{locale.viewByHistory.endDate}</strong>: {endDateDisplay}
                                     </p>
                                     <p>
-                                        <strong>{locale.lightbox.publicationStatus}</strong>: {s.active ? 'yes' : 'no'}
+                                        <strong>{locale.viewByHistory.publicationStatus}</strong>:{' '}
+                                        {s.active ? 'yes' : 'no'}
                                     </p>
                                 </li>
                             );

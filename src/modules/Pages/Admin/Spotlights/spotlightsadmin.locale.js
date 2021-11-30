@@ -277,7 +277,8 @@ export default {
                         </li>
                         <li>
                             <strong>Scheduled spotlights:</strong> displays future spotlights based on the Date
-                            published field. By default, the list is ordered by Date published. The table displays all scheduled spotlights.
+                            published field. By default, the list is ordered by Date published. The table displays all
+                            scheduled spotlights.
                         </li>
                         <li>
                             <strong>Past spotlights:</strong> displays past spotlights. By default, the list is ordered
@@ -288,7 +289,7 @@ export default {
 
                     <h4>Sort spotlights by table column heading</h4>
                     <p>
-                        In any of the spotlight tables, click one of the column lables to sort spotlights by that label. 
+                        In any of the spotlight tables, click one of the column lables to sort spotlights by that label.
                         An up or down arrow will appear beside the label to indicate the current sort.
                     </p>
                     <p>
@@ -330,8 +331,8 @@ export default {
                             spotlight form will appear.
                         </li>
                         <li>
-                            Saved spotlights will appear on the website within two minutes of their start time. Hard refresh
-                            your browser to view the spotlight.
+                            Saved spotlights will appear on the website within two minutes of their start time. Hard
+                            refresh your browser to view the spotlight.
                         </li>
                     </ol>
 
@@ -399,15 +400,21 @@ export default {
                     <h3>Publish/unpublish current spotlights</h3>
                     <ul>
                         <li>
-                            <strong>Unpublish:</strong> click on the checked <strong>Published?</strong> checkbox for that spotlight
+                            <strong>Unpublish:</strong> click on the checked <strong>Published?</strong> checkbox for
+                            that spotlight
                         </li>
-                        <li><strong>Publish:</strong> click on the unchecked <strong>Published?</strong> checkbox for that spotlight</li>
+                        <li>
+                            <strong>Publish:</strong> click on the unchecked <strong>Published?</strong> checkbox for
+                            that spotlight
+                        </li>
                     </ul>
                     <p>
-                        The checkbox will change and you will see a coloured ripple indicate that the checkbox state has changed.
+                        The checkbox will change and you will see a coloured ripple indicate that the checkbox state has
+                        changed.
                     </p>
                     <p>
-                        The adjusted spotlight will change on the website within 2 minutes. Hard refresh your browser to see the change.
+                        The adjusted spotlight will change on the website within 2 minutes. Hard refresh your browser to
+                        see the change.
                     </p>
 
                     <h3>Search past spotlights</h3>
@@ -488,7 +495,7 @@ export default {
             ),
         },
     },
-    lightbox: {
+    viewByHistory: {
         title: 'Previous entries for this image',
         linkTitle: 'Link title',
         ariaLabel: 'Image alt text',

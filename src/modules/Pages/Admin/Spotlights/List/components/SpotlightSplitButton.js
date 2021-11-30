@@ -37,7 +37,7 @@ export const SpotlightSplitButton = ({
     navigateToEditForm,
     navigateToView,
     confirmDeleteLocale,
-    showLightbox,
+    showViewByHistoryOption,
     spotlightImageUrl,
 }) => {
     const classes = useStyles();
@@ -131,9 +131,9 @@ export const SpotlightSplitButton = ({
                                                 {locale.form.splitButton.labels.delete}
                                             </MenuItem>
                                             <MenuItem
-                                                data-testid={`${spotlightId}-lightbox-button`}
-                                                key={`${spotlightId}-lightbox-button`}
-                                                onClick={() => showLightbox(spotlightImageUrl)}
+                                                data-testid={`${spotlightId}-viewbyhistory-button`}
+                                                key={`${spotlightId}-viewbyhistory-button`}
+                                                onClick={() => showViewByHistoryOption(spotlightImageUrl)}
                                             >
                                                 {locale.form.splitButton.labels.history}
                                             </MenuItem>
@@ -159,7 +159,7 @@ SpotlightSplitButton.propTypes = {
     navigateToView: PropTypes.func,
     navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.func,
-    showLightbox: PropTypes.func,
+    showViewByHistoryOption: PropTypes.func,
 };
 
 SpotlightSplitButton.defaultProps = {
