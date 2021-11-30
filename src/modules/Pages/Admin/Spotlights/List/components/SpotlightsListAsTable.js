@@ -975,8 +975,6 @@ export const SpotlightsListAsTable = ({
                                                                         >
                                                                             {spotlight.endDateDisplay}
                                                                         </span>
-                                                                        {tableType !== 'past' &&
-                                                                            endsThisWeek(spotlight) && <span> *</span>}
                                                                     </TableCell>
                                                                     {!!canUnpublish && (
                                                                         <TableCell

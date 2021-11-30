@@ -183,7 +183,7 @@ describe('Spotlights Admin Pages', () => {
                 getFooterLabel(totalCountPastRecords),
             );
         });
-        it('is accessible', () => {
+        it('the spotlights list page is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
