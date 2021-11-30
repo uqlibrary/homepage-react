@@ -38,14 +38,17 @@ const useStyles = makeStyles(theme => ({
             },
         },
     },
+    thisEntry: {
+        border: 'thick solid black',
+    },
 }));
 
 export const SpotlightViewHistory = ({
+    focussedElement,
     isLightboxOpen,
     handleLightboxClose,
     navigateToCloneForm,
     spotlights,
-    spotlightImageUrl,
 }) => {
     const classes = useStyles();
 
@@ -58,70 +61,81 @@ export const SpotlightViewHistory = ({
             data-testid="spotlights-viewbyhistory-lightbox-holder"
         >
             <DialogTitle>
-                <Button
-                    children="Close"
-                    color="secondary"
-                    data-testid="spotlights-viewbyhistory-lightbox-close-button"
-                    onClick={handleLightboxClose}
-                    style={{ float: 'right' }}
-                    variant="contained"
-                />
+                <h2 id="lightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
+                    {locale.viewByHistory.title}
+                    <Button
+                        children="Close"
+                        color="secondary"
+                        data-testid="spotlights-viewbyhistory-lightbox-close-button"
+                        onClick={handleLightboxClose}
+                        style={{ float: 'right' }}
+                        variant="contained"
+                    />
+                </h2>
             </DialogTitle>
             <DialogContent>
                 <Box className={classes.lightboxStyle}>
-                    <img
+                    <a
+                        aria-label={focussedElement.title}
+                        href={focussedElement.url}
+                        rel="noopener noreferrer"
                         style={{ margin: '0 auto' }}
-                        src={spotlightImageUrl}
-                        alt="The image we can see previous usages of"
-                    />
+                        target="_blank"
+                    >
+                        <img alt={focussedElement.img_alt} src={focussedElement.img_url} style={{ maxWidth: 650 }} />
+                    </a>
                     <div data-testid="spotlights-viewbyhistory-lightbox-dimensions" style={{ textAlign: 'center' }}>
-                        <SpotlightSizeWarningByUrl spotlightImageUrl={spotlightImageUrl} />
+                        <SpotlightSizeWarningByUrl spotlightImageUrl={focussedElement.img_url} />
                     </div>
-                    <h2 id="lightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
-                        {locale.viewByHistory.title}
-                    </h2>
                     <ul>
-                        {spotlights.map(s => {
-                            const dateDuringHour = 'ddd D MMM YYYY h.mma';
-                            const dateOnTheHour = dateDuringHour.replace('h.mma', 'ha');
-                            const startDateDisplay = moment(s.start).format(
-                                moment(s.start).format('m') === '0' ? dateOnTheHour : dateDuringHour,
-                            );
-                            const endDateDisplay = moment(s.end).format(
-                                moment(s.end).format('m') === '0' ? dateOnTheHour : dateDuringHour,
-                            );
+                        {spotlights
+                            .sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'))
+                            .map(s => {
+                                const dateDuringHour = 'ddd D MMM YYYY h.mma';
+                                const dateOnTheHour = dateDuringHour.replace('h.mma', 'ha');
+                                const startDateDisplay = moment(s.start).format(
+                                    moment(s.start).format('m') === '0' ? dateOnTheHour : dateDuringHour,
+                                );
+                                const endDateDisplay = moment(s.end).format(
+                                    moment(s.end).format('m') === '0' ? dateOnTheHour : dateDuringHour,
+                                );
 
-                            return (
-                                <li key={`${s.id}-lightbox`}>
-                                    <p>
-                                        <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
-                                        <Button
-                                            style={{ float: 'right' }}
-                                            children="Clone"
-                                            color="primary"
-                                            data-testid="spotlights-viewbyhistory-lightbox-clone-button"
-                                            onClick={() => navigateToCloneForm(s.id)}
-                                            variant="contained"
-                                        />
-                                    </p>
-                                    <p>
-                                        <strong>{locale.viewByHistory.ariaLabel}</strong>: {s.img_alt}
-                                    </p>
-                                    <p>
-                                        <strong>{locale.viewByHistory.link}</strong>: {s.url}
-                                    </p>
-                                    <p>
-                                        <strong>{locale.viewByHistory.startDate}</strong>: {startDateDisplay}
-                                        {locale.viewByHistory.dateDivider}
-                                        <strong>{locale.viewByHistory.endDate}</strong>: {endDateDisplay}
-                                    </p>
-                                    <p>
-                                        <strong>{locale.viewByHistory.publicationStatus}</strong>:{' '}
-                                        {s.active ? 'yes' : 'no'}
-                                    </p>
-                                </li>
-                            );
-                        })}
+                                return (
+                                    <li
+                                        key={`${s.id}-lightbox`}
+                                        className={`${focussedElement.id === s.id && classes.thisEntry}`}
+                                    >
+                                        <p>
+                                            <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
+                                            <Button
+                                                style={{ float: 'right' }}
+                                                children="Clone"
+                                                color="primary"
+                                                data-testid="spotlights-viewbyhistory-lightbox-clone-button"
+                                                onClick={() => navigateToCloneForm(s.id)}
+                                                variant="contained"
+                                            />
+                                        </p>
+                                        <p>
+                                            <strong>{locale.viewByHistory.datePrefix}</strong> {startDateDisplay}
+                                            {locale.viewByHistory.dateDivider}
+                                            {endDateDisplay}
+                                        </p>
+                                        <div style={{ paddingRight: 100 }}>
+                                            <p>
+                                                <strong>{locale.viewByHistory.ariaLabel}</strong>: {s.img_alt}
+                                            </p>
+                                            <p>
+                                                <strong>{locale.viewByHistory.link}</strong>: {s.url}
+                                            </p>
+                                            <p>
+                                                <strong>{locale.viewByHistory.publicationStatus}</strong>:{' '}
+                                                {s.active ? 'yes' : 'no'}
+                                            </p>
+                                        </div>
+                                    </li>
+                                );
+                            })}
                     </ul>
                 </Box>
             </DialogContent>
@@ -130,10 +144,10 @@ export const SpotlightViewHistory = ({
 };
 
 SpotlightViewHistory.propTypes = {
+    focussedElement: PropTypes.any,
     isLightboxOpen: PropTypes.bool,
     handleLightboxClose: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
-    spotlightImageUrl: PropTypes.string,
     spotlights: PropTypes.array,
 };
 

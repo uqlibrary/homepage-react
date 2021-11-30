@@ -322,12 +322,12 @@ export const SpotlightsListAsTable = ({
         scrollToTopOfPage();
     };
 
-    const showViewByHistoryLightbox = spotlightImageUrl => {
-        const filteredRows = [...allSpotlights].filter(r => r.img_url === spotlightImageUrl);
+    const showViewByHistoryLightbox = thisSpotlight => {
+        const filteredRows = [...allSpotlights].filter(r => r.img_url === thisSpotlight.img_url);
         /* istanbul ignore else */
         if (filteredRows.length > 0) {
             // because its fired by clicking on a spotlight, it should never be 0
-            setViewByHistoryLightBoxFocus(spotlightImageUrl);
+            setViewByHistoryLightBoxFocus(thisSpotlight);
             setViewByHistoryLightBoxEntries(filteredRows);
             handleViewByHistoryLightboxOpen();
         }
@@ -1017,7 +1017,7 @@ export const SpotlightsListAsTable = ({
                                                                             showViewByHistoryOption={
                                                                                 showViewByHistoryLightbox
                                                                             }
-                                                                            spotlightImageUrl={spotlight.img_url}
+                                                                            spotlight={spotlight}
                                                                         />
                                                                     </TableCell>
                                                                 </TableRow>
@@ -1076,7 +1076,7 @@ export const SpotlightsListAsTable = ({
             </DragDropContext>
             {isViewByHistoryLightboxOpen && (
                 <SpotlightViewHistory
-                    spotlightImageUrl={viewByHistoryLightBoxFocus}
+                    focussedElement={viewByHistoryLightBoxFocus}
                     spotlights={viewByHistoryLightBoxRows}
                     isLightboxOpen={isViewByHistoryLightboxOpen}
                     handleLightboxClose={handleViewByHistoryLightboxClose}

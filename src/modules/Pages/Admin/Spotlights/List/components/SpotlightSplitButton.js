@@ -38,7 +38,7 @@ export const SpotlightSplitButton = ({
     navigateToView,
     confirmDeleteLocale,
     showViewByHistoryOption,
-    spotlightImageUrl,
+    spotlight,
 }) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -133,7 +133,7 @@ export const SpotlightSplitButton = ({
                                             <MenuItem
                                                 data-testid={`${spotlightId}-viewbyhistory-button`}
                                                 key={`${spotlightId}-viewbyhistory-button`}
-                                                onClick={() => showViewByHistoryOption(spotlightImageUrl)}
+                                                onClick={() => showViewByHistoryOption(spotlight)}
                                             >
                                                 {locale.form.splitButton.labels.history}
                                             </MenuItem>
@@ -151,7 +151,7 @@ export const SpotlightSplitButton = ({
 
 SpotlightSplitButton.propTypes = {
     spotlightId: PropTypes.string,
-    spotlightImageUrl: PropTypes.string,
+    spotlight: PropTypes.any,
     mainButtonLabel: PropTypes.string,
     deleteSpotlightById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,

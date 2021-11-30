@@ -500,9 +500,10 @@ export default {
         linkTitle: 'Link title',
         ariaLabel: 'Image alt text',
         link: 'Spotlight link',
+        datePrefix: 'Run between',
         startDate: 'Date published',
         endDate: 'Date unpublished',
-        dateDivider: ' | ',
-        publicationStatus: 'Published?',
+        dateDivider: ' and ',
+        publicationStatus: 'Published:',
     },
 };
