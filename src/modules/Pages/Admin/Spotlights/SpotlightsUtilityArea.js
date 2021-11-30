@@ -49,14 +49,14 @@ const useStyles = makeStyles(
 export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton }) => {
     const classes = useStyles();
 
-    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
 
     const openHelpLightbox = () => {
-        setLightboxOpen(true);
+        setHelpLightboxOpen(true);
     };
 
     const closeHelpLightbox = () => {
-        setLightboxOpen(false);
+        setHelpLightboxOpen(false);
     };
 
     const navigateToAddPage = () => {
@@ -92,7 +92,7 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
             <Drawer
                 anchor="right"
                 className={classes.drawer}
-                open={lightboxOpen}
+                open={helpLightboxOpen}
                 onClose={closeHelpLightbox}
                 closeAfterTransition
                 BackdropComponent={SimpleBackdrop}
@@ -100,7 +100,7 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
                     timeout: 500,
                 }}
             >
-                <Fade in={lightboxOpen}>
+                <Fade in={helpLightboxOpen}>
                     <div className={classes.paper}>
                         <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
                         <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
