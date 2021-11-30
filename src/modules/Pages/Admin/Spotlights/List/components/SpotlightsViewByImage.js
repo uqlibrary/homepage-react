@@ -66,13 +66,21 @@ export const SpotlightsViewByImage = ({ isLightboxOpen, handleLightboxClose, spo
                     <div>
                         {!!spotlights &&
                             spotlights.length > 0 &&
-                            spotlights.map(s => {
-                                return (
-                                    <span key={`${s.id}-lightbox`}>
-                                        <img style={{ margin: 10 }} src={s.img_url} alt={s.img_alt} width={200} />
-                                    </span>
-                                );
-                            })}
+                            spotlights
+                                .sort((a, b) => a.start - b.start)
+                                // .reverse()
+                                .map(s => {
+                                    return (
+                                        <span
+                                            key={`${s.id}-lightbox`}
+                                            style={{ float: 'left', width: 220, height: 150, margin: 10 }}
+                                        >
+                                            <img src={s.img_url} alt={s.img_alt} width={200} />
+                                            <br />
+                                            <span margin>{s.title}</span>
+                                        </span>
+                                    );
+                                })}
                     </div>
                 </Box>
             </DialogContent>
