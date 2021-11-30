@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
+import { SpotlightsViewByImage } from './List/components/SpotlightsViewByImage';
 
 /**
  * a block that shows:
@@ -19,10 +20,23 @@ const useStyles = makeStyles(() => ({
         marginRight: 16,
     },
 }));
-export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton }) => {
+export const SpotlightsUtilityArea = ({
+    actions,
+    helpButtonLabel,
+    helpContent,
+    history,
+    showAddButton,
+    showViewByImageButton,
+    spotlights,
+}) => {
     const classes = useStyles();
 
     const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
+    const [isViewByImageLightboxOpen, setViewByImageLightboxOpen] = React.useState(false);
+    const handleViewByImageLightboxOpen = () => setViewByImageLightboxOpen(true);
+    const handleViewByImageLightboxClose = () => setViewByImageLightboxOpen(false);
+    // const [viewByImageLightBoxFocus, setViewByImageLightBoxFocus] = React.useState('');
+    // const [viewByImageLightBoxRows, setViewByImageLightBoxEntries] = React.useState([]);
 
     const openHelpLightbox = () => {
         setHelpLightboxOpen(true);
@@ -37,6 +51,16 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
         history.push('/admin/spotlights/add');
     };
 
+    const showViewByImageLightbox = () => {
+        // const filteredRows = [...allSpotlights].filter(r => r.img_url === spotlightImageUrl);
+        /* istanbul ignore else */
+        if (spotlights.length > 0) {
+            // setViewByImageLightBoxFocus(spotlightImageUrl);
+            // setViewByImageLightBoxEntries(spotlights);
+            handleViewByImageLightboxOpen();
+        }
+    };
+
     return (
         <Fragment>
             {!!helpContent && (
@@ -47,6 +71,17 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
                         data-testid="admin-spotlights-help-button"
                         id="admin-spotlights-help-button"
                         onClick={openHelpLightbox}
+                        variant="contained"
+                    />
+                </div>
+            )}
+            {!!showViewByImageButton && (
+                <div className={classes.actionButtonPlacer}>
+                    <Button
+                        children="View by Image"
+                        color="primary"
+                        data-testid="admin-spotlights-help-display-button"
+                        onClick={() => showViewByImageLightbox()}
                         variant="contained"
                     />
                 </div>
@@ -67,7 +102,15 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
                 closeHelpLightbox={closeHelpLightbox}
                 open={helpLightboxOpen}
             />
-        </Fragment>
+            {!!showViewByImageButton && (
+                <SpotlightsViewByImage
+                    // spotlightImageUrl={viewByImageLightBoxFocus}
+                    spotlights={spotlights}
+                    isLightboxOpen={isViewByImageLightboxOpen}
+                    handleLightboxClose={handleViewByImageLightboxClose}
+                    // navigateToCloneForm={navigateToCloneForm}
+                />
+            )}{' '}        </Fragment>
     );
 };
 
@@ -77,9 +120,12 @@ SpotlightsUtilityArea.propTypes = {
     helpButtonLabel: PropTypes.string,
     history: PropTypes.object,
     showAddButton: PropTypes.bool,
+    showViewByImageButton: PropTypes.bool,
+    spotlights: PropTypes.any,
 };
 
 SpotlightsUtilityArea.defaultProps = {
     helpButtonLabel: 'Help',
     showAddButton: false,
+    showViewByImageButton: false,
 };

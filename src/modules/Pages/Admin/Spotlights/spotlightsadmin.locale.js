@@ -518,4 +518,7 @@ export default {
             ),
         },
     },
+    viewByImage: {
+        title: 'View by Image',
+    },
 };
