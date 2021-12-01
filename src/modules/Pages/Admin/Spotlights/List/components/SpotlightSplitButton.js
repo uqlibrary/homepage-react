@@ -30,8 +30,10 @@ const useStyles = makeStyles(() => ({
     },
 }));
 export const SpotlightSplitButton = ({
+    cantDelete,
     spotlightId,
     deleteSpotlightById,
+    hideMainButton,
     mainButtonLabel,
     navigateToCloneForm,
     navigateToEditForm,
@@ -73,19 +75,21 @@ export const SpotlightSplitButton = ({
             <Grid container direction="column" alignItems="center">
                 <Grid item xs={12} className={classes.parent}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
-                        <Button
-                            children={mainButtonLabel}
-                            color="primary"
-                            data-testid={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
-                            id={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
-                            onClick={() =>
-                                mainButtonLabel === 'Edit'
-                                    ? navigateToEditForm(spotlightId)
-                                    : navigateToView(spotlightId)
-                            }
-                            className={classes.editButton}
-                            variant="contained"
-                        />
+                        {!hideMainButton && (
+                            <Button
+                                children={mainButtonLabel}
+                                color="primary"
+                                data-testid={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
+                                id={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
+                                onClick={() =>
+                                    mainButtonLabel === 'Edit'
+                                        ? navigateToEditForm(spotlightId)
+                                        : navigateToView(spotlightId)
+                                }
+                                className={classes.editButton}
+                                variant="contained"
+                            />
+                        )}
                         <Button
                             color="primary"
                             className={classes.editButton}
@@ -123,13 +127,15 @@ export const SpotlightSplitButton = ({
                                             >
                                                 {locale.form.splitButton.labels.clone}
                                             </MenuItem>
-                                            <MenuItem
-                                                data-testid={`${spotlightId}-delete-button`}
-                                                key={`${spotlightId}-delete-button`}
-                                                onClick={showDeleteConfirmation}
-                                            >
-                                                {locale.form.splitButton.labels.delete}
-                                            </MenuItem>
+                                            {!cantDelete && (
+                                                <MenuItem
+                                                    data-testid={`${spotlightId}-delete-button`}
+                                                    key={`${spotlightId}-delete-button`}
+                                                    onClick={showDeleteConfirmation}
+                                                >
+                                                    {locale.form.splitButton.labels.delete}
+                                                </MenuItem>
+                                            )}
                                             <MenuItem
                                                 data-testid={`${spotlightId}-viewbyhistory-button`}
                                                 key={`${spotlightId}-viewbyhistory-button`}
@@ -153,6 +159,7 @@ SpotlightSplitButton.propTypes = {
     spotlightId: PropTypes.string,
     spotlight: PropTypes.any,
     mainButtonLabel: PropTypes.string,
+    cantDelete: PropTypes.bool,
     deleteSpotlightById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     navigateToEditForm: PropTypes.func,
@@ -160,10 +167,13 @@ SpotlightSplitButton.propTypes = {
     navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.func,
     showViewByHistoryOption: PropTypes.func,
+    hideMainButton: PropTypes.bool,
 };
 
 SpotlightSplitButton.defaultProps = {
     mainButtonLabel: 'Edit',
+    hideMainButton: false,
+    cantDelete: false,
 };
 
 export default SpotlightSplitButton;
