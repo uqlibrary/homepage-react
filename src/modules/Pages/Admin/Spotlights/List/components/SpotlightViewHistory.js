@@ -28,18 +28,22 @@ const useStyles = makeStyles(theme => ({
         '& li': {
             marginBottom: 10,
             padding: 10,
-            '&:hover': {
-                backgroundColor: theme.palette.secondary.main,
-                transition: 'background-color 1s ease',
-            },
             '& p': {
                 marginBottom: 0,
                 marginTop: 1,
             },
+            listStyle: 'none',
+        },
+    },
+    entry: {
+        '&:hover': {
+            backgroundColor: theme.palette.secondary.main,
+            transition: 'background-color 1s ease',
         },
     },
     thisEntry: {
-        border: 'thick solid black',
+        backgroundColor: 'rgba(0,0,0,.65)',
+        color: '#f7f6f5',
     },
 }));
 
@@ -61,7 +65,7 @@ export const SpotlightViewHistory = ({
             data-testid="spotlights-viewbyhistory-lightbox-holder"
         >
             <DialogTitle>
-                <h2 id="lightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
+                <p id="lightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
                     {locale.viewByHistory.title}
                     <Button
                         children="Close"
@@ -71,7 +75,7 @@ export const SpotlightViewHistory = ({
                         style={{ float: 'right' }}
                         variant="contained"
                     />
-                </h2>
+                </p>
             </DialogTitle>
             <DialogContent>
                 <Box className={classes.lightboxStyle}>
@@ -103,7 +107,11 @@ export const SpotlightViewHistory = ({
                                 return (
                                     <li
                                         key={`${s.id}-lightbox`}
-                                        className={`${focussedElement.id === s.id && classes.thisEntry}`}
+                                        className={`${
+                                            spotlights.length > 1 && focussedElement.id === s.id
+                                                ? classes.thisEntry
+                                                : classes.entry
+                                        }`}
                                     >
                                         <p>
                                             <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
@@ -117,7 +125,7 @@ export const SpotlightViewHistory = ({
                                             />
                                         </p>
                                         <p>
-                                            <strong>{locale.viewByHistory.datePrefix}</strong> {startDateDisplay}
+                                            <strong>{locale.viewByHistory.datePrefix}:</strong> {startDateDisplay}
                                             {locale.viewByHistory.dateDivider}
                                             {endDateDisplay}
                                         </p>

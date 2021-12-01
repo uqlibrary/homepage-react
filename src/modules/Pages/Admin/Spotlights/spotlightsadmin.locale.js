@@ -498,14 +498,14 @@ export default {
         },
     },
     viewByHistory: {
-        title: 'Previous entries for this image',
+        title: 'Previous uses of this image',
         linkTitle: 'Link title',
         ariaLabel: 'Image alt text',
         link: 'Spotlight link',
         datePrefix: 'Run between',
-        startDate: 'Date published',
-        endDate: 'Date unpublished',
+        // startDate: 'Date published',
+        // endDate: 'Date unpublished',
         dateDivider: ' and ',
-        publicationStatus: 'Published:',
+        publicationStatus: 'Published',
     },
 };
