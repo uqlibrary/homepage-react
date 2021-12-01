@@ -110,7 +110,8 @@ export const SpotlightsUtilityArea = ({
                     handleLightboxClose={handleViewByImageLightboxClose}
                     // navigateToCloneForm={navigateToCloneForm}
                 />
-            )}{' '}        </Fragment>
+            )}
+        </Fragment>
     );
 };
 
