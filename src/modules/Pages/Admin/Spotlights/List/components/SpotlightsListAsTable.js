@@ -42,6 +42,7 @@ import {
     moveItemInArray,
     scrollToTopOfPage,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { useViewByHistoryLightboxState } from 'modules/Pages/Admin/Spotlights/spotlightsHooks';
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
@@ -125,6 +126,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
+
 export const SpotlightsListAsTable = ({
     rows,
     headertag,
@@ -192,9 +194,11 @@ export const SpotlightsListAsTable = ({
     };
     const [textSearch, setTextSearch] = useState(getFilterTermFromSession());
 
-    const [isViewByHistoryLightboxOpen, setViewByHistoryLightboxOpen] = React.useState(false);
-    const handleViewByHistoryLightboxOpen = () => setViewByHistoryLightboxOpen(true);
-    const handleViewByHistoryLightboxClose = () => setViewByHistoryLightboxOpen(false);
+    const [
+        isViewByHistoryLightboxOpen,
+        handleViewByHistoryLightboxOpen,
+        handleViewByHistoryLightboxClose,
+    ] = useViewByHistoryLightboxState();
     const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
     const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
 
