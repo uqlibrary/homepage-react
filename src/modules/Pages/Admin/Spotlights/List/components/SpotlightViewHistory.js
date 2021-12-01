@@ -15,7 +15,7 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
-    lightboxStyle: {
+    viewHistoryLightboxStyle: {
         display: 'flex',
         flexDirection: 'column',
         m: 'auto',
@@ -49,8 +49,8 @@ const useStyles = makeStyles(theme => ({
 
 export const SpotlightViewHistory = ({
     focussedElement,
-    isLightboxOpen,
-    handleLightboxClose,
+    isViewHistoryLightboxOpen,
+    handleViewHistoryLightboxClose,
     navigateToCloneForm,
     spotlights,
 }) => {
@@ -59,26 +59,26 @@ export const SpotlightViewHistory = ({
     return (
         <Dialog
             maxWidth="xl"
-            open={isLightboxOpen}
-            onClose={handleLightboxClose}
-            aria-labelledby="lightboxTitle"
+            open={isViewHistoryLightboxOpen}
+            onClose={handleViewHistoryLightboxClose}
+            aria-labelledby="viewHistoryLightboxTitle"
             data-testid="spotlights-viewbyhistory-lightbox-holder"
         >
             <DialogTitle>
-                <p id="lightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
+                <p id="viewHistoryLightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
                     {locale.viewByHistory.title}
                     <Button
                         children="Close"
                         color="secondary"
                         data-testid="spotlights-viewbyhistory-lightbox-close-button"
-                        onClick={handleLightboxClose}
+                        onClick={handleViewHistoryLightboxClose}
                         style={{ float: 'right' }}
                         variant="contained"
                     />
                 </p>
             </DialogTitle>
             <DialogContent>
-                <Box className={classes.lightboxStyle}>
+                <Box className={classes.viewHistoryLightboxStyle}>
                     <a
                         aria-label={focussedElement.title}
                         href={focussedElement.url}
@@ -106,7 +106,7 @@ export const SpotlightViewHistory = ({
 
                                 return (
                                     <li
-                                        key={`${s.id}-lightbox`}
+                                        key={`${s.id}-viewhistory-lightbox`}
                                         className={`${
                                             spotlights.length > 1 && focussedElement.id === s.id
                                                 ? classes.thisEntry
@@ -153,8 +153,8 @@ export const SpotlightViewHistory = ({
 
 SpotlightViewHistory.propTypes = {
     focussedElement: PropTypes.any,
-    isLightboxOpen: PropTypes.bool,
-    handleLightboxClose: PropTypes.func,
+    isViewHistoryLightboxOpen: PropTypes.bool,
+    handleViewHistoryLightboxClose: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     spotlights: PropTypes.array,
 };

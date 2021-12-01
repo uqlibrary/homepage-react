@@ -1077,8 +1077,8 @@ export const SpotlightsListAsTable = ({
                 <SpotlightViewHistory
                     focussedElement={viewByHistoryLightBoxFocus}
                     spotlights={viewByHistoryLightBoxRows}
-                    isLightboxOpen={isViewByHistoryLightboxOpen}
-                    handleLightboxClose={handleViewByHistoryLightboxClose}
+                    isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
+                    handleViewHistoryLightboxClose={handleViewByHistoryLightboxClose}
                     navigateToCloneForm={navigateToCloneForm}
                 />
             )}
