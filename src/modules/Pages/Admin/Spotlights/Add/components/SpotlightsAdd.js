@@ -33,7 +33,7 @@ export const SpotlightsAdd = ({
         url: '',
         img_url: '',
         img_alt: '',
-        weight: 0,
+        weight: 1000,
         active: 0,
         type: 'add',
         minimumDate: getStartOfDayFormatted(),
