@@ -1002,7 +1002,6 @@ export const SpotlightsListAsTable = ({
                                                                         style={{ paddingRight: 10 }}
                                                                     >
                                                                         <SpotlightSplitButton
-                                                                            spotlightId={spotlight.id}
                                                                             deleteSpotlightById={
                                                                                 handleDeleteSplitAction
                                                                             }

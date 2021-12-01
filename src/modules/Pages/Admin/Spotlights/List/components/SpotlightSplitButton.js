@@ -31,7 +31,6 @@ const useStyles = makeStyles(() => ({
 }));
 export const SpotlightSplitButton = ({
     cantDelete,
-    spotlightId,
     deleteSpotlightById,
     hideMainButton,
     mainButtonLabel,
@@ -66,7 +65,7 @@ export const SpotlightSplitButton = ({
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="spotlight-delete-confirm"
-                onAction={() => deleteSpotlightById(spotlightId)}
+                onAction={() => deleteSpotlightById(spotlight.id)}
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
@@ -79,12 +78,12 @@ export const SpotlightSplitButton = ({
                             <Button
                                 children={mainButtonLabel}
                                 color="primary"
-                                data-testid={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
-                                id={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlightId}`}
+                                data-testid={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlight.id}`}
+                                id={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlight.id}`}
                                 onClick={() =>
                                     mainButtonLabel === 'Edit'
-                                        ? navigateToEditForm(spotlightId)
-                                        : navigateToView(spotlightId)
+                                        ? navigateToEditForm(spotlight.id)
+                                        : navigateToView(spotlight.id)
                                 }
                                 className={classes.editButton}
                                 variant="contained"
@@ -98,7 +97,7 @@ export const SpotlightSplitButton = ({
                             aria-expanded={open ? 'true' : undefined}
                             aria-label="More actions"
                             aria-haspopup="menu"
-                            data-testid={`spotlight-list-arrowicon-${spotlightId}`}
+                            data-testid={`spotlight-list-arrowicon-${spotlight.id}`}
                             onClick={handleToggle}
                             title="More actions"
                         >
@@ -121,24 +120,24 @@ export const SpotlightSplitButton = ({
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
                                             <MenuItem
-                                                data-testid={`${spotlightId}-clone-button`}
-                                                key={`${spotlightId}-clone-button`}
-                                                onClick={() => navigateToCloneForm(spotlightId)}
+                                                data-testid={`${spotlight.id}-clone-button`}
+                                                key={`${spotlight.id}-clone-button`}
+                                                onClick={() => navigateToCloneForm(spotlight.id)}
                                             >
                                                 {locale.form.splitButton.labels.clone}
                                             </MenuItem>
                                             {!cantDelete && (
                                                 <MenuItem
-                                                    data-testid={`${spotlightId}-delete-button`}
-                                                    key={`${spotlightId}-delete-button`}
+                                                    data-testid={`${spotlight.id}-delete-button`}
+                                                    key={`${spotlight.id}-delete-button`}
                                                     onClick={showDeleteConfirmation}
                                                 >
                                                     {locale.form.splitButton.labels.delete}
                                                 </MenuItem>
                                             )}
                                             <MenuItem
-                                                data-testid={`${spotlightId}-viewbyhistory-button`}
-                                                key={`${spotlightId}-viewbyhistory-button`}
+                                                data-testid={`${spotlight.id}-viewbyhistory-button`}
+                                                key={`${spotlight.id}-viewbyhistory-button`}
                                                 onClick={() => showViewByHistoryOption(spotlight)}
                                             >
                                                 {locale.form.splitButton.labels.history}
@@ -156,7 +155,6 @@ export const SpotlightSplitButton = ({
 };
 
 SpotlightSplitButton.propTypes = {
-    spotlightId: PropTypes.string,
     spotlight: PropTypes.any,
     mainButtonLabel: PropTypes.string,
     cantDelete: PropTypes.bool,
