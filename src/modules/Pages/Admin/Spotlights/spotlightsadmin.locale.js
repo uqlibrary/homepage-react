@@ -507,5 +507,15 @@ export default {
         // endDate: 'Date unpublished',
         dateDivider: ' and ',
         publicationStatus: 'Published',
+        help: {
+            title: 'View by history help',
+            text: (
+                <Fragment>
+                    <p data-testid="admin-spotlights-view-by-history-help-example">
+                        This will be the help for the View by history lightbox.
+                    </p>
+                </Fragment>
+            ),
+        },
     },
 };

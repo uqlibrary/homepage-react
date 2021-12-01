@@ -1076,10 +1076,11 @@ export const SpotlightsListAsTable = ({
             {isViewByHistoryLightboxOpen && (
                 <SpotlightViewHistory
                     focussedElement={viewByHistoryLightBoxFocus}
-                    spotlights={viewByHistoryLightBoxRows}
-                    isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
                     handleViewHistoryLightboxClose={handleViewByHistoryLightboxClose}
+                    helpContent={locale.viewByHistory.help}
+                    isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
                     navigateToCloneForm={navigateToCloneForm}
+                    spotlights={viewByHistoryLightBoxRows}
                 />
             )}
         </Fragment>

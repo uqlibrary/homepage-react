@@ -59,6 +59,7 @@ export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
                             color="primary"
                             className={classes.button}
                             children={helpContent?.buttonLabel || 'Close'}
+                            data-testid="spotlights-helpdrawer-close-button"
                             onClick={closeHelpLightbox}
                         />
                     </div>

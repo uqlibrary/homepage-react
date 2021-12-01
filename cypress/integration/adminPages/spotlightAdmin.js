@@ -543,9 +543,7 @@ describe('Spotlights Admin Pages', () => {
                 .click();
 
             // view-by-history lightbox loads
-            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains(
-                'Previous entries for this image',
-            );
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains('Previous uses of this image');
             imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
@@ -556,6 +554,33 @@ describe('Spotlights Admin Pages', () => {
                 .should('exist')
                 .click();
             cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/clone`);
+        });
+        it('the view-by-history has a working Help button', () => {
+            cy.get('[data-testid="admin-spotlights-list-current-list"]').scrollIntoView();
+            // open the split button
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                .should('exist')
+                .click();
+
+            // click the 'view by history' action
+            cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-viewbyhistory-button"]')
+                .should('exist')
+                .click();
+
+            // view-by-history lightbox loads
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains('Previous uses of this image');
+            // open the help pop up
+            cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('not.exist');
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-help-button"]').should('be.visible');
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-help-button"]').click();
+
+            // we can see the help contents
+            cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').scrollIntoView();
+            cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('be.visible');
+
+            // the close button works
+            cy.get('[data-testid="spotlights-helpdrawer-close-button"]').click();
+            cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('not.exist');
         });
     });
     context('Spotlight Admin session storage', () => {
