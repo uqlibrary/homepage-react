@@ -516,9 +516,7 @@ describe('Spotlights Admin Pages', () => {
                 .click();
 
             // view-by-history lightbox loads
-            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains(
-                'Previous entries for this image',
-            );
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains('Previous uses of this image');
             imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
