@@ -16,15 +16,15 @@ const useStyles = makeStyles(() => ({
         maxWidth: 144,
     },
     hasBorder: {
-        height: 54,
-        border: '3px solid black',
+        height: 50,
+        border: '5px solid #1e72c6', // uq info blue, dark
     },
     reorderableOrderNumber: {
         color: 'white',
         backgroundColor: 'rgb(128, 128, 128, 0.7)',
         textAlign: 'center',
         position: 'absolute',
-        bottom: 8,
+        bottom: 10,
         left: 8,
         width: 30,
         height: 23,
@@ -224,65 +224,67 @@ export const SpotlightFormReorderableThumbs = ({
 
     if (!!thumbableSpotlights) {
         return (
-            <Grid item xs={'auto'} style={{ maxWidth: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
+            <Grid item xs={'auto'}>
                 <h3>{locale.form.reorderThumbs.header}</h3>
                 <p>
                     {tableType === 'add'
                         ? locale.form.reorderThumbs.usesPlaceholder
                         : locale.form.reorderThumbs.usesCurrentImage}
                 </p>
-                <DragDropContext onDragEnd={onDragEnd}>
-                    <Droppable droppableId="spotlights-thumbs-reorder" direction="horizontal">
-                        {droppableProvided => (
-                            <div
-                                data-testid="spotlights-thumbs-reorder"
-                                ref={droppableProvided.innerRef}
-                                {...droppableProvided.droppableProps}
-                            >
-                                {thumbableSpotlights.map((s, thumbIndex) => {
-                                    const isThisImage =
-                                        tableType === 'edit'
-                                            ? s?.id === currentValues.id
-                                            : s?.id === placeholderThumbnailId;
-                                    return (
-                                        <Draggable
-                                            draggableId={s.id}
-                                            index={thumbIndex}
-                                            key={`reorder-img-${s.id}`}
-                                            isDragDisabled={!isThisImage}
-                                        >
-                                            {draggableProvided => (
-                                                <span style={{ position: 'relative' }}>
-                                                    <img
-                                                        id={`reorder-img-${s.id}`}
-                                                        data-testid={`reorder-img-${s.id}`}
-                                                        alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
-                                                        src={getCurrentImage(isThisImage, s)}
-                                                        title={isThisImage ? currentValues.img_alt : s.img_alt}
-                                                        className={`${classes.reorderableThumb} ${
-                                                            isThisImage ? classes.hasBorder : ''
-                                                        }`}
-                                                        {...draggableProvided.draggableProps}
-                                                        {...draggableProvided.dragHandleProps}
-                                                        ref={draggableProvided.innerRef}
-                                                    />
-                                                    <span
-                                                        className={`${classes.reorderableOrderNumber} ${
-                                                            isThisImage ? classes.currentReorderableOrderNumber : ''
-                                                        }`}
-                                                    >
-                                                        {s.order}
+                <div style={{ maxWidth: '100%', overflow: 'auto', whiteSpace: 'nowrap' }}>
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="spotlights-thumbs-reorder" direction="horizontal">
+                            {droppableProvided => (
+                                <div
+                                    data-testid="spotlights-thumbs-reorder"
+                                    ref={droppableProvided.innerRef}
+                                    {...droppableProvided.droppableProps}
+                                >
+                                    {thumbableSpotlights.map((s, thumbIndex) => {
+                                        const isThisImage =
+                                            tableType === 'edit'
+                                                ? s?.id === currentValues.id
+                                                : s?.id === placeholderThumbnailId;
+                                        return (
+                                            <Draggable
+                                                draggableId={s.id}
+                                                index={thumbIndex}
+                                                key={`reorder-img-${s.id}`}
+                                                isDragDisabled={!isThisImage}
+                                            >
+                                                {draggableProvided => (
+                                                    <span style={{ position: 'relative' }}>
+                                                        <img
+                                                            id={`reorder-img-${s.id}`}
+                                                            data-testid={`reorder-img-${s.id}`}
+                                                            alt={`${isThisImage ? currentValues.img_alt : s.img_alt}`}
+                                                            src={getCurrentImage(isThisImage, s)}
+                                                            title={isThisImage ? currentValues.img_alt : s.img_alt}
+                                                            className={`${classes.reorderableThumb} ${
+                                                                isThisImage ? classes.hasBorder : ''
+                                                            }`}
+                                                            {...draggableProvided.draggableProps}
+                                                            {...draggableProvided.dragHandleProps}
+                                                            ref={draggableProvided.innerRef}
+                                                        />
+                                                        <span
+                                                            className={`${classes.reorderableOrderNumber} ${
+                                                                isThisImage ? classes.currentReorderableOrderNumber : ''
+                                                            }`}
+                                                        >
+                                                            {s.order}
+                                                        </span>
                                                     </span>
-                                                </span>
-                                            )}
-                                        </Draggable>
-                                    );
-                                })}
-                                {droppableProvided.placeholder}
-                            </div>
-                        )}
-                    </Droppable>
-                </DragDropContext>
+                                                )}
+                                            </Draggable>
+                                        );
+                                    })}
+                                    {droppableProvided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+                </div>
             </Grid>
         );
     }
