@@ -6,6 +6,7 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
+            adminNotesField: 'Admin notes - anything non-public the admin needs to record about this spotlight',
             linkDescAriaField: 'Link title *',
             imgAltField: 'Image alt text *',
             linkField: 'Spotlight link *',
@@ -20,6 +21,7 @@ export default {
             datePopupNowButton: 'Now',
         },
         tooltips: {
+            adminNotesField: 'Anything non-public the admin needs to record about this spotlight',
             linkDescAriaField: 'Link aria label - describe title and destination',
             imgAltField: 'Image alt text - include all text in image',
             linkField: 'Please enter a valid URL',

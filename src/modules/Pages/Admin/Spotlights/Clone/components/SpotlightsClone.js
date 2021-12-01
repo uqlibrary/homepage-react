@@ -52,6 +52,7 @@ export const SpotlightsClone = ({
                 active: spotlight?.active || 0,
                 // minimumDate: getStartOfDayFormatted(),
                 type: 'clone',
+                admin_notes: '',
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps

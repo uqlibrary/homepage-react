@@ -195,6 +195,7 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 10,
             active: 1,
+            admin_notes: 'Admin note 1',
         },
     ]),
 );
@@ -212,6 +213,7 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 20,
             active: 1,
+            admin_notes: 'Admin note 2',
         },
     ]),
 );

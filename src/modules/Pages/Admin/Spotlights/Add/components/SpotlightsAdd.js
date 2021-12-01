@@ -37,6 +37,7 @@ export const SpotlightsAdd = ({
         active: 0,
         type: 'add',
         minimumDate: getStartOfDayFormatted(),
+        admin_notes: '',
     };
 
     React.useEffect(() => {

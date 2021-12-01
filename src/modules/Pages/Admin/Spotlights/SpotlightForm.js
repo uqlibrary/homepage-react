@@ -285,8 +285,9 @@ export const SpotlightForm = ({
             // but lets just use a number that sits at the end of the current spotlights, as requested
             // weight: defaults.type === 'edit' ? values.weight : 1000, // weight,
             weight: values.weight,
-            // TODO does this account for future dates when they dont have the drop down available?
             active: !!values.active ? 1 : 0,
+            // eslint-disable-next-line camelcase
+            admin_notes: values?.admin_notes || '',
         };
         !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
@@ -321,7 +322,6 @@ export const SpotlightForm = ({
     };
 
     const updateWeightInValues = newWeight => {
-        console.log('updateWeightInValues newWeight = ', newWeight);
         setValues(prevState => {
             return { ...prevState, weight: newWeight };
         });
@@ -384,12 +384,10 @@ export const SpotlightForm = ({
     }
 
     const handleSuppliedFiles = files => {
-        console.log('for SpotlightFileUploadDropzone in handleSuppliedFiles files=', files);
         setValues({ ...values, ['uploadedFile']: files, hasImage: true });
     };
 
     const clearSuppliedFile = () => {
-        console.log('for SpotlightFileUploadDropzone in clearSuppliedFile');
         setValues(prevState => {
             return { ...prevState, ['uploadedFile']: [], hasImage: false };
         });
@@ -576,6 +574,22 @@ export const SpotlightForm = ({
                             {locale.form.labels.publishedCheckbox}
                         </InputLabel>
                     </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
+                            <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
+                            <Input
+                                id="spotlightAdminNote"
+                                data-testid="admin-spotlights-form-admin-note"
+                                multiline
+                                onChange={handleChange('admin_notes')}
+                                rows={2}
+                                value={values.admin_notes}
+                            />
+                        </FormControl>
+                    </Grid>
+                    <hr />
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">

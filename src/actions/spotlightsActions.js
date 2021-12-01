@@ -103,7 +103,7 @@ export const saveSpotlightBatch = request => {
 };
 
 export const createSpotlightWithExistingImage = request => {
-    console.log('action saveSpotlightChangeWithExistingImage, request to save: ', request);
+    console.log('action createSpotlightWithExistingImage, request to save: ', request);
     return dispatch => {
         console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
         dispatch({ type: actions.SPOTLIGHT_LOADING });

@@ -456,6 +456,7 @@ export const SpotlightsListAsTable = ({
             img_alt: s.img_alt,
             weight: s.weight,
             active: s.active,
+            admin_notes: s.admin_notes,
         };
     };
 
