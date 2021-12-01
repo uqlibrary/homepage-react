@@ -1,11 +1,9 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 
-import SimpleBackdrop from '@material-ui/core/Backdrop';
 import Button from '@material-ui/core/Button';
-import Fade from '@material-ui/core/Fade';
 import { makeStyles } from '@material-ui/styles';
-import Drawer from '@material-ui/core/Drawer';
+import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
 
 /**
  * a block that shows:
@@ -14,38 +12,13 @@ import Drawer from '@material-ui/core/Drawer';
  * - the help drawer
  */
 
-const useStyles = makeStyles(
-    theme => ({
-        drawer: {
-            overflowY: 'scroll',
-            '& p': {
-                marginBlockStart: 0,
-                marginBlockEnd: '1em',
-            },
-            '& li': {
-                marginBlockStart: 0,
-                marginBlockEnd: '1em',
-            },
-            '& dt': {
-                fontStyle: 'italic',
-            },
-        },
-        paper: {
-            backgroundColor: theme.palette.background.paper,
-            padding: theme.spacing(2, 4, 3),
-            width: 500,
-            [theme.breakpoints.down('sm')]: {
-                width: 200,
-            },
-        },
-        actionButtonPlacer: {
-            float: 'right',
-            marginTop: 16,
-            marginRight: 16,
-        },
-    }),
-    { withTheme: true },
-);
+const useStyles = makeStyles(() => ({
+    actionButtonPlacer: {
+        float: 'right',
+        marginTop: 16,
+        marginRight: 16,
+    },
+}));
 export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, history, showAddButton }) => {
     const classes = useStyles();
 
@@ -89,33 +62,11 @@ export const SpotlightsUtilityArea = ({ actions, helpButtonLabel, helpContent, h
                     />
                 </div>
             )}
-            <Drawer
-                anchor="right"
-                className={classes.drawer}
+            <SpotlightsHelpDrawer
+                helpContent={helpContent}
+                closeHelpLightbox={closeHelpLightbox}
                 open={helpLightboxOpen}
-                onClose={closeHelpLightbox}
-                closeAfterTransition
-                BackdropComponent={SimpleBackdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
-            >
-                <Fade in={helpLightboxOpen}>
-                    <div className={classes.paper}>
-                        <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
-                        <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
-                        <div>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                className={classes.button}
-                                children={helpContent?.buttonLabel || 'Close'}
-                                onClick={closeHelpLightbox}
-                            />
-                        </div>
-                    </div>
-                </Fade>
-            </Drawer>
+            />
         </Fragment>
     );
 };
