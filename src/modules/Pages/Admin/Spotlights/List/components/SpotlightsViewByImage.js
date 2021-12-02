@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import TextField from '@material-ui/core/TextField';
 
-import Box from '@material-ui/core/Box';
+import CloseIcon from '@material-ui/icons/Close';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
@@ -42,6 +44,7 @@ const useStyles = makeStyles(theme => ({
     dialogPaper: {
         // make the block take up more of the page
         width: '90%',
+        height: '90%',
         maxWidth: 'inherit',
     },
     link: {
@@ -61,9 +64,38 @@ export const SpotlightsViewByImage = ({
 }) => {
     const classes = useStyles();
 
-    const [helpLightboxOpen, setHelpLightboxOpen] = React.useState(false);
+    const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
     const openHelpLightbox = () => setHelpLightboxOpen(true);
     const closeHelpLightbox = () => setHelpLightboxOpen(false);
+
+    let filterTerm;
+
+    const [staticRows, setStaticRows] = useState([]);
+    const [rows, setRows] = useState([]);
+    React.useEffect(() => {
+        setRows(spotlights);
+        setStaticRows(spotlights);
+    }, [spotlights]);
+
+    const [textSearch, setTextSearch] = useState(filterTerm);
+    const clearFilter = () => {
+        setTextSearch('');
+        setRows(staticRows);
+    };
+    const filterRowsByText = e => {
+        filterTerm = e.target?.value;
+        setTextSearch(filterTerm);
+        setRows(
+            [...staticRows].filter(r => {
+                const lowercaseLinkAria = r.title.toLowerCase();
+                const lowercaseImgAlt = r.img_alt.toLowerCase();
+                return (
+                    lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
+                    lowercaseImgAlt.includes(filterTerm.toLowerCase())
+                );
+            }),
+        );
+    };
 
     return (
         <React.Fragment>
@@ -73,34 +105,56 @@ export const SpotlightsViewByImage = ({
                 aria-labelledby="lightboxTitle"
                 PaperProps={{ classes: { root: classes.dialogPaper } }}
             >
-                <DialogTitle>
-                    <p id="lightboxTitle" data-testid="spotlights-viewbyimage-lightbox-title">
-                        {locale.viewByImage.title}
-                        <Button
-                            children="Close"
-                            color="secondary"
-                            data-testid="spotlights-viewbyimage-lightbox-close-button"
-                            onClick={handleLightboxClose}
-                            style={{ float: 'right' }}
-                            variant="contained"
+                <DialogTitle
+                    id="lightboxTitle"
+                    data-testid="spotlights-viewbyimage-lightbox-title"
+                    style={{ minHeight: 48, position: 'relative' }}
+                >
+                    <span style={{ minHeight: 48, verticalAlign: 'bottom' }}>{locale.viewByImage.title}</span>
+                    <div style={{ display: 'inline', marginLeft: 16 }}>
+                        <TextField
+                            data-testid="spotlights-viewbyimage-clear-text-field"
+                            inputProps={{
+                                maxLength: 25,
+                                'aria-label': locale.listPage.textSearch.ariaLabel,
+                            }}
+                            onChange={filterRowsByText}
+                            label={locale.listPage.textSearch.displayLabel}
+                            value={textSearch}
                         />
-                        <Button
-                            children={helpButtonLabel}
-                            color="secondary"
-                            data-testid="admin-spotlights-help-button"
-                            id="admin-spotlights-help-button"
-                            onClick={openHelpLightbox}
-                            style={{ float: 'right', marginRight: 16 }}
-                            variant="contained"
+                        <CloseIcon
+                            id="spotlights-list-clear-text-filter-clear-button"
+                            data-testid="spotlights-list-clear-text-filter-clear-button"
+                            color="disabled"
+                            fontSize="small"
+                            style={{ position: 'absolute', top: 37 }}
+                            onClick={clearFilter}
                         />
-                    </p>
+                    </div>
+                    <Button
+                        children="Close"
+                        color="secondary"
+                        data-testid="spotlights-viewbyimage-lightbox-close-button"
+                        onClick={handleLightboxClose}
+                        style={{ float: 'right' }}
+                        variant="contained"
+                    />
+                    <Button
+                        children={helpButtonLabel}
+                        color="secondary"
+                        data-testid="admin-spotlights-help-button"
+                        id="admin-spotlights-help-button"
+                        onClick={openHelpLightbox}
+                        style={{ float: 'right', marginRight: 16 }}
+                        variant="contained"
+                    />
                 </DialogTitle>
                 <DialogContent>
                     <Box className={classes.contentBox} data-testid="spotlights-viewbyimage-lightbox-content">
                         <div>
-                            {!!spotlights &&
-                                spotlights.length > 0 &&
-                                spotlights
+                            {!!rows &&
+                                rows.length > 0 &&
+                                rows
                                     .sort(
                                         (a, b) =>
                                             moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
