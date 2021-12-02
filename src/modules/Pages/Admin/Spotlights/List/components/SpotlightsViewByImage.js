@@ -108,7 +108,7 @@ export const SpotlightsViewByImage = ({
                 <DialogTitle
                     id="lightboxTitle"
                     data-testid="spotlights-viewbyimage-lightbox-title"
-                    style={{ minHeight: 48, position: 'relative' }}
+                    style={{ minHeight: 48, position: 'relative', borderBottom: '1px solid #d7d1cc' }}
                 >
                     <span style={{ minHeight: 48, verticalAlign: 'bottom' }}>{locale.viewByImage.title}</span>
                     <div style={{ display: 'inline', marginLeft: 16 }}>

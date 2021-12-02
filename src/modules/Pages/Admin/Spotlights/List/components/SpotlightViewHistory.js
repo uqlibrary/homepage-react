@@ -85,7 +85,7 @@ export const SpotlightViewHistory = ({
                 aria-labelledby="viewHistoryLightboxTitle"
                 data-testid="spotlights-viewbyhistory-lightbox-holder"
             >
-                <DialogTitle>
+                <DialogTitle style={{ borderBottom: '1px solid #d7d1cc' }}>
                     <p id="viewHistoryLightboxTitle" data-testid="spotlights-viewbyhistory-lightbox-title">
                         {locale.viewByHistory.title}
                         <Button
