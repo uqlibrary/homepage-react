@@ -28,6 +28,7 @@ export const SpotlightsUtilityArea = ({
     showAddButton,
     showViewByImageButton,
     spotlights,
+    showViewByHistoryLightbox,
 }) => {
     const classes = useStyles();
 
@@ -35,8 +36,6 @@ export const SpotlightsUtilityArea = ({
     const [isViewByImageLightboxOpen, setViewByImageLightboxOpen] = React.useState(false);
     const handleViewByImageLightboxOpen = () => setViewByImageLightboxOpen(true);
     const handleViewByImageLightboxClose = () => setViewByImageLightboxOpen(false);
-    // const [viewByImageLightBoxFocus, setViewByImageLightBoxFocus] = React.useState('');
-    // const [viewByImageLightBoxRows, setViewByImageLightBoxEntries] = React.useState([]);
 
     const openHelpLightbox = () => {
         setHelpLightboxOpen(true);
@@ -52,11 +51,8 @@ export const SpotlightsUtilityArea = ({
     };
 
     const showViewByImageLightbox = () => {
-        // const filteredRows = [...allSpotlights].filter(r => r.img_url === spotlightImageUrl);
         /* istanbul ignore else */
         if (spotlights.length > 0) {
-            // setViewByImageLightBoxFocus(spotlightImageUrl);
-            // setViewByImageLightBoxEntries(spotlights);
             handleViewByImageLightboxOpen();
         }
     };
@@ -80,7 +76,7 @@ export const SpotlightsUtilityArea = ({
                     <Button
                         children="View by Image"
                         color="primary"
-                        data-testid="admin-spotlights-help-display-button"
+                        data-testid="admin-spotlights-view-by-image-button"
                         onClick={() => showViewByImageLightbox()}
                         variant="contained"
                     />
@@ -91,7 +87,7 @@ export const SpotlightsUtilityArea = ({
                     <Button
                         children="Add spotlight"
                         color="primary"
-                        data-testid="admin-spotlights-help-display-button"
+                        data-testid="admin-spotlights-add-display-button"
                         onClick={() => navigateToAddPage()}
                         variant="contained"
                     />
@@ -108,7 +104,7 @@ export const SpotlightsUtilityArea = ({
                     spotlights={spotlights}
                     isLightboxOpen={isViewByImageLightboxOpen}
                     handleLightboxClose={handleViewByImageLightboxClose}
-                    // navigateToCloneForm={navigateToCloneForm}
+                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                 />
             )}
         </Fragment>
@@ -123,6 +119,7 @@ SpotlightsUtilityArea.propTypes = {
     showAddButton: PropTypes.bool,
     showViewByImageButton: PropTypes.bool,
     spotlights: PropTypes.any,
+    showViewByHistoryLightbox: PropTypes.any,
 };
 
 SpotlightsUtilityArea.defaultProps = {

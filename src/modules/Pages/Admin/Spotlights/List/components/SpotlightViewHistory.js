@@ -14,6 +14,8 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 
 import moment from 'moment';
 import { SpotlightsHelpDrawer } from '../../SpotlightsHelpDrawer';
+import SpotlightSplitButton from './SpotlightSplitButton';
+import { navigateToCloneForm, navigateToView } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(theme => ({
     viewHistoryLightboxStyle: {
@@ -54,8 +56,8 @@ export const SpotlightViewHistory = ({
     helpContent,
     isViewHistoryLightboxOpen,
     handleViewHistoryLightboxClose,
-    navigateToCloneForm,
     spotlights,
+    history,
 }) => {
     const classes = useStyles();
 
@@ -144,14 +146,16 @@ export const SpotlightViewHistory = ({
                                         >
                                             <p>
                                                 <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
-                                                <Button
-                                                    style={{ float: 'right' }}
-                                                    children="Clone"
-                                                    color="primary"
-                                                    data-testid="spotlights-viewbyhistory-lightbox-clone-button"
-                                                    onClick={() => navigateToCloneForm(s.id)}
-                                                    variant="contained"
-                                                />
+                                                <div style={{ float: 'right' }}>
+                                                    <SpotlightSplitButton
+                                                        mainButtonLabel="Clone"
+                                                        extendedNavigateToCloneForm={navigateToCloneForm}
+                                                        extendedNavigateToView={navigateToView}
+                                                        spotlight={s}
+                                                        history={history}
+                                                        allowedArrowActions={['edit', 'view']}
+                                                    />
+                                                </div>
                                             </p>
                                             <p>
                                                 <strong>{locale.viewByHistory.datePrefix}:</strong> {startDateDisplay}
@@ -192,8 +196,8 @@ SpotlightViewHistory.propTypes = {
     helpContent: PropTypes.any,
     isViewHistoryLightboxOpen: PropTypes.bool,
     handleViewHistoryLightboxClose: PropTypes.func,
-    navigateToCloneForm: PropTypes.func,
     spotlights: PropTypes.array,
+    history: PropTypes.any,
 };
 
 SpotlightViewHistory.defaultProps = {

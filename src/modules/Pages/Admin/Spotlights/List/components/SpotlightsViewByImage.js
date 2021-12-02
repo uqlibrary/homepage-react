@@ -11,12 +11,12 @@ import Box from '@material-ui/core/Box';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
+import moment from 'moment';
+
 const useStyles = makeStyles(theme => ({
     lightboxStyle: {
-        display: 'flex',
-        flexDirection: 'column',
-        m: 'auto',
-        width: 'fit-content',
+        minWidth: '90%',
+        paddingTop: 20,
         '& img': {
             maxWidth: 800,
             border: '1px solid grey',
@@ -34,51 +34,86 @@ const useStyles = makeStyles(theme => ({
                 marginTop: 1,
             },
         },
+        '& [aria-labelledby="lightboxTitle"]': {
+            color: 'blue',
+        },
+    },
+    dialogPaper: {
+        // make the block take up more of the page
+        width: '90%',
+        maxWidth: 'inherit',
+    },
+    thisWeekNotify: {
+        fontWeight: 'bold',
+        color: theme.palette.warning.main,
     },
 }));
 
-export const SpotlightsViewByImage = ({ isLightboxOpen, handleLightboxClose, spotlights }) => {
+export const SpotlightsViewByImage = ({
+    isLightboxOpen,
+    handleLightboxClose,
+    spotlights,
+    showViewByHistoryLightbox,
+}) => {
     const classes = useStyles();
 
     return (
         <Dialog
-            maxWidth="xl"
             open={isLightboxOpen}
             onClose={handleLightboxClose}
             aria-labelledby="lightboxTitle"
             data-testid="spotlights-viewbyimage-lightbox-holder"
+            style={{ minWidth: '90%', maxWidth: '99%' }} // needed?
+            PaperProps={{ classes: { root: classes.dialogPaper } }}
         >
             <DialogTitle>
-                <Button
-                    children="Close"
-                    color="secondary"
-                    data-testid="spotlights-viewbyimage-lightbox-close-button"
-                    onClick={handleLightboxClose}
-                    style={{ float: 'right' }}
-                    variant="contained"
-                />
+                <p id="lightboxTitle" data-testid="spotlights-viewbyimage-lightbox-title">
+                    {locale.viewByImage.title}
+                    <Button
+                        children="Close"
+                        color="secondary"
+                        data-testid="spotlights-viewbyimage-lightbox-close-button"
+                        onClick={handleLightboxClose}
+                        style={{ float: 'right' }}
+                        variant="contained"
+                    />
+                </p>
             </DialogTitle>
-            <DialogContent>
+            <DialogContent style={{ minWidth: '90%', maxWidth: '99%' }}>
                 <Box className={classes.lightboxStyle}>
-                    <h2 id="lightboxTitle" data-testid="spotlights-viewbyimage-lightbox-title">
-                        {locale.viewByImage.title}
-                    </h2>
-                    <div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                        }}
+                    >
                         {!!spotlights &&
                             spotlights.length > 0 &&
                             spotlights
-                                .sort((a, b) => a.start - b.start)
-                                // .reverse()
-                                .map(s => {
+                                .sort(
+                                    (a, b) =>
+                                        moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
+                                )
+                                .map((s, index) => {
                                     return (
-                                        <span
-                                            key={`${s.id}-lightbox`}
-                                            style={{ float: 'left', width: 220, height: 150, margin: 10 }}
+                                        <a
+                                            id={`${s.id}-lightbox-item`}
+                                            key={`${s.id}-lightbox-item`}
+                                            style={{
+                                                marginBottom: 10,
+                                                marginRight: 10,
+                                            }}
+                                            onClick={() => showViewByHistoryLightbox(s)}
+                                            onKeyDown={() => showViewByHistoryLightbox(s)}
                                         >
-                                            <img src={s.img_url} alt={s.img_alt} width={200} />
-                                            <br />
-                                            <span margin>{s.title}</span>
-                                        </span>
+                                            <img
+                                                src={s.img_url}
+                                                alt={s.img_alt}
+                                                width={250}
+                                                height={92}
+                                                loading={index > 20 ? 'lazy' : null}
+                                            />
+                                        </a>
                                     );
                                 })}
                     </div>
@@ -89,9 +124,9 @@ export const SpotlightsViewByImage = ({ isLightboxOpen, handleLightboxClose, spo
 };
 
 SpotlightsViewByImage.propTypes = {
-    isLightboxOpen: PropTypes.bool,
     handleLightboxClose: PropTypes.func,
-    navigateToCloneForm: PropTypes.func,
+    isLightboxOpen: PropTypes.bool,
+    showViewByHistoryLightbox: PropTypes.func,
     spotlightImageUrl: PropTypes.string,
     spotlights: PropTypes.array,
 };

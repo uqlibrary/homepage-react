@@ -17,6 +17,7 @@ import { useConfirmationState } from 'hooks';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { isPastSpotlight, navigateToEditForm } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // based on https://material-ui.com/components/button-group/ "Split button"
 
@@ -30,16 +31,15 @@ const useStyles = makeStyles(() => ({
     },
 }));
 export const SpotlightSplitButton = ({
-    cantDelete,
     deleteSpotlightById,
-    hideMainButton,
     mainButtonLabel,
-    navigateToCloneForm,
-    navigateToEditForm,
-    navigateToView,
+    extendedNavigateToCloneForm,
+    extendedNavigateToView,
     confirmDeleteLocale,
     showViewByHistoryOption,
     spotlight,
+    history,
+    allowedArrowActions,
 }) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
@@ -59,6 +59,17 @@ export const SpotlightSplitButton = ({
         setOpen(false);
     };
 
+    function deleteLocale() {
+        // when delete isnt supplied, we have to not let the function fire
+        if (allowedArrowActions.includes('delete') && typeof confirmDeleteLocale === 'function') {
+            return confirmDeleteLocale(1);
+        }
+        return {
+            ...locale.listPage.confirmDelete,
+            confirmationTitle: 'should not appear',
+        };
+    }
+
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -69,22 +80,40 @@ export const SpotlightSplitButton = ({
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
-                locale={confirmDeleteLocale(1)}
+                locale={deleteLocale()}
             />
             <Grid container direction="column" alignItems="center">
                 <Grid item xs={12} className={classes.parent}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
-                        {!hideMainButton && (
+                        {mainButtonLabel === 'Edit' && (
                             <Button
                                 children={mainButtonLabel}
                                 color="primary"
-                                data-testid={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlight.id}`}
-                                id={`spotlight-list-item-${mainButtonLabel.toLowerCase()}-${spotlight.id}`}
-                                onClick={() =>
-                                    mainButtonLabel === 'Edit'
-                                        ? navigateToEditForm(spotlight.id)
-                                        : navigateToView(spotlight.id)
-                                }
+                                data-testid={`spotlight-list-item-edit-${spotlight.id}`}
+                                id={`spotlight-list-item-edit-${spotlight.id}`}
+                                onClick={() => navigateToEditForm(spotlight.id, history)}
+                                className={classes.editButton}
+                                variant="contained"
+                            />
+                        )}
+                        {mainButtonLabel === 'View' && (
+                            <Button
+                                children={mainButtonLabel}
+                                color="primary"
+                                data-testid={`spotlight-list-item-view-${spotlight.id}`}
+                                id={`spotlight-list-item-view-${spotlight.id}`}
+                                onClick={() => extendedNavigateToView(spotlight.id, history)}
+                                className={classes.editButton}
+                                variant="contained"
+                            />
+                        )}
+                        {mainButtonLabel === 'Clone' && (
+                            <Button
+                                children={mainButtonLabel}
+                                color="primary"
+                                data-testid={`spotlight-list-item-clone-${spotlight.id}`}
+                                id={`spotlight-list-item-clone-${spotlight.id}`}
+                                onClick={() => extendedNavigateToCloneForm(spotlight.id, history)}
                                 className={classes.editButton}
                                 variant="contained"
                             />
@@ -114,19 +143,22 @@ export const SpotlightSplitButton = ({
                                             ? 'center top'
                                             : /* istanbul ignore next */ 'center bottom',
                                     zIndex: 1,
+                                    minWidth: 60,
                                 }}
                             >
                                 <Paper className={classes.menuWrapper}>
                                     <ClickAwayListener onClickAway={handleClose}>
                                         <MenuList id="split-button-menu">
-                                            <MenuItem
-                                                data-testid={`${spotlight.id}-clone-button`}
-                                                key={`${spotlight.id}-clone-button`}
-                                                onClick={() => navigateToCloneForm(spotlight.id)}
-                                            >
-                                                {locale.form.splitButton.labels.clone}
-                                            </MenuItem>
-                                            {!cantDelete && (
+                                            {allowedArrowActions.includes('clone') && (
+                                                <MenuItem
+                                                    data-testid={`${spotlight.id}-clone-button`}
+                                                    key={`${spotlight.id}-clone-button`}
+                                                    onClick={() => extendedNavigateToCloneForm(spotlight.id, history)}
+                                                >
+                                                    {locale.form.splitButton.labels.clone}
+                                                </MenuItem>
+                                            )}
+                                            {allowedArrowActions.includes('delete') && (
                                                 <MenuItem
                                                     data-testid={`${spotlight.id}-delete-button`}
                                                     key={`${spotlight.id}-delete-button`}
@@ -135,13 +167,45 @@ export const SpotlightSplitButton = ({
                                                     {locale.form.splitButton.labels.delete}
                                                 </MenuItem>
                                             )}
-                                            <MenuItem
-                                                data-testid={`${spotlight.id}-viewbyhistory-button`}
-                                                key={`${spotlight.id}-viewbyhistory-button`}
-                                                onClick={() => showViewByHistoryOption(spotlight)}
-                                            >
-                                                {locale.form.splitButton.labels.history}
-                                            </MenuItem>
+                                            {allowedArrowActions.includes('viewbyhistory') && (
+                                                <MenuItem
+                                                    data-testid={`${spotlight.id}-viewbyhistory-button`}
+                                                    key={`${spotlight.id}-viewbyhistory-button`}
+                                                    onClick={() =>
+                                                        !!showViewByHistoryOption && showViewByHistoryOption(spotlight)
+                                                    }
+                                                >
+                                                    {locale.form.splitButton.labels.history}
+                                                </MenuItem>
+                                            )}
+                                            {mainButtonLabel !== 'Edit' &&
+                                                allowedArrowActions.includes('edit') &&
+                                                !isPastSpotlight(spotlight) && (
+                                                    <MenuItem
+                                                        data-testid={`${spotlight.id}-viewbyhistory-button`}
+                                                        key={`${spotlight.id}-viewbyhistory-button`}
+                                                        onClick={() =>
+                                                            !!showViewByHistoryOption &&
+                                                            showViewByHistoryOption(spotlight)
+                                                        }
+                                                    >
+                                                        {locale.form.splitButton.labels.edit}
+                                                    </MenuItem>
+                                                )}
+                                            {mainButtonLabel !== 'View' &&
+                                                allowedArrowActions.includes('view') &&
+                                                isPastSpotlight(spotlight) && (
+                                                    <MenuItem
+                                                        data-testid={`${spotlight.id}-viewbyhistory-button`}
+                                                        key={`${spotlight.id}-viewbyhistory-button`}
+                                                        onClick={() =>
+                                                            !!showViewByHistoryOption &&
+                                                            showViewByHistoryOption(spotlight)
+                                                        }
+                                                    >
+                                                        {locale.form.splitButton.labels.view}
+                                                    </MenuItem>
+                                                )}
                                         </MenuList>
                                     </ClickAwayListener>
                                 </Paper>
@@ -157,21 +221,19 @@ export const SpotlightSplitButton = ({
 SpotlightSplitButton.propTypes = {
     spotlight: PropTypes.any,
     mainButtonLabel: PropTypes.string,
-    cantDelete: PropTypes.bool,
     deleteSpotlightById: PropTypes.func,
-    navigateToCloneForm: PropTypes.func,
-    navigateToEditForm: PropTypes.func,
-    navigateToView: PropTypes.func,
+    extendedNavigateToCloneForm: PropTypes.func,
+    extendedNavigateToView: PropTypes.func,
     navigateToMainFunction: PropTypes.func,
-    confirmDeleteLocale: PropTypes.func,
+    confirmDeleteLocale: PropTypes.any,
     showViewByHistoryOption: PropTypes.func,
-    hideMainButton: PropTypes.bool,
+    history: PropTypes.any,
+    allowedArrowActions: PropTypes.array,
 };
 
 SpotlightSplitButton.defaultProps = {
     mainButtonLabel: 'Edit',
-    hideMainButton: false,
-    cantDelete: false,
+    confirmDeleteLocale: false,
 };
 
 export default SpotlightSplitButton;

@@ -95,3 +95,18 @@ export function scrollToTopOfPage() {
     const topOfPage = document.getElementById('StandardPage');
     !!topOfPage && topOfPage.scrollIntoView();
 }
+
+export const navigateToEditForm = (spotlightid, history) => {
+    history.push(`/admin/spotlights/edit/${spotlightid}`);
+    scrollToTopOfPage();
+};
+
+export const navigateToCloneForm = (spotlightid, history) => {
+    history.push(`/admin/spotlights/clone/${spotlightid}`);
+    scrollToTopOfPage();
+};
+
+export const navigateToView = (spotlightid, history) => {
+    history.push(`/admin/spotlights/view/${spotlightid}`);
+    scrollToTopOfPage();
+};

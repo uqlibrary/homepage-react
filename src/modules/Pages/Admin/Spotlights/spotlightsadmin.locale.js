@@ -225,6 +225,8 @@ export default {
                 clone: 'Clone',
                 delete: 'Delete',
                 history: 'View history',
+                edit: 'Edit',
+                view: 'View',
             },
         },
     },

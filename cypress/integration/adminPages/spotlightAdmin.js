@@ -78,6 +78,10 @@ function removeImageFromDragzone() {
 const placeholderImage = 'https://app-testing.library.uq.edu.au/file/public/3530e810-40e5-11ec-b167-ad28af8d7358.png';
 
 describe('Spotlights Admin Pages', () => {
+    before(() => {
+        const FILTER_STORAGE_NAME = 'alert-admin-filter-term'; // match to SpotlightsListAsTable
+        sessionStorage.removeItem(FILTER_STORAGE_NAME);
+    });
     const numRowsHiddenAsNoDatainfo = 1;
     context('unauthenticated users cannot access Spotlight Admin', () => {
         it('the list page is not available to public users', () => {
@@ -442,7 +446,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(34, 10, 6));
         });
         it('the add button loads the add page', () => {
-            cy.get('button[data-testid="admin-spotlights-help-display-button"]')
+            cy.get('button[data-testid="admin-spotlights-add-display-button"]')
                 .should('exist')
                 .click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add');
@@ -472,8 +476,9 @@ describe('Spotlights Admin Pages', () => {
         });
         it('the split button closes when the user clicks away', () => {
             // open the split button
-            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
-            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').click();
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                .should('exist')
+                .click();
             cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-delete-button"]').should('exist');
 
             // click away from the split button
@@ -507,8 +512,9 @@ describe('Spotlights Admin Pages', () => {
         it('it shows a view-by-history lightbox and can exit with the close button', () => {
             // open the split button
             cy.get('[data-testid="admin-spotlights-list-scheduled-list"]').scrollIntoView();
-            cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]').should('exist');
-            cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]').click();
+            cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]')
+                .should('exist')
+                .click();
 
             // click the 'view by history' action
             cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-viewbyhistory-button"]')
@@ -550,8 +556,9 @@ describe('Spotlights Admin Pages', () => {
                 .children()
                 .should('have.length', 23);
 
-            cy.get('li:first-child button')
+            cy.get('[data-testid="spotlight-list-item-clone-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
                 .should('exist')
+                .should('contain', 'Clone')
                 .click();
             cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/clone`);
         });
@@ -585,9 +592,6 @@ describe('Spotlights Admin Pages', () => {
     });
     context('Spotlight Admin session storage', () => {
         beforeEach(() => {
-            // match to SpotlightsListAsTable
-            const FILTER_STORAGE_NAME = 'alert-admin-filter-term';
-            sessionStorage.removeItem(FILTER_STORAGE_NAME);
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
             cy.viewport(1300, 1000);
         });
@@ -755,8 +759,9 @@ describe('Spotlights Admin Pages', () => {
             ).should('not.be.disabled');
 
             // open the split button
-            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').should('exist');
-            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]').click();
+            cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                .should('exist')
+                .click();
 
             // click the 'delete' action
             cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-delete-button"]').should('exist');
@@ -803,8 +808,9 @@ describe('Spotlights Admin Pages', () => {
             ).should('be.disabled');
 
             // open the split button
-            cy.get('[data-testid="spotlight-list-arrowicon-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').should('exist');
-            cy.get('[data-testid="spotlight-list-arrowicon-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').click();
+            cy.get('[data-testid="spotlight-list-arrowicon-1e1b0e10-c400-11e6-a8f0-47525a49f469"]')
+                .should('exist')
+                .click();
 
             // click the 'delete' action
             cy.get('[data-testid="1e1b0e10-c400-11e6-a8f0-47525a49f469-delete-button"]').should('exist');

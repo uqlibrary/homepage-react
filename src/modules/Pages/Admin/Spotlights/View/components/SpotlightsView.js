@@ -14,7 +14,7 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate, scrollToTopOfPage } from '../../spotlighthelpers';
+import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history }) => {
     const { spotlightid } = useParams();

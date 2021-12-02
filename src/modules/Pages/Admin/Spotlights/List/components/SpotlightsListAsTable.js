@@ -29,7 +29,6 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../spotlightsadmin.locale';
-import SpotlightViewHistory from './SpotlightViewHistory';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
@@ -40,9 +39,9 @@ import {
     isPastSpotlight,
     isScheduledSpotlight,
     moveItemInArray,
-    scrollToTopOfPage,
+    navigateToCloneForm,
+    navigateToView,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-import { useViewByHistoryLightboxState } from 'modules/Pages/Admin/Spotlights/spotlightsHooks';
 
 // original based on https://codesandbox.io/s/hier2
 // per https://material-ui.com/components/tables/#custom-pagination-actions
@@ -140,7 +139,7 @@ export const SpotlightsListAsTable = ({
     canDragRows,
     canUnpublish,
     canTextFilter,
-    allSpotlights,
+    showViewByHistoryLightbox,
 }) => {
     const classes = useStyles();
 
@@ -193,14 +192,6 @@ export const SpotlightsListAsTable = ({
         sessionStorage.setItem(FILTER_STORAGE_NAME, filterStorage);
     };
     const [textSearch, setTextSearch] = useState(getFilterTermFromSession());
-
-    const [
-        isViewByHistoryLightboxOpen,
-        handleViewByHistoryLightboxOpen,
-        handleViewByHistoryLightboxClose,
-    ] = useViewByHistoryLightboxState();
-    const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
-    const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
 
     const [draggedId, setDraggedId] = useState(false);
 
@@ -309,32 +300,14 @@ export const SpotlightsListAsTable = ({
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
 
-    const navigateToEditForm = spotlightid => {
-        history.push(`/admin/spotlights/edit/${spotlightid}`);
-        scrollToTopOfPage();
-    };
-
-    const navigateToCloneForm = spotlightid => {
+    const setFilterAndNavigateToCloneForm = (spotlightid, history) => {
         !!canTextFilter && setFilterTermToSession(textSearch);
-        history.push(`/admin/spotlights/clone/${spotlightid}`);
-        scrollToTopOfPage();
+        navigateToCloneForm(spotlightid, history);
     };
 
-    const navigateToView = spotlightid => {
+    const setFilterAndNavigateToView = (spotlightid, history) => {
         setFilterTermToSession(textSearch);
-        history.push(`/admin/spotlights/view/${spotlightid}`);
-        scrollToTopOfPage();
-    };
-
-    const showViewByHistoryLightbox = thisSpotlight => {
-        const filteredRows = [...allSpotlights].filter(r => r.img_url === thisSpotlight.img_url);
-        /* istanbul ignore else */
-        if (filteredRows.length > 0) {
-            // because its fired by clicking on a spotlight, it should never be 0
-            setViewByHistoryLightBoxFocus(thisSpotlight);
-            setViewByHistoryLightBoxEntries(filteredRows);
-            handleViewByHistoryLightboxOpen();
-        }
+        navigateToView(spotlightid, history);
     };
 
     const reEnableAllCheckboxes = () => {
@@ -1012,14 +985,25 @@ export const SpotlightsListAsTable = ({
                                                                             mainButtonLabel={
                                                                                 tableType === 'past' ? 'View' : 'Edit'
                                                                             }
-                                                                            navigateToCloneForm={navigateToCloneForm}
-                                                                            navigateToEditForm={navigateToEditForm}
-                                                                            navigateToView={navigateToView}
+                                                                            extendedNavigateToCloneForm={
+                                                                                setFilterAndNavigateToCloneForm
+                                                                            }
+                                                                            extendedNavigateToView={
+                                                                                setFilterAndNavigateToView
+                                                                            }
                                                                             confirmDeleteLocale={confirmDeleteLocale}
                                                                             showViewByHistoryOption={
                                                                                 showViewByHistoryLightbox
                                                                             }
                                                                             spotlight={spotlight}
+                                                                            history={history}
+                                                                            allowedArrowActions={[
+                                                                                'edit',
+                                                                                'view',
+                                                                                'clone',
+                                                                                'delete',
+                                                                                'viewbyhistory',
+                                                                            ]}
                                                                         />
                                                                     </TableCell>
                                                                 </TableRow>
@@ -1076,16 +1060,6 @@ export const SpotlightsListAsTable = ({
                     </Table>
                 </TableContainer>
             </DragDropContext>
-            {isViewByHistoryLightboxOpen && (
-                <SpotlightViewHistory
-                    focussedElement={viewByHistoryLightBoxFocus}
-                    handleViewHistoryLightboxClose={handleViewByHistoryLightboxClose}
-                    helpContent={locale.viewByHistory.help}
-                    isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
-                    navigateToCloneForm={navigateToCloneForm}
-                    spotlights={viewByHistoryLightBoxRows}
-                />
-            )}
         </Fragment>
     );
 };
@@ -1103,7 +1077,7 @@ SpotlightsListAsTable.propTypes = {
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
-    allSpotlights: PropTypes.array,
+    showViewByHistoryLightbox: PropTypes.any,
 };
 
 SpotlightsListAsTable.defaultProps = {
