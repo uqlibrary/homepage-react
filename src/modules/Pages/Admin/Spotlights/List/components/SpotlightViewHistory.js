@@ -15,7 +15,12 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import moment from 'moment';
 import { SpotlightsHelpDrawer } from '../../SpotlightsHelpDrawer';
 import SpotlightSplitButton from './SpotlightSplitButton';
-import { navigateToCloneForm, navigateToView } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import {
+    isPastSpotlight,
+    navigateToCloneForm,
+    navigateToEditForm,
+    navigateToView,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(theme => ({
     viewHistoryLightboxStyle: {
@@ -153,12 +158,34 @@ export const SpotlightViewHistory = ({
                                                         extendedNavigateToView={navigateToView}
                                                         spotlight={s}
                                                         history={history}
-                                                        allowedArrowActions={['edit', 'view']}
                                                     />
+                                                    {isPastSpotlight(s) ? (
+                                                        <Button
+                                                            children={locale.form.splitButton.labels.view}
+                                                            color="secondary"
+                                                            data-testid={`spotlight-list-item-view-${s.id}`}
+                                                            id={`spotlight-list-item-view-${s.id}`}
+                                                            onClick={() => navigateToCloneForm(s.id, history)}
+                                                            className={classes.editButton}
+                                                            variant="contained"
+                                                            style={{ float: 'right' }}
+                                                        />
+                                                    ) : (
+                                                        <Button
+                                                            children={locale.form.splitButton.labels.edit}
+                                                            color="secondary"
+                                                            data-testid={`spotlight-list-item-edit-${s.id}`}
+                                                            id={`spotlight-list-item-edit-${s.id}`}
+                                                            onClick={() => navigateToEditForm(s.id, history)}
+                                                            className={classes.editButton}
+                                                            variant="contained"
+                                                            style={{ float: 'right' }}
+                                                        />
+                                                    )}
                                                 </div>
                                             </p>
                                             <p>
-                                                <strong>{locale.viewByHistory.datePrefix}:</strong> {startDateDisplay}
+                                                <strong>{locale.viewByHistory.datePrefix}</strong>: {startDateDisplay}
                                                 {locale.viewByHistory.dateDivider}
                                                 {endDateDisplay}
                                             </p>

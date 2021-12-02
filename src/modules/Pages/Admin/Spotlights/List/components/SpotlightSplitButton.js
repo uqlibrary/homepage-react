@@ -84,7 +84,13 @@ export const SpotlightSplitButton = ({
             />
             <Grid container direction="column" alignItems="center">
                 <Grid item xs={12} className={classes.parent}>
-                    <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
+                    <ButtonGroup
+                        variant="contained"
+                        color="primary"
+                        ref={anchorRef}
+                        aria-label="split button"
+                        style={{ float: 'right' }}
+                    >
                         {mainButtonLabel === 'Edit' && (
                             <Button
                                 children={mainButtonLabel}
@@ -118,20 +124,22 @@ export const SpotlightSplitButton = ({
                                 variant="contained"
                             />
                         )}
-                        <Button
-                            color="primary"
-                            className={classes.editButton}
-                            size="small"
-                            aria-controls={open ? 'split-button-menu' : undefined}
-                            aria-expanded={open ? 'true' : undefined}
-                            aria-label="More actions"
-                            aria-haspopup="menu"
-                            data-testid={`spotlight-list-arrowicon-${spotlight.id}`}
-                            onClick={handleToggle}
-                            title="More actions"
-                        >
-                            <ArrowDropDownIcon />
-                        </Button>
+                        {allowedArrowActions.length > 0 && (
+                            <Button
+                                color="primary"
+                                className={classes.editButton}
+                                size="small"
+                                aria-controls={open ? 'split-button-menu' : undefined}
+                                aria-expanded={open ? 'true' : undefined}
+                                aria-label="More actions"
+                                aria-haspopup="menu"
+                                data-testid={`spotlight-list-arrowicon-${spotlight.id}`}
+                                onClick={handleToggle}
+                                title="More actions"
+                            >
+                                <ArrowDropDownIcon />
+                            </Button>
+                        )}
                     </ButtonGroup>
                     <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
                         {({ TransitionProps, placement }) => (
@@ -234,6 +242,7 @@ SpotlightSplitButton.propTypes = {
 SpotlightSplitButton.defaultProps = {
     mainButtonLabel: 'Edit',
     confirmDeleteLocale: false,
+    allowedArrowActions: [],
 };
 
 export default SpotlightSplitButton;

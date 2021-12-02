@@ -14,7 +14,7 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import moment from 'moment';
 
 const useStyles = makeStyles(theme => ({
-    lightboxStyle: {
+    contentBox: {
         minWidth: '90%',
         paddingTop: 20,
         '& img': {
@@ -43,9 +43,10 @@ const useStyles = makeStyles(theme => ({
         width: '90%',
         maxWidth: 'inherit',
     },
-    thisWeekNotify: {
-        fontWeight: 'bold',
-        color: theme.palette.warning.main,
+    link: {
+        marginBottom: 10,
+        marginRight: 10,
+        cursor: 'pointer',
     },
 }));
 
@@ -62,7 +63,6 @@ export const SpotlightsViewByImage = ({
             open={isLightboxOpen}
             onClose={handleLightboxClose}
             aria-labelledby="lightboxTitle"
-            data-testid="spotlights-viewbyimage-lightbox-holder"
             PaperProps={{ classes: { root: classes.dialogPaper } }}
         >
             <DialogTitle>
@@ -79,7 +79,7 @@ export const SpotlightsViewByImage = ({
                 </p>
             </DialogTitle>
             <DialogContent>
-                <Box className={classes.lightboxStyle}>
+                <Box className={classes.contentBox} data-testid="spotlights-viewbyimage-lightbox-content">
                     <div>
                         {!!spotlights &&
                             spotlights.length > 0 &&
@@ -92,11 +92,9 @@ export const SpotlightsViewByImage = ({
                                     return (
                                         <a
                                             id={`${s.id}-lightbox-item`}
+                                            title={`${s.title}\n${locale.viewByHistory.datePrefix} ${s.start} ${locale.viewByHistory.dateDivider} ${s.end}`}
                                             key={`${s.id}-lightbox-item`}
-                                            style={{
-                                                marginBottom: 10,
-                                                marginRight: 10,
-                                            }}
+                                            className={classes.link}
                                             onClick={() => showViewByHistoryLightbox(s)}
                                             onKeyDown={() => showViewByHistoryLightbox(s)}
                                         >

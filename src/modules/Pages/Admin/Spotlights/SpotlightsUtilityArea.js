@@ -5,6 +5,7 @@ import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
 import { SpotlightsViewByImage } from './List/components/SpotlightsViewByImage';
+import { default as locale } from './spotlightsadmin.locale';
 
 /**
  * a block that shows:
@@ -74,7 +75,7 @@ export const SpotlightsUtilityArea = ({
             {!!showViewByImageButton && (
                 <div className={classes.actionButtonPlacer}>
                     <Button
-                        children="View by Image"
+                        children={locale.viewByImage.title}
                         color="primary"
                         data-testid="admin-spotlights-view-by-image-button"
                         onClick={() => showViewByImageLightbox()}

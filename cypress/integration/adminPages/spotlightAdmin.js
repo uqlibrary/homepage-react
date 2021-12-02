@@ -522,7 +522,7 @@ describe('Spotlights Admin Pages', () => {
                 .click();
 
             // view-by-history lightbox loads
-            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains('Previous uses of this image');
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').exists();
             imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
@@ -549,7 +549,7 @@ describe('Spotlights Admin Pages', () => {
                 .click();
 
             // view-by-history lightbox loads
-            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains('Previous uses of this image');
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').exists();
             imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
             cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
@@ -575,7 +575,7 @@ describe('Spotlights Admin Pages', () => {
                 .click();
 
             // view-by-history lightbox loads
-            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').contains('Previous uses of this image');
+            cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').exists();
             // open the help pop up
             cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('not.exist');
             cy.get('[data-testid="spotlights-viewbyhistory-lightbox-help-button"]').should('be.visible');

@@ -500,7 +500,7 @@ export default {
         },
     },
     viewByHistory: {
-        title: 'Previous uses of this image',
+        title: 'All uses of this image',
         linkTitle: 'Link title',
         ariaLabel: 'Image alt text',
         link: 'Spotlight link',
@@ -521,6 +521,6 @@ export default {
         },
     },
     viewByImage: {
-        title: 'View by Image',
+        title: 'View by image',
     },
 };
