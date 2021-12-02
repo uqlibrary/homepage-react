@@ -63,7 +63,6 @@ export const SpotlightsViewByImage = ({
             onClose={handleLightboxClose}
             aria-labelledby="lightboxTitle"
             data-testid="spotlights-viewbyimage-lightbox-holder"
-            style={{ minWidth: '90%', maxWidth: '99%' }} // needed?
             PaperProps={{ classes: { root: classes.dialogPaper } }}
         >
             <DialogTitle>
@@ -79,14 +78,9 @@ export const SpotlightsViewByImage = ({
                     />
                 </p>
             </DialogTitle>
-            <DialogContent style={{ minWidth: '90%', maxWidth: '99%' }}>
+            <DialogContent>
                 <Box className={classes.lightboxStyle}>
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                        }}
-                    >
+                    <div>
                         {!!spotlights &&
                             spotlights.length > 0 &&
                             spotlights

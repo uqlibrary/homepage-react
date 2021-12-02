@@ -79,6 +79,8 @@ export const SpotlightsEdit = ({
             weight: spotlight?.weight || 0,
             active: spotlight?.active || /* istanbul ignore next */ 0,
             type: 'edit',
+            // eslint-disable-next-line camelcase
+            admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
         };
     }
 

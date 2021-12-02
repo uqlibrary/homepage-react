@@ -52,7 +52,8 @@ export const SpotlightsClone = ({
                 active: spotlight?.active || 0,
                 // minimumDate: getStartOfDayFormatted(),
                 type: 'clone',
-                admin_notes: '',
+                // eslint-disable-next-line camelcase
+                admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
             });
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
