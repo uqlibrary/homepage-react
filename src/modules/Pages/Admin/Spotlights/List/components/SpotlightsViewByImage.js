@@ -12,6 +12,7 @@ import Box from '@material-ui/core/Box';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
+import { SpotlightsHelpDrawer } from 'modules/Pages/Admin/Spotlights/SpotlightsHelpDrawer';
 
 const useStyles = makeStyles(theme => ({
     contentBox: {
@@ -55,68 +56,92 @@ export const SpotlightsViewByImage = ({
     handleLightboxClose,
     spotlights,
     showViewByHistoryLightbox,
+    helpButtonLabel,
+    helpContent,
 }) => {
     const classes = useStyles();
 
+    const [helpLightboxOpen, setHelpLightboxOpen] = React.useState(false);
+    const openHelpLightbox = () => setHelpLightboxOpen(true);
+    const closeHelpLightbox = () => setHelpLightboxOpen(false);
+
     return (
-        <Dialog
-            open={isLightboxOpen}
-            onClose={handleLightboxClose}
-            aria-labelledby="lightboxTitle"
-            PaperProps={{ classes: { root: classes.dialogPaper } }}
-        >
-            <DialogTitle>
-                <p id="lightboxTitle" data-testid="spotlights-viewbyimage-lightbox-title">
-                    {locale.viewByImage.title}
-                    <Button
-                        children="Close"
-                        color="secondary"
-                        data-testid="spotlights-viewbyimage-lightbox-close-button"
-                        onClick={handleLightboxClose}
-                        style={{ float: 'right' }}
-                        variant="contained"
-                    />
-                </p>
-            </DialogTitle>
-            <DialogContent>
-                <Box className={classes.contentBox} data-testid="spotlights-viewbyimage-lightbox-content">
-                    <div>
-                        {!!spotlights &&
-                            spotlights.length > 0 &&
-                            spotlights
-                                .sort(
-                                    (a, b) =>
-                                        moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
-                                )
-                                .map((s, index) => {
-                                    return (
-                                        <a
-                                            id={`${s.id}-lightbox-item`}
-                                            title={`${s.title}\n${locale.viewByHistory.datePrefix} ${s.start} ${locale.viewByHistory.dateDivider} ${s.end}`}
-                                            key={`${s.id}-lightbox-item`}
-                                            className={classes.link}
-                                            onClick={() => showViewByHistoryLightbox(s)}
-                                            onKeyDown={() => showViewByHistoryLightbox(s)}
-                                        >
-                                            <img
-                                                src={s.img_url}
-                                                alt={s.img_alt}
-                                                width={250}
-                                                height={92}
-                                                loading={index > 20 ? 'lazy' : null}
-                                            />
-                                        </a>
-                                    );
-                                })}
-                    </div>
-                </Box>
-            </DialogContent>
-        </Dialog>
+        <React.Fragment>
+            <Dialog
+                open={isLightboxOpen}
+                onClose={handleLightboxClose}
+                aria-labelledby="lightboxTitle"
+                PaperProps={{ classes: { root: classes.dialogPaper } }}
+            >
+                <DialogTitle>
+                    <p id="lightboxTitle" data-testid="spotlights-viewbyimage-lightbox-title">
+                        {locale.viewByImage.title}
+                        <Button
+                            children="Close"
+                            color="secondary"
+                            data-testid="spotlights-viewbyimage-lightbox-close-button"
+                            onClick={handleLightboxClose}
+                            style={{ float: 'right' }}
+                            variant="contained"
+                        />
+                        <Button
+                            children={helpButtonLabel}
+                            color="secondary"
+                            data-testid="admin-spotlights-help-button"
+                            id="admin-spotlights-help-button"
+                            onClick={openHelpLightbox}
+                            style={{ float: 'right', marginRight: 16 }}
+                            variant="contained"
+                        />
+                    </p>
+                </DialogTitle>
+                <DialogContent>
+                    <Box className={classes.contentBox} data-testid="spotlights-viewbyimage-lightbox-content">
+                        <div>
+                            {!!spotlights &&
+                                spotlights.length > 0 &&
+                                spotlights
+                                    .sort(
+                                        (a, b) =>
+                                            moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
+                                    )
+                                    .map((s, index) => {
+                                        return (
+                                            <a
+                                                id={`${s.id}-lightbox-item`}
+                                                title={`${s.title}\n${locale.viewByHistory.datePrefix} ${s.start} ${locale.viewByHistory.dateDivider} ${s.end}`}
+                                                key={`${s.id}-lightbox-item`}
+                                                className={classes.link}
+                                                onClick={() => showViewByHistoryLightbox(s)}
+                                                onKeyDown={() => showViewByHistoryLightbox(s)}
+                                            >
+                                                <img
+                                                    src={s.img_url}
+                                                    alt={s.img_alt}
+                                                    width={250}
+                                                    height={92}
+                                                    loading={index > 20 ? 'lazy' : null}
+                                                />
+                                            </a>
+                                        );
+                                    })}
+                        </div>
+                    </Box>
+                </DialogContent>
+            </Dialog>
+            <SpotlightsHelpDrawer
+                helpContent={helpContent}
+                closeHelpLightbox={closeHelpLightbox}
+                open={helpLightboxOpen}
+            />
+        </React.Fragment>
     );
 };
 
 SpotlightsViewByImage.propTypes = {
     handleLightboxClose: PropTypes.func,
+    helpButtonLabel: PropTypes.string,
+    helpContent: PropTypes.any,
     isLightboxOpen: PropTypes.bool,
     showViewByHistoryLightbox: PropTypes.func,
     spotlightImageUrl: PropTypes.string,
@@ -124,6 +149,8 @@ SpotlightsViewByImage.propTypes = {
 };
 
 SpotlightsViewByImage.defaultProps = {
+    helpButtonLabel: 'Help',
+    helpContent: locale.viewByImage.help,
     spotlights: [],
 };
 

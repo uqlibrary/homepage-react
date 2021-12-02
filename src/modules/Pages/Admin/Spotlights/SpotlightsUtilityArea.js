@@ -33,18 +33,13 @@ export const SpotlightsUtilityArea = ({
 }) => {
     const classes = useStyles();
 
-    const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
     const [isViewByImageLightboxOpen, setViewByImageLightboxOpen] = React.useState(false);
     const handleViewByImageLightboxOpen = () => setViewByImageLightboxOpen(true);
     const handleViewByImageLightboxClose = () => setViewByImageLightboxOpen(false);
 
-    const openHelpLightbox = () => {
-        setHelpLightboxOpen(true);
-    };
-
-    const closeHelpLightbox = () => {
-        setHelpLightboxOpen(false);
-    };
+    const [helpLightboxOpen, setHelpLightboxOpen] = useState(false);
+    const openHelpLightbox = () => setHelpLightboxOpen(true);
+    const closeHelpLightbox = () => setHelpLightboxOpen(false);
 
     const navigateToAddPage = () => {
         actions.clearASpotlight();
@@ -101,7 +96,6 @@ export const SpotlightsUtilityArea = ({
             />
             {!!showViewByImageButton && (
                 <SpotlightsViewByImage
-                    // spotlightImageUrl={viewByImageLightBoxFocus}
                     spotlights={spotlights}
                     isLightboxOpen={isViewByImageLightboxOpen}
                     handleLightboxClose={handleViewByImageLightboxClose}

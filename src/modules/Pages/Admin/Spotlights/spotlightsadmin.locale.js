@@ -522,5 +522,15 @@ export default {
     },
     viewByImage: {
         title: 'View by image',
+        help: {
+            title: 'View by image help',
+            text: (
+                <Fragment>
+                    <p data-testid="admin-spotlights-view-by-image-help-example">
+                        This will be the help for the View by image lightbox.
+                    </p>
+                </Fragment>
+            ),
+        },
     },
 };
