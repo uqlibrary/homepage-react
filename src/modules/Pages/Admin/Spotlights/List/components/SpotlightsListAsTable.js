@@ -172,6 +172,7 @@ export const SpotlightsListAsTable = ({
             return '';
         }
         const now = new Date().getTime();
+        /* istanbul ignore next */
         if (!filter.expiryDate || filter.expiryDate < now) {
             sessionStorage.removeItem(FILTER_STORAGE_NAME);
             return '';
@@ -219,6 +220,7 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
+            /* istanbul ignore next */
             if (!rowList) {
                 return;
             }
@@ -248,6 +250,7 @@ export const SpotlightsListAsTable = ({
                 }),
             );
 
+            /* istanbul ignore next */
             if (!!draggedId) {
                 // briefly mark the dragged row with a style, so the user knows what they did
                 setTimeout(() => {
@@ -991,12 +994,10 @@ export const SpotlightsListAsTable = ({
                                                                             mainButtonLabel={
                                                                                 tableType === 'past' ? 'View' : 'Edit'
                                                                             }
-                                                                            extendedNavigateToCloneForm={
+                                                                            navigateToCloneForm={
                                                                                 setFilterAndNavigateToCloneForm
                                                                             }
-                                                                            extendedNavigateToView={
-                                                                                setFilterAndNavigateToView
-                                                                            }
+                                                                            navigateToView={setFilterAndNavigateToView}
                                                                             confirmDeleteLocale={confirmDeleteLocale}
                                                                             showViewByHistoryOption={
                                                                                 showViewByHistoryLightbox

@@ -89,7 +89,7 @@ export const SpotlightFormReorderableThumbs = ({
                         img_url: currentValues?.img_url,
                         // eslint-disable-next-line camelcase
                         img_alt: currentValues?.img_alt,
-                        weight: !!chosenWeight ? chosenWeight : defaultWeight,
+                        weight: !!chosenWeight ? /* istanbul ignore next */ chosenWeight : defaultWeight,
                     };
                     currentSpotlightThumbsForEdit.push(spotlightThumbPlaceholder);
                 }
@@ -112,7 +112,7 @@ export const SpotlightFormReorderableThumbs = ({
                             id: placeholderThumbnailId,
                             img_url: imgUrlPlaceholder,
                             img_alt: 'Grey placeholder for image-to-be-uploaded when adding',
-                            weight: !!chosenWeight ? chosenWeight : defaultWeight,
+                            weight: !!chosenWeight ? /* istanbul ignore next */ chosenWeight : defaultWeight,
                         },
                     ].sort((a, b) => {
                         return a.weight - b.weight;
@@ -129,7 +129,7 @@ export const SpotlightFormReorderableThumbs = ({
                             img_url: currentValues?.img_url,
                             // eslint-disable-next-line camelcase
                             img_alt: currentValues?.img_alt,
-                            weight: !!chosenWeight ? chosenWeight : defaultWeight,
+                            weight: !!chosenWeight ? /* istanbul ignore next */ chosenWeight : defaultWeight,
                         },
                     ].sort((a, b) => {
                         return a.weight - b.weight;
@@ -157,6 +157,7 @@ export const SpotlightFormReorderableThumbs = ({
         );
     }
 
+    /* istanbul ignore next */
     const onDragEnd = result => {
         console.log('onDragEnd ', result);
         // must synchronously update state to reflect drag result
@@ -222,6 +223,7 @@ export const SpotlightFormReorderableThumbs = ({
         return isThisImage ? currentImage(currentValues, spotlight.img_url) : spotlight.img_url;
     }
 
+    /* istanbul ignore else */
     if (!!thumbableSpotlights) {
         return (
             <Grid item xs={'auto'}>
@@ -289,6 +291,7 @@ export const SpotlightFormReorderableThumbs = ({
         );
     }
 
+    /* istanbul ignore next */
     return <p>No current spotlights</p>;
 };
 

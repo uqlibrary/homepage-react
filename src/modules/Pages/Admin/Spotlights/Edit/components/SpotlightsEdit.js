@@ -76,7 +76,7 @@ export const SpotlightsEdit = ({
             img_url: spotlight?.img_url || /* istanbul ignore next */ '',
             // eslint-disable-next-line camelcase
             img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
-            weight: spotlight?.weight || 0,
+            weight: spotlight?.weight || /* istanbul ignore next */ 0,
             active: spotlight?.active || /* istanbul ignore next */ 0,
             type: 'edit',
             // eslint-disable-next-line camelcase

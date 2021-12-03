@@ -150,11 +150,11 @@ export const SpotlightViewHistory = ({
                                             }`}
                                         >
                                             <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
-                                            <div style={{ float: 'right' }}>
+                                            <div style={{ float: 'right', width: '5em' }}>
                                                 <SpotlightSplitButton
                                                     mainButtonLabel="Clone"
-                                                    extendedNavigateToCloneForm={navigateToCloneForm}
-                                                    extendedNavigateToView={navigateToView}
+                                                    navigateToCloneForm={navigateToCloneForm}
+                                                    navigateToView={navigateToView}
                                                     spotlight={s}
                                                     history={history}
                                                 />
@@ -167,7 +167,7 @@ export const SpotlightViewHistory = ({
                                                         onClick={() => navigateToView(s.id, history)}
                                                         className={classes.editButton}
                                                         variant="contained"
-                                                        style={{ float: 'right' }}
+                                                        style={{ float: 'right', width: '5.5em' }}
                                                     />
                                                 ) : (
                                                     <Button
@@ -178,10 +178,16 @@ export const SpotlightViewHistory = ({
                                                         onClick={() => navigateToEditForm(s.id, history)}
                                                         className={classes.editButton}
                                                         variant="contained"
-                                                        style={{ float: 'right' }}
+                                                        style={{ float: 'right', width: '5.5em' }}
                                                     />
                                                 )}
                                             </div>
+                                            {!!s.admin_notes && (
+                                                <p>
+                                                    <strong>{locale.viewByHistory.adminNotesLabel}</strong>:{' '}
+                                                    {s.admin_notes}
+                                                </p>
+                                            )}
                                             <p>
                                                 <strong>{locale.viewByHistory.datePrefix}</strong>: {startDateDisplay}
                                                 {locale.viewByHistory.dateDivider}

@@ -7,6 +7,7 @@ export const SpotlightSizeWarningByUrl = ({ spotlightImageUrl }) => {
     const [imgWidth, setImgWidth] = useState(null);
     const [imgHeight, setImgHeight] = useState(null);
 
+    /* istanbul ignore next */
     if (!spotlightImageUrl) {
         return null;
     }

@@ -161,7 +161,7 @@ describe('Spotlights Admin Pages', () => {
             });
         });
     });
-    context('Spotlights list page', () => {
+    context('Spotlights List page', () => {
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/spotlights?user=uqstaff');
             cy.viewport(1300, 1000);
@@ -650,7 +650,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('exist');
             }
 
-            it('it shows a view-by-history lightbox and can exit with the close button', () => {
+            it('the view-by-history lightbox can be closed with the close button', () => {
                 loadTheHistoryLightbox('298288b0-605c-11eb-ad87-357f112348ef', 'scheduled');
 
                 // confirm random piece of content
@@ -667,7 +667,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.location('href').should('eq', `${Cypress.config('baseUrl')}/admin/spotlights?user=uqstaff`);
                 cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('not.exist');
             });
-            it('it shows a view-by-history and can open clone form', () => {
+            it('the view-by-history can open the clone form for a spotlight', () => {
                 loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
 
                 // confirm random piece of content
@@ -683,7 +683,7 @@ describe('Spotlights Admin Pages', () => {
                     .click();
                 cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/clone`);
             });
-            it('it shows a view-by-history and can open edit form', () => {
+            it('the view-by-history can open the edit form for a spotlight', () => {
                 loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
 
                 // confirm random piece of content
@@ -698,6 +698,19 @@ describe('Spotlights Admin Pages', () => {
                     .should('contain', 'Edit')
                     .click();
                 cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/edit`);
+            });
+            it('the view-by-history can open the view page for a spotlight', () => {
+                loadTheHistoryLightbox('1e1b0e10-c400-11e6-a8f0-47525a49f469');
+
+                cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
+                    .children()
+                    .should('have.length', 20);
+
+                cy.get('[data-testid="spotlight-viewhistory-button-view-1e1b0e10-c400-11e6-a8f0-47525a49f469"]')
+                    .should('exist')
+                    .should('contain', 'View')
+                    .click();
+                cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/view`);
             });
             it('the spotlight that had its view-by-history button clicked is highlighted', () => {
                 const theSpotlightThatWasClickedOnID = '9eab3aa0-82c1-11eb-8896-eb36601837f5';

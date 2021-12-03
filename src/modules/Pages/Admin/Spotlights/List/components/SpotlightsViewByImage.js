@@ -168,7 +168,10 @@ export const SpotlightsViewByImage = ({
                                                 key={`${s.id}-lightbox-item`}
                                                 className={classes.link}
                                                 onClick={() => showViewByHistoryLightbox(s)}
-                                                onKeyDown={() => showViewByHistoryLightbox(s)}
+                                                onKeyDown={
+                                                    /* istanbul ignore next */ () =>
+                                                        /* istanbul ignore next */ showViewByHistoryLightbox(s)
+                                                }
                                             >
                                                 <img
                                                     src={s.img_url}

@@ -526,11 +526,10 @@ export default {
     viewByHistory: {
         title: 'All uses of this image',
         linkTitle: 'Link title',
+        adminNotesLabel: 'Admin notes',
         ariaLabel: 'Image alt text',
         link: 'Spotlight link',
         datePrefix: 'Run between',
-        // startDate: 'Date published',
-        // endDate: 'Date unpublished',
         dateDivider: ' and ',
         publicationStatus: 'Published',
         help: {
@@ -538,13 +537,12 @@ export default {
             text: (
                 <Fragment>
                     <p data-testid="admin-spotlights-view-by-history-help-example">
-                        The View history page enables you to see the usage of a spotlight image and its related
-                        details.
+                        The View history page enables you to see the usage of a spotlight image and its related details.
                     </p>
                     <p>
                         Cloning (reusing) an existing spotlight will add to its history. We recommend using the Clone
-                        tool rather than uploading additional copies of the same image. Uploading a new image creates a separate history
-                        and uses additional storage space.
+                        tool rather than uploading additional copies of the same image. Uploading a new image creates a
+                        separate history and uses additional storage space.
                     </p>
 
                     <h3>Spotlight history listing</h3>
@@ -608,8 +606,8 @@ export default {
                     <h3>Search spotlights</h3>
 
                     <p>
-                        Enter keywords into the Quick search text field to filter spotlights based on the Link title
-                        and Image alt text fields.
+                        Enter keywords into the Quick search text field to filter spotlights based on the Link title and
+                        Image alt text fields.
                     </p>
                 </Fragment>
             ),

@@ -33,8 +33,8 @@ const useStyles = makeStyles(() => ({
 export const SpotlightSplitButton = ({
     deleteSpotlightById,
     mainButtonLabel,
-    extendedNavigateToCloneForm,
-    extendedNavigateToView,
+    navigateToCloneForm,
+    navigateToView,
     confirmDeleteLocale,
     showViewByHistoryOption,
     spotlight,
@@ -108,7 +108,7 @@ export const SpotlightSplitButton = ({
                                 color="primary"
                                 data-testid={`spotlight-list-item-view-${spotlight.id}`}
                                 id={`spotlight-list-item-view-${spotlight.id}`}
-                                onClick={() => extendedNavigateToView(spotlight.id, history)}
+                                onClick={() => navigateToView(spotlight.id, history)}
                                 className={classes.editButton}
                                 variant="contained"
                             />
@@ -119,7 +119,7 @@ export const SpotlightSplitButton = ({
                                 color="primary"
                                 data-testid={`spotlight-list-item-clone-${spotlight.id}`}
                                 id={`spotlight-list-item-clone-${spotlight.id}`}
-                                onClick={() => extendedNavigateToCloneForm(spotlight.id, history)}
+                                onClick={() => navigateToCloneForm(spotlight.id, history)}
                                 className={classes.editButton}
                                 variant="contained"
                             />
@@ -161,7 +161,7 @@ export const SpotlightSplitButton = ({
                                                 <MenuItem
                                                     data-testid={`${spotlight.id}-clone-button`}
                                                     key={`${spotlight.id}-clone-button`}
-                                                    onClick={() => extendedNavigateToCloneForm(spotlight.id, history)}
+                                                    onClick={() => navigateToCloneForm(spotlight.id, history)}
                                                 >
                                                     {locale.form.splitButton.labels.clone}
                                                 </MenuItem>
@@ -189,12 +189,13 @@ export const SpotlightSplitButton = ({
                                             {mainButtonLabel !== 'Edit' &&
                                                 allowedArrowActions.includes('edit') &&
                                                 !isPastSpotlight(spotlight) && (
-                                                    <MenuItem
+                                                    /* istanbul ignore next */ <MenuItem
                                                         data-testid={`${spotlight.id}-viewbyhistory-button`}
                                                         key={`${spotlight.id}-viewbyhistory-button`}
-                                                        onClick={() =>
-                                                            !!showViewByHistoryOption &&
-                                                            showViewByHistoryOption(spotlight)
+                                                        onClick={
+                                                            /* istanbul ignore next */ () =>
+                                                                /* istanbul ignore next */
+                                                                navigateToEditForm(spotlight.id, history)
                                                         }
                                                     >
                                                         {locale.form.splitButton.labels.edit}
@@ -203,12 +204,15 @@ export const SpotlightSplitButton = ({
                                             {mainButtonLabel !== 'View' &&
                                                 allowedArrowActions.includes('view') &&
                                                 isPastSpotlight(spotlight) && (
-                                                    <MenuItem
+                                                    /* istanbul ignore next */ <MenuItem
                                                         data-testid={`${spotlight.id}-viewbyhistory-button`}
                                                         key={`${spotlight.id}-viewbyhistory-button`}
-                                                        onClick={() =>
-                                                            !!showViewByHistoryOption &&
-                                                            showViewByHistoryOption(spotlight)
+                                                        onClick={
+                                                            /* istanbul ignore next */ () =>
+                                                                /* istanbul ignore next */ navigateToView(
+                                                                    spotlight.id,
+                                                                    history,
+                                                                )
                                                         }
                                                     >
                                                         {locale.form.splitButton.labels.view}
@@ -230,8 +234,8 @@ SpotlightSplitButton.propTypes = {
     spotlight: PropTypes.any,
     mainButtonLabel: PropTypes.string,
     deleteSpotlightById: PropTypes.func,
-    extendedNavigateToCloneForm: PropTypes.func,
-    extendedNavigateToView: PropTypes.func,
+    navigateToCloneForm: PropTypes.func,
+    navigateToView: PropTypes.func,
     navigateToMainFunction: PropTypes.func,
     confirmDeleteLocale: PropTypes.any,
     showViewByHistoryOption: PropTypes.func,

@@ -326,6 +326,7 @@ export const SpotlightForm = ({
         });
     };
 
+    /* istanbul ignore next */
     const updateWeightInValues = newWeight => {
         setValues(prevState => {
             return { ...prevState, weight: newWeight };
