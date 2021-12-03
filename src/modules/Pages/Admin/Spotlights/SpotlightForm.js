@@ -36,6 +36,11 @@ const useStyles = makeStyles(() => ({
         padding: 0,
         color: 'rgba(0, 0, 0, 0.87)',
     },
+    spotlightForm: {
+        '& label': {
+            minHeight: '1.1em',
+        },
+    },
 }));
 
 export const isValidImageUrl = testurl => {
@@ -395,7 +400,7 @@ export const SpotlightForm = ({
 
     return (
         <Fragment>
-            <form>
+            <form className={classes.spotlightForm}>
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
