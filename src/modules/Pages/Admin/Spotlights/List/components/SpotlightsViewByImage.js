@@ -123,8 +123,8 @@ export const SpotlightsViewByImage = ({
                             value={textSearch}
                         />
                         <CloseIcon
-                            id="spotlights-list-clear-text-filter-clear-button"
-                            data-testid="spotlights-list-clear-text-filter-clear-button"
+                            id="spotlights-list-viewbyimage-text-filter-clear-button"
+                            data-testid="spotlights-viewbyimage-clear-text-filter-clear-button"
                             color="disabled"
                             fontSize="small"
                             style={{ position: 'absolute', top: 37 }}

@@ -130,6 +130,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c769489
             img_alt: 'Have you got your mask? Please continue to maintain physically distancing.',
             weight: 30,
             active: 1,
+            admin_notes: '',
         },
     ]),
 );
@@ -146,6 +147,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927c
             img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
             weight: 20,
             active: 0,
+            admin_notes: '',
         },
     ]),
 );
@@ -162,6 +164,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b36
             img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
             weight: 10,
             active: 0,
+            admin_notes: '',
         },
     ]),
 );
@@ -178,6 +181,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '480c5c20-6df0-11e7-86d1-31e8626e095
             img_alt: 'Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.',
             weight: 10,
             active: 0,
+            admin_notes: '',
         },
     ]),
 );
@@ -195,7 +199,7 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 10,
             active: 1,
-            admin_notes: 'Admin note 1',
+            admin_notes: 'sample admin note',
         },
     ]),
 );
@@ -231,6 +235,7 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c76
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 30,
             active: 1,
+            admin_notes: '',
         },
     ]),
 );
@@ -248,6 +253,7 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '38cbf430-8693-11e9-98ab-9d52a58
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 40,
             active: 1,
+            admin_notes: '',
         },
     ]),
 );
@@ -264,6 +270,7 @@ mock.onGet(routes.SPOTLIGHT_GET_BY_ID_API({ id: '298288b0-605c-11eb-ad87-357f112
             img_alt: 'Changes to Library loans and rules',
             weight: 50,
             active: 0,
+            admin_notes: '',
         },
     ]),
 );
@@ -280,6 +287,7 @@ mock.onAny(routes.SPOTLIGHT_GET_BY_ID_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a4
             img_alt: 'Feedback on library services',
             weight: 0,
             active: 0,
+            admin_notes: 'sample admin note 2',
         },
     ]),
 );
@@ -297,6 +305,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f
                 'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
             weight: 10,
             active: 1,
+            admin_notes: '',
         },
     ]),
 );
@@ -313,6 +322,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '298288b0-605c-11eb-ad87-357f112348e
             img_alt: 'Changes to Library loans and rules',
             weight: 50,
             active: 0,
+            admin_notes: '',
         },
     ]),
 );
@@ -360,6 +370,7 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '729df1a0-7dd0-11e9-a3a7-5fd84471520
             img_alt: 'Preparing for exams? Search past exam papers.',
             weight: 20,
             active: 1,
+            admin_notes: '',
         },
     ]),
 );

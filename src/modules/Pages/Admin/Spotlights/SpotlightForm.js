@@ -457,6 +457,21 @@ export const SpotlightForm = ({
                 />
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
+                        <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
+                            <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
+                            <Input
+                                id="spotlightAdminNote"
+                                data-testid="admin-spotlights-form-admin-note"
+                                multiline
+                                onChange={handleChange('admin_notes')}
+                                rows={2}
+                                value={values.admin_notes}
+                            />
+                        </FormControl>
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
                         <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
                             <InputLabel htmlFor="spotlightTitle">{locale.form.labels.linkDescAriaField}</InputLabel>
                             <Input
@@ -579,22 +594,6 @@ export const SpotlightForm = ({
                             {locale.form.labels.publishedCheckbox}
                         </InputLabel>
                     </Grid>
-                </Grid>
-                <Grid container spacing={2}>
-                    <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
-                            <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
-                            <Input
-                                id="spotlightAdminNote"
-                                data-testid="admin-spotlights-form-admin-note"
-                                multiline
-                                onChange={handleChange('admin_notes')}
-                                rows={2}
-                                value={values.admin_notes}
-                            />
-                        </FormControl>
-                    </Grid>
-                    <hr />
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">

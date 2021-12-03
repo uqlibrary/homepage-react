@@ -65,7 +65,8 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
             weight: spotlight?.weight || 0,
             active: spotlight?.active || 0,
             type: 'edit',
-            admin_notes: '',
+            // eslint-disable-next-line camelcase
+            admin_notes: spotlight?.admin_notes || '',
         };
     }
 
@@ -77,6 +78,25 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
                 <section aria-live="assertive">
                     <SpotlightsUtilityArea actions={actions} helpContent={locale.viewPage.help} history={history} />
                     <StandardCard title="View spotlight">
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
+                                    <InputLabel htmlFor="spotlightAdminNote">
+                                        {locale.form.labels.adminNotesField}
+                                    </InputLabel>
+                                    <Input
+                                        id="spotlightAdminNote"
+                                        data-testid="admin-spotlights-form-admin-note"
+                                        disabled
+                                        multiline
+                                        rows={2}
+                                        style={{ color: '#333' }}
+                                        value={values.admin_notes}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <hr />
+                        </Grid>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
@@ -169,25 +189,6 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
                                     />
                                 </div>
                             </Grid>
-                        </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
-                                    <InputLabel htmlFor="spotlightAdminNote">
-                                        {locale.form.labels.adminNotesField}
-                                    </InputLabel>
-                                    <Input
-                                        id="spotlightAdminNote"
-                                        data-testid="admin-spotlights-form-admin-note"
-                                        disabled
-                                        multiline
-                                        rows={2}
-                                        style={{ color: '#333' }}
-                                        value={values.admin_notes}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <hr />
                         </Grid>
                         <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                             <Grid item xs={3} align="left">

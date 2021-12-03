@@ -925,6 +925,11 @@ export const SpotlightsListAsTable = ({
                                                                         <h4
                                                                             id={`spotlight-list-item-title-${spotlight.id}`}
                                                                         >{`${spotlight.title}`}</h4>{' '}
+                                                                        {!!spotlight.admin_notes && (
+                                                                            <p style={{ fontStyle: 'italic' }}>
+                                                                                * {spotlight.admin_notes}
+                                                                            </p>
+                                                                        )}
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"

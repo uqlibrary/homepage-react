@@ -7,7 +7,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Feedback on library services",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": 'sample notes 2',
 }, {
     "id": "d8ec8820-07b1-11e7-a7ef-ef4338d401a6",
     "start": "2018-08-12 23:59:00",
@@ -17,7 +18,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Library guides",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "a7764f90-198d-11e7-9f30-3dc758d83fd5",
     "start": "2017-04-05 09:22:00",
@@ -27,7 +29,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Find an item on the shelf",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "f0a1de60-1999-11e7-af36-7d945160e88f",
     "start": "2017-04-05 10:50:00",
@@ -37,7 +40,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Pay to publish?",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9",
     "start": "2018-02-24 23:59:00",
@@ -47,7 +51,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Then and now: images from UQ Archives",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "ad2b4150-2f9f-11e7-9995-a35761a685ca",
     "start": "2017-05-03 11:26:00",
@@ -57,7 +62,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Referencing Style Guides",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "c9d54bc0-3389-11e7-9751-eb3c31fa2c22",
     "start": "2017-05-08 10:59:52",
@@ -67,7 +73,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Training for students and staff",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "94df08a0-39ef-11e7-9931-ed35cffa19d6",
     "start": "2017-05-16 14:23:00",
@@ -77,7 +84,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Drop in to the CDS",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "0951dbf0-3b81-11e7-a68d-b330785ce6f3",
     "start": "2017-05-18 14:17:18",
@@ -87,7 +95,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Publons Academy",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "80ca2a70-3f6d-11e7-9a79-416d54bc70b8",
     "start": "2017-05-23 14:07:00",
@@ -97,7 +106,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Fryer Library: celebrating 90 years of collecting",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "ba2c6840-4434-11e7-96f6-5ff389fcb703",
     "start": "2018-05-27 06:00:00",
@@ -107,7 +117,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Book a study space",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "6138b0e0-4978-11e7-9bbc-2d8d7ce4f651",
     "start": "2017-06-05 08:50:00",
@@ -117,7 +128,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Find a study space",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "4e5788f0-4bf2-11e7-803c-8df56b5e6f1d",
     "start": "2017-06-08 12:28:47",
@@ -127,7 +139,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Primo feedback",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "09c1e190-61f7-11e7-97b3-b34931c54f27",
     "start": "2018-08-19 23:59:00",
@@ -137,7 +150,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Creative Writing Fellowship",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "186836c0-67a1-11e7-bfab-db92f08eb823",
     "start": "2017-07-13 17:57:00",
@@ -147,7 +161,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Temporary closure Level 4 Duhig North",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "9b63d500-6836-11e7-ae89-299d98990dfd",
     "start": "2018-03-05 08:46:00",
@@ -157,7 +172,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Book a room with UQ Book It",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "3fa92cc0-6ab9-11e7-839f-a1392c2927cc",
     "start": "2031-07-17 16:27:00",
@@ -167,7 +183,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Welcome to O-Week! What's happening at the Library",
     "weight": 120,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "480c5c20-6df0-11e7-86d1-31e8626e095b",
     "start": "2031-07-24 09:00:00",
@@ -177,7 +194,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "What's changed over the break",
     "weight": 130,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "ea04ebc0-757d-11e7-8585-b9f9b95c4ad8",
     "start": "2017-08-14 09:21:00",
@@ -187,7 +205,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Referencing style guides",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "7cf6a470-757e-11e7-a18b-316be1b44a18",
     "start": "2017-07-31 09:22:00",
@@ -197,7 +216,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Guides to improve search techniques",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "d209a8c0-757e-11e7-888e-8728b6423f05",
     "start": "2018-10-07 09:27:00",
@@ -207,7 +227,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Find journals with databases",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "8d5f6f10-757f-11e7-a465-1b7c5670f2c2",
     "start": "2017-08-14 09:33:00",
@@ -217,7 +238,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Computer availability and terms of use",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "91838130-770f-11e7-9448-a16225013b4a",
     "start": "2017-08-07 08:30:00",
@@ -227,7 +249,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Jacaranda submissions close 24 August",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "f0267e80-7727-11e7-86dd-6323873d1139",
     "start": "2018-02-16 17:00:00",
@@ -237,7 +260,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "How to find course materials & items on the shelves",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "3baa4ee0-7afd-11e7-bbe7-1fde400b7c92",
     "start": "2017-08-28 09:15:00",
@@ -247,7 +271,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Donor thanks 2016-17",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "104833c0-7afe-11e7-b1c3-6be858f5f49c",
     "start": "2017-08-14 07:00:00",
@@ -257,7 +282,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Reaxys database upgrade",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "390b7bf0-87ad-11e7-98b1-f54948dfd588",
     "start": "2017-08-23 12:45:00",
@@ -267,7 +293,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "CKN Library Guide",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "2bd31fb0-87ae-11e7-b068-b1dea9d22f63",
     "start": "2017-08-23 12:52:00",
@@ -277,7 +304,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Emerald Insight",
     "weight": 0,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "be05e940-8c45-11e7-aae6-292bb270b7e8",
     "start": "2018-07-20 13:00:00",
@@ -287,7 +315,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Taylor and Francis Library Excellence Award in Research",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "51881a90-91da-11e7-84be-63019c74c2be",
     "start": "2018-09-10 13:00:00",
@@ -297,7 +326,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Dorothy Hill Online Exhibition",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "729df1a0-7dd0-11e9-a3a7-5fd844715207",
     "start": "2021-01-25 00:00:00",
@@ -307,7 +337,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Preparing for exams? Search past exam papers.",
     "weight": 20,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "38cbf430-8693-11e9-98ab-9d52a58e86cb",
     "start": "2021-02-08 00:01:00",
@@ -317,7 +348,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
     "img_alt": "Follow us social media 1",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "1551f5d0-de59-11e9-8c50-5f9efaadac76",
     "start": "2021-01-18 00:01:00",
@@ -327,7 +359,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Photography in Fryer - Digital Story",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "162a69f0-2167-11ea-86fd-0fc2e3806492",
     "start": "2020-12-21 00:01:00",
@@ -337,7 +370,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "JK Murray Digital Story 2019",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "600220b0-2167-11ea-84ca-e1c51751fe52",
     "start": "2019-12-24 00:01:00",
@@ -347,7 +381,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "JD Fryer Digital Story 2019",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "a07232c0-2167-11ea-944e-f1653868076f",
     "start": "2021-01-04 00:01:00",
@@ -357,7 +392,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "One man's gift: The Father Edward Leo Hayes collection",
     "weight": 0,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "9eab3aa0-82c1-11eb-8896-eb36601837f5",
     "start": "2021-03-15 00:02:00",
@@ -367,7 +403,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.",
     "weight": 10,
-    "active": 1
+    "active": 1,
+    "admin_notes": 'sample admin note',
 }, {
     "id": "298288b0-605c-11eb-ad87-357f112348ef",
     "start": "2031-01-27 00:01:00",
@@ -377,7 +414,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
     "img_alt": "Changes to Library loans and rules",
     "weight": 50,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "be8e7020-6501-11eb-98b3-ab6777f4b8d3",
     "start": "2031-02-02 12:50:00",
@@ -387,7 +425,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Updates to borrowing rules.",
     "weight": 60,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "7d40b830-668d-11eb-b0fd-e19d76f2843b",
     "start": "2031-02-04 12:03:35",
@@ -397,7 +436,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
     "img_alt": "Digital Practices Lab",
     "weight": 70,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "5ee86730-6f2a-11eb-8e97-5b9edc0aaa73",
     "start": "2031-02-15 00:01:35",
@@ -407,7 +447,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Postgrad locker draw now open. Apply by Sun 28 Feb. We'll notify successful applicants on 2 March.",
     "weight": 80,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "fba95ec0-77f5-11eb-8c73-9734f9d4b368",
     "start": "2021-03-01 00:01:00",
@@ -417,7 +458,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.",
     "weight": 20,
-    "active": 0
+    "active": 0,
+    "admin_notes": '',
 }, {
     "id": "aa2fab10-7cb1-11eb-a9ab-d7c632403564",
     "start": "2031-03-08 00:01:00",
@@ -427,7 +469,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Have you completed your Academic Integrity Modules? Complete Part A by 31 March.",
     "weight": 90,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "48727c20-7fa8-11eb-ae0f-0b60018ec35f",
     "start": "2031-03-08 00:01:48",
@@ -437,7 +480,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
     "img_alt": "Researchers, learn how to track and measure your own metrics",
     "weight": 100,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "d23555a0-8169-11eb-8ad3-2d13847ddc58",
     "start": "2031-03-10 16:26:12",
@@ -447,7 +491,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Rae and George Hammer Memorial Visiting Research Fellowship.",
     "weight": 110,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "38cbf430-8693-11e9-98ab-9d52a58e86ca",
     "start": "2021-07-19 00:01:00",
@@ -457,7 +502,8 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
     "img_alt": "Follow us social media 3",
     "weight": 40,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }, {
     "id": "1e7a5980-d7d6-11eb-a4f2-fd60c7694898",
     "start": "2021-06-29 01:00:00",
