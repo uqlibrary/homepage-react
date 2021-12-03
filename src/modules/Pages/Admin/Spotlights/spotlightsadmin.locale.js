@@ -290,7 +290,7 @@ export default {
                             spotlights displayed.
                         </li>
                     </ul>
-                    
+
                     <h4>Sort spotlights by table column heading</h4>
                     <p>
                         In any of the spotlight tables, click one of the column lables to sort spotlights by that label.
@@ -317,9 +317,11 @@ export default {
                             <strong>Past:</strong> View (primary), Clone, Delete and View history.
                         </li>
                     </ul>
-            
-                    <h3>View spotlights by image (alternative listing screen).
-                    <p>Click the <strong>View by image</strong> button to view/browse spotlights by image.</p>
+
+                    <h3>View spotlights by image (alternative listing screen).</h3>
+                    <p>
+                        Click the <strong>View by image</strong> button to view/browse spotlights by image.
+                    </p>
 
                     <h3>Add a spotlight</h3>
                     <p>
@@ -390,18 +392,24 @@ export default {
                             Press <strong>Cancel</strong> to return to the listing screen.
                         </li>
                     </ul>
-            
+
                     <h3>View history (all uses of image)</h3>
-                    <p>Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
+                    <p>
+                        Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
                         <strong>View history</strong>. The All uses of this image form will appear and you can:
                     </p>
-            
+
                     <ul>
                         <li>View when this spotlight image has been used and its related details</li>
-                        <li><strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or <strong>View</strong> (past spotlights)</li>
-                        <li>Or click <strong>Close</strong> to return to the View by image screen.</li>
+                        <li>
+                            <strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or{' '}
+                            <strong>View</strong> (past spotlights)
+                        </li>
+                        <li>
+                            Or click <strong>Close</strong> to return to the View by image screen.
+                        </li>
                     </ul>
-                    
+
                     <p>See the View history help section for more information.</p>
 
                     <h3>Reorder current spotlights</h3>
@@ -573,24 +581,36 @@ export default {
             text: (
                 <Fragment>
                     <p data-testid="admin-spotlights-view-by-image-help-example">
-                        Use the View by image screen to browse spotlights by their image. The screen displays all spotlights by Date unpublished (newest to oldest). 
+                        Use the View by image screen to browse spotlights by their image. The screen displays all
+                        spotlights by Date unpublished (newest to oldest).
                     </p>
                     <p>Mouse over a spotlight tile to see its title, date published and date unpublished.</p>
 
                     <h3>Spotlight actions</h3>
-                    <p>Click a spotlight tile for more information and actions. The All uses of this image box will appear. You can:</p>
+                    <p>
+                        Click a spotlight tile for more information and actions. The All uses of this image box will
+                        appear. You can:
+                    </p>
 
                     <ul>
                         <li>View when this spotlight image has been used and its related details</li>
-                        <li><strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or <strong>View</strong> (past spotlights)</li>
-                        <li>Or click <strong>Close</strong> to return to the View by image screen.</li>
+                        <li>
+                            <strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or{' '}
+                            <strong>View</strong> (past spotlights)
+                        </li>
+                        <li>
+                            Or click <strong>Close</strong> to return to the View by image screen.
+                        </li>
                     </ul>
-                    
+
                     <p>See the View history help section for more information.</p>
 
                     <h3>Search spotlights</h3>
 
-                    <p>Enter keywords into the Quick search text field to for spotlights search based on the Link title and Image alt text fields.</p>
+                    <p>
+                        Enter keywords into the Quick search text field to for spotlights search based on the Link title
+                        and Image alt text fields.
+                    </p>
                 </Fragment>
             ),
         },
