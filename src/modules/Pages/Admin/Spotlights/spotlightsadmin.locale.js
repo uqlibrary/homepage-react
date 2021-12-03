@@ -510,12 +510,29 @@ export default {
         dateDivider: ' and ',
         publicationStatus: 'Published',
         help: {
-            title: 'View by history help',
+            title: 'View history help',
             text: (
                 <Fragment>
                     <p data-testid="admin-spotlights-view-by-history-help-example">
-                        This will be the help for the View by history lightbox.
+                        The View history page enables you to see when a spotlight image has been used and related spotlight details.
                     </p>
+                    <p>
+                        Cloning (reusing) an existing spotlight will add to its history. We recommend using the Clone tool rather 
+                        than uploading additional copies of the same image. This creates a separate history and uses additional storage space. 
+                    </p>
+                    
+                    <h3>Spotlight history listing 
+                    <ul>
+                        <li>Spotlights are listed by Date unpublished (newest to oldest).</li>
+                        <li>Where there are multiple uses of a spotlight, the spotlight you selected will be highlighted in grey.</li>
+                    </ul>
+            
+                    <h3>Spotlight actions</h3>
+                    <ul>
+                        <li><strong>Clone (copy):</strong> clone this spotlight. The Clone spotlight form will appear</li>
+                        <li><strong>Edit (current/future spotlights):</strong> edit this spotlight. The edit spotlight form will appear</li>
+                        <li><strong>View (past spotlights only):</strong> view this past spotlight. The View spotlight form will appear</li>
+                    </ul>        
                 </Fragment>
             ),
         },
