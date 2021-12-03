@@ -292,7 +292,7 @@ export const SpotlightForm = ({
             weight: values.weight,
             active: !!values.active ? 1 : 0,
             // eslint-disable-next-line camelcase
-            admin_notes: values?.admin_notes || '',
+            admin_notes: values?.admin_notes ?? /* istanbul ignore next */ null,
         };
         !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
@@ -333,25 +333,24 @@ export const SpotlightForm = ({
     };
 
     const handleChange = prop => event => {
-        let newValue;
+        let propValue;
         if (['start', 'end'].includes(prop)) {
-            newValue = event.format('YYYY/MM/DD hh:mm a');
+            propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
-            newValue = !!event.target.value ? event.target.value : event.target.checked;
+            propValue = !!event.target.value ? event.target.value : event.target.checked;
             if (['active', 'weight'].includes(prop)) {
-                newValue = !!newValue ? 1 : /* istanbul ignore next */ 0;
-            } else if (newValue === false) {
+                propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
+            } else if (propValue === false) {
                 // it returns false when we clear a text field
-                newValue = '';
+                propValue = '';
             }
         }
-        const newValues = {
+        setValues({
             ...values,
             start: values.start || /* istanbul ignore next */ defaults.startDateDefault,
             end: values.end || /* istanbul ignore next */ defaults.endDateDefault,
-            [prop]: newValue,
-        };
-        setValues(newValues);
+            [prop]: propValue,
+        });
     };
 
     const errorLocale = {

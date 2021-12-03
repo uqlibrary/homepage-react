@@ -149,41 +149,39 @@ export const SpotlightViewHistory = ({
                                                     : classes.entry
                                             }`}
                                         >
-                                            <p>
-                                                <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
-                                                <div style={{ float: 'right' }}>
-                                                    <SpotlightSplitButton
-                                                        mainButtonLabel="Clone"
-                                                        extendedNavigateToCloneForm={navigateToCloneForm}
-                                                        extendedNavigateToView={navigateToView}
-                                                        spotlight={s}
-                                                        history={history}
+                                            <strong>{locale.viewByHistory.linkTitle}</strong>: {s.title}
+                                            <div style={{ float: 'right' }}>
+                                                <SpotlightSplitButton
+                                                    mainButtonLabel="Clone"
+                                                    extendedNavigateToCloneForm={navigateToCloneForm}
+                                                    extendedNavigateToView={navigateToView}
+                                                    spotlight={s}
+                                                    history={history}
+                                                />
+                                                {isPastSpotlight(s) ? (
+                                                    <Button
+                                                        children={locale.form.splitButton.labels.view}
+                                                        color="secondary"
+                                                        data-testid={`spotlight-viewhistory-button-view-${s.id}`}
+                                                        id={`spotlight-list-item-view-${s.id}`}
+                                                        onClick={() => navigateToView(s.id, history)}
+                                                        className={classes.editButton}
+                                                        variant="contained"
+                                                        style={{ float: 'right' }}
                                                     />
-                                                    {isPastSpotlight(s) ? (
-                                                        <Button
-                                                            children={locale.form.splitButton.labels.view}
-                                                            color="secondary"
-                                                            data-testid={`spotlight-viewhistory-button-view-${s.id}`}
-                                                            id={`spotlight-list-item-view-${s.id}`}
-                                                            onClick={() => navigateToView(s.id, history)}
-                                                            className={classes.editButton}
-                                                            variant="contained"
-                                                            style={{ float: 'right' }}
-                                                        />
-                                                    ) : (
-                                                        <Button
-                                                            children={locale.form.splitButton.labels.edit}
-                                                            color="secondary"
-                                                            data-testid={`spotlight-viewhistory-button-edit-${s.id}`}
-                                                            id={`spotlight-viewhistory-button-edit-${s.id}`}
-                                                            onClick={() => navigateToEditForm(s.id, history)}
-                                                            className={classes.editButton}
-                                                            variant="contained"
-                                                            style={{ float: 'right' }}
-                                                        />
-                                                    )}
-                                                </div>
-                                            </p>
+                                                ) : (
+                                                    <Button
+                                                        children={locale.form.splitButton.labels.edit}
+                                                        color="secondary"
+                                                        data-testid={`spotlight-viewhistory-button-edit-${s.id}`}
+                                                        id={`spotlight-viewhistory-button-edit-${s.id}`}
+                                                        onClick={() => navigateToEditForm(s.id, history)}
+                                                        className={classes.editButton}
+                                                        variant="contained"
+                                                        style={{ float: 'right' }}
+                                                    />
+                                                )}
+                                            </div>
                                             <p>
                                                 <strong>{locale.viewByHistory.datePrefix}</strong>: {startDateDisplay}
                                                 {locale.viewByHistory.dateDivider}
