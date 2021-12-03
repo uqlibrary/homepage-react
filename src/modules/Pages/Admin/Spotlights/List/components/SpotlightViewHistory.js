@@ -165,7 +165,7 @@ export const SpotlightViewHistory = ({
                                                             color="secondary"
                                                             data-testid={`spotlight-viewhistory-button-view-${s.id}`}
                                                             id={`spotlight-list-item-view-${s.id}`}
-                                                            onClick={() => navigateToCloneForm(s.id, history)}
+                                                            onClick={() => navigateToView(s.id, history)}
                                                             className={classes.editButton}
                                                             variant="contained"
                                                             style={{ float: 'right' }}
