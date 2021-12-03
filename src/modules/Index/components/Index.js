@@ -44,8 +44,8 @@ export const Index = ({
     account,
     accountLoading,
     author,
-    currentSpotlights,
-    currentSpotlightsLoading,
+    spotlightsCurrent,
+    spotlightsCurrentLoading,
     libHours,
     libHoursLoading,
     libHoursError,
@@ -65,7 +65,7 @@ export const Index = ({
     incompleteNTROLoading,
 }) => {
     const dispatch = useDispatch();
-    console.log('homepage: currentSpotlights = ', currentSpotlights);
+    console.log('homepage: spotlightsCurrent = ', spotlightsCurrent);
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {
@@ -136,8 +136,8 @@ export const Index = ({
                 )}
                 <Grid item xs={12} md={8} id="spotlights" data-testid="spotlights">
                     <Spotlights
-                        spotlights={currentSpotlights}
-                        spotlightsLoading={currentSpotlightsLoading}
+                        spotlights={spotlightsCurrent}
+                        spotlightsLoading={spotlightsCurrentLoading}
                         account={account}
                     />
                 </Grid>
@@ -225,9 +225,9 @@ Index.propTypes = {
     accountLoading: PropTypes.bool,
     author: PropTypes.object,
     actions: PropTypes.any,
-    currentSpotlights: PropTypes.any,
-    // currentSpotlightsError: PropTypes.any,
-    currentSpotlightsLoading: PropTypes.bool,
+    spotlightsCurrent: PropTypes.any,
+    // spotlightsCurrentError: PropTypes.any,
+    spotlightsCurrentLoading: PropTypes.bool,
     libHours: PropTypes.object,
     libHoursLoading: PropTypes.bool,
     libHoursError: PropTypes.bool,

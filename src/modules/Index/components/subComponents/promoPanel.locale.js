@@ -7,30 +7,22 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Open online!',
+        title: 'Summer Semester',
         content: (
             <div>
-                <p>We are here online to help you. Access the Library from home, including:</p>
-                <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
-                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
-                    <li>Tips for <a href="https://web.library.uq.edu.au/library-services/students/how-study-online">studying online</a>.</li>
-                </ul>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a>, including on chat or by phone during business hours, if you need assistance.</p>
+                <p>The Library is open on-campus and online during Summer Semester.</p>
+                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Open online!',
+        title: 'Summer Semester',
         content: (
             <div>
-                <p>We are here online to help you. Access the Library from home, including:</p>
-                <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/course-reading-lists">Reading lists</a> for your courses</li>
-                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> for specialised resources in your subject area</li>
-                    <li>Tips for <a href="https://web.library.uq.edu.au/library-services/students/how-study-online">studying online</a>.</li>
-                </ul>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a>, including on chat or by phone during business hours, if you need assistance.</p>
+                <p>The Library is open on-campus and online during Summer Semester.</p>
+                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
             </div>
         ),
     },

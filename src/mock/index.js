@@ -447,6 +447,7 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }
             title: 'Sample alert 2:',
             body: 'Has mock data.',
             urgent: 0,
+            systems: ['primo', 'homepage'],
         },
     ]),
 );
@@ -463,6 +464,22 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
             body:
                 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             urgent: 1,
+            systems: ['homepage'],
+        },
+    ]),
+);
+
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08',
+            start: '2021-06-27 14:00:57',
+            end: '2021-06-27 14:50:57',
+            title: 'Network outage, Duhig Tower, 2.30-2.45pm today.',
+            body:
+                'There will be a short network outage in the Duhig Tower this afternoon (Sunday 27 June) for network maintenance. During this time the internet, library computers and printers will be affected. We apologise for any inconvenience.',
+            urgent: 0,
         },
     ]),
 );

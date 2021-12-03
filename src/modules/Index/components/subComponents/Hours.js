@@ -170,6 +170,36 @@ const MyLoader = props => (
         <rect x="0" y="240" rx="3" ry="3" width="100%" height="1" />
     </ContentLoader>
 );
+export const ariaLabelForLocation = item => {
+    console.log('item = ', item);
+    const name = item.name;
+    const hours =
+        item.departments.length > 0 &&
+        item.departments.map(item => {
+            if (hoursLocale.departmentsMap.includes(item.name)) {
+                return item.hours;
+            }
+            return null;
+        });
+    const s = `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''} ${
+        !!hours[0] && !!hours[1] ? 'and' : ''
+    }
+            ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
+    console.log('result = ', s);
+    return s;
+};
+export const hasDepartments = item => {
+    const departments = item.departments.map(item => {
+        if (hoursLocale.departmentsMap.includes(item.name)) {
+            return item.name;
+        }
+        return null;
+    });
+    const displayableDepartments = departments.filter(el => {
+        return el !== null;
+    });
+    return displayableDepartments.length > 0;
+};
 
 const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
     const classes = useStyles();
@@ -220,33 +250,6 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
     });
     const navigateToUrl = url => {
         window.location.href = url;
-    };
-    const ariaLabelForLocation = item => {
-        const name = item.name;
-        const hours =
-            item.departments.length > 0 &&
-            item.departments.map(item => {
-                if (hoursLocale.departmentsMap.includes(item.name)) {
-                    return item.hours;
-                }
-                return null;
-            });
-        return `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''} ${
-            !!hours[0] && !!hours[1] ? 'and' : ''
-        }
-            ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
-    };
-    const hasDepartments = item => {
-        const departments = item.departments.map(item => {
-            if (hoursLocale.departmentsMap.includes(item.name)) {
-                return item.name;
-            }
-            return null;
-        });
-        const hasDepartments = departments.filter(el => {
-            return el !== null;
-        });
-        return !hasDepartments.length > 0;
     };
     return (
         <StandardCard
@@ -335,12 +338,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                     {item.name}
                                                 </a>
                                             </Grid>
-                                            {hasDepartments(item) && (
-                                                <Grid item xs key={index} style={{ fontSize: 14 }}>
-                                                    {hoursLocale.noDepartments}
-                                                </Grid>
-                                            )}
-                                            {item.departments.length > 0 &&
+                                            {hasDepartments(item) ? (
                                                 item.departments.map((item, index) => {
                                                     if (hoursLocale.departmentsMap.includes(item.name)) {
                                                         return (
@@ -350,7 +348,12 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                                                         );
                                                     }
                                                     return null;
-                                                })}
+                                                })
+                                            ) : (
+                                                <Grid item xs key={index} style={{ fontSize: 14 }}>
+                                                    {hoursLocale.noDepartments}
+                                                </Grid>
+                                            )}
                                         </Grid>
                                     );
                                 })}

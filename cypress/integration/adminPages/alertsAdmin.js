@@ -86,14 +86,20 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="headerRow-count-current"]').contains('1 alert');
 
             // this alert has all 3 chips
-            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
-            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Urgent');
-            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
-            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Link');
-            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
-            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains(
-                'Permanent',
-            );
+            cy.get('[data-testid="alert-list-urgent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .should('exist')
+                .contains('Urgent');
+            cy.get('[data-testid="alert-list-link-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .should('exist')
+                .contains('Link');
+            cy.get('[data-testid="alert-list-permanent-chip-1db618c0-d897-11eb-a27e-df4e46db7245"]')
+                .should('exist')
+                .contains('Permanent');
+
+            // the system chips display as expected
+            cy.get('[data-testid="alert-list-system-chip-1db618c0-d897-11eb-a27e-df4e46db7245-homepage"]')
+                .should('exist')
+                .contains('System: Home page');
 
             cy.wait(500);
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
@@ -831,11 +837,29 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-link-title"] input').should('not.be.visible');
             cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
         it('has a working Edit form', () => {
             cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-title"]').type('Updated alert');
+            cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
+            cy.get('[data-testid="admin-alerts-form-button-save"').click();
+            cy.wait(500);
+            cy.get('[data-testid="dialogbox-alert-edit-save-succeeded"] h2').contains('The alert has been updated');
+            // can't do much checking here that it saves properly
+            cy.get('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+        });
+        it('changing a system enables the save button', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.wait(100);
+            cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input')
+                .should('not.be.checked')
+                .check();
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
             cy.wait(500);
@@ -916,6 +940,20 @@ describe('Alerts Admin Pages', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
+        });
+        it('tells the user which systems the alert will appear on', () => {
+            cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"]')
+                .parent()
+                .should('exist')
+                .contains('Home page');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"]')
+                .parent()
+                .should('exist')
+                .contains('Primo');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
     });
     context('Alert Admin Clone page', () => {
@@ -1051,6 +1089,20 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="admin-alerts-form-remove-date-button-1"]').click(); // remove a date field
             thisManyRemoveButtonsExist(2);
         });
+        it('tells the user which systems the alert will appear on', () => {
+            cy.visit('http://localhost:2020/admin/alerts/clone/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"]')
+                .parent()
+                .should('exist')
+                .contains('Home page');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"]')
+                .parent()
+                .should('exist')
+                .contains('Primo');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
+        });
     });
     context('Alert Admin View page', () => {
         beforeEach(() => {
@@ -1130,7 +1182,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
         });
-        it('can show a preview of an non-urgent non-permanent alert without link', () => {
+        it('can show a preview of a non-urgent non-permanent alert without link', () => {
             cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
             cy.get('uq-alert[id="alert-preview"]').should('exist');
@@ -1162,6 +1214,21 @@ describe('Alerts Admin Pages', () => {
                     );
                     cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
                 });
+        });
+        it('tells the user when alert appeared on all systems', () => {
+            cy.visit('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-view-systems"]')
+                .should('exist')
+                .contains('This alert appeared on all systems');
+        });
+        it('tells the user which systems the alert appeared on', () => {
+            cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-primo"]')
+                .should('exist')
+                .contains('Primo');
+            cy.get('[data-testid="admin-alerts-view-checkbox-system-primo"] input').should('be.checked');
         });
     });
 });
