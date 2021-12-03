@@ -24,7 +24,7 @@ import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
-import SplitButton from './SplitButton';
+import AlertSplitButton from './AlertSplitButton';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const moment = require('moment');
@@ -128,9 +128,9 @@ export const AlertsListAsTable = ({
     if (!!alertOrder && !!rows && rows.length > 0) {
         if (alertOrder === 'reverseEnd') {
             userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
-        } else if (alertOrder === 'forwardEnd') {
+        } /* istanbul ignore next */ else if (alertOrder === 'forwardEnd') {
             userows = rows.sort((a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'));
-        } else if (alertOrder === 'forwardStart') {
+        } /* istanbul ignore else */ else if (alertOrder === 'forwardStart') {
             userows = rows.sort(
                 (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
             );
@@ -212,7 +212,7 @@ export const AlertsListAsTable = ({
                     ii.parentElement.parentElement.classList.add('Mui-disabled');
                 }
             });
-        } else if (!!e.target && !e.target.checked) {
+        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
             // handle a checkbox being turned off
             if (numberCheckboxesSelected === 0) {
                 setDeleteActive(false);
@@ -240,6 +240,7 @@ export const AlertsListAsTable = ({
 
     const deleteSelectedAlerts = () => {
         const checkboxes = document.querySelectorAll('#admin-alerts-list input[type="checkbox"]:checked');
+        /* istanbul ignore else */
         if (!!checkboxes && checkboxes.length > 0) {
             checkboxes.forEach(c => {
                 const alertID = c.value.replace(checkBoxIdPrefix, '');
@@ -305,7 +306,11 @@ export const AlertsListAsTable = ({
                             data-testid={`alert-list-${tableType}-delete-button`}
                             title="Delete alert(s)"
                         >
-                            <DeleteIcon className={`${!!deleteActive ? classes.iconHighlighted : ''}`} />
+                            <DeleteIcon
+                                className={`${
+                                    !!deleteActive ? classes.iconHighlighted : /* istanbul ignore next */ ''
+                                }`}
+                            />
                         </IconButton>
                         <IconButton
                             onClick={clearAllCheckboxes}
@@ -401,7 +406,7 @@ export const AlertsListAsTable = ({
                                             id={`alert-list-action-block-${alert.id}`}
                                             data-testid={`alert-list-action-block-${alert.id}`}
                                         >
-                                            <SplitButton
+                                            <AlertSplitButton
                                                 alertId={alert.id}
                                                 deleteAlertById={deleteAlertById}
                                                 mainButtonLabel={tableType === 'past' ? 'View' : 'Edit'}

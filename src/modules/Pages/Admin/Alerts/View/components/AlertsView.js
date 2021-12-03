@@ -76,6 +76,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
     };
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!!alertid) {
             actions.loadAnAlert(alertid);
         }

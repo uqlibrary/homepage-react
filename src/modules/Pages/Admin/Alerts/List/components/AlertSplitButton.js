@@ -28,7 +28,7 @@ const useStyles = makeStyles(() => ({
         marginTop: -50,
     },
 }));
-export const SplitButton = ({
+export const AlertSplitButton = ({
     alertId,
     deleteAlertById,
     mainButtonLabel,
@@ -47,6 +47,7 @@ export const SplitButton = ({
     };
 
     const handleClose = event => {
+        /* istanbul ignore next */
         if (anchorRef.current && anchorRef.current.contains(event.target)) {
             return;
         }
@@ -98,7 +99,10 @@ export const SplitButton = ({
                             <Grow
                                 {...TransitionProps}
                                 style={{
-                                    transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
+                                    transformOrigin:
+                                        placement === 'bottom'
+                                            ? 'center top'
+                                            : /* istanbul ignore next */ 'center bottom',
                                     zIndex: 1,
                                 }}
                             >
@@ -131,7 +135,7 @@ export const SplitButton = ({
     );
 };
 
-SplitButton.propTypes = {
+AlertSplitButton.propTypes = {
     alertId: PropTypes.string,
     mainButtonLabel: PropTypes.string,
     deleteAlertById: PropTypes.func,
@@ -142,8 +146,8 @@ SplitButton.propTypes = {
     confirmDeleteLocale: PropTypes.func,
 };
 
-SplitButton.defaultProps = {
+AlertSplitButton.defaultProps = {
     mainButtonLabel: 'Edit',
 };
 
-export default SplitButton;
+export default AlertSplitButton;

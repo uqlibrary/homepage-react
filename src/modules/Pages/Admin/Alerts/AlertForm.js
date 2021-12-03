@@ -60,6 +60,33 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
+export const isValidUrl = testurl => {
+    if (!testurl) {
+        return false;
+    }
+    if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
+        return false;
+    }
+    if (testurl.length < 'http://x.co'.length) {
+        // minimum possible url
+        return false;
+    }
+    // while technically an url doesn't need a TLD - in practice it does
+    if (!testurl.includes('.')) {
+        return false;
+    }
+    try {
+        const url = new URL(testurl);
+        if (url.hostname.length < 'x.co'.length) {
+            return false;
+        }
+    } catch (_) {
+        /* istanbul ignore next */
+        return false;
+    }
+    return true;
+};
+
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
 
@@ -78,26 +105,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         },
     ]);
 
-    const isValidUrl = testurl => {
-        if (testurl.length < 'http://x.co'.length) {
-            // minimum possible url
-            return false;
-        }
-        try {
-            const url = new URL(testurl);
-            if (url.hostname.length < 'x.co'.length) {
-                return false;
-            }
-        } catch (_) {
-            return false;
-        }
-        // while technically an url doesn't need a TLD - in practice it does
-        if (!testurl.includes('.')) {
-            return false;
-        }
-        return true;
-    };
-
     const handlePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
@@ -111,12 +118,14 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setPreviewOpen(showThePreview);
     };
 
+    /* istanbul ignore next */
     function isInvalidStartDate(startDate) {
-        return (startDate < defaults.startDateDefault && startDate !== '') || !moment(startDate).isValid();
+        return (startDate !== '' && startDate < defaults.startDateDefault) || !moment(startDate).isValid();
     }
 
+    /* istanbul ignore next */
     function isInvalidEndDate(endDate, startDate) {
-        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
+        return (startDate !== '' && endDate < startDate) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
@@ -300,12 +309,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const handleChange = prop => event => {
         let dateListIndex = null;
+        /* istanbul ignore next */
         if (prop === 'startDate') {
             dateListIndex = event?.target?.id.replace('startDate-', '');
         }
+        /* istanbul ignore next */
         if (prop === 'endDate') {
             dateListIndex = event?.target?.id.replace('endDate-', '');
         }
+        /* istanbul ignore next */
         if (!!dateListIndex) {
             const tempDateEntry = {
                 startDate: prop === 'startDate' ? event.target.value : values.dateList[dateListIndex].startDate,
@@ -381,7 +393,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (defaults.type !== 'add') {
             // the action on edit page is always 'return to list'
             navigateToListPage();
-        } else if (!!alertError) {
+        } /* istanbul ignore next */ else if (!!alertError) {
             // On error on add, the button just closes the notification dialog,
             // allowing the user to correct and try again
             hideConfirmation(); // form remains loaded
@@ -396,7 +408,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ...locale.form.add.addAlertConfirmation,
             confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
                 'An alert has',
-                countSuccess > 1 ? `${countSuccess} alerts have` : 'An alert has',
+                countSuccess > 1 ? /* istanbul ignore next */ `${countSuccess} alerts have` : 'An alert has',
             ),
         };
     }
