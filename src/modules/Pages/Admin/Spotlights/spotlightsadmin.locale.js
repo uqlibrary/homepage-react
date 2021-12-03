@@ -318,9 +318,9 @@ export default {
                         </li>
                     </ul>
 
-                    <h3>View spotlights by image (alternative listing screen).</h3>
+                    <h3>View spotlights by image (alternative listing screen)</h3>
                     <p>
-                        Click the <strong>View by image</strong> button to view/browse spotlights by image.
+                        Click the <strong>View by image</strong> button to browse spotlights by image.
                     </p>
 
                     <h3>Add a spotlight</h3>
@@ -400,7 +400,7 @@ export default {
                     </p>
 
                     <ul>
-                        <li>View when this spotlight image has been used and its related details</li>
+                        <li>View the usage of this spotlight image and its related details</li>
                         <li>
                             <strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or{' '}
                             <strong>View</strong> (past spotlights)
@@ -538,12 +538,12 @@ export default {
             text: (
                 <Fragment>
                     <p data-testid="admin-spotlights-view-by-history-help-example">
-                        The View history page enables you to see when a spotlight image has been used and related
-                        spotlight details.
+                        The View history page enables you to see the usage of a spotlight image and its related
+                        details.
                     </p>
                     <p>
                         Cloning (reusing) an existing spotlight will add to its history. We recommend using the Clone
-                        tool rather than uploading additional copies of the same image. This creates a separate history
+                        tool rather than uploading additional copies of the same image. Uploading a new image creates a separate history
                         and uses additional storage space.
                     </p>
 
@@ -608,7 +608,7 @@ export default {
                     <h3>Search spotlights</h3>
 
                     <p>
-                        Enter keywords into the Quick search text field to for spotlights search based on the Link title
+                        Enter keywords into the Quick search text field to filter spotlights based on the Link title
                         and Image alt text fields.
                     </p>
                 </Fragment>
