@@ -113,7 +113,7 @@ export const SpotlightsViewByImage = ({
                     <span style={{ minHeight: 48, verticalAlign: 'bottom' }}>{locale.viewByImage.title}</span>
                     <div style={{ display: 'inline', marginLeft: 16 }}>
                         <TextField
-                            data-testid="spotlights-viewbyimage-clear-text-field"
+                            data-testid="spotlights-viewbyimage-filter-text-field"
                             inputProps={{
                                 maxLength: 25,
                                 'aria-label': locale.listPage.textSearch.ariaLabel,
@@ -124,7 +124,7 @@ export const SpotlightsViewByImage = ({
                         />
                         <CloseIcon
                             id="spotlights-list-viewbyimage-text-filter-clear-button"
-                            data-testid="spotlights-viewbyimage-clear-text-filter-clear-button"
+                            data-testid="spotlights-viewbyimage-filter-text-clear-button"
                             color="disabled"
                             fontSize="small"
                             style={{ position: 'absolute', top: 37 }}
@@ -142,7 +142,7 @@ export const SpotlightsViewByImage = ({
                     <Button
                         children={helpButtonLabel}
                         color="secondary"
-                        data-testid="admin-spotlights-help-button"
+                        data-testid="admin-spotlights-viewbyimage-help-button"
                         id="admin-spotlights-help-button"
                         onClick={openHelpLightbox}
                         style={{ float: 'right', marginRight: 16 }}
@@ -163,6 +163,7 @@ export const SpotlightsViewByImage = ({
                                         return (
                                             <a
                                                 id={`${s.id}-lightbox-item`}
+                                                data-testid={`${s.id}-lightbox-item`}
                                                 title={`${s.title}\n${locale.viewByHistory.datePrefix} ${s.start} ${locale.viewByHistory.dateDivider} ${s.end}`}
                                                 key={`${s.id}-lightbox-item`}
                                                 className={classes.link}

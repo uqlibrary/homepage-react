@@ -46,13 +46,6 @@ export const SpotlightsUtilityArea = ({
         history.push('/admin/spotlights/add');
     };
 
-    const showViewByImageLightbox = () => {
-        /* istanbul ignore else */
-        if (spotlights.length > 0) {
-            handleViewByImageLightboxOpen();
-        }
-    };
-
     return (
         <Fragment>
             {!!helpContent && (
@@ -73,7 +66,7 @@ export const SpotlightsUtilityArea = ({
                         children={locale.viewByImage.title}
                         color="primary"
                         data-testid="admin-spotlights-view-by-image-button"
-                        onClick={() => showViewByImageLightbox()}
+                        onClick={() => handleViewByImageLightboxOpen()}
                         variant="contained"
                     />
                 </div>

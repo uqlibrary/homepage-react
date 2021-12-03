@@ -167,6 +167,12 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
         });
 
+        function loadTheViewByImageLightbox() {
+            cy.get('button[data-testid="admin-spotlights-view-by-image-button"]')
+                .should('exist')
+                .click();
+        }
+
         context('Spotlights list page - general', () => {
             it('displays a list of spotlights to the authorised user', () => {
                 cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
@@ -505,6 +511,11 @@ describe('Spotlights Admin Pages', () => {
                     'http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469',
                 );
             });
+            it('the view-by-image button loads the view-by-image lightbox', () => {
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-title"]').should('not.exist');
+                loadTheViewByImageLightbox();
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-title"]').should('exist');
+            });
             it('can change sort order', () => {
                 cy.get('[data-testid="admin-spotlights-list-current-list"] tbody tr:first-child').should(
                     'contain',
@@ -522,6 +533,104 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="admin-spotlights-list-current-list"] tbody tr:first-child')
                     .should('contain', '*')
                     .and('contain', 'sample admin note');
+            });
+        });
+        context('the view-by-image lightbox works', () => {
+            beforeEach(() => {
+                loadTheViewByImageLightbox();
+            });
+            it('the view-by-image loads correctly', () => {
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 47);
+                // the first image has the expected values
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div > a:first-child')
+                    .should('have.attr', 'title')
+                    .then(titleAttribute => {
+                        // too hard to test for the complete string with carriage return in the middle
+                        expect(titleAttribute.startsWith('Study outdoors in Duhig Place - Study space')).to.be.true;
+                        expect(titleAttribute.endsWith('Run between 2021-03-01 00:01:00  and  2099-12-07 23:59:00')).to
+                            .be.true;
+                    });
+                // the same element
+                cy.get('[data-testid="fba95ec0-77f5-11eb-8c73-9734f9d4b368-lightbox-item"] img')
+                    .should('exist')
+                    .and(
+                        'have.attr',
+                        'alt',
+                        'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
+                    )
+                    .and(
+                        'have.attr',
+                        'src',
+                        'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
+                    );
+            });
+            it('the view-by-image filter works', () => {
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 47);
+                // typing "can" in the filter reduces the number of thumbnails to 7
+                cy.get('[data-testid="spotlights-viewbyimage-filter-text-field"] input')
+                    .should('exist')
+                    .type('can');
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 7);
+                // the clear-filter text field 'x' buttons works
+                cy.get('[data-testid="spotlights-viewbyimage-filter-text-clear-button"]')
+                    .should('exist')
+                    .click();
+                // all thumbnails are again displayed
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div')
+                    .should('exist')
+                    .children()
+                    .should('have.length', 47);
+            });
+            it('the view-by-history loads correctly from view-by-image', () => {
+                // click the top left image in the lightbox
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div > a:first-child')
+                    .should('exist')
+                    .click();
+                // the view-by-history lightbox loads (it overlays the view-by-image lightbox)
+                cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('exist');
+                // view-by-history close button works
+                cy.get('[data-testid="spotlights-viewbyhistory-lightbox-close-button"]')
+                    .should('exist')
+                    .click();
+                // the view-by-image lightbox is back in focus
+                cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('not.exist');
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-title"]').should('exist');
+            });
+            it('the view-by-image help button works', () => {
+                // help is not inittially displayed
+                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').should('not.exist');
+
+                // click the help button
+                cy.get('[data-testid="admin-spotlights-viewbyimage-help-button"]').should('be.visible');
+                cy.get('[data-testid="admin-spotlights-viewbyimage-help-button"]')
+                    .should('exist')
+                    .click();
+
+                // we can see the help contents
+                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').scrollIntoView();
+                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').should('be.visible');
+
+                // the close button works
+                cy.get('[data-testid="spotlights-helpdrawer-close-button"]')
+                    .should('exist')
+                    .click();
+                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').should('not.exist');
+            });
+            it('the view-by-image close button works', () => {
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-close-button"]')
+                    .should('exist')
+                    .click();
+                cy.location('href').should('eq', `${Cypress.config('baseUrl')}/admin/spotlights?user=uqstaff`);
+                cy.get('[data-testid="spotlights-viewbyimage-lightbox-title"]').should('not.exist');
             });
         });
         context('the view-by-history lightbox works', () => {
