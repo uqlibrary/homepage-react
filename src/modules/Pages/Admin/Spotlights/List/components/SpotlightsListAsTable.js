@@ -112,6 +112,7 @@ const useStyles = makeStyles(
             },
         },
         h4: {
+            paddingTop: 10,
             paddingRight: 10,
             '& h4': {
                 fontWeight: '300',
