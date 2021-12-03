@@ -72,6 +72,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
         type: 'clone',
         minimumDate: getTimeNowFormatted(),
+        systems: alert?.systems || [],
     };
 
     return (

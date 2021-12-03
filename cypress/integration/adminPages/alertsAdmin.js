@@ -1072,50 +1072,50 @@ describe('Alerts Admin Pages', () => {
         it('can view an alert without being able to edit any fields', () => {
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('View alert');
-            cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
-            cy.get('[data-testid="admin-alerts-form-title"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-title"] input').should('have.value', 'Example alert:');
+            cy.get('[data-testid="admin-alerts-view-title"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-body"] textarea').should(
+            cy.get('[data-testid="admin-alerts-view-body"] textarea').should(
                 'have.value',
                 'This alert can be edited in mock.',
             );
-            cy.get('[data-testid="admin-alerts-form-body"] textarea').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-body"] textarea').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('have.value', '2021-06-29T15:00:00');
-            cy.get('[data-testid="admin-alerts-form-start-date"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-start-date"] input').should('have.value', '2021-06-29T15:00:00');
+            cy.get('[data-testid="admin-alerts-view-start-date"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('have.value', '2031-07-02T18:30:00');
-            cy.get('[data-testid="admin-alerts-form-end-date"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-end-date"] input').should('have.value', '2031-07-02T18:30:00');
+            cy.get('[data-testid="admin-alerts-view-end-date"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-checkbox-linkrequired"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-view-checkbox-linkrequired"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-link-title"] input').should(
+            cy.get('[data-testid="admin-alerts-view-link-title"] input').should(
                 'have.value',
                 'UQ community COVID-19 advice',
             );
-            cy.get('[data-testid="admin-alerts-form-link-title"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-link-title"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-link-url"] input').should(
+            cy.get('[data-testid="admin-alerts-view-link-url"] input').should(
                 'have.value',
                 'https://about.uq.edu.au/coronavirus',
             );
-            cy.get('[data-testid="admin-alerts-form-link-url"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-link-url"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-checkbox-permanent"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-view-checkbox-permanent"] input').should('be.disabled');
 
-            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.disabled');
+            cy.get('[data-testid="admin-alerts-view-checkbox-urgent"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-view-checkbox-urgent"] input').should('be.disabled');
         });
         it('can return to the list page from the view page', () => {
             cy.wait(50);
-            cy.get('button[data-testid="admin-alerts-form-button-cancel"]').click();
+            cy.get('button[data-testid="admin-alerts-view-button-cancel"]').click();
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('can visit the clone page from the view page', () => {
             cy.wait(50);
-            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            cy.get('button[data-testid="admin-alerts-view-button-save"]').click();
             cy.location('href').should(
                 'eq',
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',

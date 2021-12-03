@@ -27,8 +27,8 @@ import {
     getTimeNowFormatted,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
+    systemList,
 } from './alerthelpers';
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(
     theme => ({
@@ -46,7 +46,7 @@ const useStyles = makeStyles(
                 backgroundColor: 'rgba(0, 0, 0, 0.12)',
             },
         },
-        linkTitleWrapper: {
+        box: {
             border: '1px solid rgb(211, 211, 211)',
             marginTop: '1em',
             paddingBottom: '1em',
@@ -54,6 +54,11 @@ const useStyles = makeStyles(
         checkbox: {
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#595959',
+            },
+        },
+        disabledCheckbox: {
+            '& input[type="checkbox"]:checked + svg': {
+                fill: '#ececec',
             },
         },
     }),
@@ -105,7 +110,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         },
     ]);
 
-    const handlePreview = showThePreview => {
+    const showHidePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
         if (!alertWrapper) {
@@ -140,7 +145,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             (!currentValues.linkRequired || isValidUrl(currentValues.linkUrl));
 
         // if we are currently showing the preview and the form becomes invalid, hide it again
-        !isValid && !!showPreview && handlePreview(false);
+        !isValid && !!showPreview && showHidePreview(false);
 
         return isValid;
     };
@@ -182,6 +187,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     endDate: defaults.endDateDefault,
                 },
             ],
+            ['systems']: [],
         });
     };
 
@@ -194,7 +200,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
         history.push('/admin/alerts');
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const reloadClonePage = () => {
@@ -208,7 +215,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ],
         });
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     function expandValues(expandableValues) {
@@ -231,6 +239,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ['linkUrl']: newLinkUrl,
             ['startDate']: newStartDate,
             ['endDate']: newEndDate,
+            ['systems']: expandableValues.systems || [],
         };
     }
 
@@ -247,6 +256,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
             dateList: values.dateList,
+            systems: values.systems || [],
         };
         newValues.dateList.forEach(dateset => {
             // an 'edit' event will only have one entry in the date array
@@ -261,7 +271,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
-        handlePreview(false);
+        showHidePreview(false);
 
         // force to the top of the page, because otherwise it looks a bit weird
         window.scrollTo({
@@ -275,11 +285,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const alertWrapper = document.getElementById('previewWrapper');
         !!alertWrapper && (alertWrapper.innerHTML = '');
         if (!!showPreview) {
-            handlePreview(false);
+            showHidePreview(false);
             return;
         }
 
-        handlePreview(true);
+        showHidePreview(true);
         setValues(expandValues(values));
 
         // oddly, hardcoding the alert with attributes tied to values doesnt work, so insert it this way
@@ -308,6 +318,24 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const handleChange = prop => event => {
+        if (prop === 'system') {
+            const systems = values.systems || [];
+            if (systems.includes(event.target.name) && !event.target.checked) {
+                // system exists in array and the checkbox has been unchecked. Remove.
+                const index = systems.indexOf(event.target.name);
+                index >= 0 && systems.splice(index, 1);
+            } else if (!systems.includes(event.target.name) && !!event.target.checked) {
+                // system doesnt exist in array and the checkbox has been checked. Add.
+                systems.push(event.target.name);
+            }
+            setValues({
+                ...values,
+                systems: systems,
+            });
+            setFormValidity(validateValues(values));
+            return;
+        }
+
         let dateListIndex = null;
         /* istanbul ignore next */
         if (prop === 'startDate') {
@@ -352,7 +380,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setFormValidity(validateValues({ ...values, [prop]: newValue }));
 
         // if the form has changed, hide the Preview
-        handlePreview(false);
+        showHidePreview(false);
     };
 
     const removeDateRow = indexRowToBeRemoved => {
@@ -477,11 +505,8 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 )}
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl
-                            fullWidth
-                            title="Alert lead text. Appears in bold. Field length of 100 characters."
-                        >
-                            <InputLabel htmlFor="alertTitle">Title *</InputLabel>
+                        <FormControl fullWidth title={locale.form.tooltips.title}>
+                            <InputLabel htmlFor="alertTitle">{locale.form.labels.title}</InputLabel>
                             <Input
                                 id="alertTitle"
                                 data-testid="admin-alerts-form-title"
@@ -494,9 +519,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title="Regular body text. Field length of 550 characters.">
+                        <FormControl fullWidth title={locale.form.tooltips.message}>
                             <InputLabel htmlFor="alertBody" style={{ minHeight: '1.1em' }}>
-                                Message *
+                                {locale.form.labels.message}
                             </InputLabel>
                             <Input
                                 id="alertBody"
@@ -520,7 +545,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         data-testid={`admin-alerts-form-start-date-${index}`}
                                         error={isInvalidStartDate(dateset.startDate)}
                                         InputLabelProps={{ shrink: true }}
-                                        label="Start date"
+                                        label={locale.form.labels.startdate}
                                         onChange={handleChange('startDate')}
                                         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                                         type="datetime-local"
@@ -536,7 +561,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         id={`endDate-${index}`}
                                         data-testid={`admin-alerts-form-end-date-${index}`}
                                         InputLabelProps={{ shrink: true }}
-                                        label="End date"
+                                        label={locale.form.labels.enddate}
                                         onChange={handleChange('endDate')}
                                         pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}"
                                         type="datetime-local"
@@ -554,7 +579,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         <IconButton
                                             data-testid={`admin-alerts-form-another-date-button-${index}`}
                                             onClick={addDateRow}
-                                            title="Add another alert with the same text but different start and end times"
+                                            title={locale.form.tooltips.addAnotherDateSet}
                                             style={{ minWidth: 60 }}
                                         >
                                             <AddCircleSharpIcon />
@@ -568,7 +593,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         <IconButton
                                             data-testid={`admin-alerts-form-remove-date-button-${index}`}
                                             onClick={() => removeDateRow(index)}
-                                            title="Remove this date/time set from the alert series"
+                                            title={locale.form.tooltips.removeDateSet}
                                         >
                                             <RemoveCircleSharpIcon />
                                         </IconButton>
@@ -584,21 +609,18 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     className={classes.checkboxes}
                 >
                     <Grid item sm={4} xs={12}>
-                        <InputLabel
-                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
-                            title="Check to add button to alert linking to more information. Displays extra form fields."
-                        >
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.link.checkbox}>
                             <Checkbox
                                 checked={values.linkRequired}
                                 data-testid="admin-alerts-form-checkbox-linkrequired"
                                 onChange={handleChange('linkRequired')}
                                 className={classes.checkbox}
                             />
-                            Add info link
+                            {locale.form.labels.link.checkbox}
                         </InputLabel>
                     </Grid>
                     <Grid item sm={4} xs={12}>
-                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.permanentTooltip}>
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.permanent}>
                             <Checkbox
                                 data-testid="admin-alerts-form-checkbox-permanent"
                                 checked={values.permanentAlert}
@@ -607,11 +629,11 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 title={locale.form.permanentTooltip}
                                 className={classes.checkbox}
                             />
-                            Permanent
+                            {locale.form.labels.permanent}
                         </InputLabel>
                     </Grid>
                     <Grid item sm={4} xs={12}>
-                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.urgentTooltip}>
+                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.urgent}>
                             <Checkbox
                                 checked={values.urgent}
                                 data-testid="admin-alerts-form-checkbox-urgent"
@@ -620,27 +642,27 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 title={locale.form.urgentTooltip}
                                 className={classes.checkbox}
                             />
-                            Urgent
+                            {locale.form.labels.urgent}
                         </InputLabel>
                     </Grid>
                 </Grid>
                 <Grid
                     container
                     spacing={2}
-                    className={classes.linkTitleWrapper}
+                    className={classes.box}
                     style={{
                         display: values.linkRequired ? 'flex' : 'none',
                     }}
                 >
                     <Grid item md={6} xs={12}>
                         <FormControl fullWidth>
-                            <InputLabel htmlFor="linkTitle">Link title *</InputLabel>
+                            <InputLabel htmlFor="linkTitle">{locale.form.labels.link.title}</InputLabel>
                             <Input
                                 id="linkTitle"
                                 data-testid="admin-alerts-form-link-title"
                                 value={values.linkTitle}
                                 onChange={handleChange('linkTitle')}
-                                title="Use destination page title or clear call to action. Minimise length; max length 55 characters."
+                                title={locale.form.tooltips.link.title}
                                 inputProps={{
                                     maxLength: 55,
                                 }}
@@ -649,7 +671,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                     <Grid item md={6} xs={12}>
                         <FormControl fullWidth>
-                            <InputLabel htmlFor="linkUrl">Link URL *</InputLabel>
+                            <InputLabel htmlFor="linkUrl">{locale.form.labels.link.url}</InputLabel>
                             <Input
                                 type="url"
                                 id="linkUrl"
@@ -657,9 +679,34 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                 value={values.linkUrl}
                                 onChange={handleChange('linkUrl')}
                                 error={!isValidUrl(values.linkUrl)}
-                                title="Please enter a valid URL"
+                                title={locale.form.tooltips.link.url}
                             />
                         </FormControl>
+                    </Grid>
+                </Grid>
+                <Grid container className={classes.box} spacing={2}>
+                    <Grid item xs={12}>
+                        <p>{locale.form.labels.systems}</p>
+                    </Grid>
+                    <Grid item xs={12}>
+                        {systemList.map(system => {
+                            const isChecked = values?.systems?.find(s => s === system.slug) || null;
+                            const displayColor = !!system.removed ? null : 'rgba(0, 0, 0, 0.87)';
+                            return (
+                                <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
+                                    <Checkbox
+                                        checked={!!isChecked}
+                                        data-testid={`admin-alerts-form-checkbox-system-${system.slug}`}
+                                        onChange={handleChange('system')}
+                                        name={system.slug}
+                                        title={system.title || system.slug || 'Unknown'}
+                                        className={`${!system.removed ? classes.checkbox : classes.disabledCheckbox}`}
+                                        disabled={!!system.removed}
+                                    />
+                                    {system.title}
+                                </InputLabel>
+                            );
+                        })}
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>

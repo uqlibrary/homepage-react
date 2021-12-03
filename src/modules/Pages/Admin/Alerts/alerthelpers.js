@@ -82,3 +82,25 @@ export function extractFieldsFromBody(content) {
         message: theMessage,
     };
 }
+
+// the slug(s) are saved to the db for the alert, the title is displayed on the form
+// **
+// If a system is removed at some point, add 'removed: true" as attribute instead of deleting
+//      this will maintain historic info
+// **
+// To add a system, add an entry here and then add a system="{slug}" to the <alert-list> call, usually here:
+// https://github.com/uqlibrary/reusable-webcomponents/tree/master/src/applications
+// eg https://github.com/uqlibrary/reusable-webcomponents/blob/master/src/applications/drupal/load.js#L163
+// add: !!alerts && alerts.setAttribute('system', 'drupal');
+// below const alerts = document.createElement('alert-list');
+// and slug: drupal entry below
+export const systemList = [
+    {
+        slug: 'homepage',
+        title: 'Home page',
+    },
+    {
+        slug: 'primo',
+        title: 'Primo',
+    },
+];

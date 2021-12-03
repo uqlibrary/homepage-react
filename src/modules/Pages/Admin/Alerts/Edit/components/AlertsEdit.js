@@ -63,6 +63,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
             linkUrl: linkUrl,
             type: 'edit',
             minimumDate: getTimeNowFormatted(),
+            systems: alert?.systems || [],
         };
     }
 

@@ -25,7 +25,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
 import AlertSplitButton from './AlertSplitButton';
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { systemList } from '../../alerthelpers';
 
 const moment = require('moment');
 
@@ -54,6 +54,14 @@ const useStyles2 = makeStyles(
         iconHighlighted: {
             color: '#fff',
         },
+        chipblock: {
+            '&>div': {
+                marginBottom: 4,
+            },
+            '&>div>div': {
+                marginBottom: 4,
+            },
+        },
         urgent: {
             backgroundColor: theme.palette.warning.main,
             color: '#fff',
@@ -62,10 +70,17 @@ const useStyles2 = makeStyles(
             backgroundColor: theme.palette.primary.main,
             color: '#fff',
         },
+        system: {
+            backgroundColor: '#666666',
+            color: '#fff',
+        },
         checkboxCell: {
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#595959',
             },
+        },
+        removedChip: {
+            textDecoration: 'line-through',
         },
     }),
     { withTheme: true },
@@ -158,19 +173,22 @@ export const AlertsListAsTable = ({
     const navigateToEditForm = alertid => {
         history.push(`/admin/alerts/edit/${alertid}`);
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const navigateToCloneForm = alertid => {
         history.push(`/admin/alerts/clone/${alertid}`);
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const navigateToView = alertid => {
         history.push(`/admin/alerts/view/${alertid}`);
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const reEnableAllCheckboxes = () => {
@@ -369,7 +387,7 @@ export const AlertsListAsTable = ({
                                                 id={`alert-list-item-title-${alert.id}`}
                                             >{`${alert.title}`}</h4>{' '}
                                             {`${alert.message.replace('[permanent]', '')}`}
-                                            <div>
+                                            <div className={classes.chipblock}>
                                                 {alert.body.includes('](') && (
                                                     <Chip
                                                         data-testid={`alert-list-link-chip-${alert.id}`}
@@ -393,6 +411,36 @@ export const AlertsListAsTable = ({
                                                         title="This alert cannot be dismissed"
                                                     />
                                                 )}
+                                                {!!alert.systems &&
+                                                    alert.systems.length > 0 &&
+                                                    alert.systems.map((systemSlug, index) => {
+                                                        const systemDetails = systemList.find(
+                                                            s => s.slug === systemSlug,
+                                                        );
+                                                        return (
+                                                            <div
+                                                                key={`alert-list-system-chip-${systemDetails?.slug ||
+                                                                    index}`}
+                                                                style={{ marginLeft: 3, display: 'inline' }}
+                                                            >
+                                                                <Chip
+                                                                    data-testid={`alert-list-system-chip-${
+                                                                        alert.id
+                                                                    }-${systemDetails?.slug || index}`}
+                                                                    label={`System: ${systemDetails?.title ||
+                                                                        systemDetails?.slug ||
+                                                                        'Unrecognised'}`}
+                                                                    title={`This alert is restricted to the ${systemDetails?.title ||
+                                                                        systemDetails?.slug ||
+                                                                        'Unrecognised'} system`}
+                                                                    className={`${
+                                                                        classes.system
+                                                                    } ${!!systemDetails?.removed &&
+                                                                        classes.removedChip}`}
+                                                                />
+                                                            </div>
+                                                        );
+                                                    })}
                                             </div>
                                         </TableCell>
                                         <TableCell component="td" align="center" className={classes.startDate}>
