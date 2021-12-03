@@ -9,6 +9,7 @@ const mapStateToProps = state => {
         ...state.get('accountReducer'),
         ...state.get('homeReducer'),
         ...state.get('primoReducer'),
+        ...state.get('spotlightsCurrentReducer'),
     };
 };
 

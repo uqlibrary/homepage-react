@@ -25,6 +25,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
     const { alertid } = useParams();
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!!alertid) {
             actions.loadAnAlert(alertid);
         }

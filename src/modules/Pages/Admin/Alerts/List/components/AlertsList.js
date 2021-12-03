@@ -45,6 +45,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
     const [pastAlerts, setPastAlerts] = useState([]);
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!alertsError && !alertsLoading && !alerts) {
             actions.loadAllAlerts();
         }
@@ -97,6 +98,7 @@ export const AlertsList = ({ actions, alerts, alertsLoading, alertsError, histor
         }
     }, [alerts]);
 
+    /* istanbul ignore next */
     if (!!alertsError) {
         return (
             <StandardPage title="Alerts Management">

@@ -27,6 +27,7 @@ export function makePreviewActionButtonJustNotifyUser(values) {
         if (!!link) {
             link.setAttribute('href', '#');
             link.setAttribute('title', popuptext);
+            /* istanbul ignore next */
             link.onclick = () => {
                 alert(popuptext);
                 return false;

@@ -256,7 +256,7 @@ exports[`Application component should render for anon user 1`] = `
                 "contrastText": "rgba(0, 0, 0, 0.87)",
                 "dark": "#333333",
                 "light": "#595959",
-                "main": "#d7d1cc",
+                "main": "#f7f6f5",
               },
               "success": Object {
                 "contrastText": "#fff",
@@ -2017,7 +2017,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
                                                                               "light": "#595959",
-                                                                              "main": "#d7d1cc",
+                                                                              "main": "#f7f6f5",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",
@@ -3497,7 +3497,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
                                                                               "light": "#595959",
-                                                                              "main": "#d7d1cc",
+                                                                              "main": "#f7f6f5",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",
@@ -4877,7 +4877,7 @@ exports[`Application component should render loading screen while account is loa
                 "contrastText": "rgba(0, 0, 0, 0.87)",
                 "dark": "#333333",
                 "light": "#595959",
-                "main": "#d7d1cc",
+                "main": "#f7f6f5",
               },
               "success": Object {
                 "contrastText": "#fff",
@@ -6633,7 +6633,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
                                                                               "light": "#595959",
-                                                                              "main": "#d7d1cc",
+                                                                              "main": "#f7f6f5",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",
@@ -8113,7 +8113,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               "contrastText": "rgba(0, 0, 0, 0.87)",
                                                                               "dark": "#333333",
                                                                               "light": "#595959",
-                                                                              "main": "#d7d1cc",
+                                                                              "main": "#f7f6f5",
                                                                             },
                                                                             "success": Object {
                                                                               "contrastText": "#fff",

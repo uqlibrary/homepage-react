@@ -24,6 +24,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
     const { alertid } = useParams();
 
     React.useEffect(() => {
+        /* istanbul ignore else */
         if (!!alertid) {
             actions.loadAnAlert(alertid);
         }

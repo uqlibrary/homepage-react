@@ -7,10 +7,6 @@ export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     return newMoment.format(dateFormat);
 }
 
-// export function getTimeNowFormatted() {
-//     return moment().format('YYYY-MM-DDTHH:mm');
-// }
-
 export function getStartOfDayFormatted() {
     return moment()
         .startOf('day')
@@ -56,11 +52,11 @@ export function getTimeMondayMidnightNext(baseDate = null) {
         .format('YYYY-MM-DDTHH:mm');
 }
 
-export const addConstantsToDisplayValues = (displayText, imageWidthIn = null, imageHeightIn = null, ratio = null) => {
+export const addConstantsToDisplayValues = (displayText, imageWidthIn, imageHeightIn, ratio) => {
     return displayText
-        .replace('[WIDTH]', imageWidthIn || locale.form.upload.ideal.width)
-        .replace('[HEIGHT]', imageHeightIn || locale.form.upload.ideal.height)
-        .replace('[RATIO]', ratio || locale.form.upload.ideal.ratio)
+        .replace('[WIDTH]', imageWidthIn)
+        .replace('[HEIGHT]', imageHeightIn)
+        .replace('[RATIO]', ratio)
         .replace('[MAXFILESIZE]', locale.form.upload.maxSize / 1000);
 };
 
@@ -75,3 +71,42 @@ export function isScheduledSpotlight(spotlight) {
 export function isCurrentSpotlight(spotlight) {
     return !isPastSpotlight(spotlight) && !isScheduledSpotlight(spotlight);
 }
+
+// https://stackoverflow.com/a/5306832/1246313
+/* istanbul ignore next */
+export function moveItemInArray(arr, oldIndex, newIndex) {
+    if (newIndex >= arr.length) {
+        let k = newIndex - arr.length + 1;
+        while (k--) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
+    return arr; // for testing
+}
+
+export const getWeightAfterDrag = (destination, tableType, originalWeight) => {
+    const isDestinationLeftOfOriginal = destination * 10 < originalWeight;
+    const addToWeight = tableType !== 'edit' || isDestinationLeftOfOriginal ? 5 : 15;
+    return destination * 10 + addToWeight;
+};
+
+export function scrollToTopOfPage() {
+    const topOfPage = document.getElementById('StandardPage');
+    !!topOfPage && topOfPage.scrollIntoView();
+}
+
+export const navigateToEditForm = (spotlightid, history) => {
+    history.push(`/admin/spotlights/edit/${spotlightid}`);
+    scrollToTopOfPage();
+};
+
+export const navigateToCloneForm = (spotlightid, history) => {
+    history.push(`/admin/spotlights/clone/${spotlightid}`);
+    scrollToTopOfPage();
+};
+
+export const navigateToView = (spotlightid, history) => {
+    history.push(`/admin/spotlights/view/${spotlightid}`);
+    scrollToTopOfPage();
+};

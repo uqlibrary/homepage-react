@@ -10,18 +10,6 @@ describe('account reducer', () => {
         };
     });
 
-    it('should handle a failing Spotlights API call', () => {
-        const test = homeReducer(emptyState, {
-            type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
-            payload: 'failed!',
-        });
-        expect(test).toEqual({
-            ...emptyState,
-            spotlightsCurrentLoading: false,
-            spotlightsCurrentError: 'failed!',
-        });
-    });
-
     it('should handle a failing Print balance API call', () => {
         const test = homeReducer(emptyState, {
             type: actions.PRINT_BALANCE_FAILED,

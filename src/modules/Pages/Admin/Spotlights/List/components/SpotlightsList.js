@@ -11,6 +11,9 @@ import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/Spotlights
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
+import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import SpotlightViewHistory from './SpotlightViewHistory';
+import { useViewByHistoryLightboxState } from 'modules/Pages/Admin/Spotlights/spotlightsHooks';
 
 const useStyles = makeStyles(
     theme => ({
@@ -43,20 +46,19 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
+    const [
+        isViewByHistoryLightboxOpen,
+        handleViewByHistoryLightboxOpen,
+        handleViewByHistoryLightboxClose,
+    ] = useViewByHistoryLightboxState();
+    const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
+    const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
+
     useEffect(() => {
         /* istanbul ignore else */
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
-            console.log('@@@ kick off spotlights load');
             actions.loadAllSpotlights();
-        } else {
-            console.log(
-                '@@@ useeeffect []; spotlightsError = ',
-                spotlightsError,
-                '; spotlightsLoading = ',
-                spotlightsLoading,
-                '; spotlights = ',
-                spotlights,
-            );
+            scrollToTopOfPage();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -101,10 +103,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         }
     }, [spotlights]);
 
-    // const deleteSpotlight = spotlightID => {
-    //     return actions.deleteSpotlight(spotlightID);
-    // };
-
     const deleteSpotlightBulk = slist => {
         return actions.deleteSpotlightBatch(slist);
     };
@@ -115,11 +113,21 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
 
     /* istanbul ignore next */
     const saveBatchReorder = slist => {
-        slist.forEach(s => {
-            console.log('saveBatchReorder', s.id, s.weight, s.title);
-        });
-        // console.log('saveBatchReorder', slist);
         return actions.saveSpotlightBatch(slist);
+    };
+
+    const showViewByHistoryLightbox = thisSpotlight => {
+        console.log('showViewByHistoryLightbox spotlights = ', spotlights);
+        console.log('showViewByHistoryLightbox thisSpotlight = ', thisSpotlight);
+        const filteredRows =
+            !!thisSpotlight && !!spotlights && [...spotlights].filter(r => r.img_url === thisSpotlight.img_url);
+        /* istanbul ignore else */
+        if (filteredRows.length > 0) {
+            // because its fired by clicking on a spotlight, it should never be 0
+            setViewByHistoryLightBoxFocus(thisSpotlight);
+            setViewByHistoryLightBoxEntries(filteredRows);
+            handleViewByHistoryLightboxOpen();
+        }
     };
 
     /* istanbul ignore next */
@@ -142,7 +150,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         );
     }
 
-    console.log('spotlightsError:', spotlightsError);
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -156,6 +163,9 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                     helpContent={locale.listPage.help}
                     history={history}
                     showAddButton
+                    showViewByImageButton
+                    spotlights={spotlights}
+                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                 />
                 <StandardCard title="All spotlights" noPadding customBackgroundColor="#F7F7F7">
                     <Grid container>
@@ -177,13 +187,12 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canDragRows
                                     canUnpublish
-                                    // reweightSpotlights={reweightSpotlights}
+                                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
                             <div
@@ -197,12 +206,11 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canUnpublish
-                                    // reweightSpotlights={reweightSpotlights}
+                                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -213,17 +221,29 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canTextFilter
-                                    // reweightSpotlights={reweightSpotlights}
+                                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
                         </Grid>
                     </Grid>
                 </StandardCard>
+                {isViewByHistoryLightboxOpen && (
+                    <SpotlightViewHistory
+                        focussedElement={viewByHistoryLightBoxFocus}
+                        handleViewHistoryLightboxClose={handleViewByHistoryLightboxClose}
+                        helpContent={locale.viewByHistory.help}
+                        isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
+                        spotlights={viewByHistoryLightBoxRows}
+                        setViewByHistoryLightBoxFocus={setViewByHistoryLightBoxFocus}
+                        setViewByHistoryLightBoxEntries={setViewByHistoryLightBoxEntries}
+                        handleViewByHistoryLightboxOpen={handleViewByHistoryLightboxOpen}
+                        history={history}
+                    />
+                )}
             </section>
         </StandardPage>
     );

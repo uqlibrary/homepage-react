@@ -14,9 +14,10 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import { useConfirmationState } from 'hooks';
+import SpotlightFormReorderableThumbs from './SpotlightFormReorderableThumbs';
 
 const moment = require('moment');
 
@@ -34,6 +35,11 @@ const useStyles = makeStyles(() => ({
         },
         padding: 0,
         color: 'rgba(0, 0, 0, 0.87)',
+    },
+    spotlightForm: {
+        '& label': {
+            minHeight: '1.1em',
+        },
     },
 }));
 
@@ -74,13 +80,19 @@ export const SpotlightForm = ({
     publicFileUploadError,
     publicFileUploadResult,
     history,
+    spotlights,
+    spotlightsLoading,
 }) => {
-    console.log('form: spotlightError = ', spotlightError);
-    console.log('form: spotlightResponse = ', spotlightResponse);
-    console.log('form: spotlightStatus = ', spotlightStatus);
     const classes = useStyles();
 
-    // const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
+    // we cant just use the Current Spotlights api because it doesnt return unpublished records :(
+    const currentSpotlights =
+        !spotlightsLoading &&
+        !!spotlights &&
+        spotlights
+            .filter(s => moment(s.start).isBefore(moment()) && moment(s.end).isAfter(moment()))
+            .sort((a, b) => a.weight - b.weight);
+
     const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
     const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
     const [isEditOpen, showEditConfirmation, hideEditConfirmation] = useConfirmationState();
@@ -88,14 +100,19 @@ export const SpotlightForm = ({
     const [isUploadErrorOpen, showUploadError, hideUploadError] = useConfirmationState();
 
     const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-    const [uploadedFiles, setUploadedFiles] = useState(null);
 
-    console.log('defaults = ', defaults);
+    const [originalValues, setOriginalValues] = useState({});
+    useEffect(() => {
+        const newVar = { weight: defaults.type === 'edit' ? defaults.weight : 1000, start: defaults.startDateDefault };
+        setOriginalValues(newVar);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [defaults]);
+
     const [values, setValues] = useState({
-        // the data displayed in the form
         ...defaults,
         start: defaults.startDateDefault,
         end: defaults.endDateDefault,
+        hasImage: defaults.type !== 'add',
     });
 
     const isValidLinkAria = title => {
@@ -149,7 +166,7 @@ export const SpotlightForm = ({
     }
 
     const validateValues = currentValues => {
-        console.log('validateValues: currentValues = ', currentValues);
+        // console.log('validateValues: currentValues = ', currentValues);
         const isValid =
             spotlightStatus !== 'loading' &&
             !isInvalidStartDate(currentValues.start) &&
@@ -165,7 +182,8 @@ export const SpotlightForm = ({
             // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
-            isValidImageUrl(currentValues.url);
+            isValidImageUrl(currentValues.url) &&
+            !!currentValues.hasImage;
 
         // console.log('validateValues: isValid = ', isValid, currentValues);
         // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
@@ -185,16 +203,7 @@ export const SpotlightForm = ({
         return isValid;
     };
 
-    // useEffect(() => {
-    //     if (!!defaults && defaults.type === 'clone') {
-    //         setFormValidity(validateValues(defaults));
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, []);
-
     useEffect(() => {
-        // console.log('uploadedFiles set to ', uploadedFiles);
-        console.log('values have been changed to: ', values);
         setFormValidity(validateValues(values));
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [values]);
@@ -251,17 +260,10 @@ export const SpotlightForm = ({
 
         history.push('/admin/spotlights');
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reloadClonePage = () => {
-        console.log('reloadClonePage defaults = ', {
-            // the data displayed in the form
-            ...defaults,
-            start: defaults.startDateDefault,
-            end: defaults.endDateDefault,
-        });
         setValues({
             // the data displayed in the form
             ...defaults,
@@ -269,15 +271,12 @@ export const SpotlightForm = ({
             end: defaults.endDateDefault,
         });
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const saveSpotlight = () => {
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
 
-        console.log('saveSpotlight: currentValues = ', values);
         const newValues = {
             id: defaults.type === 'edit' ? values.id : null,
             start: formatDate(values.start),
@@ -289,46 +288,33 @@ export const SpotlightForm = ({
             img_alt: values.img_alt,
             // weight will update after save,
             // but lets just use a number that sits at the end of the current spotlights, as requested
-            weight: defaults.type === 'edit' ? values.weight : 1000,
+            // weight: defaults.type === 'edit' ? values.weight : 1000, // weight,
+            weight: values.weight,
             active: !!values.active ? 1 : 0,
+            // eslint-disable-next-line camelcase
+            admin_notes: values?.admin_notes ?? /* istanbul ignore next */ null,
         };
         !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
-        console.log('saveSpotlight editType = ', defaults.type);
-        console.log('saveSpotlight: newValues = ', newValues);
-        // const saveSpotlightChange = s => {
-        //     return actions.saveSpotlightChangeWithExistingImage(s);
-        // };
         switch (defaults.type) {
             case 'add':
-                // console.log('handleSpotlightCreation: uploadedFiles = ', uploadedFiles);
-                console.log('handleSpotlightCreation 2: newValues = ', newValues);
                 actions.createSpotlightWithNewImage(newValues);
-                // .then(() => actions.reweightSpotlights(saveSpotlightChange));
                 break;
             case 'edit':
                 /* istanbul ignore next */
-                if (!!values.uploadedFile) {
-                    actions.saveSpotlightWithNewImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
-                } else {
-                    actions.saveSpotlightChangeWithExistingImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
-                }
+                !!values.uploadedFile
+                    ? actions.saveSpotlightWithNewImage(newValues)
+                    : actions.saveSpotlightChangeWithExistingImage(newValues);
                 break;
             case 'clone':
                 /* istanbul ignore next */
-                if (!!values.uploadedFile) {
-                    actions.createSpotlightWithNewImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
-                } else {
-                    actions.createSpotlightWithExistingImage(newValues);
-                    // .then(() => actions.reweightSpotlights(saveSpotlightChange));
-                }
+                !!values.uploadedFile
+                    ? actions.createSpotlightWithNewImage(newValues)
+                    : actions.createSpotlightWithExistingImage(newValues);
                 break;
             /* istanbul ignore next */
             default:
-                console.log('an unhandled type of ', defaults.type, ' was provided at SpotlightForm.saveSpotlight');
+                // never happens
                 return;
         }
 
@@ -340,30 +326,32 @@ export const SpotlightForm = ({
         });
     };
 
+    /* istanbul ignore next */
+    const updateWeightInValues = newWeight => {
+        setValues(prevState => {
+            return { ...prevState, weight: newWeight };
+        });
+    };
+
     const handleChange = prop => event => {
-        let newValue;
+        let propValue;
         if (['start', 'end'].includes(prop)) {
-            newValue = event.format('YYYY/MM/DD hh:mm a');
+            propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
-            newValue = !!event.target.value ? event.target.value : event.target.checked;
+            propValue = !!event.target.value ? event.target.value : event.target.checked;
             if (['active', 'weight'].includes(prop)) {
-                newValue = !!newValue ? 1 : /* istanbul ignore next */ 0;
-            } else if (newValue === false) {
+                propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
+            } else if (propValue === false) {
                 // it returns false when we clear a text field
-                newValue = '';
+                propValue = '';
             }
         }
-        console.log('handleChange prop = ', prop, ': newValue = ', newValue);
-        // we need the explicit setting of '' otherwise we get a 'false' in the field
         setValues({
             ...values,
             start: values.start || /* istanbul ignore next */ defaults.startDateDefault,
             end: values.end || /* istanbul ignore next */ defaults.endDateDefault,
-            [prop]: newValue,
+            [prop]: propValue,
         });
-
-        console.log('handleChange values now = ', values);
-        setFormValidity(validateValues({ ...values, [prop]: newValue }));
     };
 
     const errorLocale = {
@@ -401,31 +389,18 @@ export const SpotlightForm = ({
     }
 
     const handleSuppliedFiles = files => {
-        console.log('handleSuppliedFiles files = ', files);
-        setUploadedFiles(files);
-
-        console.log('check: ', { ...values, ['uploadedFile']: files });
-        setValues({ ...values, ['uploadedFile']: files });
-        console.log('handleSuppliedFiles values now = ', values);
-
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: files }));
-
-        setTimeout(() => {
-            console.log('handleSuppliedFiles setTimeout: values = ', values);
-            console.log('handleSuppliedFiles setTimeout: uploadedFiles = ', uploadedFiles);
-        }, 1000);
+        setValues({ ...values, ['uploadedFile']: files, hasImage: true });
     };
 
     const clearSuppliedFile = () => {
         setValues(prevState => {
-            return { ...prevState, ['uploadedFile']: [] };
+            return { ...prevState, ['uploadedFile']: [], hasImage: false };
         });
-        setFormValidity(validateValues({ ...values, ['uploadedFile']: [] }));
     };
 
     return (
         <Fragment>
-            <form>
+            <form className={classes.spotlightForm}>
                 <ConfirmationBox
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
@@ -480,6 +455,21 @@ export const SpotlightForm = ({
                     locale={uploadErrorLocale()}
                     hideCancelButton
                 />
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
+                            <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
+                            <Input
+                                id="spotlightAdminNote"
+                                data-testid="admin-spotlights-form-admin-note"
+                                multiline
+                                onChange={handleChange('admin_notes')}
+                                rows={2}
+                                value={values.admin_notes}
+                            />
+                        </FormControl>
+                    </Grid>
+                </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
@@ -574,6 +564,21 @@ export const SpotlightForm = ({
                     </Grid>
                 </Grid>
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                    <Grid item xs={10} align="left">
+                        <SpotlightFormReorderableThumbs
+                            currentSpotlights={currentSpotlights}
+                            currentSpotlightsLoading={spotlightsLoading}
+                            defaultWeight={
+                                defaults.type === 'edit' && originalValues.start === values.start ? values.weight : 1000
+                            }
+                            currentValues={values}
+                            updateWeightInValues={updateWeightInValues}
+                            tableType={defaults.type}
+                            originalValues={originalValues}
+                        />
+                    </Grid>
+                </Grid>
+                <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={7} md={10} />
                     <Grid item xs={5} md={2} align="right">
                         <InputLabel
@@ -627,6 +632,8 @@ SpotlightForm.propTypes = {
     spotlightStatus: PropTypes.any,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 SpotlightForm.defaultProps = {
