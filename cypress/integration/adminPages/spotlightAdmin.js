@@ -50,7 +50,7 @@ function showUnpublishedSpotlights() {
 // we test on 2 different images:
 // spotlight-just-right.png and spotlight-too-large.jpg
 // we know what the specific dimensions are for each, so can hard code them
-function imageWarningIsPresent(dataTestid, isUpload = true) {
+function assertImageWarningIsPresent(dataTestid, isUpload = true) {
     cy.get(`[data-testid="${dataTestid}"]`)
         .should('exist')
         .find('svg path[d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"]')
@@ -63,7 +63,7 @@ function imageWarningIsPresent(dataTestid, isUpload = true) {
         );
     }
 }
-function imageOKIsPresent(dataTestid) {
+function assertImageOKIsPresent(dataTestid) {
     cy.get(`[data-testid="${dataTestid}"]`)
         .should('exist')
         .should('contain', 'Dimensions: 813px by 298px (aspect ratio: 2.73).')
@@ -524,21 +524,27 @@ describe('Spotlights Admin Pages', () => {
                     .and('contain', 'sample admin note');
             });
             context('the view-by-history lightbox works', () => {
-                it('it shows a view-by-history lightbox and can exit with the close button', () => {
+                function loadTheHistoryLightbox(spotlightid, listType = 'current') {
                     // open the split button
-                    cy.get('[data-testid="admin-spotlights-list-scheduled-list"]').scrollIntoView();
-                    cy.get('[data-testid="spotlight-list-arrowicon-298288b0-605c-11eb-ad87-357f112348ef"]')
+                    cy.get(`[data-testid="admin-spotlights-list-${listType}-list"]`).scrollIntoView();
+                    cy.get(`[data-testid="spotlight-list-arrowicon-${spotlightid}"]`)
                         .should('exist')
                         .click();
 
                     // click the 'view by history' action
-                    cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-viewbyhistory-button"]')
+                    cy.get('[data-testid="' + spotlightid + '-viewbyhistory-button"]')
                         .should('exist')
                         .click();
 
                     // view-by-history lightbox loads
                     cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('exist');
-                    imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
+                }
+
+                it('it shows a view-by-history lightbox and can exit with the close button', () => {
+                    loadTheHistoryLightbox('298288b0-605c-11eb-ad87-357f112348ef', 'scheduled');
+
+                    // confirm random piece of content
+                    assertImageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
                     cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
                         .children()
@@ -552,20 +558,10 @@ describe('Spotlights Admin Pages', () => {
                     cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('not.exist');
                 });
                 it('it shows a view-by-history and can open clone form', () => {
-                    cy.get('[data-testid="admin-spotlights-list-current-list"]').scrollIntoView();
-                    // open the split button
-                    cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
-                        .should('exist')
-                        .click();
+                    loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
 
-                    // click the 'view by history' action
-                    cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-viewbyhistory-button"]')
-                        .should('exist')
-                        .click();
-
-                    // view-by-history lightbox loads
-                    cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('exist');
-                    imageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
+                    // confirm random piece of content
+                    assertImageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
 
                     cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
                         .children()
@@ -577,20 +573,43 @@ describe('Spotlights Admin Pages', () => {
                         .click();
                     cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/clone`);
                 });
+                it('it shows a view-by-history and can open edit form', () => {
+                    loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
+
+                    // confirm random piece of content
+                    assertImageWarningIsPresent('spotlights-viewbyhistory-lightbox-dimensions', false);
+
+                    cy.get('[data-testid="spotlights-viewbyhistory-lightbox-holder"] ul')
+                        .children()
+                        .should('have.length', 23);
+
+                    cy.get('[data-testid="spotlight-viewhistory-button-edit-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                        .should('exist')
+                        .should('contain', 'Edit')
+                        .click();
+                    cy.location('href').should('contain', `${Cypress.config('baseUrl')}/admin/spotlights/edit`);
+                });
+                it('the spotlight that had its view-by-history button clicked is highlighted', () => {
+                    loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
+
+                    cy.get(
+                        '[data-testid="spotlight-viewhistory-button-edit-9eab3aa0-82c1-11eb-8896-eb36601837f5"]',
+                    ).scrollIntoView();
+                    cy.get('[data-testid="spotlight-viewhistory-button-edit-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
+                        .parent()
+                        .parent()
+                        .parent()
+                        .should('exist')
+                        .and('have.css', 'background-color', 'rgba(0, 0, 0, 0.65)');
+
+                    cy.get('[data-testid="spotlight-viewhistory-button-view-d8ec8820-07b1-11e7-a7ef-ef4338d401a6"]')
+                        .parent()
+                        .parent()
+                        .should('exist')
+                        .and('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
+                });
                 it('the view-by-history has a working Help button', () => {
-                    cy.get('[data-testid="admin-spotlights-list-current-list"]').scrollIntoView();
-                    // open the split button
-                    cy.get('[data-testid="spotlight-list-arrowicon-9eab3aa0-82c1-11eb-8896-eb36601837f5"]')
-                        .should('exist')
-                        .click();
-
-                    // click the 'view by history' action
-                    cy.get('[data-testid="9eab3aa0-82c1-11eb-8896-eb36601837f5-viewbyhistory-button"]')
-                        .should('exist')
-                        .click();
-
-                    // view-by-history lightbox loads
-                    cy.get('[data-testid="spotlights-viewbyhistory-lightbox-title"]').should('exist');
+                    loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
                     // open the help pop up
                     cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('not.exist');
                     cy.get('[data-testid="spotlights-viewbyhistory-lightbox-help-button"]').should('be.visible');
@@ -1123,7 +1142,7 @@ describe('Spotlights Admin Pages', () => {
                 );
 
                 dragFileToDropzone('spotlight-too-large.jpg');
-                imageWarningIsPresent('dropzone-dimension-warning');
+                assertImageWarningIsPresent('dropzone-dimension-warning');
                 saveButtonNOTDisabled();
 
                 cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').check();
@@ -1224,7 +1243,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
                 cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
                 dragFileToDropzone('spotlight-too-large.jpg');
-                imageWarningIsPresent('dropzone-dimension-warning');
+                assertImageWarningIsPresent('dropzone-dimension-warning');
                 cy.get('[data-testid="admin-spotlights-form-admin-note"]').type('spotlight admin note 4');
                 cy.get('[data-testid="admin-spotlights-form-button-save"]')
                     .should('not.be.disabled')
@@ -1268,7 +1287,7 @@ describe('Spotlights Admin Pages', () => {
                 saveButtonisDisabled();
 
                 dragFileToDropzone('spotlight-just-right.png');
-                imageOKIsPresent('dropzone-dimension-warning');
+                assertImageOKIsPresent('dropzone-dimension-warning');
                 saveButtonisDisabled();
 
                 cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 5');
@@ -1290,7 +1309,7 @@ describe('Spotlights Admin Pages', () => {
                 removeImageFromDragzone();
                 saveButtonisDisabled();
                 dragFileToDropzone('spotlight-just-right.png');
-                imageOKIsPresent('dropzone-dimension-warning');
+                assertImageOKIsPresent('dropzone-dimension-warning');
                 saveButtonNOTDisabled();
 
                 cy.get('[data-testid="admin-spotlights-form-title"]')
@@ -1345,7 +1364,7 @@ describe('Spotlights Admin Pages', () => {
 
                 // drag in a new image and it is reflected in the 'reorderable thumbs'
                 dragFileToDropzone('spotlight-just-right.png');
-                imageOKIsPresent('dropzone-dimension-warning');
+                assertImageOKIsPresent('dropzone-dimension-warning');
                 cy.get('[data-testid="spotlights-thumbs-reorder"] span:last-child img')
                     .invoke('attr', 'src')
                     .then(src => {
@@ -1520,7 +1539,7 @@ describe('Spotlights Admin Pages', () => {
                 dragzoneContainsAnImage();
                 saveButtonNOTDisabled();
 
-                imageOKIsPresent('dropzone-dimension-warning');
+                assertImageOKIsPresent('dropzone-dimension-warning');
             });
             it('edit form shows the reorderable thumbs block', () => {
                 cy.visit(
@@ -1730,7 +1749,7 @@ describe('Spotlights Admin Pages', () => {
                 dragzoneIsReadyForDrag();
                 dragFileToDropzone('spotlight-just-right.png');
                 dragzoneContainsAnImage();
-                imageOKIsPresent('dropzone-dimension-warning');
+                assertImageOKIsPresent('dropzone-dimension-warning');
             });
             it('clone form shows the reorderable thumbs block', () => {
                 cy.visit(

@@ -163,7 +163,7 @@ export const SpotlightViewHistory = ({
                                                         <Button
                                                             children={locale.form.splitButton.labels.view}
                                                             color="secondary"
-                                                            data-testid={`spotlight-list-item-view-${s.id}`}
+                                                            data-testid={`spotlight-viewhistory-button-view-${s.id}`}
                                                             id={`spotlight-list-item-view-${s.id}`}
                                                             onClick={() => navigateToCloneForm(s.id, history)}
                                                             className={classes.editButton}
@@ -174,8 +174,8 @@ export const SpotlightViewHistory = ({
                                                         <Button
                                                             children={locale.form.splitButton.labels.edit}
                                                             color="secondary"
-                                                            data-testid={`spotlight-list-item-edit-${s.id}`}
-                                                            id={`spotlight-list-item-edit-${s.id}`}
+                                                            data-testid={`spotlight-viewhistory-button-edit-${s.id}`}
+                                                            id={`spotlight-viewhistory-button-edit-${s.id}`}
                                                             onClick={() => navigateToEditForm(s.id, history)}
                                                             className={classes.editButton}
                                                             variant="contained"
