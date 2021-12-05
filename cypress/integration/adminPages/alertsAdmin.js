@@ -1102,6 +1102,8 @@ describe('Alerts Admin Pages', () => {
                 .should('exist')
                 .contains('Primo');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').uncheck();
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('not.be.checked');
         });
     });
     context('Alert Admin View page', () => {
