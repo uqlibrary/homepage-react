@@ -25,7 +25,6 @@ import {
     systemList,
 } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
@@ -101,13 +100,15 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
     const navigateToCloneForm = () => {
         history.push(`/admin/alerts/clone/${alertid}`);
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     const navigateToListPage = () => {
         history.push('/admin/alerts');
 
-        scrollToTopOfPage();
+        const topOfPage = document.getElementById('StandardPage');
+        !!topOfPage && topOfPage.scrollIntoView();
     };
 
     // Strip markdown from the body

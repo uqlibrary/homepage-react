@@ -414,29 +414,25 @@ export const AlertsListAsTable = ({
                                                 {!!alert.systems &&
                                                     alert.systems.length > 0 &&
                                                     alert.systems.map((systemSlug, index) => {
-                                                        const systemDetails = systemList.find(
-                                                            s => s.slug === systemSlug,
-                                                        );
+                                                        const ss = systemList.find(s => s.slug === systemSlug);
                                                         return (
                                                             <div
-                                                                key={`alert-list-system-chip-${systemDetails?.slug ||
-                                                                    index}`}
+                                                                key={`alert-list-system-chip-${ss?.slug ||
+                                                                    /* istanbul ignore next */ index}`}
                                                                 style={{ marginLeft: 3, display: 'inline' }}
                                                             >
                                                                 <Chip
                                                                     data-testid={`alert-list-system-chip-${
                                                                         alert.id
-                                                                    }-${systemDetails?.slug || index}`}
-                                                                    label={`System: ${systemDetails?.title ||
-                                                                        systemDetails?.slug ||
-                                                                        'Unrecognised'}`}
-                                                                    title={`This alert is restricted to the ${systemDetails?.title ||
-                                                                        systemDetails?.slug ||
-                                                                        'Unrecognised'} system`}
-                                                                    className={`${
-                                                                        classes.system
-                                                                    } ${!!systemDetails?.removed &&
-                                                                        classes.removedChip}`}
+                                                                    }-${ss?.slug || /* istanbul ignore next */ index}`}
+                                                                    label={`System: ${ss?.title ||
+                                                                        /* istanbul ignore next */ ss?.slug ||
+                                                                        /* istanbul ignore next */ 'Unrecognised'}`}
+                                                                    title={`This alert is restricted to the ${ss?.title ||
+                                                                        /* istanbul ignore next */ ss?.slug ||
+                                                                        /* istanbul ignore next */ 'Unrecognised'} system`}
+                                                                    className={`${classes.system} ${!!ss?.removed &&
+                                                                        /* istanbul ignore next */ classes.removedChip}`}
                                                                 />
                                                             </div>
                                                         );

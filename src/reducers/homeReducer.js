@@ -1,6 +1,9 @@
 import * as actions from 'actions/actionTypes';
 
 export const initialState = {
+    spotlightsCurrent: null,
+    spotlightsCurrentLoading: null,
+    spotlightsCurrentError: null,
     printBalance: null,
     printBalanceLoading: null,
     loans: null,
@@ -12,6 +15,23 @@ export const initialState = {
 };
 
 const handlers = {
+    [actions.SPOTLIGHTS_HOMEPAGE_LOADING]: state => ({
+        ...state,
+        spotlightsCurrentLoading: true,
+    }),
+
+    [actions.SPOTLIGHTS_HOMEPAGE_LOADED]: (state, action) => ({
+        ...state,
+        spotlightsCurrent: action.payload,
+        spotlightsCurrentLoading: false,
+    }),
+
+    [actions.SPOTLIGHTS_HOMEPAGE_FAILED]: (state, action) => ({
+        ...state,
+        spotlightsCurrentLoading: false,
+        spotlightsCurrentError: action.payload,
+    }),
+
     // Print balance
     [actions.PRINT_BALANCE_LOADING]: state => ({
         ...state,
