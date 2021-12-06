@@ -127,6 +127,12 @@ export default {
 
                     <h4>Fields</h4>
                     <dl>
+                        <dt>Admin notes</dt>
+                        <dd className="description">
+                            <p>Notes field for Spotlight admin to put useful/specific notes about the spotlight.</p>
+                            <p>Admin notes appear on the listing screen following a * (star) character. These notes are not visible to clients.
+                            <p>Optional field.</p>
+                        </dd>
                         <dt>Link title</dt>
                         <dd className="description">
                             <p>
@@ -178,6 +184,16 @@ export default {
                             <p>Recommended dimensions: 813px by 300px (aspect ratio: 2.71).</p>
                             <p>
                                 Required field. Replace uploaded image using the <strong>Remove image</strong> button.
+                            </p>
+                        </dd>
+                        <dt>Set display order</dt>
+                        <dd className="description">
+                            <p>Drag and drop tile to adjust spotlight display order.</p>
+                            <p>New spotlights are positioned last by default.</p>
+                            <p>Optional and conditional field that is <strong>only visible for current spotlights</strong>.</p>
+                            <p>
+                                Reordering on the Form is only reliable when <em>7 or less spotlights are current</em>. 
+                                Where we have more, use the List page for reordering.
                             </p>
                         </dd>
                         <dt>Published?</dt>
@@ -270,6 +286,10 @@ export default {
                         Spotlights are listed in three tables, Current spotlights, Scheduled spotlights and Past
                         spotlights based on their Date published (start) and Date unpublished (end) date and time. Check
                         full date information by mousing over the short date display.
+                    </p>
+                    <p>
+                        Admin notes are listed following a * (star) character after the Spotlight title info. 
+                        These notes are not visible to clients on the homepage.
                     </p>
 
                     <ul>
@@ -448,7 +468,7 @@ export default {
                     <h3>Search past spotlights</h3>
                     <p>
                         Enter keywords into the Quick search text field above the Past spotlights table to search based
-                        on the Link title and Image alt text fields.
+                        on the Link title, Image alt text and Admin notes fields.
                     </p>
                     <p>Past spotlights will be filtered based on your keywords.</p>
                     <p>Search results will be retained for one hour and then cleared.</p>
@@ -606,8 +626,8 @@ export default {
                     <h3>Search spotlights</h3>
 
                     <p>
-                        Enter keywords into the Quick search text field to filter spotlights based on the Link title and
-                        Image alt text fields.
+                        Enter keywords into the Quick search text field to filter spotlights based on the Link title, 
+                        Image alt text and Admin notes fields.
                     </p>
                 </Fragment>
             ),
