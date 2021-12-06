@@ -33,6 +33,7 @@ import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
 import {
+    filterSpotlights,
     formatDate,
     getTimeMondayComing,
     isCurrentSpotlight,
@@ -241,12 +242,7 @@ export const SpotlightsListAsTable = ({
                     if (!canTextFilter || textSearch === '') {
                         return true;
                     }
-                    const lowercaseLinkAria = r.title.toLowerCase();
-                    const lowercaseImgAlt = r.img_alt.toLowerCase();
-                    return (
-                        lowercaseLinkAria.includes(textSearch.toLowerCase()) ||
-                        lowercaseImgAlt.includes(textSearch.toLowerCase())
-                    );
+                    return filterSpotlights(r, textSearch);
                 }),
             );
 
@@ -657,12 +653,7 @@ export const SpotlightsListAsTable = ({
         setTextSearch(filterTerm);
         setUserows(
             [...staticUserows].filter(r => {
-                const lowercaseLinkAria = r.title.toLowerCase();
-                const lowercaseImgAlt = r.img_alt.toLowerCase();
-                return (
-                    lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
-                    lowercaseImgAlt.includes(filterTerm.toLowerCase())
-                );
+                return filterSpotlights(r, filterTerm);
             }),
         );
     };

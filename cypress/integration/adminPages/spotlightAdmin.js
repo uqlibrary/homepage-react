@@ -92,8 +92,6 @@ function hasAWorkingHelpButton(idHelpButton = 'admin-spotlights-help-button') {
     cy.get('[data-testid="help-drawer-title"]').scrollIntoView();
     cy.get('[data-testid="help-drawer-title"]').should('be.visible');
 
-    cy.wait(500);
-
     // the close button works
     cy.get('[data-testid="spotlights-helpdrawer-close-button"]')
         .should('exist')
@@ -441,8 +439,8 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
-                cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(3, 3));
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+                cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(4, 4));
 
                 cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
                     .should('exist')
@@ -599,14 +597,20 @@ describe('Spotlights Admin Pages', () => {
                     .should('exist')
                     .children()
                     .should('have.length', 47);
-                // typing "can" in the filter reduces the number of thumbnails to 7
+                // typing "can" in the filter reduces the number of thumbnails to 8
                 cy.get('[data-testid="spotlights-viewbyimage-filter-text-field"] input')
                     .should('exist')
                     .type('can');
                 cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div')
                     .should('exist')
                     .children()
-                    .should('have.length', 7);
+                    .should('have.length', 8);
+                // an alert with title containing "can" displays
+                cy.get('[data-testid="3fa92cc0-6ab9-11e7-839f-a1392c2927cc-lightbox-item"]').should('exist');
+                // an alert with img_alt containing "can" displays
+                cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-lightbox-item"]').should('exist');
+                // an alert with admin note containing "can" displays
+                cy.get('[data-testid="f0a1de60-1999-11e7-af36-7d945160e88f-lightbox-item"]').should('exist');
                 // the clear-filter text field 'x' buttons works
                 cy.get('[data-testid="spotlights-viewbyimage-filter-text-clear-button"]')
                     .should('exist')
@@ -768,7 +772,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
 
                 // we load the view page, then click the cancel button to come back to the list page
                 cy.get('[data-testid="spotlight-list-past"] tbody tr:first-child button:first-child')
@@ -793,7 +797,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', 'can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
                 // the current and scheduled lists arent filtered
                 cy.get('[data-testid="admin-spotlights-list-current-list"] tbody')
                     .children()
@@ -823,12 +827,12 @@ describe('Spotlights Admin Pages', () => {
                     getFooterLabel(totalCountPastRecords),
                 );
 
-                // we reduce the number of rows to 3 by typing into the filter input field
+                // we reduce the number of rows to 4 by typing into the filter input field
                 cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
 
                 // we load the Clone page, then click the cancel button to come back to the List page
                 cy.get('[data-testid="spotlight-list-past"] tbody tr:first-child button:nth-child(2)')
@@ -847,13 +851,13 @@ describe('Spotlights Admin Pages', () => {
                     .click();
                 cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
 
-                // the filter text field still has the previously typed word and only 3 rows are present
+                // the filter text field still has the previously typed word and only 4 rows are present
                 cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
                 cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', 'can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
 
                 // we use the 'x' button to clear the text field and restore the rows to 5
                 cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')

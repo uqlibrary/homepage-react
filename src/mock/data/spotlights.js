@@ -9,6 +9,7 @@ export const spotlights = [{
         'Academic Integrity Modules - Everything you need to know about academic integrity at UQ',
     'weight': 10,
     'active': 1,
+    'admin_notes': 'sample admin note',
 }, {
     'id': '1e7a5980-d7d6-11eb-a4f2-fd60c7694898',
     'start': '2021-06-29 01:00:00',
@@ -18,7 +19,8 @@ export const spotlights = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     'img_alt': 'Have you got your mask? Please continue to maintain physically distancing.',
     'weight': 20,
-    'active': 1
+    'active': 1,
+    'admin_notes': '',
 },{
     'id': '38cbf430-8693-11e9-98ab-9d52a58e86ca',
     'start': '2021-07-19 00:01:00',
@@ -28,5 +30,6 @@ export const spotlights = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/f9ff71b0-d77e-11ea-8881-93befcabdbc2.jpg',
     'img_alt': 'Follow us social media 3',
     'weight': 30,
-    'active': 1
+    'active': 1,
+    'admin_notes': '',
 }];

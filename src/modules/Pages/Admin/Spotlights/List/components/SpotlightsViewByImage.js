@@ -15,6 +15,7 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 
 import moment from 'moment';
 import { SpotlightsHelpDrawer } from 'modules/Pages/Admin/Spotlights/SpotlightsHelpDrawer';
+import { filterSpotlights } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(theme => ({
     contentBox: {
@@ -68,7 +69,7 @@ export const SpotlightsViewByImage = ({
     const openHelpLightbox = () => setHelpLightboxOpen(true);
     const closeHelpLightbox = () => setHelpLightboxOpen(false);
 
-    let filterTerm;
+    let filterTerm = '';
 
     const [staticRows, setStaticRows] = useState([]);
     const [rows, setRows] = useState([]);
@@ -83,16 +84,11 @@ export const SpotlightsViewByImage = ({
         setRows(staticRows);
     };
     const filterRowsByText = e => {
-        filterTerm = e.target?.value;
+        filterTerm = e.target?.value || '';
         setTextSearch(filterTerm);
         setRows(
             [...staticRows].filter(r => {
-                const lowercaseLinkAria = r.title.toLowerCase();
-                const lowercaseImgAlt = r.img_alt.toLowerCase();
-                return (
-                    lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
-                    lowercaseImgAlt.includes(filterTerm.toLowerCase())
-                );
+                return filterSpotlights(r, filterTerm);
             }),
         );
     };

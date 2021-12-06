@@ -110,3 +110,14 @@ export const navigateToView = (spotlightid, history) => {
     history.push(`/admin/spotlights/view/${spotlightid}`);
     scrollToTopOfPage();
 };
+
+export function filterSpotlights(r, filterTerm) {
+    const lowercaseLinkAria = r.title.toLowerCase();
+    const lowercaseImgAlt = r.img_alt.toLowerCase();
+    const lowercaseAdminNotes = r.admin_notes.toLowerCase();
+    return (
+        lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
+        lowercaseImgAlt.includes(filterTerm.toLowerCase()) ||
+        lowercaseAdminNotes.includes(filterTerm.toLowerCase())
+    );
+}
