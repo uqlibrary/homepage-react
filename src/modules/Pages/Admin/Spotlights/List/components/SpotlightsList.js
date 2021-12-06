@@ -13,7 +13,6 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 import moment from 'moment';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import SpotlightViewHistory from './SpotlightViewHistory';
-import { useViewByHistoryLightboxState } from 'modules/Pages/Admin/Spotlights/spotlightsHooks';
 
 const useStyles = makeStyles(
     theme => ({
@@ -46,11 +45,9 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
-    const [
-        isViewByHistoryLightboxOpen,
-        handleViewByHistoryLightboxOpen,
-        handleViewByHistoryLightboxClose,
-    ] = useViewByHistoryLightboxState();
+    const [isViewByHistoryLightboxOpen, setViewByHistoryLightboxOpen] = useState(false);
+    const handleViewByHistoryLightboxOpen = () => setViewByHistoryLightboxOpen(true);
+    const handleViewByHistoryLightboxClose = () => setViewByHistoryLightboxOpen(false);
     const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
     const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
 
