@@ -22,8 +22,8 @@ export default {
         },
         tooltips: {
             adminNotesField: 'Anything non-public the admin needs to record about this spotlight',
-            linkDescAriaField: 'Link aria label - describe title and destination',
-            imgAltField: 'Image alt text - include all text in image',
+            linkDescAriaField: 'Link aria label - describe title and destination. Field length of 100 characters',
+            imgAltField: 'Image alt text - include all text in image.  Field length of 255 characters',
             linkField: 'Please enter a valid URL',
             publishDate: 'Select publish date-time',
             unpublishDate: 'Select unpublish date-time',
