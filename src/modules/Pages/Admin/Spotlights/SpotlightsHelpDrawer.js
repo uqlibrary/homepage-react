@@ -51,7 +51,7 @@ export const SpotlightsHelpDrawer = ({ open, helpContent, closeHelpLightbox }) =
         >
             <Fade in={open}>
                 <div className={classes.paper}>
-                    <h2>{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
+                    <h2 data-testid="help-drawer-title">{helpContent?.title || /* istanbul ignore next */ 'TBA'}</h2>
                     <div>{helpContent?.text || /* istanbul ignore next */ ''}</div>
                     <div>
                         <Button

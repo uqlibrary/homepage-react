@@ -95,7 +95,7 @@ export default {
         help: {
             title: 'Add/Edit/Clone help',
             text: (
-                <div data-testid="admin-spotlights-help-example">
+                <div>
                     <p>
                         If a spotlight image already exists, we recommend that you clone that spotlight and reuse the
                         image file rather than upload another copy. To do this, use the Quick search box to search past
@@ -130,7 +130,10 @@ export default {
                         <dt>Admin notes</dt>
                         <dd className="description">
                             <p>Notes field for Spotlight admin to put useful/specific notes about the spotlight.</p>
-                            <p>Admin notes appear on the listing screen following a * (star) character. These notes are not visible to clients.</p>
+                            <p>
+                                Admin notes appear on the listing screen following a * (star) character. These notes are
+                                not visible to clients.
+                            </p>
                             <p>Optional field.</p>
                         </dd>
                         <dt>Link title</dt>
@@ -190,9 +193,12 @@ export default {
                         <dd className="description">
                             <p>Drag and drop tile to adjust spotlight display order.</p>
                             <p>New spotlights are positioned last by default.</p>
-                            <p>Optional and conditional field that is <strong>only visible for current spotlights</strong>.</p>
                             <p>
-                                Reordering on the Form is only reliable when <em>7 or less spotlights are current</em>. 
+                                Optional and conditional field that is{' '}
+                                <strong>only visible for current spotlights</strong>.
+                            </p>
+                            <p>
+                                Reordering on the Form is only reliable when <em>7 or less spotlights are current</em>.
                                 Where we have more, use the List page for reordering.
                             </p>
                         </dd>
@@ -274,7 +280,7 @@ export default {
         help: {
             title: 'Spotlights',
             text: (
-                <div data-testid="admin-spotlights-help-example">
+                <div>
                     <p>
                         UQ Library's Spotlight Management application provides authorised users with an interface to
                         add, update and remove spotlights (promotional images in the carousel). These spotlights are
@@ -288,8 +294,8 @@ export default {
                         full date information by mousing over the short date display.
                     </p>
                     <p>
-                        Admin notes are listed following a * (star) character after the Spotlight title info. 
-                        These notes are not visible to clients on the homepage.
+                        Admin notes are listed following a * (star) character after the Spotlight title info. These
+                        notes are not visible to clients on the homepage.
                     </p>
 
                     <ul>
@@ -556,7 +562,7 @@ export default {
             title: 'View history help',
             text: (
                 <Fragment>
-                    <p data-testid="admin-spotlights-view-by-history-help-example">
+                    <p>
                         The View history page enables you to see the usage of a spotlight image and its related details.
                     </p>
                     <p>
@@ -598,7 +604,7 @@ export default {
             title: 'View by image help',
             text: (
                 <Fragment>
-                    <p data-testid="admin-spotlights-view-by-image-help-example">
+                    <p>
                         Use the View by image screen to browse spotlights by their image. The screen displays all
                         spotlights by Date unpublished (newest to oldest).
                     </p>
@@ -626,7 +632,7 @@ export default {
                     <h3>Search spotlights</h3>
 
                     <p>
-                        Enter keywords into the Quick search text field to filter spotlights based on the Link title, 
+                        Enter keywords into the Quick search text field to filter spotlights based on the Link title,
                         Image alt text and Admin notes fields.
                     </p>
                 </Fragment>
