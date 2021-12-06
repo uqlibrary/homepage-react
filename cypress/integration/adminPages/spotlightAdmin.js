@@ -77,6 +77,28 @@ function removeImageFromDragzone() {
 
 const placeholderImage = 'https://app-testing.library.uq.edu.au/file/public/3530e810-40e5-11ec-b167-ad28af8d7358.png';
 
+function hasAWorkingHelpButton(idHelpButton = 'admin-spotlights-help-button') {
+    // help is not initially displayed
+    cy.get('[data-testid="help-drawer-title"]').should('not.exist');
+
+    // click the help button
+    cy.get(`[data-testid="${idHelpButton}"]`).scrollIntoView();
+    cy.get(`[data-testid="${idHelpButton}"]`).should('be.visible');
+    cy.get(`[data-testid="${idHelpButton}"]`)
+        .should('exist')
+        .click();
+
+    // we can see the help contents
+    cy.get('[data-testid="help-drawer-title"]').scrollIntoView();
+    cy.get('[data-testid="help-drawer-title"]').should('be.visible');
+
+    // the close button works
+    cy.get('[data-testid="spotlights-helpdrawer-close-button"]')
+        .should('exist')
+        .click();
+    cy.get('[data-testid="help-drawer-title"]').should('not.exist');
+}
+
 describe('Spotlights Admin Pages', () => {
     before(() => {
         const FILTER_STORAGE_NAME = 'alert-admin-filter-term'; // match to SpotlightsListAsTable
@@ -417,8 +439,8 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
-                cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(3, 3));
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
+                cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(4, 4));
 
                 cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
                     .should('exist')
@@ -488,6 +510,9 @@ describe('Spotlights Admin Pages', () => {
                     'eq',
                     'http://localhost:2020/admin/spotlights/clone/9eab3aa0-82c1-11eb-8896-eb36601837f5',
                 );
+            });
+            it('the help button opens the help drawer on the list page', () => {
+                hasAWorkingHelpButton();
             });
             it('the split button closes when the user clicks away', () => {
                 // open the split button
@@ -572,14 +597,20 @@ describe('Spotlights Admin Pages', () => {
                     .should('exist')
                     .children()
                     .should('have.length', 47);
-                // typing "can" in the filter reduces the number of thumbnails to 7
+                // typing "can" in the filter reduces the number of thumbnails to 8
                 cy.get('[data-testid="spotlights-viewbyimage-filter-text-field"] input')
                     .should('exist')
                     .type('can');
                 cy.get('[data-testid="spotlights-viewbyimage-lightbox-content"] div')
                     .should('exist')
                     .children()
-                    .should('have.length', 7);
+                    .should('have.length', 8);
+                // an alert with title containing "can" displays
+                cy.get('[data-testid="3fa92cc0-6ab9-11e7-839f-a1392c2927cc-lightbox-item"]').should('exist');
+                // an alert with img_alt containing "can" displays
+                cy.get('[data-testid="298288b0-605c-11eb-ad87-357f112348ef-lightbox-item"]').should('exist');
+                // an alert with admin note containing "can" displays
+                cy.get('[data-testid="f0a1de60-1999-11e7-af36-7d945160e88f-lightbox-item"]').should('exist');
                 // the clear-filter text field 'x' buttons works
                 cy.get('[data-testid="spotlights-viewbyimage-filter-text-clear-button"]')
                     .should('exist')
@@ -606,24 +637,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-viewbyimage-lightbox-title"]').should('exist');
             });
             it('the view-by-image help button works', () => {
-                // help is not inittially displayed
-                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').should('not.exist');
-
-                // click the help button
-                cy.get('[data-testid="admin-spotlights-viewbyimage-help-button"]').should('be.visible');
-                cy.get('[data-testid="admin-spotlights-viewbyimage-help-button"]')
-                    .should('exist')
-                    .click();
-
-                // we can see the help contents
-                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').scrollIntoView();
-                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').should('be.visible');
-
-                // the close button works
-                cy.get('[data-testid="spotlights-helpdrawer-close-button"]')
-                    .should('exist')
-                    .click();
-                cy.get('[data-testid="admin-spotlights-view-by-image-help-example"]').should('not.exist');
+                hasAWorkingHelpButton('admin-spotlights-viewbyimage-help-button');
             });
             it('the view-by-image close button works', () => {
                 cy.get('[data-testid="spotlights-viewbyimage-lightbox-close-button"]')
@@ -733,18 +747,7 @@ describe('Spotlights Admin Pages', () => {
             });
             it('the view-by-history has a working Help button', () => {
                 loadTheHistoryLightbox('9eab3aa0-82c1-11eb-8896-eb36601837f5');
-                // open the help pop up
-                cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('not.exist');
-                cy.get('[data-testid="spotlights-viewbyhistory-lightbox-help-button"]').should('be.visible');
-                cy.get('[data-testid="spotlights-viewbyhistory-lightbox-help-button"]').click();
-
-                // we can see the help contents
-                cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').scrollIntoView();
-                cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('be.visible');
-
-                // the close button works
-                cy.get('[data-testid="spotlights-helpdrawer-close-button"]').click();
-                cy.get('[data-testid="admin-spotlights-view-by-history-help-example"]').should('not.exist');
+                hasAWorkingHelpButton('spotlights-viewbyhistory-lightbox-help-button');
             });
         });
         context('Spotlight Admin session storage', () => {
@@ -769,7 +772,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
 
                 // we load the view page, then click the cancel button to come back to the list page
                 cy.get('[data-testid="spotlight-list-past"] tbody tr:first-child button:first-child')
@@ -794,7 +797,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', 'can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
                 // the current and scheduled lists arent filtered
                 cy.get('[data-testid="admin-spotlights-list-current-list"] tbody')
                     .children()
@@ -824,12 +827,12 @@ describe('Spotlights Admin Pages', () => {
                     getFooterLabel(totalCountPastRecords),
                 );
 
-                // we reduce the number of rows to 3 by typing into the filter input field
+                // we reduce the number of rows to 4 by typing into the filter input field
                 cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
 
                 // we load the Clone page, then click the cancel button to come back to the List page
                 cy.get('[data-testid="spotlight-list-past"] tbody tr:first-child button:nth-child(2)')
@@ -848,13 +851,13 @@ describe('Spotlights Admin Pages', () => {
                     .click();
                 cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
 
-                // the filter text field still has the previously typed word and only 3 rows are present
+                // the filter text field still has the previously typed word and only 4 rows are present
                 cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
                 cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
                 cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', 'can');
                 cy.get('[data-testid="spotlight-list-past"] tbody')
                     .children()
-                    .should('have.length', 3 + numRowsHiddenAsNoDatainfo);
+                    .should('have.length', 4 + numRowsHiddenAsNoDatainfo);
 
                 // we use the 'x' button to clear the text field and restore the rows to 5
                 cy.get('[data-testid="spotlights-list-clear-text-filter-clear-button"]')
@@ -1391,18 +1394,7 @@ describe('Spotlights Admin Pages', () => {
                     .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
             });
             it('has a working Help button on the Add page', () => {
-                // open the help pop up
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
-                cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
-                cy.get('[data-testid="admin-spotlights-help-button"]').click();
-
-                // we can see the help contents
-                cy.get('[data-testid="admin-spotlights-help-example"]').scrollIntoView();
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('be.visible');
-
-                // the close button works
-                cy.get('button:contains("Close")').click();
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
+                hasAWorkingHelpButton();
             });
             it('save button on the add page is disabled unless the form is valid', () => {
                 // fill out the form from the bottom up to double-check the "button enables properly"
@@ -1580,21 +1572,6 @@ describe('Spotlights Admin Pages', () => {
                     .children()
                     .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
             });
-            it('has a working Help button on the Edit page', () => {
-                // open the help pop up
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
-                cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
-                cy.wait(100);
-                cy.get('[data-testid="admin-spotlights-help-button"]').click();
-
-                // we can see the help contents
-                cy.get('[data-testid="admin-spotlights-help-example"]').scrollIntoView();
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('be.visible');
-
-                // the close button works
-                cy.get('button:contains("Close")').click();
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
-            });
             it('the edit form presets the correct data', () => {
                 cy.wait(100);
                 cy.get('[data-testid="admin-spotlights-form-title"] textarea').should(
@@ -1619,6 +1596,8 @@ describe('Spotlights Admin Pages', () => {
                     'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
                 );
                 cy.get('[data-testid="admin-spotlights-form-checkbox-published"] input').should('be.checked');
+
+                hasAWorkingHelpButton();
             });
             it('Edit save button is disabled when the form is invalid', () => {
                 // this is an edit page, so the page loads valid
@@ -1737,19 +1716,7 @@ describe('Spotlights Admin Pages', () => {
                     .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
             });
             it('has a working Help button on the Clone page', () => {
-                // open the help pop up
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
-                cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
-                cy.wait(100);
-                cy.get('[data-testid="admin-spotlights-help-button"]').click();
-
-                // we can see the help contents
-                cy.get('[data-testid="admin-spotlights-help-example"]').scrollIntoView();
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('be.visible');
-
-                // the close button works
-                cy.get('button:contains("Close")').click();
-                cy.get('[data-testid="admin-spotlights-help-example"]').should('not.exist');
+                hasAWorkingHelpButton();
             });
             it('the clone form presets the correct data', () => {
                 cy.wait(100);
@@ -1950,13 +1917,7 @@ describe('Spotlights Admin Pages', () => {
                 .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
         });
         it('has a working Help button on the View page', () => {
-            cy.get('[data-testid="admin-spotlights-view-help-example"]').should('not.exist');
-            cy.get('[data-testid="admin-spotlights-help-button"]').should('be.visible');
-            cy.wait(100);
-            cy.get('[data-testid="admin-spotlights-help-button"]').click();
-            cy.get('[data-testid="admin-spotlights-view-help-example"]').should('be.visible');
-            cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-spotlights-view-help-example"]').should('not.exist');
+            hasAWorkingHelpButton();
         });
         it('the view page displays the correct data', () => {
             cy.wait(100);

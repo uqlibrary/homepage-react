@@ -41,7 +41,7 @@ export const spotlightsLong = [{
     "img_alt": "Pay to publish?",
     "weight": 0,
     "active": 1,
-    "admin_notes": '',
+    "admin_notes": 'includes the word "can" so it shows in the view-by-image filter results',
 }, {
     "id": "a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9",
     "start": "2018-02-24 23:59:00",
@@ -409,10 +409,10 @@ export const spotlightsLong = [{
     "id": "298288b0-605c-11eb-ad87-357f112348ef",
     "start": "2031-01-27 00:01:00",
     "end": "2099-02-07 23:59:00",
-    "title": "Changes to Library loans and rules (can be edited)",
+    "title": "Changes to Library loans and rules (editable)",
     "url": "https:\/\/web.library.uq.edu.au\/borrowing-requesting\/how-borrow\/borrowing-rules",
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/43f8c480-e1e9-11ea-8b42-656cb34d5c84.jpg',
-    "img_alt": "Changes to Library loans and rules",
+    "img_alt": "Changes to Library loans and rules (can be edited)",
     "weight": 50,
     "active": 0,
     "admin_notes": '',
@@ -513,5 +513,6 @@ export const spotlightsLong = [{
     'img_url': 'http:\/\/localhost:2020\/public\/images\/spotlights\/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
     "img_alt": "Have you got your mask? Please continue to maintain physically distancing.",
     "weight": 30,
-    "active": 1
+    "active": 1,
+    "admin_notes": '',
 }];

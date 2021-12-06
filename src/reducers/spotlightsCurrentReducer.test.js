@@ -12,7 +12,7 @@ describe('current spotlight reducer', () => {
 
     it('should handle a failing Spotlights API call', () => {
         const test = spotlightCurrentReducer(emptyState, {
-            type: actions.SPOTLIGHTS_CURRENT_FAILED,
+            type: actions.SPOTLIGHTS_HOMEPAGE_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({

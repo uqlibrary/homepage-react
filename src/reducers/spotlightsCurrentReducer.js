@@ -7,18 +7,18 @@ export const initialState = {
 };
 
 const handlers = {
-    [actions.SPOTLIGHTS_CURRENT_LOADING]: state => ({
+    [actions.SPOTLIGHTS_HOMEPAGE_LOADING]: state => ({
         ...state,
         currentSpotlightsLoading: true,
     }),
 
-    [actions.SPOTLIGHTS_CURRENT_LOADED]: (state, action) => ({
+    [actions.SPOTLIGHTS_HOMEPAGE_LOADED]: (state, action) => ({
         ...state,
         currentSpotlights: action.payload,
         currentSpotlightsLoading: false,
     }),
 
-    [actions.SPOTLIGHTS_CURRENT_FAILED]: (state, action) => ({
+    [actions.SPOTLIGHTS_HOMEPAGE_FAILED]: (state, action) => ({
         ...state,
         currentSpotlightsLoading: false,
         currentSpotlightsError: action.payload,
