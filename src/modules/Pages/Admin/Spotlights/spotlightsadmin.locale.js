@@ -130,7 +130,7 @@ export default {
                         <dt>Admin notes</dt>
                         <dd className="description">
                             <p>Notes field for Spotlight admin to put useful/specific notes about the spotlight.</p>
-                            <p>Admin notes appear on the listing screen following a * (star) character. These notes are not visible to clients.
+                            <p>Admin notes appear on the listing screen following a * (star) character. These notes are not visible to clients.</p>
                             <p>Optional field.</p>
                         </dd>
                         <dt>Link title</dt>
