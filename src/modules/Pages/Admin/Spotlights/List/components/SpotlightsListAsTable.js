@@ -931,7 +931,7 @@ export const SpotlightsListAsTable = ({
                                                                         className={classes.startDate}
                                                                         style={{ padding: 0 }}
                                                                     >
-                                                                        <span title={spotlight.startDateLong}>
+                                                                        <span title={spotlight.startDateMouseover}>
                                                                             {spotlight.startDateDisplay}
                                                                         </span>
                                                                     </TableCell>
@@ -944,7 +944,7 @@ export const SpotlightsListAsTable = ({
                                                                         style={{ padding: 8 }}
                                                                     >
                                                                         <span
-                                                                            title={`${spotlight.endDateLong} ${
+                                                                            title={`${spotlight.endDateMouseover} ${
                                                                                 tableType !== 'past' &&
                                                                                 endsThisWeek(spotlight)
                                                                                     ? ' - ends this week'

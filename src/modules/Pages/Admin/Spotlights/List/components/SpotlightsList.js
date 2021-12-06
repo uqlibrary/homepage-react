@@ -11,7 +11,11 @@ import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/Spotlights
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
-import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import {
+    isPastSpotlight,
+    isScheduledSpotlight,
+    scrollToTopOfPage,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import SpotlightViewHistory from './SpotlightViewHistory';
 
 const useStyles = makeStyles(
@@ -61,40 +65,41 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     }, []);
 
     useEffect(() => {
+        // detect if the supplied date has time component "on the hour"
+        // (when the time would give eg 7:00am we collapse it down to 7am)
+        const isTimeOnTheHour = inputDate => moment(inputDate).format('m') === '0';
+
+        const pastDateDuringHourFormat = 'ddd D MMM YYYY [\n]h.mma';
+        const pastDateOnTheHourFormat = pastDateDuringHourFormat.replace('h.mma', 'ha');
+        const currentDateOnTheHourFormat = pastDateOnTheHourFormat.replace(' YYYY', '');
+        const currentDateDuringTheHourFormat = pastDateDuringHourFormat.replace(' YYYY', '');
+        const currentDateFormat = inputDate =>
+            isTimeOnTheHour(inputDate) ? currentDateOnTheHourFormat : currentDateDuringTheHourFormat;
+        const pastDateFormat = inputDate =>
+            isTimeOnTheHour(inputDate) ? pastDateOnTheHourFormat : pastDateDuringHourFormat;
+
         if (!!spotlights && spotlights.length > 0) {
             setPastSpotlights([]);
             setCurrentSpotlights([]);
             setScheduledSpotlights([]);
-            spotlights.forEach(spotlight => {
-                const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
-                const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
-                const currentDateOnTheHour = pastDateOnTheHour.replace(' YYYY', '');
-                const currentDateDuringTheHour = pastDateDuringHour.replace(' YYYY', '');
-                if (moment(spotlight.end).isBefore(moment())) {
-                    spotlight.startDateDisplay = moment(spotlight.start).format(
-                        moment(spotlight.start).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
-                    );
-                    spotlight.endDateDisplay = moment(spotlight.end).format(
-                        moment(spotlight.end).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
-                    );
-                } else {
-                    spotlight.startDateDisplay = moment(spotlight.start).format(
-                        moment(spotlight.start).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
-                    );
-                    spotlight.endDateDisplay = moment(spotlight.end).format(
-                        moment(spotlight.end).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
-                    );
-                }
-                // we provide a mousover with the complete data for clarity
+            spotlights.forEach(s => {
+                // past spotlights have their dates displayed in a different format to current & scheduled spotlights
+                s.startDateDisplay = moment(s.start).format(
+                    isPastSpotlight(s) ? pastDateFormat(s.start) : currentDateFormat(s.start),
+                );
+                s.endDateDisplay = moment(s.end).format(
+                    isPastSpotlight(s) ? pastDateFormat(s.end) : currentDateFormat(s.end),
+                );
+
                 const fullDateFormat = 'dddd D MMMM YYYY h.mma';
-                spotlight.startDateLong = moment(spotlight.start).format(fullDateFormat);
-                spotlight.endDateLong = moment(spotlight.end).format(fullDateFormat);
-                if (moment(spotlight.end).isBefore(moment())) {
-                    setPastSpotlights(pastState => [...pastState, spotlight]);
-                } else if (moment(spotlight.start).isAfter(moment())) {
-                    setScheduledSpotlights(pastState => [...pastState, spotlight]);
+                s.startDateMouseover = moment(s.start).format(fullDateFormat);
+                s.endDateMouseover = moment(s.end).format(fullDateFormat);
+                if (isPastSpotlight(s)) {
+                    setPastSpotlights(pastState => [...pastState, s]);
+                } else if (isScheduledSpotlight(s)) {
+                    setScheduledSpotlights(pastState => [...pastState, s]);
                 } else {
-                    setCurrentSpotlights(pastState => [...pastState, spotlight]);
+                    setCurrentSpotlights(pastState => [...pastState, s]);
                 }
             });
         }
