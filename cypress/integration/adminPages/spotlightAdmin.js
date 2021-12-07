@@ -1245,7 +1245,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
             });
 
-            it('Entering the fields works', () => {
+            it('Entering the fields on the add form works', () => {
                 saveButtonisDisabled();
                 cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 3');
                 cy.get('[data-testid="admin-spotlights-form-title"] textarea').should(
@@ -1324,7 +1324,7 @@ describe('Spotlights Admin Pages', () => {
                 // and the end date has an error message
                 cy.get('[data-testid="admin-spotlights-form-end-date"] p.Mui-error')
                     .should('exist')
-                    .and('contain', 'Date should not be before minimal date');
+                    .and('contain', 'Should not be before Date published');
                 // open the end date so we can fix the date
                 cy.get('[data-testid="admin-spotlights-form-end-date"] button').click();
                 // advance the end date another month
