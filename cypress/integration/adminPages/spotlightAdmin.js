@@ -1238,11 +1238,10 @@ describe('Spotlights Admin Pages', () => {
             });
             it('an url must be valid', () => {
                 cy.get('[data-testid="admin-spotlights-form-link-url"]').should('be.visible');
-                cy.get('[data-testid="admin-spotlights-form-title"] textarea').type('Read more');
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://x.c');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('http://x.c');
                 cy.get('[data-testid="admin-spotlights-form-link-url"]').should('have.class', 'Mui-error');
                 // one more character
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('o');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('o');
                 cy.get('[data-testid="admin-spotlights-form-link-url"]').should('not.have.class', 'Mui-error');
             });
 
@@ -1261,7 +1260,7 @@ describe('Spotlights Admin Pages', () => {
                 );
 
                 cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').should(
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should(
                     'have.value',
                     'http://example.com',
                 );
@@ -1317,6 +1316,9 @@ describe('Spotlights Admin Pages', () => {
                         .startOf('month');
                     expect(defaultDate).to.include(nextmonth.format('DD/MM/YYYY'));
                 });
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .parent()
+                    .should('not.contain', 'This date is in the past.');
                 // and the end date field now has an error, so the submit button is disabled
                 saveButtonisDisabled();
                 // and the end date has an error message
@@ -1366,7 +1368,9 @@ describe('Spotlights Admin Pages', () => {
             it('can save a spotlight on the add page', () => {
                 cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 4');
                 cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://example.com');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type(
+                    'http://example.com',
+                );
                 dragFileToDropzone('spotlight-too-large.jpg');
                 assertImageWarningIsPresent('dropzone-dimension-warning');
                 cy.get('[data-testid="admin-spotlights-form-admin-note"]').type('spotlight admin note 4');
@@ -1380,7 +1384,7 @@ describe('Spotlights Admin Pages', () => {
                 // the spotlight page reloads with a blank form
                 cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
                 cy.get('[data-testid="admin-spotlights-form-title"]').should('have.value', '');
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').should('have.value', '');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should('have.value', '');
                 cy.get('[data-testid="admin-spotlights-form-admin-note"]').should('have.value', '');
                 dragzoneIsReadyForDrag();
             });
@@ -1443,6 +1447,34 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://example.com');
                 saveButtonNOTDisabled();
             });
+            it('characters remaining report displays correctly', () => {
+                cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight t');
+                cy.get('[data-testid="admin-spotlights-form-title"]')
+                    .next()
+                    .should('contain', '89 characters left');
+                cy.get('[data-testid="admin-spotlights-form-title"]').type('itle 5');
+                cy.get('[data-testid="admin-spotlights-form-title"]')
+                    .next()
+                    .should('contain', '83 characters left');
+
+                cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight im');
+                cy.get('[data-testid="admin-spotlights-form-tooltip"]')
+                    .next()
+                    .should('contain', '243 characters left');
+                cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('g alt 5');
+                cy.get('[data-testid="admin-spotlights-form-tooltip"]')
+                    .next()
+                    .should('contain', '236 characters left');
+
+                cy.get('[data-testid="admin-spotlights-form-link-url"]').type('http://e');
+                cy.get('[data-testid="admin-spotlights-form-link-url"]')
+                    .next()
+                    .should('contain', '242 characters left');
+                cy.get('[data-testid="admin-spotlights-form-link-url"]').type('xample.com');
+                cy.get('[data-testid="admin-spotlights-form-link-url"]')
+                    .next()
+                    .should('contain', '232 characters left');
+            });
             it('add form shows the reorderable thumbs block', () => {
                 cy.visit('http://localhost:2020/admin/spotlights/add?user=uqstaff');
                 cy.viewport(1300, 1000);
@@ -1456,6 +1488,9 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
                     .contains('OK')
                     .click();
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .parent()
+                    .should('not.contain', 'This date is in the past.');
 
                 // we cant current do any interactive testing, so a basic check is the best we can do
                 cy.get('[data-testid="spotlights-thumbs-reorder"]')
@@ -1528,13 +1563,16 @@ describe('Spotlights Admin Pages', () => {
             });
             it('can make changes to spotlight fields on the edit form', () => {
                 cy.wait(1000); // these waits fix "this element is detached from the DOM" errors :(
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .parent()
+                    .should('contain', 'This date is in the past.');
                 cy.get('[data-testid="admin-spotlights-form-title"] textarea')
                     .clear()
                     .type('spotlight title 3');
                 cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea')
                     .clear()
                     .type('spotlight image alt 3');
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input')
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child')
                     .clear()
                     .type('http://example.com');
 
@@ -1546,6 +1584,9 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
                     .contains('OK')
                     .click();
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .parent()
+                    .should('not.contain', 'This date is in the past.');
 
                 cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
             });
@@ -1586,6 +1627,9 @@ describe('Spotlights Admin Pages', () => {
                     'have.value',
                     '15/03/2021 00:02 am',
                 );
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .next()
+                    .should('contain', 'This date is in the past.');
                 cy.get('[data-testid="admin-spotlights-form-end-date"] input').should(
                     'have.value',
                     '21/03/2099 23:59 pm',
@@ -1618,14 +1662,14 @@ describe('Spotlights Admin Pages', () => {
                 saveButtonNOTDisabled();
 
                 // start an url, but button are disabled while it isnt valid
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').clear();
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').clear();
                 saveButtonisDisabled();
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://e');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('http://e');
                 saveButtonisDisabled();
                 // complete to a valid url
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('xample.com');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('xample.com');
                 saveButtonNOTDisabled();
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').should(
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should(
                     'have.value',
                     'http://example.com',
                 );
@@ -1728,7 +1772,7 @@ describe('Spotlights Admin Pages', () => {
                     'have.value',
                     'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
                 );
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').should(
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should(
                     'have.value',
                     'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
                 );
@@ -1759,14 +1803,14 @@ describe('Spotlights Admin Pages', () => {
                 saveButtonNOTDisabled();
 
                 // start an url, but button are disabled while it isnt valid
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').clear();
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').clear();
                 saveButtonisDisabled();
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('http://e');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('http://e');
                 saveButtonisDisabled();
                 // complete to a valid url
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').type('xample.com');
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('xample.com');
                 saveButtonNOTDisabled();
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input').should(
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should(
                     'have.value',
                     'http://example.com',
                 );
@@ -1779,7 +1823,7 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('[data-testid="admin-spotlights-form-tooltip"] textarea')
                     .clear()
                     .type('spotlight image alt 3');
-                cy.get('[data-testid="admin-spotlights-form-link-url"] input')
+                cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child')
                     .clear()
                     .type('http://example.com');
 
@@ -1791,6 +1835,9 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
                     .contains('OK')
                     .click();
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .parent()
+                    .should('not.contain', 'This date is in the past.');
 
                 cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
             });
@@ -1856,6 +1903,9 @@ describe('Spotlights Admin Pages', () => {
                 cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
                     .contains('OK')
                     .click();
+                cy.get('[data-testid="admin-spotlights-form-start-date"]')
+                    .parent()
+                    .should('not.contain', 'This date is in the past.');
 
                 // we cant current do any interactive testing, so a basic check is the best we can do
                 cy.get('[data-testid="spotlights-thumbs-reorder"]')

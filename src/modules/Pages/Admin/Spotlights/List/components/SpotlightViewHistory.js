@@ -44,6 +44,9 @@ const useStyles = makeStyles(theme => ({
         },
     },
     entry: {
+        '& strong': {
+            fontWeight: 900,
+        },
         '&:hover': {
             backgroundColor: theme.palette.secondary.main,
             transition: 'background-color 1s ease',
