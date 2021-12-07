@@ -51,8 +51,8 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 - `npm run start:url` to use api
   - runs <http://dev-homepage.library.uq.edu.au:2020/#/>
   - add `dev-homepage.library.uq.edu.au` to your /etc/hosts file using your external IP)
-  - to use staging data from the aws api as a backend set API_URL in .env to `https://api.library.uq.edu.au/staging/`
-  - to use local api as a backend set API_URL in .env to `http://dev-api.library.uq.edu.au:8050/` and bring up api repo [(cf)](https://github.com/uqlibrary/api)
+  - to use staging data from the aws api as a backend set API_URL in .env to `https://api.library.uq.edu.au/staging/` (You can only access staging api if you are on a UQ IP address, eg VPN)
+  - to use api locally as a backend, set API_URL in .env to `http://dev-api.library.uq.edu.au:8050/` and bring up api repo [(cf)](https://github.com/uqlibrary/api)
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
     ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
 
@@ -75,8 +75,8 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
   - async loading is not working since chuncks are not saved, navigate directly to required routes
 - `npm run test:cs`
   - Runs Prettier and ESLint checks on all Javascript files in the project, then lists files with code style issues. Check the other npm scripts for ways to fix the issues automatically if possible.
-- `npm run test:e2e:cc`
-  - Runs Cypress tests with code coverage checks. HTML report will be available under `coverage/cypress` while and after tests run.
+- `npm run test:cc`
+  - Runs all tests with code coverage checks. HTML report will be available under `coverage`. Needs to start localhost itself - kill any mock instance you have running before run. 
 
 Mock data is provided for all pages and actions under `src/mock/`.
 

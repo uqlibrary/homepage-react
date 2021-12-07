@@ -41,6 +41,28 @@ const useStyles = makeStyles(() => ({
             minHeight: '1.1em',
         },
     },
+    errorStyle: {
+        color: '#c80000',
+        marginTop: 3,
+        fontSize: '0.75rem',
+    },
+    typingArea: {
+        '& textarea ': {
+            backgroundColor: 'rgb(236, 236, 236, 0.5)',
+            borderRadius: 4,
+            padding: 10,
+        },
+        '& label': {
+            color: '#000',
+            paddingLeft: 10,
+            paddingTop: 10,
+        },
+    },
+    charactersRemaining: {
+        textAlign: 'right',
+        color: '#504e4e',
+        fontSize: '0.8em',
+    },
 }));
 
 export const isValidImageUrl = testurl => {
@@ -398,6 +420,16 @@ export const SpotlightForm = ({
         });
     };
 
+    const ImageAltMaxLength = 255;
+    const titleMaxLength = 100;
+    const urlMaxLength = 250;
+
+    // display a count of the remaining characters for the field
+    const characterCount = (numCharsCurrent, numCharsMax) => (
+        <div className={classes.charactersRemaining}>
+            {numCharsCurrent > 0 && `${numCharsMax - numCharsCurrent} characters left`}
+        </div>
+    );
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
@@ -457,7 +489,11 @@ export const SpotlightForm = ({
                 />
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
+                        <FormControl
+                            className={classes.typingArea}
+                            fullWidth
+                            title={locale.form.tooltips.adminNotesField}
+                        >
                             <InputLabel htmlFor="spotlightAdminNote">{locale.form.labels.adminNotesField}</InputLabel>
                             <Input
                                 id="spotlightAdminNote"
@@ -472,51 +508,60 @@ export const SpotlightForm = ({
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
+                        <FormControl
+                            className={classes.typingArea}
+                            fullWidth
+                            title={locale.form.tooltips.linkDescAriaField}
+                        >
                             <InputLabel htmlFor="spotlightTitle">{locale.form.labels.linkDescAriaField}</InputLabel>
                             <Input
                                 id="spotlightTitle"
                                 data-testid="admin-spotlights-form-title"
                                 error={!isValidLinkAria(values.title)}
-                                inputProps={{ maxLength: 100 }}
+                                inputProps={{ maxLength: titleMaxLength }}
                                 multiline
                                 onChange={handleChange('title')}
                                 required
                                 rows={2}
                                 value={values.title}
                             />
+                            {!!values.title && characterCount(values.title.length, titleMaxLength)}
                         </FormControl>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.imgAltField}>
+                        <FormControl className={classes.typingArea} fullWidth title={locale.form.tooltips.imgAltField}>
                             <InputLabel htmlFor="spotlightTooltip">{locale.form.labels.imgAltField}</InputLabel>
                             <Input
                                 id="spotlightTooltip"
                                 data-testid="admin-spotlights-form-tooltip"
                                 error={!isValidImgAlt(values.img_alt)}
-                                value={values.img_alt}
-                                onChange={handleChange('img_alt')}
-                                inputProps={{ maxLength: 255 }}
+                                inputProps={{ maxLength: ImageAltMaxLength }}
                                 multiline
+                                onChange={handleChange('img_alt')}
                                 rows={2}
+                                value={values.img_alt}
                             />
+                            {!!values.img_alt && characterCount(values.img_alt.length, ImageAltMaxLength)}
                         </FormControl>
                     </Grid>
                 </Grid>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
-                        <FormControl fullWidth title={locale.form.tooltips.linkField}>
+                        <FormControl fullWidth title={locale.form.tooltips.linkField} className={classes.typingArea}>
                             <InputLabel htmlFor="linkUrl">{locale.form.labels.linkField}</InputLabel>
                             <Input
                                 type="url"
                                 id="linkUrl"
                                 data-testid="admin-spotlights-form-link-url"
-                                value={values.url}
-                                onChange={handleChange('url')}
                                 error={!isValidImageUrl(values.url)}
+                                inputProps={{ maxLength: urlMaxLength }}
+                                multiline
+                                onChange={handleChange('url')}
+                                value={values.url}
                             />
+                            {!!values.url && characterCount(values.url.length, urlMaxLength)}
                         </FormControl>
                     </Grid>
                 </Grid>
@@ -537,6 +582,9 @@ export const SpotlightForm = ({
                                 'aria-label': locale.form.tooltips.publishDate,
                             }}
                         />
+                        {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
+                            <div className={classes.errorStyle}>This date is in the past.</div>
+                        )}
                     </Grid>
                     <Grid item md={5} xs={12}>
                         <KeyboardDateTimePicker
