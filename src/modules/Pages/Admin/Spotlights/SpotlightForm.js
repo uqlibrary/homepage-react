@@ -180,11 +180,12 @@ export const SpotlightForm = ({
 
     function isInvalidEndDate(endDate, startDate) {
         const startDateReformatted = startDate !== '' && moment(startDate).format('YYYY-MM-DDTHH:mm');
+        const endDateReformatted = endDate !== '' && moment(endDate).format('YYYY-MM-DDTHH:mm');
         // console.log('isInvalidEndDate endDate < startDateReformatted: ', endDate, ' < ', startDateReformatted);
         // console.log("isInvalidEndDate startDate !== '': ", startDate !== '');
         // console.log('isInvalidEndDate together: ', endDate < startDateReformatted && startDate !== '');
         // console.log('isInvalidEndDate !moment(endDate).isValid() = ', !moment(endDate).isValid());
-        return (startDate !== '' && endDate < startDateReformatted) || !moment(endDate).isValid();
+        return (startDate !== '' && endDateReformatted < startDateReformatted) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
@@ -503,6 +504,7 @@ export const SpotlightForm = ({
                                 rows={2}
                                 value={values.admin_notes}
                             />
+                            {!!values.img_alt && characterCount(values.img_alt.length, ImageAltMaxLength)}
                         </FormControl>
                     </Grid>
                 </Grid>
@@ -599,6 +601,7 @@ export const SpotlightForm = ({
                             KeyboardButtonProps={{
                                 'aria-label': locale.form.tooltips.unpublishDate,
                             }}
+                            minDateMessage="Should not be before Date published"
                         />
                     </Grid>
                 </Grid>
