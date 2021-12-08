@@ -1,4 +1,4 @@
-import { default as locale } from './spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 const moment = require('moment');
 

@@ -9,11 +9,11 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 
 import Box from '@material-ui/core/Box';
 
-import SpotlightSizeWarningByUrl from 'modules/Pages/Admin/Spotlights/SpotlightSizeWarningByUrl';
+import SpotlightSizeWarningByUrl from 'modules/Pages/Admin/Spotlights/Form/SpotlightSizeWarningByUrl';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
-import { SpotlightsHelpDrawer } from '../../SpotlightsHelpDrawer';
+import { SpotlightsHelpDrawer } from '../SpotlightsHelpDrawer';
 import SpotlightSplitButton from './SpotlightSplitButton';
 import {
     isPastSpotlight,

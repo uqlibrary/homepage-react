@@ -7,7 +7,11 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { isCurrentSpotlight, moveItemInArray, getWeightAfterDrag } from './spotlighthelpers';
+import {
+    isCurrentSpotlight,
+    moveItemInArray,
+    getWeightAfterDrag,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const useStyles = makeStyles(() => ({
     reorderableThumb: {

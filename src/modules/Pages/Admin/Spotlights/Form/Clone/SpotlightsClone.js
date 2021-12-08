@@ -7,11 +7,11 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
-import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
-export const SpotlightsEdit = ({
+export const SpotlightsClone = ({
     actions,
     spotlight,
     spotlightError,
@@ -25,6 +25,8 @@ export const SpotlightsEdit = ({
 }) => {
     const { spotlightid } = useParams();
 
+    const [defaults, setDefaults] = React.useState({});
+
     React.useEffect(() => {
         /* istanbul ignore else */
         if (!!spotlightid) {
@@ -34,7 +36,36 @@ export const SpotlightsEdit = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
 
-    if (spotlightStatus === 'loading' || !!publicFileUploading) {
+    React.useEffect(() => {
+        if (!!spotlightid && spotlight?.id === spotlightid) {
+            setDefaults({
+                id: spotlight?.id || /* istanbul ignore next */ '',
+                startDateDefault: getTimeMondayMidnightNext(),
+                endDateDefault: getTimeSundayNextFormatted(),
+                title: spotlight?.title || /* istanbul ignore next */ '',
+                url: spotlight?.url || /* istanbul ignore next */ '',
+                // eslint-disable-next-line camelcase
+                img_url: spotlight?.img_url || /* istanbul ignore next */ '',
+                // eslint-disable-next-line camelcase
+                img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
+                weight: spotlight?.weight || 1000,
+                active: spotlight?.active || 0,
+                // minimumDate: getStartOfDayFormatted(),
+                type: 'clone',
+                // eslint-disable-next-line camelcase
+                admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [spotlight]);
+
+    if (
+        spotlightStatus === 'loading' ||
+        spotlightStatus === null ||
+        !!publicFileUploading ||
+        !defaults ||
+        !defaults.id
+    ) {
         return (
             <div style={{ minHeight: 600 }}>
                 <InlineLoader message="Loading" />
@@ -42,55 +73,11 @@ export const SpotlightsEdit = ({
         );
     }
 
-    const emptySpotlight = {
-        id: spotlightid,
-        startDateDefault: '',
-        endDateDefault: '',
-        title: '',
-        url: '',
-        // eslint-disable-next-line camelcase
-        img_url: '',
-        // eslint-disable-next-line camelcase
-        img_alt: '',
-        weight: 0,
-        active: 0,
-        type: 'edit',
-    };
-
-    function setDefaults() {
-        const startDateDefault = spotlight?.start ? formatDate(spotlight.start, 'YYYY-MM-DDTHH:mm:ss') : '';
-        const endDateDefault = spotlight?.end ? formatDate(spotlight.end, 'YYYY-MM-DDTHH:mm:ss') : '';
-        if (spotlight?.id !== spotlightid) {
-            // after the save returns we (possibly) reweight the other spotlights
-            // they return into this page in the 'spotlight' variable
-            // we dont want to display them
-            return emptySpotlight;
-        }
-        return {
-            id: spotlight?.id || /* istanbul ignore next */ '',
-            startDateDefault: startDateDefault,
-            endDateDefault: endDateDefault,
-            title: spotlight?.title || /* istanbul ignore next */ '',
-            url: spotlight?.url || /* istanbul ignore next */ '',
-            // eslint-disable-next-line camelcase
-            img_url: spotlight?.img_url || /* istanbul ignore next */ '',
-            // eslint-disable-next-line camelcase
-            img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
-            weight: spotlight?.weight || /* istanbul ignore next */ 0,
-            active: spotlight?.active || /* istanbul ignore next */ 0,
-            type: 'edit',
-            // eslint-disable-next-line camelcase
-            admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
-        };
-    }
-
-    const defaults = setDefaults();
-
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
                 <SpotlightsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
-                <StandardCard title="Edit spotlight">
+                <StandardCard title="Clone spotlight">
                     <SpotlightForm
                         actions={actions}
                         spotlightResponse={spotlight}
@@ -110,7 +97,7 @@ export const SpotlightsEdit = ({
     );
 };
 
-SpotlightsEdit.propTypes = {
+SpotlightsClone.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
     spotlightError: PropTypes.any,
@@ -123,4 +110,4 @@ SpotlightsEdit.propTypes = {
     spotlightsLoading: PropTypes.any,
 };
 
-export default SpotlightsEdit;
+export default SpotlightsClone;

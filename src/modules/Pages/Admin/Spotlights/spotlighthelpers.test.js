@@ -4,7 +4,7 @@ import {
     getTimeMondayMidnightNext,
     getTimeSundayNextFormatted,
     getWeightAfterDrag,
-} from './spotlighthelpers';
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const moment = require('moment');
 

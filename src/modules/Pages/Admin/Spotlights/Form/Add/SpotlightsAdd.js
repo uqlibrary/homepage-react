@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
+import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
 import {
     getStartOfDayFormatted,
     getTimeMondayMidnightNext,

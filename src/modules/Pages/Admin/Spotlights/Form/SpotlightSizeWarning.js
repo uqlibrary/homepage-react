@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import CheckIcon from '@material-ui/icons/Check';
 import Warning from '@material-ui/icons/Warning';
 
-import { default as locale } from './spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import { addConstantsToDisplayValues } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 

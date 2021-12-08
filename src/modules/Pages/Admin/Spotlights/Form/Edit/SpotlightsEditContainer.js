@@ -3,11 +3,13 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import SpotlightsView from '../components/SpotlightsView';
+import SpotlightsEdit from './SpotlightsEdit';
 
 const mapStateToProps = state => {
     return {
         ...state.get('spotlightReducer'),
+        ...state.get('publicFileUploadReducer'),
+        ...state.get('spotlightsReducer'),
     };
 };
 
@@ -17,7 +19,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SpotlightsViewContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsView);
-SpotlightsViewContainer = withRouter(SpotlightsViewContainer);
+let SpotlightsEditContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsEdit);
+SpotlightsEditContainer = withRouter(SpotlightsEditContainer);
 
-export default SpotlightsViewContainer;
+export default SpotlightsEditContainer;

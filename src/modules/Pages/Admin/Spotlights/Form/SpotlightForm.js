@@ -12,7 +12,7 @@ import { KeyboardDateTimePicker } from '@material-ui/pickers';
 
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/SpotlightFileUploadDropzone';
+import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/Form/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 

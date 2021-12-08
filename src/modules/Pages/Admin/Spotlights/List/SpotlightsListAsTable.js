@@ -28,7 +28,7 @@ import SortIcon from '@material-ui/icons/Sort';
 import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../../spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';

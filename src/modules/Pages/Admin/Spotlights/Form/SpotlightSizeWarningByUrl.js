@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import SpotlightSizeWarning from 'modules/Pages/Admin/Spotlights/SpotlightSizeWarning';
+import SpotlightSizeWarning from 'modules/Pages/Admin/Spotlights/Form/SpotlightSizeWarning';
 
 export const SpotlightSizeWarningByUrl = ({ spotlightImageUrl }) => {
     const [imgWidth, setImgWidth] = useState(null);

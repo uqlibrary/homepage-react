@@ -8,8 +8,8 @@ import { useConfirmationState } from 'hooks';
 import DeleteIcon from '@material-ui/icons/Delete';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
-import { default as locale } from './spotlightsadmin.locale';
-import { addConstantsToDisplayValues } from './spotlighthelpers';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { addConstantsToDisplayValues } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { SpotlightSizeWarning } from './SpotlightSizeWarning';
 
 const emptyDropzone = {

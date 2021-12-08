@@ -3,10 +3,12 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import SpotlightsList from '../components/SpotlightsList';
+import SpotlightsClone from './SpotlightsClone';
 
 const mapStateToProps = state => {
     return {
+        ...state.get('spotlightReducer'),
+        ...state.get('publicFileUploadReducer'),
         ...state.get('spotlightsReducer'),
     };
 };
@@ -17,7 +19,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SpotlightsAdminContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsList);
-SpotlightsAdminContainer = withRouter(SpotlightsAdminContainer);
+let SpotlightsCloneContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsClone);
+SpotlightsCloneContainer = withRouter(SpotlightsCloneContainer);
 
-export default SpotlightsAdminContainer;
+export default SpotlightsCloneContainer;

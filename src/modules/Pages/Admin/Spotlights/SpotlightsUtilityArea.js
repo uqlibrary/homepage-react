@@ -4,8 +4,8 @@ import PropTypes from 'prop-types';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
 import { SpotlightsHelpDrawer } from './SpotlightsHelpDrawer';
-import { SpotlightsViewByImage } from './List/components/SpotlightsViewByImage';
-import { default as locale } from './spotlightsadmin.locale';
+import { SpotlightsViewByImage } from './SpotlightsViewByImage';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 /**
  * a block that shows:

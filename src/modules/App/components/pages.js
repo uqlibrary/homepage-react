@@ -33,19 +33,19 @@ export const AlertsClone = lazy(() =>
 export const AlertsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/View/containers/AlertsView')));
 export const AlertsList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/List/containers/AlertsList')));
 export const SpotlightsList = lazy(() =>
-    lazyRetry(() => import('modules/Pages/Admin/Spotlights/List/containers/SpotlightsList')),
+    lazyRetry(() => import('modules/Pages/Admin/Spotlights/List/SpotlightsListContainer')),
 );
 export const SpotlightsAdd = lazy(() =>
-    lazyRetry(() => import('modules/Pages/Admin/Spotlights/Add/containers/SpotlightsAdd')),
+    lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Add/SpotlightsAddContainer')),
 );
 export const SpotlightsEdit = lazy(() =>
-    lazyRetry(() => import('modules/Pages/Admin/Spotlights/Edit/containers/SpotlightsEdit')),
+    lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Edit/SpotlightsEditContainer')),
 );
 export const SpotlightsView = lazy(() =>
-    lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/containers/SpotlightsView')),
+    lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')),
 );
 export const SpotlightsClone = lazy(() =>
-    lazyRetry(() => import('modules/Pages/Admin/Spotlights/Clone/containers/SpotlightsClone')),
+    lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')),
 );
 
 // always load components
