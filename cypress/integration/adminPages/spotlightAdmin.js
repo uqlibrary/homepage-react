@@ -4,6 +4,24 @@ import { default as locale } from '../../../src/modules/Pages/Admin/Spotlights/s
 const numberCurrentPublishedSpotlights = 4;
 const totalCountPastRecords = 34;
 
+function clickButton(selector) {
+    // hacky call to jquery as fix for occasional error:
+    // "This DOM element likely became detached somewhere between the previous and current command.'
+    // Try this function when that error occurs occasionally in tests when clicking a button
+    // per https://github.com/cypress-io/cypress/issues/7306#issuecomment-639828954
+    cy.get(selector).scrollIntoView();
+    cy.get(selector).should('exist');
+    cy.get(selector).should('be.visible');
+    cy.get(selector).then(e => {
+        Cypress.$(e).click();
+    });
+
+    /*
+    for a input field problem clearing, first try adding a .focus(), if that isnt sufficient add eg
+        .should('have.value', 'Example alert:')
+    */
+}
+
 function getFooterLabel(
     totalCountRecordsAvailable,
     highestRecordNumberDisplayedOnPage = 5,
@@ -82,20 +100,14 @@ function hasAWorkingHelpButton(idHelpButton = 'admin-spotlights-help-button') {
     cy.get('[data-testid="help-drawer-title"]').should('not.exist');
 
     // click the help button
-    cy.get(`[data-testid="${idHelpButton}"]`).scrollIntoView();
-    cy.get(`[data-testid="${idHelpButton}"]`).should('be.visible');
-    cy.get(`[data-testid="${idHelpButton}"]`)
-        .should('exist')
-        .click();
+    clickButton(`[data-testid="${idHelpButton}"]`);
 
     // we can see the help contents
     cy.get('[data-testid="help-drawer-title"]').scrollIntoView();
     cy.get('[data-testid="help-drawer-title"]').should('be.visible');
 
     // the close button works
-    cy.get('[data-testid="spotlights-helpdrawer-close-button"]')
-        .should('exist')
-        .click();
+    clickButton('[data-testid="spotlights-helpdrawer-close-button"]');
     cy.get('[data-testid="help-drawer-title"]').should('not.exist');
 }
 
