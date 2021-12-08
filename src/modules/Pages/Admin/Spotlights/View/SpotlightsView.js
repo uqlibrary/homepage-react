@@ -23,6 +23,7 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
+            scrollToTopOfPage();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
