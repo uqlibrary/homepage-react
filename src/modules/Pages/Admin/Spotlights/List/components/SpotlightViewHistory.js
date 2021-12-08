@@ -55,6 +55,9 @@ const useStyles = makeStyles(theme => ({
     thisEntry: {
         backgroundColor: 'rgba(0,0,0,.65)',
         color: '#f7f6f5',
+        '& strong': {
+            fontWeight: 900,
+        },
     },
 }));
 
