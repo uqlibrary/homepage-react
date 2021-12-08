@@ -1,3 +1,30 @@
+function clickButton(selector) {
+    // hacky call to jquery as fix for occasional error:
+    // "This DOM element likely became detached somewhere between the previous and current command.'
+    // Try this function when that error occurs occasionally in tests when clicking a button
+    // per https://github.com/cypress-io/cypress/issues/7306#issuecomment-639828954
+    cy.get(selector).scrollIntoView();
+    cy.get(selector).should('exist');
+    cy.get(selector).should('be.visible');
+    cy.get(selector).then(e => {
+        Cypress.$(e).click();
+    });
+
+    /*
+    for a input field problem clearing, first try adding a .focus(), if that isnt sufficient add eg
+        .should('have.value', 'Example alert:')
+    */
+}
+
+function hasAWorkingHelpButton() {
+    cy.wait(100);
+    cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+    clickButton('[data-testid="admin-alerts-help-button"]');
+    cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
+    cy.get('button:contains("Close")').click();
+    cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+}
+
 describe('Alerts Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Alert Admin public access blocked', () => {
@@ -139,12 +166,7 @@ describe('Alerts Admin Pages', () => {
             });
         });
         it('has a working Help button on the List page', () => {
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
-            cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            hasAWorkingHelpButton();
         });
 
         it('has a working Add button on the List page', () => {
@@ -157,7 +179,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should(
                 'be.visible',
             );
-            cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').click();
+            clickButton('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]');
             cy.location('href').should(
                 'eq',
                 'http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245',
@@ -168,14 +190,16 @@ describe('Alerts Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
 
             // this alert doesnt exist in mock
-            cy.get('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').click();
+            clickButton('button[data-testid="alert-list-item-edit-232d6880-996a-11eb-8a79-e7fddae87baf"]');
             cy.get('button[data-testid="confirm-alert-error"]').should('exist');
             // the ok button on the error returns to the list page
-            cy.get('button[data-testid="confirm-alert-error"]').click();
+            clickButton('button[data-testid="confirm-alert-error"]');
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+            cy.get('button[data-testid="confirm-alert-error"]').should('not.exist');
 
-            // a alert form way down the list loads so that the form is in view
-            cy.get('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').click();
+            // a alert from way down the list loads so that we can check the form is in view
+            cy.get('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').scrollIntoView();
+            clickButton('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]');
             cy.location('href').should(
                 'eq',
                 'http://localhost:2020/admin/alerts/edit/0aa12a30-996a-11eb-b009-3f6ded4fdb35',
@@ -221,8 +245,7 @@ describe('Alerts Admin Pages', () => {
             );
             cy.get('[data-testid="admin-alerts-list-past-list"] tfoot').contains('1-10 of 78');
         });
-        it('should have working Split button actions for current/scheduled alerts', () => {
-            // EDIT BUTTON WORKS
+        it('has working Split button actions for current/scheduled alerts', () => {
             cy.get('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist');
             cy.get('[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').contains('Edit');
             // the dropdown split button exists but is not open
@@ -232,17 +255,10 @@ describe('Alerts Admin Pages', () => {
                 .parent()
                 .children()
                 .should('have.length', 1);
-            cy.get('[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)')
-                .should('exist')
-                .click();
-            cy.get('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-clone-button"]').should('exist');
-            // click away to close the split button
-            cy.get('body').click();
-            cy.get('[data-testid="1db618c0-d897-11eb-a27e-df4e46db7245-clone-button"]').should('not.exist');
             // open the split button
-            cy.get(
+            clickButton(
                 '[data-testid="alert-list-action-block-1db618c0-d897-11eb-a27e-df4e46db7245"] button:nth-of-type(2)',
-            ).click();
+            );
             cy.get('[data-testid="alert-list-arrowicon-1db618c0-d897-11eb-a27e-df4e46db7245"]')
                 .parent()
                 .parent()
@@ -273,7 +289,7 @@ describe('Alerts Admin Pages', () => {
             cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
             // cant test display further as mock data doesnt actually delete
         });
-        it('should have working Split button actions for past alerts', () => {
+        it('has working Split button actions for past alerts', () => {
             // VIEW BUTTON WORKS
             cy.get('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').should('exist');
             cy.get('[data-testid="alert-list-item-view-d23f2e10-d7d6-11eb-a928-71f3ef9d35d9"]').contains('View');
@@ -749,12 +765,7 @@ describe('Alerts Admin Pages', () => {
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         });
         it('has a working Help button on the Add page', () => {
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
-            cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            hasAWorkingHelpButton();
         });
         it('buttons are disabled unless the form is valid', () => {
             function PreviewButtonAvailableAndSaveDisabled() {
@@ -869,21 +880,15 @@ describe('Alerts Admin Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('has a working Help button on the Edit page', () => {
-            cy.wait(50);
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
-            cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            hasAWorkingHelpButton();
         });
         it('can show a preview of a change', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.wait(50);
+            cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input')
-                .focus()
-                .clear();
-            cy.get('[data-testid="admin-alerts-form-title"] input').type('Updated alert');
+                .should('have.value', 'Example alert:') // force retry until re-attached
+                .clear()
+                .type('Updated alert');
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
@@ -917,7 +922,7 @@ describe('Alerts Admin Pages', () => {
         it('can show a preview of the original alert', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.wait(50);
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]'); // show preview
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
@@ -928,17 +933,11 @@ describe('Alerts Admin Pages', () => {
                     cy.get('[data-testid="alert-alert-preview-action-button"]').contains(
                         'UQ community COVID-19 advice',
                     );
-                    // this version of reusable isnt quite live yet
-                    // cy.get('[data-testid="alert-alert-preview-action-button"]').should(
-                    //     'have.attr',
-                    //     'href',
-                    //     'https://about.uq.edu.au/coronavirus',
-                    // );
                 });
             // user can toggle the Preview
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]'); // hide preview
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]'); // show preview
             cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
         it('tells the user which systems the alert will appear on', () => {
@@ -1016,12 +1015,7 @@ describe('Alerts Admin Pages', () => {
         });
         it('has a working Help button on the Clone page', () => {
             cy.wait(50);
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-help-button"]').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('be.visible');
-            cy.get('button:contains("Close")').click();
-            cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
+            hasAWorkingHelpButton();
         });
         it('the "add a date set button" works', () => {
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
@@ -1074,19 +1068,25 @@ describe('Alerts Admin Pages', () => {
             cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
         }
 
+        function clickPlusButton(buttonId) {
+            clickButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
+        }
+        function clickMinusButton(buttonId) {
+            clickButton('[data-testid="admin-alerts-form-remove-date-button-' + buttonId + '"]');
+        }
         it('the "remove a date set button" works', () => {
             cy.wait(50);
             cy.get('[data-testid="admin-alerts-form-remove-date-button-0"]').should('not.exist'); // no '-' button
-            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click(); // click '+' button
+            clickPlusButton('0'); // add a date field
             thisManyRemoveButtonsExist(1);
 
-            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click(); // click '+' button
+            clickPlusButton('1');
             thisManyRemoveButtonsExist(2);
 
-            cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').click();
+            clickPlusButton('2');
             thisManyRemoveButtonsExist(3);
 
-            cy.get('[data-testid="admin-alerts-form-remove-date-button-1"]').click(); // remove a date field
+            clickMinusButton('1'); // remove a date field
             thisManyRemoveButtonsExist(2);
         });
         it('tells the user which systems the alert will appear on', () => {
@@ -1164,12 +1164,12 @@ describe('Alerts Admin Pages', () => {
         });
         it('can return to the list page from the view page', () => {
             cy.wait(50);
-            cy.get('button[data-testid="admin-alerts-view-button-cancel"]').click();
+            clickButton('button[data-testid="admin-alerts-view-button-cancel"]');
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('can visit the clone page from the view page', () => {
             cy.wait(50);
-            cy.get('button[data-testid="admin-alerts-view-button-save"]').click();
+            clickButton('button[data-testid="admin-alerts-view-button-save"]');
             cy.location('href').should(
                 'eq',
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',
@@ -1179,7 +1179,7 @@ describe('Alerts Admin Pages', () => {
             cy.wait(50);
             cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-help-button"]').should('be.visible');
-            cy.get('[data-testid="admin-alerts-help-button"]').click();
+            clickButton('[data-testid="admin-alerts-help-button"]');
             cy.get('[data-testid="admin-alerts-view-help-example"]').should('be.visible');
             cy.get('button:contains("Close")').click();
             cy.get('[data-testid="admin-alerts-view-help-example"]').should('not.exist');
