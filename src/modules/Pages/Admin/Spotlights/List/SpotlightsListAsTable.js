@@ -28,16 +28,20 @@ import SortIcon from '@material-ui/icons/Sort';
 import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../../spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
 import {
+    filterSpotlights,
     formatDate,
     getTimeMondayComing,
     isCurrentSpotlight,
     isPastSpotlight,
     isScheduledSpotlight,
+    moveItemInArray,
+    navigateToCloneForm,
+    navigateToView,
 } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // original based on https://codesandbox.io/s/hier2
@@ -45,10 +49,6 @@ import {
 
 const useStyles = makeStyles(
     theme => ({
-        table: {
-            // minWidth: 500,
-            // tableLayout: 'fixed',
-        },
         tableCell: {
             padding: 0,
         },
@@ -113,7 +113,9 @@ const useStyles = makeStyles(
             },
         },
         h4: {
+            paddingTop: 10,
             paddingRight: 10,
+            verticalAlign: 'top',
             '& h4': {
                 fontWeight: '300',
                 display: 'inline',
@@ -126,6 +128,7 @@ const useStyles = makeStyles(
     }),
     { withTheme: true },
 );
+
 export const SpotlightsListAsTable = ({
     rows,
     headertag,
@@ -139,9 +142,8 @@ export const SpotlightsListAsTable = ({
     canDragRows,
     canUnpublish,
     canTextFilter,
+    showViewByHistoryLightbox,
 }) => {
-    console.log('top: spotlightsError = ', spotlightsError);
-    console.log('top: ', tableType, ' rows = ', rows);
     const classes = useStyles();
 
     const ORDERBY_WEIGHT = 'weight';
@@ -172,6 +174,7 @@ export const SpotlightsListAsTable = ({
             return '';
         }
         const now = new Date().getTime();
+        /* istanbul ignore next */
         if (!filter.expiryDate || filter.expiryDate < now) {
             sessionStorage.removeItem(FILTER_STORAGE_NAME);
             return '';
@@ -196,6 +199,7 @@ export const SpotlightsListAsTable = ({
 
     const [draggedId, setDraggedId] = useState(false);
 
+    const [hasDraggedAndDropped, markAsDraggedAndDropped] = useState(false);
     const [cookies, setCookie] = useCookies();
 
     const paginatorCookieName = `spotlightAdminPaginatorSize${tableType}`;
@@ -218,7 +222,7 @@ export const SpotlightsListAsTable = ({
 
     const displayTheRows = React.useCallback(
         rowList => {
-            console.log('rowList = ', rowList);
+            /* istanbul ignore next */
             if (!rowList) {
                 return;
             }
@@ -239,15 +243,11 @@ export const SpotlightsListAsTable = ({
                     if (!canTextFilter || textSearch === '') {
                         return true;
                     }
-                    const lowercaseLinkAria = r.title.toLowerCase();
-                    const lowercaseImgAlt = r.img_alt.toLowerCase();
-                    return (
-                        lowercaseLinkAria.includes(textSearch.toLowerCase()) ||
-                        lowercaseImgAlt.includes(textSearch.toLowerCase())
-                    );
+                    return filterSpotlights(r, textSearch);
                 }),
             );
 
+            /* istanbul ignore next */
             if (!!draggedId) {
                 // briefly mark the dragged row with a style, so the user knows what they did
                 setTimeout(() => {
@@ -301,26 +301,14 @@ export const SpotlightsListAsTable = ({
         .replace('[N]', userows.length)
         .replace('[s]', userows.length > 1 ? 's' : '');
 
-    function scrollToTopOfPage() {
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
-    }
-
-    const navigateToEditForm = spotlightid => {
-        history.push(`/admin/spotlights/edit/${spotlightid}`);
-        scrollToTopOfPage();
-    };
-
-    const navigateToCloneForm = spotlightid => {
+    const setFilterAndNavigateToCloneForm = (spotlightid, history) => {
         !!canTextFilter && setFilterTermToSession(textSearch);
-        history.push(`/admin/spotlights/clone/${spotlightid}`);
-        scrollToTopOfPage();
+        navigateToCloneForm(spotlightid, history);
     };
 
-    const navigateToView = spotlightid => {
+    const setFilterAndNavigateToView = (spotlightid, history) => {
         setFilterTermToSession(textSearch);
-        history.push(`/admin/spotlights/view/${spotlightid}`);
-        scrollToTopOfPage();
+        navigateToView(spotlightid, history);
     };
 
     const reEnableAllCheckboxes = () => {
@@ -346,7 +334,6 @@ export const SpotlightsListAsTable = ({
     }
 
     const handleMarkForDeletion = e => {
-        console.log('handleMarkForDeletion ', e.target);
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
@@ -379,10 +366,8 @@ export const SpotlightsListAsTable = ({
     };
 
     const reweightSpotlights = () => {
-        console.log('reweightSpotlights: userows=', userows);
         const listUnchanged = userows.map(s => s);
         setUserows(prevState => {
-            console.log('reweightSpotlights prevState = ', prevState);
             const data = [...prevState];
 
             data.map(s => {
@@ -430,15 +415,11 @@ export const SpotlightsListAsTable = ({
                     if (!!isCurrentSpotlight(s)) {
                         const selector = `#spotlight-list-row-${currentRow.id} .order`;
                         const weightCell = document.querySelector(selector);
-                        console.log('weightCell = ', weightCell);
                         !!weightCell && (weightCell.innerHTML = newValues.weight / 10);
                     }
                 });
-            console.log('reweight: setting userows to:', data);
             return data;
         });
-
-        console.log('after reweight: userows = ', userows);
     };
 
     const cleanSpotlight = s => {
@@ -453,36 +434,26 @@ export const SpotlightsListAsTable = ({
             img_alt: s.img_alt,
             weight: s.weight,
             active: s.active,
+            admin_notes: s.admin_notes,
         };
     };
 
     function deleteListOfSpotlights(spotlightIDsToBeDeleted) {
-        console.log('spotlightIDsToBeDeleted = ', spotlightIDsToBeDeleted);
-
         deleteSpotlightBulk(spotlightIDsToBeDeleted)
             .then(() => {
-                console.log('returned bulk delete checkboxes');
-                console.log('deleteSelectedSpotlights tableType=', tableType, 'userows=', userows);
-                console.log('deleteListOfSpotlights: spotlightsError = ', spotlightsError);
                 /* istanbul ignore next */
                 if (!!spotlightsError) {
-                    console.log('deleteSpotlightBulk failed!');
                     showDeleteFailureConfirmation();
                 } else {
-                    console.log('deleteSpotlightBulk success!');
-                    console.log('deleteListOfSpotlights: will reorder');
                     reweightSpotlights();
-                    console.log('deleteListOfSpotlights: reneable checkboxes');
                     reEnableAllCheckboxes();
-                    console.log('deleteListOfSpotlights: clear delete marking');
                     clearAllDeleteMarkingCheckboxes();
                     setSpotlightNotice('');
                     setDeleteActive(false);
                 }
             })
             .catch(
-                /* istanbul ignore next */ x => {
-                    console.log('Promise.all fail', x);
+                /* istanbul ignore next */ () => {
                     showDeleteFailureConfirmation();
                 },
             );
@@ -496,7 +467,6 @@ export const SpotlightsListAsTable = ({
             const spotlightIDsToBeDeleted = [];
             for (const c of checkboxes) {
                 const spotlightID = c.value.replace(checkBoxIdPrefix, '');
-                console.log('checkbox ', c.value, spotlightID);
                 spotlightIDsToBeDeleted.push(spotlightID);
             }
             deleteListOfSpotlights(spotlightIDsToBeDeleted);
@@ -504,7 +474,6 @@ export const SpotlightsListAsTable = ({
     };
 
     const handleDeleteSplitAction = spotlightID => {
-        console.log('deleteSpotlightById ', spotlightID);
         deleteListOfSpotlights([spotlightID]);
     };
 
@@ -517,34 +486,16 @@ export const SpotlightsListAsTable = ({
         };
     };
 
-    // https://stackoverflow.com/a/5306832/1246313
-    let hasDraggedAndDropped = false;
-    /* istanbul ignore next */
-    function moveItemInArray(arr, oldIndex, newIndex) {
-        if (newIndex >= arr.length) {
-            let k = newIndex - arr.length + 1;
-            while (k--) {
-                arr.push(undefined);
-            }
-        }
-        arr.splice(newIndex, 0, arr.splice(oldIndex, 1)[0]);
-        hasDraggedAndDropped = true;
-        return arr; // for testing
-    }
-
     /* istanbul ignore next */
     const onDragEnd = result => {
-        console.log('onDragEnd ', result);
         // must synchronously update state (and server) to reflect drag result
         const { destination, source, draggableId } = result;
         if (!destination) {
-            console.log('onDragEnd: result.destination was not set');
             return;
         }
         console.log('DRAGGING ', source.index + 1, ' TO ', destination.index + 1);
 
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
-            console.log('onDragEnd: result.destination was unchanged');
             return;
         }
 
@@ -552,7 +503,6 @@ export const SpotlightsListAsTable = ({
         setDraggedId(draggableId);
 
         const thisspotlight = [...userows].find(s => s.id === draggableId);
-        console.log('thisspotlight = ', thisspotlight);
         // set the weight on the edited spotlight to + 5, then let the Backend resort it to 10s on save
         let newWeight;
         if (destination.index > source.index) {
@@ -589,12 +539,12 @@ export const SpotlightsListAsTable = ({
             .catch(() => {
                 showSaveFailureConfirmation();
             });
+
+        markAsDraggedAndDropped(true);
     };
 
     const handlePublishCheckbox = () => event => {
-        console.log('handlePublishCheckbox event = ', event);
         const checkboxId = event.target?.id.replace('spotlight-published-', '');
-        console.log('checkboxId = ', checkboxId);
 
         const updateableRow = rows.find(r => r.id === checkboxId);
         /* istanbul ignore next */
@@ -603,7 +553,6 @@ export const SpotlightsListAsTable = ({
             ...cleanSpotlight(updateableRow),
             active: newState,
         };
-        console.log('rowToUpdate = ', newState, rowToUpdate.active);
 
         setUserows(prevState => {
             const data = [...prevState];
@@ -613,7 +562,6 @@ export const SpotlightsListAsTable = ({
 
         saveSpotlightChange(rowToUpdate)
             .then(() => {
-                console.log('saveSpotlightChange then');
                 const updatedrows = userows.map(r => {
                     if (r.id === updateableRow.id) {
                         r.active = rowToUpdate.active;
@@ -622,9 +570,7 @@ export const SpotlightsListAsTable = ({
                 });
                 setUserows(updatedrows);
             })
-            .catch(e => {
-                console.log('saveSpotlightChange error');
-                console.log('failed to update Publish field = ', e);
+            .catch(() => {
                 showSaveFailureConfirmation();
             });
     };
@@ -677,7 +623,7 @@ export const SpotlightsListAsTable = ({
     function stableSort(array, comparator) {
         if (!!hasDraggedAndDropped) {
             // we dont resort immediately after a drag and drop - it overrides the drag redisplay :(
-            hasDraggedAndDropped = false;
+            markAsDraggedAndDropped(false);
             return array;
         }
         const stabilizedThis = array.map((el, index) => [el, index]);
@@ -703,18 +649,12 @@ export const SpotlightsListAsTable = ({
         setUserows(staticUserows);
     };
 
-    const filterRows = e => {
+    const filterRowsByText = e => {
         const filterTerm = e.target?.value;
-
         setTextSearch(filterTerm);
         setUserows(
             [...staticUserows].filter(r => {
-                const lowercaseLinkAria = r.title.toLowerCase();
-                const lowercaseImgAlt = r.img_alt.toLowerCase();
-                return (
-                    lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
-                    lowercaseImgAlt.includes(filterTerm.toLowerCase())
-                );
+                return filterSpotlights(r, filterTerm);
             }),
         );
     };
@@ -854,7 +794,7 @@ export const SpotlightsListAsTable = ({
                                                     maxLength: 25,
                                                     'aria-label': locale.listPage.textSearch.ariaLabel,
                                                 }}
-                                                onChange={filterRows}
+                                                onChange={filterRowsByText}
                                                 label={locale.listPage.textSearch.displayLabel}
                                                 value={savedTextTerm || textSearch}
                                             />
@@ -981,13 +921,18 @@ export const SpotlightsListAsTable = ({
                                                                         <h4
                                                                             id={`spotlight-list-item-title-${spotlight.id}`}
                                                                         >{`${spotlight.title}`}</h4>{' '}
+                                                                        {!!spotlight.admin_notes && (
+                                                                            <p style={{ fontStyle: 'italic' }}>
+                                                                                * {spotlight.admin_notes}
+                                                                            </p>
+                                                                        )}
                                                                     </TableCell>
                                                                     <TableCell
                                                                         component="td"
                                                                         className={classes.startDate}
                                                                         style={{ padding: 0 }}
                                                                     >
-                                                                        <span title={spotlight.startDateLong}>
+                                                                        <span title={spotlight.startDateMouseover}>
                                                                             {spotlight.startDateDisplay}
                                                                         </span>
                                                                     </TableCell>
@@ -1000,7 +945,7 @@ export const SpotlightsListAsTable = ({
                                                                         style={{ padding: 8 }}
                                                                     >
                                                                         <span
-                                                                            title={`${spotlight.endDateLong} ${
+                                                                            title={`${spotlight.endDateMouseover} ${
                                                                                 tableType !== 'past' &&
                                                                                 endsThisWeek(spotlight)
                                                                                     ? ' - ends this week'
@@ -1009,8 +954,6 @@ export const SpotlightsListAsTable = ({
                                                                         >
                                                                             {spotlight.endDateDisplay}
                                                                         </span>
-                                                                        {tableType !== 'past' &&
-                                                                            endsThisWeek(spotlight) && <span> *</span>}
                                                                     </TableCell>
                                                                     {!!canUnpublish && (
                                                                         <TableCell
@@ -1037,17 +980,29 @@ export const SpotlightsListAsTable = ({
                                                                         style={{ paddingRight: 10 }}
                                                                     >
                                                                         <SpotlightSplitButton
-                                                                            spotlightId={spotlight.id}
                                                                             deleteSpotlightById={
                                                                                 handleDeleteSplitAction
                                                                             }
                                                                             mainButtonLabel={
                                                                                 tableType === 'past' ? 'View' : 'Edit'
                                                                             }
-                                                                            navigateToCloneForm={navigateToCloneForm}
-                                                                            navigateToEditForm={navigateToEditForm}
-                                                                            navigateToView={navigateToView}
+                                                                            navigateToCloneForm={
+                                                                                setFilterAndNavigateToCloneForm
+                                                                            }
+                                                                            navigateToView={setFilterAndNavigateToView}
                                                                             confirmDeleteLocale={confirmDeleteLocale}
+                                                                            showViewByHistoryOption={
+                                                                                showViewByHistoryLightbox
+                                                                            }
+                                                                            spotlight={spotlight}
+                                                                            history={history}
+                                                                            allowedArrowActions={[
+                                                                                'edit',
+                                                                                'view',
+                                                                                'clone',
+                                                                                'delete',
+                                                                                'viewbyhistory',
+                                                                            ]}
                                                                         />
                                                                     </TableCell>
                                                                 </TableRow>
@@ -1121,6 +1076,7 @@ SpotlightsListAsTable.propTypes = {
     canDragRows: PropTypes.bool,
     canUnpublish: PropTypes.bool,
     canTextFilter: PropTypes.bool,
+    showViewByHistoryLightbox: PropTypes.any,
 };
 
 SpotlightsListAsTable.defaultProps = {

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
+import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
 import {
     getStartOfDayFormatted,
     getTimeMondayMidnightNext,
@@ -22,6 +22,8 @@ export const SpotlightsAdd = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
+    spotlights,
+    spotlightsLoading,
 }) => {
     const defaults = {
         id: '',
@@ -31,11 +33,21 @@ export const SpotlightsAdd = ({
         url: '',
         img_url: '',
         img_alt: '',
-        weight: 0,
+        weight: 1000,
         active: 0,
         type: 'add',
         minimumDate: getStartOfDayFormatted(),
+        admin_notes: '',
     };
+
+    React.useEffect(() => {
+        /* istanbul ignore else */
+        if (!spotlightsLoading && !spotlights) {
+            actions.loadAllSpotlights();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -46,6 +58,8 @@ export const SpotlightsAdd = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError}
                         spotlightStatus={spotlightStatus}
+                        spotlights={spotlights}
+                        spotlightsLoading={spotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -67,6 +81,8 @@ SpotlightsAdd.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsAdd;

@@ -6,6 +6,7 @@ import React, { Fragment } from 'react';
 export default {
     form: {
         labels: {
+            adminNotesField: 'Admin notes - anything non-public the admin needs to record about this spotlight',
             linkDescAriaField: 'Link title *',
             imgAltField: 'Image alt text *',
             linkField: 'Spotlight link *',
@@ -20,8 +21,9 @@ export default {
             datePopupNowButton: 'Now',
         },
         tooltips: {
-            linkDescAriaField: 'Link aria label - describe title and destination',
-            imgAltField: 'Image alt text - include all text in image',
+            adminNotesField: 'Anything non-public the admin needs to record about this spotlight',
+            linkDescAriaField: 'Link aria label - describe title and destination. Field length of 100 characters',
+            imgAltField: 'Image alt text - include all text in image.  Field length of 255 characters',
             linkField: 'Please enter a valid URL',
             publishDate: 'Select publish date-time',
             unpublishDate: 'Select unpublish date-time',
@@ -52,6 +54,12 @@ export default {
                     'The file is too large. Please reduce the spotlight file size to [MAXFILESIZE] KB or less and try again.',
                 confirmButtonLabel: 'OK',
             },
+        },
+        reorderThumbs: {
+            header: 'Set display order',
+            usesPlaceholder: 'Drag and drop the placeholder to set the display order for this spotlight.',
+            usesCurrentImage: 'Drag and drop the highlighted image to set the display order for this spotlight.',
+            unavailable: 'Reordering only available for current spotlights.',
         },
         add: {
             addSpotlightConfirmation: {
@@ -87,7 +95,7 @@ export default {
         help: {
             title: 'Add/Edit/Clone help',
             text: (
-                <div data-testid="admin-spotlights-help-example">
+                <div>
                     <p>
                         If a spotlight image already exists, we recommend that you clone that spotlight and reuse the
                         image file rather than upload another copy. To do this, use the Quick search box to search past
@@ -119,6 +127,15 @@ export default {
 
                     <h4>Fields</h4>
                     <dl>
+                        <dt>Admin notes</dt>
+                        <dd className="description">
+                            <p>Notes field for Spotlight admin to put useful/specific notes about the spotlight.</p>
+                            <p>
+                                Admin notes appear on the listing screen following a * (star) character. These notes are
+                                not visible to clients.
+                            </p>
+                            <p>Optional field.</p>
+                        </dd>
                         <dt>Link title</dt>
                         <dd className="description">
                             <p>
@@ -172,6 +189,19 @@ export default {
                                 Required field. Replace uploaded image using the <strong>Remove image</strong> button.
                             </p>
                         </dd>
+                        <dt>Set display order</dt>
+                        <dd className="description">
+                            <p>Drag and drop tile to adjust spotlight display order.</p>
+                            <p>New spotlights are positioned last by default.</p>
+                            <p>
+                                Optional and conditional field that is{' '}
+                                <strong>only visible for current spotlights</strong>.
+                            </p>
+                            <p>
+                                Reordering on the Form is only reliable when <em>7 or less spotlights are current</em>.
+                                Where we have more, use the List page for reordering.
+                            </p>
+                        </dd>
                         <dt>Published?</dt>
                         <dd className="description">
                             <p>Enables/disables content on the homepage between Date published and Date unpublished.</p>
@@ -212,6 +242,15 @@ export default {
                 </div>
             ),
         },
+        splitButton: {
+            labels: {
+                clone: 'Clone',
+                delete: 'Delete',
+                history: 'View history',
+                edit: 'Edit',
+                view: 'View',
+            },
+        },
     },
     listPage: {
         confirmDelete: {
@@ -241,7 +280,7 @@ export default {
         help: {
             title: 'Spotlights',
             text: (
-                <div data-testid="admin-spotlights-help-example">
+                <div>
                     <p>
                         UQ Library's Spotlight Management application provides authorised users with an interface to
                         add, update and remove spotlights (promotional images in the carousel). These spotlights are
@@ -253,6 +292,10 @@ export default {
                         Spotlights are listed in three tables, Current spotlights, Scheduled spotlights and Past
                         spotlights based on their Date published (start) and Date unpublished (end) date and time. Check
                         full date information by mousing over the short date display.
+                    </p>
+                    <p>
+                        Admin notes are listed following a * (star) character after the Spotlight title info. These
+                        notes are not visible to clients on the homepage.
                     </p>
 
                     <ul>
@@ -291,15 +334,20 @@ export default {
                     </p>
                     <ul>
                         <li>
-                            <strong>Current:</strong> Edit (primary), Clone and Delete
+                            <strong>Current:</strong> Edit (primary), Clone, Delete and View history
                         </li>
                         <li>
-                            <strong>Future:</strong> Edit (primary), Clone and Delete
+                            <strong>Future:</strong> Edit (primary), Clone, Delete and View history
                         </li>
                         <li>
-                            <strong>Past:</strong> View (primary), Clone and Delete.
+                            <strong>Past:</strong> View (primary), Clone, Delete and View history.
                         </li>
                     </ul>
+
+                    <h3>View spotlights by image (alternative listing screen)</h3>
+                    <p>
+                        Click the <strong>View by image</strong> button to browse spotlights by image.
+                    </p>
 
                     <h3>Add a spotlight</h3>
                     <p>
@@ -371,6 +419,25 @@ export default {
                         </li>
                     </ul>
 
+                    <h3>View history (all uses of image)</h3>
+                    <p>
+                        Press the <strong>More actions</strong> button beside a spotlight, then press{' '}
+                        <strong>View history</strong>. The All uses of this image form will appear and you can:
+                    </p>
+
+                    <ul>
+                        <li>View the usage of this spotlight image and its related details</li>
+                        <li>
+                            <strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or{' '}
+                            <strong>View</strong> (past spotlights)
+                        </li>
+                        <li>
+                            Or click <strong>Close</strong> to return to the View by image screen.
+                        </li>
+                    </ul>
+
+                    <p>See the View history help section for more information.</p>
+
                     <h3>Reorder current spotlights</h3>
                     <p>
                         Current spotlights can be reordered when the Current spotlights table is ordered in the default
@@ -407,12 +474,12 @@ export default {
                     <h3>Search past spotlights</h3>
                     <p>
                         Enter keywords into the Quick search text field above the Past spotlights table to search based
-                        on the Link title and Image alt text fields.
+                        on the Link title, Image alt text and Admin notes fields.
                     </p>
                     <p>Past spotlights will be filtered based on your keywords.</p>
                     <p>Search results will be retained for one hour and then cleared.</p>
 
-                    <h3>Remove alerts</h3>
+                    <h3>Delete spotlights</h3>
                     <p>Deleted spotlights cannot be restored. In general, limit deletions to:</p>
                     <ul>
                         <li>
@@ -477,6 +544,96 @@ export default {
                     <h3>Return to spotlights list</h3>
                     <p>
                         Press <strong>Cancel</strong> to return to the Spotlights listing page.
+                    </p>
+                </Fragment>
+            ),
+        },
+    },
+    viewByHistory: {
+        title: 'All uses of this image',
+        linkTitle: 'Link title',
+        adminNotesLabel: 'Admin notes',
+        ariaLabel: 'Image alt text',
+        link: 'Spotlight link',
+        datePrefix: 'Run between',
+        dateDivider: ' and ',
+        publicationStatus: 'Published',
+        help: {
+            title: 'View history help',
+            text: (
+                <Fragment>
+                    <p>
+                        The View history page enables you to see the usage of a spotlight image and its related details.
+                    </p>
+                    <p>
+                        Cloning (reusing) an existing spotlight will add to its history. We recommend using the Clone
+                        tool rather than uploading additional copies of the same image. Uploading a new image creates a
+                        separate history and uses additional storage space.
+                    </p>
+
+                    <h3>Spotlight history listing</h3>
+                    <ul>
+                        <li>Spotlights are listed by Date unpublished (newest to oldest).</li>
+                        <li>
+                            Where there are multiple uses of a spotlight, the spotlight you selected will be highlighted
+                            in grey.
+                        </li>
+                    </ul>
+
+                    <h3>Spotlight actions</h3>
+                    <ul>
+                        <li>
+                            <strong>Clone (copy):</strong> clone this spotlight. The Clone spotlight form will appear
+                        </li>
+                        <li>
+                            <strong>Edit (current/future spotlights):</strong> edit this spotlight. The edit spotlight
+                            form will appear
+                        </li>
+                        <li>
+                            <strong>View (past spotlights only):</strong> view this past spotlight. The View spotlight
+                            form will appear
+                        </li>
+                    </ul>
+                </Fragment>
+            ),
+        },
+    },
+    viewByImage: {
+        title: 'View by image',
+        help: {
+            title: 'View by image help',
+            text: (
+                <Fragment>
+                    <p>
+                        Use the View by image screen to browse spotlights by their image. The screen displays all
+                        spotlights by Date unpublished (newest to oldest).
+                    </p>
+                    <p>Mouse over a spotlight tile to see its title, date published and date unpublished.</p>
+
+                    <h3>Spotlight actions</h3>
+                    <p>
+                        Click a spotlight tile for more information and actions. The All uses of this image box will
+                        appear. You can:
+                    </p>
+
+                    <ul>
+                        <li>View when this spotlight image has been used and its related details</li>
+                        <li>
+                            <strong>Clone</strong>, <strong>Edit</strong> (current and scheduled spotlights) or{' '}
+                            <strong>View</strong> (past spotlights)
+                        </li>
+                        <li>
+                            Or click <strong>Close</strong> to return to the View by image screen.
+                        </li>
+                    </ul>
+
+                    <p>See the View history help section for more information.</p>
+
+                    <h3>Search spotlights</h3>
+
+                    <p>
+                        Enter keywords into the Quick search text field to filter spotlights based on the Link title,
+                        Image alt text and Admin notes fields.
                     </p>
                 </Fragment>
             ),

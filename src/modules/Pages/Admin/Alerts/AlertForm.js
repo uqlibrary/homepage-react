@@ -65,6 +65,33 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
+export const isValidUrl = testurl => {
+    if (!testurl) {
+        return false;
+    }
+    if (!testurl.startsWith('http://') && !testurl.startsWith('https://')) {
+        return false;
+    }
+    if (testurl.length < 'http://x.co'.length) {
+        // minimum possible url
+        return false;
+    }
+    // while technically an url doesn't need a TLD - in practice it does
+    if (!testurl.includes('.')) {
+        return false;
+    }
+    try {
+        const url = new URL(testurl);
+        if (url.hostname.length < 'x.co'.length) {
+            return false;
+        }
+    } catch (_) {
+        /* istanbul ignore next */
+        return false;
+    }
+    return true;
+};
+
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
     const classes = useStyles();
 
@@ -83,26 +110,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         },
     ]);
 
-    const isValidUrl = testurl => {
-        if (testurl.length < 'http://x.co'.length) {
-            // minimum possible url
-            return false;
-        }
-        try {
-            const url = new URL(testurl);
-            if (url.hostname.length < 'x.co'.length) {
-                return false;
-            }
-        } catch (_) {
-            return false;
-        }
-        // while technically an url doesn't need a TLD - in practice it does
-        if (!testurl.includes('.')) {
-            return false;
-        }
-        return true;
-    };
-
     const showHidePreview = showThePreview => {
         const alertWrapper = document.getElementById('previewWrapper');
         /* istanbul ignore next */
@@ -116,12 +123,14 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         setPreviewOpen(showThePreview);
     };
 
+    /* istanbul ignore next */
     function isInvalidStartDate(startDate) {
-        return (startDate < defaults.startDateDefault && startDate !== '') || !moment(startDate).isValid();
+        return (startDate !== '' && startDate < defaults.startDateDefault) || !moment(startDate).isValid();
     }
 
+    /* istanbul ignore next */
     function isInvalidEndDate(endDate, startDate) {
-        return (endDate < startDate && startDate !== '') || !moment(endDate).isValid();
+        return (startDate !== '' && endDate < startDate) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
@@ -230,7 +239,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ['linkUrl']: newLinkUrl,
             ['startDate']: newStartDate,
             ['endDate']: newEndDate,
-            ['systems']: expandableValues.systems || [],
+            ['systems']: expandableValues.systems || /* istanbul ignore next */ [],
         };
     }
 
@@ -247,7 +256,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
             dateList: values.dateList,
-            systems: values.systems || [],
+            systems: values.systems || /* istanbul ignore next */ [],
         };
         console.log('saveAlerts: newValues = ', newValues);
         newValues.dateList.forEach(dateset => {
@@ -311,12 +320,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const handleChange = prop => event => {
         if (prop === 'system') {
-            const systems = values.systems || [];
+            const systems = values.systems || /* istanbul ignore next */ [];
             if (systems.includes(event.target.name) && !event.target.checked) {
                 // system exists in array and the checkbox has been unchecked. Remove.
                 const index = systems.indexOf(event.target.name);
                 index >= 0 && systems.splice(index, 1);
-            } else if (!systems.includes(event.target.name) && !!event.target.checked) {
+            } /* istanbul ignore else */ else if (!systems.includes(event.target.name) && !!event.target.checked) {
                 // system doesnt exist in array and the checkbox has been checked. Add.
                 systems.push(event.target.name);
             }
@@ -329,12 +338,15 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
 
         let dateListIndex = null;
+        /* istanbul ignore next */
         if (prop === 'startDate') {
             dateListIndex = event?.target?.id.replace('startDate-', '');
         }
+        /* istanbul ignore next */
         if (prop === 'endDate') {
             dateListIndex = event?.target?.id.replace('endDate-', '');
         }
+        /* istanbul ignore next */
         if (!!dateListIndex) {
             const tempDateEntry = {
                 startDate: prop === 'startDate' ? event.target.value : values.dateList[dateListIndex].startDate,
@@ -410,7 +422,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         if (defaults.type !== 'add') {
             // the action on edit page is always 'return to list'
             navigateToListPage();
-        } else if (!!alertError) {
+        } /* istanbul ignore next */ else if (!!alertError) {
             // On error on add, the button just closes the notification dialog,
             // allowing the user to correct and try again
             hideConfirmation(); // form remains loaded
@@ -425,7 +437,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ...locale.form.add.addAlertConfirmation,
             confirmationTitle: locale.form.add.addAlertConfirmation.confirmationTitle.replace(
                 'An alert has',
-                countSuccess > 1 ? `${countSuccess} alerts have` : 'An alert has',
+                countSuccess > 1 ? /* istanbul ignore next */ `${countSuccess} alerts have` : 'An alert has',
             ),
         };
     }
@@ -680,7 +692,9 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     <Grid item xs={12}>
                         {systemList.map(system => {
                             const isChecked = values?.systems?.find(s => s === system.slug) || null;
-                            const displayColor = !!system.removed ? null : 'rgba(0, 0, 0, 0.87)';
+                            const displayColor = !!system.removed
+                                ? /* istanbul ignore next */ null
+                                : 'rgba(0, 0, 0, 0.87)';
                             return (
                                 <InputLabel style={{ color: `${displayColor}` }} key={system.slug}>
                                     <Checkbox
@@ -688,8 +702,16 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         data-testid={`admin-alerts-form-checkbox-system-${system.slug}`}
                                         onChange={handleChange('system')}
                                         name={system.slug}
-                                        title={system.title || system.slug || 'Unknown'}
-                                        className={`${!system.removed ? classes.checkbox : classes.disabledCheckbox}`}
+                                        title={
+                                            system.title ||
+                                            /* istanbul ignore next */ system.slug ||
+                                            /* istanbul ignore next */ 'Unknown'
+                                        }
+                                        className={`${
+                                            !system.removed
+                                                ? classes.checkbox
+                                                : /* istanbul ignore next */ classes.disabledCheckbox
+                                        }`}
                                         disabled={!!system.removed}
                                     />
                                     {system.title}

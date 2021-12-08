@@ -6,11 +6,17 @@ import { makeStyles } from '@material-ui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/components/SpotlightsListAsTable';
+import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 import moment from 'moment';
+import {
+    isPastSpotlight,
+    isScheduledSpotlight,
+    scrollToTopOfPage,
+} from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import SpotlightViewHistory from './SpotlightViewHistory';
 
 const useStyles = makeStyles(
     theme => ({
@@ -43,67 +49,61 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     const [scheduledSpotlights, setScheduledSpotlights] = useState([]);
     const [pastSpotlights, setPastSpotlights] = useState([]);
 
+    const [isViewByHistoryLightboxOpen, setViewByHistoryLightboxOpen] = useState(false);
+    const handleViewByHistoryLightboxOpen = () => setViewByHistoryLightboxOpen(true);
+    const handleViewByHistoryLightboxClose = () => setViewByHistoryLightboxOpen(false);
+    const [viewByHistoryLightBoxFocus, setViewByHistoryLightBoxFocus] = React.useState('');
+    const [viewByHistoryLightBoxRows, setViewByHistoryLightBoxEntries] = React.useState([]);
+
     useEffect(() => {
         /* istanbul ignore else */
         if (!spotlightsError && !spotlightsLoading && !spotlights) {
-            console.log('@@@ kick off spotlights load');
             actions.loadAllSpotlights();
-        } else {
-            console.log(
-                '@@@ useeeffect []; spotlightsError = ',
-                spotlightsError,
-                '; spotlightsLoading = ',
-                spotlightsLoading,
-                '; spotlights = ',
-                spotlights,
-            );
+            scrollToTopOfPage();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
+        // detect if the supplied date has time component "on the hour"
+        // (when the time would give eg 7:00am we collapse it down to 7am)
+        const isTimeOnTheHour = inputDate => moment(inputDate).format('m') === '0';
+
+        const pastDateDuringHourFormat = 'ddd D MMM YYYY [\n]h.mma';
+        const pastDateOnTheHourFormat = pastDateDuringHourFormat.replace('h.mma', 'ha');
+        const currentDateOnTheHourFormat = pastDateOnTheHourFormat.replace(' YYYY', '');
+        const currentDateDuringTheHourFormat = pastDateDuringHourFormat.replace(' YYYY', '');
+        const currentDateFormat = inputDate =>
+            isTimeOnTheHour(inputDate) ? currentDateOnTheHourFormat : currentDateDuringTheHourFormat;
+        const pastDateFormat = inputDate =>
+            isTimeOnTheHour(inputDate) ? pastDateOnTheHourFormat : pastDateDuringHourFormat;
+
         if (!!spotlights && spotlights.length > 0) {
             setPastSpotlights([]);
             setCurrentSpotlights([]);
             setScheduledSpotlights([]);
-            spotlights.forEach(spotlight => {
-                const pastDateDuringHour = 'ddd D MMM YYYY [\n]h.mma';
-                const pastDateOnTheHour = pastDateDuringHour.replace('h.mma', 'ha');
-                const currentDateOnTheHour = pastDateOnTheHour.replace(' YYYY', '');
-                const currentDateDuringTheHour = pastDateDuringHour.replace(' YYYY', '');
-                if (moment(spotlight.end).isBefore(moment())) {
-                    spotlight.startDateDisplay = moment(spotlight.start).format(
-                        moment(spotlight.start).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
-                    );
-                    spotlight.endDateDisplay = moment(spotlight.end).format(
-                        moment(spotlight.end).format('m') === '0' ? pastDateOnTheHour : pastDateDuringHour,
-                    );
-                } else {
-                    spotlight.startDateDisplay = moment(spotlight.start).format(
-                        moment(spotlight.start).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
-                    );
-                    spotlight.endDateDisplay = moment(spotlight.end).format(
-                        moment(spotlight.end).format('m') === '0' ? currentDateOnTheHour : currentDateDuringTheHour,
-                    );
-                }
-                // we provide a mousover with the complete data for clarity
+            spotlights.forEach(s => {
+                // past spotlights have their dates displayed in a different format to current & scheduled spotlights
+                s.startDateDisplay = moment(s.start).format(
+                    isPastSpotlight(s) ? pastDateFormat(s.start) : currentDateFormat(s.start),
+                );
+                s.endDateDisplay = moment(s.end).format(
+                    isPastSpotlight(s) ? pastDateFormat(s.end) : currentDateFormat(s.end),
+                );
+
                 const fullDateFormat = 'dddd D MMMM YYYY h.mma';
-                spotlight.startDateLong = moment(spotlight.start).format(fullDateFormat);
-                spotlight.endDateLong = moment(spotlight.end).format(fullDateFormat);
-                if (moment(spotlight.end).isBefore(moment())) {
-                    setPastSpotlights(pastState => [...pastState, spotlight]);
-                } else if (moment(spotlight.start).isAfter(moment())) {
-                    setScheduledSpotlights(pastState => [...pastState, spotlight]);
+                s.startDateMouseover = moment(s.start).format(fullDateFormat);
+                s.endDateMouseover = moment(s.end).format(fullDateFormat);
+                if (isPastSpotlight(s)) {
+                    setPastSpotlights(pastState => [...pastState, s]);
+                } else if (isScheduledSpotlight(s)) {
+                    setScheduledSpotlights(pastState => [...pastState, s]);
                 } else {
-                    setCurrentSpotlights(pastState => [...pastState, spotlight]);
+                    setCurrentSpotlights(pastState => [...pastState, s]);
                 }
             });
         }
     }, [spotlights]);
-
-    // const deleteSpotlight = spotlightID => {
-    //     return actions.deleteSpotlight(spotlightID);
-    // };
 
     const deleteSpotlightBulk = slist => {
         return actions.deleteSpotlightBatch(slist);
@@ -115,11 +115,21 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
 
     /* istanbul ignore next */
     const saveBatchReorder = slist => {
-        slist.forEach(s => {
-            console.log('saveBatchReorder', s.id, s.weight, s.title);
-        });
-        // console.log('saveBatchReorder', slist);
         return actions.saveSpotlightBatch(slist);
+    };
+
+    const showViewByHistoryLightbox = thisSpotlight => {
+        console.log('showViewByHistoryLightbox spotlights = ', spotlights);
+        console.log('showViewByHistoryLightbox thisSpotlight = ', thisSpotlight);
+        const filteredRows =
+            !!thisSpotlight && !!spotlights && [...spotlights].filter(r => r.img_url === thisSpotlight.img_url);
+        /* istanbul ignore else */
+        if (filteredRows.length > 0) {
+            // because its fired by clicking on a spotlight, it should never be 0
+            setViewByHistoryLightBoxFocus(thisSpotlight);
+            setViewByHistoryLightBoxEntries(filteredRows);
+            handleViewByHistoryLightboxOpen();
+        }
     };
 
     /* istanbul ignore next */
@@ -142,7 +152,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         );
     }
 
-    console.log('spotlightsError:', spotlightsError);
     return (
         <StandardPage title="Spotlights Management">
             <section aria-live="assertive">
@@ -156,6 +165,9 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                     helpContent={locale.listPage.help}
                     history={history}
                     showAddButton
+                    showViewByImageButton
+                    spotlights={spotlights}
+                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                 />
                 <StandardCard title="All spotlights" noPadding customBackgroundColor="#F7F7F7">
                     <Grid container>
@@ -177,13 +189,12 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canDragRows
                                     canUnpublish
-                                    // reweightSpotlights={reweightSpotlights}
+                                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
                             <div
@@ -197,12 +208,11 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canUnpublish
-                                    // reweightSpotlights={reweightSpotlights}
+                                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
                             <div id="admin-spotlights-list-past-list" data-testid="admin-spotlights-list-past-list">
@@ -213,17 +223,29 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     spotlightsLoading={spotlightsLoading}
                                     history={history}
                                     spotlightsError={spotlightsError}
-                                    // deleteSpotlight={deleteSpotlight}
                                     saveSpotlightChange={saveSpotlightChange}
                                     saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canTextFilter
-                                    // reweightSpotlights={reweightSpotlights}
+                                    showViewByHistoryLightbox={showViewByHistoryLightbox}
                                 />
                             </div>
                         </Grid>
                     </Grid>
                 </StandardCard>
+                {isViewByHistoryLightboxOpen && (
+                    <SpotlightViewHistory
+                        focussedElement={viewByHistoryLightBoxFocus}
+                        handleViewHistoryLightboxClose={handleViewByHistoryLightboxClose}
+                        helpContent={locale.viewByHistory.help}
+                        isViewHistoryLightboxOpen={isViewByHistoryLightboxOpen}
+                        spotlights={viewByHistoryLightBoxRows}
+                        setViewByHistoryLightBoxFocus={setViewByHistoryLightBoxFocus}
+                        setViewByHistoryLightBoxEntries={setViewByHistoryLightBoxEntries}
+                        handleViewByHistoryLightboxOpen={handleViewByHistoryLightboxOpen}
+                        history={history}
+                    />
+                )}
             </section>
         </StandardPage>
     );

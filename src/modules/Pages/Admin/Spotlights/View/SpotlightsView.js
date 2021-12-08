@@ -14,19 +14,16 @@ import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
-import { formatDate } from '../../spotlighthelpers';
+import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
-export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightStatus, history }) => {
-    console.log('SpotlightsView: spotlight =  ', spotlight);
-    console.log('SpotlightsView: spotlightStatus =  ', spotlightStatus);
-    console.log('SpotlightsView: spotlightError =  ', spotlightError);
-
+export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history }) => {
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
+            scrollToTopOfPage();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
@@ -44,15 +41,13 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
 
         history.push('/admin/spotlights');
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToCloneForm = () => {
         history.push(`/admin/spotlights/clone/${spotlightid}`);
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     function setDefaults() {
@@ -71,6 +66,8 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
             weight: spotlight?.weight || 0,
             active: spotlight?.active || 0,
             type: 'edit',
+            // eslint-disable-next-line camelcase
+            admin_notes: spotlight?.admin_notes || '',
         };
     }
 
@@ -82,6 +79,25 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
                 <section aria-live="assertive">
                     <SpotlightsUtilityArea actions={actions} helpContent={locale.viewPage.help} history={history} />
                     <StandardCard title="View spotlight">
+                        <Grid container spacing={2}>
+                            <Grid item xs={12}>
+                                <FormControl fullWidth title={locale.form.tooltips.adminNotesField}>
+                                    <InputLabel htmlFor="spotlightAdminNote">
+                                        {locale.form.labels.adminNotesField}
+                                    </InputLabel>
+                                    <Input
+                                        id="spotlightAdminNote"
+                                        data-testid="admin-spotlights-form-admin-note"
+                                        disabled
+                                        multiline
+                                        rows={2}
+                                        style={{ color: '#333' }}
+                                        value={values.admin_notes}
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <hr />
+                        </Grid>
                         <Grid container spacing={2}>
                             <Grid item xs={12}>
                                 <FormControl fullWidth title={locale.form.tooltips.linkDescAriaField}>
@@ -205,7 +221,6 @@ export const SpotlightsView = ({ actions, spotlight, spotlightError, spotlightSt
 SpotlightsView.propTypes = {
     actions: PropTypes.any,
     spotlight: PropTypes.any,
-    spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
     history: PropTypes.object,
 };

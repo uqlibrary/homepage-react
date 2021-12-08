@@ -7,7 +7,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
+import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
@@ -20,14 +20,9 @@ export const SpotlightsClone = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
+    spotlights,
+    spotlightsLoading,
 }) => {
-    console.log('SpotlightsClone: spotlight =  ', spotlight);
-    console.log('SpotlightsClone: spotlightStatus =  ', spotlightStatus);
-    console.log('SpotlightsClone: spotlightError =  ', spotlightError);
-    console.log('SpotlightsClone: publicFileUploading = ', publicFileUploading);
-    console.log('SpotlightsClone: publicFileUploadError = ', publicFileUploadError);
-    console.log('SpotlightsClone: publicFileUploadResult = ', publicFileUploadResult);
-
     const { spotlightid } = useParams();
 
     const [defaults, setDefaults] = React.useState({});
@@ -36,21 +31,13 @@ export const SpotlightsClone = ({
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
+            actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
 
     React.useEffect(() => {
-        console.log(
-            '*** useeffect, spotlightid = ',
-            spotlightid,
-            '; spotlightStatus = ',
-            spotlightStatus,
-            '; spotlight?.id = ',
-            spotlight?.id,
-        );
         if (!!spotlightid && spotlight?.id === spotlightid) {
-            console.log('load defaults:');
             setDefaults({
                 id: spotlight?.id || /* istanbul ignore next */ '',
                 startDateDefault: getTimeMondayMidnightNext(),
@@ -61,13 +48,13 @@ export const SpotlightsClone = ({
                 img_url: spotlight?.img_url || /* istanbul ignore next */ '',
                 // eslint-disable-next-line camelcase
                 img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
-                weight: spotlight?.weight || 0,
+                weight: spotlight?.weight || 1000,
                 active: spotlight?.active || 0,
                 // minimumDate: getStartOfDayFormatted(),
                 type: 'clone',
+                // eslint-disable-next-line camelcase
+                admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
             });
-        } else {
-            console.log('SpotlightsClone: useffect did nothing');
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlight]);
@@ -96,6 +83,8 @@ export const SpotlightsClone = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError || publicFileUploadError}
                         spotlightStatus={spotlightStatus}
+                        spotlights={spotlights}
+                        spotlightsLoading={spotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -117,6 +106,8 @@ SpotlightsClone.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsClone;

@@ -7,7 +7,7 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/SpotlightForm';
+import { SpotlightForm } from 'modules/Pages/Admin/Spotlights/Form/SpotlightForm';
 import { formatDate } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
@@ -20,20 +20,16 @@ export const SpotlightsEdit = ({
     publicFileUploading,
     publicFileUploadError,
     publicFileUploadResult,
+    spotlights,
+    spotlightsLoading,
 }) => {
-    console.log('SpotlightsEdit: spotlight =  ', spotlight);
-    console.log('SpotlightsEdit: spotlightStatus =  ', spotlightStatus);
-    console.log('SpotlightsEdit: spotlightError =  ', spotlightError);
-    console.log('SpotlightsEdit: publicFileUploading = ', publicFileUploading);
-    console.log('SpotlightsEdit: publicFileUploadError = ', publicFileUploadError);
-    console.log('SpotlightsEdit: publicFileUploadResult = ', publicFileUploadResult);
-
     const { spotlightid } = useParams();
 
     React.useEffect(() => {
         /* istanbul ignore else */
         if (!!spotlightid) {
             actions.loadASpotlight(spotlightid);
+            actions.loadAllSpotlights();
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [spotlightid]);
@@ -80,9 +76,11 @@ export const SpotlightsEdit = ({
             img_url: spotlight?.img_url || /* istanbul ignore next */ '',
             // eslint-disable-next-line camelcase
             img_alt: spotlight?.img_alt || /* istanbul ignore next */ '',
-            weight: spotlight?.weight || 0,
+            weight: spotlight?.weight || /* istanbul ignore next */ 0,
             active: spotlight?.active || /* istanbul ignore next */ 0,
             type: 'edit',
+            // eslint-disable-next-line camelcase
+            admin_notes: spotlight?.admin_notes || /* istanbul ignore next */ '',
         };
     }
 
@@ -98,6 +96,8 @@ export const SpotlightsEdit = ({
                         spotlightResponse={spotlight}
                         spotlightError={spotlightError || publicFileUploadError}
                         spotlightStatus={spotlightStatus}
+                        spotlights={spotlights}
+                        spotlightsLoading={spotlightsLoading}
                         history={history}
                         defaults={defaults}
                         publicFileUploading={publicFileUploading}
@@ -119,6 +119,8 @@ SpotlightsEdit.propTypes = {
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,
     publicFileUploadResult: PropTypes.any,
+    spotlights: PropTypes.any,
+    spotlightsLoading: PropTypes.any,
 };
 
 export default SpotlightsEdit;

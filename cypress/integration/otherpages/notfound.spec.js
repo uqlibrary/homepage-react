@@ -54,17 +54,17 @@ context('authorisation errors', () => {
         cy.get('h1').should('be.visible');
         cy.get('h1').contains('Permission denied');
     });
-    it('page that requires Admin does not return a not found error to privileged users', () => {
-        cy.visit('/admin/alerts/?user=uqstaff');
-        cy.viewport(1300, 1000);
-        cy.get('[data-testid=page-not-found]').should('not.exist');
-        cy.get('h1').should('not.contain', 'Permission denied');
-    });
     it('page that isnt available to all logged in users returns an authorisation error for non privileged users', () => {
         cy.visit('/courseresources?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=permission-denied]').should('exist');
         cy.get('body').contains('Permission denied');
+    });
+    it('page that requires Admin does not return a not found error to privileged users', () => {
+        cy.visit('/admin/alerts?user=uqstaff');
+        cy.viewport(1300, 1000);
+        cy.get('[data-testid=page-not-found]').should('not.exist');
+        cy.get('h1').should('not.contain', 'Permission denied');
     });
     it('page that isnt available to all logged in users does not return an authorisation error for privileged users', () => {
         cy.visit('/courseresources?user=s1111111');

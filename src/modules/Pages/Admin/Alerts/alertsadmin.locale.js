@@ -177,12 +177,10 @@ export default {
                         <dd>
                             <p>Displays the alert on selected systems only.</p>
                             <p>
-                                Use the checkboxes to select one or more systems for your alert. 
-                                The alert will be displayed on those systems only. 
+                                Use the checkboxes to select one or more systems for your alert. The alert will be
+                                displayed on those systems only.
                             </p>
-                            <p>
-                                When the checkboxes are blank, the alert will be displayed on all systems.
-                            </p>
+                            <p>When the checkboxes are blank, the alert will be displayed on all systems.</p>
                         </dd>
                     </dl>
                     <p>The alert will appear between the start time and the end time set in the alert.</p>

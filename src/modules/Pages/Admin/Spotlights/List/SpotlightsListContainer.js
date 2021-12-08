@@ -3,11 +3,11 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import SpotlightsView from '../components/SpotlightsView';
+import SpotlightsList from './SpotlightsList';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('spotlightReducer'),
+        ...state.get('spotlightsReducer'),
     };
 };
 
@@ -17,7 +17,7 @@ const mapDispatchToProps = dispatch => {
     };
 };
 
-let SpotlightsViewContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsView);
-SpotlightsViewContainer = withRouter(SpotlightsViewContainer);
+let SpotlightsAdminContainer = connect(mapStateToProps, mapDispatchToProps)(SpotlightsList);
+SpotlightsAdminContainer = withRouter(SpotlightsAdminContainer);
 
-export default SpotlightsViewContainer;
+export default SpotlightsAdminContainer;
