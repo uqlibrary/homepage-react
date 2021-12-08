@@ -115,6 +115,7 @@ const useStyles = makeStyles(
         h4: {
             paddingTop: 10,
             paddingRight: 10,
+            verticalAlign: 'top',
             '& h4': {
                 fontWeight: '300',
                 display: 'inline',

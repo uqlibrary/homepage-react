@@ -112,9 +112,11 @@ export const navigateToView = (spotlightid, history) => {
 };
 
 export function filterSpotlights(r, filterTerm) {
-    const lowercaseLinkAria = r.title.toLowerCase();
-    const lowercaseImgAlt = r.img_alt.toLowerCase();
-    const lowercaseAdminNotes = r.admin_notes.toLowerCase();
+    const lowercaseLinkAria = r?.title?.toLowerCase() || /* istanbul ignore next */ '';
+    // eslint-disable-next-line camelcase
+    const lowercaseImgAlt = r?.img_alt?.toLowerCase() || /* istanbul ignore next */ '';
+    // eslint-disable-next-line camelcase
+    const lowercaseAdminNotes = r?.admin_notes?.toLowerCase() || /* istanbul ignore next */ '';
     return (
         lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
         lowercaseImgAlt.includes(filterTerm.toLowerCase()) ||
