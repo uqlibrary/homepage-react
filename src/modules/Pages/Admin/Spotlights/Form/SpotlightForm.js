@@ -125,6 +125,8 @@ export const SpotlightForm = ({
 
     const [originalValues, setOriginalValues] = useState({});
     useEffect(() => {
+        scrollToTopOfPage();
+
         const newVar = { weight: defaults.type === 'edit' ? defaults.weight : 1000, start: defaults.startDateDefault };
         setOriginalValues(newVar);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -504,7 +506,6 @@ export const SpotlightForm = ({
                                 rows={2}
                                 value={values.admin_notes}
                             />
-                            {!!values.img_alt && characterCount(values.img_alt.length, ImageAltMaxLength)}
                         </FormControl>
                     </Grid>
                 </Grid>
