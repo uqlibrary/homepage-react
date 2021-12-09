@@ -186,7 +186,7 @@ describe('Alerts Admin Pages', () => {
             );
 
             // back to the list page
-            cy.get('[data-testid="admin-alerts-form-button-cancel"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-cancel"]');
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
 
             // this alert doesnt exist in mock
