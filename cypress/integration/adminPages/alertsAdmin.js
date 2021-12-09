@@ -25,7 +25,7 @@ function hasAWorkingHelpButton() {
     cy.get('[data-testid="admin-alerts-help-example"]').should('not.exist');
 }
 
-describe('Alerts Admin Pages', () => {
+describe.skip('Alerts Admin Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Alert Admin public access blocked', () => {
         it('displays an "unauthorised" page to public users', () => {
