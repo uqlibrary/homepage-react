@@ -487,39 +487,6 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
 mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailability]));
 // .reply(withDelay([500, {}]));
 
-fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
-    status: 200,
-    response: {
-        numFound: 1622,
-        start: 0,
-        maxScore: 16.476818,
-        docs: [
-            { text: 'beards', score: 16.476818 },
-            {
-                text: 'beards folklore',
-                score: 16.476564,
-            },
-            { text: 'beards massage', score: 16.476564 },
-            {
-                text: 'beards fiction',
-                score: 16.476564,
-            },
-            { text: 'beards poetry', score: 16.476564 },
-            {
-                text: 'beards history',
-                score: 16.476564,
-            },
-            { text: 'beards europe', score: 16.476564 },
-            {
-                text: 'beards humor',
-                score: 16.476564,
-            },
-            { text: 'beards harold', score: 16.476564 },
-            { text: 'beards peter', score: 16.476564 },
-        ],
-    },
-});
-
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper', examSuggestions);
 
