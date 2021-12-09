@@ -13,7 +13,6 @@ import {
 import { API_URL } from '../config';
 
 export function loadAllSpotlights() {
-    console.log('action loadAllSpotlights: Loading Spotlights');
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHTS_CLEAR });
         dispatch({ type: actions.SPOTLIGHTS_LOADING });
@@ -25,7 +24,6 @@ export function loadAllSpotlights() {
                 });
             })
             .catch(error => {
-                console.log('loadAllSpotlights, error = ', error);
                 dispatch({
                     type: actions.SPOTLIGHTS_FAILED,
                     payload: error.message,
@@ -39,18 +37,14 @@ function createSpotlight(request, dispatch) {
         // as we are creating a new spotlight there should not be an id field
         delete request.id;
     }
-    console.log('createSpotlight: send request: ', request);
-    console.log('createSpotlight action, SPOTLIGHT_CREATE_API() = ', SPOTLIGHT_CREATE_API());
     return post(SPOTLIGHT_CREATE_API(), request)
         .then(data => {
-            console.log('createSpotlight action, returned data = ', data);
             dispatch({
                 type: actions.SPOTLIGHT_CREATED,
                 payload: data,
             });
         })
         .catch(error => {
-            console.log('createSpotlight action error = ', error);
             dispatch({
                 type: actions.SPOTLIGHT_FAILED,
                 payload: error.message,
@@ -59,20 +53,15 @@ function createSpotlight(request, dispatch) {
 }
 
 const saveSpotlightChange = (request, dispatch) => {
-    console.log('saveSpotlightChange for request ', request);
-    console.log('saveSpotlightChange for request.id ', request.id);
     !!request.updated && delete request.updated;
-    console.log('action saveSpotlightChange action, SPOTLIGHT_SAVE_API() = ', SPOTLIGHT_SAVE_API({ id: request.id }));
     return post(SPOTLIGHT_SAVE_API({ id: request.id }), request)
         .then(data => {
-            console.log('saveSpotlightChange action, returned data = ', data);
             dispatch({
                 type: actions.SPOTLIGHT_SAVED,
                 payload: data,
             });
         })
         .catch(error => {
-            console.log('saveSpotlightChange action FAILED, returned: ', error);
             dispatch({
                 type: actions.SPOTLIGHT_FAILED,
                 payload: error,
@@ -87,7 +76,6 @@ export const saveSpotlightBatch = request => {
         dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY });
         return post(SPOTLIGHT_SAVE_BULK_API(), request)
             .then(data => {
-                console.log('saveSpotlightBatch: post reorder, spotlights will be:', data);
                 dispatch({
                     type: actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED,
                     payload: data,
@@ -103,26 +91,20 @@ export const saveSpotlightBatch = request => {
 };
 
 export const createSpotlightWithExistingImage = request => {
-    console.log('action createSpotlightWithExistingImage, request to save: ', request);
     return dispatch => {
-        console.log('actions.SPOTLIGHT_LOADING = ', actions.SPOTLIGHT_LOADING);
         dispatch({ type: actions.SPOTLIGHT_LOADING });
         return createSpotlight(request, dispatch);
     };
 };
 
 export const saveSpotlightChangeWithExistingImage = request => {
-    console.log('action saveSpotlightChangeWithExistingImage, request to save: ', request);
     return dispatch => {
-        console.log('actions.SPOTLIGHT_SAVING = ', actions.SPOTLIGHT_SAVING);
         dispatch({ type: actions.SPOTLIGHT_SAVING });
         return saveSpotlightChange(request, dispatch);
     };
 };
 
 export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update') => {
-    console.log('action saveSpotlightWithNewImage, request to save: ', spotlightSaveType, request);
-
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
         if (spotlightSaveType === 'create') {
             return createSpotlightWithExistingImage(request);
@@ -132,8 +114,6 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
     }
 
     return async dispatch => {
-        console.log('saveSpotlightWithNewImage: post data: ', request.uploadedFile);
-
         dispatch({ type: actions.PUBLIC_FILE_UPLOADING });
 
         const formData = new FormData();
@@ -144,7 +124,6 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
         // it causes webpack not to build, with cryptic errors
         return post(UPLOAD_PUBLIC_FILES_API(), formData)
             .then(response => {
-                console.log('uploadPublicFile got response ', response);
                 dispatch({
                     type: actions.PUBLIC_FILE_UPLOADED,
                     payload: response,
@@ -157,7 +136,6 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
                     !!firstresponse && !!firstresponse.key && `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
-                console.log('action saveSpotlightWithNewImage, request to save: ', request);
                 if (spotlightSaveType === 'create') {
                     dispatch({ type: actions.SPOTLIGHT_LOADING });
                     return createSpotlight(request, dispatch);
@@ -167,7 +145,6 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
                 }
             })
             .catch(error => {
-                console.log('uploadPublicFile error = ', error);
                 dispatch({
                     type: actions.PUBLIC_FILE_UPLOAD_FAILED,
                     payload: error,
@@ -177,19 +154,14 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
 };
 
 export const createSpotlightWithNewImage = request => {
-    console.log('action createSpotlightWithNewImage, request to save: ', request);
     return saveSpotlightWithNewImage(request, 'create');
 };
 
 export const deleteSpotlightBatch = request => {
-    console.log('deleteSpotlightBatch', request);
     return async dispatch => {
         dispatch({ type: actions.SPOTLIGHT_SAVING });
-        console.log('calling ', SPOTLIGHT_DELETE_BULK_API(), request);
         return destroy(SPOTLIGHT_DELETE_BULK_API(), request)
-            .then(data => {
-                console.log('deleteSpotlightBatch success', data);
-                console.log('deleteSpotlightBatch request', request);
+            .then(() => {
                 dispatch({
                     type: actions.SPOTLIGHTS_DELETION_SUCCESS,
                     // return the request so we can delete those entry from the display
@@ -197,7 +169,6 @@ export const deleteSpotlightBatch = request => {
                 });
             })
             .catch(error => {
-                console.log('deleteSpotlightBatch failed', error);
                 dispatch({
                     type: actions.SPOTLIGHTS_DELETION_FAILED,
                     payload: error,
@@ -208,13 +179,11 @@ export const deleteSpotlightBatch = request => {
 
 // not currently used? delete?
 export const deleteSpotlight = spotlightID => {
-    console.log('SPOTLIGHT_DELETE_API({ id: spotlightID }) = ', SPOTLIGHT_DELETE_API({ id: spotlightID }));
     return async dispatch => {
         dispatch({ type: actions.SPOTLIGHT_LOADING });
 
         try {
             const response = await destroy(SPOTLIGHT_DELETE_API({ id: spotlightID }));
-            console.log('deleteSpotlight action, returned response = ', response);
             dispatch({
                 type: actions.SPOTLIGHT_DELETED,
                 payload: [],
@@ -222,7 +191,6 @@ export const deleteSpotlight = spotlightID => {
 
             return Promise.resolve(response.data);
         } catch (e) {
-            console.log('deleteSpotlight action error = ', e);
             dispatch({
                 type: actions.SPOTLIGHT_FAILED,
                 payload: e,
@@ -234,7 +202,6 @@ export const deleteSpotlight = spotlightID => {
 };
 
 export function clearSpotlights() {
-    console.log('action clearSpotlights - refreshing Spotlights');
     return dispatch => {
         dispatch({
             type: actions.SPOTLIGHTS_CLEAR,
@@ -243,20 +210,16 @@ export function clearSpotlights() {
 }
 
 export function loadASpotlight(spotlightId) {
-    console.log('action load an Spotlight for ', spotlightId);
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHT_LOADING });
-        console.log('getting ', SPOTLIGHT_GET_BY_ID_API({ id: spotlightId }));
         return get(SPOTLIGHT_GET_BY_ID_API({ id: spotlightId }))
             .then(data => {
-                console.log('loadASpotlight action, returned data = ', data);
                 dispatch({
                     type: actions.SPOTLIGHT_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
-                console.log('loadASpotlight action error = ', error);
                 dispatch({
                     type: actions.SPOTLIGHT_FAILED,
                     payload: error.message,
@@ -270,119 +233,3 @@ export function clearASpotlight() {
         dispatch({ type: actions.SPOTLIGHT_CLEAR });
     };
 }
-
-// when a spotlight is added, date changed or deleted, the list must be reordered
-// export const reweightSpotlights = saveSpotlightChange => {
-//     let failureOccured = false;
-//     return dispatch => {
-//         console.log('reweightSpotlights getting ', SPOTLIGHTS_ALL_API());
-//         dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY });
-//         get(SPOTLIGHTS_ALL_API()).then(list0 => {
-//             console.log('reweightSpotlights response = ', list0);
-//             // used to get the complete list back when the user clears the filter field
-//             const listUnchanged = list0.map(s => s);
-//             console.log('reweightSpotlights listUnchanged = ', listUnchanged);
-//             const list = list0.map(s => s);
-//             // temp for early dev
-//             // if (window.location.hostname === 'localhost') {
-//             //     list = list0.filter(r => r.id !== '9eab3aa0-82c1-11eb-8896-eb36601837f5');
-//             // }
-//             list.map(s => {
-//                 // sort current then scheduled and then past
-//                 if (isPastSpotlight(s)) {
-//                     s.spotlightType = 3; // past
-//                 } else if (isScheduledSpotlight(s)) {
-//                     // console.log('check scheduled', s.id, s.title.substr(0, 20), s.start, s.weight);
-//                     s.spotlightType = 2; // scheduled
-//                 } else {
-//                     // console.log('check current', s.id, s.title.substr(0, 20), s.start, s.weight);
-//                     s.spotlightType = 1; // current
-//                 }
-//                 return s;
-//             })
-//                 .sort((a, b) => {
-//                     // sort by type then start date
-//                     // this will make the scheduled spotlights appear as the last spotlight, as they become current
-//                     const thisStartDate = formatDate(a.start, 'YYYYMMDDHHmmss');
-//                     const prevStartDate = formatDate(b.start, 'YYYYMMDDHHmmss');
-//                     const thisEndDate = formatDate(a.end, 'YYYYMMDDHHmmss');
-//                     const prevEndDate = formatDate(b.end, 'YYYYMMDDHHmmss');
-//                     if (isPastSpotlight(a)) {
-//                         return a.spotlightType - b.spotlightType || Number(thisEndDate) - Number(prevEndDate);
-//                     } else if (isScheduledSpotlight(a)) {
-//                         return a.spotlightType - b.spotlightType || Number(thisStartDate) - Number(prevStartDate);
-//                     } else {
-//                         return a.spotlightType - b.spotlightType || a.weight - b.weight;
-//                     }
-//                 })
-//                 .map((s, index) => {
-//                     return {
-//                         ...s,
-//                         weight: isPastSpotlight(s) ? 0 : (Number(index) + 1) * 10,
-//                     };
-//                 })
-//                 .forEach(s => {
-//                     const currentRow = listUnchanged.map(t => t).find(r => r.id === s.id);
-//                     const newValues = {
-//                         ...currentRow,
-//                         active: !!currentRow.active ? 1 : 0,
-//                         weight: s.weight,
-//                     };
-//
-//                     (!isPastSpotlight(s) || s.weight !== currentRow.weight) &&
-//                         console.log(
-//                             'will',
-//                             s.weight === currentRow.weight ? 'NOT' : '',
-//                             'save',
-//                             newValues.id,
-//                             newValues.title.substr(0, 20),
-//                             'start: ',
-//                             newValues.start,
-//                             'weight: ',
-//                             newValues.weight,
-//                             ' (was ',
-//                             currentRow.weight,
-//                             ')',
-//                             // eslint-disable-next-line no-nested-ternary
-//                             isPastSpotlight(s) ? 'past' : isScheduledSpotlight(s) ? 'scheduled' : 'current',
-//                         );
-//
-//                     // save any changes to order
-//                     s.weight !== currentRow.weight &&
-//                         saveSpotlightChange(newValues)
-//                             .then(() => {
-//                                 console.log('reWeightSpotlights saved success ', newValues.weight, newValues);
-//                                 console.log('look for ', `#spotlight-list-row-${newValues.id} .order`);
-//                             })
-//                             .catch(bad => {
-//                                 console.log('reWeightSpotlights saved failed ', bad, newValues);
-//                                 failureOccured = true;
-//                             });
-//
-//                     // update the display of Order
-//                     // only current spotlights display the order value
-//                     if (!!isCurrentSpotlight(s)) {
-//                         const weightCell = document.querySelector(`#spotlight-list-row-${currentRow.id} .order`);
-//                         console.log('weightCell = ', weightCell);
-//                         !!weightCell && (weightCell.innerHTML = newValues.weight / 10);
-//                     }
-//                 });
-//             console.log('list = ', list);
-//         });
-//         !!failureOccured
-//             ? dispatch({
-//                   type: actions.SPOTLIGHTS_BATCHUPDATE_FAILED,
-//               })
-//             : dispatch({
-//                   type: actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED,
-//               });
-//     };
-// };
-
-// export function clearSpotlightReweighting() {
-//     console.log('action clearSpotlightReweighting');
-//     return dispatch => {
-//         console.log('action dispatch clearSpotlightReweighting');
-//         dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_CLEAR });
-//     };
-// }

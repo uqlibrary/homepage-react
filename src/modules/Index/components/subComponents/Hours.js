@@ -171,22 +171,20 @@ const MyLoader = props => (
     </ContentLoader>
 );
 export const ariaLabelForLocation = item => {
-    console.log('item = ', item);
+    console.log(item);
     const name = item.name;
     const hours =
         item.departments.length > 0 &&
-        item.departments.map(item => {
-            if (hoursLocale.departmentsMap.includes(item.name)) {
-                return item.hours;
+        item.departments.map(i => {
+            if (hoursLocale.departmentsMap.includes(i.name)) {
+                return i.hours;
             }
             return null;
         });
-    const s = `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''} ${
-        !!hours[0] && !!hours[1] ? 'and' : ''
-    }
-            ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
-    console.log('result = ', s);
-    return s;
+    const studySpaceHours = `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''}`;
+    const askUsHours = !!hours[1] ? 'Ask Us hours are ' + hours[1] : '';
+    const hoursConjunction = !!hours[0] && !!hours[1] ? 'and' : '';
+    return `${studySpaceHours} ${hoursConjunction} ${askUsHours}`;
 };
 export const hasDepartments = item => {
     const departments = item.departments.map(item => {
@@ -384,7 +382,6 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <Grid item xs>
                             <Button
                                 classes={{ root: classes.actionButtonsRight }}
-                                color="primary"
                                 size="small"
                                 variant="contained"
                                 color={hoursLocale.actionButtons[1].color}

@@ -510,7 +510,7 @@ export const SpotlightsListAsTable = ({
         } else {
             newWeight = destination.index * 10 + 5; // dragging up
         }
-        const thisspotlight2 = {
+        const reweightedSpotlight = {
             ...cleanSpotlight(thisspotlight),
             weight: newWeight,
         };
@@ -531,10 +531,9 @@ export const SpotlightsListAsTable = ({
         const newIndex = reweightedRows.find(r => r.id === draggableId).weight / 10 - 1;
         moveItemInArray(userows, oldIndex, newIndex);
 
-        saveSpotlightChange(thisspotlight2)
+        saveSpotlightChange(reweightedSpotlight)
             .then(() => {
-                // do nothing, we assume success
-                console.log('saveSpotlightChange success');
+                // do nothing upon success
             })
             .catch(() => {
                 showSaveFailureConfirmation();

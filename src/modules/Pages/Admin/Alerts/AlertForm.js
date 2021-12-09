@@ -258,7 +258,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             dateList: values.dateList,
             systems: values.systems || /* istanbul ignore next */ [],
         };
-        console.log('saveAlerts: newValues = ', newValues);
         newValues.dateList.forEach(dateset => {
             // an 'edit' event will only have one entry in the date array
             const saveableValues = {

@@ -119,8 +119,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     };
 
     const showViewByHistoryLightbox = thisSpotlight => {
-        console.log('showViewByHistoryLightbox spotlights = ', spotlights);
-        console.log('showViewByHistoryLightbox thisSpotlight = ', thisSpotlight);
         const filteredRows =
             !!thisSpotlight && !!spotlights && [...spotlights].filter(r => r.img_url === thisSpotlight.img_url);
         /* istanbul ignore else */

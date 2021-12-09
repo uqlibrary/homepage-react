@@ -94,7 +94,6 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
                     }),
                 ),
             );
-            console.log('SpotlightFileUploadDropzone about to onAddFile for', acceptedFiles);
             onAddFile(acceptedFiles);
             setDimensions(acceptedFiles);
             /* istanbul ignore next */
@@ -137,7 +136,6 @@ export function SpotlightFileUploadDropzone({ onAddFile, onClearFile, currentIma
         files.forEach(file => URL.revokeObjectURL(file.preview));
         setFiles([]);
 
-        console.log('SpotlightFileUploadDropzone about to onClearFile');
         onClearFile();
     };
 
