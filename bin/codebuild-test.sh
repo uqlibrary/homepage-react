@@ -49,6 +49,7 @@ case "$PIPE_NUM" in
 
     # Running in series with `runInBand` to avoid CodeShip VM running out of memory
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
         npm run test:cc
@@ -112,11 +113,8 @@ case "$PIPE_NUM" in
     # Setting this after codestyle checks so that script doesn't exist before list of failures can be printed above.
     set -e
 
-    printf "\n--- \e[1mRUNNING UNIT TESTS\e[0m ---\n"
-    printf "Jest v"; jest --version
-
     if [[ $CODE_COVERAGE_REQUIRED == false ]]; then
-        printf "(\"$CI_BRANCH\" build INCLUDES code coverage check)\n"
+        printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
         npm run test:unit:ci2
 
         # Runner for cypress. More is in other pipelines.
