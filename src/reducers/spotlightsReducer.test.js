@@ -50,4 +50,33 @@ describe('spotlights reducer', () => {
             ...emptyState,
         });
     });
+
+    it('should set spotlights value when successfully deleted', () => {
+        const test = spotlightsReducer(
+            { spotlights: [{ id: 'aaa' }, { id: 'bbb' }, { id: 'ccc' }] },
+            {
+                type: actions.SPOTLIGHTS_DELETION_SUCCESS,
+                payload: ['bbb'],
+            },
+        );
+        expect(test).toEqual({
+            ...emptyState,
+            spotlights: [{ id: 'aaa' }, { id: 'ccc' }],
+            spotlightsLoading: false,
+            spotlightsError: false,
+        });
+    });
+
+    it('should handle a failing Spotlights API delete call', () => {
+        const test = spotlightsReducer(initialState, {
+            type: actions.SPOTLIGHTS_DELETION_FAILED,
+            payload: { status: 403, message: 'Test error message', errorType: 'deletion' },
+        });
+
+        expect(test).toEqual({
+            ...emptyState,
+            spotlightsLoading: false,
+            spotlightsError: { errorType: 'deletion' },
+        });
+    });
 });
