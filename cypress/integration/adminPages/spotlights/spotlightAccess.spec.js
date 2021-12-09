@@ -3,7 +3,7 @@ describe('access to Spotlight Admin is controlled', () => {
         const FILTER_STORAGE_NAME = 'alert-admin-filter-term'; // match to SpotlightsListAsTable
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
     });
-    context('Alert Admin public access blocked', () => {
+    context('Spotlight Admin public access blocked', () => {
         it('displays an "unauthorised" page to public users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=public');
             cy.viewport(1300, 1000);
@@ -36,7 +36,7 @@ describe('access to Spotlight Admin is controlled', () => {
         });
     });
 
-    context('Alert Admin non admin access blocked', () => {
+    context('Spotlight Admin non admin access blocked', () => {
         it('displays an "unauthorised" page to non-authorised users', () => {
             cy.visit('http://localhost:2020/admin/alerts?user=uqstaffnonpriv');
             cy.viewport(1300, 1000);
