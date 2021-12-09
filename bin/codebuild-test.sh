@@ -48,7 +48,9 @@ case "$PIPE_NUM" in
     set -e
 
     # Running in series with `runInBand` to avoid CodeShip VM running out of memory
+echo "#### at 1"
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+echo "#### at 2"
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
         npm run test:cc
@@ -58,6 +60,7 @@ case "$PIPE_NUM" in
         NUM_FULL_COVERAGE="grep -c class=\"strong\"\>100\% coverage/index.html"
         echo ${NUM_FULL_COVERAGE}
         if [[ $NUM_FULL_COVERAGE == 4 ]]; then
+echo "#### at 3"
             echo ""
             echo "Coverage 100%";
             echo ""
@@ -73,14 +76,18 @@ case "$PIPE_NUM" in
             echo "            (___)____.|_____"
             echo "Human, your code coverage was found to be satisfactory. Great job!"
         else
+echo "#### at 4"
             echo ""
             echo "Coverage not 100%";
             echo ""
             grep -A 2 class=\"strong\"\> coverage/index.html
             echo "Run your tests locally with `npm run test:cc` then load coverage/index.html to determine where the coverage gaps are"
             exit 1;
+echo "#### should have exited"
         fi;
+echo "#### at 5"
     else
+echo "#### at 6"
         printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
         npm run test:unit:ci1:skipcoverage
@@ -88,7 +95,9 @@ case "$PIPE_NUM" in
         # Second runner for e2e. The first one is in the other pipeline.
         printf "\n--- \e[1mRUNNING CYPRESS TESTS\e[0m ---\n"
         npm run test:e2e:dashboard
+echo "#### at 7"
     fi
+echo "#### at 8"
 
 ;;
 "2")
@@ -135,3 +144,4 @@ case "$PIPE_NUM" in
     fi
 ;;
 esac
+echo "#### AFTER"
