@@ -842,6 +842,7 @@ exports[`Application component should render for anon user 1`] = `
                                       "searcheSpacePossiblePublications": [Function],
                                       "setRedirectPath": [Function],
                                       "showAppAlert": [Function],
+                                      "stripSeconds": [Function],
                                     }
                                   }
                                   history={
@@ -5458,6 +5459,7 @@ exports[`Application component should render loading screen while account is loa
                                       "searcheSpacePossiblePublications": [Function],
                                       "setRedirectPath": [Function],
                                       "showAppAlert": [Function],
+                                      "stripSeconds": [Function],
                                     }
                                   }
                                   history={
