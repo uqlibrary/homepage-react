@@ -171,7 +171,6 @@ const MyLoader = props => (
     </ContentLoader>
 );
 export const ariaLabelForLocation = item => {
-    console.log(item);
     const name = item.name;
     const hours =
         item.departments.length > 0 &&
