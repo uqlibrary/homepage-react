@@ -51,14 +51,6 @@ export const SpotlightFormReorderableThumbs = ({
     tableType,
     originalValues,
 }) => {
-    // console.log('SpotlightFormReorderableThumbs TOP currentValues = ', currentValues);
-    // console.log('SpotlightFormReorderableThumbs TOP currentSpotlights = ', currentSpotlights);
-    // console.log('SpotlightFormReorderableThumbs TOP !!currentSpotlights = ', !!currentSpotlights);
-    // if (!!currentSpotlights) {
-    //     console.log('SpotlightFormReorderableThumbs TOP currentSpotlights.length = ', currentSpotlights.length);
-    // }
-    // console.log('SpotlightFormReorderableThumbs TOP currentSpotlightsLoading = ', currentSpotlightsLoading);
-
     const classes = useStyles();
 
     const placeholderThumbnailId = 'placeholder-thumbnail';
@@ -163,7 +155,6 @@ export const SpotlightFormReorderableThumbs = ({
 
     /* istanbul ignore next */
     const onDragEnd = result => {
-        console.log('onDragEnd ', result);
         // must synchronously update state to reflect drag result
         const { destination, source } = result;
         if (!destination) {
@@ -201,12 +192,6 @@ export const SpotlightFormReorderableThumbs = ({
             </Grid>
         );
     }
-
-    // const isUploadProvided = values => {
-    //     return !!values.uploadedFile && !!values.uploadedFile[0] && !!values.uploadedFile[0].preview;
-    // };
-    //
-    // console.log('SpotlightFormReorderableThumbs xx currentValues = ', currentValues);
 
     // if they drag a new image in, reuse this as the thumb
     const currentImage = (values, defaultImage) => {

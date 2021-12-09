@@ -114,18 +114,5 @@ export default function homeReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log(
-        'homeReducer: ',
-        action.type,
-        '\n',
-        '- state before = ',
-        state,
-        '\n',
-        '- action = ',
-        action,
-        '\n',
-        '- handler (state after) = ',
-        handler(state, action),
-    );
     return handler(state, action);
 }
