@@ -1,12 +1,17 @@
 import * as actions from './actionTypes';
-import { get, post, destroy } from 'repositories/generic';
+import { destroy, get, post } from 'repositories/generic';
 import {
-    ALERT_SAVE_API,
-    ALERT_CREATE_API,
-    ALERTS_ALL_API,
     ALERT_BY_ID_API,
+    ALERT_CREATE_API,
     ALERT_DELETE_API,
+    ALERT_SAVE_API,
+    ALERTS_ALL_API,
 } from 'repositories/routes';
+
+export const stripSeconds = inputDate => {
+    const splittedString = inputDate.split(':');
+    return !!splittedString && splittedString.length > 2 ? splittedString.slice(0, -1).join(':') : inputDate;
+};
 
 export function loadAllAlerts() {
     return dispatch => {
@@ -96,11 +101,6 @@ export function clearAlerts() {
         });
     };
 }
-
-const stripSeconds = inputDate => {
-    const splittedString = inputDate.split(':');
-    return !!splittedString && splittedString.length > 2 ? splittedString.slice(0, -1).join(':') : inputDate;
-};
 
 export function loadAnAlert(alertId) {
     return dispatch => {
