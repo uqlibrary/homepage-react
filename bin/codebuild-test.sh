@@ -76,7 +76,8 @@ case "$PIPE_NUM" in
             echo ""
             echo "Coverage not 100%";
             echo ""
-            grep -A 1 class=\"strong\"\> coverage/index.html
+            grep -A 2 class=\"strong\"\> coverage/index.html
+            echo "Run your tests locally with `npm run test:cc` then load coverage/index.html to determine where the coverage gaps are"
             exit 1;
         fi;
     else
