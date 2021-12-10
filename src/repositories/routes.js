@@ -165,5 +165,4 @@ send payload:
 
 export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 
-export const SPOTLIGHT_DELETE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });
