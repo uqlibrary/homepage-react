@@ -39,26 +39,6 @@ const handlers = {
         spotlightsLoading: false,
         spotlightsError: { ...action.payload, errorType: 'deletion' },
     }),
-    [actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY]: state => ({
-        ...initialState,
-        ...state,
-        spotlightsLoading: true,
-        spotlightsError: false,
-    }),
-    [actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        spotlightsLoading: false,
-        spotlightsError: false,
-        // set of spotlights reweighted returned as payload
-        spotlights: state.spotlights.map(s => action.payload.find(r => r === s.id) || s),
-    }),
-    [actions.SPOTLIGHTS_BATCHUPDATE_FAILED]: (state, action) => ({
-        ...initialState,
-        ...state,
-        spotlightsLoading: false,
-        spotlightsError: action.payload,
-    }),
     [actions.SPOTLIGHTS_CLEAR]: () => ({
         ...initialState,
     }),

@@ -5,13 +5,11 @@ import * as repositories from 'repositories';
 import {
     clearSpotlights,
     clearASpotlight,
-    deleteSpotlight,
     loadAllSpotlights,
     loadASpotlight,
     saveSpotlightChangeWithExistingImage,
     saveSpotlightWithNewImage,
     createSpotlightWithNewImage,
-    saveSpotlightBatch,
     deleteSpotlightBatch,
 } from './spotlightsActions';
 
@@ -380,40 +378,6 @@ describe('Spotlight list actions', () => {
                 saveSpotlightWithNewImage({ ...sendSpotlightRecord, id: 'id', uploadedFile: [fileToUpload] }),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-        });
-    });
-
-    describe('Spotlight Bulk Update', () => {
-        it('handles a successful spotlight bulk save request', async () => {
-            mockApi.onAny(repositories.routes.SPOTLIGHT_SAVE_BULK_API().apiUrl).reply(200, [
-                {
-                    ...returnedSpotlightRecord,
-                    id: '88888-d62b-11e7-954e-57c2cc19d151',
-                },
-            ]);
-
-            const expectedActions = [actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY, actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED];
-
-            await mockActionsStore.dispatch(
-                saveSpotlightBatch([
-                    {
-                        ...sendSpotlightRecord,
-                        id: '88888-d62b-11e7-954e-57c2cc19d151',
-                    },
-                ]),
-            );
-            expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-        });
-        it('handles a failing spotlight bulk save request', async () => {
-            mockApi.onAny(repositories.routes.SPOTLIGHT_SAVE_API({ id: 'id' }).apiUrl).reply(500);
-            const expectedActions = [actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY, actions.SPOTLIGHTS_BATCHUPDATE_FAILED];
-
-            try {
-                await mockActionsStore.dispatch(saveSpotlightBatch([{ ...sendSpotlightRecord, id: 'id' }]));
-                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-            } catch (e) {
-                expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-            }
         });
     });
 });

@@ -165,34 +165,5 @@ send payload:
 
 export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 
-// on reorder, send all the rows together, so the api can use its after-update-of-many-then-reweight
-export const SPOTLIGHT_SAVE_BULK_API = () => ({ apiUrl: 'spotlights' });
-/*
-send payload:
-{
-active: 0
-end: "2021-01-18 18:00:00"
-id: "ca7d3e70-516f-11eb-880b-1d4a9f408ccb"
-img_alt: "Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates."
-img_url: "https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg"
-start: "2021-01-08 15:05:00"
-title: "08/01/21 Spaces & collections closed temporarily"
-url: "https://web.library.uq.edu.au/library-services/covid-19"
-weight: 0
-}
-response:
-{
-    "id": "ca7d3e70-516f-11eb-880b-1d4a9f408ccb",
-    "start": "2021-01-08 15:05:00",
-    "end": "2021-01-18 18:00:00",
-    "title": "08\/01\/21 Spaces & collections closed temporarily",
-    "url": "https:\/\/web.library.uq.edu.au\/library-services\/covid-19",
-    "img_url": "https:\/\/app.library.uq.edu.au\/file\/public\/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg",
-    "img_alt": "Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.",
-    "weight": 0,
-    "active": 0
-}
- */
-
 export const SPOTLIGHT_DELETE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });

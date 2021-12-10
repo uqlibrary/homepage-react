@@ -2,6 +2,8 @@ import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmi
 
 const moment = require('moment');
 
+export const FILTER_STORAGE_NAME = 'spotlights-admin-filter-term'; // match to SpotlightsListAsTable
+
 export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     const newMoment = new moment(dateString);
     return newMoment.format(dateFormat);

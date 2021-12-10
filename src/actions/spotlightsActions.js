@@ -7,7 +7,6 @@ import {
     SPOTLIGHT_GET_BY_ID_API,
     SPOTLIGHT_DELETE_API,
     UPLOAD_PUBLIC_FILES_API,
-    SPOTLIGHT_SAVE_BULK_API,
     SPOTLIGHT_DELETE_BULK_API,
 } from 'repositories/routes';
 import { API_URL } from '../config';
@@ -68,26 +67,6 @@ const saveSpotlightChange = (request, dispatch) => {
             });
             return Promise.reject(error);
         });
-};
-
-// the only batch save action atm is to reorder
-export const saveSpotlightBatch = request => {
-    return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHTS_BATCHUPDATE_UNDERWAY });
-        return post(SPOTLIGHT_SAVE_BULK_API(), request)
-            .then(data => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_BATCHUPDATE_SUCCEEDED,
-                    payload: data,
-                });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.SPOTLIGHTS_BATCHUPDATE_FAILED,
-                    payload: error,
-                });
-            });
-    };
 };
 
 export const createSpotlightWithExistingImage = request => {

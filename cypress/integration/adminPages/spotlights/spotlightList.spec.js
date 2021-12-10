@@ -1,5 +1,6 @@
 import {
     assertImageWarningIsPresent,
+    FILTER_STORAGE_NAME,
     getFooterLabel,
     hasAWorkingHelpButton,
     numberCurrentPublishedSpotlights,
@@ -11,7 +12,6 @@ const numRowsHiddenAsNoDatainfo = 1;
 
 describe('Spotlights Admin List Page', () => {
     before(() => {
-        const FILTER_STORAGE_NAME = 'alert-admin-filter-term'; // match to SpotlightsListAsTable
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
     });
     beforeEach(() => {
