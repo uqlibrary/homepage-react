@@ -1,6 +1,8 @@
 export const numberCurrentPublishedSpotlights = 4;
 export const totalCountPastRecords = 34;
 
+export const FILTER_STORAGE_NAME = 'spotlights-admin-filter-term'; // match to SpotlightsListAsTable value
+
 export function clickButton(selector) {
     // hacky call to jquery as fix for occasional error:
     // "This DOM element likely became detached somewhere between the previous and current command.'

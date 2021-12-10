@@ -32,12 +32,7 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
-import {
-    SPOTLIGHT_DELETE_BULK_API,
-    SPOTLIGHT_GET_BY_ID_API,
-    SPOTLIGHT_SAVE_BULK_API,
-    UPLOAD_PUBLIC_FILES_API,
-} from 'repositories/routes';
+import { SPOTLIGHT_DELETE_BULK_API, SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -324,37 +319,6 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '298288b0-605c-11eb-ad87-357f112348e
             active: 0,
             admin_notes: '',
         },
-    ]),
-);
-// the user drags spotlight 1 to position 2
-mock.onPost(routes.SPOTLIGHT_SAVE_BULK_API().apiUrl).reply(
-    withDelay([
-        200,
-        [
-            {
-                id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
-                start: '2021-03-01 00:01:00',
-                end: '2099-12-07 23:59:00',
-                title: 'Study outdoors in Duhig Place - Study space',
-                url: 'http://bit.ly/3uBIK7C',
-                img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-                img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
-                weight: 10,
-                active: 0,
-            },
-            {
-                id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
-                start: '2021-03-15 00:02:00',
-                end: '2099-03-21 23:59:00',
-                title: 'Can be deleted and edited',
-                url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-                img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-                img_alt:
-                    'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-                weight: 20,
-                active: 1,
-            },
-        ],
     ]),
 );
 mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '729df1a0-7dd0-11e9-a3a7-5fd844715207' }).apiUrl).reply(

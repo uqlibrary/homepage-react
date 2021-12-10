@@ -33,6 +33,7 @@ import SpotlightSplitButton from './SpotlightSplitButton';
 
 import moment from 'moment';
 import {
+    FILTER_STORAGE_NAME,
     filterSpotlights,
     formatDate,
     getTimeMondayComing,
@@ -167,7 +168,6 @@ export const SpotlightsListAsTable = ({
     const [userows, setUserows] = useState([]);
     const [staticUserows, setStaticUserows] = useState([]);
 
-    const FILTER_STORAGE_NAME = 'alert-admin-filter-term';
     const getFilterTermFromSession = () => {
         const filter = JSON.parse(sessionStorage.getItem(FILTER_STORAGE_NAME));
         if (!filter) {

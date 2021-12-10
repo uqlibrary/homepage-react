@@ -1,8 +1,11 @@
-import { hasAWorkingHelpButton, numberCurrentPublishedSpotlights } from '../../../support/spotlights';
+import {
+    FILTER_STORAGE_NAME,
+    hasAWorkingHelpButton,
+    numberCurrentPublishedSpotlights,
+} from '../../../support/spotlights';
 
 describe('Spotlight Admin View page', () => {
     before(() => {
-        const FILTER_STORAGE_NAME = 'alert-admin-filter-term'; // match to SpotlightsListAsTable
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
     });
     const numRowsHiddenAsNoDatainfo = 1;

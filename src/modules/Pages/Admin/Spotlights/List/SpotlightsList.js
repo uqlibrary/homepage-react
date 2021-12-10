@@ -113,11 +113,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
         return actions.saveSpotlightChangeWithExistingImage(spotlight);
     };
 
-    /* istanbul ignore next */
-    const saveBatchReorder = slist => {
-        return actions.saveSpotlightBatch(slist);
-    };
-
     const showViewByHistoryLightbox = thisSpotlight => {
         const filteredRows =
             !!thisSpotlight && !!spotlights && [...spotlights].filter(r => r.img_url === thisSpotlight.img_url);
@@ -188,7 +183,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canDragRows
                                     canUnpublish
@@ -207,7 +201,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canUnpublish
                                     showViewByHistoryLightbox={showViewByHistoryLightbox}
@@ -222,7 +215,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canTextFilter
                                     showViewByHistoryLightbox={showViewByHistoryLightbox}

@@ -7,6 +7,7 @@ import {
     dragFileToDropzone,
     dragzoneContainsAnImage,
     dragzoneIsReadyForDrag,
+    FILTER_STORAGE_NAME,
     hasAWorkingHelpButton,
     numberCurrentPublishedSpotlights,
     placeholderImage,
@@ -17,7 +18,6 @@ import {
 
 describe('Spotlights Admin Pages', () => {
     before(() => {
-        const FILTER_STORAGE_NAME = 'alert-admin-filter-term'; // match to SpotlightsListAsTable
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
     });
     const numRowsHiddenAsNoDatainfo = 1;
