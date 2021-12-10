@@ -493,48 +493,6 @@ mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
         },
     ]),
 );
-// mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9' }).apiUrl).reply(
-    withDelay([500, []]),
-);
-
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'd8ec8820-07b1-11e7-a7ef-ef4338d401a6' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a7764f90-198d-11e7-9f30-3dc758d83fd5' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '5ee86730-6f2a-11eb-8e97-5b9edc0aaa73' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '7d40b830-668d-11eb-b0fd-e19d76f2843b' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '5ee86730-6f2a-11eb-8e97-5b9edc0aaa73' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '48727c20-7fa8-11eb-ae0f-0b60018ec35f' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'aa2fab10-7cb1-11eb-a9ab-d7c632403564' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
-    withDelay([200, []]),
-);
 
 mock.onDelete(routes.SPOTLIGHT_DELETE_BULK_API().apiUrl).reply(withDelay([200, []]));
 

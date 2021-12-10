@@ -5,7 +5,6 @@ import {
     SPOTLIGHT_CREATE_API,
     SPOTLIGHTS_ALL_API,
     SPOTLIGHT_GET_BY_ID_API,
-    SPOTLIGHT_DELETE_API,
     UPLOAD_PUBLIC_FILES_API,
     SPOTLIGHT_DELETE_BULK_API,
 } from 'repositories/routes';
@@ -110,7 +109,10 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
 
                 const firstresponse = !!response && response.length > 0 && response.shift();
                 const apiProd = 'https://api.library.uq.edu.au/v1/';
-                const domain = API_URL === apiProd ? 'app.library.uq.edu.au' : 'app-testing.library.uq.edu.au';
+                const domain =
+                    API_URL === apiProd
+                        ? /* istanbul ignore next */ 'app.library.uq.edu.au'
+                        : 'app-testing.library.uq.edu.au';
                 request.img_url =
                     !!firstresponse && !!firstresponse.key && `https://${domain}/file/public/${firstresponse.key}`;
 
@@ -153,30 +155,6 @@ export const deleteSpotlightBatch = request => {
                     payload: error,
                 });
             });
-    };
-};
-
-// not currently used? delete?
-export const deleteSpotlight = spotlightID => {
-    return async dispatch => {
-        dispatch({ type: actions.SPOTLIGHT_LOADING });
-
-        try {
-            const response = await destroy(SPOTLIGHT_DELETE_API({ id: spotlightID }));
-            dispatch({
-                type: actions.SPOTLIGHT_DELETED,
-                payload: [],
-            });
-
-            return Promise.resolve(response.data);
-        } catch (e) {
-            dispatch({
-                type: actions.SPOTLIGHT_FAILED,
-                payload: e,
-            });
-
-            return Promise.reject(e);
-        }
     };
 };
 
