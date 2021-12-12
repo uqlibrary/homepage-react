@@ -386,6 +386,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                     const buildingTotal = item.levels
                                         .map(level => level.occupied + level.available)
                                         .reduce(add);
+                                    const ariaLabel = `${item.library} - ${buildingAvail} free of ${buildingTotal}. Click to review each level`;
                                     return (
                                         <React.Fragment key={index}>
                                             <Grid
@@ -407,8 +408,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                                     : ''
                                                             }`,
                                                         }}
-                                                        aria-label={`${item.library} - ${buildingAvail} free of{' '}
-                                                        ${buildingTotal}. Click to review each level`}
+                                                        aria-label={ariaLabel}
                                                         id={`computers-library-button-${index}`}
                                                         data-testid={`computers-library-button-${index}`}
                                                     >
@@ -420,66 +420,70 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                                 </Grid>
                                             </Grid>
                                             {item.levels.length > 0 &&
-                                                item.levels.map((level, levelIndex) => (
-                                                    <Collapse
-                                                        in={collapse[index]}
-                                                        timeout="auto"
-                                                        unmountOnExit
-                                                        key={levelIndex}
-                                                    >
-                                                        <Grid
-                                                            role="region"
-                                                            container
-                                                            spacing={1}
-                                                            className={classes.row}
-                                                            justify="center"
-                                                            alignItems="center"
+                                                item.levels.map((level, levelIndex) => {
+                                                    const levelname = l => `${item.library} level ${l.level}`;
+                                                    const seatsOnLevel = l => {
+                                                        const totalSeatsOnLevel = l.available + l.occupied;
+                                                        return `${l.available} free of ${totalSeatsOnLevel}`;
+                                                    };
+                                                    const seatsOnLevelAria = l =>
+                                                        `${levelname(l)}. ${seatsOnLevel(l)} computers`;
+                                                    return (
+                                                        <Collapse
+                                                            in={collapse[index]}
+                                                            timeout="auto"
+                                                            unmountOnExit
+                                                            key={levelIndex}
                                                         >
-                                                            <Grid item xs style={{ paddingLeft: 32 }}>
-                                                                <Button
-                                                                    id={`computers-${item.library}-level-${item.level}-button`}
-                                                                    data-testid={`computers-library-${index}-level-${level.level}-button`}
-                                                                    aria-label={`${item.library} level ${
-                                                                        level.level
-                                                                    }. ${level.available} free of{' '}
-                                                                        ${level.available + level.occupied}{' '}
-                                                                        computers`}
-                                                                    disabled={!level.floorplan}
-                                                                    onClick={() =>
-                                                                        openMap(
-                                                                            item.library,
-                                                                            item.buildingCode,
-                                                                            level.roomCode,
-                                                                            level.level,
-                                                                            level.total,
-                                                                            level.available,
-                                                                            level.floorplan,
-                                                                        )
-                                                                    }
-                                                                    classes={{
-                                                                        root: classes.linkButton,
-                                                                        label: `${classes.linkButtonLabel} ${
-                                                                            cookies.location === item.campus
-                                                                                ? classes.selectedCampus
-                                                                                : ''
-                                                                        }`,
-                                                                    }}
-                                                                >
-                                                                    Level {level.level}
-                                                                </Button>
-                                                            </Grid>
-                                                            <Grid xs item />
                                                             <Grid
-                                                                item
-                                                                xs={'auto'}
-                                                                style={{ fontSize: 14, marginRight: 16 }}
+                                                                role="region"
+                                                                container
+                                                                spacing={1}
+                                                                className={classes.row}
+                                                                justify="center"
+                                                                alignItems="center"
                                                             >
-                                                                {level.available} free of{' '}
-                                                                {level.available + level.occupied}
+                                                                <Grid item xs style={{ paddingLeft: 32 }}>
+                                                                    <Button
+                                                                        id={`computers-${item.library}-level-${item.level}-button`}
+                                                                        data-testid={`computers-library-${index}-level-${level.level}-button`}
+                                                                        aria-label={seatsOnLevelAria(level)}
+                                                                        disabled={!level.floorplan}
+                                                                        onClick={() =>
+                                                                            openMap(
+                                                                                item.library,
+                                                                                item.buildingCode,
+                                                                                level.roomCode,
+                                                                                level.level,
+                                                                                level.total,
+                                                                                level.available,
+                                                                                level.floorplan,
+                                                                            )
+                                                                        }
+                                                                        classes={{
+                                                                            root: classes.linkButton,
+                                                                            label: `${classes.linkButtonLabel} ${
+                                                                                cookies.location === item.campus
+                                                                                    ? classes.selectedCampus
+                                                                                    : ''
+                                                                            }`,
+                                                                        }}
+                                                                    >
+                                                                        Level {level.level}
+                                                                    </Button>
+                                                                </Grid>
+                                                                <Grid xs item />
+                                                                <Grid
+                                                                    item
+                                                                    xs={'auto'}
+                                                                    style={{ fontSize: 14, marginRight: 16 }}
+                                                                >
+                                                                    {seatsOnLevel(level)}
+                                                                </Grid>
                                                             </Grid>
-                                                        </Grid>
-                                                    </Collapse>
-                                                ))}
+                                                        </Collapse>
+                                                    );
+                                                })}
                                         </React.Fragment>
                                     );
                                 })}
