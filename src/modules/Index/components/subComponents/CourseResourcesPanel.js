@@ -93,7 +93,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
                 <Grid container spacing={1} data-testid="your-courses" className={classes.myCourses}>
                     <Grid item xs={12}>
-                        <Typography color={'secondary'} component={'h4'} variant={'h6'}>
+                        <Typography component={'h4'} variant={'h6'}>
                             {locale.homepagePanel.userCourseTitle}
                         </Typography>
                     </Grid>
