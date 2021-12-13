@@ -1,4 +1,4 @@
-import { clickButton } from '../../../support/alerts';
+import { clickButton } from '../../../support/helpers';
 
 describe('Alerts Admin View Page', () => {
     beforeEach(() => {

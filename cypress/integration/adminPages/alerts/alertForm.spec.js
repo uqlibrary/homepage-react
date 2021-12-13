@@ -1,4 +1,5 @@
-import { clickButton, hasAWorkingHelpButton } from '../../../support/alerts';
+import { hasAWorkingHelpButton } from '../../../support/alerts';
+import { clickButton } from '../../../support/helpers';
 
 describe('Alerts Admin Form Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
