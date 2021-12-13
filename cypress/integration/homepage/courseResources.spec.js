@@ -5,7 +5,6 @@ import { default as learningResourceSearchSuggestions } from '../../../src/mock/
 context('The Homepage Course Resource Panel', () => {
     it('Course resources panel is accessible', () => {
         cy.visit('/?user=s1111111');
-        cy.viewport(1300, 1000);
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.log('Course resources panel');
@@ -24,10 +23,10 @@ context('The Homepage Course Resource Panel', () => {
         expect(currentClasses.length).to.be.above(1); // the course we are going to click on exists
 
         cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
-        cy.get('div[data-testid=course-resources-panel] h4').contains(locale.homepagePanel.userCourseTitle);
+        cy.get('div[data-testid=course-resources-panel] h3').contains(locale.homepagePanel.userCourseTitle);
 
         const numberOfBlocks = currentClasses.length + 1; // n classes + 1 header
-        cy.get('div[data-testid=course-resources-panel] h4')
+        cy.get('div[data-testid=course-resources-panel] h3')
             .parent()
             .parent()
             .children()
