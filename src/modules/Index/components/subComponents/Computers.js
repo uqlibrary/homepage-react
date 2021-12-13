@@ -215,8 +215,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                 const textA = a.library.toUpperCase();
                 const textB = b.library.toUpperCase();
                 // eslint-disable-next-line no-nested-ternary
-                const result = textA < textB ? -1 : textA > textB ? 1 : 0;
-                return result;
+                return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
             });
     const sortedComputers =
         alphaAvailability &&
@@ -244,6 +243,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
         setMapSrc(null);
     };
     const openMap = (library, building, room, level, total, available, floorplan) => {
+        /* istanbul ignore else */
         if (!!floorplan) {
             setMapSrc({ library, building, room, level, total, available, floorplan });
         }
@@ -252,7 +252,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
         if (!!mapSrc) {
             return (
                 <Dialog
-                    onClose={() => closeMap()}
+                    onClose={/* istanbul ignore next */ () => closeMap()}
                     aria-label="UQ Library computer availablity map"
                     role="dialog"
                     open={!!mapSrc}
@@ -369,7 +369,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
             <MapPopup />
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
                 {!!computerAvailabilityError && (
-                    <Fade in={!computerAvailabilityLoading} timeout={1000}>
+                    /* istanbul ignore next */ <Fade in={!computerAvailabilityLoading} timeout={1000}>
                         <div className={classes.flexContent}>
                             <Typography style={{ padding: '1rem' }}>{computersLocale.unavailable}</Typography>
                         </div>
