@@ -1,5 +1,6 @@
 import Index from './Index';
 import { getUrlForCourseResourceSpecificTab } from './subComponents/CourseResourcesPanel';
+import { greeting } from './subComponents/PersonalisedPanel';
 
 function setup(testProps = {}, args = { isShallow: false }) {
     const props = {
@@ -16,7 +17,7 @@ describe('Index page', () => {
 });
 
 describe('Course Resources panel', () => {
-    it('something', () => {
+    it('test urls correct', () => {
         const aclass = {
             ACAD_CAREER: 'UGRD',
             ACAD_GROUP: 'SCI',
@@ -38,5 +39,13 @@ describe('Course Resources panel', () => {
         expect(getUrlForCourseResourceSpecificTab(aclass, page, true, true)).toEqual(
             'http://localhost/courseresources?keyword&coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
+    });
+});
+
+describe('Personalised panel', () => {
+    it('shows the correct greeting time', () => {
+        expect(greeting(9)).toEqual('Good morning'); // 9am
+        expect(greeting(13)).toEqual('Good afternoon'); // 1pm
+        expect(greeting(21)).toEqual('Good evening'); // 9pm
     });
 });

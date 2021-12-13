@@ -169,6 +169,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+export const greeting = (currentTime = null) => {
+    const time = currentTime ?? moment().format('H');
+    if (time < 12) {
+        return ppLocale.greetings.morning;
+    } else if (time >= 12 && time < 18) {
+        return ppLocale.greetings.afternoon;
+    } else {
+        return ppLocale.greetings.evening;
+    }
+};
+
 const PersonalisedPanel = ({
     account,
     author,
@@ -179,28 +190,18 @@ const PersonalisedPanel = ({
     incompleteNTRORecords,
 }) => {
     const classes = useStyles();
-    const greeting = () => {
-        const time = moment().format('H');
-        if (time < 12) {
-            return ppLocale.greetings.morning;
-        } else if (time >= 12 && time < 18) {
-            return ppLocale.greetings.afternoon;
-        } else {
-            return ppLocale.greetings.evening;
-        }
-    };
-    const id = tag => `pp${tag ? '-' + tag : ''}`;
+    const id = tag => `pp${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
 
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
-        const id = tag => `pp-papercut${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClick = event => {
             setAnchorEl(event.currentTarget);
         };
         const handleClose = () => {
             setAnchorEl(null);
         };
-        const handleNagivationToManage = () => {
+        const handleNavigationToManage = () => {
             window.location.href = ppLocale.items.papercut.url;
             handleClose();
         };
@@ -255,7 +256,7 @@ const PersonalisedPanel = ({
                     <MenuItem
                         id={id('item-button-0')}
                         data-testid={id('item-button-0')}
-                        onClick={() => handleNagivationToManage()}
+                        onClick={() => handleNavigationToManage()}
                     >
                         Log in and manage your print balance
                     </MenuItem>
