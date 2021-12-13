@@ -82,6 +82,23 @@ context('Personalised panel', () => {
         cy.get('[data-testid=hours-wiggler]').should('not.exist');
     });
 
+    it('location popup can be closed', () => {
+        cy.visit('/');
+        cy.viewport(1300, 1000);
+
+        // open location selector popup
+        cy.get('[data-testid=location]')
+            .contains('Set a preferred campus')
+            .click();
+        cy.get('[data-testid="location-option-0"]')
+            .should('exist')
+            .should('contain', 'No preference');
+
+        // click away from popup to close
+        cy.get('body').click();
+        cy.get('[data-testid="location-option-0"]').should('not.be.visible');
+    });
+
     function openPapercutPopup() {
         cy.get('[data-testid="personalised-panel"]')
             .should('exist')

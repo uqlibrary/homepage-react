@@ -73,11 +73,12 @@ export const Location = ({ idLabel }) => {
     } else {
         thisLocation = cookies.location;
     }
-    const id = (tag = null) => `location${!!idLabel ? '-' + idLabel : ''}${!!tag ? '-' + tag : ''}`;
+    const getTagId = (tag = null) =>
+        `location${!!idLabel ? /* istanbul ignore next */ '-' + idLabel : ''}${!!tag ? '-' + tag : ''}`;
     return (
-        <div id={id()} data-testid={id()}>
+        <div id={getTagId()} data-testid={getTagId()}>
             <Tooltip
-                id={id('tooltip')}
+                id={getTagId('tooltip')}
                 title={locale.tooltip.replace('[currentLocation]', thisLocation)}
                 placement="right"
                 TransitionProps={{ timeout: 300 }}
@@ -87,8 +88,8 @@ export const Location = ({ idLabel }) => {
                     variant={'text'}
                     className={classes.iconButton}
                     onClick={handleLocationClick}
-                    id={id('button')}
-                    data-testid={id('button')}
+                    id={getTagId('button')}
+                    data-testid={getTagId('button')}
                 >
                     <RoomIcon
                         className={`${classes.icon} ${
@@ -101,14 +102,14 @@ export const Location = ({ idLabel }) => {
             <Menu
                 keepMounted
                 autoFocus
-                id={id('menu')}
-                data-testid={id('menu')}
+                id={getTagId('menu')}
+                data-testid={getTagId('menu')}
                 anchorEl={anchorEl}
                 open={Boolean(anchorEl)}
                 onClose={handleClose}
                 PaperProps={{
-                    id: id('paper'),
-                    'data-testid': id('paper'),
+                    id: getTagId('paper'),
+                    'data-testid': getTagId('paper'),
                 }}
             >
                 {locale.locations.map((item, index) => (
@@ -117,8 +118,8 @@ export const Location = ({ idLabel }) => {
                         onClick={handleLocationClose(item.value)}
                         disabled={thisLocation === item.value}
                         className={thisLocation === item.value ? classes.selectedItem : ''}
-                        data-testid={id(`option-${index}`)}
-                        id={id(`option-${index}`)}
+                        data-testid={getTagId(`option-${index}`)}
+                        id={getTagId(`option-${index}`)}
                     >
                         {(thisLocation === item.location || thisLocation === item.value) && <RoomIcon />}
                         {item.location}
