@@ -16,7 +16,21 @@ import {
     saveButtonNOTDisabled,
 } from '../../../support/spotlights';
 
-describe('Spotlights Admin Pages', () => {
+function setDateToNow() {
+    cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
+    cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
+        .should('be.visible')
+        .contains(locale.form.labels.datePopupNowButton)
+        .click();
+    cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
+        .contains('OK')
+        .click();
+    cy.get('[data-testid="admin-spotlights-form-start-date"]')
+        .parent()
+        .should('not.contain', 'This date is in the past.');
+}
+
+describe('Spotlights Admin Form Pages', () => {
     before(() => {
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
     });
@@ -176,6 +190,7 @@ describe('Spotlights Admin Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
+
             cy.wait(50);
             cy.get('body').contains('A spotlight has been added');
             // click 'add another spotlight' button in dialog
@@ -278,18 +293,7 @@ describe('Spotlights Admin Pages', () => {
             cy.visit('http://localhost:2020/admin/spotlights/add?user=uqstaff');
             cy.viewport(1300, 1000);
 
-            // set date to now
-            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
-                .should('be.visible')
-                .contains(locale.form.labels.datePopupNowButton)
-                .click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
-                .contains('OK')
-                .click();
-            cy.get('[data-testid="admin-spotlights-form-start-date"]')
-                .parent()
-                .should('not.contain', 'This date is in the past.');
+            setDateToNow();
 
             // we cant current do any interactive testing, so a basic check is the best we can do
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
@@ -373,21 +377,35 @@ describe('Spotlights Admin Pages', () => {
                 .clear()
                 .type('http://example.com');
 
-            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
-                .should('be.visible')
-                .contains(locale.form.labels.datePopupNowButton)
-                .click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
-                .contains('OK')
-                .click();
-            cy.get('[data-testid="admin-spotlights-form-start-date"]')
-                .parent()
-                .should('not.contain', 'This date is in the past.');
+            setDateToNow();
 
             cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
         });
-        it('the edit form can save a spotlight', () => {
+        it('the edit form can save a spotlight with a new image', () => {
+            // also provide test coverage for saveSpotlightChangeWithExistingImage
+            dragzoneContainsAnImage();
+            removeImageFromDragzone();
+            saveButtonisDisabled();
+
+            dragzoneIsReadyForDrag();
+            dragFileToDropzone('spotlight-too-large.jpg');
+            dragzoneContainsAnImage();
+            saveButtonNOTDisabled();
+
+            assertImageWarningIsPresent('dropzone-dimension-warning');
+
+            cy.get('[data-testid="admin-spotlights-form-button-save"]')
+                .should('not.be.disabled')
+                .click();
+            cy.wait(50);
+            cy.get('body').contains('The spotlight has been updated');
+            cy.wait(50);
+            cy.get('[data-testid="confirm-spotlight-edit-save-succeeded"]')
+                .should('exist')
+                .click(); // click 'view list' button in dialog
+            cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights'); // the list page reloads
+        });
+        it('the edit form can save a spotlight with the old image', () => {
             cy.get('[data-testid="admin-spotlights-form-button-save"]')
                 .should('not.be.disabled')
                 .click();
@@ -611,17 +629,7 @@ describe('Spotlights Admin Pages', () => {
                 .clear()
                 .type('http://example.com');
 
-            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
-                .should('be.visible')
-                .contains(locale.form.labels.datePopupNowButton)
-                .click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
-                .contains('OK')
-                .click();
-            cy.get('[data-testid="admin-spotlights-form-start-date"]')
-                .parent()
-                .should('not.contain', 'This date is in the past.');
+            setDateToNow();
 
             cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
         });
@@ -676,20 +684,8 @@ describe('Spotlights Admin Pages', () => {
             cy.viewport(1300, 1000);
             dragzoneContainsAnImage();
 
-            // set date to now so the thumbs are available
-            cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:first-child span.MuiButton-label')
-                .should('be.visible')
-                .contains(locale.form.labels.datePopupNowButton)
-                .click();
-            cy.get('.MuiPickersModal-withAdditionalAction button:nth-child(3)')
-                .contains('OK')
-                .click();
-            cy.get('[data-testid="admin-spotlights-form-start-date"]')
-                .parent()
-                .should('not.contain', 'This date is in the past.');
-
             // we cant current do any interactive testing, so a basic check is the best we can do
+            setDateToNow(); // displays the reorderable thumbs
             cy.get('[data-testid="spotlights-thumbs-reorder"]')
                 .should('exist')
                 .scrollIntoView();
