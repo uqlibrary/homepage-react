@@ -4,16 +4,18 @@ const lazyRetry = (importFn, retries = 3, interval = 500) => {
     return new Promise((resolve, reject) => {
         importFn()
             .then(resolve)
-            .catch(error => {
-                if (!retries) {
-                    reject(error);
-                    return;
-                }
+            .catch(
+                /* istanbul ignore next */ error => {
+                    if (!retries) {
+                        reject(error);
+                        return;
+                    }
 
-                setTimeout(() => {
-                    lazyRetry(importFn, retries - 1).then(resolve, reject);
-                }, interval);
-            });
+                    setTimeout(() => {
+                        lazyRetry(importFn, retries - 1).then(resolve, reject);
+                    }, interval);
+                },
+            );
     });
 };
 // lazy loaded components

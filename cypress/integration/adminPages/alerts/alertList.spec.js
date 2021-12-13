@@ -87,7 +87,7 @@ describe('Alert Admin List page', () => {
         clickButton('[data-testid="admin-alerts-form-button-cancel"]');
         cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
 
-        // this alert doesnt exist in mock
+        // this alert doesnt exist in mock, so an error pops up on edit
         clickButton('button[data-testid="alert-list-item-edit-232d6880-996a-11eb-8a79-e7fddae87baf"]');
         cy.get('button[data-testid="confirm-alert-error"]').should('exist');
         // the ok button on the error returns to the list page
@@ -95,7 +95,7 @@ describe('Alert Admin List page', () => {
         cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         cy.get('button[data-testid="confirm-alert-error"]').should('not.exist');
 
-        // a alert from way down the list loads so that we can check the form is in view
+        // an alert from way down the list is edited (lets us check the form scrolls into view)
         cy.get('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]').scrollIntoView();
         clickButton('button[data-testid="alert-list-item-edit-0aa12a30-996a-11eb-b009-3f6ded4fdb35"]');
         cy.location('href').should(

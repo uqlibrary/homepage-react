@@ -432,6 +432,19 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
         },
     ]),
 );
+mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35',
+            start: '2031-09-04 02:00:55',
+            end: '2032-09-04 03:00:55',
+            title: 'Example alert:',
+            body: 'This alert will return an error if deleted in mock',
+            urgent: 0,
+        },
+    ]),
+);
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
     withDelay([
