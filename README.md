@@ -330,7 +330,14 @@ If you want Codeship to run cypress tests before you merge to master, include th
             .click();
     cy.get('body').contains('user has navigated to Bookit page');
 ```
-
+- if you need to check pattern matching on an element attribute, this is one way to do it:
+```javascript
+    cy.get('[data-testid="computers-library-1-level-4-button"]')
+        .should('have.attr', 'aria-label')
+        .then(ariaLabel => {
+            expect(ariaLabel).to.contains('Biological Sciences Library level 4. 72 free of 110 computers');
+        });
+```
 
 
 ## Mocking
