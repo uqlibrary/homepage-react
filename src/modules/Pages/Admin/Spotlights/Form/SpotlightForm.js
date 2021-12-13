@@ -366,7 +366,7 @@ export const SpotlightForm = ({
             propValue = !!event.target.value ? event.target.value : event.target.checked;
             if (['active', 'weight'].includes(prop)) {
                 propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
-            } else if (propValue === false) {
+            } /* istanbul ignore next */ else if (propValue === false) {
                 // it returns false when we clear a text field
                 propValue = '';
             }
