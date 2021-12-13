@@ -63,12 +63,13 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
                       link: item.url,
                   };
               })
-            : [];
+            : /* istanbul ignore next */ [];
     const renderDots = dotprops => {
         const totalSlides = dotprops.totalSlides;
         const visibleSlides = dotprops.visibleSlides;
         const slideGroups = Math.ceil(totalSlides / visibleSlides);
         if (slideGroups <= 1) {
+            /* istanbul ignore next */
             return null;
         } else {
             const dots = [];
