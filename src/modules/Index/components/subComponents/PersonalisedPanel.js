@@ -190,11 +190,11 @@ const PersonalisedPanel = ({
     incompleteNTRORecords,
 }) => {
     const classes = useStyles();
-    const id = tag => `pp${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+    const topLevelTagId = tag => `pp${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
 
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
-        const getId = tag => `pp-papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getPapercutId = tag => `pp-papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClick = event => {
             setAnchorEl(event.currentTarget);
         };
@@ -214,8 +214,8 @@ const PersonalisedPanel = ({
         return (
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
-                    id={getId('tooltip')}
-                    data-testid={getId('tooltip')}
+                    id={getPapercutId('tooltip')}
+                    data-testid={getPapercutId('tooltip')}
                     title={ppLocale.items.papercut.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -224,8 +224,8 @@ const PersonalisedPanel = ({
                         fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={handleClick}
-                        id={getId('menu-button')}
-                        data-testid={getId('menu-button')}
+                        id={getPapercutId('menu-button')}
+                        data-testid={getPapercutId('menu-button')}
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
@@ -243,8 +243,8 @@ const PersonalisedPanel = ({
                     </Button>
                 </Tooltip>
                 <Menu
-                    id={getId('menu')}
-                    data-testid={getId('menu')}
+                    id={getPapercutId('menu')}
+                    data-testid={getPapercutId('menu')}
                     anchorEl={anchorEl}
                     open={!!anchorEl}
                     onClose={handleClose}
@@ -254,51 +254,28 @@ const PersonalisedPanel = ({
                     }}
                 >
                     <MenuItem
-                        id={getId('item-button-0')}
-                        data-testid={getId('item-button-0')}
+                        id={getPapercutId('item-button-0')}
+                        data-testid={getPapercutId('item-button-0')}
                         onClick={() => handleNavigationToManage()}
                     >
                         Log in and manage your print balance
                     </MenuItem>
                     {[5, 10, 20].map((topupAmount, index) => (
                         <MenuItem
-                            id={getId(`item-button-${index + 1}`)}
-                            key={getId(`item-button-${index + 1}`)}
-                            data-testid={getId(`item-button-${index + 1}`)}
+                            id={getPapercutId(`item-button-${index + 1}`)}
+                            key={getPapercutId(`item-button-${index + 1}`)}
+                            data-testid={getPapercutId(`item-button-${index + 1}`)}
                             onClick={() => navigatToTopUpUrl(topupAmount)}
                         >
                             Top up your print balance - ${topupAmount}
                         </MenuItem>
                     ))}
-                    {/*
-                    <MenuItem
-                        id={getId('item-button-1')}
-                        data-testid={getId('item-button-1')}
-                        onClick={() => navigatToTopUpUrl(5)}
-                    >
-                        Top up your print balance - $5
-                    </MenuItem>
-                    <MenuItem
-                        id={getId('item-button-2')}
-                        data-testid={getId('item-button-2')}
-                        onClick={() => navigatToTopUpUrl(10)}
-                    >
-                        Top up your print balance - $10
-                    </MenuItem>
-                    <MenuItem
-                        id={getId('item-button-3')}
-                        data-testid={getId('item-button-3')}
-                        onClick={() => navigatToTopUpUrl(20)}
-                    >
-                        Top up your print balance - $20
-                    </MenuItem>
-                    */}
                 </Menu>
             </Grid>
         );
     };
     const Loans = () => {
-        const id = tag => `pp-loans${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -341,7 +318,7 @@ const PersonalisedPanel = ({
         );
     };
     const Fines = () => {
-        const id = tag => `pp-fines${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-fines${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -381,7 +358,7 @@ const PersonalisedPanel = ({
         );
     };
     const EspacePossible = () => {
-        const id = tag => `pp-espace-possible${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -421,7 +398,7 @@ const PersonalisedPanel = ({
         );
     };
     const EspaceOrcid = () => {
-        const id = tag => `pp-espace-orcid${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-espace-orcid${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -461,7 +438,7 @@ const PersonalisedPanel = ({
         );
     };
     const EspaceNTROs = () => {
-        const id = tag => `pp-espace-ntro${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-espace-ntro${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -518,8 +495,8 @@ const PersonalisedPanel = ({
                         {account && account.id && (
                             <Grid item xs={12} lg="auto">
                                 <Tooltip
-                                    id={id('tooltip')}
-                                    data-testid={id('tooltip')}
+                                    id={topLevelTagId('tooltip')}
+                                    data-testid={topLevelTagId('tooltip')}
                                     title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
                                     placement="left"
                                     TransitionProps={{ timeout: 300 }}
