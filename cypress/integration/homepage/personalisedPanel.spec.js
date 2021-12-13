@@ -53,7 +53,7 @@ context('Personalised panel accessibility', () => {
         });
     });
 });
-context('Personalised panel Header', () => {
+context('Personalised panel', () => {
     it('location button changes location', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
@@ -82,46 +82,62 @@ context('Personalised panel Header', () => {
         cy.get('[data-testid=hours-wiggler]').should('not.exist');
     });
 
-    it.skip('Personalised panel print menu can close', () => {
+    function openPapercutPopup() {
+        cy.get('[data-testid="personalised-panel"]')
+            .should('exist')
+            .scrollIntoView();
+        cy.get('button[data-testid="pp-papercut-menu-button"]')
+            .should('exist')
+            .should('be.visible')
+            .contains('Manage your print balance')
+            .click();
+    }
+
+    it('Personalised panel print menu can close', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personalised-panel"]').contains('Vanilla');
-        cy.get('div[data-testid="personalised-panel"]').contains('Manage your print balance');
 
-        cy.get('[data-testid="pp-papercut-menu"]').scrollIntoView();
-        clickButton('button[data-testid="pp-papercut-menu-button"]');
-        // cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
-        //
-        // // papercut menu closes
-        // cy.get('body').click(); // click away
-        // cy.get('li[data-testid="pp-papercut-item-button-0"]').should('not.exist');
-        // cy.get('div[data-testid="personalised-panel"]').contains('Manage your print balance');
+        openPapercutPopup();
+
+        cy.get('[data-testid="pp-papercut-menu"]')
+            .should('exist')
+            .scrollIntoView();
+        cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
+
+        // papercut menu closes
+        cy.get('body').click(); // click away
+        cy.get('li[data-testid="pp-papercut-item-button-0"]').should('not.exist');
+        cy.get('button[data-testid="pp-papercut-menu-button"]').contains('Manage your print balance');
     });
 
-    it.skip('can navigate to papercut manage page', () => {
+    it('can navigate to papercut manage page', () => {
         // from PersonalisedPanel locale: items.papercut.url
         cy.intercept(/lib-print/, 'user has navigated to papercut page');
 
         cy.visit('/');
         cy.viewport(1300, 1000);
 
-        clickButton('button[data-testid="pp-papercut-menu-button"]');
+        openPapercutPopup();
+
         cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
-        clickButton('li[data-testid="pp-papercut-item-button-0"]').click();
+        clickButton('li[data-testid="pp-papercut-item-button-0"]');
 
         cy.get('body').contains('user has navigated to papercut page');
     });
 
-    it.skip('can navigate to papercut topup page', () => {
+    it('can navigate to papercut topup page', () => {
         // from PersonalisedPanel locale: items.papercut.url
         cy.intercept(/payments.uq.edu.au/, 'user has navigated to papercut topup page');
 
         cy.visit('/');
         cy.viewport(1300, 1000);
 
-        clickButton('button[data-testid="pp-papercut-menu-button"]');
-        cy.get('li[data-testid="pp-papercut-item-button-1"]').contains('Top up your print balance');
-        clickButton('button[data-testid="pp-papercut-menu-button"]').click();
+        openPapercutPopup();
+
+        cy.get('li[data-testid="pp-papercut-item-button-1"]')
+            .contains('Top up your print balance')
+            .click();
 
         cy.get('body').contains('user has navigated to papercut topup page');
     });
