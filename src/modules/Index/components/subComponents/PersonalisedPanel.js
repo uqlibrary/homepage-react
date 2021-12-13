@@ -194,7 +194,7 @@ const PersonalisedPanel = ({
 
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
-        const id = tag => `pp-papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
+        const getId = tag => `pp-papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClick = event => {
             setAnchorEl(event.currentTarget);
         };
@@ -214,8 +214,8 @@ const PersonalisedPanel = ({
         return (
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getId('tooltip')}
+                    data-testid={getId('tooltip')}
                     title={ppLocale.items.papercut.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -224,8 +224,8 @@ const PersonalisedPanel = ({
                         fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={handleClick}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getId('menu-button')}
+                        data-testid={getId('menu-button')}
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
@@ -243,8 +243,8 @@ const PersonalisedPanel = ({
                     </Button>
                 </Tooltip>
                 <Menu
-                    id={id('menu')}
-                    data-testid={id('menu')}
+                    id={getId('menu')}
+                    data-testid={getId('menu')}
                     anchorEl={anchorEl}
                     open={!!anchorEl}
                     onClose={handleClose}
@@ -254,33 +254,45 @@ const PersonalisedPanel = ({
                     }}
                 >
                     <MenuItem
-                        id={id('item-button-0')}
-                        data-testid={id('item-button-0')}
+                        id={getId('item-button-0')}
+                        data-testid={getId('item-button-0')}
                         onClick={() => handleNavigationToManage()}
                     >
                         Log in and manage your print balance
                     </MenuItem>
+                    {[5, 10, 20].map((topupAmount, index) => (
+                        <MenuItem
+                            id={getId(`item-button-${index + 1}`)}
+                            key={getId(`item-button-${index + 1}`)}
+                            data-testid={getId(`item-button-${index + 1}`)}
+                            onClick={() => navigatToTopUpUrl(topupAmount)}
+                        >
+                            Top up your print balance - ${topupAmount}
+                        </MenuItem>
+                    ))}
+                    {/*
                     <MenuItem
-                        id={id('item-button-1')}
-                        data-testid={id('item-button-1')}
+                        id={getId('item-button-1')}
+                        data-testid={getId('item-button-1')}
                         onClick={() => navigatToTopUpUrl(5)}
                     >
                         Top up your print balance - $5
                     </MenuItem>
                     <MenuItem
-                        id={id('item-button-2')}
-                        data-testid={id('item-button-2')}
+                        id={getId('item-button-2')}
+                        data-testid={getId('item-button-2')}
                         onClick={() => navigatToTopUpUrl(10)}
                     >
                         Top up your print balance - $10
                     </MenuItem>
                     <MenuItem
-                        id={id('item-button-3')}
-                        data-testid={id('item-button-3')}
+                        id={getId('item-button-3')}
+                        data-testid={getId('item-button-3')}
                         onClick={() => navigatToTopUpUrl(20)}
                     >
                         Top up your print balance - $20
                     </MenuItem>
+                    */}
                 </Menu>
             </Grid>
         );
