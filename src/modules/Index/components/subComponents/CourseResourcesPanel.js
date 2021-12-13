@@ -57,6 +57,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
     }, [searchUrl, loadSearchResult]);
 
     const navigateToCourseResourcePage = option => {
+        /* istanbul ignore next */
         if (!option.text || !option.rest || !option.rest.campus || !option.rest.period) {
             return; // should never happen
         }

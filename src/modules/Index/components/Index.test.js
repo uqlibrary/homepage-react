@@ -33,11 +33,15 @@ describe('Course Resources panel', () => {
         const page = {
             search: '?keyword',
         };
+        const pageNoParams = {};
         expect(getUrlForCourseResourceSpecificTab(aclass, page)).toEqual(
             '/courseresources?keyword&coursecode=HIST1201&campus=St Lucia&semester=Semester 2 2020',
         );
         expect(getUrlForCourseResourceSpecificTab(aclass, page, true, true)).toEqual(
             'http://localhost/courseresources?keyword&coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
+        );
+        expect(getUrlForCourseResourceSpecificTab(aclass, pageNoParams, true, true)).toEqual(
+            'http://localhost/courseresources?coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
     });
 });
