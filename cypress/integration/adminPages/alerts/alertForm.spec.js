@@ -539,6 +539,8 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').uncheck();
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('not.be.checked');
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').check();
+            cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
     });
 });
