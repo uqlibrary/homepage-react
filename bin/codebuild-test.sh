@@ -43,6 +43,64 @@ fi
 
 printf "Jest v"; jest --version
 
+PIPELINE_ONE_COMPLETE=false
+PIPELINE_TWO_COMPLETE=false
+# called by the pipeline that finishes last
+function checkCoverage {
+     npm run cc:reportAll
+
+     # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
+     ls -la coverage/index.html
+     NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
+     echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
+     NORMALCOLOR="\e[97m"
+     GREEN="\e[32m"
+     RED="\e[31m"
+     if [[ $NUM_FULL_COVERAGE == 4 ]]; then
+         echo "${GREEN}"
+         echo "Coverage 100%";
+         echo ""
+         echo "            ,-""-."
+         echo "           :======:"
+         echo "           :======:"
+         echo "            `-.,-'"
+         echo "              ||"
+         echo "            _,''--.    _____"
+         echo "           (/ __   `._|"
+         echo "          ((_/_)\     |"
+         echo "           (____)'.___|"
+         echo "            (___)____.|_____"
+         echo "Human, your code coverage was found to be satisfactory. Great job!"
+         echo "${NORMALCOLOR}"
+     else
+         echo "${RED}"
+         echo "                     ____________________"
+         echo "                    /                    \ "
+         echo "                    |      Coverage       | "
+         echo "                    |      NOT 100%       | "
+         echo "                    \____________________/ "
+         echo "                             !  !"
+         echo "                             !  !"
+         echo "                             L_ !"
+         echo "                            / _)!"
+         echo "                           / /__L"
+         echo "                     _____/ (____)"
+         echo "                            (____)"
+         echo "                     _____  (____)"
+         echo "                          \_(____)"
+         echo "                             !  !"
+         echo "                             !  !"
+         echo "                             \__/"
+         echo ""
+         echo "            Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
+         echo "${NORMALCOLOR}"
+         # show actual coverage numbers
+         grep -A 2 class=\"strong\"\> coverage/index.html
+         echo "Run your tests locally with npm run test:cc then load coverage/index.html to determine where the coverage gaps are"
+         exit 1;
+     fi;
+}
+
 case "$PIPE_NUM" in
 "1")
     set -e
@@ -53,59 +111,10 @@ case "$PIPE_NUM" in
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
         npm run test:e2e:aws
-        # presumably by the time cypress is complete, jest will be well and truly complete already!
-        npm run cc:reportAll
 
-        # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
-        ls -la coverage/index.html
-        NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
-        echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
-        NORMALCOLOR="\e[97m"
-        GREEN="\e[32m"
-        RED="\e[31m"
-        if [[ $NUM_FULL_COVERAGE == 4 ]]; then
-            echo "${GREEN}"
-            echo "Coverage 100%";
-            echo ""
-            echo "            ,-""-."
-            echo "           :======:"
-            echo "           :======:"
-            echo "            `-.,-'"
-            echo "              ||"
-            echo "            _,''--.    _____"
-            echo "           (/ __   `._|"
-            echo "          ((_/_)\     |"
-            echo "           (____)'.___|"
-            echo "            (___)____.|_____"
-            echo "Human, your code coverage was found to be satisfactory. Great job!"
-            echo "${NORMALCOLOR}"
-        else
-            echo "${RED}"
-            echo "                     ____________________"
-            echo "                    /                    \ "
-            echo "                    |      Coverage       | "
-            echo "                    |      NOT 100%       | "
-            echo "                    \____________________/ "
-            echo "                             !  !"
-            echo "                             !  !"
-            echo "                             L_ !"
-            echo "                            / _)!"
-            echo "                           / /__L"
-            echo "                     _____/ (____)"
-            echo "                            (____)"
-            echo "                     _____  (____)"
-            echo "                          \_(____)"
-            echo "                             !  !"
-            echo "                             !  !"
-            echo "                             \__/"
-            echo ""
-            echo "            Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
-            echo "${NORMALCOLOR}"
-            # show actual coverage numbers
-            grep -A 2 class=\"strong\"\> coverage/index.html
-            echo "Run your tests locally with npm run test:cc then load coverage/index.html to determine where the coverage gaps are"
-            exit 1;
-        fi;
+        if [[ $PIPELINE_TWO_COMPLETE == true ]]; then
+            checkCoverage
+        fi
     else
         printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
@@ -141,6 +150,14 @@ case "$PIPE_NUM" in
     printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         npm run test:unit:ci
+
+        npm run test:e2e:aws
+
+        PIPELINE_TWO_COMPLETE=TRUE
+        if [[ $PIPELINE_ONE_COMPLETE == true ]]; then
+            checkCoverage
+        fi
+
     else
         npm run test:unit:ci2
 
