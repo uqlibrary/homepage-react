@@ -356,8 +356,7 @@ describe('Alerts Admin Form Pages', () => {
         });
         it('can show a preview of the original alert', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.wait(50);
-            clickButton('[data-testid="admin-alerts-form-button-preview"]'); // show preview
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 100); // show preview
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
@@ -370,9 +369,9 @@ describe('Alerts Admin Form Pages', () => {
                     );
                 });
             // user can toggle the Preview
-            clickButton('[data-testid="admin-alerts-form-button-preview"]'); // hide preview
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 100); // hide preview
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            clickButton('[data-testid="admin-alerts-form-button-preview"]'); // show preview
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 100); // show preview
             cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
         it('tells the user which systems the alert will appear on', () => {
@@ -452,18 +451,20 @@ describe('Alerts Admin Form Pages', () => {
             cy.wait(50);
             hasAWorkingHelpButton();
         });
+
+        function clickPlusButton(buttonId) {
+            clickButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
+        }
         it('the "add a date set button" works', () => {
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
             cy.wait(50);
-            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('exist');
-            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
+            clickPlusButton('0');
 
             cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
-            cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').click();
+            clickPlusButton('1');
 
             cy.get('[data-testid="admin-alerts-form-start-date-2"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-2"] input').should('exist');
@@ -471,24 +472,23 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').should('exist');
 
-            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            clickButton('button[data-testid="admin-alerts-form-button-save"]');
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('3 alerts have been cloned');
 
-            cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
+            clickButton('[data-testid="confirm-alert-clone-save-succeeded"]');
 
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
             cy.wait(50);
-            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('exist');
-            cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').click();
+            clickPlusButton('0');
 
             cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-1"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-0"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
 
-            cy.get('button[data-testid="admin-alerts-form-button-save"]').click();
+            clickButton('button[data-testid="admin-alerts-form-button-save"]');
             cy.wait(50);
             cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
         });
@@ -501,10 +501,6 @@ describe('Alerts Admin Form Pages', () => {
             }
             const nextButtonId = buttonId + 1;
             cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
-        }
-
-        function clickPlusButton(buttonId) {
-            clickButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
         }
         function clickMinusButton(buttonId) {
             clickButton('[data-testid="admin-alerts-form-remove-date-button-' + buttonId + '"]');

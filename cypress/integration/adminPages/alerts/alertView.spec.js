@@ -58,12 +58,12 @@ describe('Alerts Admin View Page', () => {
     });
     it('can return to the list page from the view page', () => {
         cy.wait(50);
-        clickButton('button[data-testid="admin-alerts-view-button-cancel"]');
+        clickButton('button[data-testid="admin-alerts-view-button-cancel"]', 100);
         cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
     });
     it('can visit the clone page from the view page', () => {
         cy.wait(50);
-        clickButton('button[data-testid="admin-alerts-view-button-save"]');
+        clickButton('button[data-testid="admin-alerts-view-button-save"]', 100);
         cy.location('href').should(
             'eq',
             'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',
