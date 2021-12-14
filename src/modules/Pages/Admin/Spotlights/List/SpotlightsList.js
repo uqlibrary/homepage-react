@@ -110,7 +110,7 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     };
 
     const saveSpotlightChange = spotlight => {
-        return actions.saveSpotlightChangeWithExistingImage(spotlight);
+        return actions.updateSpotlightWithExistingImage(spotlight);
     };
 
     const showViewByHistoryLightbox = thisSpotlight => {

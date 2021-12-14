@@ -51,6 +51,7 @@ function createSpotlight(request, dispatch) {
 }
 
 const saveSpotlightChange = (request, dispatch) => {
+    /* istanbul ignore next */
     !!request.updated && delete request.updated;
     return post(SPOTLIGHT_SAVE_API({ id: request.id }), request)
         .then(data => {
@@ -75,19 +76,20 @@ export const createSpotlightWithExistingImage = request => {
     };
 };
 
-export const saveSpotlightChangeWithExistingImage = request => {
+export const updateSpotlightWithExistingImage = request => {
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHT_SAVING });
         return saveSpotlightChange(request, dispatch);
     };
 };
 
-export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update') => {
+export const updateSpotlightWithNewImage = (request, spotlightSaveType = 'update') => {
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
+        /* istanbul ignore else */
         if (spotlightSaveType === 'create') {
             return createSpotlightWithExistingImage(request);
         } else {
-            return saveSpotlightChangeWithExistingImage(request);
+            return updateSpotlightWithExistingImage(request);
         }
     }
 
@@ -135,7 +137,7 @@ export const saveSpotlightWithNewImage = (request, spotlightSaveType = 'update')
 };
 
 export const createSpotlightWithNewImage = request => {
-    return saveSpotlightWithNewImage(request, 'create');
+    return updateSpotlightWithNewImage(request, 'create');
 };
 
 export const deleteSpotlightBatch = request => {

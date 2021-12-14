@@ -7,8 +7,8 @@ import {
     clearASpotlight,
     loadAllSpotlights,
     loadASpotlight,
-    saveSpotlightChangeWithExistingImage,
-    saveSpotlightWithNewImage,
+    updateSpotlightWithExistingImage,
+    updateSpotlightWithNewImage,
     createSpotlightWithNewImage,
     deleteSpotlightBatch,
 } from './spotlightsActions';
@@ -175,7 +175,7 @@ describe('Spotlight list actions', () => {
 
             const expectedActions = [actions.SPOTLIGHT_LOADING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
 
-            await mockActionsStore.dispatch(saveSpotlightWithNewImage(sendSpotlightRecord, 'create'));
+            await mockActionsStore.dispatch(updateSpotlightWithNewImage(sendSpotlightRecord, 'create'));
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });
 
@@ -307,7 +307,7 @@ describe('Spotlight list actions', () => {
             const expectedActions = [actions.SPOTLIGHT_SAVING, actions.SPOTLIGHT_SAVED];
 
             await mockActionsStore.dispatch(
-                saveSpotlightChangeWithExistingImage({
+                updateSpotlightWithExistingImage({
                     ...sendSpotlightRecord,
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
                 }),
@@ -319,9 +319,7 @@ describe('Spotlight list actions', () => {
             const expectedActions = [actions.SPOTLIGHT_SAVING, actions.APP_ALERT_SHOW, actions.SPOTLIGHT_FAILED];
 
             try {
-                await mockActionsStore.dispatch(
-                    saveSpotlightChangeWithExistingImage({ ...sendSpotlightRecord, id: 'id' }),
-                );
+                await mockActionsStore.dispatch(updateSpotlightWithExistingImage({ ...sendSpotlightRecord, id: 'id' }));
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             } catch (e) {
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
@@ -349,7 +347,7 @@ describe('Spotlight list actions', () => {
             ];
 
             await mockActionsStore.dispatch(
-                saveSpotlightWithNewImage({
+                updateSpotlightWithNewImage({
                     ...sendSpotlightRecord,
                     id: '88888-d62b-11e7-954e-57c2cc19d151',
                     uploadedFile: [fileToUpload],
@@ -375,7 +373,7 @@ describe('Spotlight list actions', () => {
             ];
 
             await mockActionsStore.dispatch(
-                saveSpotlightWithNewImage({ ...sendSpotlightRecord, id: 'id', uploadedFile: [fileToUpload] }),
+                updateSpotlightWithNewImage({ ...sendSpotlightRecord, id: 'id', uploadedFile: [fileToUpload] }),
             );
             expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
         });

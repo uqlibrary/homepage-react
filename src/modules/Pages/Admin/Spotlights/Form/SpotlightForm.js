@@ -326,10 +326,9 @@ export const SpotlightForm = ({
                 actions.createSpotlightWithNewImage(newValues);
                 break;
             case 'edit':
-                /* istanbul ignore next */
                 !!values.uploadedFile
-                    ? actions.saveSpotlightWithNewImage(newValues)
-                    : actions.saveSpotlightChangeWithExistingImage(newValues);
+                    ? actions.updateSpotlightWithNewImage(newValues)
+                    : /* istanbul ignore next */ actions.updateSpotlightWithExistingImage(newValues);
                 break;
             case 'clone':
                 /* istanbul ignore next */

@@ -185,6 +185,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
             const levels = Object.keys(item.availability);
             const totalLevels = levels.length;
             let levelsData = [];
+            /* istanbul ignore else */
             if (totalLevels > 0) {
                 levelsData = levels
                     .map(level => {
