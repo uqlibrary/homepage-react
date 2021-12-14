@@ -59,7 +59,8 @@ export const ConfirmationBox = ({
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
             <DialogContent style={{ minWidth: 400 }}>
                 <DialogContentText data-testid="message-content">{locale.confirmationMessage}</DialogContentText>
-                {!!showInputForm && <InputForm />}
+                {/* istanbul ignore next */
+                !!showInputForm && <InputForm />}
             </DialogContent>
             <DialogActions>
                 <Grid container spacing={1}>

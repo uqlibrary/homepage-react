@@ -24,8 +24,8 @@ cp $CYPRESS_REPORT all/cypress.json
 cp $JEST_REPORT all/jest.json
 
 # Combine reports into single json file
-nyc merge all temp/combined.json
+npx nyc merge all temp/combined.json
 
 # Report
 cd ..
-nyc report --reporter html --reporter text --reporter text-summary --report-dir coverage
+npx nyc report --reporter html --reporter text --reporter text-summary --report-dir coverage
