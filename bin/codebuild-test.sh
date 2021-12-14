@@ -52,14 +52,14 @@ case "$PIPE_NUM" in
         printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
-        npm run test:e2e:cc
+        npm run test:e2e:aws
         # presumably by the time cypress is complete, jest will be well and truly complete already!
         npm run cc:reportAll
 
         # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
         ls -la coverage/index.html
         NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
-        echo ${NUM_FULL_COVERAGE}
+        echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
         NORMALCOLOR="\e[97m"
         GREEN="\e[32m"
         RED="\e[31m"
