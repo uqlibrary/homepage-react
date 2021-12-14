@@ -1,6 +1,5 @@
 /* eslint camelcase: 0 */
 /* eslint max-len: 0 */
-import { accounts } from '../../../src/mock/data';
 import { default as locale } from '../../../src/modules/Pages/CourseResources/courseResources.locale';
 import { _courseLink, _pluralise } from '../../../src/modules/Pages/CourseResources/courseResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
@@ -382,6 +381,20 @@ context('Course Resources Accessibility', () => {
     });
 });
 
+context('Course Resources Access', () => {
+    it('A non-loggedin user cannot access Course Resources', () => {
+        cy.visit('/courseresources?user=public');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authenticated users only.');
+    });
+
+    it('A loggedin user without course resource privs cannot access Course Resources', () => {
+        cy.visit('/courseresources?user=emcommunity');
+        cy.viewport(1300, 1000);
+        cy.get('body').contains('The requested page is available to authorised users only.');
+    });
+});
+
 context('The Course Resources Page', () => {
     /**
      * Show a user with 3 classes can see all the variations correctly
@@ -480,18 +493,6 @@ context('The Course Resources Page', () => {
         load_a_subject_in_course_resource_page_search_tab(FREN1010ReadingList, learningResourceSearchSuggestions);
 
         FREN1010_loads_properly_for_s111111_user();
-    });
-
-    it('The non-loggedin user cannot access Course Resources', () => {
-        cy.visit('/courseresources?user=public');
-        cy.viewport(1300, 1000);
-        cy.get('body').contains('The requested page is available to authenticated users only.');
-    });
-
-    it('The loggedin user without course resource privs cannot access Course Resources', () => {
-        cy.visit('/courseresources?user=emcommunity');
-        cy.viewport(1300, 1000);
-        cy.get('body').contains('The requested page is available to authorised users only.');
     });
 
     it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
