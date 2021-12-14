@@ -320,12 +320,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const handleChange = prop => event => {
         if (prop === 'system') {
             const systems = values.systems || /* istanbul ignore next */ [];
+            /* istanbul ignore next */
             if (systems.includes(event.target.name) && !event.target.checked) {
-                // system exists in array and the checkbox has been unchecked. Remove.
+                // system had been selected and the checkbox has been unchecked. Remove.
                 const index = systems.indexOf(event.target.name);
                 index >= 0 && systems.splice(index, 1);
             } /* istanbul ignore else */ else if (!systems.includes(event.target.name) && !!event.target.checked) {
-                // system doesnt exist in array and the checkbox has been checked. Add.
+                // system wasnt previously selected and the checkbox has been checked. Add.
                 systems.push(event.target.name);
             }
             setValues({
