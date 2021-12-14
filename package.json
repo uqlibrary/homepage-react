@@ -107,6 +107,7 @@
         "mini-css-extract-plugin": "^0.8.2",
         "mockdate": "^2.0.2",
         "node-sass": "^4.14.1",
+        "nyc": "^15.1.0",
         "postcss-loader": "^2.1.4",
         "preloader-html-webpack-plugin": "github:uqlibrary/preloader-html-webpack-plugin#master",
         "prettier": "^1.18.2",
@@ -420,7 +421,13 @@
         "exclude": [
             "src/**/{index,locale,config}.js",
             "src/**/containers/*.{js,jsx}",
-            "src/**/*.{test,locale}.{js,jsx}"
+            "src/**/*.{test,locale}.{js,jsx}", 
+            "src/modules/testhelpers.{js,jsx}", 
+            "src/modules/App/components/Appnew.{js,jsx}",
+            "src/modules/SharedComponents/ScrollTop/components/*.{js,jsx}",
+            "src/modules/SharedComponents/Toolbox/Alert/components/*.{js,jsx}",
+            "src/modules/SharedComponents/Toolbox/ScrollToTop/components/*.{js,jsx}",
+            "src/modules/SharedComponents/Toolbox/helpers/*.{js,jsx}"
         ],
         "all": true
     },
