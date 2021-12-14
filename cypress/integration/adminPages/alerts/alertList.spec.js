@@ -315,6 +315,21 @@ describe('Alert Admin List page', () => {
             cy.get('[data-testid="dialogbox-alert-delete-confirm"]').should('not.exist');
         });
 
+        it('the user can clear selected alerts', () => {
+            cy.get('[data-testid="headerRow-scheduled"]').should('have.css', 'background-color', 'rgba(0, 0, 0, 0)');
+            cy.get('[data-testid="headerRow-scheduled"] span.deleteManager').should('not.exist');
+            cy.get('[data-testid="alert-list-item-checkbox-d480b250-9cd8-11eb-88c0-a3882cd6c52e"]').check();
+            cy.get('[data-testid="headerRow-scheduled"]').should('have.css', 'background-color', 'rgb(35, 119, 203)');
+            cy.get('[data-testid="headerRow-scheduled"] span.deleteManager span').contains('1 alert selected');
+            cy.get('[data-testid="alert-list-item-checkbox-857726b0-a19f-11eb-ab5b-bb33418ed6de"]').check();
+            cy.get('[data-testid="headerRow-scheduled"] span.deleteManager span').contains('2 alerts selected');
+
+            cy.get('[data-testid="alert-list-scheduled-deselect-button"]')
+                .should('exist')
+                .click();
+            cy.get('[data-testid="headerRow-scheduled"] span.deleteManager').should('not.exist');
+        });
+
         it('the user can delete an alert', () => {
             cy.get('[data-testid="alert-list-item-checkbox-1db618c0-d897-11eb-a27e-df4e46db7245"]').check();
             cy.get('[data-testid="headerRow-current"] span span').contains('1 alert selected');

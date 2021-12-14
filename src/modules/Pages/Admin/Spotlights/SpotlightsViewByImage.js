@@ -84,7 +84,7 @@ export const SpotlightsViewByImage = ({
         setRows(staticRows);
     };
     const filterRowsByText = e => {
-        filterTerm = e.target?.value || '';
+        filterTerm = e.target?.value || /* istanbul ignore next */ '';
         setTextSearch(filterTerm);
         setRows(
             [...staticRows].filter(r => {

@@ -68,8 +68,8 @@ const Spotlights = ({ spotlights, spotlightsLoading, account }) => {
         const totalSlides = dotprops.totalSlides;
         const visibleSlides = dotprops.visibleSlides;
         const slideGroups = Math.ceil(totalSlides / visibleSlides);
+        /* istanbul ignore next */
         if (slideGroups <= 1) {
-            /* istanbul ignore next */
             return null;
         } else {
             const dots = [];

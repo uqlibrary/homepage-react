@@ -382,7 +382,6 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
         });
         it('the edit form can save a spotlight with a new image', () => {
-            // also provide test coverage for saveSpotlightChangeWithExistingImage
             dragzoneContainsAnImage();
             removeImageFromDragzone();
             saveButtonisDisabled();

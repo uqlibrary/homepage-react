@@ -228,7 +228,13 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
         <StandardCard primaryHeader title={trainingLocale.title} noPadding>
             <div className={`${classes.flexWrapper} ${classes.componentHeight}`}>
                 {!!trainingEventsError && (
-                    <Fade direction="right" timeout={1000} in={!eventDetail} mountOnEnter unmountOnExit>
+                    /* istanbul ignore next */ <Fade
+                        direction="right"
+                        timeout={1000}
+                        in={!eventDetail}
+                        mountOnEnter
+                        unmountOnExit
+                    >
                         <div className={classes.flexContent} role="region">
                             <Typography style={{ padding: '1rem' }}>{trainingLocale.unavailable}</Typography>
                         </div>
@@ -265,7 +271,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                                             </Grid>
                                                             <Grid item className={classes.eventSummary}>
                                                                 {eventTime(event.start)}
-                                                                {event.campus ? ` - ${event.campus}` : ''}
+                                                                {event.campus
+                                                                    ? ` - ${event.campus}`
+                                                                    : /* istanbul ignore next */ ''}
                                                             </Grid>
                                                         </Grid>
                                                     </Button>
@@ -337,7 +345,9 @@ const Training = ({ trainingEvents, trainingEventsLoading, trainingEventsError }
                                             </Tooltip>
                                         </Grid>
                                         <Grid item xs={10} className={classes.detailMeta}>
-                                            {eventDetail.location || eventDetail.venue || eventDetail.offCampusVenue}
+                                            {eventDetail.location ||
+                                                eventDetail.venue ||
+                                                /* istanbul ignore next */ eventDetail.offCampusVenue}
                                         </Grid>
                                         <Grid item xs={1} className={classes.detailMeta}>
                                             <Tooltip

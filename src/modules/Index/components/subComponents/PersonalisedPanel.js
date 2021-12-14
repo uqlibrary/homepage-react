@@ -489,7 +489,7 @@ const PersonalisedPanel = ({
             >
                 <div className={classes.flexHeader}>
                     <Typography variant={'h5'} component={'h2'} className={classes.greeting}>
-                        {greeting()} {account.firstName || ''}
+                        {greeting()} {account.firstName || /* istanbul ignore next */ ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
                         {account && account.id && (
@@ -497,13 +497,16 @@ const PersonalisedPanel = ({
                                 <Tooltip
                                     id={topLevelTagId('tooltip')}
                                     data-testid={topLevelTagId('tooltip')}
-                                    title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
+                                    title={ppLocale.username.replace(
+                                        '[id]',
+                                        account.id || /* istanbul ignore next */ ppLocale.unavailable,
+                                    )}
                                     placement="left"
                                     TransitionProps={{ timeout: 300 }}
                                 >
                                     <Typography component={'span'} style={{ fontSize: 14, color: '#595959' }}>
                                         <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
-                                        {(account && account.id) || ''}
+                                        {(account && account.id) || /* istanbul ignore next */ ''}
                                     </Typography>
                                 </Tooltip>
                             </Grid>
