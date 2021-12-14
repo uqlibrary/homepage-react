@@ -58,7 +58,7 @@ case "$PIPE_NUM" in
 
         # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
         ls -la coverage/index.html
-        NUM_FULL_COVERAGE="grep -c class=\"strong\"\>100\% coverage/index.html"
+        NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
         echo ${NUM_FULL_COVERAGE}
         NORMALCOLOR="\e[97m"
         GREEN="\e[32m"
