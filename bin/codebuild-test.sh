@@ -52,7 +52,9 @@ case "$PIPE_NUM" in
         printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
-        npm run test:cc
+        npm run test:e2e:cc
+        # presumably by the time cypress is complete, jest will be well and truly complete already!
+        npm run cc:reportAll
 
         # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
         ls -la coverage/index.html
@@ -136,8 +138,10 @@ case "$PIPE_NUM" in
     # Setting this after codestyle checks so that script doesn't exist before list of failures can be printed above.
     set -e
 
-    if [[ $CODE_COVERAGE_REQUIRED == false ]]; then
-        printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
+    printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
+    if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        npm run test:unit:ci
+    else
         npm run test:unit:ci2
 
         # Runner for cypress. More is in other pipelines.
