@@ -1,6 +1,6 @@
 import {
     FILTER_STORAGE_NAME,
-    hasAWorkingHelpButton,
+    // hasAWorkingHelpButton,
     numberCurrentPublishedSpotlights,
 } from '../../../support/spotlights';
 import { clickButton } from '../../../support/helpers';
@@ -38,7 +38,7 @@ describe('Spotlight Admin View page', () => {
             .children()
             .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
     });
-    it('has a Help button on the View page', () => {
+    it('has a Help button on the spotlight View page', () => {
         cy.get('[data-testid="admin-spotlights-help-button"]').should('exist');
         // the reusable function doesnt work here - unclear why
         // hasAWorkingHelpButton();
@@ -68,7 +68,7 @@ describe('Spotlight Admin View page', () => {
                 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
             );
     });
-    it('can visit the clone page from the view page', () => {
+    it('can visit the clone page from the spotlight view page', () => {
         cy.wait(50);
         clickButton('button[data-testid="admin-spotlights-form-button-save"]', 100);
         cy.location('href').should(
