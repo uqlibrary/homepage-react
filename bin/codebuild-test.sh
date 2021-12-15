@@ -109,16 +109,7 @@ case "$PIPE_NUM" in
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         echo "updating package.json to not exclude admin pages from pages"
         ADMIN_FILE="src\/modules\/Pages\/Admin/\*\*"
-        echo "try 1"
-        SIMPLE_TEXT="vendorCopy"
-        sed -i "s+${SIMPLE_TEXT}+${SIMPLE_TEXT}+" package.json
-        echo "try 2"
-        sed -i "s+${SIMPLE_TEXT}+\!${SIMPLE_TEXT}+" package.json
-        echo "try 3"
-#        sed -i "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
-#        echo "try 4"
-#        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
-        sed -in "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+        sed -in "s+\!${ADMIN_FILE}+${ADMIN_FILE}+" package.json
 
         echo "############### PACKAGE.JSON ####################"
         cat package.json
@@ -177,7 +168,7 @@ case "$PIPE_NUM" in
         )
         for filepath in "${FILE_REFERENCES[@]}"
         do
-            sed -in "s+${filepath}+\!${filepath}+" package.json
+            sed -in "\!s+${filepath}+${filepath}+" package.json
         done
 
         echo "############### PACKAGE.JSON ####################"
