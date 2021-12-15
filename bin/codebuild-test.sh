@@ -100,14 +100,29 @@ function checkCoverage {
 
 case "$PIPE_NUM" in
 "1")
+    # pipeline #1: test the admin pages
     set -e
 
     # Running in series with `runInBand` to avoid CodeShip VM running out of memory
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+
+        # update the package.json file to exclude non-admin files
+        sed -i "s/^src\/modules\/App\/!src\/modules\/App\/" /package.json
+        sed -i "s/^src\/modules\/Index\/!src\/modules\/Index\/" /package.json
+        sed -i "s/^src\/modules\/Pages\/BookExamBooth\/!src\/modules\/Pages\/BookExamBooth\/" /package.json
+        sed -i "s/^src\/modules\/Pages\/CourseResources\/!src\/modules\/Pages\/CourseResources\/" /package.json
+        sed -i "s/^src\/modules\/Pages\/NotFound\/!src\/modules\/Pages\/NotFound\/" /package.json
+        sed -i "s/^src\/modules\/Pages\/PaymentReceiptAdmin\/!src\/modules\/Pages\/PaymentReceiptAdmin\/" /package.json
+        sed -i "s/^src\/modules\/SharedComponents\/!src\/modules\/SharedComponents\/" /package.json
+
         printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
-        npm run test:e2e:aws
+        npm run test:unit:ci
+
+        npm run test:e2e:cc:admin
+
+        checkCoverage
     else
         printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
@@ -120,6 +135,7 @@ case "$PIPE_NUM" in
 
 ;;
 "2")
+    # pipeline #2: test the non-admin pages
     printf "\n--- \e[1mRUNNING CODE STYLE CHECKS\e[0m ---\n"
     printf "\n$ npm run codestyles:files -s\n"
     FILES=$(npm run codestyles:files -s)
@@ -142,12 +158,13 @@ case "$PIPE_NUM" in
 
     printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        # update the package.json file to exclude non-admin files
+        sed -i "s/^src\/modules\/Pages/Admin\/!src\/modules\/Pages/Admin\/" /package.json
+
         npm run test:unit:ci
 
-        npm run test:e2e:aws
+        npm run test:e2e:cc:nonadmin
 
-        # we do the tests here because the jest coverage is written here
-        # and _hopefully_ it has access to the full cypress coverage!
         checkCoverage
 
     else
