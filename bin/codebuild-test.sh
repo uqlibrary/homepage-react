@@ -104,23 +104,21 @@ case "$PIPE_NUM" in
     set -e
 
     # a code coverage run is split between admin pages and non admin
-    # as we dont have enough memory(?) for one big run (cypress randomly fails tests)
+    # as we dont have enough resources(?) for one big run (cypress randomly fails tests)
     # To do this, we need to change the package.json coverage
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        echo "updating package.json to exclude non-admin pages"
-        FILE_REFERENCES=( \
-          "src/modules/App/\*\*" \
-          "src/modules/Index/\*\*" \
-          "src/modules/Pages/BookExamBooth/\*\*" \
-          "src/modules/Pages/CourseResources/\*\*" \
-          "src/modules/Pages/NotFound/\*\*" \
-          "src/modules/Pages/PaymentReceipt/\*\*" \
-          "src/modules/SharedComponents/\*\*" \
-        )
-        for filepath in "${FILE_REFERENCES[@]}"
-        do
-            sed -in "s+${filepath}+\!${filepath}+" package.json
-        done
+        echo "updating package.json to not exclude admin pages from pages"
+        ADMIN_FILE="src\/modules\/Pages\/Admin/\*\*"
+        echo "try 1"
+        SIMPLE_TEXT="vendorCopy"
+        sed -i "s+${SIMPLE_TEXT}+${SIMPLE_TEXT}+" package.json
+        echo "try 2"
+        sed -i "s+${SIMPLE_TEXT}+\!${SIMPLE_TEXT}+" package.json
+        echo "try 3"
+#        sed -i "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+#        echo "try 4"
+#        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+        sed -in "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
 
         echo "############### PACKAGE.JSON ####################"
         cat package.json
@@ -166,20 +164,21 @@ case "$PIPE_NUM" in
     # Setting this after codestyle checks so that script doesn't exist before list of failures can be printed above.
     set -e
 
-    printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        echo "updating package.json to exclude admin pages"
-        ADMIN_FILE="src\/modules\/Pages\/Admin/\*\*"
-        echo "try 1"
-        SIMPLE_TEXT="vendorCopy"
-        sed -i "s+${SIMPLE_TEXT}+${SIMPLE_TEXT}+" package.json
-        echo "try 2"
-        sed -i "s+${SIMPLE_TEXT}+\!${SIMPLE_TEXT}+" package.json
-        echo "try 3"
-#        sed -i "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
-#        echo "try 4"
-#        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
-        sed -in "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+        echo "updating package.json to not exclude non-admin pages from coverage"
+        FILE_REFERENCES=( \
+          "src/modules/App/\*\*" \
+          "src/modules/Index/\*\*" \
+          "src/modules/Pages/BookExamBooth/\*\*" \
+          "src/modules/Pages/CourseResources/\*\*" \
+          "src/modules/Pages/NotFound/\*\*" \
+          "src/modules/Pages/PaymentReceipt/\*\*" \
+          "src/modules/SharedComponents/\*\*" \
+        )
+        for filepath in "${FILE_REFERENCES[@]}"
+        do
+            sed -in "s+${filepath}+\!${filepath}+" package.json
+        done
 
         echo "############### PACKAGE.JSON ####################"
         cat package.json
