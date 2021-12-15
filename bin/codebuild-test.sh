@@ -168,7 +168,7 @@ case "$PIPE_NUM" in
         )
         for filepath in "${FILE_REFERENCES[@]}"
         do
-            sed -in "\!s+${filepath}+${filepath}+" package.json
+            sed -in "s+\!${filepath}+${filepath}+" package.json
         done
 
         echo "############### PACKAGE.JSON ####################"
