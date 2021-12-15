@@ -439,7 +439,7 @@
             "src/modules/Pages/BookExamBooth/**",
             "src/modules/Pages/CourseResources/**",
             "src/modules/Pages/NotFound/**",
-            "src/modules/Pages/PaymentReceiptAdmin/**",
+            "src/modules/Pages/PaymentReceipt/**",
             "src/modules/SharedComponents/**"
         ],
         "all": true

@@ -98,28 +98,39 @@ function checkCoverage {
      fi;
 }
 
+echo "ls -la package.json"
+ls -la package.json
+
 case "$PIPE_NUM" in
 "1")
     # pipeline #1: test the admin pages
     set -e
 
-    # Running in series with `runInBand` to avoid CodeShip VM running out of memory
+    # a code coverage run is split between admin pages and non admin
+    # as we dont have enough memory(?) for one big run (cypress randomly fails tests)
+    # To do this, we need to change the package.json coverage
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-
-        # update the package.json file to exclude non-admin files
-        sed -i "s/^src\/modules\/App\/!src\/modules\/App\/" /package.json
-        sed -i "s/^src\/modules\/Index\/!src\/modules\/Index\/" /package.json
-        sed -i "s/^src\/modules\/Pages\/BookExamBooth\/!src\/modules\/Pages\/BookExamBooth\/" /package.json
-        sed -i "s/^src\/modules\/Pages\/CourseResources\/!src\/modules\/Pages\/CourseResources\/" /package.json
-        sed -i "s/^src\/modules\/Pages\/NotFound\/!src\/modules\/Pages\/NotFound\/" /package.json
-        sed -i "s/^src\/modules\/Pages\/PaymentReceiptAdmin\/!src\/modules\/Pages\/PaymentReceiptAdmin\/" /package.json
-        sed -i "s/^src\/modules\/SharedComponents\/!src\/modules\/SharedComponents\/" /package.json
+        echo "updating package.json to exclude non-admin pages"
+        FILE_REFERENCES=( \
+          "src/modules/App/\*\*" \
+          "src/modules/Index/\*\*" \
+          "src/modules/Pages/BookExamBooth/\*\*" \
+          "src/modules/Pages/CourseResources/\*\*" \
+          "src/modules/Pages/NotFound/\*\*" \
+          "src/modules/Pages/PaymentReceipt/\*\*" \
+          "src/modules/SharedComponents/\*\*" \
+        )
+        for filepath in "${FILE_REFERENCES[@]}"
+        do
+            sed -i '' "s+${filepath}+\!${filepath}+" package.json
+        done
 
         printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
-        printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
+        printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on admin pages\e[0m ---\n"
         npm run test:unit:ci
 
+        printf "\n--- \e[1mRUNNING CYPRESS TESTS for code coverage check on admin pages\e[0m ---\n"
         npm run test:e2e:cc:admin
 
         checkCoverage
@@ -158,11 +169,14 @@ case "$PIPE_NUM" in
 
     printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        # update the package.json file to exclude non-admin files
-        sed -i "s/^src\/modules\/Pages/Admin\/!src\/modules\/Pages/Admin\/" /package.json
+        echo "updating package.json to exclude admin pages"
+        ADMIN_FILE="src\/modules\/Pages\/Admin/\*\*"
+        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
 
+        printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on non-admin pages\e[0m ---\n"
         npm run test:unit:ci
 
+        printf "\n--- \e[1mRUNNING CYPRESS TESTS for code coverage check on non-admin pages\e[0m ---\n"
         npm run test:e2e:cc:nonadmin
 
         checkCoverage
