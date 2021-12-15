@@ -43,9 +43,6 @@ fi
 
 printf "Jest v"; jest --version
 
-PIPELINE_ONE_COMPLETE=false
-PIPELINE_TWO_COMPLETE=false
-# called by the pipeline that finishes last
 function checkCoverage {
      npm run cc:reportAll
 
@@ -101,6 +98,7 @@ function checkCoverage {
      fi;
 }
 
+PIPELINE_ONE_COMPLETE=false
 case "$PIPE_NUM" in
 "1")
     set -e
@@ -112,9 +110,7 @@ case "$PIPE_NUM" in
 
         npm run test:e2e:aws
 
-        if [[ $PIPELINE_TWO_COMPLETE == true ]]; then
-            checkCoverage
-        fi
+        PIPELINE_ONE_COMPLETE=true
     else
         printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
@@ -153,10 +149,15 @@ case "$PIPE_NUM" in
 
         npm run test:e2e:aws
 
-        PIPELINE_TWO_COMPLETE=TRUE
-        if [[ $PIPELINE_ONE_COMPLETE == true ]]; then
-            checkCoverage
-        fi
+        until [[ $PIPELINE_ONE_COMPLETE == true ]]
+        do
+            echo "Waiting for cypress tests to complete ..."
+            sleep 1
+        done
+
+        # we do the tests here because the jest coverage is written here
+        # and _hopefully_ it has access to the full cypress coverage!
+        checkCoverage
 
     else
         npm run test:unit:ci2
