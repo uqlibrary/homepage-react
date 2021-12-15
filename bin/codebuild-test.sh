@@ -122,7 +122,7 @@ case "$PIPE_NUM" in
         )
         for filepath in "${FILE_REFERENCES[@]}"
         do
-            sed -i '' "s+${filepath}+\!${filepath}+" package.json
+            sed -in "s+${filepath}+\!${filepath}+" package.json
         done
 
         printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
@@ -171,7 +171,16 @@ case "$PIPE_NUM" in
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
         echo "updating package.json to exclude admin pages"
         ADMIN_FILE="src\/modules\/Pages\/Admin/\*\*"
-        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+        echo "try 1"
+        SIMPLE_TEXT="vendorCopy"
+        sed -i "s+${SIMPLE_TEXT}+${SIMPLE_TEXT}+" package.json
+        echo "try 2"
+        sed -i "s+${SIMPLE_TEXT}+\!${SIMPLE_TEXT}+" package.json
+        echo "try 3"
+#        sed -i "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+#        echo "try 4"
+#        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+        sed -in "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
 
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on non-admin pages\e[0m ---\n"
         npm run test:unit:ci
