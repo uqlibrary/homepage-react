@@ -98,9 +98,6 @@ function checkCoverage {
      fi;
 }
 
-echo "ls -la package.json"
-ls -la package.json
-
 case "$PIPE_NUM" in
 "1")
     # pipeline #1: test the admin pages
@@ -125,7 +122,9 @@ case "$PIPE_NUM" in
             sed -in "s+${filepath}+\!${filepath}+" package.json
         done
 
-        printf "(\"%s\" build INCLUDES code coverage check)\n" "$CI_BRANCH"
+        echo "############### PACKAGE.JSON ####################"
+        cat package.json
+        echo "############### / PACKAGE.JSON ####################"
 
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on admin pages\e[0m ---\n"
         npm run test:unit:ci
@@ -181,6 +180,10 @@ case "$PIPE_NUM" in
 #        echo "try 4"
 #        sed -i '' "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
         sed -in "s+${ADMIN_FILE}+\!${ADMIN_FILE}+" package.json
+
+        echo "############### PACKAGE.JSON ####################"
+        cat package.json
+        echo "############### / PACKAGE.JSON ####################"
 
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS for code coverage check on non-admin pages\e[0m ---\n"
         npm run test:unit:ci

@@ -216,7 +216,7 @@
         "test:e2e:admin": "start-server-and-test 'npm run start:mock' http-get://localhost:2020 'cypress run --record false --spec=\"cypress/integration/adminPages/*\"'",
         "pretest:e2e:cc": "rm -rf .nyc_output coverage/cypress",
         "test:e2e:cc": "cross-env NODE_ENV=cc npm run test:e2e",
-        "test:e2e:cc:admin": "cross-env NODE_ENV=cc npm run test:unit:citest:e2e:admin",
+        "test:e2e:cc:admin": "cross-env NODE_ENV=cc npm run test:e2e:admin",
         "test:e2e:cc:nonadmin": "cross-env NODE_ENV=cc npm run test:e2e:nonadmin",
         "posttest:e2e:cc": "rm -rf .nyc_output",
         "pretest:cc": "rm -rf .nyc_output && rm -rf coverage",
