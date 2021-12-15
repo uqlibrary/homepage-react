@@ -98,7 +98,6 @@ function checkCoverage {
      fi;
 }
 
-PIPELINE_ONE_COMPLETE=false
 case "$PIPE_NUM" in
 "1")
     set -e
@@ -109,8 +108,6 @@ case "$PIPE_NUM" in
         printf "\n--- \e[1mRUNNING JEST UNIT AND CYPRESS TESTS for code coverage check\e[0m ---\n"
 
         npm run test:e2e:aws
-
-        PIPELINE_ONE_COMPLETE=true
     else
         printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
         printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
@@ -148,12 +145,6 @@ case "$PIPE_NUM" in
         npm run test:unit:ci
 
         npm run test:e2e:aws
-
-        until [[ $PIPELINE_ONE_COMPLETE == true ]]
-        do
-            echo "Waiting for cypress tests to complete ..."
-            sleep 1
-        done
 
         # we do the tests here because the jest coverage is written here
         # and _hopefully_ it has access to the full cypress coverage!
