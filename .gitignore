@@ -3,6 +3,7 @@
 .idea/watcherTasks.xml
 .idea/composerJson.xml
 .idea/dataSources.local.xml
+.idea/esline.xml
 .idea/php.xml
 .idea/markdown-navigator*
 .idea/markdown-exported-files.xml
