@@ -10,18 +10,14 @@
  */
 export function clickButton(selector, waitRequired = 0) {
     cy.get(selector).scrollIntoView();
-    cy.get(selector).should('exist');
-    cy.get(selector).should('be.visible');
-    cy.get(selector).then(e => {
-        // and when we really get stuck, we add a wait anyway :(
-        if (waitRequired > 0) {
-            cy.wait(waitRequired);
-        }
-        Cypress.$(e).click();
-    });
-
-    /*
-    for a input field problem clearing, first try adding a .focus(), if that isnt sufficient add eg
-        .should('have.value', 'Example alert:')
-    */
+    cy.get(selector)
+        .should('exist')
+        .should('be.visible')
+        .then(e => {
+            // and when we really get stuck, we add a wait anyway :(
+            if (waitRequired > 0) {
+                cy.wait(waitRequired);
+            }
+            Cypress.$(e).click();
+        });
 }
