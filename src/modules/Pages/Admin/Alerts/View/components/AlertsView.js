@@ -317,7 +317,12 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </Grid>
                             )}
                         </Grid>
-                        <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                        <Grid
+                            container
+                            data-testid="admin-alerts-view-button-block"
+                            spacing={2}
+                            style={{ marginTop: '1rem' }}
+                        >
                             <Grid item xs={3} align="left">
                                 <Button
                                     color="secondary"

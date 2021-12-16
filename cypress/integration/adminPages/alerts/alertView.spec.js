@@ -57,13 +57,23 @@ describe('Alerts Admin View Page', () => {
         cy.get('[data-testid="admin-alerts-view-checkbox-urgent"] input').should('be.disabled');
     });
     it('can return to the list page from the view page', () => {
-        // cy.wait(50);
-        clickButton('button[data-testid="admin-alerts-view-button-cancel"]', 100);
+        cy.get('[data-testid="admin-alerts-view-title"] input').should('have.value', 'Example alert:');
+        cy.get('[data-testid="admin-alerts-view-button-block"]')
+            .children()
+            .should('have.length', 2)
+            .then(() => {
+                clickButton('button[data-testid="admin-alerts-view-button-cancel"]', 'Cancel');
+            });
         cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
     });
     it('can visit the clone page from the view page', () => {
-        //  cy.wait(50);
-        clickButton('button[data-testid="admin-alerts-view-button-save"]', 100);
+        cy.get('[data-testid="admin-alerts-view-title"] input').should('have.value', 'Example alert:');
+        cy.get('[data-testid="admin-alerts-view-button-block"]')
+            .children()
+            .should('have.length', 2)
+            .then(() => {
+                clickButton('button[data-testid="admin-alerts-view-button-save"]', 'Clone');
+            });
         cy.location('href').should(
             'eq',
             'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245',

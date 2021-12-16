@@ -3,30 +3,33 @@
  * "This DOM element likely became detached somewhere between the previous and current command.'
  * Try this function when that error occurs occasionally in tests when clicking a button
  * per https://github.com/cypress-io/cypress/issues/7306#issuecomment-639828954
- * and sometimes its not enough - supply an integer wait time, eg 100, to really make it work (mostly)
  *
  * @param string selector
- * @param int waitRequired
+ * @param string expectedButtonLabel
  */
-export function clickButton(selector, waitRequired = 0) {
+export function clickButton(selector, expectedButtonLabel) {
     cy.get(selector).scrollIntoView();
-    cy.get(selector)
+    cy.get(`${selector} span:first-child`) // standard MUI button
+        .should('exist')
+        .should('be.visible')
+        .should('have.text', expectedButtonLabel) // force reget
+        .parent()
+        .then(e => {
+            Cypress.$(e).trigger('click');
+        });
+}
+
+/**
+ * some buttons have eg svg content - too hard to check
+ * @param selector
+ * @param expectedButtonLabel
+ */
+export function clickSVGButton(selector) {
+    cy.get(selector).scrollIntoView();
+    cy.get(`${selector}`)
         .should('exist')
         .should('be.visible')
         .then(e => {
-            // and when we really get stuck, we add a wait anyway :(
-            if (waitRequired > 0) {
-                cy.wait(waitRequired);
-            }
             Cypress.$(e).trigger('click');
         });
-    cy.wait(waitRequired * 5);
-    // .should($btn => {
-    //     expect($btn).to.exist;
-    //     expect($btn).to.be.visible;
-    //     if (waitRequired > 0) {
-    //         cy.wait(waitRequired);
-    //     }
-    //     Cypress.$($btn).trigger('click');
-    // });
 }

@@ -70,7 +70,7 @@ describe('Spotlight Admin View page', () => {
     });
     it('can visit the clone page from the spotlight view page', () => {
         cy.wait(50);
-        clickButton('button[data-testid="admin-spotlights-form-button-save"]', 100);
+        clickButton('button[data-testid="admin-spotlights-form-button-save"]', 'Clone');
         cy.location('href').should(
             'eq',
             'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',

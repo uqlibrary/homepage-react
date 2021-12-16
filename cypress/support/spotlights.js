@@ -84,13 +84,13 @@ export function hasAWorkingHelpButton(idHelpButton = 'admin-spotlights-help-butt
     cy.get('[data-testid="help-drawer-title"]').should('not.exist');
 
     // click the help button
-    clickButton(`[data-testid="${idHelpButton}"]`);
+    clickButton(`[data-testid="${idHelpButton}"]`, 'Help');
 
     // we can see the help contents
     cy.get('[data-testid="help-drawer-title"]').scrollIntoView();
     cy.get('[data-testid="help-drawer-title"]').should('be.visible');
 
     // the close button works
-    clickButton('[data-testid="spotlights-helpdrawer-close-button"]');
+    clickButton('[data-testid="spotlights-helpdrawer-close-button"]', 'x');
     cy.get('[data-testid="help-drawer-title"]').should('not.exist');
 }
