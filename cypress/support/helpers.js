@@ -20,7 +20,7 @@ export function clickButton(selector, waitRequired = 0) {
             }
             Cypress.$(e).trigger('click');
         });
-    cy.wait(waitRequired);
+    cy.wait(waitRequired * 5);
     // .should($btn => {
     //     expect($btn).to.exist;
     //     expect($btn).to.be.visible;
