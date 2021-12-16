@@ -12,6 +12,7 @@ export function clickButton(selector, expectedButtonLabel) {
     cy.get(`${selector} span:first-child`) // standard MUI button
         .should('exist')
         .should('be.visible')
+        // .should('not.be.disabled')
         .should('have.text', expectedButtonLabel) // force reget
         .parent()
         .then(e => {

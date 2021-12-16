@@ -15,6 +15,7 @@ import {
     saveButtonisDisabled,
     saveButtonNOTDisabled,
 } from '../../../support/spotlights';
+import { clickButton } from '../../../support/helpers';
 
 function setDateToNow() {
     cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
@@ -181,29 +182,28 @@ describe('Spotlights Admin Form Pages', () => {
         });
 
         it('can save a spotlight on the add page', () => {
+            cy.get('[data-testid="admin-spotlights-form-admin-note"]').type('spotlight admin note 4');
             cy.get('[data-testid="admin-spotlights-form-title"]').type('spotlight title 4');
             cy.get('[data-testid="admin-spotlights-form-tooltip"]').type('spotlight image alt 4');
             cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').type('http://example.com');
             dragFileToDropzone('spotlight-too-large.jpg');
             assertImageWarningIsPresent('dropzone-dimension-warning');
-            cy.get('[data-testid="admin-spotlights-form-admin-note"]').type('spotlight admin note 4');
-            cy.get('[data-testid="admin-spotlights-form-button-save"]')
-                .should('not.be.disabled')
-                .click();
+            cy.get('[data-testid="admin-spotlights-form-button-save"]').should('not.be.disabled');
+            clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Create');
 
             cy.wait(50);
             cy.get('body').contains('A spotlight has been added');
             // click 'add another spotlight' button in dialog
-            cy.get('[data-testid="confirm-spotlight-add-save-succeeded"]').click();
+            clickButton('[data-testid="confirm-spotlight-add-save-succeeded"]', 'Add another spotlight');
             // the spotlight page reloads with a blank form
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights/add?user=uqstaff');
+            cy.get('[data-testid="admin-spotlights-form-admin-note"]').should('have.value', '');
             cy.get('[data-testid="admin-spotlights-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-spotlights-form-link-url"] textarea:first-child').should('have.value', '');
-            cy.get('[data-testid="admin-spotlights-form-admin-note"]').should('have.value', '');
             dragzoneIsReadyForDrag();
         });
         it('the cancel button on the add page returns to the list page', () => {
-            cy.get('[data-testid="admin-spotlights-form-button-cancel"]').click();
+            clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
             cy.wait(500);
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
@@ -393,34 +393,24 @@ describe('Spotlights Admin Form Pages', () => {
 
             assertImageWarningIsPresent('dropzone-dimension-warning');
 
-            cy.get('[data-testid="admin-spotlights-form-button-save"]')
-                .should('not.be.disabled')
-                .click();
+            clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Save');
             cy.wait(50);
             cy.get('body').contains('The spotlight has been updated');
             cy.wait(50);
-            cy.get('[data-testid="confirm-spotlight-edit-save-succeeded"]')
-                .should('exist')
-                .click(); // click 'view list' button in dialog
+            clickButton('[data-testid="confirm-spotlight-edit-save-succeeded"]', 'View spotlight list');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights'); // the list page reloads
         });
         it('the edit form can save a spotlight with the old image', () => {
-            cy.get('[data-testid="admin-spotlights-form-button-save"]')
-                .should('not.be.disabled')
-                .click();
+            clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Save');
             cy.wait(50);
             cy.get('body').contains('The spotlight has been updated');
             cy.wait(50);
-            cy.get('[data-testid="confirm-spotlight-edit-save-succeeded"]')
-                .should('exist')
-                .click(); // click 'view list' button in dialog
+            clickButton('[data-testid="confirm-spotlight-edit-save-succeeded"]', 'View spotlight list');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights'); // the list page reloads
         });
         it('the cancel button on the edit page returns to the list page', () => {
             cy.wait(100);
-            cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
-                .should('exist')
-                .click();
+            clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
@@ -554,9 +544,7 @@ describe('Spotlights Admin Form Pages', () => {
         });
         it('the cancel button on the clone page returns to the list page', () => {
             cy.wait(100);
-            cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
-                .should('exist')
-                .click();
+            clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
@@ -636,16 +624,12 @@ describe('Spotlights Admin Form Pages', () => {
             cy.get('[data-testid="admin-spotlights-form-title"] textarea')
                 .clear()
                 .type('a cloned spotlight');
-            cy.get('[data-testid="admin-spotlights-form-button-save"]')
-                .should('not.be.disabled')
-                .click();
+            clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Create');
             cy.wait(50);
             cy.get('body').contains('The spotlight has been cloned');
             // click 'view list' button in dialog
             cy.wait(50);
-            cy.get('[data-testid="confirm-spotlight-clone-save-succeeded"]')
-                .should('exist')
-                .click();
+            clickButton('[data-testid="confirm-spotlight-clone-save-succeeded"]', 'Clone again');
             // the list page reloads
             cy.location('href').should(
                 'eq',
@@ -660,13 +644,11 @@ describe('Spotlights Admin Form Pages', () => {
             );
         });
         it('the save on the clone form runs correctly and can return to list', () => {
-            cy.get('[data-testid="admin-spotlights-form-button-save"]')
-                .should('not.be.disabled')
-                .click();
+            clickButton('[data-testid="admin-spotlights-form-button-save"]', 'Create');
             cy.wait(50);
             cy.get('body').contains('The spotlight has been cloned');
             // click ''view list'' button in dialog
-            cy.get('[data-testid="cancel-spotlight-clone-save-succeeded"]').click();
+            clickButton('[data-testid="cancel-spotlight-clone-save-succeeded"]', 'View spotlight list');
             // the list page reloads
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         });
