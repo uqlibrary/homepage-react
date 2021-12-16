@@ -57,12 +57,12 @@ describe('Alerts Admin View Page', () => {
         cy.get('[data-testid="admin-alerts-view-checkbox-urgent"] input').should('be.disabled');
     });
     it('can return to the list page from the view page', () => {
-        cy.wait(50);
+        // cy.wait(50);
         clickButton('button[data-testid="admin-alerts-view-button-cancel"]', 100);
         cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
     });
     it('can visit the clone page from the view page', () => {
-        cy.wait(50);
+        //  cy.wait(50);
         clickButton('button[data-testid="admin-alerts-view-button-save"]', 100);
         cy.location('href').should(
             'eq',
