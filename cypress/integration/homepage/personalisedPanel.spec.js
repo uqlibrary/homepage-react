@@ -53,7 +53,7 @@ context('Personalised panel accessibility', () => {
         });
     });
 });
-context('Personalised panel', () => {
+context.only('Personalised panel', () => {
     it('location button changes location', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
@@ -137,8 +137,9 @@ context('Personalised panel', () => {
 
         openPapercutPopup();
 
-        cy.get('li[data-testid="pp-papercut-item-button-0"]').contains('Log in and manage your print balance');
-        clickButton('li[data-testid="pp-papercut-item-button-0"]');
+        cy.get('li[data-testid="pp-papercut-item-button-0"]')
+            .contains('Log in and manage your print balance')
+            .click();
 
         cy.get('body').contains('user has navigated to papercut page');
     });
