@@ -290,6 +290,8 @@ If you want Codeship to run cypress tests before you merge to master, include th
 - When simulating clicks which result in non-trivial DOM changes, you might need to `cy.wait(1000);` to wait 1 second after the click before posing any expectations. If possible, use `cy.waitUntil()` instead to wait for a particular condition to be true.
 - sometimes a button is detached from the DOM when you go to click it. We have a helper called `clickButton` which usually gets around this.
   If not, the fallback it to add a cy.wait(50) and that fixes it (mostly). Waits are considered an anti-pattern though
+- For a input field that has a problem clearing, first try adding a `.focus()`, if that isnt sufficient try eg
+  `.should('have.value', 'Example alert:')`
 - Custom cypress commands can be added to `cypress/support` to abstract out common actions. For example:
 
   - When the form you are writing tests for has a browser alert box to prevent navigating away before its complete, add this to the top of your test to unbind the unload event handler. The issue might only present itself when trying to do another test by navigating to a new url, which never finishes loading because the browser is waiting for the alert from the previous page to be dismissed, which is actually not visible in Cypress UI!
