@@ -18,6 +18,15 @@ export function clickButton(selector, waitRequired = 0) {
             if (waitRequired > 0) {
                 cy.wait(waitRequired);
             }
-            Cypress.$(e).click();
+            Cypress.$(e).trigger('click');
         });
+    cy.wait(waitRequired);
+    // .should($btn => {
+    //     expect($btn).to.exist;
+    //     expect($btn).to.be.visible;
+    //     if (waitRequired > 0) {
+    //         cy.wait(waitRequired);
+    //     }
+    //     Cypress.$($btn).trigger('click');
+    // });
 }
