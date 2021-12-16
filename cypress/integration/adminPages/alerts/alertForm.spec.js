@@ -23,7 +23,7 @@ describe('Alerts Admin Form Pages', () => {
         it.skip('can show a preview of the initial blank alert', () => {
             // this one is more about making sure nothing bad happens rather than checking it looks ok
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
@@ -43,7 +43,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title');
             cy.get('[data-testid="admin-alerts-form-body"]').type('the body');
             cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').check();
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
@@ -61,7 +61,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
             cy.get('[data-testid="admin-alerts-form-link-title"] input').type('Click here');
             cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http://example.com');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
@@ -79,9 +79,9 @@ describe('Alerts Admin Form Pages', () => {
                     );
                 });
             // user can toggle the Preview
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
         });
         it('hides incomplete links from the preview', () => {
@@ -89,7 +89,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 6');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 6');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             // when the user has required a link but entered nothing, no link shows in the preview
             cy.get('uq-alert[id="alert-preview"]')
@@ -98,7 +98,7 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-message"]').should('have.text', 'body 6');
                 });
             cy.get('[data-testid="admin-alerts-form-link-title"] input').type('Click here');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             // when the user has required a link and entered the text but no link, no link shows in the preview
             cy.get('uq-alert[id="alert-preview"]')
@@ -108,7 +108,7 @@ describe('Alerts Admin Form Pages', () => {
                 });
             cy.get('[data-testid="admin-alerts-form-link-title"] input').clear();
             cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http://example.com');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             // when the user has required a link and entered the link but no linktext, no link shows in the preview
             cy.get('uq-alert[id="alert-preview"]')
@@ -324,7 +324,7 @@ describe('Alerts Admin Form Pages', () => {
                 .should('have.value', 'Example alert:') // force retry until re-attached
                 .clear()
                 .type('Updated alert');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
                 .parent()
@@ -337,9 +337,9 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-title"]').should('have.text', 'Updated alert');
                 });
             // user can toggle the Preview
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             // when the user edits a field the preview disappears and can be reshown
             cy.get('[data-testid="admin-alerts-form-title"]').type(' again');
@@ -348,7 +348,7 @@ describe('Alerts Admin Form Pages', () => {
                 .parent()
                 .parent()
                 .should('have.attr', 'style', 'padding-bottom: 1em; display: block; visibility: hidden; opacity: 0;');
-            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview');
             cy.get('uq-alert[id="alert-preview"]')
                 .parent()
                 .parent()
