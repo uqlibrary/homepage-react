@@ -48,6 +48,15 @@ function checkCoverage {
 
      # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
      ls -la coverage/index.html
+
+     echo "############### coverage/index.html ####################"
+     cat coverage/index.html
+     echo "############### / coverage/index.html ####################"
+
+     grep -c class=\"strong\"\>100\% coverage/index.html
+
+     echo "AFTER GREP"
+
      NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
      echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
      NORMALCOLOR="\e[97m"
