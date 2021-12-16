@@ -29,9 +29,7 @@ describe('Spotlight Admin View page', () => {
     });
     it('the cancel button on the view page returns to the list page', () => {
         cy.wait(100);
-        cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
-            .should('exist')
-            .click();
+        clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
         cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
         cy.get('[data-testid="spotlight-list-current"] tbody')
@@ -40,8 +38,6 @@ describe('Spotlight Admin View page', () => {
     });
     it('has a Help button on the spotlight View page', () => {
         cy.get('[data-testid="admin-spotlights-help-button"]').should('exist');
-        // the reusable function doesnt work here - unclear why
-        // hasAWorkingHelpButton();
     });
     it('the view page displays the correct data', () => {
         cy.wait(100);
