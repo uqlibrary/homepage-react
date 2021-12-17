@@ -237,6 +237,18 @@ describe('Alerts Admin Form Pages', () => {
             buttonsAreNOTDisabled();
         });
     });
+    context('Alert Admin Edit page Special', () => {
+        it('if a non exitsing record is requested the edit form pops an error', () => {
+            // this alert doesnt exist in mock, so an error pops up on edit
+            cy.visit('http://localhost:2020/admin/alerts/edit/232d6880-996a-11eb-8a79-e7fddae87baf?user=uqstaff');
+            cy.viewport(1300, 1000);
+            cy.get('button[data-testid="confirm-alert-error"]').should('exist');
+            // the ok button on the error returns to the list page
+            clickButton('button[data-testid="confirm-alert-error"]', 'OK');
+            cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+            cy.get('button[data-testid="confirm-alert-error"]').should('not.exist');
+        });
+    });
     context('Alert Admin Edit page', () => {
         beforeEach(() => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
@@ -357,18 +369,25 @@ describe('Alerts Admin Form Pages', () => {
         it('can show a preview of the original alert', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
-            cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('uq-alert[id="alert-preview"]')
-                .shadow()
-                .within(() => {
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
-                    cy.get('[data-testid="alert-title"]').contains('Example alert:');
-                    cy.get('[data-testid="alert-message"]').contains('This alert can be edited in mock.');
-                    cy.get('[data-testid="alert-alert-preview-action-button"]').contains(
-                        'UQ community COVID-19 advice',
-                    );
+                .should('exist')
+                .then(() => {
+                    cy.get('uq-alert[id="alert-preview"]')
+                        .shadow()
+                        .within(() => {
+                            cy.get('[data-testid="alert-icon"] svg').should(
+                                'have.attr',
+                                'aria-label',
+                                'Important alert.',
+                            );
+                            cy.get('[data-testid="alert-title"]').contains('Example alert:');
+                            cy.get('[data-testid="alert-message"]').contains('This alert can be edited in mock.');
+                            cy.get('[data-testid="alert-alert-preview-action-button"]').contains(
+                                'UQ community COVID-19 advice',
+                            );
+                        });
+                    // user can toggle the Preview
                 });
-            // user can toggle the Preview
             clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // hide preview
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
@@ -497,6 +516,7 @@ describe('Alerts Admin Form Pages', () => {
             for (let ii = 0; ii < buttonId; ii++) {
                 cy.get(`[data-testid="admin-alerts-form-start-date-${ii}"] input`).should('exist');
                 cy.get(`[data-testid="admin-alerts-form-end-date-${ii}"] input`).should('exist');
+                cy.log('looking for remove button', ii);
                 cy.get(`[data-testid="admin-alerts-form-remove-date-button-${ii}"]`).should('exist'); // '-' button exists
             }
             const nextButtonId = buttonId + 1;
