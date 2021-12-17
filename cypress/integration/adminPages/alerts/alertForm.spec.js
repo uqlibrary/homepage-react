@@ -20,9 +20,10 @@ describe('Alerts Admin Form Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it.skip('can show a preview of the initial blank alert', () => {
-            // this one is more about making sure nothing bad happens rather than checking it looks ok
+        it('can show a preview of the initial blank alert', () => {
+            // this test is more about making sure nothing bad happens rather than checking it looks ok (and coverage)
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
@@ -368,6 +369,7 @@ describe('Alerts Admin Form Pages', () => {
         });
         it('can show a preview of the original alert', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.wait(100);
             clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
             cy.get('uq-alert[id="alert-preview"]')
                 .should('exist')
