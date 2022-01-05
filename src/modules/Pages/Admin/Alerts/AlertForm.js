@@ -130,7 +130,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     /* istanbul ignore next */
     function isInvalidEndDate(endDate, startDate) {
-        return (startDate !== '' && endDate < startDate) || !moment(endDate).isValid();
+        return (startDate !== '' && endDate <= startDate) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
@@ -415,7 +415,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const errorLocale = {
         ...locale.form.add.addAlertError,
-        confirmationTitle: `An error occurred: ${alertError}`,
+        confirmationTitle: `An error occurred: ${JSON.stringify(alertError)}`,
     };
 
     const handleConfirmation = () => {
