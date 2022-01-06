@@ -539,7 +539,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 {!!values.dateList &&
                     values.dateList.map((dateset, index) => {
                         return (
-                            <Grid key={`dateset-${index}`} container spacing={2} style={{ marginTop: 12 }}>
+                            <Grid
+                                data-testid={`admin-alerts-form-row-${index}`}
+                                key={`dateset-${index}`}
+                                container
+                                spacing={2}
+                                style={{ marginTop: 12 }}
+                            >
                                 <Grid item md={5} xs={12}>
                                     <TextField
                                         id={`startDate-${index}`}
@@ -574,7 +580,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         }}
                                     />
                                 </Grid>
-                                <Grid item md={2} xs={12}>
+                                <Grid
+                                    item
+                                    md={2}
+                                    xs={12}
+                                    data-testid={`admin-alerts-form-add-remove-buttons-${index}`}
+                                    aria-label="Add/remove a date set"
+                                >
                                     {['add', 'clone'].includes(defaults.type) &&
                                     index === values.dateList.length - 1 ? (
                                         <IconButton

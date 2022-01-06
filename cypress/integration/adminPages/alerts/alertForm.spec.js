@@ -515,11 +515,16 @@ describe('Alerts Admin Form Pages', () => {
         });
 
         function thisManyRemoveButtonsExist(buttonId) {
-            for (let ii = 0; ii < buttonId; ii++) {
+            for (let ii = 0; ii <= buttonId; ii++) {
                 cy.get(`[data-testid="admin-alerts-form-start-date-${ii}"] input`).should('exist');
                 cy.get(`[data-testid="admin-alerts-form-end-date-${ii}"] input`).should('exist');
                 cy.log('looking for remove button', ii);
-                cy.get(`[data-testid="admin-alerts-form-remove-date-button-${ii}"]`).should('exist'); // '-' button exists
+                cy.get(`[data-testid="admin-alerts-form-row-${ii}"]`)
+                    .should('exist')
+                    .should('contain', 'Start date')
+                    .find(`[data-testid="admin-alerts-form-add-remove-buttons-${ii}"]`)
+                    .should('exist')
+                    .should('have.attr', 'aria-label', 'Add/remove a date set');
             }
             const nextButtonId = buttonId + 1;
             cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
