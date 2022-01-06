@@ -10,6 +10,7 @@
 .idea/dbnavigator.xml
 .idea/markdown-navigator.xml
 .idea/shelf/
+.idea/jsLinters/
 .idea/prettier.xml
 .idea/sonarlint/*
 .idea/snyk.project.settings.xml
