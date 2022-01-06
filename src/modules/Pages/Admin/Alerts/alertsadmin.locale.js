@@ -85,6 +85,7 @@ export default {
                             has been created. When editing alerts, Save will only be enabled when you have made a change
                             to a field.
                         </li>
+                        <li>Alerts will not update on the live system for around one minute.</li>
                     </ul>
                     <h3>Fields</h3>
                     <dl>

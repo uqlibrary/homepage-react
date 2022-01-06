@@ -183,11 +183,12 @@ export const SpotlightForm = ({
     function isInvalidEndDate(endDate, startDate) {
         const startDateReformatted = startDate !== '' && moment(startDate).format('YYYY-MM-DDTHH:mm');
         const endDateReformatted = endDate !== '' && moment(endDate).format('YYYY-MM-DDTHH:mm');
-        // console.log('isInvalidEndDate endDate < startDateReformatted: ', endDate, ' < ', startDateReformatted);
-        // console.log("isInvalidEndDate startDate !== '': ", startDate !== '');
-        // console.log('isInvalidEndDate together: ', endDate < startDateReformatted && startDate !== '');
-        // console.log('isInvalidEndDate !moment(endDate).isValid() = ', !moment(endDate).isValid());
-        return (startDate !== '' && endDateReformatted < startDateReformatted) || !moment(endDate).isValid();
+        console.log('isInvalidEndDate end <= start: ', endDateReformatted, ' <= ', startDateReformatted);
+        console.log(endDateReformatted <= startDateReformatted);
+        console.log("isInvalidEndDate startDate !== '': ", startDate !== '');
+        console.log('isInvalidEndDate together: ', endDate < startDateReformatted && startDate !== '');
+        console.log('isInvalidEndDate !moment(endDate).isValid() = ', !moment(endDate).isValid());
+        return (startDate !== '' && endDateReformatted <= startDateReformatted) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
@@ -382,7 +383,7 @@ export const SpotlightForm = ({
     const errorLocale = {
         ...locale.form.add.addSpotlightError,
         confirmationTitle: !!spotlightError
-            ? /* istanbul ignore next */ `An error occurred: ${spotlightError}`
+            ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(spotlightError)}`
             : 'An unknown error occurred',
     };
 

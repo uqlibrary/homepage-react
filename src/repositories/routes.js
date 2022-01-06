@@ -112,13 +112,12 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
 };
 
 // alerts
-export const ALERTS_ALL_API = (requestNonCachedData = true) => {
-    const param = requestNonCachedData ? '?noCache=1' : '';
+export const ALERTS_ALL_API = () => {
     return {
-        apiUrl: `/alerts${param}`,
+        apiUrl: '/alerts',
     };
 };
-export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}?noCache=1` });
+export const ALERT_BY_ID_API = ({ id }) => ({ apiUrl: `alert/${id}` });
 
 export const ALERT_CREATE_API = () => ({ apiUrl: 'alert' });
 
