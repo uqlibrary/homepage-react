@@ -27,6 +27,7 @@ import {
     getTimeNowFormatted,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
+    scrollToTopOfPage,
     systemList,
 } from './alerthelpers';
 
@@ -199,9 +200,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         actions.clearAnAlert(); // make the form clear for the next use
 
         history.push('/admin/alerts');
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reloadClonePage = () => {
@@ -215,8 +214,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ],
         });
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     function expandValues(expandableValues) {

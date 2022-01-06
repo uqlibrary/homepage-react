@@ -25,7 +25,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../../alertsadmin.locale';
 import AlertSplitButton from './AlertSplitButton';
-import { systemList } from '../../alerthelpers';
+import { scrollToTopOfPage, systemList } from '../../alerthelpers';
 
 const moment = require('moment');
 
@@ -172,23 +172,17 @@ export const AlertsListAsTable = ({
 
     const navigateToEditForm = alertid => {
         history.push(`/admin/alerts/edit/${alertid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToCloneForm = alertid => {
         history.push(`/admin/alerts/clone/${alertid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const navigateToView = alertid => {
         history.push(`/admin/alerts/view/${alertid}`);
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reEnableAllCheckboxes = () => {
