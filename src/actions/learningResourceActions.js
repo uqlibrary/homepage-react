@@ -57,76 +57,80 @@ export function clearExams() {
     };
 }
 
+const extractDetailsOfEnrolmentFromCurrentClassList = (classnumber, account) => {
+    const currentClasses = account.current_classes;
+
+    const subjectlist =
+        !!currentClasses && currentClasses.filter(aClass => !!aClass && aClass.classnumber === classnumber);
+    const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
+    const theSemester = thisSubject?.semester || null;
+    const theCampus = thisSubject?.CAMPUS || null;
+    const instructionMode = thisSubject?.INSTRUCTION_MODE || null;
+    return !!thisSubject
+        ? {
+              semester: theSemester,
+              CAMPUS: theCampus,
+              INSTRUCTION_MODE: instructionMode,
+          }
+        : null;
+};
+
+const filterReadingLists = (readingLists, coursecode, campus, semester, account) => {
+    if (!readingLists || readingLists.length === 0 || !readingLists[0].list || readingLists[0].list.length === 0) {
+        return [];
+    }
+
+    if (!account || !account.current_classes) {
+        return [];
+    }
+
+    const importanceOrder = {
+        Required: 1,
+        Recommended: 2,
+        Further: 3,
+    };
+    readingLists[0].list
+        .sort((a, b) => {
+            // Item with defined importance should be higher
+            if (a.hasOwnProperty('importance') && !b.hasOwnProperty('importance')) {
+                return -1;
+            }
+            // Item with defined importance should be higher
+            if (!a.hasOwnProperty('importance') && b.hasOwnProperty('importance')) {
+                return 1;
+            }
+            if (!a.hasOwnProperty('importance') && !b.hasOwnProperty('importance')) {
+                return 0;
+            }
+            const impA = importanceOrder.hasOwnProperty(a.importance) ? importanceOrder[a.importance] : 999;
+            const impB = importanceOrder.hasOwnProperty(b.importance) ? importanceOrder[b.importance] : 999;
+            return impA - impB;
+        })
+        .map(item => {
+            item.coursecode = coursecode;
+        });
+
+    const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(coursecode, account);
+    if (!subjectEnrolment) {
+        // user is searching
+        return readingLists.filter(item => {
+            return item.period === semester && item.campus.indexOf(campus) !== -1;
+        });
+    } else {
+        // this is the users classes
+        const semesterString = subjectEnrolment.semester;
+        const thisCampus = getCampusByCode(subjectEnrolment.CAMPUS);
+        return readingLists.filter(item => {
+            return item.period === semesterString && item.campus.indexOf(thisCampus) !== -1;
+        });
+    }
+};
+
 export function loadReadingLists(coursecode, campus, semester, account) {
-    const extractDetailsOfEnrolmentFromCurrentClassList = classnumber => {
-        const currentClasses = account.current_classes;
-
-        const subjectlist =
-            !!currentClasses && currentClasses.filter(aClass => !!aClass && aClass.classnumber === classnumber);
-        const thisSubject = (!!subjectlist && subjectlist.length > 0 && subjectlist[0]) || null;
-        const theSemester = thisSubject?.semester || null;
-        const theCampus = thisSubject?.CAMPUS || null;
-        const instructionMode = thisSubject?.INSTRUCTION_MODE || null;
-        return !!thisSubject
-            ? {
-                  semester: theSemester,
-                  CAMPUS: theCampus,
-                  INSTRUCTION_MODE: instructionMode,
-              }
-            : null;
-    };
-
-    const filterReadingLists = (readingLists, coursecode, campus, semester) => {
-        if (!readingLists || readingLists.length === 0 || !readingLists[0].list || readingLists[0].list.length === 0) {
-            return [];
-        }
-
-        const importanceOrder = {
-            Required: 1,
-            Recommended: 2,
-            Further: 3,
-        };
-        readingLists[0].list
-            .sort((a, b) => {
-                // Item with defined importance should be higher
-                if (a.hasOwnProperty('importance') && !b.hasOwnProperty('importance')) {
-                    return -1;
-                }
-                // Item with defined importance should be higher
-                if (!a.hasOwnProperty('importance') && b.hasOwnProperty('importance')) {
-                    return 1;
-                }
-                if (!a.hasOwnProperty('importance') && !b.hasOwnProperty('importance')) {
-                    return 0;
-                }
-                const impA = importanceOrder.hasOwnProperty(a.importance) ? importanceOrder[a.importance] : 999;
-                const impB = importanceOrder.hasOwnProperty(b.importance) ? importanceOrder[b.importance] : 999;
-                return impA - impB;
-            })
-            .map(item => {
-                item.coursecode = coursecode;
-            });
-
-        const subjectEnrolment = extractDetailsOfEnrolmentFromCurrentClassList(coursecode);
-        if (!subjectEnrolment) {
-            // user is searching
-            return readingLists.filter(item => {
-                return item.period === semester && item.campus.indexOf(campus) !== -1;
-            });
-        } else {
-            // this is the users classes
-            const semesterString = subjectEnrolment.semester;
-            const thisCampus = getCampusByCode(subjectEnrolment.CAMPUS);
-            return readingLists.filter(item => {
-                return item.period === semesterString && item.campus.indexOf(thisCampus) !== -1;
-            });
-        }
-    };
-
     /* istanbul ignore next */
     if (coursecode.length !== 8 && coursecode.length !== 9) {
         // coursecodes have a length of 8 eg FREN1101, with a small number of weird outliers with 9
-        return false;
+        return null;
     }
 
     return dispatch => {
@@ -137,7 +141,13 @@ export function loadReadingLists(coursecode, campus, semester, account) {
                 // make the returned value a more sensibly named variable
                 updatedData.coursecode = data.title;
                 // filter out any wrong reading lists
-                updatedData.reading_lists = filterReadingLists(updatedData.reading_lists, coursecode, campus, semester);
+                updatedData.reading_lists = filterReadingLists(
+                    updatedData.reading_lists,
+                    coursecode,
+                    campus,
+                    semester,
+                    account,
+                );
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: updatedData,

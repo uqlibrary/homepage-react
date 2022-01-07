@@ -119,7 +119,7 @@ export const updateSpotlightWithNewImage = (request, spotlightSaveType = 'update
                 request.img_url =
                     !!firstresponse &&
                     /* istanbul ignore next */ !!firstresponse.key &&
-                    `https://${domain}/file/public/${firstresponse.key}`;
+                    /* istanbul ignore next */ `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
                 if (spotlightSaveType === 'create') {
