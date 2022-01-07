@@ -8,6 +8,44 @@ describe('Alerts Admin Form Pages', () => {
             cy.visit('http://localhost:2020/admin/alerts/add?user=uqstaff');
             cy.viewport(1300, 1000);
         });
+
+        function thisManyRemoveButtonsExist(buttonId) {
+            for (let ii = 0; ii <= buttonId; ii++) {
+                cy.get(`[data-testid="admin-alerts-form-start-date-${ii}"] input`).should('exist');
+                cy.get(`[data-testid="admin-alerts-form-end-date-${ii}"] input`).should('exist');
+                cy.log('looking for remove button', ii);
+                cy.get(`[data-testid="admin-alerts-form-row-${ii}"]`)
+                    .should('exist')
+                    .should('contain', 'Start date')
+                    .find(`[data-testid="admin-alerts-form-add-remove-buttons-${ii}"]`)
+                    .should('exist')
+                    .should('have.attr', 'aria-label', 'Add/remove a date set');
+            }
+            const nextButtonId = buttonId + 1;
+            cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
+        }
+        function clickMinusButton(buttonId) {
+            clickSVGButton('[data-testid="admin-alerts-form-remove-date-button-' + buttonId + '"]');
+        }
+        function clickPlusButton(buttonId) {
+            clickSVGButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
+        }
+        it('the "remove a date set button" works', () => {
+            cy.wait(50);
+            cy.get('[data-testid="admin-alerts-form-remove-date-button-0"]').should('not.exist'); // no '-' button
+            clickPlusButton('0'); // add a date field
+            thisManyRemoveButtonsExist(1);
+
+            clickPlusButton('1');
+            thisManyRemoveButtonsExist(2);
+
+            clickPlusButton('2');
+            thisManyRemoveButtonsExist(3);
+
+            clickMinusButton('1'); // remove a date field
+            thisManyRemoveButtonsExist(2);
+        });
+
         it('is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
@@ -516,39 +554,6 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
         });
 
-        function thisManyRemoveButtonsExist(buttonId) {
-            for (let ii = 0; ii <= buttonId; ii++) {
-                cy.get(`[data-testid="admin-alerts-form-start-date-${ii}"] input`).should('exist');
-                cy.get(`[data-testid="admin-alerts-form-end-date-${ii}"] input`).should('exist');
-                cy.log('looking for remove button', ii);
-                cy.get(`[data-testid="admin-alerts-form-row-${ii}"]`)
-                    .should('exist')
-                    .should('contain', 'Start date')
-                    .find(`[data-testid="admin-alerts-form-add-remove-buttons-${ii}"]`)
-                    .should('exist')
-                    .should('have.attr', 'aria-label', 'Add/remove a date set');
-            }
-            const nextButtonId = buttonId + 1;
-            cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
-        }
-        function clickMinusButton(buttonId) {
-            clickSVGButton('[data-testid="admin-alerts-form-remove-date-button-' + buttonId + '"]');
-        }
-        it('the "remove a date set button" works', () => {
-            cy.wait(50);
-            cy.get('[data-testid="admin-alerts-form-remove-date-button-0"]').should('not.exist'); // no '-' button
-            clickPlusButton('0'); // add a date field
-            thisManyRemoveButtonsExist(1);
-
-            clickPlusButton('1');
-            thisManyRemoveButtonsExist(2);
-
-            clickPlusButton('2');
-            thisManyRemoveButtonsExist(3);
-
-            clickMinusButton('1'); // remove a date field
-            thisManyRemoveButtonsExist(2);
-        });
         it('tells the user which systems the alert will appear on', () => {
             cy.visit('http://localhost:2020/admin/alerts/clone/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);

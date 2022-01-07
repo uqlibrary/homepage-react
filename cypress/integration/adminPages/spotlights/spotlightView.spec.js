@@ -15,6 +15,15 @@ describe('Spotlight Admin View page', () => {
         cy.viewport(1300, 1000);
     });
 
+    it('can visit the clone page from the spotlight view page', () => {
+        cy.wait(50);
+        clickButton('button[data-testid="admin-spotlights-form-button-save"]', 'Clone');
+        cy.location('href').should(
+            'eq',
+            'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',
+        );
+    });
+
     it('view page is accessible', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -63,13 +72,5 @@ describe('Spotlight Admin View page', () => {
                 'src',
                 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
             );
-    });
-    it('can visit the clone page from the spotlight view page', () => {
-        cy.wait(50);
-        clickButton('button[data-testid="admin-spotlights-form-button-save"]', 'Clone');
-        cy.location('href').should(
-            'eq',
-            'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',
-        );
     });
 });
