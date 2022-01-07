@@ -8,7 +8,6 @@ exports[`Cards component renders given ID for standar card 1`] = `
   style={Object {}}
 >
   <WithStyles(ForwardRef(CardHeader))
-    action={false}
     classes={
       Object {
         "root": undefined,
@@ -51,7 +50,6 @@ exports[`Cards component renders with custom colours and full height 1`] = `
   }
 >
   <WithStyles(ForwardRef(CardHeader))
-    action={false}
     classes={
       Object {
         "root": "#555",
@@ -95,7 +93,6 @@ exports[`Cards component renders with small title and as a subcard 1`] = `
   style={Object {}}
 >
   <WithStyles(ForwardRef(CardHeader))
-    action={false}
     classes={
       Object {
         "root": undefined,
@@ -133,7 +130,6 @@ exports[`Cards component renders with square top and accent header 1`] = `
   style={Object {}}
 >
   <WithStyles(ForwardRef(CardHeader))
-    action={false}
     classes={
       Object {
         "root": "#333",
@@ -171,13 +167,6 @@ exports[`Cards component renders with title and help button 1`] = `
   style={Object {}}
 >
   <WithStyles(ForwardRef(CardHeader))
-    action={
-      <Memo(Connect(HelpIcon))
-        buttonLabel="OK"
-        text="help text"
-        title="help"
-      />
-    }
     classes={
       Object {
         "root": undefined,
@@ -215,7 +204,6 @@ exports[`Cards component renders with title and no help icon 1`] = `
   style={Object {}}
 >
   <WithStyles(ForwardRef(CardHeader))
-    action={false}
     classes={
       Object {
         "root": undefined,
