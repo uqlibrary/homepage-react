@@ -31,6 +31,7 @@ export function loadAllSpotlights() {
 }
 
 function createSpotlight(request, dispatch) {
+    /* istanbul ignore next */
     if ('id' in request) {
         // as we are creating a new spotlight there should not be an id field
         delete request.id;
@@ -109,14 +110,16 @@ export const updateSpotlightWithNewImage = (request, spotlightSaveType = 'update
                     payload: response,
                 });
 
-                const firstresponse = !!response && response.length > 0 && response.shift();
+                const firstresponse = !!response && response.length > 0 && /* istanbul ignore next */ response.shift();
                 const apiProd = 'https://api.library.uq.edu.au/v1/';
                 const domain =
                     API_URL === apiProd
                         ? /* istanbul ignore next */ 'app.library.uq.edu.au'
                         : 'app-testing.library.uq.edu.au';
                 request.img_url =
-                    !!firstresponse && !!firstresponse.key && `https://${domain}/file/public/${firstresponse.key}`;
+                    !!firstresponse &&
+                    /* istanbul ignore next */ !!firstresponse.key &&
+                    `https://${domain}/file/public/${firstresponse.key}`;
 
                 delete request.uploadedFile;
                 if (spotlightSaveType === 'create') {
