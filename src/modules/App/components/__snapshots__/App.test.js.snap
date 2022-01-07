@@ -181,7 +181,7 @@ exports[`Application component should render for anon user 1`] = `
               "accent": Object {
                 "dark": "#3b1a59",
                 "light": "#962A8B",
-                "main": "#51247A",
+                "main": "#3881cb",
               },
               "action": Object {
                 "activatedOpacity": 0.12,
@@ -249,7 +249,7 @@ exports[`Application component should render for anon user 1`] = `
                     "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                   },
                 },
-                "light": "#3881cb",
+                "light": "#51247A",
                 "main": "#2377CB",
               },
               "secondary": Object {
@@ -1937,7 +1937,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             "accent": Object {
                                                                               "dark": "#3b1a59",
                                                                               "light": "#962A8B",
-                                                                              "main": "#51247A",
+                                                                              "main": "#3881cb",
                                                                             },
                                                                             "action": Object {
                                                                               "activatedOpacity": 0.12,
@@ -2005,7 +2005,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#3881cb",
+                                                                              "light": "#51247A",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {
@@ -3417,7 +3417,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                             "accent": Object {
                                                                               "dark": "#3b1a59",
                                                                               "light": "#962A8B",
-                                                                              "main": "#51247A",
+                                                                              "main": "#3881cb",
                                                                             },
                                                                             "action": Object {
                                                                               "activatedOpacity": 0.12,
@@ -3485,7 +3485,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#3881cb",
+                                                                              "light": "#51247A",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {
@@ -4797,7 +4797,7 @@ exports[`Application component should render loading screen while account is loa
               "accent": Object {
                 "dark": "#3b1a59",
                 "light": "#962A8B",
-                "main": "#51247A",
+                "main": "#3881cb",
               },
               "action": Object {
                 "activatedOpacity": 0.12,
@@ -4865,7 +4865,7 @@ exports[`Application component should render loading screen while account is loa
                     "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                   },
                 },
-                "light": "#3881cb",
+                "light": "#51247A",
                 "main": "#2377CB",
               },
               "secondary": Object {
@@ -6548,7 +6548,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             "accent": Object {
                                                                               "dark": "#3b1a59",
                                                                               "light": "#962A8B",
-                                                                              "main": "#51247A",
+                                                                              "main": "#3881cb",
                                                                             },
                                                                             "action": Object {
                                                                               "activatedOpacity": 0.12,
@@ -6616,7 +6616,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#3881cb",
+                                                                              "light": "#51247A",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {
@@ -8028,7 +8028,7 @@ exports[`Application component should render loading screen while account is loa
                                                                             "accent": Object {
                                                                               "dark": "#3b1a59",
                                                                               "light": "#962A8B",
-                                                                              "main": "#51247A",
+                                                                              "main": "#3881cb",
                                                                             },
                                                                             "action": Object {
                                                                               "activatedOpacity": 0.12,
@@ -8096,7 +8096,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                   "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                                                 },
                                                                               },
-                                                                              "light": "#3881cb",
+                                                                              "light": "#51247A",
                                                                               "main": "#2377CB",
                                                                             },
                                                                             "secondary": Object {

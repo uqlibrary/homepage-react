@@ -34,7 +34,7 @@ const useStyles = makeStyles(
             },
         },
         header: {
-            color: theme.palette.accent.main,
+            color: theme.palette.primary.light,
             textAlign: 'center',
         },
     }),

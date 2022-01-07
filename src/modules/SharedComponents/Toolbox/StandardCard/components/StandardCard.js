@@ -23,7 +23,7 @@ export const styles = theme => ({
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        backgroundColor: theme.palette.accent.main,
+        backgroundColor: theme.palette.primary.light,
         borderRadius: '4px 4px 0px 0px',
         padding: '12px 24px',
     },

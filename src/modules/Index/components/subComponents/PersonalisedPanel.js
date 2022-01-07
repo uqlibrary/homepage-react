@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
     },
     greeting: {
-        color: theme.palette.accent.main,
+        color: theme.palette.primary.light,
         fontSize: '2.25rem',
         lineHeight: 1,
         marginLeft: 16,
