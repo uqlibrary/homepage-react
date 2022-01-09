@@ -408,6 +408,9 @@ context('The Course Resources Page', () => {
      * ---------+-----------------------------------+---------------+----------------+
      * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
      * ---------+-----------------------------------+---------------+----------------+
+     *
+     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/courseresources
+     *
      */
     it('User with classes sees their classes', () => {
         cy.visit('/courseresources?user=s1111111');
