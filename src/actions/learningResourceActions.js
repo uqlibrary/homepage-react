@@ -58,6 +58,10 @@ export function clearExams() {
 }
 
 const extractDetailsOfEnrolmentFromCurrentClassList = (classnumber, account) => {
+    /* instanbul ignore next */
+    if (!account || !account.current_classes) {
+        return null;
+    }
     const currentClasses = account.current_classes;
 
     const subjectlist =
@@ -80,6 +84,7 @@ const filterReadingLists = (readingLists, coursecode, campus, semester, account)
         return [];
     }
 
+    /* instanbul ignore next */
     if (!account || !account.current_classes) {
         return [];
     }
@@ -116,14 +121,14 @@ const filterReadingLists = (readingLists, coursecode, campus, semester, account)
         return readingLists.filter(item => {
             return item.period === semester && item.campus.indexOf(campus) !== -1;
         });
-    } else {
-        // this is the users classes
-        const semesterString = subjectEnrolment.semester;
-        const thisCampus = getCampusByCode(subjectEnrolment.CAMPUS);
-        return readingLists.filter(item => {
-            return item.period === semesterString && item.campus.indexOf(thisCampus) !== -1;
-        });
     }
+
+    // this is the user's classes
+    const semesterString = subjectEnrolment.semester;
+    const thisCampus = getCampusByCode(subjectEnrolment.CAMPUS);
+    return readingLists.filter(item => {
+        return item.period === semesterString && item.campus.indexOf(thisCampus) !== -1;
+    });
 };
 
 export function loadReadingLists(coursecode, campus, semester, account) {
