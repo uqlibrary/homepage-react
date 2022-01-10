@@ -433,7 +433,6 @@
             "src/modules/SharedComponents/Toolbox/Alert/components/*.{js,jsx}",
             "src/modules/SharedComponents/Toolbox/ScrollToTop/components/*.{js,jsx}",
             "src/modules/SharedComponents/Toolbox/helpers/*.{js,jsx}",
-            "src/modules/App/components/pages.js",
             "!src/modules/Pages/Admin/**",
             "!src/modules/App/**",
             "!src/modules/Index/**",
@@ -441,7 +440,8 @@
             "!src/modules/Pages/CourseResources/**",
             "!src/modules/Pages/NotFound/**",
             "!src/modules/Pages/PaymentReceipt/**",
-            "!src/modules/SharedComponents/**"
+            "!src/modules/SharedComponents/**",
+            "src/modules/App/components/pages.js"
         ],
         "all": true
     },
