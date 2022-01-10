@@ -440,8 +440,7 @@
             "!src/modules/Pages/CourseResources/**",
             "!src/modules/Pages/NotFound/**",
             "!src/modules/Pages/PaymentReceipt/**",
-            "!src/modules/SharedComponents/**",
-            "src/modules/App/components/pages.js"
+            "!src/modules/SharedComponents/**"
         ],
         "all": true
     },

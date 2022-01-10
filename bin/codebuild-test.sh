@@ -108,11 +108,12 @@ case "$PIPE_NUM" in
     # pipeline #1: test the admin pages
     set -e
 
-    # a code coverage run is split between admin pages and non admin
-    # as we dont have enough resources(?) for one big run (cypress randomly fails tests)
-    # To do this, we need to change the package.json coverage
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
-        echo "updating package.json to exclude non-admin pages from pages"
+        # a code coverage run is split between admin pages and non admin
+        # as we dont have enough resources(?) for one big run (cypress randomly fails tests)
+        # and it is just waaaay too slow.
+        # To do this, we need to change the package.json coverage
+        echo "updating package.json to exclude non-admin pages from coverage"
         FILE_REFERENCES=( \
           "src/modules/App/\*\*" \
           "src/modules/Index/\*\*" \
@@ -172,9 +173,19 @@ case "$PIPE_NUM" in
     set -e
 
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
+        # a code coverage run is split between admin pages and non admin
+        # as we dont have enough resources(?) for one big run (cypress randomly fails tests)
+        # and it is just waaaay too slow.
+        # To do this, we need to change the package.json coverage
         echo "updating package.json to exclude admin pages from coverage"
-        ADMIN_FILE="src\/modules\/Pages\/Admin/\*\*"
-        sed -in "s+\!${ADMIN_FILE}+${ADMIN_FILE}+" package.json
+        FILE_REFERENCES=( \
+          "src/modules/App/\*\*" \
+          "src\/modules\/Pages\/Admin/\*\*"
+        )
+        for filepath in "${FILE_REFERENCES[@]}"
+        do
+            sed -in "s+\!${filepath}+${filepath}+" package.json
+        done
 
         echo "############### PACKAGE.JSON ####################"
         cat package.json
