@@ -55,14 +55,10 @@ function checkCoverage {
 
      NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
      echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
-     NORMALCOLOR="\e[97m"
-     GREEN="\e[32m"
-     RED="\e[31m"
      if [[ $NUM_FULL_COVERAGE == 4 ]]; then
-         echo "${GREEN}"
          echo "Coverage 100%";
          echo ""
-         echo "            ,-""-."
+         echo '            ,-""-.'
          echo "           :======:"
          echo "           :======:"
          echo "            '-..-"
@@ -73,9 +69,7 @@ function checkCoverage {
          echo "           (____)'.___|"
          echo "            (___)____.|_____"
          echo "Human, your code coverage was found to be satisfactory. Great job!"
-         echo "${NORMALCOLOR}"
      else
-         echo "${RED}"
          echo "                     ____________________"
          echo "                    /                    \ "
          echo "                    |      Coverage       | "
@@ -95,7 +89,6 @@ function checkCoverage {
          echo "                             \__/"
          echo ""
          echo "            Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
-         echo "${NORMALCOLOR}"
          # show actual coverage numbers
          grep -A 2 class=\"strong\"\> coverage/index.html
          echo "Run your tests locally with npm run test:cc then load coverage/index.html to determine where the coverage gaps are"
