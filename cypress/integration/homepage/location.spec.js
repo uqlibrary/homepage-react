@@ -29,6 +29,11 @@ context('Location component', () => {
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
         cy.get('div#location-tooltip').contains('Click to update your preferred campus, currently Gatton');
 
+        cy.log('Should close when opened if clicking on body');
+        cy.get('button[data-testid="location-button"]').click();
+        cy.get('body').click();
+        cy.get('div#location-paper').should('not.be.visible');
+
         cy.log('Should set the cookie to Herston');
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-3"').click();
@@ -40,5 +45,6 @@ context('Location component', () => {
         cy.get('button[data-testid="location-button"]').click();
         cy.get('li[data-testid="location-option-0"').click();
         cy.getCookie('location').should('have.property', 'value', 'null');
+        cy.get('body').click();
     });
 });

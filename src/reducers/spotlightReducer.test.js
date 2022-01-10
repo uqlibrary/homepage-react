@@ -1,6 +1,7 @@
 import spotlightReducer, { initialState } from './spotlightReducer';
 import * as actions from '../actions/actionTypes';
-import { SPOTLIGHT_CREATED } from '../actions/actionTypes';
+import accountReducer from './account';
+import spotlightsReducer from './spotlightsReducer';
 
 describe('spotlight reducer', () => {
     let emptyState;
@@ -69,6 +70,25 @@ describe('spotlight reducer', () => {
         const test = spotlightReducer(emptyState, { type: actions.SPOTLIGHT_CLEAR });
         expect(test).toEqual({
             ...emptyState,
+        });
+    });
+
+    it('should set saving spotlights flag to true when saving spotlights', () => {
+        const test = spotlightReducer(emptyState, { type: 'SPOTLIGHT_SAVING' });
+        expect(test).toEqual({
+            ...emptyState,
+            spotlightStatus: 'saving',
+            spotlightError: false,
+        });
+    });
+
+    it('should set spotlight Status flags to loading when loading spotlight', () => {
+        const test = spotlightReducer(emptyState, { type: actions.SPOTLIGHT_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            spotlight: null,
+            spotlightStatus: 'loading',
+            spotlightError: false,
         });
     });
 });

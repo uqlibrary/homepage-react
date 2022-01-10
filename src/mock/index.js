@@ -32,12 +32,7 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
-import {
-    SPOTLIGHT_DELETE_BULK_API,
-    SPOTLIGHT_GET_BY_ID_API,
-    SPOTLIGHT_SAVE_BULK_API,
-    UPLOAD_PUBLIC_FILES_API,
-} from 'repositories/routes';
+import { SPOTLIGHT_DELETE_BULK_API, SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -326,37 +321,6 @@ mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '298288b0-605c-11eb-ad87-357f112348e
         },
     ]),
 );
-// the user drags spotlight 1 to position 2
-mock.onPost(routes.SPOTLIGHT_SAVE_BULK_API().apiUrl).reply(
-    withDelay([
-        200,
-        [
-            {
-                id: 'fba95ec0-77f5-11eb-8c73-9734f9d4b368',
-                start: '2021-03-01 00:01:00',
-                end: '2099-12-07 23:59:00',
-                title: 'Study outdoors in Duhig Place - Study space',
-                url: 'http://bit.ly/3uBIK7C',
-                img_url: 'http://localhost:2020/public/images/spotlights/52d3e090-d096-11ea-916e-092f3af3e8ac.jpg',
-                img_alt: 'Study outdoors in Duhig Place. Shade, wifi, tables, bubbler, fairy lights and fresh air.',
-                weight: 10,
-                active: 0,
-            },
-            {
-                id: '9eab3aa0-82c1-11eb-8896-eb36601837f5',
-                start: '2021-03-15 00:02:00',
-                end: '2099-03-21 23:59:00',
-                title: 'Can be deleted and edited',
-                url: 'https://web.library.uq.edu.au/locations-hours/dorothy-hill-engineering-and-sciences-library',
-                img_url: 'http://localhost:2020/public/images/spotlights/babcccc0-e0e4-11ea-b159-6dfe174e1a21.jpg',
-                img_alt:
-                    'Dorothy Hill Engineering & Sciences Library. Meeting rooms, low-light spaces, quiet spaces & more.',
-                weight: 20,
-                active: 1,
-            },
-        ],
-    ]),
-);
 mock.onPost(routes.SPOTLIGHT_SAVE_API({ id: '729df1a0-7dd0-11e9-a3a7-5fd844715207' }).apiUrl).reply(
     withDelay([
         200,
@@ -468,6 +432,19 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
         },
     ]),
 );
+mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35',
+            start: '2031-09-04 02:00:55',
+            end: '2032-09-04 03:00:55',
+            title: 'Example alert:',
+            body: 'This alert will return an error if deleted in mock',
+            urgent: 0,
+        },
+    ]),
+);
 
 mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }).apiUrl).reply(
     withDelay([
@@ -486,39 +463,6 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
 
 mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailability]));
 // .reply(withDelay([500, {}]));
-
-fetchMock.mock('begin:https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac', {
-    status: 200,
-    response: {
-        numFound: 1622,
-        start: 0,
-        maxScore: 16.476818,
-        docs: [
-            { text: 'beards', score: 16.476818 },
-            {
-                text: 'beards folklore',
-                score: 16.476564,
-            },
-            { text: 'beards massage', score: 16.476564 },
-            {
-                text: 'beards fiction',
-                score: 16.476564,
-            },
-            { text: 'beards poetry', score: 16.476564 },
-            {
-                text: 'beards history',
-                score: 16.476564,
-            },
-            { text: 'beards europe', score: 16.476564 },
-            {
-                text: 'beards humor',
-                score: 16.476564,
-            },
-            { text: 'beards harold', score: 16.476564 },
-            { text: 'beards peter', score: 16.476564 },
-        ],
-    },
-});
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper', examSuggestions);
@@ -561,48 +505,6 @@ mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(
             active: 1,
         },
     ]),
-);
-// mock.onAny(routes.SPOTLIGHT_CREATE_API().apiUrl).reply(withDelay([500, {}]));
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a84b9b20-1f4a-11e7-aeac-5f0c4ecdebb9' }).apiUrl).reply(
-    withDelay([500, []]),
-);
-
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e1b0e10-c400-11e6-a8f0-47525a49f469' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'd8ec8820-07b1-11e7-a7ef-ef4338d401a6' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'a7764f90-198d-11e7-9f30-3dc758d83fd5' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '3fa92cc0-6ab9-11e7-839f-a1392c2927cc' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '9eab3aa0-82c1-11eb-8896-eb36601837f5' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '5ee86730-6f2a-11eb-8e97-5b9edc0aaa73' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '7d40b830-668d-11eb-b0fd-e19d76f2843b' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '5ee86730-6f2a-11eb-8e97-5b9edc0aaa73' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '48727c20-7fa8-11eb-ae0f-0b60018ec35f' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: 'aa2fab10-7cb1-11eb-a9ab-d7c632403564' }).apiUrl).reply(
-    withDelay([200, []]),
-);
-mock.onDelete(routes.SPOTLIGHT_DELETE_API({ id: '1e7a5980-d7d6-11eb-a4f2-fd60c7694898' }).apiUrl).reply(
-    withDelay([200, []]),
 );
 
 mock.onDelete(routes.SPOTLIGHT_DELETE_BULK_API().apiUrl).reply(withDelay([200, []]));

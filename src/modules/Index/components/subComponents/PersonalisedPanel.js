@@ -59,7 +59,7 @@ const useStyles = makeStyles(theme => ({
         height: 'auto',
     },
     greeting: {
-        color: theme.palette.accent.main,
+        color: theme.palette.primary.light,
         fontSize: '2.25rem',
         lineHeight: 1,
         marginLeft: 16,
@@ -169,6 +169,17 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+export const greeting = (currentTime = null) => {
+    const time = currentTime ?? moment().format('H');
+    if (time < 12) {
+        return ppLocale.greetings.morning;
+    } else if (time >= 12 && time < 18) {
+        return ppLocale.greetings.afternoon;
+    } else {
+        return ppLocale.greetings.evening;
+    }
+};
+
 const PersonalisedPanel = ({
     account,
     author,
@@ -179,28 +190,18 @@ const PersonalisedPanel = ({
     incompleteNTRORecords,
 }) => {
     const classes = useStyles();
-    const greeting = () => {
-        const time = moment().format('H');
-        if (time < 12) {
-            return ppLocale.greetings.morning;
-        } else if (time >= 12 && time < 18) {
-            return ppLocale.greetings.afternoon;
-        } else {
-            return ppLocale.greetings.evening;
-        }
-    };
-    const id = tag => `pp${tag ? '-' + tag : ''}`;
+    const topLevelTagId = tag => `pp${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
 
     const PaperCut = () => {
         const [anchorEl, setAnchorEl] = React.useState(null);
-        const id = tag => `pp-papercut${tag ? '-' + tag : ''}`;
+        const getPapercutId = tag => `pp-papercut${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         const handleClick = event => {
             setAnchorEl(event.currentTarget);
         };
         const handleClose = () => {
             setAnchorEl(null);
         };
-        const handleNagivationToManage = () => {
+        const handleNavigationToManage = () => {
             window.location.href = ppLocale.items.papercut.url;
             handleClose();
         };
@@ -213,8 +214,8 @@ const PersonalisedPanel = ({
         return (
             <Grid item xs={12} className={classes.menuItem}>
                 <Tooltip
-                    id={id('tooltip')}
-                    data-testid={id('tooltip')}
+                    id={getPapercutId('tooltip')}
+                    data-testid={getPapercutId('tooltip')}
                     title={ppLocale.items.papercut.tooltip}
                     placement="left"
                     TransitionProps={{ timeout: 300 }}
@@ -223,8 +224,8 @@ const PersonalisedPanel = ({
                         fullWidth
                         classes={{ root: classes.menuItemRoot }}
                         onClick={handleClick}
-                        id={id('menu-button')}
-                        data-testid={id('menu-button')}
+                        id={getPapercutId('menu-button')}
+                        data-testid={getPapercutId('menu-button')}
                     >
                         <Grid container spacing={0}>
                             <Grid item xs className={classes.menuItemLabel}>
@@ -242,8 +243,8 @@ const PersonalisedPanel = ({
                     </Button>
                 </Tooltip>
                 <Menu
-                    id={id('menu')}
-                    data-testid={id('menu')}
+                    id={getPapercutId('menu')}
+                    data-testid={getPapercutId('menu')}
                     anchorEl={anchorEl}
                     open={!!anchorEl}
                     onClose={handleClose}
@@ -253,39 +254,28 @@ const PersonalisedPanel = ({
                     }}
                 >
                     <MenuItem
-                        id={id('item-button-0')}
-                        data-testid={id('item-button-0')}
-                        onClick={() => handleNagivationToManage()}
+                        id={getPapercutId('item-button-0')}
+                        data-testid={getPapercutId('item-button-0')}
+                        onClick={() => handleNavigationToManage()}
                     >
                         Log in and manage your print balance
                     </MenuItem>
-                    <MenuItem
-                        id={id('item-button-1')}
-                        data-testid={id('item-button-1')}
-                        onClick={() => navigatToTopUpUrl(5)}
-                    >
-                        Top up your print balance - $5
-                    </MenuItem>
-                    <MenuItem
-                        id={id('item-button-2')}
-                        data-testid={id('item-button-2')}
-                        onClick={() => navigatToTopUpUrl(10)}
-                    >
-                        Top up your print balance - $10
-                    </MenuItem>
-                    <MenuItem
-                        id={id('item-button-3')}
-                        data-testid={id('item-button-3')}
-                        onClick={() => navigatToTopUpUrl(20)}
-                    >
-                        Top up your print balance - $20
-                    </MenuItem>
+                    {[5, 10, 20].map((topupAmount, index) => (
+                        <MenuItem
+                            id={getPapercutId(`item-button-${index + 1}`)}
+                            key={getPapercutId(`item-button-${index + 1}`)}
+                            data-testid={getPapercutId(`item-button-${index + 1}`)}
+                            onClick={() => navigatToTopUpUrl(topupAmount)}
+                        >
+                            Top up your print balance - ${topupAmount}
+                        </MenuItem>
+                    ))}
                 </Menu>
             </Grid>
         );
     };
     const Loans = () => {
-        const id = tag => `pp-loans${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-loans${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -328,7 +318,7 @@ const PersonalisedPanel = ({
         );
     };
     const Fines = () => {
-        const id = tag => `pp-fines${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-fines${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -368,7 +358,7 @@ const PersonalisedPanel = ({
         );
     };
     const EspacePossible = () => {
-        const id = tag => `pp-espace-possible${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-espace-possible${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -408,7 +398,7 @@ const PersonalisedPanel = ({
         );
     };
     const EspaceOrcid = () => {
-        const id = tag => `pp-espace-orcid${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-espace-orcid${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -448,7 +438,7 @@ const PersonalisedPanel = ({
         );
     };
     const EspaceNTROs = () => {
-        const id = tag => `pp-espace-ntro${tag ? '-' + tag : ''}`;
+        const id = tag => `pp-espace-ntro${tag ? '-' + tag : /* istanbul ignore next */ ''}`;
         return (
             <Grid item xs={12} className={classes.menuItemAnchor}>
                 <Tooltip
@@ -499,21 +489,24 @@ const PersonalisedPanel = ({
             >
                 <div className={classes.flexHeader}>
                     <Typography variant={'h5'} component={'h2'} className={classes.greeting}>
-                        {greeting()} {account.firstName || ''}
+                        {greeting()} {account.firstName || /* istanbul ignore next */ ''}
                     </Typography>
                     <Grid container spacing={1} style={{ marginLeft: 16, marginTop: 6 }}>
                         {account && account.id && (
                             <Grid item xs={12} lg="auto">
                                 <Tooltip
-                                    id={id('tooltip')}
-                                    data-testid={id('tooltip')}
-                                    title={ppLocale.username.replace('[id]', account.id || ppLocale.unavailable)}
+                                    id={topLevelTagId('tooltip')}
+                                    data-testid={topLevelTagId('tooltip')}
+                                    title={ppLocale.username.replace(
+                                        '[id]',
+                                        account.id || /* istanbul ignore next */ ppLocale.unavailable,
+                                    )}
                                     placement="left"
                                     TransitionProps={{ timeout: 300 }}
                                 >
                                     <Typography component={'span'} style={{ fontSize: 14, color: '#595959' }}>
                                         <AccountBoxIcon className={classes.uqidIcon} fontSize={'small'} />
-                                        {(account && account.id) || ''}
+                                        {(account && account.id) || /* istanbul ignore next */ ''}
                                     </Typography>
                                 </Tooltip>
                             </Grid>

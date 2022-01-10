@@ -27,6 +27,7 @@ import {
     getTimeNowFormatted,
     makePreviewActionButtonJustNotifyUser,
     manuallyMakeWebComponentBePermanent,
+    scrollToTopOfPage,
     systemList,
 } from './alerthelpers';
 
@@ -199,9 +200,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         actions.clearAnAlert(); // make the form clear for the next use
 
         history.push('/admin/alerts');
-
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     const reloadClonePage = () => {
@@ -215,8 +214,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ],
         });
 
-        const topOfPage = document.getElementById('StandardPage');
-        !!topOfPage && topOfPage.scrollIntoView();
+        scrollToTopOfPage();
     };
 
     function expandValues(expandableValues) {
@@ -258,7 +256,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             dateList: values.dateList,
             systems: values.systems || /* istanbul ignore next */ [],
         };
-        console.log('saveAlerts: newValues = ', newValues);
         newValues.dateList.forEach(dateset => {
             // an 'edit' event will only have one entry in the date array
             const saveableValues = {
@@ -321,12 +318,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     const handleChange = prop => event => {
         if (prop === 'system') {
             const systems = values.systems || /* istanbul ignore next */ [];
+            /* istanbul ignore next */
             if (systems.includes(event.target.name) && !event.target.checked) {
-                // system exists in array and the checkbox has been unchecked. Remove.
+                // system had been selected and the checkbox has been unchecked. Remove.
                 const index = systems.indexOf(event.target.name);
                 index >= 0 && systems.splice(index, 1);
             } /* istanbul ignore else */ else if (!systems.includes(event.target.name) && !!event.target.checked) {
-                // system doesnt exist in array and the checkbox has been checked. Add.
+                // system wasnt previously selected and the checkbox has been checked. Add.
                 systems.push(event.target.name);
             }
             setValues({
@@ -539,7 +537,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                 {!!values.dateList &&
                     values.dateList.map((dateset, index) => {
                         return (
-                            <Grid key={`dateset-${index}`} container spacing={2} style={{ marginTop: 12 }}>
+                            <Grid
+                                data-testid={`admin-alerts-form-row-${index}`}
+                                key={`dateset-${index}`}
+                                container
+                                spacing={2}
+                                style={{ marginTop: 12 }}
+                            >
                                 <Grid item md={5} xs={12}>
                                     <TextField
                                         id={`startDate-${index}`}
@@ -574,7 +578,13 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         }}
                                     />
                                 </Grid>
-                                <Grid item md={2} xs={12}>
+                                <Grid
+                                    item
+                                    md={2}
+                                    xs={12}
+                                    data-testid={`admin-alerts-form-add-remove-buttons-${index}`}
+                                    aria-label="Add/remove a date set"
+                                >
                                     {['add', 'clone'].includes(defaults.type) &&
                                     index === values.dateList.length - 1 ? (
                                         <IconButton

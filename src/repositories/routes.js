@@ -61,22 +61,7 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
     },
 });
 
-// Primo Suggestions API
-// https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=cats&facet=off&fq=scope%3A()%2BAND%2Bcontext%3A(B)&rows=10&wt=json&json.wrf=byutv_jsonp_callback_c631f96adec14320b23f1cac342d30f6&_=2ef82775b72140a6bde04ea6e20012e4
-export const PRIMO_SUGGESTIONS_API_GENERIC = ({ keyword }) => {
-    return {
-        apiUrl:
-            'https://primo-instant-apac.hosted.exlibrisgroup.com/solr/ac?q=' +
-            keyword +
-            '&facet=off' +
-            '&fq=scope%3A()%2BAND%2Bcontext%3A(B)' +
-            '&rows=10' +
-            '&wt=json' +
-            '&json.wrf=byutv_jsonp_callback_c631f96adec14320b23f1cac342d30f6',
-    };
-};
-
-export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
+export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
 });
 
@@ -179,34 +164,4 @@ send payload:
 
 export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 
-// on reorder, send all the rows together, so the api can use its after-update-of-many-then-reweight
-export const SPOTLIGHT_SAVE_BULK_API = () => ({ apiUrl: 'spotlights' });
-/*
-send payload:
-{
-active: 0
-end: "2021-01-18 18:00:00"
-id: "ca7d3e70-516f-11eb-880b-1d4a9f408ccb"
-img_alt: "Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates."
-img_url: "https://app.library.uq.edu.au/file/public/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg"
-start: "2021-01-08 15:05:00"
-title: "08/01/21 Spaces & collections closed temporarily"
-url: "https://web.library.uq.edu.au/library-services/covid-19"
-weight: 0
-}
-response:
-{
-    "id": "ca7d3e70-516f-11eb-880b-1d4a9f408ccb",
-    "start": "2021-01-08 15:05:00",
-    "end": "2021-01-18 18:00:00",
-    "title": "08\/01\/21 Spaces & collections closed temporarily",
-    "url": "https:\/\/web.library.uq.edu.au\/library-services\/covid-19",
-    "img_url": "https:\/\/app.library.uq.edu.au\/file\/public\/4d2dce40-5175-11eb-8aa1-fbc04f4f5310.jpg",
-    "img_alt": "Our spaces and collections are closed temporarily. Read more Library COVID-19 Updates.",
-    "weight": 0,
-    "active": 0
-}
- */
-
-export const SPOTLIGHT_DELETE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });

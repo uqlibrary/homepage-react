@@ -8,10 +8,10 @@ import { withStyles } from '@material-ui/core/styles';
 
 const styles = theme => ({
     circular: {
-        color: theme.palette.accent.main,
+        color: theme.palette.primary.light,
     },
     message: {
-        color: theme.palette.accent.main,
+        color: theme.palette.primary.light,
         fontSize: '1.33rem',
     },
 });

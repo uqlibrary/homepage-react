@@ -110,17 +110,10 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
     };
 
     const saveSpotlightChange = spotlight => {
-        return actions.saveSpotlightChangeWithExistingImage(spotlight);
-    };
-
-    /* istanbul ignore next */
-    const saveBatchReorder = slist => {
-        return actions.saveSpotlightBatch(slist);
+        return actions.updateSpotlightWithExistingImage(spotlight);
     };
 
     const showViewByHistoryLightbox = thisSpotlight => {
-        console.log('showViewByHistoryLightbox spotlights = ', spotlights);
-        console.log('showViewByHistoryLightbox thisSpotlight = ', thisSpotlight);
         const filteredRows =
             !!thisSpotlight && !!spotlights && [...spotlights].filter(r => r.img_url === thisSpotlight.img_url);
         /* istanbul ignore else */
@@ -190,7 +183,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canDragRows
                                     canUnpublish
@@ -209,7 +201,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canUnpublish
                                     showViewByHistoryLightbox={showViewByHistoryLightbox}
@@ -224,7 +215,6 @@ export const SpotlightsList = ({ actions, spotlights, spotlightsLoading, spotlig
                                     history={history}
                                     spotlightsError={spotlightsError}
                                     saveSpotlightChange={saveSpotlightChange}
-                                    saveBatchReorder={saveBatchReorder}
                                     deleteSpotlightBulk={deleteSpotlightBulk}
                                     canTextFilter
                                     showViewByHistoryLightbox={showViewByHistoryLightbox}
