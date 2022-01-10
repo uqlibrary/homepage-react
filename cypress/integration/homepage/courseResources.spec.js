@@ -47,6 +47,7 @@ context('The Homepage Course Resource Panel', () => {
         cy.get(`div[data-testid=${classPanelId}] h2`).contains(secondClass.SUBJECT);
     });
 
+    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/courseresources
     it('The Course resources panel searches correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);

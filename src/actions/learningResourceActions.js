@@ -58,7 +58,7 @@ export function clearExams() {
 }
 
 const extractDetailsOfEnrolmentFromCurrentClassList = (classnumber, account) => {
-    /* instanbul ignore next */
+    /* istanbul ignore next */
     if (!account || !account.current_classes) {
         return null;
     }
@@ -84,7 +84,7 @@ const filterReadingLists = (readingLists, coursecode, campus, semester, account)
         return [];
     }
 
-    /* instanbul ignore next */
+    /* istanbul ignore next */
     if (!account || !account.current_classes) {
         return [];
     }

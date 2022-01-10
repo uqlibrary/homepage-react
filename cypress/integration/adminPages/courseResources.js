@@ -1,5 +1,6 @@
 import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as locale } from '../../../src/modules/Pages/CourseResources/courseResources.locale';
+import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
 
 /*
   This is a single test brought in from the Course Resources test to give coverage of actions in Pipeline 1
@@ -47,5 +48,32 @@ context('Course Resources', () => {
         readingList.list.forEach(l => {
             cy.get('body').contains(l.title);
         });
+    });
+
+    it('The Course resources panel searches correctly', () => {
+        cy.visit('/?user=s3333333');
+        cy.viewport(1300, 1000);
+        cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
+
+        // the user sees NO subjects (the form has no sibling elements)
+        cy.get('div[data-testid=course-resources-panel] form')
+            .parent()
+            .children()
+            .should('have.length', 2); // 1 search field and one div with 'no courses' text
+        // the user sees a search field
+        cy.get('div[data-testid=course-resources-panel] form input').should(
+            'have.attr',
+            'placeholder',
+            locale.search.placeholder,
+        );
+
+        // user enters ACCT
+        cy.get('div[data-testid=course-resources-panel] form input').type('ACCT11');
+        const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
+            item.name.startsWith('ACCT11'),
+        );
+        cy.get('ul#homepage-courseresource-autocomplete-popup')
+            .children()
+            .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for title
     });
 });

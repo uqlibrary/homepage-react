@@ -61,7 +61,7 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
     },
 });
 
-export const PRIMO_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
+export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
 });
 
