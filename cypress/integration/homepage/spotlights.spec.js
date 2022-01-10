@@ -1,5 +1,5 @@
-context('Spotlights homepage Accessibility', () => {
-    it('Spotlights', () => {
+context('Spotlights on homepage', () => {
+    it('Spotlights is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -9,16 +9,13 @@ context('Spotlights homepage Accessibility', () => {
             .and($img => {
                 expect($img[0].naturalWidth).to.be.greaterThan(0);
             });
-        // TODO: Does not current pass
         cy.checkA11y('div[data-testid="spotlights"]', {
             reportName: 'Spotlights',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-});
-context('Spotlights homepage', () => {
-    it('Renders as expected', () => {
+    it('Spotlights homepage renders as expected', () => {
         cy.visit('/');
         cy.injectAxe();
         cy.viewport(1300, 1000);

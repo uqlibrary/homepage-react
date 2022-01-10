@@ -110,10 +110,6 @@ export const getUserServices = (account, serviceLocale = null) => {
         .filter(i => i !== undefined);
 };
 
-// everyone sees these, so could just be `true` but lets maintain the flexibility of passing the account
-// (this means if an option changes from everyone to logged in, we only need to change the call internally here)
-const everyoneCanSee = account => true || /* istanbul ignore next */ !!account;
-
 const loggedinCanSee = account => !!account && !!account.id;
 
 // define which home page panel items and mylibrary popup items each user type can see
@@ -136,49 +132,9 @@ export const seeCourseResources = account => {
     );
 };
 
-export const seeMasquerade = account => loggedinCanSee(account) && !!account.canMasquerade;
-
-export const seeRoomBookings = account =>
-    !!account &&
-    !!account.user_group &&
-    [
-        LIBRARY_STAFF,
-        UNDERGRADUATE_GENERAL,
-        UNDERGRADUATE_REMOTE,
-        POSTGRAD_COURSEWORK,
-        POSTGRAD_COURSEWORK_REMOTE,
-        POSTGRAD_RESEARCH,
-        POSTGRAD_RESEARCH_REMOTE,
-        SHORT_FORM_CREDENTIAL_COURSE,
-        SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
-    ].includes(account.user_group);
-
 export const seeLoans = account => loggedinCanSee(account);
 
 export const seePrintBalance = account => loggedinCanSee(account);
-
-export const seeSavedItems = account => everyoneCanSee(account);
-
-export const seeSavedSearches = account => everyoneCanSee(account);
-
-export const seeDocumentDelivery = account =>
-    loggedinCanSee(account) &&
-    [
-        UNDERGRADUATE_GENERAL,
-        UNDERGRADUATE_REMOTE,
-        POSTGRAD_COURSEWORK,
-        POSTGRAD_COURSEWORK_REMOTE,
-        POSTGRAD_RESEARCH,
-        POSTGRAD_RESEARCH_REMOTE,
-        EXTRAMURAL_ASSOCIATE,
-        EXTRAMURAL_HOSPITAL,
-        EXTRAMURAL_HONORARY,
-        OTHER_STAFF,
-        LIBRARY_STAFF,
-        STAFF_AWAITING_AURION,
-        SHORT_FORM_CREDENTIAL_COURSE,
-        SHORT_FORM_CREDENTIAL_COURSE_REMOTE,
-    ].includes(account.user_group);
 
 export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
 
@@ -194,8 +150,6 @@ export const seeLibraryServices = account => {
 
 export const isHospitalUser = account =>
     !!account && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
-
-export const seeFeedback = account => everyoneCanSee(account);
 
 const hasWebContentAdminAccess = account => {
     return !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));

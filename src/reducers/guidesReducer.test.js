@@ -1,5 +1,6 @@
 import guidesReducer, { initialState } from './guidesReducer';
 import * as actions from '../actions/actionTypes';
+import examReducer from './examReducer';
 
 describe('account reducer', () => {
     let emptyState;
@@ -26,6 +27,31 @@ describe('account reducer', () => {
         const test = guidesReducer(emptyState, { type: actions.GUIDES_CLEAR });
         expect(test).toEqual({
             ...emptyState,
+        });
+    });
+
+    it('should set guides values when successfully loaded', () => {
+        const test = guidesReducer(emptyState, {
+            type: actions.GUIDES_LOADED,
+            payload: [],
+        });
+        expect(test).toEqual({
+            ...emptyState,
+            guideList: [],
+            guideListError: false,
+            guideListLoading: false,
+        });
+    });
+
+    it('should set guides Status flags to loading when loading', () => {
+        const test = guidesReducer(emptyState, {
+            type: actions.GUIDES_LOADING,
+        });
+        expect(test).toEqual({
+            ...emptyState,
+            guideList: null,
+            guideListError: false,
+            guideListLoading: true,
         });
     });
 });

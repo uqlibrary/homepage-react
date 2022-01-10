@@ -206,4 +206,64 @@ describe('account reducer', () => {
             trainingEventsError: true,
         });
     });
+
+    it('should set library hours value when successfully loaded library hours', () => {
+        const test = accountReducer(emptyState, { type: actions.LIB_HOURS_LOADED, payload: [] });
+        expect(test).toEqual({
+            ...emptyState,
+            libHours: [],
+            libHoursLoading: false,
+            libHoursError: false,
+        });
+    });
+
+    it('should set library hours loading flag to true when loading library hours', () => {
+        const test = accountReducer(emptyState, { type: actions.LIB_HOURS_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            libHours: null,
+            libHoursLoading: true,
+            libHoursError: false,
+        });
+    });
+
+    it('should set computer availability value when successfully loaded', () => {
+        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_LOADED, payload: [] });
+        expect(test).toEqual({
+            ...emptyState,
+            computerAvailability: [],
+            computerAvailabilityLoading: false,
+            computerAvailabilityError: false,
+        });
+    });
+
+    it('should set computer availability loading flag to true when loading library hours', () => {
+        const test = accountReducer(emptyState, { type: actions.COMP_AVAIL_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            computerAvailability: null,
+            computerAvailabilityLoading: true,
+            computerAvailabilityError: false,
+        });
+    });
+
+    it('should set training value when successfully loaded', () => {
+        const test = accountReducer(emptyState, { type: actions.TRAINING_LOADED, payload: [] });
+        expect(test).toEqual({
+            ...emptyState,
+            trainingEvents: [],
+            trainingEventsLoading: false,
+            trainingEventsError: false,
+        });
+    });
+
+    it('should set training loading flag to true when loading library hours', () => {
+        const test = accountReducer(emptyState, { type: actions.TRAINING_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            trainingEvents: null,
+            trainingEventsLoading: true,
+            trainingEventsError: false,
+        });
+    });
 });

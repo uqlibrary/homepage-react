@@ -65,7 +65,6 @@ export const Index = ({
     incompleteNTROLoading,
 }) => {
     const dispatch = useDispatch();
-    console.log('homepage: spotlightsCurrent = ', spotlightsCurrent);
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {

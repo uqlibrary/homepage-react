@@ -171,22 +171,21 @@ const MyLoader = props => (
     </ContentLoader>
 );
 export const ariaLabelForLocation = item => {
-    console.log('item = ', item);
     const name = item.name;
     const hours =
         item.departments.length > 0 &&
-        item.departments.map(item => {
-            if (hoursLocale.departmentsMap.includes(item.name)) {
-                return item.hours;
+        item.departments.map(i => {
+            if (hoursLocale.departmentsMap.includes(i.name)) {
+                return i.hours;
             }
             return null;
         });
-    const s = `${name || ''}. ${!!hours[0] ? 'Study space hours are ' + hours[0] : ''} ${
-        !!hours[0] && !!hours[1] ? 'and' : ''
-    }
-            ${!!hours[1] ? 'Ask Us hours are ' + hours[1] : ''}`;
-    console.log('result = ', s);
-    return s;
+    const studySpaceHours = `${name || /* istanbul ignore next */ ''}. ${
+        !!hours[0] ? 'Study space hours are ' + hours[0] : ''
+    }`;
+    const askUsHours = !!hours[1] ? 'Ask Us hours are ' + hours[1] : '';
+    const hoursConjunction = !!hours[0] && !!hours[1] ? 'and' : '';
+    return `${studySpaceHours} ${hoursConjunction} ${askUsHours}`;
 };
 export const hasDepartments = item => {
     const departments = item.departments.map(item => {
@@ -242,7 +241,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
             const textA = a.name.toUpperCase();
             const textB = b.name.toUpperCase();
             // eslint-disable-next-line no-nested-ternary
-            return textA < textB ? -1 : textA > textB ? 1 : 0;
+            return textA < textB ? -1 : textA > textB ? 1 : /* istanbul ignore next */ 0;
         });
     const sortedHours = matchSorter(alphaHours, cookies.location, {
         keys: ['campus'],
@@ -303,7 +302,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                     </div>
                 )}
                 {!!libHoursError && (
-                    <Fade in={!libHoursLoading} timeout={1000}>
+                    /* istanbul ignore next */ <Fade in={!libHoursLoading} timeout={1000}>
                         <div className={classes.flexContent}>
                             <Typography style={{ padding: '1rem' }}>{hoursLocale.unavailable}</Typography>
                         </div>
@@ -371,6 +370,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <Grid item xs>
                             <Button
                                 classes={{ root: classes.actionButtonsLeft }}
+                                data-testid="homepage-hours-weeklyhours-link"
                                 size="small"
                                 variant="contained"
                                 color={hoursLocale.actionButtons[0].color}
@@ -384,7 +384,7 @@ const Hours = ({ libHours, libHoursLoading, libHoursError, account }) => {
                         <Grid item xs>
                             <Button
                                 classes={{ root: classes.actionButtonsRight }}
-                                color="primary"
+                                data-testid="homepage-hours-bookit-link"
                                 size="small"
                                 variant="contained"
                                 color={hoursLocale.actionButtons[1].color}

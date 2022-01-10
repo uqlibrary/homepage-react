@@ -2,7 +2,6 @@ import React from 'react';
 import { rtlRender, fireEvent } from 'test-utils';
 import Alert from './Alert';
 import mediaQuery from 'css-mediaquery';
-
 function setup(testProps = {}) {
     return rtlRender(
         <Alert
@@ -182,6 +181,14 @@ describe('Alert', () => {
         const { getByTestId } = setup();
         expect(getByTestId('1-dismiss-button-mobile')).toBeInTheDocument();
         expect(toJson(getByTestId)).toMatchSnapshot();
+    });
+
+    it('should correctly hide', () => {
+        window.matchMedia = createMatchMedia(256);
+        const { getByTestId, queryByTestId } = setup();
+        expect(getByTestId('1-hide-button-mobile')).toBeInTheDocument();
+        fireEvent.click(getByTestId('1-hide-button-mobile'));
+        expect(queryByTestId('1-hide-button-mobile')).not.toBeInTheDocument();
     });
 
     it('should display loader', () => {

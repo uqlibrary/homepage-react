@@ -68,10 +68,12 @@ export const unescapeString = text => {
 // Instead, a then() handler must check the Response.ok and/or Response.status properties."
 // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 export const throwFetchErrors = response => {
+    /* istanbul ignore else */
     if (!response.ok) {
         const status = response.status || 'status undefined';
         const statusText = response.statusText || 'status message undefined';
         throw Error(`Error ${status} - ${statusText}`);
     }
+    /* istanbul ignore next */
     return response;
 };

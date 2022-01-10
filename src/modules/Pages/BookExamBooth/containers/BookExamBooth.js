@@ -14,7 +14,8 @@ const BookExamBoothContainer = () => {
         const urlRoot = 'https://uqbookit.uq.edu.au/#/app/booking-types/';
         // const urlRoot = 'https://uqbookit-dev.uq.edu.au/#/app/booking-types/';
 
-        const locationCode = chosenLocationCode === 'unset' ? locations[0].value : chosenLocationCode; // should not be unset
+        const locationCode =
+            chosenLocationCode === 'unset' ? /* istanbul ignore next */ locations[0].value : chosenLocationCode; // should not be unset
         const locationOptions = locations.find(l => l.value === locationCode);
         const bookingCode = isBYOD ? locationOptions.BYODBookitLink : locationOptions.needsComputerBookitLink;
         return urlRoot + bookingCode;
@@ -48,7 +49,7 @@ const BookExamBoothContainer = () => {
         const startDateTime = moment(startDate)
             .hour(startTimeHours)
             .minute(startTimeMinutes);
-        const vacateAllowance = startDateTime.isBefore('2020-06-22') ? 180 : 90;
+        const vacateAllowance = startDateTime.isBefore('2020-06-22') ? /* istanbul ignore next */ 180 : 90;
         return startDateTime.add(sessionLength, 'minutes').add(vacateAllowance, 'minutes');
     };
 
@@ -76,9 +77,11 @@ const BookExamBoothContainer = () => {
     const startTimeHoursListByExamLength = examLength => {
         const output = getListHours(7, 22);
 
+        /* istanbul ignore next */
         if (examLength >= 180) {
             output.pop();
         }
+        /* istanbul ignore next */
         if (examLength > 90) {
             output.pop();
         }

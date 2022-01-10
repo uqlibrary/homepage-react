@@ -12,9 +12,7 @@ describe('AppLoader component', () => {
                 },
                 primary: {
                     main: 'test3',
-                },
-                accent: {
-                    main: 'test4',
+                    light: 'test4',
                 },
             },
         };

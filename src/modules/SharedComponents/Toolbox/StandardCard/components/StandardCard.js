@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import CardHeader from '@material-ui/core/CardHeader';
-import { HelpIcon } from '../../HelpDrawer';
 import { withStyles } from '@material-ui/core/styles';
 
 export const styles = theme => ({
@@ -23,7 +22,7 @@ export const styles = theme => ({
         overflow: 'hidden',
         whiteSpace: 'nowrap',
         textOverflow: 'ellipsis',
-        backgroundColor: theme.palette.accent.main,
+        backgroundColor: theme.palette.primary.light,
         borderRadius: '4px 4px 0px 0px',
         padding: '12px 24px',
     },
@@ -51,7 +50,6 @@ export class Cards extends Component {
         noHeader: PropTypes.bool,
         children: PropTypes.any,
         classes: PropTypes.object.isRequired,
-        help: PropTypes.object,
         customBackgroundColor: PropTypes.any,
         customTitleColor: PropTypes.any,
         customTitleBgColor: PropTypes.any,
@@ -67,7 +65,6 @@ export class Cards extends Component {
         const {
             classes,
             title,
-            help,
             children,
             primaryHeader,
             accentHeader,
@@ -111,7 +108,6 @@ export class Cards extends Component {
                             color: 'inherit',
                             'data-testid': `${standardCardId}-header`,
                         }}
-                        action={!!help && !!help.text && <HelpIcon {...help} />}
                         classes={{
                             root:
                                 (primaryHeader && classes.cardHeaderPrimary) ||

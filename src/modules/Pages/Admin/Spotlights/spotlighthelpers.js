@@ -1,6 +1,8 @@
-import { default as locale } from './spotlightsadmin.locale';
+import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
 
 const moment = require('moment');
+
+export const FILTER_STORAGE_NAME = 'spotlights-admin-filter-term'; // match to SpotlightsListAsTable
 
 export function formatDate(dateString, dateFormat = 'YYYY-MM-DD HH:mm:ss') {
     const newMoment = new moment(dateString);
@@ -112,9 +114,11 @@ export const navigateToView = (spotlightid, history) => {
 };
 
 export function filterSpotlights(r, filterTerm) {
-    const lowercaseLinkAria = r.title.toLowerCase();
-    const lowercaseImgAlt = r.img_alt.toLowerCase();
-    const lowercaseAdminNotes = r.admin_notes.toLowerCase();
+    const lowercaseLinkAria = r?.title?.toLowerCase() || /* istanbul ignore next */ '';
+    // eslint-disable-next-line camelcase
+    const lowercaseImgAlt = r?.img_alt?.toLowerCase() || /* istanbul ignore next */ '';
+    // eslint-disable-next-line camelcase
+    const lowercaseAdminNotes = r?.admin_notes?.toLowerCase() || /* istanbul ignore next */ '';
     return (
         lowercaseLinkAria.includes(filterTerm.toLowerCase()) ||
         lowercaseImgAlt.includes(filterTerm.toLowerCase()) ||

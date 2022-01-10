@@ -6,7 +6,7 @@ import createPalette from '@material-ui/core/styles/createPalette';
 export const mui1theme = createMuiTheme({
     palette: createPalette({
         primary: {
-            light: '#3881cb',
+            light: '#51247A', // uqpurple
             main: '#2377CB', // uqblue
             dark: '#195794',
             gradient: {
@@ -31,7 +31,7 @@ export const mui1theme = createMuiTheme({
         },
         accent: {
             light: '#962A8B',
-            main: '#51247A', // uqpurple
+            main: '#3881cb',
             dark: '#3b1a59',
         },
         white: {

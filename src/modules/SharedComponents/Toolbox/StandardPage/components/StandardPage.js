@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import { HelpIcon } from 'modules/SharedComponents/Toolbox/HelpDrawer';
 
 export const useStyles = makeStyles(
     theme => ({
@@ -35,10 +34,6 @@ export const useStyles = makeStyles(
                 marginBottom: 8,
             },
         },
-        helpIcon: {
-            position: 'absolute',
-            right: '10px',
-        },
         arrowBack: {
             marginLeft: -48,
             marginTop: -4,
@@ -48,7 +43,7 @@ export const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const StandardPage = ({ title, children, help }) => {
+export const StandardPage = ({ title, children }) => {
     const classes = useStyles();
 
     return (
@@ -64,11 +59,6 @@ export const StandardPage = ({ title, children, help }) => {
                         >
                             {title}
                         </Typography>
-                    </Grid>
-                )}
-                {help && (
-                    <Grid item xs={'auto'} className={classes.helpIcon}>
-                        <HelpIcon {...help} />
                     </Grid>
                 )}
                 <Grid item xs={12}>

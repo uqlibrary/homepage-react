@@ -164,7 +164,7 @@ exports[`Index page should render placeholders 1`] = `
               "accent": Object {
                 "dark": "#3b1a59",
                 "light": "#962A8B",
-                "main": "#51247A",
+                "main": "#3881cb",
               },
               "action": Object {
                 "activatedOpacity": 0.12,
@@ -232,7 +232,7 @@ exports[`Index page should render placeholders 1`] = `
                     "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                   },
                 },
-                "light": "#3881cb",
+                "light": "#51247A",
                 "main": "#2377CB",
               },
               "secondary": Object {
@@ -1401,11 +1401,11 @@ exports[`Index page should render placeholders 1`] = `
                                               <Cards
                                                 classes={
                                                   Object {
-                                                    "card": "Cards-card-126",
-                                                    "cardContentNoPadding": "Cards-cardContentNoPadding-127",
-                                                    "cardHeaderAccent": "Cards-cardHeaderAccent-129",
-                                                    "cardHeaderPrimary": "Cards-cardHeaderPrimary-128",
-                                                    "fullHeight": "Cards-fullHeight-130",
+                                                    "card": "Cards-card-125",
+                                                    "cardContentNoPadding": "Cards-cardContentNoPadding-126",
+                                                    "cardHeaderAccent": "Cards-cardHeaderAccent-128",
+                                                    "cardHeaderPrimary": "Cards-cardHeaderPrimary-127",
+                                                    "fullHeight": "Cards-fullHeight-129",
                                                   }
                                                 }
                                                 noPadding={true}
@@ -1495,7 +1495,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       "accent": Object {
                                                         "dark": "#3b1a59",
                                                         "light": "#962A8B",
-                                                        "main": "#51247A",
+                                                        "main": "#3881cb",
                                                       },
                                                       "action": Object {
                                                         "activatedOpacity": 0.12,
@@ -1563,7 +1563,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                           },
                                                         },
-                                                        "light": "#3881cb",
+                                                        "light": "#51247A",
                                                         "main": "#2377CB",
                                                       },
                                                       "secondary": Object {
@@ -1797,13 +1797,13 @@ exports[`Index page should render placeholders 1`] = `
                                                 }
                                               >
                                                 <WithStyles(ForwardRef(Card))
-                                                  className="Cards-card-126 StandardCard"
+                                                  className="Cards-card-125 StandardCard"
                                                   data-testid="standard-card-computers"
                                                   id="standard-card-computers"
                                                   style={Object {}}
                                                 >
                                                   <ForwardRef(Card)
-                                                    className="Cards-card-126 StandardCard"
+                                                    className="Cards-card-125 StandardCard"
                                                     classes={
                                                       Object {
                                                         "root": "MuiCard-root",
@@ -1814,14 +1814,14 @@ exports[`Index page should render placeholders 1`] = `
                                                     style={Object {}}
                                                   >
                                                     <WithStyles(ForwardRef(Paper))
-                                                      className="MuiCard-root Cards-card-126 StandardCard"
+                                                      className="MuiCard-root Cards-card-125 StandardCard"
                                                       data-testid="standard-card-computers"
                                                       elevation={1}
                                                       id="standard-card-computers"
                                                       style={Object {}}
                                                     >
                                                       <ForwardRef(Paper)
-                                                        className="MuiCard-root Cards-card-126 StandardCard"
+                                                        className="MuiCard-root Cards-card-125 StandardCard"
                                                         classes={
                                                           Object {
                                                             "elevation0": "MuiPaper-elevation0",
@@ -1860,16 +1860,15 @@ exports[`Index page should render placeholders 1`] = `
                                                         style={Object {}}
                                                       >
                                                         <div
-                                                          className="MuiPaper-root MuiCard-root Cards-card-126 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+                                                          className="MuiPaper-root MuiCard-root Cards-card-125 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
                                                           data-testid="standard-card-computers"
                                                           id="standard-card-computers"
                                                           style={Object {}}
                                                         >
                                                           <WithStyles(ForwardRef(CardHeader))
-                                                            action={false}
                                                             classes={
                                                               Object {
-                                                                "root": "Cards-cardHeaderPrimary-128",
+                                                                "root": "Cards-cardHeaderPrimary-127",
                                                               }
                                                             }
                                                             style={
@@ -1913,13 +1912,12 @@ exports[`Index page should render placeholders 1`] = `
                                                             }
                                                           >
                                                             <ForwardRef(CardHeader)
-                                                              action={false}
                                                               classes={
                                                                 Object {
                                                                   "action": "MuiCardHeader-action",
                                                                   "avatar": "MuiCardHeader-avatar",
                                                                   "content": "MuiCardHeader-content",
-                                                                  "root": "MuiCardHeader-root Cards-cardHeaderPrimary-128",
+                                                                  "root": "MuiCardHeader-root Cards-cardHeaderPrimary-127",
                                                                   "subheader": "MuiCardHeader-subheader",
                                                                   "title": "MuiCardHeader-title",
                                                                 }
@@ -1965,7 +1963,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               }
                                                             >
                                                               <div
-                                                                className="MuiCardHeader-root Cards-cardHeaderPrimary-128"
+                                                                className="MuiCardHeader-root Cards-cardHeaderPrimary-127"
                                                                 style={
                                                                   Object {
                                                                     "borderTopLeftRadius": 4,
@@ -2423,12 +2421,12 @@ exports[`Index page should render placeholders 1`] = `
                                                             </ForwardRef(CardHeader)>
                                                           </WithStyles(ForwardRef(CardHeader))>
                                                           <WithStyles(ForwardRef(CardContent))
-                                                            className="Cards-cardContentNoPadding-127"
+                                                            className="Cards-cardContentNoPadding-126"
                                                             data-testid="standard-card-computers-content"
                                                             style={Object {}}
                                                           >
                                                             <ForwardRef(CardContent)
-                                                              className="Cards-cardContentNoPadding-127"
+                                                              className="Cards-cardContentNoPadding-126"
                                                               classes={
                                                                 Object {
                                                                   "root": "MuiCardContent-root",
@@ -2438,16 +2436,16 @@ exports[`Index page should render placeholders 1`] = `
                                                               style={Object {}}
                                                             >
                                                               <div
-                                                                className="MuiCardContent-root Cards-cardContentNoPadding-127"
+                                                                className="MuiCardContent-root Cards-cardContentNoPadding-126"
                                                                 data-testid="standard-card-computers-content"
                                                                 style={Object {}}
                                                               >
                                                                 <MapPopup />
                                                                 <div
-                                                                  className="makeStyles-flexWrapper-118 makeStyles-componentHeight-123"
+                                                                  className="makeStyles-flexWrapper-117 makeStyles-componentHeight-122"
                                                                 >
                                                                   <div
-                                                                    className="makeStyles-flexLoaderContent-121"
+                                                                    className="makeStyles-flexLoaderContent-120"
                                                                   >
                                                                     <MyLoader>
                                                                       <ContentLoader
@@ -2882,11 +2880,11 @@ exports[`Index page should render placeholders 1`] = `
                                               <Cards
                                                 classes={
                                                   Object {
-                                                    "card": "Cards-card-126",
-                                                    "cardContentNoPadding": "Cards-cardContentNoPadding-127",
-                                                    "cardHeaderAccent": "Cards-cardHeaderAccent-129",
-                                                    "cardHeaderPrimary": "Cards-cardHeaderPrimary-128",
-                                                    "fullHeight": "Cards-fullHeight-130",
+                                                    "card": "Cards-card-125",
+                                                    "cardContentNoPadding": "Cards-cardContentNoPadding-126",
+                                                    "cardHeaderAccent": "Cards-cardHeaderAccent-128",
+                                                    "cardHeaderPrimary": "Cards-cardHeaderPrimary-127",
+                                                    "fullHeight": "Cards-fullHeight-129",
                                                   }
                                                 }
                                                 noPadding={true}
@@ -2975,7 +2973,7 @@ exports[`Index page should render placeholders 1`] = `
                                                       "accent": Object {
                                                         "dark": "#3b1a59",
                                                         "light": "#962A8B",
-                                                        "main": "#51247A",
+                                                        "main": "#3881cb",
                                                       },
                                                       "action": Object {
                                                         "activatedOpacity": 0.12,
@@ -3043,7 +3041,7 @@ exports[`Index page should render placeholders 1`] = `
                                                             "filter": "progid:DXImageTransform.Microsoft.gradient( startColorstr=\\"#51247a\\", endColorstr=\\"#962a8b\\",GradientType=1 )",
                                                           },
                                                         },
-                                                        "light": "#3881cb",
+                                                        "light": "#51247A",
                                                         "main": "#2377CB",
                                                       },
                                                       "secondary": Object {
@@ -3253,13 +3251,13 @@ exports[`Index page should render placeholders 1`] = `
                                                 title="Training"
                                               >
                                                 <WithStyles(ForwardRef(Card))
-                                                  className="Cards-card-126 StandardCard"
+                                                  className="Cards-card-125 StandardCard"
                                                   data-testid="standard-card-training"
                                                   id="standard-card-training"
                                                   style={Object {}}
                                                 >
                                                   <ForwardRef(Card)
-                                                    className="Cards-card-126 StandardCard"
+                                                    className="Cards-card-125 StandardCard"
                                                     classes={
                                                       Object {
                                                         "root": "MuiCard-root",
@@ -3270,14 +3268,14 @@ exports[`Index page should render placeholders 1`] = `
                                                     style={Object {}}
                                                   >
                                                     <WithStyles(ForwardRef(Paper))
-                                                      className="MuiCard-root Cards-card-126 StandardCard"
+                                                      className="MuiCard-root Cards-card-125 StandardCard"
                                                       data-testid="standard-card-training"
                                                       elevation={1}
                                                       id="standard-card-training"
                                                       style={Object {}}
                                                     >
                                                       <ForwardRef(Paper)
-                                                        className="MuiCard-root Cards-card-126 StandardCard"
+                                                        className="MuiCard-root Cards-card-125 StandardCard"
                                                         classes={
                                                           Object {
                                                             "elevation0": "MuiPaper-elevation0",
@@ -3316,16 +3314,15 @@ exports[`Index page should render placeholders 1`] = `
                                                         style={Object {}}
                                                       >
                                                         <div
-                                                          className="MuiPaper-root MuiCard-root Cards-card-126 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+                                                          className="MuiPaper-root MuiCard-root Cards-card-125 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
                                                           data-testid="standard-card-training"
                                                           id="standard-card-training"
                                                           style={Object {}}
                                                         >
                                                           <WithStyles(ForwardRef(CardHeader))
-                                                            action={false}
                                                             classes={
                                                               Object {
-                                                                "root": "Cards-cardHeaderPrimary-128",
+                                                                "root": "Cards-cardHeaderPrimary-127",
                                                               }
                                                             }
                                                             style={
@@ -3345,13 +3342,12 @@ exports[`Index page should render placeholders 1`] = `
                                                             }
                                                           >
                                                             <ForwardRef(CardHeader)
-                                                              action={false}
                                                               classes={
                                                                 Object {
                                                                   "action": "MuiCardHeader-action",
                                                                   "avatar": "MuiCardHeader-avatar",
                                                                   "content": "MuiCardHeader-content",
-                                                                  "root": "MuiCardHeader-root Cards-cardHeaderPrimary-128",
+                                                                  "root": "MuiCardHeader-root Cards-cardHeaderPrimary-127",
                                                                   "subheader": "MuiCardHeader-subheader",
                                                                   "title": "MuiCardHeader-title",
                                                                 }
@@ -3373,7 +3369,7 @@ exports[`Index page should render placeholders 1`] = `
                                                               }
                                                             >
                                                               <div
-                                                                className="MuiCardHeader-root Cards-cardHeaderPrimary-128"
+                                                                className="MuiCardHeader-root Cards-cardHeaderPrimary-127"
                                                                 style={
                                                                   Object {
                                                                     "borderTopLeftRadius": 4,
@@ -3447,12 +3443,12 @@ exports[`Index page should render placeholders 1`] = `
                                                             </ForwardRef(CardHeader)>
                                                           </WithStyles(ForwardRef(CardHeader))>
                                                           <WithStyles(ForwardRef(CardContent))
-                                                            className="Cards-cardContentNoPadding-127"
+                                                            className="Cards-cardContentNoPadding-126"
                                                             data-testid="standard-card-training-content"
                                                             style={Object {}}
                                                           >
                                                             <ForwardRef(CardContent)
-                                                              className="Cards-cardContentNoPadding-127"
+                                                              className="Cards-cardContentNoPadding-126"
                                                               classes={
                                                                 Object {
                                                                   "root": "MuiCardContent-root",
@@ -3462,16 +3458,16 @@ exports[`Index page should render placeholders 1`] = `
                                                               style={Object {}}
                                                             >
                                                               <div
-                                                                className="MuiCardContent-root Cards-cardContentNoPadding-127"
+                                                                className="MuiCardContent-root Cards-cardContentNoPadding-126"
                                                                 data-testid="standard-card-training-content"
                                                                 style={Object {}}
                                                               >
                                                                 <div
-                                                                  className="makeStyles-flexWrapper-201 makeStyles-componentHeight-206"
+                                                                  className="makeStyles-flexWrapper-200 makeStyles-componentHeight-205"
                                                                 >
                                                                   <div
                                                                     aria-label="UQ training Events loading"
-                                                                    className="makeStyles-flexLoader-204"
+                                                                    className="makeStyles-flexLoader-203"
                                                                   >
                                                                     <MyLoader>
                                                                       <ContentLoader
@@ -3739,7 +3735,7 @@ exports[`Index page should render placeholders 1`] = `
                                                                     />
                                                                   </ForwardRef(Fade)>
                                                                   <div
-                                                                    className="makeStyles-flexFooter-205"
+                                                                    className="makeStyles-flexFooter-204"
                                                                   >
                                                                     <WithStyles(ForwardRef(Grid))
                                                                       container={true}
@@ -3860,12 +3856,12 @@ exports[`Index page should render placeholders 1`] = `
                                                                           className="MuiGrid-root MuiGrid-container"
                                                                         >
                                                                           <WithStyles(ForwardRef(Grid))
-                                                                            className="makeStyles-actionButtonBlock-210"
+                                                                            className="makeStyles-actionButtonBlock-209"
                                                                             item={true}
                                                                             xs={12}
                                                                           >
                                                                             <ForwardRef(Grid)
-                                                                              className="makeStyles-actionButtonBlock-210"
+                                                                              className="makeStyles-actionButtonBlock-209"
                                                                               classes={
                                                                                 Object {
                                                                                   "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -3977,10 +3973,10 @@ exports[`Index page should render placeholders 1`] = `
                                                                               xs={12}
                                                                             >
                                                                               <div
-                                                                                className="MuiGrid-root makeStyles-actionButtonBlock-210 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                                className="MuiGrid-root makeStyles-actionButtonBlock-209 MuiGrid-item MuiGrid-grid-xs-12"
                                                                               >
                                                                                 <a
-                                                                                  className="makeStyles-moreActionButton-211"
+                                                                                  className="makeStyles-moreActionButton-210"
                                                                                   data-testid="training-event-detail-more-training-button"
                                                                                   href="https://web.library.uq.edu.au/library-services/training"
                                                                                   id="training-event-detail-more-training-button"

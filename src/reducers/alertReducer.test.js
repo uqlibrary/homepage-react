@@ -60,4 +60,14 @@ describe('alert reducer', () => {
             ...emptyState,
         });
     });
+
+    it('should set alert Status flags to loading when loading alert', () => {
+        const test = alertReducer(emptyState, { type: actions.ALERT_LOADING });
+        expect(test).toEqual({
+            ...emptyState,
+            alert: null,
+            alertStatus: 'loading',
+            alertError: false,
+        });
+    });
 });

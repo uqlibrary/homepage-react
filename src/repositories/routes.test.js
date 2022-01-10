@@ -1,5 +1,4 @@
 import * as routes from './routes';
-import { UPLOAD_PUBLIC_FILES_API } from './routes';
 
 describe('Backend routes method', () => {
     it('should get zero-padded year', () => {
@@ -83,5 +82,17 @@ describe('Backend routes method', () => {
         expect(get10TrainingEvents.apiUrl).toEqual('training_events');
         expect(get10TrainingEvents.options.params.take).toEqual(expectedParams.take);
         expect(get10TrainingEvents.options.params.filterIds).toEqual(expectedParams.filterIds);
+    });
+
+    it('Should accept a RequestNonCachedData parameter', () => {
+        const AllAPIRequest = routes.ALERTS_ALL_API(false);
+        expect(AllAPIRequest.apiUrl).toEqual('/alerts');
+    });
+
+    it('Should return no prefix if not supplied for API Exams', () => {
+        const AllAPIRequest = routes.SEARCH_SUGGESTIONS_API_EXAMS({ keyword: 'test' });
+        expect(AllAPIRequest.apiUrl).toEqual(
+            'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=test',
+        );
     });
 });

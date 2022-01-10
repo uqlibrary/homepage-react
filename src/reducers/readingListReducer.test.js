@@ -28,4 +28,29 @@ describe('account reducer', () => {
             ...emptyState,
         });
     });
+
+    it('should set Reading List values when successfully loaded', () => {
+        const test = readingListReducer(emptyState, {
+            type: actions.READING_LIST_LOADED,
+            payload: [],
+        });
+        expect(test).toEqual({
+            ...emptyState,
+            readingList: [],
+            readingListError: false,
+            readingListLoading: false,
+        });
+    });
+
+    it('should set Reading List Status flags to loading when loading', () => {
+        const test = readingListReducer(emptyState, {
+            type: actions.READING_LIST_LOADING,
+        });
+        expect(test).toEqual({
+            ...emptyState,
+            readingList: null,
+            readingListError: false,
+            readingListLoading: true,
+        });
+    });
 });

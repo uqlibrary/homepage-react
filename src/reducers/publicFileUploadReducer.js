@@ -37,18 +37,5 @@ export default function publicFileUploadReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log(
-        'publicFileUploadReducer: ',
-        action.type,
-        '\n',
-        '- state before = ',
-        state,
-        '\n',
-        '- action = ',
-        action,
-        '\n',
-        '- state after = ',
-        handler(state, action),
-    );
     return handler(state, action);
 }

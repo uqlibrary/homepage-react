@@ -26,4 +26,9 @@ describe('HelpDrawer reducer tests ', () => {
         const newState = helpDrawerReducer(initialState, { type: HIDE, payload: initialState });
         expect(newState.get('open')).toEqual(false);
     });
+    it('it should fall back to default if no state passed, and type not recognised', () => {
+        const payload = { type: undefined };
+        const newState = helpDrawerReducer(undefined, payload);
+        expect(newState.get('open')).toEqual(false);
+    });
 });

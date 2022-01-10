@@ -30,19 +30,5 @@ export default function spotlightsCurrentReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log(
-        'spotlightsCurrentReducer: ',
-        action.type,
-        '\n',
-        '- state before = ',
-        state,
-        '\n',
-        '- action = ',
-        action,
-        '\n',
-        '- handler (state after) = ',
-        handler(state, action),
-    );
-    console.log(action.payload);
     return handler(state, action);
 }

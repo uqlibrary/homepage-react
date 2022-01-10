@@ -48,6 +48,15 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
+    it('handles a guides get request', async () => {
+        mockApi.onGet(repositories.routes.GUIDES_API({ keyword: 'FREN1010' }).apiUrl).reply(200, [{}]);
+
+        const expectedActions = [actions.GUIDES_LOADING, actions.GUIDES_LOADED];
+
+        await mockActionsStore.dispatch(loadGuides('FREN1010'));
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
     it('dispatches expected actions when possible exams call fails', async () => {
         mockApi.onGet(repositories.routes.EXAMS_API({ keyword: 'FREN1010' })).reply(500);
 
@@ -61,6 +70,15 @@ describe('Account action creators', () => {
         const expectedActions = [actions.EXAMS_CLEAR];
 
         await mockActionsStore.dispatch(clearExams());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('handles an exams get request', async () => {
+        mockApi.onGet(repositories.routes.EXAMS_API({ keyword: 'FREN1010' }).apiUrl).reply(200, {});
+
+        const expectedActions = [actions.EXAMS_LOADING, actions.EXAMS_LOADED];
+
+        await mockActionsStore.dispatch(loadExams('FREN1010'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
