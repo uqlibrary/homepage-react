@@ -96,7 +96,7 @@ function getAccountFromStorage() {
         );
 
         if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
-            // allow developer to swap between users in the same tab
+            // allow developer to swap between users in the same tab in mock
             removeAccountStorage();
             return null;
         }
@@ -108,6 +108,10 @@ function getAccountFromStorage() {
 
     const now = new Date().getTime();
     if (!accountDetails.storageExpiryDate || accountDetails.storageExpiryDate < now) {
+        console.log(
+            'homepage: session storage account too old or missing, remove storage ',
+            accountDetails.storageExpiryDate,
+        );
         removeAccountStorage();
         return null;
     }
