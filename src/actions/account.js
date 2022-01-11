@@ -2,20 +2,23 @@ import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
     AUTHOR_DETAILS_API,
+    COMP_AVAIL_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
+    INCOMPLETE_NTRO_RECORDS_API,
     LIB_HOURS_API,
-    SPOTLIGHTS_API_CURRENT,
-    COMP_AVAIL_API,
-    TRAINING_API,
-    PRINTING_API,
     LOANS_API,
     POSSIBLE_RECORDS_API,
-    INCOMPLETE_NTRO_RECORDS_API,
+    PRINTING_API,
+    SPOTLIGHTS_API_CURRENT,
+    TRAINING_API,
 } from 'repositories/routes';
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
-import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from '../helpers/access';
+import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
+import { getCookieValue } from 'helpers/general';
+import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
+const queryString = require('query-string');
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
 export function getClassNumberFromPieces(subject) {
@@ -49,6 +52,115 @@ export function getSemesterStringByTermNumber(termNumber) {
     return `Semester ${semester} ${year}`;
 }
 
+function getSessionCookie() {
+    return getCookieValue(SESSION_COOKIE_NAME);
+}
+function getLibraryGroupCookie() {
+    // I am guessing this field is used as a proxy for 'has a Library account, not just a general UQ login'
+    return getCookieValue(SESSION_USER_GROUP_COOKIE_NAME);
+}
+
+function storeAccount(account, numberOfHoursUntilExpiry = 8) {
+    // for improved UX, expire the session storage when the token must surely be expired, for those rare long sessions
+    // session lasts 8 hours, per https://auth.uq.edu.au/about/
+
+    const millisecondsUntilExpiry = numberOfHoursUntilExpiry * 60 /* min*/ * 60 /* sec*/ * 1000; /* milliseconds */
+    const storageExpiryDate = {
+        storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
+    };
+    let storeableAccount = {
+        account: {
+            ...account,
+        },
+        ...storageExpiryDate,
+    };
+    storeableAccount = JSON.stringify(storeableAccount);
+    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
+}
+
+function removeAccountStorage() {
+    sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
+}
+
+function getAccountFromStorage() {
+    const accountDetails = JSON.parse(sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
+    console.log('getAccountFromStorage accountDetails = ', accountDetails);
+
+    if (!!accountDetails && process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
+        const user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
+        console.log(
+            'getAccountFromStorage user = url:',
+            user,
+            '; session: ',
+            !!accountDetails.account.id && accountDetails.account.id,
+        );
+
+        if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
+            // allow developer to swap between users in the same tab
+            removeAccountStorage();
+            return null;
+        }
+    }
+
+    if (accountDetails === null) {
+        return null;
+    }
+
+    const now = new Date().getTime();
+    if (!accountDetails.storageExpiryDate || accountDetails.storageExpiryDate < now) {
+        removeAccountStorage();
+        return null;
+    }
+
+    return accountDetails;
+}
+
+function addCurrentAuthorToAccount(currentAuthor) {
+    const storedAccount = getAccountFromStorage();
+    if (storedAccount === null) {
+        return;
+    }
+    let storeableAccount = {
+        ...storedAccount,
+        // 'currentAuthor' name must match reusable ApiAccess.js
+        currentAuthor: {
+            ...currentAuthor,
+        },
+    };
+    storeableAccount = JSON.stringify(storeableAccount);
+    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
+}
+
+function addCurrentAuthorDetailsToAccount(authorDetails) {
+    const storedAccount = getAccountFromStorage();
+    if (storedAccount === null) {
+        return;
+    }
+    let storeableAccount = {
+        ...storedAccount,
+        authorDetails: {
+            ...authorDetails,
+        },
+    };
+    storeableAccount = JSON.stringify(storeableAccount);
+    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
+}
+
+function calculateAccountDetails(accountResponse) {
+    return {
+        ...accountResponse,
+        current_classes:
+            !!accountResponse.current_classes && accountResponse.current_classes.length > 0
+                ? accountResponse.current_classes.map(subject => {
+                      subject.classnumber = getClassNumberFromPieces(subject);
+                      subject.semester = getSemesterStringByTermNumber(subject.STRM);
+                      return subject;
+                  })
+                : accountResponse.current_classes,
+        trainingfilterId: isHospitalUser(accountResponse) ? TRAINING_FILTER_HOSPITAL : TRAINING_FILTER_GENERAL,
+    };
+}
+
 /**
  * Loads the user's account and author details into the application
  * @returns {function(*)}
@@ -59,6 +171,43 @@ export function loadCurrentAccount() {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         } else {
+            // store the account details locally with an expiry date
+            // use in preference to yet another call on the api!
+            if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+                // no cookie, force them to log in again
+                removeAccountStorage();
+            }
+
+            const storedAccount = getAccountFromStorage();
+            console.log('retreived storedAccount = ', storedAccount);
+            if (storedAccount !== null && !!storedAccount.account) {
+                const accountResponse = calculateAccountDetails(storedAccount.account || null);
+                dispatch({
+                    type: actions.CURRENT_ACCOUNT_LOADED,
+                    payload: accountResponse,
+                });
+
+                const currentAuthorRetrieved = storedAccount.currentAuthor || null;
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_LOADED,
+                    payload: currentAuthorRetrieved,
+                });
+
+                console.log('currentAuthorRetrieved = ', currentAuthorRetrieved);
+                if (
+                    !!currentAuthorRetrieved &&
+                    (!!currentAuthorRetrieved.aut_org_username || !!currentAuthorRetrieved.aut_student_username)
+                ) {
+                    const authorDetailsResponse = storedAccount.authorDetails || null;
+                    dispatch({
+                        type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
+                        payload: authorDetailsResponse,
+                    });
+                }
+
+                return true;
+            }
+
             dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
 
             let currentAuthor = null;
@@ -66,8 +215,12 @@ export function loadCurrentAccount() {
             // load UQL account (based on token)
             return get(CURRENT_ACCOUNT_API())
                 .then(account => {
+                    console.log('flow: getting account', account);
                     if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                         if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
+
+                        storeAccount(account);
+
                         return Promise.resolve(account);
                     } else {
                         dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
@@ -75,20 +228,11 @@ export function loadCurrentAccount() {
                     }
                 })
                 .then(accountResponse => {
-                    accountResponse.current_classes =
-                        !!accountResponse.current_classes && accountResponse.current_classes.length > 0
-                            ? accountResponse.current_classes.map(subject => {
-                                  subject.classnumber = getClassNumberFromPieces(subject);
-                                  subject.semester = getSemesterStringByTermNumber(subject.STRM);
-                                  return subject;
-                              })
-                            : accountResponse.current_classes;
-                    accountResponse.trainingfilterId = isHospitalUser(accountResponse)
-                        ? TRAINING_FILTER_HOSPITAL
-                        : TRAINING_FILTER_GENERAL;
+                    console.log('flow: 2', accountResponse);
+                    const accountResponse2 = calculateAccountDetails(accountResponse);
                     dispatch({
                         type: actions.CURRENT_ACCOUNT_LOADED,
-                        payload: accountResponse,
+                        payload: accountResponse2,
                     });
 
                     // load current author details (based on token)
@@ -96,7 +240,9 @@ export function loadCurrentAccount() {
                     return get(CURRENT_AUTHOR_API());
                 })
                 .then(currentAuthorResponse => {
+                    console.log('flow: getting currentAuthor', currentAuthorResponse);
                     currentAuthor = currentAuthorResponse.data;
+                    addCurrentAuthorToAccount(currentAuthor);
                     dispatch({
                         type: actions.CURRENT_AUTHOR_LOADED,
                         payload: currentAuthor,
@@ -114,12 +260,15 @@ export function loadCurrentAccount() {
                     return null;
                 })
                 .then(authorDetailsResponse => {
+                    console.log('flow: getting authorDetailsResponse', authorDetailsResponse);
+                    addCurrentAuthorDetailsToAccount(authorDetailsResponse);
                     dispatch({
                         type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
                         payload: authorDetailsResponse,
                     });
                 })
                 .catch(error => {
+                    console.log('flow: error');
                     if (!currentAuthor) {
                         dispatch({
                             type: actions.CURRENT_AUTHOR_FAILED,
