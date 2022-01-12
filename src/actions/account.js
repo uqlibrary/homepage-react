@@ -16,8 +16,9 @@ import {
 import Raven from 'raven-js';
 import { sessionApi } from 'config';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
-import { getCookieValue } from 'helpers/general';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
+import Cookies from 'js-cookie';
+
 const queryString = require('query-string');
 
 // make the complete class number from the pieces supplied by API, eg FREN + 1010 = FREN1010
@@ -53,11 +54,11 @@ export function getSemesterStringByTermNumber(termNumber) {
 }
 
 function getSessionCookie() {
-    return getCookieValue(SESSION_COOKIE_NAME);
+    return Cookies.get(SESSION_COOKIE_NAME);
 }
 function getLibraryGroupCookie() {
     // I am guessing this field is used as a proxy for 'has a Library account, not just a general UQ login'
-    return getCookieValue(SESSION_USER_GROUP_COOKIE_NAME);
+    return Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
 }
 
 function storeAccount(account, numberOfHoursUntilExpiry = 8) {
@@ -68,15 +69,11 @@ function storeAccount(account, numberOfHoursUntilExpiry = 8) {
     const storageExpiryDate = {
         storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
     };
-    const uqlCookie = {
-        cookie: getSessionCookie(),
-    };
     let storeableAccount = {
         account: {
             ...account,
         },
         ...storageExpiryDate,
-        ...uqlCookie,
     };
     storeableAccount = JSON.stringify(storeableAccount);
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
@@ -88,7 +85,6 @@ function removeAccountStorage() {
 
 export function getAccountFromStorage() {
     const accountDetails = JSON.parse(sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
-    console.log('getAccountFromStorage accountDetails = ', accountDetails);
 
     if (accountDetails === null) {
         return null;
@@ -96,12 +92,6 @@ export function getAccountFromStorage() {
 
     if (process.env.USE_MOCK && process.env.BRANCH !== 'production') {
         const user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
-        console.log(
-            'getAccountFromStorage user = url:',
-            user,
-            '; session: ',
-            !!accountDetails.account.id && accountDetails.account.id,
-        );
 
         if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
             // allow developer to swap between users in the same tab in mock
@@ -110,17 +100,8 @@ export function getAccountFromStorage() {
         }
     }
 
-    if (!accountDetails.cookie || accountDetails.cookie !== getSessionCookie()) {
-        removeAccountStorage();
-        return null;
-    }
-
     const now = new Date().getTime();
     if (!accountDetails.storageExpiryDate || accountDetails.storageExpiryDate < now) {
-        console.log(
-            'homepage: session storage account too old or missing, remove storage ',
-            accountDetails.storageExpiryDate,
-        );
         removeAccountStorage();
         return null;
     }
@@ -184,41 +165,36 @@ export function loadCurrentAccount() {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
-        console.log('loadCurrentAccount 1');
-
         // store the account details locally with an expiry date
         // use in preference to yet another call on the api!
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-            // no cookie, wipe the storage
+            // no cookie, force them to log in again
             removeAccountStorage();
 
-            if (!process.env.USE_MOCK) {
-                return false;
-            }
+            return false;
         }
-        console.log('loadCurrentAccount 2');
 
         const storedAccount = getAccountFromStorage();
-        console.log('retreived storedAccount = ', storedAccount);
         if (storedAccount !== null && !!storedAccount.account) {
-            console.log('loadCurrentAccount 3');
+            dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
             const accountResponse = calculateAccountDetails(storedAccount.account || null);
             dispatch({
                 type: actions.CURRENT_ACCOUNT_LOADED,
                 payload: accountResponse,
             });
 
+            dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
             const currentAuthorRetrieved = storedAccount.currentAuthor || null;
             dispatch({
                 type: actions.CURRENT_AUTHOR_LOADED,
                 payload: currentAuthorRetrieved,
             });
 
-            console.log('currentAuthorRetrieved = ', currentAuthorRetrieved);
             if (
                 !!currentAuthorRetrieved &&
-                (!!currentAuthorRetrieved.aut_org_username || !!currentAuthorRetrieved.aut_student_username)
+                (currentAuthorRetrieved.aut_org_username || currentAuthorRetrieved.aut_student_username)
             ) {
+                dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
                 const authorDetailsResponse = storedAccount.authorDetails || null;
                 dispatch({
                     type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
@@ -228,7 +204,6 @@ export function loadCurrentAccount() {
 
             return true;
         }
-        console.log('loadCurrentAccount 4');
 
         dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
 
@@ -237,7 +212,6 @@ export function loadCurrentAccount() {
         // load UQL account (based on token)
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
-                console.log('flow: getting account', account);
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
 
@@ -250,7 +224,6 @@ export function loadCurrentAccount() {
                 }
             })
             .then(accountResponse => {
-                console.log('flow: 2', accountResponse);
                 const accountResponse2 = calculateAccountDetails(accountResponse);
                 dispatch({
                     type: actions.CURRENT_ACCOUNT_LOADED,
@@ -262,7 +235,6 @@ export function loadCurrentAccount() {
                 return get(CURRENT_AUTHOR_API());
             })
             .then(currentAuthorResponse => {
-                console.log('flow: getting currentAuthor', currentAuthorResponse);
                 currentAuthor = currentAuthorResponse.data;
                 addCurrentAuthorToAccount(currentAuthor);
                 dispatch({
@@ -282,7 +254,6 @@ export function loadCurrentAccount() {
                 return null;
             })
             .then(authorDetailsResponse => {
-                console.log('flow: getting authorDetailsResponse', authorDetailsResponse);
                 addCurrentAuthorDetailsToAccount(authorDetailsResponse);
                 dispatch({
                     type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
@@ -290,7 +261,6 @@ export function loadCurrentAccount() {
                 });
             })
             .catch(error => {
-                console.log('flow: error');
                 if (!currentAuthor) {
                     dispatch({
                         type: actions.CURRENT_AUTHOR_FAILED,

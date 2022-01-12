@@ -77,17 +77,3 @@ export const throwFetchErrors = response => {
     /* istanbul ignore next */
     return response;
 };
-
-export function getCookieValue(name) {
-    const cookies = document.cookie.split(';');
-    for (let i = 0; i < cookies.length; ++i) {
-        const pair = cookies[i].trim().split('=');
-        if (!!pair[0] && pair[0] === name) {
-            console.log('getCookieValue ', name, !!pair[1] ? pair[1] : /* istanbul ignore next */ undefined);
-            return !!pair[1] ? pair[1] : /* istanbul ignore next */ undefined;
-        }
-    }
-    console.log('getCookieValue ', name, 'undefined');
-    /* istanbul ignore next */
-    return undefined;
-}

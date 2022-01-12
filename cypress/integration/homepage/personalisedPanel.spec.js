@@ -1,5 +1,3 @@
-import { clickButton } from '../../support/helpers';
-
 context('Personalised panel accessibility', () => {
     it('Main Personalised panel', () => {
         cy.visit('/?user=uqresearcher');
@@ -53,7 +51,7 @@ context('Personalised panel accessibility', () => {
         });
     });
 });
-context.only('Personalised panel', () => {
+context('Personalised panel', () => {
     it('location button changes location', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
@@ -106,7 +104,7 @@ context.only('Personalised panel', () => {
         cy.get('button[data-testid="pp-papercut-menu-button"]')
             .should('exist')
             .should('be.visible')
-            .contains('Manage your print balance')
+            .should('contain', 'Manage your print balance')
             .click();
     }
 
