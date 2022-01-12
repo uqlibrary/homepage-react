@@ -180,6 +180,7 @@ export function loadCurrentAccount() {
             if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
                 // no cookie, force them to log in again
                 removeAccountStorage();
+                return false;
             }
 
             const storedAccount = getAccountFromStorage();
