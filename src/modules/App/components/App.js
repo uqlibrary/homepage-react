@@ -80,16 +80,29 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
     useEffect(() => {
         actions.loadCurrentAccount();
 
-        // on first load, the user will have no cookie, so the above will not send an account request
-        // so wait a bit to allow reusable to write the local storage and repeat
-        setTimeout(() => {
-            console.log('App: account double check');
-            const accountDetails = getAccountFromStorage();
-            console.log('accountDetails=', accountDetails);
-            if (!accountDetails) {
+        // on first load, if the user didn't have a cookie, the loadCurrentAccount above didnt ask api for account.
+        // reusable will load the sessionstorage when login succeeds
+        // so watch for the mylibrary button to appear, as only logged-in users have it, then try again
+        const accountDetails = getAccountFromStorage();
+        if (!accountDetails) {
+            console.log('observing mylibrary');
+            const targetNode = document.getElementById('mylibrarystub');
+
+            if (!!targetNode) {
+                // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+                const observer = new MutationObserver(function observeMylibraryButtonStub(e) {
+                    if (e[0].removedNodes) {
+                        actions.loadCurrentAccount();
+
+                        observer.disconnect();
+                    }
+                });
+
+                observer.observe(targetNode, { attributes: true });
+            } else {
                 actions.loadCurrentAccount();
             }
-        }, 500);
+        }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
