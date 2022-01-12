@@ -82,7 +82,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
 
         // on first load, if the user didn't have a cookie, the loadCurrentAccount above didnt ask api for account.
         // reusable will load the sessionstorage when login succeeds
-        // so watch for the mylibrary button to appear, as only logged-in users have it, then try again
+        // so watch for the mylibrary button, as only logged-in users have it, then try again
         const accountDetails = getAccountFromStorage();
         console.log('App::: accountDetails =', accountDetails);
         if (!accountDetails) {

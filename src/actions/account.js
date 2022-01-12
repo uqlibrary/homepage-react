@@ -206,6 +206,7 @@ function extractEntriesFromAccountStorage(dispatch, storedAccount) {
  * @returns {function(*)}
  */
 export function loadCurrentAccount() {
+    console.log('homepage: start of loadCurrentAccount');
     return dispatch => {
         if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
@@ -219,6 +220,7 @@ export function loadCurrentAccount() {
 
         const storedAccount = getAccountFromStorage();
         if (storedAccount !== null && !!storedAccount.account) {
+            console.log('homepage: account loaded from storage');
             // account details stored locally with an expiry date
             extractEntriesFromAccountStorage(dispatch, storedAccount);
             return true;
@@ -231,6 +233,7 @@ export function loadCurrentAccount() {
         // load UQL account (based on token)
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
+                console.log('homepage: account loaded from api');
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
 

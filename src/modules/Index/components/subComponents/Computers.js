@@ -335,6 +335,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
         }
         return null;
     };
+    console.log('Computers: computerAvailability: loading', computerAvailabilityLoading, computerAvailability);
     return (
         <StandardCard
             primaryHeader
