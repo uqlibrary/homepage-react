@@ -33,7 +33,7 @@ describe('Account action creators', () => {
         mockSessionApi.reset();
     });
 
-    it('should dispatch expected actions on successful fetch of user details', async () => {
+    it.only('should dispatch expected actions on successful fetch of user details', async () => {
         mockApi
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)

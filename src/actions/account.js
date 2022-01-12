@@ -68,11 +68,15 @@ function storeAccount(account, numberOfHoursUntilExpiry = 8) {
     const storageExpiryDate = {
         storageExpiryDate: new Date().setTime(new Date().getTime() + millisecondsUntilExpiry),
     };
+    const uqlCookie = {
+        cookie: getSessionCookie(),
+    };
     let storeableAccount = {
         account: {
             ...account,
         },
         ...storageExpiryDate,
+        ...uqlCookie,
     };
     storeableAccount = JSON.stringify(storeableAccount);
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
@@ -82,11 +86,15 @@ function removeAccountStorage() {
     sessionStorage.removeItem(STORAGE_ACCOUNT_KEYNAME);
 }
 
-function getAccountFromStorage() {
+export function getAccountFromStorage() {
     const accountDetails = JSON.parse(sessionStorage.getItem(STORAGE_ACCOUNT_KEYNAME));
     console.log('getAccountFromStorage accountDetails = ', accountDetails);
 
-    if (!!accountDetails && process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
+    if (accountDetails === null) {
+        return null;
+    }
+
+    if (process.env.USE_MOCK && process.env.BRANCH !== 'production') {
         const user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
         console.log(
             'getAccountFromStorage user = url:',
@@ -102,7 +110,8 @@ function getAccountFromStorage() {
         }
     }
 
-    if (accountDetails === null) {
+    if (!accountDetails.cookie || accountDetails.cookie !== getSessionCookie()) {
+        removeAccountStorage();
         return null;
     }
 
@@ -175,18 +184,24 @@ export function loadCurrentAccount() {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
+        console.log('loadCurrentAccount 1');
 
         // store the account details locally with an expiry date
         // use in preference to yet another call on the api!
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-            // no cookie, force them to log in again
+            // no cookie, wipe the storage
             removeAccountStorage();
-            return false;
+
+            if (!process.env.USE_MOCK) {
+                return false;
+            }
         }
+        console.log('loadCurrentAccount 2');
 
         const storedAccount = getAccountFromStorage();
         console.log('retreived storedAccount = ', storedAccount);
         if (storedAccount !== null && !!storedAccount.account) {
+            console.log('loadCurrentAccount 3');
             const accountResponse = calculateAccountDetails(storedAccount.account || null);
             dispatch({
                 type: actions.CURRENT_ACCOUNT_LOADED,
@@ -213,6 +228,7 @@ export function loadCurrentAccount() {
 
             return true;
         }
+        console.log('loadCurrentAccount 4');
 
         dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
 

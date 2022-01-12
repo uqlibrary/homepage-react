@@ -9,6 +9,7 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
+import { getAccountFromStorage } from 'actions';
 
 browserUpdate({
     required: {
@@ -78,6 +79,17 @@ const useStyles = makeStyles(theme => ({
 export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actions }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
+
+        // on first load, the user will have no cookie, so the above will not send an account request
+        // so wait a bit to allow reusable to write the local storage and repeat
+        setTimeout(() => {
+            console.log('App double check');
+            const accountDetails = getAccountFromStorage();
+            if (!accountDetails) {
+                actions.loadCurrentAccount();
+            }
+        }, 500);
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
