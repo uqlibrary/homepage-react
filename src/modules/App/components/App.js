@@ -84,14 +84,17 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
         // reusable will load the sessionstorage when login succeeds
         // so watch for the mylibrary button to appear, as only logged-in users have it, then try again
         const accountDetails = getAccountFromStorage();
+        console.log('App::: accountDetails =', accountDetails);
         if (!accountDetails) {
-            console.log('observing mylibrary');
+            console.log('App::: observing mylibrary');
             const targetNode = document.getElementById('mylibrarystub');
 
             if (!!targetNode) {
                 // https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
                 const observer = new MutationObserver(function observeMylibraryButtonStub(e) {
+                    console.log('App::: mylibrary stub changed');
                     if (e[0].removedNodes) {
+                        console.log('App::: mylibrary stub removed');
                         actions.loadCurrentAccount();
 
                         observer.disconnect();
@@ -100,6 +103,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
 
                 observer.observe(targetNode, { attributes: true });
             } else {
+                console.log('App::: mylibrary stub already replaced?');
                 actions.loadCurrentAccount();
             }
         }

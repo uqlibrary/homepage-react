@@ -65,7 +65,7 @@ function getLibraryGroupCookie() {
     return newVar;
 }
 
-function storeAccount(account, numberOfHoursUntilExpiry = 8) {
+function addAccountToStoredAccount(account, numberOfHoursUntilExpiry = 8) {
     // for improved UX, expire the session storage when the token must surely be expired, for those rare long sessions
     // session lasts 8 hours, per https://auth.uq.edu.au/about/
 
@@ -113,7 +113,7 @@ export function getAccountFromStorage() {
     return accountDetails;
 }
 
-function addCurrentAuthorToAccount(currentAuthor) {
+function addCurrentAuthorToStoredAccount(currentAuthor) {
     const storedAccount = getAccountFromStorage();
     if (storedAccount === null) {
         return;
@@ -129,7 +129,7 @@ function addCurrentAuthorToAccount(currentAuthor) {
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
 }
 
-function addCurrentAuthorDetailsToAccount(authorDetails) {
+function addCurrentAuthorDetailsToStoredAccount(authorDetails) {
     const storedAccount = getAccountFromStorage();
     if (storedAccount === null) {
         return;
@@ -144,7 +144,7 @@ function addCurrentAuthorDetailsToAccount(authorDetails) {
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
 }
 
-function calculateAccountDetails(accountResponse) {
+function extendAccountDetails(accountResponse) {
     return {
         ...accountResponse,
         current_classes:
@@ -159,6 +159,48 @@ function calculateAccountDetails(accountResponse) {
     };
 }
 
+function extractEntriesFromAccountStorage(dispatch, storedAccount) {
+    dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+    const accountResponse = extendAccountDetails(storedAccount.account || null);
+    dispatch({
+        type: actions.CURRENT_ACCOUNT_LOADED,
+        payload: accountResponse,
+    });
+
+    dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+    if (storedAccount.currentAuthor) {
+        const currentAuthorRetrieved = storedAccount.currentAuthor;
+        dispatch({
+            type: actions.CURRENT_AUTHOR_LOADED,
+            payload: currentAuthorRetrieved,
+        });
+
+        if (
+            !!currentAuthorRetrieved &&
+            (currentAuthorRetrieved.aut_org_username || currentAuthorRetrieved.aut_student_username)
+        ) {
+            dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
+            if (!!storedAccount.authorDetails) {
+                const authorDetailsResponse = storedAccount.authorDetails;
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
+                    payload: authorDetailsResponse,
+                });
+            } else {
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_DETAILS_FAILED,
+                    payload: 'author details unexpectedly not available',
+                });
+            }
+        }
+    } else {
+        dispatch({
+            type: actions.CURRENT_AUTHOR_FAILED,
+            payload: 'author unexpectedly not available',
+        });
+    }
+}
+
 /**
  * Loads the user's account and author details into the application
  * @returns {function(*)}
@@ -169,43 +211,16 @@ export function loadCurrentAccount() {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
         }
-        // store the account details locally with an expiry date
-        // use in preference to yet another call on the api!
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-            // no cookie, force them to log in again
+            // no cookie, dont call account api without a cookie
             removeAccountStorage();
-
             return false;
         }
 
         const storedAccount = getAccountFromStorage();
         if (storedAccount !== null && !!storedAccount.account) {
-            dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-            const accountResponse = calculateAccountDetails(storedAccount.account || null);
-            dispatch({
-                type: actions.CURRENT_ACCOUNT_LOADED,
-                payload: accountResponse,
-            });
-
-            dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-            const currentAuthorRetrieved = storedAccount.currentAuthor || null;
-            dispatch({
-                type: actions.CURRENT_AUTHOR_LOADED,
-                payload: currentAuthorRetrieved,
-            });
-
-            if (
-                !!currentAuthorRetrieved &&
-                (currentAuthorRetrieved.aut_org_username || currentAuthorRetrieved.aut_student_username)
-            ) {
-                dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
-                const authorDetailsResponse = storedAccount.authorDetails || null;
-                dispatch({
-                    type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
-                    payload: authorDetailsResponse,
-                });
-            }
-
+            // account details stored locally with an expiry date
+            extractEntriesFromAccountStorage(dispatch, storedAccount);
             return true;
         }
 
@@ -219,7 +234,7 @@ export function loadCurrentAccount() {
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
                     if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
 
-                    storeAccount(account);
+                    addAccountToStoredAccount(account);
 
                     return Promise.resolve(account);
                 } else {
@@ -228,10 +243,9 @@ export function loadCurrentAccount() {
                 }
             })
             .then(accountResponse => {
-                const accountResponse2 = calculateAccountDetails(accountResponse);
                 dispatch({
                     type: actions.CURRENT_ACCOUNT_LOADED,
-                    payload: accountResponse2,
+                    payload: extendAccountDetails(accountResponse),
                 });
 
                 // load current author details (based on token)
@@ -240,7 +254,7 @@ export function loadCurrentAccount() {
             })
             .then(currentAuthorResponse => {
                 currentAuthor = currentAuthorResponse.data;
-                addCurrentAuthorToAccount(currentAuthor);
+                addCurrentAuthorToStoredAccount(currentAuthor);
                 dispatch({
                     type: actions.CURRENT_AUTHOR_LOADED,
                     payload: currentAuthor,
@@ -255,10 +269,11 @@ export function loadCurrentAccount() {
                         }),
                     );
                 }
+
                 return null;
             })
             .then(authorDetailsResponse => {
-                addCurrentAuthorDetailsToAccount(authorDetailsResponse);
+                addCurrentAuthorDetailsToStoredAccount(authorDetailsResponse);
                 dispatch({
                     type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
                     payload: authorDetailsResponse,
