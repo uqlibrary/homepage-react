@@ -174,118 +174,118 @@ export function loadCurrentAccount() {
         if (navigator.userAgent.match(/Googlebot|facebookexternalhit|bingbot|Slackbot-LinkExpanding|Twitterbot/)) {
             dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
             return Promise.resolve({});
-        } else {
-            // store the account details locally with an expiry date
-            // use in preference to yet another call on the api!
-            if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
-                // no cookie, force them to log in again
-                removeAccountStorage();
-                return false;
+        }
+
+        // store the account details locally with an expiry date
+        // use in preference to yet another call on the api!
+        if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
+            // no cookie, force them to log in again
+            removeAccountStorage();
+            return false;
+        }
+
+        const storedAccount = getAccountFromStorage();
+        console.log('retreived storedAccount = ', storedAccount);
+        if (storedAccount !== null && !!storedAccount.account) {
+            const accountResponse = calculateAccountDetails(storedAccount.account || null);
+            dispatch({
+                type: actions.CURRENT_ACCOUNT_LOADED,
+                payload: accountResponse,
+            });
+
+            const currentAuthorRetrieved = storedAccount.currentAuthor || null;
+            dispatch({
+                type: actions.CURRENT_AUTHOR_LOADED,
+                payload: currentAuthorRetrieved,
+            });
+
+            console.log('currentAuthorRetrieved = ', currentAuthorRetrieved);
+            if (
+                !!currentAuthorRetrieved &&
+                (!!currentAuthorRetrieved.aut_org_username || !!currentAuthorRetrieved.aut_student_username)
+            ) {
+                const authorDetailsResponse = storedAccount.authorDetails || null;
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
+                    payload: authorDetailsResponse,
+                });
             }
 
-            const storedAccount = getAccountFromStorage();
-            console.log('retreived storedAccount = ', storedAccount);
-            if (storedAccount !== null && !!storedAccount.account) {
-                const accountResponse = calculateAccountDetails(storedAccount.account || null);
+            return true;
+        }
+
+        dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+
+        let currentAuthor = null;
+
+        // load UQL account (based on token)
+        return get(CURRENT_ACCOUNT_API())
+            .then(account => {
+                console.log('flow: getting account', account);
+                if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
+                    if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
+
+                    storeAccount(account);
+
+                    return Promise.resolve(account);
+                } else {
+                    dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+                    return Promise.reject(new Error('Session expired. User is unauthorized.'));
+                }
+            })
+            .then(accountResponse => {
+                console.log('flow: 2', accountResponse);
+                const accountResponse2 = calculateAccountDetails(accountResponse);
                 dispatch({
                     type: actions.CURRENT_ACCOUNT_LOADED,
-                    payload: accountResponse,
+                    payload: accountResponse2,
                 });
 
-                const currentAuthorRetrieved = storedAccount.currentAuthor || null;
+                // load current author details (based on token)
+                dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+                return get(CURRENT_AUTHOR_API());
+            })
+            .then(currentAuthorResponse => {
+                console.log('flow: getting currentAuthor', currentAuthorResponse);
+                currentAuthor = currentAuthorResponse.data;
+                addCurrentAuthorToAccount(currentAuthor);
                 dispatch({
                     type: actions.CURRENT_AUTHOR_LOADED,
-                    payload: currentAuthorRetrieved,
+                    payload: currentAuthor,
                 });
 
-                console.log('currentAuthorRetrieved = ', currentAuthorRetrieved);
-                if (
-                    !!currentAuthorRetrieved &&
-                    (!!currentAuthorRetrieved.aut_org_username || !!currentAuthorRetrieved.aut_student_username)
-                ) {
-                    const authorDetailsResponse = storedAccount.authorDetails || null;
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
-                        payload: authorDetailsResponse,
-                    });
+                // load repository author details
+                if (currentAuthor.aut_org_username || currentAuthor.aut_student_username) {
+                    dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
+                    return get(
+                        AUTHOR_DETAILS_API({
+                            userId: currentAuthor.aut_org_username || currentAuthor.aut_student_username,
+                        }),
+                    );
                 }
-
-                return true;
-            }
-
-            dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-
-            let currentAuthor = null;
-
-            // load UQL account (based on token)
-            return get(CURRENT_ACCOUNT_API())
-                .then(account => {
-                    console.log('flow: getting account', account);
-                    if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
-                        if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
-
-                        storeAccount(account);
-
-                        return Promise.resolve(account);
-                    } else {
-                        dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-                        return Promise.reject(new Error('Session expired. User is unauthorized.'));
-                    }
-                })
-                .then(accountResponse => {
-                    console.log('flow: 2', accountResponse);
-                    const accountResponse2 = calculateAccountDetails(accountResponse);
+                return null;
+            })
+            .then(authorDetailsResponse => {
+                console.log('flow: getting authorDetailsResponse', authorDetailsResponse);
+                addCurrentAuthorDetailsToAccount(authorDetailsResponse);
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
+                    payload: authorDetailsResponse,
+                });
+            })
+            .catch(error => {
+                console.log('flow: error');
+                if (!currentAuthor) {
                     dispatch({
-                        type: actions.CURRENT_ACCOUNT_LOADED,
-                        payload: accountResponse2,
-                    });
-
-                    // load current author details (based on token)
-                    dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
-                    return get(CURRENT_AUTHOR_API());
-                })
-                .then(currentAuthorResponse => {
-                    console.log('flow: getting currentAuthor', currentAuthorResponse);
-                    currentAuthor = currentAuthorResponse.data;
-                    addCurrentAuthorToAccount(currentAuthor);
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_LOADED,
-                        payload: currentAuthor,
-                    });
-
-                    // load repository author details
-                    if (currentAuthor.aut_org_username || currentAuthor.aut_student_username) {
-                        dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
-                        return get(
-                            AUTHOR_DETAILS_API({
-                                userId: currentAuthor.aut_org_username || currentAuthor.aut_student_username,
-                            }),
-                        );
-                    }
-                    return null;
-                })
-                .then(authorDetailsResponse => {
-                    console.log('flow: getting authorDetailsResponse', authorDetailsResponse);
-                    addCurrentAuthorDetailsToAccount(authorDetailsResponse);
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
-                        payload: authorDetailsResponse,
-                    });
-                })
-                .catch(error => {
-                    console.log('flow: error');
-                    if (!currentAuthor) {
-                        dispatch({
-                            type: actions.CURRENT_AUTHOR_FAILED,
-                            payload: error.message,
-                        });
-                    }
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_DETAILS_FAILED,
+                        type: actions.CURRENT_AUTHOR_FAILED,
                         payload: error.message,
                     });
+                }
+                dispatch({
+                    type: actions.CURRENT_AUTHOR_DETAILS_FAILED,
+                    payload: error.message,
                 });
-        }
+            });
     };
 }
 
