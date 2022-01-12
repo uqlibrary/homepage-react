@@ -85,6 +85,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
         setTimeout(() => {
             console.log('App: account double check');
             const accountDetails = getAccountFromStorage();
+            console.log('accountDetails=', accountDetails);
             if (!accountDetails) {
                 actions.loadCurrentAccount();
             }

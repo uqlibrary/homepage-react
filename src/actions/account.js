@@ -54,11 +54,15 @@ export function getSemesterStringByTermNumber(termNumber) {
 }
 
 function getSessionCookie() {
-    return Cookies.get(SESSION_COOKIE_NAME);
+    const newVar = Cookies.get(SESSION_COOKIE_NAME);
+    console.log('cookie ', SESSION_COOKIE_NAME, newVar);
+    return newVar;
 }
 function getLibraryGroupCookie() {
     // I am guessing this field is used as a proxy for 'has a Library account, not just a general UQ login'
-    return Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
+    const newVar = Cookies.get(SESSION_USER_GROUP_COOKIE_NAME);
+    console.log('cookie ', SESSION_USER_GROUP_COOKIE_NAME, newVar);
+    return newVar;
 }
 
 function storeAccount(account, numberOfHoursUntilExpiry = 8) {
