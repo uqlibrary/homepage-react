@@ -275,6 +275,7 @@ If you want Codeship to run cypress tests before you merge to master, include th
 
 #### Some tricks and tips
 
+- the message 'Failed to connect to the bus' is not a problem per https://docs.cypress.io/guides/references/troubleshooting#Run-the-Cypress-app-by-itself
 - When simulating clicks which result in non-trivial DOM changes, you might need to `cy.wait(1000);` to wait 1 second after the click before posing any expectations. If possible, use `cy.waitUntil()` instead to wait for a particular condition to be true.
 - sometimes a button is detached from the DOM when you go to click it. We have a helper called `clickButton` which usually gets around this.
   If not, the fallback it to add a cy.wait(50) and that fixes it (mostly). Waits are considered an anti-pattern though.

@@ -159,7 +159,7 @@ function extendAccountDetails(accountResponse) {
     };
 }
 
-function extractEntriesFromAccountStorage(dispatch, storedAccount) {
+function extractAccountFromSession(dispatch, storedAccount) {
     dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
     const accountResponse = extendAccountDetails(storedAccount.account || null);
     dispatch({
@@ -199,6 +199,7 @@ function extractEntriesFromAccountStorage(dispatch, storedAccount) {
             payload: 'author unexpectedly not available',
         });
     }
+    return accountResponse;
 }
 
 /**
@@ -215,22 +216,23 @@ export function loadCurrentAccount() {
         if (getSessionCookie() === undefined || getLibraryGroupCookie() === undefined) {
             // no cookie, dont call account api without a cookie
             removeAccountStorage();
-            return false;
+            dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+            return Promise.resolve({});
         }
 
         const storedAccount = getAccountFromStorage();
         if (storedAccount !== null && !!storedAccount.account) {
             console.log('homepage: account loaded from storage');
             // account details stored locally with an expiry date
-            extractEntriesFromAccountStorage(dispatch, storedAccount);
-            return true;
+            const account = extractAccountFromSession(dispatch, storedAccount);
+            return Promise.resolve(account);
         }
-
-        dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
 
         let currentAuthor = null;
 
         // load UQL account (based on token)
+        dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
+        console.log('have dispatched CURRENT_ACCOUNT_LOADING');
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
                 console.log('homepage: account loaded from api');
@@ -283,6 +285,9 @@ export function loadCurrentAccount() {
                 });
             })
             .catch(error => {
+                // is this needed?
+                // dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
+
                 if (!currentAuthor) {
                     dispatch({
                         type: actions.CURRENT_AUTHOR_FAILED,

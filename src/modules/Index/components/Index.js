@@ -66,6 +66,7 @@ export const Index = ({
 }) => {
     const dispatch = useDispatch();
     console.log('Index: computerAvailability: loading', computerAvailabilityLoading, computerAvailability);
+    console.log('Index: account: loading', accountLoading, account);
     // Load homepage data requirements
     useEffect(() => {
         if (accountLoading === false) {
