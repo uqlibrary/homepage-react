@@ -9,7 +9,6 @@ import * as pages from 'modules/App/components/pages';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
 import { isHdrStudent } from 'helpers/access';
-import { getAccountFromStorage } from 'actions';
 
 browserUpdate({
     required: {
