@@ -6,40 +6,54 @@ export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
 };
 export const hasPanels = optionsTheUserShouldSee => {
     const availableOptions = new Map();
-    availableOptions.set('computer-availability', 'Computer availability');
-    availableOptions.set('course-resources', 'Course resources');
-    // availableOptions.set('feedback', 'Feedback');
-    availableOptions.set('library-hours', 'Library hours');
-    availableOptions.set('library-services', 'Library services');
-    availableOptions.set('training', 'Training');
+    availableOptions.set('computer-availability', { title: 'Computer availability', content: 'Architecture' });
+    availableOptions.set('course-resources', { title: 'Course resources', content: 'Search by' });
+    availableOptions.set('library-hours', { title: 'Library hours', content: 'Study space' });
+    availableOptions.set('library-services', { title: 'Library services', content: 'Services for' });
+    availableOptions.set('training', { title: 'Training', content: 'Online' });
     availableOptions.set('promo', 'n/a');
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
-        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for panel test: ${item}`).to
-            .be.true;
+        console.log('check', item);
+        expect(
+            [...availableOptions.keys()].includes(item),
+            `panel option unexpectedly supplied for panel test: ${item}`,
+        ).to.be.true;
     });
 
     // eslint-disable-next-line guard-for-in
     for (const [key, value] of availableOptions) {
+        console.log('key = ', key, '; value=', value);
         expect(typeof key).to.equal('string');
-        expect(key.length).to.not.equals(0);
-        expect(typeof value).to.equal('string');
-        expect(value.length).to.not.equals(0);
+        expect(key.length).to.be.greaterThan(0);
+        if (key !== 'promo') {
+            expect(typeof value.title).to.equal('string');
+            expect(value.title.length).to.be.greaterThan(0);
+            expect(typeof value.content).to.equal('string');
+            expect(value.content.length).to.be.greaterThan(0);
+        }
 
         const panelname = `${key}-panel`;
-        const elementId = `div[data-testid="${panelname}"]`;
+        const titleSelector = `div[data-testid="${panelname}"] h2`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             if (key === 'promo') {
-                // the promo panel is admin editable, so we cant just check the header. Just check it exists
-                cy.get(elementId).length > 0;
+                // the promo panel is admin editable, so we cant check the values. Just check it exists
+                cy.get(titleSelector).length > 0;
             } else {
-                cy.log(`checking panel ${panelname} contains ${value}`);
-                cy.get(elementId).contains(value);
+                cy.log(`checking panel ${panelname} contains ${value.title}`);
+                cy.get(titleSelector).contains(value.title);
             }
         } else {
             cy.log(`checking panel ${panelname} is missing`);
-            cy.get(elementId).should('not.exist');
+            cy.get(titleSelector).should('not.exist');
+        }
+        const contentSelector = `div[data-testid="${panelname}"]`;
+        if (!!optionsTheUserShouldSee.includes(key)) {
+            if (key !== 'promo') {
+                cy.log(`checking panel ${panelname} contains ${value.content}`);
+                cy.get(contentSelector).contains(value.content);
+            }
         }
     }
 
@@ -49,48 +63,6 @@ export const hasPanels = optionsTheUserShouldSee => {
         cy.get('div[data-testid=library-services-items]')
             .children()
             .length.to.be.greaterThan(0);
-    }
-};
-export const hasMyLibraryButtonOptions = optionsTheUserShouldSee => {
-    cy.get('button[data-testid="mylibrary-button"]').should('exist');
-    cy.get('button[data-testid="mylibrary-button"]').click();
-
-    const availableOptions = new Map();
-    availableOptions.set('borrowing', 'Borrowing');
-    // availableOptions.set('computer-availability', 'Computer');
-    availableOptions.set('course-resources', 'Course resources');
-    availableOptions.set('document-delivery', 'Document delivery');
-    availableOptions.set('espace', 'eSpace dashboard');
-    availableOptions.set('print-balance', 'Printing balance');
-    availableOptions.set('publication-metrics', 'Publication metrics');
-    availableOptions.set('room-bookings', 'Room bookings');
-    // availableOptions.set('library-hours', 'Hours');
-    availableOptions.set('saved-items', 'Saved items');
-    availableOptions.set('saved-searches', 'Saved searches');
-    availableOptions.set('feedback', 'Feedback');
-    availableOptions.set('masquerade', 'Masquerade');
-
-    // validate the input - all supplied entries should exist in the available options
-    optionsTheUserShouldSee.map(item => {
-        expect([...availableOptions.keys()].includes(item), `option unexpectedly supplied for mylibrary test: ${item}`)
-            .to.be.true;
-    });
-
-    for (const [key, value] of availableOptions) {
-        expect(typeof key).to.equal('string');
-        expect(key.length).to.not.equals(0);
-        expect(typeof value).to.equal('string');
-        expect(value.length).to.not.equals(0);
-
-        const linkName = `mylibrary-menuitem-${key}`;
-        const elementId = `li[data-testid="${linkName}"]`;
-        if (!!optionsTheUserShouldSee.includes(key)) {
-            cy.log(`checking panel ${linkName} contains ${value}`);
-            cy.get(elementId).contains(value);
-        } else {
-            cy.log(`checking panel ${linkName} is missing`);
-            cy.get(elementId).should('not.exist');
-        }
     }
 };
 export const hasPersonalisedPanelOptions = optionsTheUserShouldSee => {
