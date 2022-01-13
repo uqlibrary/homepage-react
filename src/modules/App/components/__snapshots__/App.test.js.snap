@@ -469,13 +469,8 @@ exports[`Application component should render for anon user 1`] = `
                 "loadCurrentAccount": [MockFunction] {
                   "calls": Array [
                     Array [],
-                    Array [],
                   ],
                   "results": Array [
-                    Object {
-                      "type": "return",
-                      "value": undefined,
-                    },
                     Object {
                       "type": "return",
                       "value": undefined,
@@ -5087,13 +5082,8 @@ exports[`Application component should render loading screen while account is loa
                 "loadCurrentAccount": [MockFunction] {
                   "calls": Array [
                     Array [],
-                    Array [],
                   ],
                   "results": Array [
-                    Object {
-                      "type": "return",
-                      "value": undefined,
-                    },
                     Object {
                       "type": "return",
                       "value": undefined,
