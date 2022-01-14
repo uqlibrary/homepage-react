@@ -161,6 +161,7 @@ context('Personalised Homepage', () => {
     });
 
     it('Renders a logged out user', () => {
+        cy.clearCookies();
         cy.visit('/?user=public');
         cy.wait(1000);
         cy.viewport(1300, 1000);

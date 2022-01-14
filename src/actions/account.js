@@ -91,7 +91,9 @@ export function getAccountFromStorage() {
     }
 
     if (process.env.USE_MOCK && process.env.BRANCH !== 'production') {
-        const user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
+        const user = queryString.parse(
+            location.search || /* istanbul ignore next */ location.hash.substring(location.hash.indexOf('?')),
+        ).user;
 
         if ((!!accountDetails.account.id && accountDetails.account.id !== user) || !accountDetails.account.id) {
             // allow developer to swap between users in the same tab in mock
@@ -102,12 +104,14 @@ export function getAccountFromStorage() {
 
     // short term during upgrade - if older structure that doesnt have .account, clear
     // this clause can be removed a day or so after day golive, written Jan/2022
+    /* istanbul ignore next */
     if (!accountDetails.account) {
         this.removeAccountStorage();
         return null;
     }
 
     const now = new Date().getTime();
+    /* istanbul ignore next */
     if (!accountDetails.storageExpiryDate || accountDetails.storageExpiryDate < now) {
         removeAccountStorage();
         return null;
@@ -118,6 +122,7 @@ export function getAccountFromStorage() {
 
 function addCurrentAuthorToStoredAccount(currentAuthor) {
     const storedAccount = getAccountFromStorage();
+    /* istanbul ignore next */
     if (storedAccount === null) {
         return;
     }
@@ -134,6 +139,7 @@ function addCurrentAuthorToStoredAccount(currentAuthor) {
 
 function addCurrentAuthorDetailsToStoredAccount(authorDetails) {
     const storedAccount = getAccountFromStorage();
+    /* istanbul ignore next */
     if (storedAccount === null) {
         return;
     }
@@ -164,13 +170,14 @@ function extendAccountDetails(accountResponse) {
 
 function extractAccountFromSession(dispatch, storedAccount) {
     dispatch({ type: actions.CURRENT_ACCOUNT_LOADING });
-    const accountResponse = extendAccountDetails(storedAccount.account || null);
+    const accountResponse = extendAccountDetails(storedAccount.account || /* istanbul ignore next */ null);
     dispatch({
         type: actions.CURRENT_ACCOUNT_LOADED,
         payload: accountResponse,
     });
 
     dispatch({ type: actions.CURRENT_AUTHOR_LOADING });
+    /* istanbul ignore else */
     if (storedAccount.currentAuthor) {
         const currentAuthorRetrieved = storedAccount.currentAuthor;
         dispatch({
@@ -183,6 +190,7 @@ function extractAccountFromSession(dispatch, storedAccount) {
             (currentAuthorRetrieved.aut_org_username || currentAuthorRetrieved.aut_student_username)
         ) {
             dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
+            /* istanbul ignore next */
             if (!!storedAccount.authorDetails) {
                 const authorDetailsResponse = storedAccount.authorDetails;
                 dispatch({
@@ -197,6 +205,7 @@ function extractAccountFromSession(dispatch, storedAccount) {
             }
         }
     } else {
+        /* istanbul ignore next */
         dispatch({
             type: actions.CURRENT_AUTHOR_FAILED,
             payload: 'author unexpectedly not available',

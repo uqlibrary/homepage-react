@@ -41,12 +41,14 @@ const mock = new MockAdapter(api, { delayResponse: 100 });
 const mockSessionApi = new MockAdapter(sessionApi, { delayResponse: 100 });
 const escapeRegExp = input => input.replace('.\\*', '.*').replace(/[\-Aler\[\]\{\}\(\)\+\?\\\^\$\|]/g, '\\$&');
 // set session cookie in mock mode
-Cookies.set(SESSION_COOKIE_NAME, 'abc123');
-Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
 
 // Get user from query string
 let user = queryString.parse(location.search || location.hash.substring(location.hash.indexOf('?'))).user;
 
+if (!!user && user.length > 0 && user !== 'public') {
+    Cookies.set(SESSION_COOKIE_NAME, 'abc123');
+    Cookies.set(SESSION_USER_GROUP_COOKIE_NAME, 'LIBRARYSTAFFB');
+}
 mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
 mockData.accounts.uqagrinb = mockData.uqagrinb.account;
 if (user && !mockData.accounts[user]) {

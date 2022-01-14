@@ -14,7 +14,7 @@ context('Personalised panel accessibility', () => {
         });
     });
     it('Personalised panel print menu', () => {
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.wait(3000);
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -33,7 +33,7 @@ context('Personalised panel accessibility', () => {
     });
 
     it('Personalised panel location menu', () => {
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.wait(3000);
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -53,7 +53,7 @@ context('Personalised panel accessibility', () => {
 });
 context('Personalised panel', () => {
     it('location button changes location', () => {
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
 
         // page is initialised as default
@@ -81,7 +81,7 @@ context('Personalised panel', () => {
     });
 
     it('location popup can be closed', () => {
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
 
         // open location selector popup
@@ -109,7 +109,7 @@ context('Personalised panel', () => {
     }
 
     it('Personalised panel print menu can close', () => {
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="personalised-panel"]').contains('Vanilla');
 
@@ -130,7 +130,7 @@ context('Personalised panel', () => {
         // from PersonalisedPanel locale: items.papercut.url
         cy.intercept(/lib-print/, 'user has navigated to papercut page');
 
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
 
         openPapercutPopup();
@@ -146,7 +146,7 @@ context('Personalised panel', () => {
         // from PersonalisedPanel locale: items.papercut.url
         cy.intercept(/payments.uq.edu.au/, 'user has navigated to papercut topup page');
 
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
 
         openPapercutPopup();
