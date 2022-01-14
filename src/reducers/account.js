@@ -162,6 +162,5 @@ export default function accountReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-
     return handler(state, action);
 }

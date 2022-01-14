@@ -78,7 +78,6 @@ const useStyles = makeStyles(theme => ({
 export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actions }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
