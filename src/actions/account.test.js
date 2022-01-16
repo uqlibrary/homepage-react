@@ -15,8 +15,35 @@ import {
     searcheSpacePossiblePublications,
     getClassNumberFromPieces,
 } from './account';
+import Cookies from 'js-cookie';
 
 jest.mock('raven-js');
+
+const sessionStorageMock = (function createSessionStorageMock() {
+    let store = {};
+
+    return {
+        getItem(key) {
+            return store[key] || null;
+        },
+
+        setItem(key, value) {
+            store[key] = value;
+        },
+
+        clear() {
+            store = {};
+        },
+
+        removeItem(key) {
+            delete store[key];
+        },
+
+        getAll() {
+            console.log(store);
+        },
+    };
+})();
 
 describe('Account action creators', () => {
     const MockDate = require('mockdate');
@@ -25,12 +52,16 @@ describe('Account action creators', () => {
         mockActionsStore = setupStoreForActions();
         mockApi = setupMockAdapter();
         mockSessionApi = setupSessionMockAdapter();
+
+        Cookies.get = jest.fn().mockImplementation(() => 'abc123');
+        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
     });
 
     afterEach(() => {
         MockDate.reset();
         mockApi.reset();
         mockSessionApi.reset();
+        window.sessionStorage.clear();
     });
 
     it('should dispatch expected actions on successful fetch of user details', async () => {

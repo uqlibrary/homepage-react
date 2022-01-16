@@ -1,23 +1,21 @@
 import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as locale } from '../../../src/modules/Pages/CourseResources/courseResources.locale';
 import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
-
+import { readingListLength } from '../../support/helpers';
 /*
-  This is a single test brought in from the Course Resources test to give coverage of actions in Pipeline 1
-*/
+ * this section duplcates tests in the homepage and otherpages folders and is needed to provide full coverage in the
+ * admin pipeline during code coverage runs on aws :(
+ */
+
+context('Personalisation', () => {
+    it('Renders a logged out user', () => {
+        cy.rendersALoggedoutUser();
+    });
+});
 
 context('Course Resources', () => {
-    function readingListLength(courseReadingList) {
-        return (
-            (!!courseReadingList.reading_lists &&
-                courseReadingList.reading_lists.length > 0 &&
-                !!courseReadingList.reading_lists[0] &&
-                !!courseReadingList.reading_lists[0].list &&
-                courseReadingList.reading_lists[0].list.length) ||
-            0
-        );
-    }
     it('User with classes sees their classes', () => {
+        // this test simplifies the matching homepage/courseResources.js test, just to give coverage
         cy.visit('/courseresources?user=s1111111');
         cy.viewport(1300, 1000);
 
@@ -51,6 +49,7 @@ context('Course Resources', () => {
     });
 
     it('The Course resources panel searches correctly', () => {
+        // this test simplifies the matching homepage/courseResources.js test, just to give coverage
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
