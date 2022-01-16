@@ -185,9 +185,11 @@ function extractAccountFromSession(dispatch, storedAccount) {
             payload: currentAuthorRetrieved,
         });
 
+        /* istanbul ignore else */
         if (
             !!currentAuthorRetrieved &&
-            (currentAuthorRetrieved.aut_org_username || currentAuthorRetrieved.aut_student_username)
+            (currentAuthorRetrieved.aut_org_username ||
+                /* istanbul ignore next */ currentAuthorRetrieved.aut_student_username)
         ) {
             dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
             /* istanbul ignore next */
