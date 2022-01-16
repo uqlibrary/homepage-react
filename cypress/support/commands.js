@@ -24,6 +24,8 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+import { hasPanels } from './access';
+
 Cypress.Commands.add('killWindowUnloadHandler', () => {
     cy.window().then(win => {
         win.onbeforeunload = undefined;
@@ -111,3 +113,13 @@ Cypress.Commands.add(
         });
     },
 );
+
+Cypress.Commands.add('rendersALoggedoutUser', () => {
+    cy.clearCookies();
+    cy.visit('/?user=public');
+    cy.wait(1000);
+    cy.viewport(1300, 1000);
+    cy.get('div#content-container').contains('Library hours');
+
+    hasPanels(['computer-availability', 'library-hours', 'training', 'promo']);
+});

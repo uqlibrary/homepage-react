@@ -34,3 +34,14 @@ export function clickSVGButton(selector) {
             Cypress.$(e).trigger('click');
         });
 }
+
+export function readingListLength(courseReadingList) {
+    return (
+        (!!courseReadingList.reading_lists &&
+            courseReadingList.reading_lists.length > 0 &&
+            !!courseReadingList.reading_lists[0] &&
+            !!courseReadingList.reading_lists[0].list &&
+            courseReadingList.reading_lists[0].list.length) ||
+        0
+    );
+}
