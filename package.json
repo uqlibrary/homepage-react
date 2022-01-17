@@ -176,7 +176,6 @@
         "react-router": "^5.0.1",
         "react-router-dom": "^5.0.1",
         "react-script-tag": "^1.1.2",
-        "react-speech-recognition": "^3.2.3",
         "redux": "4.0.0",
         "redux-immutable": "^4.0.0",
         "redux-thunk": "^2.2.0",
