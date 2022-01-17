@@ -1844,11 +1844,11 @@ exports[`Application component should render for anon user 1`] = `
                                                                     <Cards
                                                                       classes={
                                                                         Object {
-                                                                          "card": "Cards-card-132",
-                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-133",
-                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-135",
-                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-134",
-                                                                          "fullHeight": "Cards-fullHeight-136",
+                                                                          "card": "Cards-card-29",
+                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-30",
+                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-32",
+                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-31",
+                                                                          "fullHeight": "Cards-fullHeight-33",
                                                                         }
                                                                       }
                                                                       noPadding={true}
@@ -2240,13 +2240,13 @@ exports[`Application component should render for anon user 1`] = `
                                                                       }
                                                                     >
                                                                       <WithStyles(ForwardRef(Card))
-                                                                        className="Cards-card-132 StandardCard"
+                                                                        className="Cards-card-29 StandardCard"
                                                                         data-testid="standard-card-computers"
                                                                         id="standard-card-computers"
                                                                         style={Object {}}
                                                                       >
                                                                         <ForwardRef(Card)
-                                                                          className="Cards-card-132 StandardCard"
+                                                                          className="Cards-card-29 StandardCard"
                                                                           classes={
                                                                             Object {
                                                                               "root": "MuiCard-root",
@@ -2257,14 +2257,14 @@ exports[`Application component should render for anon user 1`] = `
                                                                           style={Object {}}
                                                                         >
                                                                           <WithStyles(ForwardRef(Paper))
-                                                                            className="MuiCard-root Cards-card-132 StandardCard"
+                                                                            className="MuiCard-root Cards-card-29 StandardCard"
                                                                             data-testid="standard-card-computers"
                                                                             elevation={1}
                                                                             id="standard-card-computers"
                                                                             style={Object {}}
                                                                           >
                                                                             <ForwardRef(Paper)
-                                                                              className="MuiCard-root Cards-card-132 StandardCard"
+                                                                              className="MuiCard-root Cards-card-29 StandardCard"
                                                                               classes={
                                                                                 Object {
                                                                                   "elevation0": "MuiPaper-elevation0",
@@ -2303,7 +2303,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               style={Object {}}
                                                                             >
                                                                               <div
-                                                                                className="MuiPaper-root MuiCard-root Cards-card-132 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+                                                                                className="MuiPaper-root MuiCard-root Cards-card-29 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
                                                                                 data-testid="standard-card-computers"
                                                                                 id="standard-card-computers"
                                                                                 style={Object {}}
@@ -2311,7 +2311,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <WithStyles(ForwardRef(CardHeader))
                                                                                   classes={
                                                                                     Object {
-                                                                                      "root": "Cards-cardHeaderPrimary-134",
+                                                                                      "root": "Cards-cardHeaderPrimary-31",
                                                                                     }
                                                                                   }
                                                                                   style={
@@ -2360,7 +2360,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                         "action": "MuiCardHeader-action",
                                                                                         "avatar": "MuiCardHeader-avatar",
                                                                                         "content": "MuiCardHeader-content",
-                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-134",
+                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-31",
                                                                                         "subheader": "MuiCardHeader-subheader",
                                                                                         "title": "MuiCardHeader-title",
                                                                                       }
@@ -2406,7 +2406,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                     }
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-134"
+                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-31"
                                                                                       style={
                                                                                         Object {
                                                                                           "borderTopLeftRadius": 4,
@@ -2864,12 +2864,12 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   </ForwardRef(CardHeader)>
                                                                                 </WithStyles(ForwardRef(CardHeader))>
                                                                                 <WithStyles(ForwardRef(CardContent))
-                                                                                  className="Cards-cardContentNoPadding-133"
+                                                                                  className="Cards-cardContentNoPadding-30"
                                                                                   data-testid="standard-card-computers-content"
                                                                                   style={Object {}}
                                                                                 >
                                                                                   <ForwardRef(CardContent)
-                                                                                    className="Cards-cardContentNoPadding-133"
+                                                                                    className="Cards-cardContentNoPadding-30"
                                                                                     classes={
                                                                                       Object {
                                                                                         "root": "MuiCardContent-root",
@@ -2879,16 +2879,16 @@ exports[`Application component should render for anon user 1`] = `
                                                                                     style={Object {}}
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-133"
+                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-30"
                                                                                       data-testid="standard-card-computers-content"
                                                                                       style={Object {}}
                                                                                     >
                                                                                       <MapPopup />
                                                                                       <div
-                                                                                        className="makeStyles-flexWrapper-124 makeStyles-componentHeight-129"
+                                                                                        className="makeStyles-flexWrapper-21 makeStyles-componentHeight-26"
                                                                                       >
                                                                                         <div
-                                                                                          className="makeStyles-flexLoaderContent-127"
+                                                                                          className="makeStyles-flexLoaderContent-24"
                                                                                         >
                                                                                           <MyLoader>
                                                                                             <ContentLoader
@@ -3323,11 +3323,11 @@ exports[`Application component should render for anon user 1`] = `
                                                                     <Cards
                                                                       classes={
                                                                         Object {
-                                                                          "card": "Cards-card-132",
-                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-133",
-                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-135",
-                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-134",
-                                                                          "fullHeight": "Cards-fullHeight-136",
+                                                                          "card": "Cards-card-29",
+                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-30",
+                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-32",
+                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-31",
+                                                                          "fullHeight": "Cards-fullHeight-33",
                                                                         }
                                                                       }
                                                                       noPadding={true}
@@ -3694,13 +3694,13 @@ exports[`Application component should render for anon user 1`] = `
                                                                       title="Training"
                                                                     >
                                                                       <WithStyles(ForwardRef(Card))
-                                                                        className="Cards-card-132 StandardCard"
+                                                                        className="Cards-card-29 StandardCard"
                                                                         data-testid="standard-card-training"
                                                                         id="standard-card-training"
                                                                         style={Object {}}
                                                                       >
                                                                         <ForwardRef(Card)
-                                                                          className="Cards-card-132 StandardCard"
+                                                                          className="Cards-card-29 StandardCard"
                                                                           classes={
                                                                             Object {
                                                                               "root": "MuiCard-root",
@@ -3711,14 +3711,14 @@ exports[`Application component should render for anon user 1`] = `
                                                                           style={Object {}}
                                                                         >
                                                                           <WithStyles(ForwardRef(Paper))
-                                                                            className="MuiCard-root Cards-card-132 StandardCard"
+                                                                            className="MuiCard-root Cards-card-29 StandardCard"
                                                                             data-testid="standard-card-training"
                                                                             elevation={1}
                                                                             id="standard-card-training"
                                                                             style={Object {}}
                                                                           >
                                                                             <ForwardRef(Paper)
-                                                                              className="MuiCard-root Cards-card-132 StandardCard"
+                                                                              className="MuiCard-root Cards-card-29 StandardCard"
                                                                               classes={
                                                                                 Object {
                                                                                   "elevation0": "MuiPaper-elevation0",
@@ -3757,7 +3757,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                               style={Object {}}
                                                                             >
                                                                               <div
-                                                                                className="MuiPaper-root MuiCard-root Cards-card-132 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+                                                                                className="MuiPaper-root MuiCard-root Cards-card-29 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
                                                                                 data-testid="standard-card-training"
                                                                                 id="standard-card-training"
                                                                                 style={Object {}}
@@ -3765,7 +3765,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                 <WithStyles(ForwardRef(CardHeader))
                                                                                   classes={
                                                                                     Object {
-                                                                                      "root": "Cards-cardHeaderPrimary-134",
+                                                                                      "root": "Cards-cardHeaderPrimary-31",
                                                                                     }
                                                                                   }
                                                                                   style={
@@ -3790,7 +3790,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                         "action": "MuiCardHeader-action",
                                                                                         "avatar": "MuiCardHeader-avatar",
                                                                                         "content": "MuiCardHeader-content",
-                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-134",
+                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-31",
                                                                                         "subheader": "MuiCardHeader-subheader",
                                                                                         "title": "MuiCardHeader-title",
                                                                                       }
@@ -3812,7 +3812,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                     }
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-134"
+                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-31"
                                                                                       style={
                                                                                         Object {
                                                                                           "borderTopLeftRadius": 4,
@@ -3886,12 +3886,12 @@ exports[`Application component should render for anon user 1`] = `
                                                                                   </ForwardRef(CardHeader)>
                                                                                 </WithStyles(ForwardRef(CardHeader))>
                                                                                 <WithStyles(ForwardRef(CardContent))
-                                                                                  className="Cards-cardContentNoPadding-133"
+                                                                                  className="Cards-cardContentNoPadding-30"
                                                                                   data-testid="standard-card-training-content"
                                                                                   style={Object {}}
                                                                                 >
                                                                                   <ForwardRef(CardContent)
-                                                                                    className="Cards-cardContentNoPadding-133"
+                                                                                    className="Cards-cardContentNoPadding-30"
                                                                                     classes={
                                                                                       Object {
                                                                                         "root": "MuiCardContent-root",
@@ -3901,16 +3901,16 @@ exports[`Application component should render for anon user 1`] = `
                                                                                     style={Object {}}
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-133"
+                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-30"
                                                                                       data-testid="standard-card-training-content"
                                                                                       style={Object {}}
                                                                                     >
                                                                                       <div
-                                                                                        className="makeStyles-flexWrapper-207 makeStyles-componentHeight-212"
+                                                                                        className="makeStyles-flexWrapper-38 makeStyles-componentHeight-43"
                                                                                       >
                                                                                         <div
                                                                                           aria-label="UQ training Events loading"
-                                                                                          className="makeStyles-flexLoader-210"
+                                                                                          className="makeStyles-flexLoader-41"
                                                                                         >
                                                                                           <MyLoader>
                                                                                             <ContentLoader
@@ -4178,7 +4178,7 @@ exports[`Application component should render for anon user 1`] = `
                                                                                           />
                                                                                         </ForwardRef(Fade)>
                                                                                         <div
-                                                                                          className="makeStyles-flexFooter-211"
+                                                                                          className="makeStyles-flexFooter-42"
                                                                                         >
                                                                                           <WithStyles(ForwardRef(Grid))
                                                                                             container={true}
@@ -4299,12 +4299,12 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                 className="MuiGrid-root MuiGrid-container"
                                                                                               >
                                                                                                 <WithStyles(ForwardRef(Grid))
-                                                                                                  className="makeStyles-actionButtonBlock-216"
+                                                                                                  className="makeStyles-actionButtonBlock-47"
                                                                                                   item={true}
                                                                                                   xs={12}
                                                                                                 >
                                                                                                   <ForwardRef(Grid)
-                                                                                                    className="makeStyles-actionButtonBlock-216"
+                                                                                                    className="makeStyles-actionButtonBlock-47"
                                                                                                     classes={
                                                                                                       Object {
                                                                                                         "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -4416,10 +4416,10 @@ exports[`Application component should render for anon user 1`] = `
                                                                                                     xs={12}
                                                                                                   >
                                                                                                     <div
-                                                                                                      className="MuiGrid-root makeStyles-actionButtonBlock-216 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                                                      className="MuiGrid-root makeStyles-actionButtonBlock-47 MuiGrid-item MuiGrid-grid-xs-12"
                                                                                                     >
                                                                                                       <a
-                                                                                                        className="makeStyles-moreActionButton-217"
+                                                                                                        className="makeStyles-moreActionButton-48"
                                                                                                         data-testid="training-event-detail-more-training-button"
                                                                                                         href="https://web.library.uq.edu.au/library-services/training"
                                                                                                         id="training-event-detail-more-training-button"
@@ -6452,11 +6452,11 @@ exports[`Application component should render loading screen while account is loa
                                                                     <Cards
                                                                       classes={
                                                                         Object {
-                                                                          "card": "Cards-card-132",
-                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-133",
-                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-135",
-                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-134",
-                                                                          "fullHeight": "Cards-fullHeight-136",
+                                                                          "card": "Cards-card-29",
+                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-30",
+                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-32",
+                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-31",
+                                                                          "fullHeight": "Cards-fullHeight-33",
                                                                         }
                                                                       }
                                                                       noPadding={true}
@@ -6848,13 +6848,13 @@ exports[`Application component should render loading screen while account is loa
                                                                       }
                                                                     >
                                                                       <WithStyles(ForwardRef(Card))
-                                                                        className="Cards-card-132 StandardCard"
+                                                                        className="Cards-card-29 StandardCard"
                                                                         data-testid="standard-card-computers"
                                                                         id="standard-card-computers"
                                                                         style={Object {}}
                                                                       >
                                                                         <ForwardRef(Card)
-                                                                          className="Cards-card-132 StandardCard"
+                                                                          className="Cards-card-29 StandardCard"
                                                                           classes={
                                                                             Object {
                                                                               "root": "MuiCard-root",
@@ -6865,14 +6865,14 @@ exports[`Application component should render loading screen while account is loa
                                                                           style={Object {}}
                                                                         >
                                                                           <WithStyles(ForwardRef(Paper))
-                                                                            className="MuiCard-root Cards-card-132 StandardCard"
+                                                                            className="MuiCard-root Cards-card-29 StandardCard"
                                                                             data-testid="standard-card-computers"
                                                                             elevation={1}
                                                                             id="standard-card-computers"
                                                                             style={Object {}}
                                                                           >
                                                                             <ForwardRef(Paper)
-                                                                              className="MuiCard-root Cards-card-132 StandardCard"
+                                                                              className="MuiCard-root Cards-card-29 StandardCard"
                                                                               classes={
                                                                                 Object {
                                                                                   "elevation0": "MuiPaper-elevation0",
@@ -6911,7 +6911,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               style={Object {}}
                                                                             >
                                                                               <div
-                                                                                className="MuiPaper-root MuiCard-root Cards-card-132 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+                                                                                className="MuiPaper-root MuiCard-root Cards-card-29 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
                                                                                 data-testid="standard-card-computers"
                                                                                 id="standard-card-computers"
                                                                                 style={Object {}}
@@ -6919,7 +6919,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <WithStyles(ForwardRef(CardHeader))
                                                                                   classes={
                                                                                     Object {
-                                                                                      "root": "Cards-cardHeaderPrimary-134",
+                                                                                      "root": "Cards-cardHeaderPrimary-31",
                                                                                     }
                                                                                   }
                                                                                   style={
@@ -6968,7 +6968,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                         "action": "MuiCardHeader-action",
                                                                                         "avatar": "MuiCardHeader-avatar",
                                                                                         "content": "MuiCardHeader-content",
-                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-134",
+                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-31",
                                                                                         "subheader": "MuiCardHeader-subheader",
                                                                                         "title": "MuiCardHeader-title",
                                                                                       }
@@ -7014,7 +7014,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                     }
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-134"
+                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-31"
                                                                                       style={
                                                                                         Object {
                                                                                           "borderTopLeftRadius": 4,
@@ -7472,12 +7472,12 @@ exports[`Application component should render loading screen while account is loa
                                                                                   </ForwardRef(CardHeader)>
                                                                                 </WithStyles(ForwardRef(CardHeader))>
                                                                                 <WithStyles(ForwardRef(CardContent))
-                                                                                  className="Cards-cardContentNoPadding-133"
+                                                                                  className="Cards-cardContentNoPadding-30"
                                                                                   data-testid="standard-card-computers-content"
                                                                                   style={Object {}}
                                                                                 >
                                                                                   <ForwardRef(CardContent)
-                                                                                    className="Cards-cardContentNoPadding-133"
+                                                                                    className="Cards-cardContentNoPadding-30"
                                                                                     classes={
                                                                                       Object {
                                                                                         "root": "MuiCardContent-root",
@@ -7487,16 +7487,16 @@ exports[`Application component should render loading screen while account is loa
                                                                                     style={Object {}}
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-133"
+                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-30"
                                                                                       data-testid="standard-card-computers-content"
                                                                                       style={Object {}}
                                                                                     >
                                                                                       <MapPopup />
                                                                                       <div
-                                                                                        className="makeStyles-flexWrapper-124 makeStyles-componentHeight-129"
+                                                                                        className="makeStyles-flexWrapper-21 makeStyles-componentHeight-26"
                                                                                       >
                                                                                         <div
-                                                                                          className="makeStyles-flexLoaderContent-127"
+                                                                                          className="makeStyles-flexLoaderContent-24"
                                                                                         >
                                                                                           <MyLoader>
                                                                                             <ContentLoader
@@ -7931,11 +7931,11 @@ exports[`Application component should render loading screen while account is loa
                                                                     <Cards
                                                                       classes={
                                                                         Object {
-                                                                          "card": "Cards-card-132",
-                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-133",
-                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-135",
-                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-134",
-                                                                          "fullHeight": "Cards-fullHeight-136",
+                                                                          "card": "Cards-card-29",
+                                                                          "cardContentNoPadding": "Cards-cardContentNoPadding-30",
+                                                                          "cardHeaderAccent": "Cards-cardHeaderAccent-32",
+                                                                          "cardHeaderPrimary": "Cards-cardHeaderPrimary-31",
+                                                                          "fullHeight": "Cards-fullHeight-33",
                                                                         }
                                                                       }
                                                                       noPadding={true}
@@ -8302,13 +8302,13 @@ exports[`Application component should render loading screen while account is loa
                                                                       title="Training"
                                                                     >
                                                                       <WithStyles(ForwardRef(Card))
-                                                                        className="Cards-card-132 StandardCard"
+                                                                        className="Cards-card-29 StandardCard"
                                                                         data-testid="standard-card-training"
                                                                         id="standard-card-training"
                                                                         style={Object {}}
                                                                       >
                                                                         <ForwardRef(Card)
-                                                                          className="Cards-card-132 StandardCard"
+                                                                          className="Cards-card-29 StandardCard"
                                                                           classes={
                                                                             Object {
                                                                               "root": "MuiCard-root",
@@ -8319,14 +8319,14 @@ exports[`Application component should render loading screen while account is loa
                                                                           style={Object {}}
                                                                         >
                                                                           <WithStyles(ForwardRef(Paper))
-                                                                            className="MuiCard-root Cards-card-132 StandardCard"
+                                                                            className="MuiCard-root Cards-card-29 StandardCard"
                                                                             data-testid="standard-card-training"
                                                                             elevation={1}
                                                                             id="standard-card-training"
                                                                             style={Object {}}
                                                                           >
                                                                             <ForwardRef(Paper)
-                                                                              className="MuiCard-root Cards-card-132 StandardCard"
+                                                                              className="MuiCard-root Cards-card-29 StandardCard"
                                                                               classes={
                                                                                 Object {
                                                                                   "elevation0": "MuiPaper-elevation0",
@@ -8365,7 +8365,7 @@ exports[`Application component should render loading screen while account is loa
                                                                               style={Object {}}
                                                                             >
                                                                               <div
-                                                                                className="MuiPaper-root MuiCard-root Cards-card-132 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
+                                                                                className="MuiPaper-root MuiCard-root Cards-card-29 StandardCard MuiPaper-elevation1 MuiPaper-rounded"
                                                                                 data-testid="standard-card-training"
                                                                                 id="standard-card-training"
                                                                                 style={Object {}}
@@ -8373,7 +8373,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                 <WithStyles(ForwardRef(CardHeader))
                                                                                   classes={
                                                                                     Object {
-                                                                                      "root": "Cards-cardHeaderPrimary-134",
+                                                                                      "root": "Cards-cardHeaderPrimary-31",
                                                                                     }
                                                                                   }
                                                                                   style={
@@ -8398,7 +8398,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                         "action": "MuiCardHeader-action",
                                                                                         "avatar": "MuiCardHeader-avatar",
                                                                                         "content": "MuiCardHeader-content",
-                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-134",
+                                                                                        "root": "MuiCardHeader-root Cards-cardHeaderPrimary-31",
                                                                                         "subheader": "MuiCardHeader-subheader",
                                                                                         "title": "MuiCardHeader-title",
                                                                                       }
@@ -8420,7 +8420,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                     }
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-134"
+                                                                                      className="MuiCardHeader-root Cards-cardHeaderPrimary-31"
                                                                                       style={
                                                                                         Object {
                                                                                           "borderTopLeftRadius": 4,
@@ -8494,12 +8494,12 @@ exports[`Application component should render loading screen while account is loa
                                                                                   </ForwardRef(CardHeader)>
                                                                                 </WithStyles(ForwardRef(CardHeader))>
                                                                                 <WithStyles(ForwardRef(CardContent))
-                                                                                  className="Cards-cardContentNoPadding-133"
+                                                                                  className="Cards-cardContentNoPadding-30"
                                                                                   data-testid="standard-card-training-content"
                                                                                   style={Object {}}
                                                                                 >
                                                                                   <ForwardRef(CardContent)
-                                                                                    className="Cards-cardContentNoPadding-133"
+                                                                                    className="Cards-cardContentNoPadding-30"
                                                                                     classes={
                                                                                       Object {
                                                                                         "root": "MuiCardContent-root",
@@ -8509,16 +8509,16 @@ exports[`Application component should render loading screen while account is loa
                                                                                     style={Object {}}
                                                                                   >
                                                                                     <div
-                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-133"
+                                                                                      className="MuiCardContent-root Cards-cardContentNoPadding-30"
                                                                                       data-testid="standard-card-training-content"
                                                                                       style={Object {}}
                                                                                     >
                                                                                       <div
-                                                                                        className="makeStyles-flexWrapper-207 makeStyles-componentHeight-212"
+                                                                                        className="makeStyles-flexWrapper-38 makeStyles-componentHeight-43"
                                                                                       >
                                                                                         <div
                                                                                           aria-label="UQ training Events loading"
-                                                                                          className="makeStyles-flexLoader-210"
+                                                                                          className="makeStyles-flexLoader-41"
                                                                                         >
                                                                                           <MyLoader>
                                                                                             <ContentLoader
@@ -8786,7 +8786,7 @@ exports[`Application component should render loading screen while account is loa
                                                                                           />
                                                                                         </ForwardRef(Fade)>
                                                                                         <div
-                                                                                          className="makeStyles-flexFooter-211"
+                                                                                          className="makeStyles-flexFooter-42"
                                                                                         >
                                                                                           <WithStyles(ForwardRef(Grid))
                                                                                             container={true}
@@ -8907,12 +8907,12 @@ exports[`Application component should render loading screen while account is loa
                                                                                                 className="MuiGrid-root MuiGrid-container"
                                                                                               >
                                                                                                 <WithStyles(ForwardRef(Grid))
-                                                                                                  className="makeStyles-actionButtonBlock-216"
+                                                                                                  className="makeStyles-actionButtonBlock-47"
                                                                                                   item={true}
                                                                                                   xs={12}
                                                                                                 >
                                                                                                   <ForwardRef(Grid)
-                                                                                                    className="makeStyles-actionButtonBlock-216"
+                                                                                                    className="makeStyles-actionButtonBlock-47"
                                                                                                     classes={
                                                                                                       Object {
                                                                                                         "align-content-xs-center": "MuiGrid-align-content-xs-center",
@@ -9024,10 +9024,10 @@ exports[`Application component should render loading screen while account is loa
                                                                                                     xs={12}
                                                                                                   >
                                                                                                     <div
-                                                                                                      className="MuiGrid-root makeStyles-actionButtonBlock-216 MuiGrid-item MuiGrid-grid-xs-12"
+                                                                                                      className="MuiGrid-root makeStyles-actionButtonBlock-47 MuiGrid-item MuiGrid-grid-xs-12"
                                                                                                     >
                                                                                                       <a
-                                                                                                        className="makeStyles-moreActionButton-217"
+                                                                                                        className="makeStyles-moreActionButton-48"
                                                                                                         data-testid="training-event-detail-more-training-button"
                                                                                                         href="https://web.library.uq.edu.au/library-services/training"
                                                                                                         id="training-event-detail-more-training-button"
