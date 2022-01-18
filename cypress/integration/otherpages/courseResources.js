@@ -12,6 +12,7 @@ import { default as ACCT1101ReadingList } from '../../../src/mock/data/records/c
 import { default as ACCT1101Guide } from '../../../src/mock/data/records/libraryGuides_ACCT1101';
 import { default as ACCT1101Exam } from '../../../src/mock/data/records/examListACCT1101';
 import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
+import { readingListLength } from '../../support/helpers';
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
@@ -35,17 +36,6 @@ function the_user_clicks_on_the_Search_tab() {
     cy.get('button#topmenu-1')
         .contains(locale.search.title)
         .click();
-}
-
-function readingListLength(courseReadingList) {
-    return (
-        (!!courseReadingList.reading_lists &&
-            courseReadingList.reading_lists.length > 0 &&
-            !!courseReadingList.reading_lists[0] &&
-            !!courseReadingList.reading_lists[0].list &&
-            courseReadingList.reading_lists[0].list.length) ||
-        0
-    );
 }
 
 function firstReadingListItems(courseReadingList) {

@@ -1,7 +1,7 @@
 context('Location component', () => {
     it('Renders as expected', () => {
         cy.clearCookies();
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
         cy.get('button[data-testid="location-button"]').should('be.visible');
         cy.get('button[data-testid="location-button"]').trigger('mouseover');
@@ -11,7 +11,7 @@ context('Location component', () => {
 
     it('Works as expected', () => {
         cy.clearCookies();
-        cy.visit('/');
+        cy.visit('/?user=vanilla');
         cy.viewport(1300, 1000);
         cy.get('button[data-testid="location-button"]').should('be.visible');
 
