@@ -1,5 +1,5 @@
 import { locale } from 'locale';
-import { seeCourseResources, seeAlertsAdmin, seeSpotlightsAdmin } from 'helpers/access';
+import { isAlertsAdminUser, canSeeCourseResources, isSpotlightsAdminUser } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -196,22 +196,20 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const canSeeAlertsAdmin = account && seeAlertsAdmin(account);
-    const canSeeSpotlightsAdmin = account && seeSpotlightsAdmin(account);
     return [
         ...publicPages,
-        ...(account && seeCourseResources(account) ? courseResoures : []),
-        ...(canSeeAlertsAdmin ? alertAddDisplay : []),
-        ...(canSeeAlertsAdmin ? alertEditForm : []),
-        ...(canSeeAlertsAdmin ? alertCloneForm : []),
-        ...(canSeeAlertsAdmin ? alertView : []),
-        ...(canSeeAlertsAdmin ? alertsListDisplay : []),
+        ...(account && canSeeCourseResources(account) ? courseResoures : []),
+        ...(isAlertsAdminUser(account) ? alertAddDisplay : []),
+        ...(isAlertsAdminUser(account) ? alertEditForm : []),
+        ...(isAlertsAdminUser(account) ? alertCloneForm : []),
+        ...(isAlertsAdminUser(account) ? alertView : []),
+        ...(isAlertsAdminUser(account) ? alertsListDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(canSeeSpotlightsAdmin ? spotlightsListDisplay : []),
-        ...(canSeeSpotlightsAdmin ? spotlightAddDisplay : []),
-        ...(canSeeSpotlightsAdmin ? spotlightEditForm : []),
-        ...(canSeeSpotlightsAdmin ? spotlightCloneForm : []),
-        ...(canSeeSpotlightsAdmin ? spotlightViewDisplay : []),
+        ...(isSpotlightsAdminUser(account) ? spotlightsListDisplay : []),
+        ...(isSpotlightsAdminUser(account) ? spotlightAddDisplay : []),
+        ...(isSpotlightsAdminUser(account) ? spotlightEditForm : []),
+        ...(isSpotlightsAdminUser(account) ? spotlightCloneForm : []),
+        ...(isSpotlightsAdminUser(account) ? spotlightViewDisplay : []),
         {
             component: components.NotFound,
         },

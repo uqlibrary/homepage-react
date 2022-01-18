@@ -110,11 +110,11 @@ export const getUserServices = (account, serviceLocale = null) => {
         .filter(i => i !== undefined);
 };
 
-const loggedinCanSee = account => !!account && !!account.id;
+const isLoggedInUser = account => !!account && !!account.id;
 
-// define which home page panel items and mylibrary popup items each user type can see
+// define which home page panel items each user type can see
 
-export const seeCourseResources = account => {
+export const canSeeCourseResources = account => {
     return (
         !!account &&
         !!account.id &&
@@ -132,39 +132,37 @@ export const seeCourseResources = account => {
     );
 };
 
-export const seeLoans = account => loggedinCanSee(account);
+export const canSeeLoans = account => isLoggedInUser(account);
 
-export const seePrintBalance = account => loggedinCanSee(account);
+export const canSeePrintBalance = account => isLoggedInUser(account);
 
-export const seeEspace = (account, author) => loggedinCanSee(account) && !!author && !!author.aut_id;
-
-export const seeLibraryServices = account => {
-    if (!loggedinCanSee(account)) {
+export const canSeeLibraryServices = account => {
+    if (!isLoggedInUser(account)) {
         return false;
     }
+    const userServices = getUserServices(account);
     // if the user has no services (should only be a brand new group we havent configured yet)
     // then dont display the panel
-    const userServices = getUserServices(account);
     return !!userServices && userServices.length > 0;
 };
 
+const canSeeWebContentAdminPages = account => {
+    return (
+        !!account && !!account.groups && !!account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'))
+    );
+};
+
+export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+
+export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+
 export const isHospitalUser = account =>
-    !!account && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
-
-const hasWebContentAdminAccess = account => {
-    return !!account && !!account.groups && account.groups.find(group => group.includes('lib_libapi_SpotlightAdmins'));
-};
-
-export const seeSpotlightsAdmin = account => {
-    return !!account && !!hasWebContentAdminAccess(account);
-};
-
-export const seeAlertsAdmin = account => {
-    return !!account && !!hasWebContentAdminAccess(account);
-};
+    isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 
 export const isHdrStudent = account =>
-    !!account &&
+    isLoggedInUser(account) &&
     account.class &&
     account.class.indexOf('IS_CURRENT') >= 0 &&
     account.class.indexOf('IS_UQ_STUDENT_PLACEMENT') >= 0;
+
+export const isEspaceAuthor = (account, author) => isLoggedInUser(account) && !!author && !!author.aut_id;
