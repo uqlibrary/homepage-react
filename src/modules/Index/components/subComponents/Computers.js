@@ -392,6 +392,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                                         <React.Fragment key={index}>
                                             <Grid
                                                 container
+                                                data-testid={`computer-row-${index}`}
                                                 spacing={1}
                                                 className={classes.row}
                                                 justify="center"
