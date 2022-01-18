@@ -14,7 +14,7 @@ import {
     loadCompAvail,
     loadTrainingEvents,
 } from 'actions';
-import { seeCourseResources, seeLibraryServices } from 'helpers/access';
+import { canSeeCourseResources, canSeeLibraryServices } from 'helpers/access';
 import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
 import Hours from './subComponents/Hours';
@@ -191,7 +191,7 @@ export const Index = ({
                     </Grid>
                 )}
 
-                {seeCourseResources(account) && (
+                {canSeeCourseResources(account) && (
                     <Grid item xs={12} md={4} data-testid="course-resources-panel">
                         <CourseResourcesPanel account={account} history={history} />
                     </Grid>
@@ -205,7 +205,7 @@ export const Index = ({
                     />
                 </Grid>
 
-                {seeLibraryServices(account) && (
+                {canSeeLibraryServices(account) && (
                     <Grid item xs={12} md={4} data-testid="library-services-panel">
                         <LibraryServices account={account} />
                     </Grid>
