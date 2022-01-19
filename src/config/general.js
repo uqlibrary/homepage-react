@@ -1,10 +1,3 @@
-const converter = require('number-to-words');
-
-export const numberToWords = value => {
-    const ordinal = converter.toWordsOrdinal(value);
-    return ordinal.charAt(0).toUpperCase() + ordinal.slice(1);
-};
-
 // Authentication
 export const SESSION_COOKIE_NAME = 'UQLID';
 export const SESSION_USER_GROUP_COOKIE_NAME = 'UQLID_USER_GROUP';

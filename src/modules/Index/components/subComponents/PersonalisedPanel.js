@@ -17,7 +17,7 @@ import Badge from '@material-ui/core/Badge';
 import PrintIcon from '@material-ui/icons/Print';
 import { Location } from 'modules/SharedComponents/Location';
 import { ppLocale } from './PersonalisedPanel.locale';
-import { seeEspace, seeLoans, seePrintBalance } from 'helpers/access';
+import { isEspaceAuthor, canSeeLoans, canSeePrintBalance } from 'helpers/access';
 import Collapse from '@material-ui/core/Collapse';
 import Fade from '@material-ui/core/Fade';
 const moment = require('moment');
@@ -521,30 +521,36 @@ const PersonalisedPanel = ({
                     <Grid container spacing={0} style={{ marginLeft: 16 }}>
                         <Collapse
                             style={{ width: '100%' }}
-                            in={!!(seePrintBalance(account) && !!printBalance && printBalance.balance)}
+                            in={!!(canSeePrintBalance(account) && !!printBalance && printBalance.balance)}
                         >
                             <PaperCut />
                         </Collapse>
-                        <Collapse style={{ width: '100%' }} in={!!(seeLoans(account) && !!loans)}>
+                        <Collapse style={{ width: '100%' }} in={!!(canSeeLoans(account) && !!loans)}>
                             <Loans />
                         </Collapse>
                         <Collapse
                             style={{ width: '100%' }}
-                            in={!!(seeLoans(account) && !!loans && loans.total_fines_count > 0)}
+                            in={!!(canSeeLoans(account) && !!loans && loans.total_fines_count > 0)}
                         >
                             <Fines />
                         </Collapse>
-                        <Collapse style={{ width: '100%' }} in={!!(seeEspace(account, author) && !!possibleRecords)}>
+                        <Collapse
+                            style={{ width: '100%' }}
+                            in={!!(isEspaceAuthor(account, author) && !!possibleRecords)}
+                        >
                             <EspacePossible />
                         </Collapse>
-                        <Collapse style={{ width: '100%' }} in={!!(seeEspace(account, author) && !author.aut_orcid_id)}>
+                        <Collapse
+                            style={{ width: '100%' }}
+                            in={!!(isEspaceAuthor(account, author) && !author.aut_orcid_id)}
+                        >
                             <EspaceOrcid />
                         </Collapse>
                         <Collapse
                             style={{ width: '100%' }}
                             in={
                                 !!(
-                                    seeEspace(account, author) &&
+                                    isEspaceAuthor(account, author) &&
                                     !!incompleteNTRORecords &&
                                     !!incompleteNTRORecords.total
                                 )

@@ -11,7 +11,6 @@ export {
 export { api, generateCancelToken, cache, sessionApi } from './axios';
 export * as validation from './validation';
 export * as general from './general';
-export { numberToWords } from './general';
 export * as routes from './routes';
 export { mui1theme } from './theme';
 export { history } from './history';

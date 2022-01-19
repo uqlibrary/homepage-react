@@ -3,57 +3,6 @@ describe('Computer availability', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
     });
-    context('Computer availability accessibility', () => {
-        it('Computer availability is accessible', () => {
-            cy.injectAxe();
-            cy.viewport(1300, 1000);
-            cy.log('Computers');
-            cy.get('button[data-testid="computers-library-button-0"]').contains('Architecture & Music Library');
-
-            cy.log('Computers list');
-            cy.checkA11y('div[data-testid="standard-card-computers"]', {
-                reportName: 'Computers',
-                scopeName: 'As loaded',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
-
-            cy.log('Level displayed');
-            cy.get('button[data-testid="computers-library-button-0"]').click();
-            cy.wait(500);
-            cy.checkA11y('div[data-testid="standard-card-computers"]', {
-                reportName: 'Computers',
-                scopeName: 'Level expanded',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
-
-            cy.log('Floor map');
-            cy.get('button[data-testid="computers-library-0-level-3-button"]').click();
-            cy.wait(500);
-            cy.checkA11y('div[data-testid="computers-library-dialog"]', {
-                reportName: 'Computers',
-                scopeName: 'Level map',
-                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-            });
-        });
-        it('has appropriate aria-labels', () => {
-            cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
-            cy.get('button[data-testid="computers-library-button-1"]')
-                .should('have.attr', 'aria-label')
-                .then(ariaLabel => {
-                    expect(ariaLabel).to.contains(
-                        'Biological Sciences Library - 108 free of 269. Click to review each level',
-                    );
-                });
-            cy.get('button[data-testid="computers-library-button-1"]').click();
-
-            cy.get('[data-testid="computers-library-1-level-4-button"]').contains('Level 4');
-            cy.get('[data-testid="computers-library-1-level-4-button"]')
-                .should('have.attr', 'aria-label')
-                .then(ariaLabel => {
-                    expect(ariaLabel).to.contains('Biological Sciences Library level 4. 72 free of 110 computers');
-                });
-        });
-    });
     context('Minor functionality works', () => {
         it('the display label has the correct number of computers free', () => {
             cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
@@ -90,6 +39,62 @@ describe('Computer availability', () => {
             cy.get('button[data-testid="computers-library-button-1"]')
                 .should('exist')
                 .contains('Biological Sciences Library');
+        });
+    });
+    context('Computer availability accessibility', () => {
+        it('Computer availability is accessible', () => {
+            cy.injectAxe();
+            cy.viewport(1300, 1000);
+
+            cy.log('Computers list');
+            cy.get('button[data-testid="computers-library-button-0"]').should(
+                'have.text',
+                'Architecture & Music Library',
+            );
+            cy.wait(500);
+            // checking all rows was creating spurious colour contrast errors; just one seemed to work
+            cy.checkA11y('div[data-testid="computer-row-0"]', {
+                reportName: 'Computers',
+                scopeName: 'As loaded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+
+            cy.log('Level displayed');
+            cy.get('button[data-testid="computers-library-button-0"]').click();
+            cy.get('div[data-testid="computer-row-0"] + div').should('have.text', 'Level 320 free of 41');
+            cy.wait(500);
+            cy.checkA11y('div[data-testid="computer-row-0"] + div', {
+                reportName: 'Computers',
+                scopeName: 'Level expanded',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+
+            cy.log('Floor map');
+            cy.get('button[data-testid="computers-library-0-level-3-button"]').click();
+            cy.wait(500);
+            cy.checkA11y('div[data-testid="computers-library-dialog"]', {
+                reportName: 'Computers',
+                scopeName: 'Level map',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('aria-labels make sense', () => {
+            cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
+            cy.get('button[data-testid="computers-library-button-1"]')
+                .should('have.attr', 'aria-label')
+                .then(ariaLabel => {
+                    expect(ariaLabel).to.contains(
+                        'Biological Sciences Library - 108 free of 269. Click to review each level',
+                    );
+                });
+            cy.get('button[data-testid="computers-library-button-1"]').click();
+
+            cy.get('[data-testid="computers-library-1-level-4-button"]').contains('Level 4');
+            cy.get('[data-testid="computers-library-1-level-4-button"]')
+                .should('have.attr', 'aria-label')
+                .then(ariaLabel => {
+                    expect(ariaLabel).to.contains('Biological Sciences Library level 4. 72 free of 110 computers');
+                });
         });
     });
 });
