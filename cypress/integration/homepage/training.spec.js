@@ -7,6 +7,7 @@ context('Training', () => {
         cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
 
         cy.log('Events list');
+        cy.wait(500);
         cy.checkA11y('div[data-testid="standard-card-training"]', {
             reportName: 'Training',
             scopeName: 'As loaded',

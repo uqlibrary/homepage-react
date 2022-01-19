@@ -45,10 +45,13 @@ describe('Computer availability', () => {
         it('Computer availability is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.log('Computers');
-            cy.get('button[data-testid="computers-library-button-0"]').contains('Architecture & Music Library');
 
             cy.log('Computers list');
+            cy.get('button[data-testid="computers-library-button-0"]').should(
+                'have.text',
+                'Architecture & Music Library',
+            );
+            cy.wait(500);
             cy.checkA11y('div[data-testid="standard-card-computers"]', {
                 reportName: 'Computers',
                 scopeName: 'As loaded',
