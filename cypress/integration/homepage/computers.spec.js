@@ -49,8 +49,7 @@ describe('Computer availability', () => {
             cy.get('button[data-testid="computers-library-button-0"]').contains('Architecture & Music Library');
 
             cy.log('Computers list');
-            // checking all rows was creating spurious colour contrast errors; just one seemed to work
-            cy.checkA11y('div[data-testid="computer-row-0"]', {
+            cy.checkA11y('div[data-testid="standard-card-computers"]', {
                 reportName: 'Computers',
                 scopeName: 'As loaded',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
