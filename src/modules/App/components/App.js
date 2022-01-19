@@ -75,7 +75,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actions }) => {
+export const App = ({ account, actions }) => {
     useEffect(() => {
         actions.loadCurrentAccount();
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -84,9 +84,7 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
     const classes = useStyles();
     const routesConfig = routes.getRoutesConfig({
         components: pages,
-        authorDetails: authorDetails,
         account: account,
-        accountAuthorDetailsLoading: accountAuthorDetailsLoading,
         isHdrStudent: isHdrStudent,
     });
     return (
@@ -140,8 +138,6 @@ export const App = ({ account, authorDetails, accountAuthorDetailsLoading, actio
 
 App.propTypes = {
     account: PropTypes.object,
-    accountAuthorDetailsLoading: PropTypes.bool,
-    authorDetails: PropTypes.object,
     actions: PropTypes.any,
     history: PropTypes.any,
     chatStatus: PropTypes.object,
