@@ -8,7 +8,10 @@ context('Training', () => {
 
         cy.log('Events list');
         cy.wait(500);
-        cy.checkA11y('div[data-testid="standard-card-training"]', {
+        cy.get('[data-testid="training-event-detail-button-0"]')
+            .should('exist')
+            .should('have.text', 'EndNote: getting started24 November at 10am - Online');
+        cy.checkA11y('button[data-testid="training-event-detail-button-0"]', {
             reportName: 'Training',
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
