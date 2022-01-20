@@ -42,7 +42,7 @@ export const POSSIBLE_RECORDS_API = () => ({
     },
 });
 
-// eSpace Possible records
+// eSpace NTRO records Incomplete (user is prompted to update them)
 export const INCOMPLETE_NTRO_RECORDS_API = () => ({
     apiUrl: 'records/search',
     options: {

@@ -17,7 +17,6 @@ export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
 
     // validate the input - all supplied entries should exist in the available options
     optionsTheUserShouldSee.map(item => {
-        console.log('check', item);
         expect(
             [...availableOptions.keys()].includes(item),
             `panel option unexpectedly supplied for panel test: ${item}`,
