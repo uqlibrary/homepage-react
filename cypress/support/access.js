@@ -1,10 +1,12 @@
+import { promoPanel } from '../../src/modules/Index/components/subComponents/promoPanel.locale';
+
 export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
     cy.visit(`/?user=${username}`);
     cy.viewport(1300, 1000);
     cy.wait(1000);
     cy.get('div[data-testid="personalised-panel"]').contains(firstname);
 };
-export const hasPanels = optionsTheUserShouldSee => {
+export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
     const availableOptions = new Map();
     availableOptions.set('computer-availability', { title: 'Computer availability', content: 'Architecture' });
     availableOptions.set('course-resources', { title: 'Course resources', content: 'Search by' });
@@ -22,9 +24,14 @@ export const hasPanels = optionsTheUserShouldSee => {
         ).to.be.true;
     });
 
+    // promo panel title is currently set in locale by end user
+    // (there is a plan to make it api driven, then we can use mock here)
+    const title = loggedin ? promoPanel.loggedin.title : promoPanel.loggedout.title;
+    expect(typeof title).to.equal('string');
+    expect(title.length).to.be.greaterThan(0);
+
     // eslint-disable-next-line guard-for-in
     for (const [key, value] of availableOptions) {
-        console.log('key = ', key, '; value=', value);
         expect(typeof key).to.equal('string');
         expect(key.length).to.be.greaterThan(0);
         if (key !== 'promo') {
@@ -38,8 +45,9 @@ export const hasPanels = optionsTheUserShouldSee => {
         const titleSelector = `div[data-testid="${panelname}"] h2`;
         if (!!optionsTheUserShouldSee.includes(key)) {
             if (key === 'promo') {
-                // the promo panel is admin editable, so we cant check the values. Just check it exists
-                cy.get(titleSelector).length > 0;
+                cy.get(titleSelector)
+                    .should('exist')
+                    .contains(title);
             } else {
                 cy.log(`checking panel ${panelname} contains ${value.title}`);
                 cy.get(titleSelector).contains(value.title);
