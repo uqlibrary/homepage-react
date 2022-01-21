@@ -1,7 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
 import {
-    AUTHOR_DETAILS_API,
     COMP_AVAIL_API,
     CURRENT_ACCOUNT_API,
     CURRENT_AUTHOR_API,
@@ -137,22 +136,6 @@ function addCurrentAuthorToStoredAccount(currentAuthor) {
     sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
 }
 
-function addCurrentAuthorDetailsToStoredAccount(authorDetails) {
-    const storedAccount = getAccountFromStorage();
-    /* istanbul ignore next */
-    if (storedAccount === null) {
-        return;
-    }
-    let storeableAccount = {
-        ...storedAccount,
-        authorDetails: {
-            ...authorDetails,
-        },
-    };
-    storeableAccount = JSON.stringify(storeableAccount);
-    sessionStorage.setItem(STORAGE_ACCOUNT_KEYNAME, storeableAccount);
-}
-
 function extendAccountDetails(accountResponse) {
     return {
         ...accountResponse,
@@ -184,28 +167,6 @@ function extractAccountFromSession(dispatch, storedAccount) {
             type: actions.CURRENT_AUTHOR_LOADED,
             payload: currentAuthorRetrieved,
         });
-
-        /* istanbul ignore else */
-        if (
-            !!currentAuthorRetrieved &&
-            (currentAuthorRetrieved.aut_org_username ||
-                /* istanbul ignore next */ currentAuthorRetrieved.aut_student_username)
-        ) {
-            dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
-            /* istanbul ignore next */
-            if (!!storedAccount.authorDetails) {
-                const authorDetailsResponse = storedAccount.authorDetails;
-                dispatch({
-                    type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
-                    payload: authorDetailsResponse,
-                });
-            } else {
-                dispatch({
-                    type: actions.CURRENT_AUTHOR_DETAILS_FAILED,
-                    payload: 'author details unexpectedly not available',
-                });
-            }
-        }
     } else {
         /* istanbul ignore next */
         dispatch({
@@ -275,37 +236,11 @@ export function loadCurrentAccount() {
                     payload: currentAuthor,
                 });
 
-                // load repository author details
-                if (currentAuthor.aut_org_username || currentAuthor.aut_student_username) {
-                    dispatch({ type: actions.CURRENT_AUTHOR_DETAILS_LOADING });
-                    return get(
-                        AUTHOR_DETAILS_API({
-                            userId: currentAuthor.aut_org_username || currentAuthor.aut_student_username,
-                        }),
-                    );
-                }
-
                 return null;
             })
-            .then(authorDetailsResponse => {
-                addCurrentAuthorDetailsToStoredAccount(authorDetailsResponse);
-                dispatch({
-                    type: actions.CURRENT_AUTHOR_DETAILS_LOADED,
-                    payload: authorDetailsResponse,
-                });
-            })
             .catch(error => {
-                // is this needed?
-                // dispatch({ type: actions.CURRENT_ACCOUNT_ANONYMOUS });
-
-                if (!currentAuthor) {
-                    dispatch({
-                        type: actions.CURRENT_AUTHOR_FAILED,
-                        payload: error.message,
-                    });
-                }
                 dispatch({
-                    type: actions.CURRENT_AUTHOR_DETAILS_FAILED,
+                    type: actions.CURRENT_AUTHOR_FAILED,
                     payload: error.message,
                 });
             });

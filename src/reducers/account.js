@@ -32,7 +32,6 @@ const handlers = {
         account: null,
         accountLoading: false,
         accountAuthorLoading: false,
-        accountAuthorDetailsLoading: false,
     }),
 
     [actions.CURRENT_AUTHOR_FAILED]: state => ({

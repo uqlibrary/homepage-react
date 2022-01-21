@@ -4,6 +4,7 @@ context('Spotlights on homepage', () => {
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.log('Spootlights');
+        cy.wait(500);
         cy.get('img[alt="Academic Integrity Modules - Everything you need to know about academic integrity at UQ"]')
             .should('be.visible')
             .and($img => {

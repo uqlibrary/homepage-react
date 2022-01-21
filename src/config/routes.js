@@ -50,11 +50,6 @@ export const flattedPathConfig = [
     '/admin/spotlights/clone',
 ];
 
-// TODO: will we even have roles?
-export const roles = {
-    admin: 'admin',
-};
-
 export const getRoutesConfig = ({ components = {}, account = null }) => {
     const publicPages = [
         {
@@ -141,7 +136,6 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             path: pathConfig.admin.masquerade,
             component: components.Masquerade,
             exact: true,
-            access: [roles.admin],
             pageTitle: locale.pages.admin.masquerade.title,
         },
     ];

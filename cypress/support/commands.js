@@ -121,5 +121,5 @@ Cypress.Commands.add('rendersALoggedoutUser', () => {
     cy.viewport(1300, 1000);
     cy.get('div#content-container').contains('Library hours');
 
-    hasPanels(['computer-availability', 'library-hours', 'training', 'promo']);
+    hasPanels(['computer-availability', 'library-hours', 'training', 'promo'], false);
 });

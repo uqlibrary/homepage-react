@@ -9,6 +9,7 @@ context('The Homepage Course Resource Panel', () => {
         cy.viewport(1300, 1000);
         cy.log('Course resources panel');
         cy.get('div[data-testid=course-resources-panel]').contains(locale.homepagePanel.title);
+        cy.wait(500);
         cy.checkA11y('div[data-testid="course-resources-panel"]', {
             reportName: 'Course resources panel',
             scopeName: 'As loaded',

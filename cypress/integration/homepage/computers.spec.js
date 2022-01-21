@@ -45,10 +45,13 @@ describe('Computer availability', () => {
         it('Computer availability is accessible', () => {
             cy.injectAxe();
             cy.viewport(1300, 1000);
-            cy.log('Computers');
-            cy.get('button[data-testid="computers-library-button-0"]').contains('Architecture & Music Library');
 
             cy.log('Computers list');
+            cy.get('button[data-testid="computers-library-button-0"]').should(
+                'have.text',
+                'Architecture & Music Library',
+            );
+            cy.wait(500);
             // checking all rows was creating spurious colour contrast errors; just one seemed to work
             cy.checkA11y('div[data-testid="computer-row-0"]', {
                 reportName: 'Computers',
@@ -58,8 +61,9 @@ describe('Computer availability', () => {
 
             cy.log('Level displayed');
             cy.get('button[data-testid="computers-library-button-0"]').click();
+            cy.get('div[data-testid="computer-row-0"] + div').should('have.text', 'Level 320 free of 41');
             cy.wait(500);
-            cy.checkA11y('div[data-testid="standard-card-computers"]', {
+            cy.checkA11y('div[data-testid="computer-row-0"] + div', {
                 reportName: 'Computers',
                 scopeName: 'Level expanded',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],

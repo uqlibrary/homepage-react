@@ -5,7 +5,7 @@ import { expectUserToDisplayCorrectFirstName, hasPanels, hasPersonalisedPanelOpt
 // we test that each user type gets the correct elements on the homepage
 // we shouldnt test the mylibrary button here, same, as that is built in reusable-webcomponents
 context('Personalised Homepage', () => {
-    it('Renders an on-campus undergraduate home page correctly', () => {
+    it("Renders an on-campus undergraduate student's home page correctly", () => {
         expectUserToDisplayCorrectFirstName('s1111111', 'Michael');
 
         // this type of user will see the following panels:
@@ -20,6 +20,10 @@ context('Personalised Homepage', () => {
 
         // this type of user will see these lines in the Personalisation Panel
         hasPersonalisedPanelOptions(['espace-possible', 'espace-ntro', 'fines', 'loans', 'papercut']);
+    });
+
+    it('Renders a logged out user', () => {
+        cy.rendersALoggedoutUser();
     });
 
     it('Renders an RHD home page correctly', () => {
@@ -158,10 +162,6 @@ context('Personalised Homepage', () => {
         ]);
 
         hasPersonalisedPanelOptions(['fines', 'loans', 'papercut']);
-    });
-
-    it('Renders a logged out user', () => {
-        cy.rendersALoggedoutUser();
     });
 
     it('Renders a Short Form Credential course student home page correctly', () => {
