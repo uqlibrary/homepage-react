@@ -232,19 +232,6 @@ describe('Account action creators', () => {
         },
     );
 
-    // it.only('should dispatch expected actions for account on error', async () => {
-    //     process.env = {
-    //         ENABLE_LOG: true,
-    //     };
-    //
-    //     mockApi.onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl).reply(403, accounts.s3333333);
-    //
-    //     const expectedActions = [actions.CURRENT_ACCOUNT_LOADING, actions.CURRENT_AUTHOR_FAILED];
-    //
-    //     await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
-    //     expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    // });
-
     it('should dispatch expected actions for a student without an author account', async () => {
         process.env = {
             ENABLE_LOG: true,
