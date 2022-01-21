@@ -407,3 +407,16 @@ setup as an environmental variable at CI level if required.
 
 GTM is very flexible and easy to configure to track required events. See more details on
 [Google Analytics](https://www.google.com.au/analytics/tag-manager/)
+
+
+## To work with api locally
+
+- bring up local [api](https://github.com/uqlibrary/api) repo (cf - tl;dr `./scripts/dev-tools.sh up`), remembering to run the seeders relevant to your needs
+- change .env to have value `API_URL='http://dev-api.library.uq.edu.au:8050/'`
+- start `npm run start:devapi`
+- possibly use a non-cors browser?
+- open <http://localhost:2020/> if it didnt open automatically
+- get the values of your cookies, UQLID and UQLID_USER_GROUP, from library.uq.edu.au and set them in localhost:2020
+- I think thats everything
+
+Remember to change the .env back after! (NB: You will need to restart `npm run start` for a change in .env to take effect)
