@@ -81,7 +81,6 @@ mockSessionApi.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
 });
 
 mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
-    console.log('Loading Account');
     // mock account response
     if (user === 'public') {
         return [403, {}];
@@ -92,23 +91,11 @@ mock.onGet(routes.CURRENT_ACCOUNT_API().apiUrl).reply(() => {
 });
 
 mock.onGet(routes.CURRENT_AUTHOR_API().apiUrl).reply(() => {
-    console.log('Loading eSpace Author');
     // mock current author details from fez
     if (user === 'anon') {
         return [403, {}];
     } else if (mockData.currentAuthor[user]) {
         return [200, mockData.currentAuthor[user]];
-    }
-    return [404, {}];
-});
-
-mock.onGet(routes.AUTHOR_DETAILS_API({ userId: user }).apiUrl).reply(() => {
-    console.log('Loading eSpace Author Details');
-    // mock current author details
-    if (user === 'anon') {
-        return [403, {}];
-    } else if (mockData.authorDetails[user]) {
-        return [200, mockData.authorDetails[user]];
     }
     return [404, {}];
 });

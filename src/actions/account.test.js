@@ -1,4 +1,4 @@
-import { accounts, currentAuthor, authorDetails } from 'mock/data/account';
+import { accounts, currentAuthor } from 'mock/data/account';
 
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
@@ -69,17 +69,13 @@ describe('Account action creators', () => {
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)
             .onGet(repositories.routes.CURRENT_AUTHOR_API().apiUrl)
-            .reply(200, currentAuthor.uqresearcher)
-            .onGet(repositories.routes.AUTHOR_DETAILS_API({ userId: accounts.uqresearcher.id }).apiUrl)
-            .reply(200, authorDetails.uqresearcher);
+            .reply(200, currentAuthor.uqresearcher);
 
         const expectedActions = [
             actions.CURRENT_ACCOUNT_LOADING,
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_LOADED,
-            actions.CURRENT_AUTHOR_DETAILS_LOADING,
-            actions.CURRENT_AUTHOR_DETAILS_LOADED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -91,17 +87,13 @@ describe('Account action creators', () => {
             .onGet(repositories.routes.CURRENT_ACCOUNT_API().apiUrl)
             .reply(200, accounts.uqresearcher)
             .onGet(repositories.routes.CURRENT_AUTHOR_API().apiUrl)
-            .reply(200, currentAuthor.s2222222)
-            .onGet(repositories.routes.AUTHOR_DETAILS_API({ userId: accounts.s2222222.id }).apiUrl)
-            .reply(200, authorDetails.s2222222);
+            .reply(200, currentAuthor.s2222222);
 
         const expectedActions = [
             actions.CURRENT_ACCOUNT_LOADING,
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_LOADED,
-            actions.CURRENT_AUTHOR_DETAILS_LOADING,
-            actions.CURRENT_AUTHOR_DETAILS_LOADED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -120,7 +112,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_LOADED,
-            actions.CURRENT_AUTHOR_DETAILS_LOADED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -139,7 +130,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_LOADED,
-            actions.CURRENT_AUTHOR_DETAILS_LOADED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -158,7 +148,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_LOADED,
-            actions.CURRENT_AUTHOR_DETAILS_LOADED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -177,7 +166,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_FAILED,
-            actions.CURRENT_AUTHOR_DETAILS_FAILED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -197,7 +185,6 @@ describe('Account action creators', () => {
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_ACCOUNT_ANONYMOUS,
             actions.CURRENT_AUTHOR_FAILED,
-            actions.CURRENT_AUTHOR_DETAILS_FAILED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -211,7 +198,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADING,
             actions.CURRENT_ACCOUNT_ANONYMOUS,
             actions.CURRENT_AUTHOR_FAILED,
-            actions.CURRENT_AUTHOR_DETAILS_FAILED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -239,8 +225,6 @@ describe('Account action creators', () => {
                 actions.CURRENT_ACCOUNT_LOADED,
                 actions.CURRENT_AUTHOR_LOADING,
                 actions.CURRENT_AUTHOR_LOADED,
-                actions.CURRENT_AUTHOR_DETAILS_LOADING,
-                actions.CURRENT_AUTHOR_DETAILS_FAILED,
             ];
 
             await mockActionsStore.dispatch(accountActions.loadCurrentAccount());
@@ -266,7 +250,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
             actions.CURRENT_AUTHOR_LOADED,
-            actions.CURRENT_AUTHOR_DETAILS_LOADED,
         ];
 
         await mockActionsStore.dispatch(accountActions.loadCurrentAccount());

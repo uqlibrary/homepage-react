@@ -6,9 +6,6 @@ export const CURRENT_ACCOUNT_API = () => ({
 });
 export const CURRENT_AUTHOR_API = () => ({ apiUrl: 'fez-authors' });
 export const AUTHOR_API = ({ authorId }) => ({ apiUrl: `fez-authors/${authorId}` });
-export const AUTHOR_DETAILS_API = ({ userId }) => ({
-    apiUrl: `authors/details/${userId}`,
-});
 
 // Training API
 export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
@@ -45,7 +42,7 @@ export const POSSIBLE_RECORDS_API = () => ({
     },
 });
 
-// eSpace Possible records
+// eSpace NTRO records Incomplete (user is prompted to update them)
 export const INCOMPLETE_NTRO_RECORDS_API = () => ({
     apiUrl: 'records/search',
     options: {
