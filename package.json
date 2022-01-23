@@ -178,7 +178,8 @@
         "redux": "4.0.0",
         "redux-immutable": "^4.0.0",
         "redux-thunk": "^2.2.0",
-        "throttle-debounce": "^2.1.0"
+        "throttle-debounce": "^2.1.0",
+        "vendor-copy": "^2.0.1"
     },
     "scripts": {
         "analyse": "webpack --config=./webpack-dist.config --profile --json > stats.json",
@@ -235,8 +236,8 @@
         "postinstall": "vendor-copy"
     },
     "engines": {
-        "npm": "^6",
-        "node": ">=14.15.1"
+        "npm": "^8",
+        "node": ">=16.13.2"
     },
     "babel": {
         "presets": [
