@@ -83,13 +83,13 @@ export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
-export const EXAMS_API = ({ keyword }) => ({ apiUrl: `learning_resources/${keyword}/exams` });
+export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
 export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     // api requires this field to be double encoded, as it may include characters like '/'
     const s = encodeURIComponent(encodeURIComponent(semester));
     return {
-        apiUrl: `learning_resources/${coursecode}/${campus}/${s}/reading_list`,
+        apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list`,
     };
 };
 
