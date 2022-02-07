@@ -25,10 +25,13 @@ export const NotFound = ({ account, accountLoading }) => {
                         !accountLoading && account ? account.id : 'NA'
                     }`}
                 />
-                {locale.notFound.urlChangeAdvisory.map(changeAdvice => {
-                    return changeAdvice.linkPattern === document.location.pathname ? changeAdvice.content : '';
-                })}
-                {locale.notFound.content}
+                {locale.notFound.urlChangeAdvisory.find(
+                    changeAdvice => changeAdvice.linkPattern === document.location.pathname,
+                )
+                    ? locale.notFound.urlChangeAdvisory.map(changeAdvice => {
+                          return changeAdvice.linkPattern === document.location.pathname ? changeAdvice.content : '';
+                      })
+                    : locale.notFound.content}
             </StandardPage>
         );
     }
