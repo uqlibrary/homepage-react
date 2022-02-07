@@ -45,7 +45,7 @@ context('Header', () => {
     });
 
     it('has a working home link', () => {
-        cy.visit('/courseresources?user=s1111111');
+        cy.visit('/learningresources?user=s1111111');
         cy.get('body').contains('Introductory French 1');
 
         cy.get('button[data-testid=uq-site-header-home-button]').click();

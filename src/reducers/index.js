@@ -3,7 +3,7 @@ export { default as alertsReducer } from './alertsReducer';
 export { default as alertReducer } from './alertReducer';
 export { default as homeReducer } from './homeReducer';
 export { default as appReducer } from './app';
-export { default as courseResourceSuggestionsReducer } from './courseResourceSuggestionsReducer';
+export { default as learningResourceSuggestionsReducer } from './learningResourceSuggestionsReducer';
 export { default as guidesReducer } from './guidesReducer';
 export { default as readingListReducer } from './readingListReducer';
 export { default as examReducer } from './examReducer';

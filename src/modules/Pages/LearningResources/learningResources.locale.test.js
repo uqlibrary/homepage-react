@@ -1,7 +1,7 @@
-import { default as locale } from './courseResources.locale';
+import { default as locale } from './learningResources.locale';
 import { isAString, isAValidLink, isPositiveInteger } from 'modules/testhelpers';
 
-describe('courseResourcesLocale', () => {
+describe('learningResourcesLocale', () => {
     it('should have a valid locale', () => {
         // because the locale is meant to be maintained by the user, we check the file is valid
         isAString(locale.title);

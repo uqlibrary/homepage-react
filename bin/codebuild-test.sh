@@ -111,7 +111,7 @@ case "$PIPE_NUM" in
           "src/modules/App/\*\*" \
           "src/modules/Index/\*\*" \
           "src/modules/Pages/BookExamBooth/\*\*" \
-          "src/modules/Pages/CourseResources/\*\*" \
+          "src/modules/Pages/LearningResources/\*\*" \
           "src/modules/Pages/NotFound/\*\*" \
           "src/modules/Pages/PaymentReceipt/\*\*" \
           "src/modules/SharedComponents/\*\*" \

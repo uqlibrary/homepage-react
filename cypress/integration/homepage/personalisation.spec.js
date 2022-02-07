@@ -11,7 +11,7 @@ context('Personalised Homepage', () => {
         // this type of user will see the following panels:
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -39,7 +39,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -54,7 +54,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -69,7 +69,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -84,7 +84,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -99,7 +99,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -154,7 +154,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',
@@ -169,7 +169,7 @@ context('Personalised Homepage', () => {
 
         hasPanels([
             'computer-availability',
-            'course-resources',
+            'learning-resources',
             'library-hours',
             'library-services',
             'promo',

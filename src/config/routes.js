@@ -1,5 +1,5 @@
 import { locale } from 'locale';
-import { isAlertsAdminUser, canSeeCourseResources, isSpotlightsAdminUser } from 'helpers/access';
+import { isAlertsAdminUser, canSeeLearningResources, isSpotlightsAdminUser } from 'helpers/access';
 
 export const fullPath = process.env.FULL_PATH || 'https://homepage-staging.library.uq.edu.au';
 
@@ -7,7 +7,7 @@ export const adminEditRegexConfig = new RegExp(/\/admin\/alerts\/edit\/(.*)/i);
 
 export const pathConfig = {
     index: '/',
-    courseresources: '/courseresources',
+    learningresources: '/learningresources',
     paymentReceipt: '/payment-receipt',
     admin: {
         alertsadd: '/admin/alerts/add',
@@ -29,8 +29,8 @@ export const pathConfig = {
 // a duplicate list of routes for checking validity easily, 2 sets: exact match and startswith
 export const flattedPathConfigExact = [
     '/',
-    '/courseresources',
-    '/courseresources/', // maybe someone has bookmarked it with a '/'?
+    '/learningresources',
+    '/learningresources/', // maybe someone has bookmarked it with a '/'?
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts',
@@ -74,10 +74,10 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     const courseResoures = [
         {
-            path: pathConfig.courseresources,
-            component: components.CourseResources,
+            path: pathConfig.learningresources,
+            component: components.LearningResources,
             exact: true,
-            pageTitle: locale.pages.courseresources.title,
+            pageTitle: locale.pages.learningresources.title,
         },
     ];
 
@@ -192,7 +192,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
 
     return [
         ...publicPages,
-        ...(account && canSeeCourseResources(account) ? courseResoures : []),
+        ...(account && canSeeLearningResources(account) ? courseResoures : []),
         ...(isAlertsAdminUser(account) ? alertAddDisplay : []),
         ...(isAlertsAdminUser(account) ? alertEditForm : []),
         ...(isAlertsAdminUser(account) ? alertCloneForm : []),

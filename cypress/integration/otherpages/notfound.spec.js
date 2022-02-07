@@ -12,7 +12,7 @@ context('not found page accessibility', () => {
     });
 
     it('non-loggedin user on a page that requires login is accessible', () => {
-        cy.visit('/courseresources?user=public');
+        cy.visit('/learningresources?user=public');
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[id="content-container"]').contains('authenticated users only');
@@ -24,7 +24,7 @@ context('not found page accessibility', () => {
     });
 
     it('pages that arent available to all logged in users are accessible', () => {
-        cy.visit('/courseresources?user=emcommunity');
+        cy.visit('/learningresources?user=emcommunity');
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[id="content-container"]').contains('authorised users only');
@@ -55,7 +55,7 @@ context('authorisation errors', () => {
         cy.get('h1').contains('Permission denied');
     });
     it('page that isnt available to all logged in users returns an authorisation error for non privileged users', () => {
-        cy.visit('/courseresources?user=emcommunity');
+        cy.visit('/learningresources?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=permission-denied]').should('exist');
         cy.get('body').contains('Permission denied');
@@ -67,7 +67,7 @@ context('authorisation errors', () => {
         cy.get('h1').should('not.contain', 'Permission denied');
     });
     it('page that isnt available to all logged in users does not return an authorisation error for privileged users', () => {
-        cy.visit('/courseresources?user=s1111111');
+        cy.visit('/learningresources?user=s1111111');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=permission-denied]').should('not.exist');
         cy.get('h1').should('not.contain', 'Permission denied');
@@ -75,13 +75,13 @@ context('authorisation errors', () => {
 });
 context('authentication errors', () => {
     it('page that requires login returns an authentication error for non-loggedin user', () => {
-        cy.visit('/courseresources?user=public');
+        cy.visit('/learningresources?user=public');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=user-not-loggedin]').should('exist');
         cy.get('body').contains('Authentication required');
     });
     it('page that requires login does not return an authentication error for loggedin user', () => {
-        cy.visit('/courseresources?user=uqstaff');
+        cy.visit('/learningresources?user=uqstaff');
         cy.viewport(1300, 1000);
         cy.get('[data-testid=user-not-loggedin]').should('not.exist');
     });

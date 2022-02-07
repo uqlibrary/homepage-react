@@ -1,5 +1,5 @@
 import Index from './Index';
-import { getUrlForCourseResourceSpecificTab } from './subComponents/CourseResourcesPanel';
+import { getUrlForLearningResourceSpecificTab } from './subComponents/LearningResourcesPanel';
 import { greeting } from './subComponents/PersonalisedPanel';
 
 function setup(testProps = {}, args = { isShallow: false }) {
@@ -16,7 +16,7 @@ describe('Index page', () => {
     });
 });
 
-describe('Course Resources panel', () => {
+describe('Learning Resources panel', () => {
     it('test urls correct', () => {
         const aclass = {
             ACAD_CAREER: 'UGRD',
@@ -34,14 +34,14 @@ describe('Course Resources panel', () => {
             search: '?keyword',
         };
         const pageNoParams = {};
-        expect(getUrlForCourseResourceSpecificTab(aclass, page)).toEqual(
-            '/courseresources?keyword&coursecode=HIST1201&campus=St Lucia&semester=Semester 2 2020',
+        expect(getUrlForLearningResourceSpecificTab(aclass, page)).toEqual(
+            '/learningresources?keyword&coursecode=HIST1201&campus=St Lucia&semester=Semester 2 2020',
         );
-        expect(getUrlForCourseResourceSpecificTab(aclass, page, true, true)).toEqual(
-            'http://localhost/courseresources?keyword&coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
+        expect(getUrlForLearningResourceSpecificTab(aclass, page, true, true)).toEqual(
+            'http://localhost/learningresources?keyword&coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
-        expect(getUrlForCourseResourceSpecificTab(aclass, pageNoParams, true, true)).toEqual(
-            'http://localhost/courseresources?coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
+        expect(getUrlForLearningResourceSpecificTab(aclass, pageNoParams, true, true)).toEqual(
+            'http://localhost/learningresources?coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
     });
 });

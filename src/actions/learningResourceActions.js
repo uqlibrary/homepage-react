@@ -175,7 +175,7 @@ export function clearReadingLists() {
 
 export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {
-        dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADING });
+        dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())
@@ -188,21 +188,21 @@ export function loadCourseReadingListsSuggestions(keyword) {
                     };
                 });
                 dispatch({
-                    type: actions.COURSE_RESOURCE_SUGGESTIONS_LOADED,
+                    type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADED,
                     payload: payload,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
+                    type: actions.LEARNING_RESOURCE_SUGGESTIONS_FAILED,
                     payload: error.message,
                 });
             });
     };
 }
 
-export function clearCourseResourceSuggestions() {
+export function clearLearningResourceSuggestions() {
     return dispatch => {
-        dispatch({ type: actions.COURSE_RESOURCE_SUGGESTIONS_CLEAR });
+        dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_CLEAR });
     };
 }

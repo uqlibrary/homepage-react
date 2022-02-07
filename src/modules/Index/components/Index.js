@@ -14,14 +14,14 @@ import {
     loadCompAvail,
     loadTrainingEvents,
 } from 'actions';
-import { canSeeCourseResources, canSeeLibraryServices } from 'helpers/access';
+import { canSeeLearningResources, canSeeLibraryServices } from 'helpers/access';
 import LibraryServices from './subComponents/LibraryServices';
 import Spotlights from './subComponents/Spotlights';
 import Hours from './subComponents/Hours';
 import { default as Computers } from './subComponents/Computers';
 import { default as Training } from './subComponents/Training';
 import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
-import CourseResourcesPanel from './subComponents/CourseResourcesPanel';
+import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
 import PromoPanel from './subComponents/PromoPanel';
 import ContentLoader from 'react-content-loader';
 
@@ -191,9 +191,9 @@ export const Index = ({
                     </Grid>
                 )}
 
-                {canSeeCourseResources(account) && (
-                    <Grid item xs={12} md={4} data-testid="course-resources-panel">
-                        <CourseResourcesPanel account={account} history={history} />
+                {canSeeLearningResources(account) && (
+                    <Grid item xs={12} md={4} data-testid="learning-resources-panel">
+                        <LearningResourcesPanel account={account} history={history} />
                     </Grid>
                 )}
 

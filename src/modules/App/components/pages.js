@@ -21,7 +21,7 @@ const lazyRetry = (importFn, retries = 3, interval = 500) => {
 };
 // lazy loaded components
 export const NotFound = lazy(() => lazyRetry(() => import('modules/Pages/NotFound/containers/NotFound')));
-export const CourseResources = lazy(() => lazyRetry(() => import('modules/Pages/CourseResources/containers/CourseResources')));
+export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/containers/LearningResources')));
 export const PaymentReceipt = lazy(() => lazyRetry(() => import('modules/Pages/PaymentReceipt/PaymentReceipt')));
 export const BookExamBooth = lazy(() => lazyRetry(() => import('modules/Pages/BookExamBooth/containers/BookExamBooth')));
 export const AlertsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Add/containers/AlertsAdd')));

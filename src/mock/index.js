@@ -511,19 +511,19 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 //     message: ['an error message from the api that describes what the problem was'],
 // });
 
-mock.onGet('course_resources/FREN1010/exams')
+mock.onGet('learning_resources/FREN1010/exams')
     .reply(() => {
         return [200, exams_FREN1010];
     })
-    .onGet('course_resources/HIST1201/exams')
+    .onGet('learning_resources/HIST1201/exams')
     .reply(() => {
         return [200, exams_HIST1201];
     })
-    .onGet('course_resources/PHIL1002/exams')
+    .onGet('learning_resources/PHIL1002/exams')
     .reply(() => {
         return [200, exams_PHIL1002];
     })
-    .onGet('course_resources/ACCT1101/exams')
+    .onGet('learning_resources/ACCT1101/exams')
     .reply(() => {
         return [200, exams_ACCT1101];
     })
@@ -545,19 +545,19 @@ mock.onGet('course_resources/FREN1010/exams')
         return [200, libraryGuides_ACCT1101];
     })
 
-    .onGet('course_resources/FREN1010/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/FREN1010/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
     })
-    .onGet('course_resources/HIST1201/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/HIST1201/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_HIST1201];
     })
-    .onGet('course_resources/PHIL1002/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/PHIL1002/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_PHIL1002];
     })
-    .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
     })

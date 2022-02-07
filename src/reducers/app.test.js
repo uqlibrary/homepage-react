@@ -65,8 +65,8 @@ describe('app reducer', () => {
         expect(test).toEqual(initialState);
     });
 
-    // it('should set course resource suggestions to null when failed loading', () => {
-    //     const test = appReducer(emptyState, { type: actions.COURSE_RESOURCE_SUGGESTIONS_FAILED });
+    // it('should set Learning Resource suggestions to null when failed loading', () => {
+    //     const test = appReducer(emptyState, { type: actions.LEARNING_RESOURCE_SUGGESTIONS_FAILED });
     //     expect(test).toEqual({
     //         ...emptyState,
     //         CRsuggestionsLoading: false,
