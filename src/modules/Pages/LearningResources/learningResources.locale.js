@@ -5,25 +5,25 @@ import CourtHouseIcon from '@material-ui/icons/AccountBalance';
 import { SpacedArrowForwardIcon } from './components/SpacedArrowForwardIcon';
 
 export default {
-    title: 'Course resources',
+    title: 'Learning resources',
     search: {
         title: 'Course search',
         autocompleteResultsTitle: 'Matching courses',
         noOptionsText: 'Enter a course code to find a course',
         noResultsText: 'No matching courses found',
         placeholder: 'Search by course code or keyword',
-        unavailableText: 'Course Resource suggestions unavailable',
+        unavailableText: 'Learning Resource suggestions unavailable',
     },
     searchResultsTitle: 'Search results',
     notesTrimLength: 90,
     externalSubjectLocation: 'External Instruction',
     homepagePanel: {
-        title: 'Course resources',
+        title: 'Learning resources',
         userCourseTitle: 'Your courses',
         noCourses: (
             <Fragment>
                 <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
-                <p>Search for course resources above.</p>
+                <p>Search for learning resources above.</p>
             </Fragment>
         ),
     },
@@ -34,7 +34,7 @@ export default {
             description: (
                 <Fragment>
                     <p>Your enrolled courses will appear here three weeks prior to the start of the semester.</p>
-                    <p>Search for course resources using the &apos;Course search&apos; tab, above.</p>
+                    <p>Search for learning resources using the &apos;Course search&apos; tab, above.</p>
                 </Fragment>
             ),
         },

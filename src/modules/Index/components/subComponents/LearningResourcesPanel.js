@@ -6,10 +6,10 @@ import { withRouter } from 'react-router-dom';
 
 import { getCampusByCode } from 'helpers/general';
 import { fullPath } from 'config/routes';
-import { default as locale } from 'modules/Pages/CourseResources/courseResources.locale';
+import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
-import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
+import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
 
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
@@ -27,21 +27,21 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-export const getUrlForCourseResourceSpecificTab = (
+export const getUrlForLearningResourceSpecificTab = (
     item,
     pageLocation,
     includeFullPath = false,
     isAccurateCampus = false,
 ) => {
     const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
-    const courseResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-    const prefix = `${includeFullPath ? fullPath : ''}/courseresources`;
+    const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
+    const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
     return !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-        ? `${prefix}${pageLocation.search}&${courseResourceParams}` // eg include ?user=s111111
-        : `${prefix}?${courseResourceParams}`;
+        ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
+        : `${prefix}?${learningResourceParams}`;
 };
 
-export const CourseResourcesPanel = ({ account, history }) => {
+export const LearningResourcesPanel = ({ account, history }) => {
     const pageLocation = useLocation();
     const classes = useStyles();
 
@@ -56,7 +56,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
         loadSearchResult(searchUrl);
     }, [searchUrl, loadSearchResult]);
 
-    const navigateToCourseResourcePage = option => {
+    const navigateToLearningResourcePage = option => {
         /* istanbul ignore next */
         if (!option.text || !option.rest || !option.rest.campus || !option.rest.period) {
             return; // should never happen
@@ -66,29 +66,29 @@ export const CourseResourcesPanel = ({ account, history }) => {
             campus: option.rest.campus,
             semester: option.rest.period,
         };
-        setSearchUrl(getUrlForCourseResourceSpecificTab(course, pageLocation, false, true));
+        setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
 
-    const courseResourceId = 'homepage-courseresource';
+    const learningResourceId = 'homepage-learningresource';
 
     return (
         <StandardCard
             fullHeight
             primaryHeader
             noPadding
-            standardCardId="course-resources-homepage-panel"
+            standardCardId="learning-resources-homepage-panel"
             title={
                 <Grid container>
-                    <Grid item xs id={`${courseResourceId}-autocomplete2-label`}>
+                    <Grid item xs id={`${learningResourceId}-autocomplete2-label`}>
                         {locale.homepagePanel.title}
                     </Grid>
                 </Grid>
             }
         >
-            <CourseResourceSearch
+            <LearningResourceSearch
                 displayType="compact"
-                elementId={courseResourceId}
-                navigateToCourseResourcePage={navigateToCourseResourcePage}
+                elementId={learningResourceId}
+                navigateToLearningResourcePage={navigateToLearningResourcePage}
             />
 
             {!!account && !!account.current_classes && account.current_classes.length > 0 ? (
@@ -107,7 +107,7 @@ export const CourseResourcesPanel = ({ account, history }) => {
                                 key={`hcr-${index}`}
                                 style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
                             >
-                                <Link to={getUrlForCourseResourceSpecificTab(item, pageLocation)}>
+                                <Link to={getUrlForLearningResourceSpecificTab(item, pageLocation)}>
                                     {item.classnumber}
                                 </Link>
                                 {' - '}
@@ -123,9 +123,9 @@ export const CourseResourcesPanel = ({ account, history }) => {
     );
 };
 
-CourseResourcesPanel.propTypes = {
+LearningResourcesPanel.propTypes = {
     account: PropTypes.object,
     history: PropTypes.object,
 };
 
-export default withRouter(CourseResourcesPanel);
+export default withRouter(LearningResourcesPanel);

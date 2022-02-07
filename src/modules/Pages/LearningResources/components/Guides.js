@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseResources.locale';
+import locale from '../learningResources.locale';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(
     () => ({
-        courseResourceLineItem: {
+        learningResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
             '& a': {
@@ -53,7 +53,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     </Grid>
                 )}
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
-                    <Grid item xs={12} data-testid="no-guides" className={classes.courseResourceLineItem}>
+                    <Grid item xs={12} data-testid="no-guides" className={classes.learningResourceLineItem}>
                         <Typography>{locale.myCourses.guides.none}</Typography>
                     </Grid>
                 )}
@@ -63,7 +63,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                     guideList.length > 0 &&
                     guideList.slice(0, locale.myCourses.guides.visibleItemsCount).map((guide, index) => {
                         return (
-                            <Grid item xs={12} className={classes.courseResourceLineItem} key={`guides-${index}`}>
+                            <Grid item xs={12} className={classes.learningResourceLineItem} key={`guides-${index}`}>
                                 <a
                                     aria-label={`library guide for ${guide.title}`}
                                     className="library-guide-item"
@@ -86,7 +86,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                             item.linkLabel && (
                                 <Grid
                                     item
-                                    className={classes.courseResourceLineItem}
+                                    className={classes.learningResourceLineItem}
                                     key={`studylink-${index}`}
                                     xs={12}
                                 >

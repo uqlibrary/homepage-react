@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseResources.locale';
-import { _courseLink } from '../courseResourcesHelpers';
+import locale from '../learningResources.locale';
+import { _courseLink } from '../learningResourcesHelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(
     () => ({
-        courseResourceLineItem: {
+        learningResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
             '& a': {
@@ -50,7 +50,7 @@ export const SubjectLinks = ({ subject, headingLevel }) => {
                             item.linkLabel && (
                                 <Grid
                                     item
-                                    className={classes.courseResourceLineItem}
+                                    className={classes.learningResourceLineItem}
                                     key={`studylink-${index}`}
                                     xs={12}
                                 >

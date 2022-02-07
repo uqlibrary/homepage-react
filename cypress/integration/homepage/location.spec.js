@@ -1,3 +1,4 @@
+// this tests the little 'set a preferred campus' wiggler, and its associated display in panel headers
 context('Location component', () => {
     it('Renders as expected', () => {
         cy.clearCookies();

@@ -2,8 +2,8 @@ import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
-import locale from '../courseResources.locale';
-import { _pluralise, trimNotes } from '../courseResourcesHelpers';
+import locale from '../learningResources.locale';
+import { _pluralise, trimNotes } from '../learningResourcesHelpers';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
@@ -14,7 +14,7 @@ import { unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     () => ({
-        courseResourceLineItem: {
+        learningResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
             '& a': {
@@ -55,7 +55,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                                 xs={12}
                                 data-testid={`multiple-reading-lists-${index}`}
                                 key={`multiple-reading-lists-${index}`}
-                                className={classes.courseResourceLineItem}
+                                className={classes.learningResourceLineItem}
                             >
                                 <a
                                     aria-label={`Reading list for ${list.title} ${list.period}`}
@@ -67,7 +67,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                             </Grid>
                         );
                     })}
-                <Grid item xs={12} className={classes.courseResourceLineItem}>
+                <Grid item xs={12} className={classes.learningResourceLineItem}>
                     <a
                         data-testid="multiple-reading-list-search-link"
                         href={locale.myCourses.readingLists.error.footer.linkOut}
@@ -132,10 +132,10 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
 
                 {!!readingListError && (
                     /* istanbul ignore next */ <Fragment>
-                        <Grid item xs={12} className={classes.courseResourceLineItem}>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <Typography>{locale.myCourses.readingLists.error.unavailable}</Typography>
                         </Grid>
-                        <Grid item xs={12} className={classes.courseResourceLineItem}>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <a
                                 data-testid="multiple-reading-list-search-link"
                                 href={locale.myCourses.readingLists.error.footer.linkOut}
@@ -151,10 +151,10 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                     !readingListLoading &&
                     (!readingList || (!!readingList.reading_lists && readingList.reading_lists.length === 0)) && (
                         <Fragment>
-                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                            <Grid item xs={12} className={classes.learningResourceLineItem}>
                                 <Typography>{locale.myCourses.readingLists.error.none}</Typography>
                             </Grid>
-                            <Grid item xs={12} className={classes.courseResourceLineItem}>
+                            <Grid item xs={12} className={classes.learningResourceLineItem}>
                                 <a
                                     data-testid="multiple-reading-list-search-link"
                                     href={locale.myCourses.readingLists.error.footer.linkOut}
@@ -188,7 +188,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                                     xs={12}
                                     data-testid={`reading-list-${index}`}
                                     key={`reading-list-${index}`}
-                                    className={classes.courseResourceLineItem}
+                                    className={classes.learningResourceLineItem}
                                 >
                                     {!!list.itemLink && !!list.title && (
                                         <a
@@ -233,7 +233,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                         <Grid
                             item
                             xs={12}
-                            className={classes.courseResourceLineItem}
+                            className={classes.learningResourceLineItem}
                             data-testid="reading-list-more-link"
                         >
                             <a href={readingList.reading_lists[0].url}>

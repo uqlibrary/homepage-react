@@ -4,9 +4,9 @@ import { useAccountContext } from 'context';
 import { useLocation } from 'react-router';
 import { throttle } from 'throttle-debounce';
 
-import locale from '../courseResources.locale';
+import locale from '../learningResources.locale';
 import global from 'locale/global';
-import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
+import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../learningResourcesHelpers';
 import { getCampusByCode, isRepeatingString } from 'helpers/general';
 import { courseTabLabel, MyCourses } from './MyCourses';
 import { SearchCourses } from './SearchCourses';
@@ -70,7 +70,7 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export const CourseResources = ({
+export const LearningResources = ({
     actions,
     examList,
     examListLoading,
@@ -319,10 +319,10 @@ export const CourseResources = ({
             <section aria-live="assertive">
                 <StandardCard noPadding noHeader>
                     <Grid container>
-                        <Grid item xs={12} data-testid="course-resources" style={{ marginBottom: 24 }}>
+                        <Grid item xs={12} data-testid="learning-resources" style={{ marginBottom: 24 }}>
                             <AppBar
-                                data-testid="course-resource-top-menu"
-                                id="course-resource-top-menu"
+                                data-testid="learning-resource-top-menu"
+                                id="learning-resource-top-menu"
                                 position="static"
                                 component="div"
                                 className={classes.appbar}
@@ -376,7 +376,7 @@ export const CourseResources = ({
     );
 };
 
-CourseResources.propTypes = {
+LearningResources.propTypes = {
     actions: PropTypes.object,
     examList: PropTypes.any,
     examListLoading: PropTypes.bool,
@@ -389,4 +389,4 @@ CourseResources.propTypes = {
     readingListError: PropTypes.any,
 };
 
-export default React.memo(CourseResources);
+export default React.memo(LearningResources);

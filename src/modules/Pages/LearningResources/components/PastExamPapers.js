@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import locale from '../courseResources.locale';
-import { _courseLink, _pluralise } from '../courseResourcesHelpers';
+import locale from '../learningResources.locale';
+import { _courseLink, _pluralise } from '../learningResourcesHelpers';
 import { SpacedArrowForwardIcon } from './SpacedArrowForwardIcon';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(
     () => ({
-        courseResourceLineItem: {
+        learningResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
             '& a': {
@@ -68,10 +68,10 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
                 {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
-                        <Grid item xs={12} className={classes.courseResourceLineItem}>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <Typography>{locale.myCourses.examPapers.none}</Typography>
                         </Grid>
-                        <Grid item xs={12} className={classes.courseResourceLineItem}>
+                        <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <a href={_courseLink('', locale.myCourses.examPapers.footer.linkOutPattern)}>
                                 <SpacedArrowForwardIcon />
                                 {locale.myCourses.examPapers.footer.linkLabel}
@@ -85,7 +85,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     listOfExams.length > 0 &&
                     listOfExams.slice(0, locale.myCourses.examPapers.visibleItemsCount).map((paper, index) => {
                         return (
-                            <Grid item xs={12} key={`examPapers-${index}`} className={classes.courseResourceLineItem}>
+                            <Grid item xs={12} key={`examPapers-${index}`} className={classes.learningResourceLineItem}>
                                 <a
                                     aria-label={examAriaLabel(paper)}
                                     className="exam-paper-item"
@@ -99,7 +99,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                         );
                     })}
                 {!!listOfExams && listOfExams.length > 0 && !!numberExcessExams && (
-                    <Grid item xs={12} data-testid="exam-more-link" className={classes.courseResourceLineItem}>
+                    <Grid item xs={12} data-testid="exam-more-link" className={classes.learningResourceLineItem}>
                         <a href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}>
                             <SpacedArrowForwardIcon />
                             {locale.myCourses.examPapers.morePastExams

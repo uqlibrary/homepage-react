@@ -1,5 +1,5 @@
 import {
-    canSeeCourseResources,
+    canSeeLearningResources,
     canSeeLibraryServices,
     canSeeLoans,
     canSeePrintBalance,
@@ -79,9 +79,9 @@ describe('access', () => {
         expect(isEspaceAuthor({})).toEqual(false);
     });
 
-    it('only authorised users can see course resources', () => {
-        expect(canSeeCourseResources({ id: 's123456', user_group: 'UG' })).toEqual(true);
-        expect(canSeeCourseResources({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
+    it('only authorised users can see learning resources', () => {
+        expect(canSeeLearningResources({ id: 's123456', user_group: 'UG' })).toEqual(true);
+        expect(canSeeLearningResources({ id: 's123456', user_group: 'STAFF_AWAITING_AURION' })).toEqual(false);
     });
 
     it('library services are shown to appropriate users', () => {

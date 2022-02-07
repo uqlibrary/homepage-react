@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../courseResourcesHelpers';
-import { default as locale } from '../courseResources.locale';
+import { a11yProps, extractSubjectCodeFromName, reverseA11yProps } from '../learningResourcesHelpers';
+import { default as locale } from '../learningResources.locale';
 import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';
-import { CourseResourceSearch } from 'modules/SharedComponents/CourseResourceSearch';
+import { LearningResourceSearch } from 'modules/SharedComponents/LearningResourceSearch';
 import AppBar from '@material-ui/core/AppBar';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
@@ -54,7 +54,7 @@ export const SearchCourses = ({
 
     React.useEffect(() => {
         // when the page loads on the Search tab, put focus in the input field
-        const searchField = document.getElementById('full-courseresource-autocomplete');
+        const searchField = document.getElementById('full-learningresource-autocomplete');
         !!searchField && searchField.focus();
     }, []);
 
@@ -223,21 +223,21 @@ export const SearchCourses = ({
     };
 
     return (
-        <Grid container spacing={3} id={'full-courseresource'} data-testid={'full-courseresource'}>
-            <Grid item xs={12} id="courseresource-search">
-                <CourseResourceSearch
+        <Grid container spacing={3} id={'full-learningresource'} data-testid={'full-learningresource'}>
+            <Grid item xs={12} id="learningresource-search">
+                <LearningResourceSearch
                     displayType="full"
-                    elementId="full-courseresource"
+                    elementId="full-learningresource"
                     loadCourseAndSelectTab={loadCourseAndSelectTab}
                 />
             </Grid>
             {!!listSearchedSubjects && listSearchedSubjects.length > 0 && (
-                <Grid item xs={12} role="region" aria-live="assertive" aria-label="Course Resource Search Results">
+                <Grid item xs={12} role="region" aria-live="assertive" aria-label="Learning Resource Search Results">
                     <Typography
                         component="h2"
                         variant="h6"
                         style={{ marginLeft: '1.2rem' }}
-                        id="course-resource-search-results"
+                        id="learning-resource-search-results"
                     >
                         {locale.searchResultsTitle}
                     </Typography>

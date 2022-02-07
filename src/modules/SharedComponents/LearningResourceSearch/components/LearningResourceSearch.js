@@ -3,8 +3,8 @@ import { throttle } from 'throttle-debounce';
 
 import { PropTypes } from 'prop-types';
 import { isRepeatingString, unescapeString } from 'helpers/general';
-import { default as locale } from 'modules/Pages/CourseResources/courseResources.locale';
-import { extractSubjectCodeFromName } from 'modules/Pages/CourseResources/courseResourcesHelpers';
+import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
+import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/learningResourcesHelpers';
 
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -64,14 +64,14 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const CourseResourceSearch = ({
+export const LearningResourceSearch = ({
     actions,
     displayType, // default: 'full'; values: 'full', 'compact'
-    // 'full' for course resources page search
-    // 'compact' for course resource search in homepage panel
+    // 'full' for learning resources page search
+    // 'compact' for Learning Resource search in homepage panel
     elementId,
     loadCourseAndSelectTab,
-    navigateToCourseResourcePage,
+    navigateToLearningResourcePage,
     CRsuggestions,
     CRsuggestionsLoading,
     CRsuggestionsError,
@@ -88,7 +88,7 @@ export const CourseResourceSearch = ({
 
     const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
 
-    const throttledCourseResourceLoadSuggestions = useRef(
+    const throttledLearningResourceLoadSuggestions = useRef(
         throttle(3100, newValue => actions.loadCourseReadingListsSuggestions(newValue)),
     );
 
@@ -103,14 +103,14 @@ export const CourseResourceSearch = ({
             setInputValue(newValue);
 
             if (newValue.length <= 3) {
-                actions.clearCourseResourceSuggestions();
+                actions.clearLearningResourceSuggestions();
                 noOptionsTextSetter(locale.search.noOptionsText);
             } else if (!isRepeatingString(newValue)) {
                 // if we pass a space in the search string, Autocomplete refuses to display a result
                 // but - api only returns anything for "multiple words" when they make up a course code
                 // (eg 'health economics' doesnt return anything, but 'FREN 1010' does)
                 // so spaces do nothing anyway
-                throttledCourseResourceLoadSuggestions.current(newValue.replace(' ', ''));
+                throttledLearningResourceLoadSuggestions.current(newValue.replace(' ', ''));
 
                 document.getElementById(`${elementId}-autocomplete`).focus();
 
@@ -129,7 +129,7 @@ export const CourseResourceSearch = ({
         [actions, elementId],
     );
 
-    const courseResourceSubjectDisplay = option => {
+    const learningResourceSubjectDisplay = option => {
         const coursecode = option.text;
         const title = !!option.rest.course_title ? `${unescapeString(option.rest.course_title)}, ` : '';
         const campus = !!option.rest.campus ? `${option.rest.campus}, ` : '';
@@ -142,17 +142,17 @@ export const CourseResourceSearch = ({
         /* istanbul ignore else */
         if (!!option && !!option.text) {
             if (displayType === 'compact') {
-                // user is on the homepage - will navigate to the Course Resources page
-                navigateToCourseResourcePage(option);
+                // user is on the homepage - will navigate to the Learning Resources page
+                navigateToLearningResourcePage(option);
             } else {
-                // user is on the Course Resource page - tab will load
+                // user is on the Learning Resource page - tab will load
                 loadCourseAndSelectTab(extractSubjectCodeFromName(option.text), CRsuggestions);
             }
 
             document.getElementById(`${elementId}-autocomplete`).value = '';
 
             // we dont want the previous list to pop up if they search again
-            actions.clearCourseResourceSuggestions();
+            actions.clearLearningResourceSuggestions();
 
             // clear the input after they select so they can re-search in a clean field
             setInputValue('');
@@ -178,7 +178,7 @@ export const CourseResourceSearch = ({
                         clearOnEscape
                         id={`${elementId}-autocomplete`}
                         options={(!!CRsuggestions && CRsuggestions) || []}
-                        getOptionLabel={option => courseResourceSubjectDisplay(option)}
+                        getOptionLabel={option => learningResourceSubjectDisplay(option)}
                         onChange={(event, value) => {
                             handleSelectionOfCourseInDropdown(event, value);
                         }}
@@ -239,22 +239,22 @@ export const CourseResourceSearch = ({
     );
 };
 
-CourseResourceSearch.propTypes = {
+LearningResourceSearch.propTypes = {
     displayType: PropTypes.string,
     elementId: PropTypes.string,
     history: PropTypes.any,
     locale: PropTypes.any,
     option: PropTypes.any,
     loadCourseAndSelectTab: PropTypes.any,
-    navigateToCourseResourcePage: PropTypes.any,
+    navigateToLearningResourcePage: PropTypes.any,
     CRsuggestions: PropTypes.any,
     CRsuggestionsLoading: PropTypes.bool,
     CRsuggestionsError: PropTypes.string,
     actions: PropTypes.any,
 };
 
-CourseResourceSearch.defaultProps = {
+LearningResourceSearch.defaultProps = {
     displayType: 'all',
 };
 
-export default CourseResourceSearch;
+export default LearningResourceSearch;
