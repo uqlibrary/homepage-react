@@ -91,12 +91,12 @@ context('404 errors', () => {
         cy.visit('/thisPageDoesntExist?user=vanilla');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page could not be found.');
-        cy.get('body').should('not.contain', 'Course Resources are now');
+        cy.get('body').should('not.contain', 'This page has permanently moved and is now available at');
     });
     it('the course resources page notifies the user of the new url', () => {
         cy.visit('/courseresources');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page could not be found.');
-        cy.get('body').should('contain', 'Course Resources are now');
+        cy.get('body').should('contain', 'This page has permanently moved and is now available at');
     });
 });

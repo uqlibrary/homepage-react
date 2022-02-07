@@ -19,7 +19,8 @@ export default {
                     >
                         <p>
                             <b>
-                                Course Resources are now <a href="/learningresources">Learning Resources</a>
+                                This page has permanently moved and is now available at{' '}
+                                <a href="/learningresources">Learning Resources</a>.
                             </b>
                         </p>
                     </div>
