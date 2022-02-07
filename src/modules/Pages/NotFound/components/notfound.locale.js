@@ -3,6 +3,29 @@ import React from 'react';
 export default {
     notFound: {
         title: 'Page not found',
+        urlChangeAdvisory: [
+            // when the url path matches this pattern, this content will be displayed
+            {
+                linkPattern: '/courseresources',
+                content: (
+                    <div
+                        className="layout-card"
+                        data-testid="courseresources-in-url"
+                        style={{
+                            border: 'thin solid black',
+                            padding: '1rem',
+                            margin: '1rem',
+                        }}
+                    >
+                        <p>
+                            <b>
+                                Course Resources are now <a href="/learningresources">Learning Resources</a>
+                            </b>
+                        </p>
+                    </div>
+                ),
+            },
+        ],
         content: (
             <div className="layout-card" data-testid="page-not-found">
                 <p>The requested page could not be found.</p>
