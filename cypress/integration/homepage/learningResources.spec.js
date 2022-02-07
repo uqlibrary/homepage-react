@@ -42,13 +42,13 @@ context('The Homepage Learning Resource Panel', () => {
         // the user lands on the correct page
         cy.url().should(
             'include',
-            'learningresources?user=s1111111&coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020',
+            'learning-resources?user=s1111111&coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020',
         );
         const classPanelId = 'classpanel-1';
         cy.get(`div[data-testid=${classPanelId}] h2`).contains(secondClass.SUBJECT);
     });
 
-    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learningresources
+    // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
     it('The Learning resources panel searches correctly', () => {
         cy.visit('/?user=s3333333');
         cy.viewport(1300, 1000);
@@ -85,7 +85,7 @@ context('The Homepage Learning Resource Panel', () => {
         // user lands on appropriate learning resources page
         cy.url().should(
             'include',
-            'learningresources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
+            'learning-resources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
         );
         const classPanelId = 'classpanel-0';
         cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');

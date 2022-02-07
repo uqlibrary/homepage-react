@@ -35,7 +35,7 @@ export const getUrlForLearningResourceSpecificTab = (
 ) => {
     const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
     const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
-    const prefix = `${includeFullPath ? fullPath : ''}/learningresources`;
+    const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
     return !!pageLocation.search && pageLocation.search.indexOf('?') === 0
         ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
         : `${prefix}?${learningResourceParams}`;

@@ -332,7 +332,7 @@ function FREN1010_loads_properly_for_s111111_user() {
 
 context('Learning Resources Accessibility', () => {
     it('User with classes', () => {
-        cy.visit('/learningresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="learning-resources"]').contains('My courses');
@@ -345,7 +345,7 @@ context('Learning Resources Accessibility', () => {
     });
 
     it('User without classes', () => {
-        cy.visit('/learningresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.injectAxe();
         cy.viewport(1300, 1000);
         cy.get('div[data-testid="learning-resources"]').contains('My courses');
@@ -358,7 +358,7 @@ context('Learning Resources Accessibility', () => {
     });
 
     it('Responsive display', () => {
-        cy.visit('/learningresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(414, 736);
         cy.get('div[data-testid="learning-resources"]').contains('My courses');
@@ -373,13 +373,13 @@ context('Learning Resources Accessibility', () => {
 
 context('Learning Resources Access', () => {
     it('A non-loggedin user cannot access Learning Resources', () => {
-        cy.visit('/learningresources?user=public');
+        cy.visit('/learning-resources?user=public');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authenticated users only.');
     });
 
     it('A loggedin user without Learning Resource privs cannot access Learning Resources', () => {
-        cy.visit('/learningresources?user=emcommunity');
+        cy.visit('/learning-resources?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
@@ -399,11 +399,11 @@ context('The Learning Resources Page', () => {
      * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
      * ---------+-----------------------------------+---------------+----------------+
      *
-     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learningresources
+     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
      *
      */
     it('User with classes sees their classes', () => {
-        cy.visit('/learningresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
         FREN1010_loads_properly_for_s111111_user();
@@ -437,7 +437,7 @@ context('The Learning Resources Page', () => {
     });
 
     it('User without classes sees the search field', () => {
-        cy.visit('/learningresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
@@ -449,7 +449,9 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user who has arrived by clicking on the homepage own course gets the course they requested', () => {
-        cy.visit('/learningresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020');
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+        );
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
@@ -458,7 +460,9 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user who has arrived by searching for a course on the homepage gets the course they requested', () => {
-        cy.visit('/learningresources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020');
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
+        );
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
@@ -476,7 +480,7 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user who searches for a subject they are enrolled in will be changed to the mycourses tab', () => {
-        cy.visit('/learningresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
         the_user_clicks_on_the_Search_tab();
@@ -489,7 +493,7 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
-        cy.visit('/learningresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
@@ -533,7 +537,7 @@ context('The Learning Resources Page', () => {
     });
 
     it('A repeating string is handled correctly', () => {
-        cy.visit('/learningresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         // enter a repeating string
@@ -543,7 +547,7 @@ context('The Learning Resources Page', () => {
     });
 
     it('A user putting a space in a search still gets their result on the full page', () => {
-        cy.visit('/learningresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         // enter a repeating string

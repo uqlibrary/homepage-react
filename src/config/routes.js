@@ -7,7 +7,7 @@ export const adminEditRegexConfig = new RegExp(/\/admin\/alerts\/edit\/(.*)/i);
 
 export const pathConfig = {
     index: '/',
-    learningresources: '/learningresources',
+    learningresources: '/learning-resources',
     paymentReceipt: '/payment-receipt',
     admin: {
         alertsadd: '/admin/alerts/add',
@@ -29,8 +29,8 @@ export const pathConfig = {
 // a duplicate list of routes for checking validity easily, 2 sets: exact match and startswith
 export const flattedPathConfigExact = [
     '/',
-    '/learningresources',
-    '/learningresources/', // maybe someone has bookmarked it with a '/'?
+    '/learning-resources',
+    '/learning-resources/', // maybe someone has bookmarked it with a '/'?
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts',

@@ -35,13 +35,13 @@ describe('Learning Resources panel', () => {
         };
         const pageNoParams = {};
         expect(getUrlForLearningResourceSpecificTab(aclass, page)).toEqual(
-            '/learningresources?keyword&coursecode=HIST1201&campus=St Lucia&semester=Semester 2 2020',
+            '/learning-resources?keyword&coursecode=HIST1201&campus=St Lucia&semester=Semester 2 2020',
         );
         expect(getUrlForLearningResourceSpecificTab(aclass, page, true, true)).toEqual(
-            'http://localhost/learningresources?keyword&coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
+            'http://localhost/learning-resources?keyword&coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
         expect(getUrlForLearningResourceSpecificTab(aclass, pageNoParams, true, true)).toEqual(
-            'http://localhost/learningresources?coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
+            'http://localhost/learning-resources?coursecode=HIST1201&campus=undefined&semester=Semester 2 2020',
         );
     });
 });

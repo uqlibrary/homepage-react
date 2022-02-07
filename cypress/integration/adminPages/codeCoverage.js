@@ -16,7 +16,7 @@ context('Personalisation', () => {
 context('Learning Resources', () => {
     it('User with classes sees their classes', () => {
         // this test simplifies the matching homepage/learningResources.js test, just to give coverage
-        cy.visit('/learningresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
         const title = FREN1010ReadingList.course_title || 'mock data is missing';

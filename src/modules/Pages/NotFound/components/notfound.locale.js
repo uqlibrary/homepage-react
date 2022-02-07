@@ -20,7 +20,7 @@ export default {
                         <p>
                             <b>
                                 This page has permanently moved and is now available at{' '}
-                                <a href="/learningresources">Learning Resources</a>.
+                                <a href="/learning-resources">Learning Resources</a>.
                             </b>
                         </p>
                     </div>
