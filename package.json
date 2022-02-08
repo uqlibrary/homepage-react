@@ -78,7 +78,7 @@
         "cross-env": "^5.2.0",
         "css-loader": "^2.1.1",
         "css-mediaquery": "^0.1.2",
-        "cypress": "^9.3.1",
+        "cypress": "^9.4.1",
         "cypress-axe": "^0.14.0",
         "cypress-file-upload": "^5.0.7",
         "cypress-plugin-tab": "^1.0.5",
@@ -353,7 +353,7 @@
         ],
         "collectCoverage": true,
         "collectCoverageFrom": [
-            "src/modules/Pages/CourseResources/components/*.{js,jsx}",
+            "src/modules/Pages/LearningResources/components/*.{js,jsx}",
             "src/modules/**/*.{js,jsx}",
             "src/modules/*.{js,jsx}",
             "!src/modules/**/*locale*.js",
@@ -435,7 +435,7 @@
             "!src/modules/App/**",
             "!src/modules/Index/**",
             "!src/modules/Pages/BookExamBooth/**",
-            "!src/modules/Pages/CourseResources/**",
+            "!src/modules/Pages/LearningResources/**",
             "!src/modules/Pages/NotFound/**",
             "!src/modules/Pages/PaymentReceipt/**",
             "!src/modules/SharedComponents/**"

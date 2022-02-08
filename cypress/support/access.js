@@ -9,7 +9,7 @@ export const expectUserToDisplayCorrectFirstName = (username, firstname) => {
 export const hasPanels = (optionsTheUserShouldSee, loggedin = true) => {
     const availableOptions = new Map();
     availableOptions.set('computer-availability', { title: 'Computer availability', content: 'Architecture' });
-    availableOptions.set('course-resources', { title: 'Course resources', content: 'Search by' });
+    availableOptions.set('learning-resources', { title: 'Learning resources', content: 'Search by' });
     availableOptions.set('library-hours', { title: 'Library hours', content: 'Study space' });
     availableOptions.set('library-services', { title: 'Library services', content: 'Services for' });
     availableOptions.set('training', { title: 'Training', content: 'Online' });

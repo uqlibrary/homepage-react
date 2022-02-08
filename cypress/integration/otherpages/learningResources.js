@@ -1,7 +1,7 @@
 /* eslint camelcase: 0 */
 /* eslint max-len: 0 */
-import { default as locale } from '../../../src/modules/Pages/CourseResources/courseResources.locale';
-import { _courseLink, _pluralise } from '../../../src/modules/Pages/CourseResources/courseResourcesHelpers';
+import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
+import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/learningResourcesHelpers';
 import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as FREN1010Guide } from '../../../src/mock/data/records/libraryGuides_FREN1010';
 import { default as FREN1010Exam } from '../../../src/mock/data/records/examListFREN1010';
@@ -17,13 +17,13 @@ import { readingListLength } from '../../support/helpers';
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
 
-    cy.get('div[data-testid="course-resources"]').contains(locale.myCourses.title);
+    cy.get('div[data-testid="learning-resources"]').contains(locale.myCourses.title);
 
     cy.get(`div[data-testid=classpanel-${panelId}] h2`).contains(title);
 }
 
 function the_user_lands_on_the_Search_tab() {
-    cy.get('div[data-testid="course-resources"]').contains(locale.search.title);
+    cy.get('div[data-testid="learning-resources"]').contains(locale.search.title);
 }
 
 function the_user_clicks_on_the_My_Courses_tab() {
@@ -193,7 +193,7 @@ function course_links_panel_loads_correctly_for_a_subject(courseReadingList) {
     });
 }
 
-function load_a_subject_in_course_resource_page_search_tab(
+function load_a_subject_in_learning_resource_page_search_tab(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
@@ -206,45 +206,45 @@ function load_a_subject_in_course_resource_page_search_tab(
         })
         .pop();
 
-    cy.get('div[data-testid=full-courseresource-autocomplete] input')
+    cy.get('div[data-testid=full-learningresource-autocomplete] input')
         .should('exist')
         .type('WXYZ');
     cy.get('[data-testid="noCoursesFound"]').contains(locale.search.noResultsText);
 
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').clear();
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').clear();
     cy.get('[data-testid="noCoursesFound"]').should('not.exist');
 
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').type(typeChar);
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').type(typeChar);
     cy.get('[data-testid="noCoursesFound"]').should('not.exist');
 
-    cy.get('ul#full-courseresource-autocomplete-popup')
+    cy.get('ul#full-learningresource-autocomplete-popup')
         .children()
         .should('have.length', numberOfMatchingSubject + 1); // plus one for title
 
     cy.log('backspace one char');
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').type('{backspace}');
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').type('{backspace}');
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').should(
         'have.value',
         typeChar.substring(0, typeChar.length - 1),
     );
     // the backspace means we dont have enough char and the dropdown is emptied
-    cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
+    cy.get('ul#full-learningresource-autocomplete-popup').should('not.exist');
 
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').type('{backspace}');
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').type('{backspace}');
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').should(
         'have.value',
         typeChar.substring(0, typeChar.length - 2),
     );
 
     // re-enter the characters
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').type(typeChar.slice(-2));
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').type(typeChar.slice(-2));
     // the drop down returns
-    cy.get('ul#full-courseresource-autocomplete-popup')
+    cy.get('ul#full-learningresource-autocomplete-popup')
         .children()
         .should('have.length', numberOfMatchingSubject + 1);
 
     // click the first option
-    cy.get('li#full-courseresource-autocomplete-option-0')
+    cy.get('li#full-learningresource-autocomplete-option-0')
         .contains(
             `${frenchSearchSuggestion.course_title}, ${frenchSearchSuggestion.campus}, ${frenchSearchSuggestion.period}`,
         )
@@ -258,7 +258,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     numberOfMatchingSubject = 2, // autocomplete finds this many entries for typeChar
     tabId = 0,
 ) {
-    load_a_subject_in_course_resource_page_search_tab(
+    load_a_subject_in_learning_resource_page_search_tab(
         courseReadingList,
         searchSuggestions,
         typeChar,
@@ -274,7 +274,7 @@ function a_user_with_no_classes_sees_notice_of_same_in_courses_list() {
 }
 
 function the_user_sees_the_search_form() {
-    cy.get('div[data-testid=full-courseresource-autocomplete] input').should(
+    cy.get('div[data-testid=full-learningresource-autocomplete] input').should(
         'have.attr',
         'placeholder',
         locale.search.placeholder,
@@ -308,10 +308,10 @@ function the_title_block_displays_properly(courseReadingList) {
     const semester = readingList.period || 'mock data is missing3';
     const campus = readingList.campus || 'mock data is missing4';
 
-    cy.get('h2[data-testid=course-resource-subject-title]').contains(listTitle);
-    cy.get('h2[data-testid=course-resource-subject-title]').contains(coursecode);
-    cy.get('h2[data-testid=course-resource-subject-title]').contains(campus);
-    cy.get('h2[data-testid=course-resource-subject-title]').contains(semester);
+    cy.get('h2[data-testid=learning-resource-subject-title]').contains(listTitle);
+    cy.get('h2[data-testid=learning-resource-subject-title]').contains(coursecode);
+    cy.get('h2[data-testid=learning-resource-subject-title]').contains(campus);
+    cy.get('h2[data-testid=learning-resource-subject-title]').contains(semester);
 }
 
 function FREN1010_loads_properly_for_s111111_user() {
@@ -330,62 +330,62 @@ function FREN1010_loads_properly_for_s111111_user() {
     course_links_panel_loads_correctly_for_a_subject(FREN1010ReadingList);
 }
 
-context('Course Resources Accessibility', () => {
+context('Learning Resources Accessibility', () => {
     it('User with classes', () => {
-        cy.visit('/courseresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[data-testid="course-resources"]').contains('My courses');
-        cy.log('Course Resources');
-        cy.checkA11y('div[data-testid="course-resources"]', {
-            reportName: 'Course Resources',
+        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.log('Learning Resources');
+        cy.checkA11y('div[data-testid="learning-resources"]', {
+            reportName: 'Learning Resources',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
 
     it('User without classes', () => {
-        cy.visit('/courseresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('div[data-testid="course-resources"]').contains('My courses');
-        cy.log('Course Resources');
-        cy.checkA11y('div[data-testid="course-resources"]', {
-            reportName: 'Course Resources',
+        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.log('Learning Resources');
+        cy.checkA11y('div[data-testid="learning-resources"]', {
+            reportName: 'Learning Resources',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
 
     it('Responsive display', () => {
-        cy.visit('/courseresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(414, 736);
-        cy.get('div[data-testid="course-resources"]').contains('My courses');
-        cy.log('Course Resources');
-        cy.checkA11y('div[data-testid="course-resources"]', {
-            reportName: 'Course Resources',
+        cy.get('div[data-testid="learning-resources"]').contains('My courses');
+        cy.log('Learning Resources');
+        cy.checkA11y('div[data-testid="learning-resources"]', {
+            reportName: 'Learning Resources',
             scopeName: 'Content',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
 });
 
-context('Course Resources Access', () => {
-    it('A non-loggedin user cannot access Course Resources', () => {
-        cy.visit('/courseresources?user=public');
+context('Learning Resources Access', () => {
+    it('A non-loggedin user cannot access Learning Resources', () => {
+        cy.visit('/learning-resources?user=public');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authenticated users only.');
     });
 
-    it('A loggedin user without course resource privs cannot access Course Resources', () => {
-        cy.visit('/courseresources?user=emcommunity');
+    it('A loggedin user without Learning Resource privs cannot access Learning Resources', () => {
+        cy.visit('/learning-resources?user=emcommunity');
         cy.viewport(1300, 1000);
         cy.get('body').contains('The requested page is available to authorised users only.');
     });
 });
 
-context('The Course Resources Page', () => {
+context('The Learning Resources Page', () => {
     /**
      * Show a user with 3 classes can see all the variations correctly
      * The mock data has been selected to cover the display options:
@@ -399,11 +399,11 @@ context('The Course Resources Page', () => {
      * PHIL1002 | has > 1 list reading lists        | has 0 exams   | has > 2 guides |            |
      * ---------+-----------------------------------+---------------+----------------+
      *
-     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/courseresources
+     * NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
      *
      */
     it('User with classes sees their classes', () => {
-        cy.visit('/courseresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
         FREN1010_loads_properly_for_s111111_user();
@@ -437,7 +437,7 @@ context('The Course Resources Page', () => {
     });
 
     it('User without classes sees the search field', () => {
-        cy.visit('/courseresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
@@ -449,7 +449,9 @@ context('The Course Resources Page', () => {
     });
 
     it('A user who has arrived by clicking on the homepage own course gets the course they requested', () => {
-        cy.visit('/courseresources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020');
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+        );
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_My_Classes_tab(FREN1010ReadingList);
@@ -458,7 +460,9 @@ context('The Course Resources Page', () => {
     });
 
     it('A user who has arrived by searching for a course on the homepage gets the course they requested', () => {
-        cy.visit('/courseresources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020');
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
+        );
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
@@ -476,20 +480,20 @@ context('The Course Resources Page', () => {
     });
 
     it('A user who searches for a subject they are enrolled in will be changed to the mycourses tab', () => {
-        cy.visit('/courseresources?user=s1111111');
+        cy.visit('/learning-resources?user=s1111111');
         cy.viewport(1300, 1000);
 
         the_user_clicks_on_the_Search_tab();
 
         the_user_sees_the_search_form();
 
-        load_a_subject_in_course_resource_page_search_tab(FREN1010ReadingList, learningResourceSearchSuggestions);
+        load_a_subject_in_learning_resource_page_search_tab(FREN1010ReadingList, learningResourceSearchSuggestions);
 
         FREN1010_loads_properly_for_s111111_user();
     });
 
     it('A user who searches for multiple subjects can switch between the tabs for each one', () => {
-        cy.visit('/courseresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         the_user_lands_on_the_Search_tab();
@@ -533,23 +537,23 @@ context('The Course Resources Page', () => {
     });
 
     it('A repeating string is handled correctly', () => {
-        cy.visit('/courseresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         // enter a repeating string
-        cy.get('input[data-testid="full-courseresource-autocomplete-input-wrapper"]').type('AAAAA');
+        cy.get('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').type('AAAAA');
         // and the drop down will not appear
-        cy.get('ul#full-courseresource-autocomplete-popup').should('not.exist');
+        cy.get('ul#full-learningresource-autocomplete-popup').should('not.exist');
     });
 
     it('A user putting a space in a search still gets their result on the full page', () => {
-        cy.visit('/courseresources?user=s3333333');
+        cy.visit('/learning-resources?user=s3333333');
         cy.viewport(1300, 1000);
 
         // enter a repeating string
-        cy.get('input[data-testid="full-courseresource-autocomplete-input-wrapper"]').type('FREN 1');
+        cy.get('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').type('FREN 1');
         // and the drop down will not appear
-        cy.get('ul#full-courseresource-autocomplete-popup')
+        cy.get('ul#full-learningresource-autocomplete-popup')
             .children()
             .should('have.length', 1 + 1);
     });

@@ -15,6 +15,7 @@ export const NotFound = ({ account, accountLoading }) => {
         flattedPathConfigExact.indexOf(location.pathname) >= 0 ||
         flattedPathConfig.find(f => location.pathname.startsWith(f));
     const isValidFileRoute = adminEditRegexConfig.test(location.pathname);
+    const isCurrentPage = pathname => pathname === document.location.pathname;
     // if not known page, standard 404
     if (!(isValidRoute || isValidFileRoute)) {
         return (
@@ -25,7 +26,13 @@ export const NotFound = ({ account, accountLoading }) => {
                         !accountLoading && account ? account.id : 'NA'
                     }`}
                 />
-                {locale.notFound.content}
+                {locale.notFound.urlChangeAdvisory.find(changeAdvice => isCurrentPage(changeAdvice.linkPattern))
+                    ? locale.notFound.urlChangeAdvisory.map(changeAdvice => {
+                          return isCurrentPage(changeAdvice.linkPattern)
+                              ? changeAdvice.content
+                              : /* istanbul ignore next */ ''; // ignore while we only have one example
+                      })
+                    : locale.notFound.content}
             </StandardPage>
         );
     }

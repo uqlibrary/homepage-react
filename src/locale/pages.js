@@ -58,8 +58,8 @@ export default {
                 },
             },
         },
-        courseresources: {
-            title: 'Course resources',
+        learningresources: {
+            title: 'Learning resources',
         },
         paymentReceipt: {
             title: 'Payment receipt',

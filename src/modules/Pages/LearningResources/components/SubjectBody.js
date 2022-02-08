@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-// import { default as locale } from '../courseResources.locale';
+// import { default as locale } from '../learningResources.locale';
 import { Guides } from './Guides';
 import { PastExamPapers } from './PastExamPapers';
 import { ReadingLists } from './ReadingLists';
@@ -14,7 +14,7 @@ import { getCampusByCode, unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     theme => ({
-        courseResourceLineItem: {
+        learningResourceLineItem: {
             borderTop: '1px solid #e8e8e8',
             padding: '15px 0',
             '& a': {
@@ -90,7 +90,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
 
         if (title !== null) {
             // put focus on the tab, for screenreaders
-            const searchResults = document.getElementById('course-resource-search-results');
+            const searchResults = document.getElementById('learning-resource-search-results');
             !!searchResults && searchResults.focus();
         }
 
@@ -104,7 +104,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 className={classes.header}
                 component={subjectHeaderLevel}
                 variant={'h5'}
-                data-testid="course-resource-subject-title"
+                data-testid="learning-resource-subject-title"
             >
                 {coursecode}
                 {courseTitle()}

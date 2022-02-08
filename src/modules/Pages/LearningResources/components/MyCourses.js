@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useAccountContext } from 'context';
-import locale from '../courseResources.locale';
-import { a11yProps, reverseA11yProps } from '../courseResourcesHelpers';
+import locale from '../learningResources.locale';
+import { a11yProps, reverseA11yProps } from '../learningResourcesHelpers';
 import { getCampusByCode } from 'helpers/general';
 import { SubjectBody } from './SubjectBody';
 import { TabPanel } from './TabPanel';

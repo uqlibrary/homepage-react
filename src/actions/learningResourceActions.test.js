@@ -4,7 +4,7 @@ import { default as HIST1201ReadingList } from '../../src/mock/data/records/cour
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import {
-    clearCourseResourceSuggestions,
+    clearLearningResourceSuggestions,
     clearExams,
     clearGuides,
     clearReadingLists,
@@ -163,8 +163,8 @@ describe('Account action creators', () => {
         });
 
         const expectedActions = [
-            actions.COURSE_RESOURCE_SUGGESTIONS_LOADING,
-            actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
+            actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING,
+            actions.LEARNING_RESOURCE_SUGGESTIONS_FAILED,
         ];
 
         await mockActionsStore.dispatch(loadCourseReadingListsSuggestions('FREN1010'));
@@ -177,8 +177,8 @@ describe('Account action creators', () => {
         });
 
         const expectedActions = [
-            actions.COURSE_RESOURCE_SUGGESTIONS_LOADING,
-            actions.COURSE_RESOURCE_SUGGESTIONS_FAILED,
+            actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING,
+            actions.LEARNING_RESOURCE_SUGGESTIONS_FAILED,
         ];
 
         await mockActionsStore.dispatch(loadCourseReadingListsSuggestions('FREN1010'));
@@ -186,9 +186,9 @@ describe('Account action creators', () => {
     });
 
     it('should dispatch clear course suggestions list action', async () => {
-        const expectedActions = [actions.COURSE_RESOURCE_SUGGESTIONS_CLEAR];
+        const expectedActions = [actions.LEARNING_RESOURCE_SUGGESTIONS_CLEAR];
 
-        await mockActionsStore.dispatch(clearCourseResourceSuggestions());
+        await mockActionsStore.dispatch(clearLearningResourceSuggestions());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 });

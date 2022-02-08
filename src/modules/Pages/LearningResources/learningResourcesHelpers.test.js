@@ -5,8 +5,8 @@ import {
     extractSubjectCodeFromName,
     reverseA11yProps,
     trimNotes,
-} from './courseResourcesHelpers';
-import { isValidInput } from './components/CourseResources';
+} from './learningResourcesHelpers';
+import { isValidInput } from './components/LearningResources';
 
 describe('filterProps helper', () => {
     it('should make plurals of words properly', () => {
