@@ -28,7 +28,9 @@ export const NotFound = ({ account, accountLoading }) => {
                 />
                 {locale.notFound.urlChangeAdvisory.find(changeAdvice => isCurrentPage(changeAdvice.linkPattern))
                     ? locale.notFound.urlChangeAdvisory.map(changeAdvice => {
-                          return isCurrentPage(changeAdvice.linkPattern) ? changeAdvice.content : '';
+                          return isCurrentPage(changeAdvice.linkPattern)
+                              ? changeAdvice.content
+                              : /* istanbul ignore next */ ''; // ignore while we only have one example
                       })
                     : locale.notFound.content}
             </StandardPage>
