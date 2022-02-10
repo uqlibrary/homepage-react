@@ -12,7 +12,7 @@ export const promoPanel = {
             <div>
                 <p>Get to know your Library as part of O&nbsp;-&nbsp;Week (14-18 Feb) and Connect Week (21-25 Feb).</p>
                 <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as a library tour, introductory IT session, or one of our social events to your Orientation Plan!</p>
-                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.
+                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
             </div>
         ),
     },
@@ -22,7 +22,7 @@ export const promoPanel = {
             <div>
                 <p>Get to know your Library as part of O&nbsp;-&nbsp;Week (14-18 Feb) and Connect Week (21-25 Feb). </p>
                 <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as a library tour, introductory IT session, or one of our social events to your Orientation Plan!</p>
-                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.
+                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
             </div>
         ),
     },
