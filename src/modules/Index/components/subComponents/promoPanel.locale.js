@@ -7,22 +7,22 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Summer Semester',
+        title: 'Orientation',
         content: (
             <div>
-                <p>The Library is open on-campus and online during Summer Semester.</p>
-                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+                <p>Get to know your Library as part of O&nbsp;-&nbsp;Week (14-18 Feb) and Connect Week (21-25 Feb).</p>
+                <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as an introductory IT session or one of our social events to your Orientation Plan!</p>
+                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Summer Semester',
+        title: 'Orientation',
         content: (
             <div>
-                <p>The Library is open on-campus and online during Summer Semester.</p>
-                <p>Enjoy a range of comfortable study spaces. Access 24/7 spaces and collections with your UQ ID card. Check our <a href="https://web.library.uq.edu.au/locations-hours/opening-hours">opening hours</a> for details.</p>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> or visit an AskUs service point for assistance.</p>
+                <p>Get to know your Library as part of O&nbsp;-&nbsp;Week (14-18 Feb) and Connect Week (21-25 Feb). </p>
+                <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as an introductory IT session or one of our social events to your Orientation Plan!</p>
+                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
             </div>
         ),
     },
