@@ -184,12 +184,6 @@ const webpackConfig = {
     module: {
         rules: [
             {
-                test: /\.js$/,
-                exclude: [/node_modules/, /custom_modules/],
-                enforce: 'pre',
-                use: 'eslint-loader',
-            },
-            {
                 test: /\.js?$/,
                 include: [resolve(__dirname, 'src')],
                 exclude: [/node_modules/, /custom_modules/, '/src/mocks/'],
