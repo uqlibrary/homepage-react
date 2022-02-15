@@ -106,7 +106,6 @@
         "node-sass": "^6.0.1",
         "nyc": "^15.1.0",
         "postcss-loader": "^2.1.4",
-        "preloader-html-webpack-plugin": "github:uqlibrary/preloader-html-webpack-plugin#master",
         "prettier": "^1.18.2",
         "prettier-eslint": "^9.0.1",
         "prettier-eslint-cli": "^5.0.0",

@@ -4,7 +4,6 @@ const webpack = require('webpack');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ProgressBarPlugin = require('progress-bar-webpack-plugin');
-const InjectPreloader = require('preloader-html-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
@@ -120,7 +119,6 @@ module.exports = {
             )} (It took :elapsed seconds to build)\n`,
             clear: false,
         }),
-        new InjectPreloader(),
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.NamedModulesPlugin(),
