@@ -1,5 +1,6 @@
 /* eslint-env jest */
-import React from 'react';
+import 'core-js/stable';
+import 'regenerator-runtime/runtime';
 
 import Enzyme, { mount, render, shallow } from 'enzyme';
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';

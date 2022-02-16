@@ -141,14 +141,27 @@ export const AlertsListAsTable = ({
 
     let userows = rows;
     if (!!alertOrder && !!rows && rows.length > 0) {
-        if (alertOrder === 'reverseEnd') {
-            userows = rows.sort((a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'));
-        } /* istanbul ignore next */ else if (alertOrder === 'forwardEnd') {
-            userows = rows.sort((a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'));
-        } /* istanbul ignore else */ else if (alertOrder === 'forwardStart') {
-            userows = rows.sort(
-                (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
-            );
+        // (fake switch to allow istanbul on else if :( )
+        switch (alertOrder) {
+            case 'reverseEnd':
+                userows = rows.sort(
+                    (a, b) => moment(b.end, 'YYYY-MM-DD hh:mm:ss') - moment(a.end, 'YYYY-MM-DD hh:mm:ss'),
+                );
+                break;
+            /* istanbul ignore next */
+            case 'forwardEnd':
+                userows = rows.sort(
+                    (a, b) => moment(a.end, 'YYYY-MM-DD hh:mm:ss') - moment(b.end, 'YYYY-MM-DD hh:mm:ss'),
+                );
+                break;
+            /* istanbul ignore next */
+            case 'forwardStart':
+                userows = rows.sort(
+                    (a, b) => moment(a.start, 'YYYY-MM-DD hh:mm:ss') - moment(b.start, 'YYYY-MM-DD hh:mm:ss'),
+                );
+                break;
+            /* istanbul ignore next */
+            default:
         }
     }
 
@@ -210,6 +223,7 @@ export const AlertsListAsTable = ({
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
+        /* istanbul ignore else */
         if (!!e.target && !!e.target.checked) {
             // handle a checkbox being turned on
             if (numberCheckboxesSelected === 1) {

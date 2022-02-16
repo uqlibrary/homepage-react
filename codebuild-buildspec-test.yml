@@ -28,9 +28,9 @@ phases:
   install:
     runtime-versions:
       java: corretto11
-      nodejs: 12
-    #commands:
-      # - command
+      nodejs: 14
+    commands:
+      - n 16
       # - command
   pre_build:
     commands:

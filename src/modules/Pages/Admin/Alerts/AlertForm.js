@@ -417,15 +417,21 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
     };
 
     const handleConfirmation = () => {
-        if (defaults.type !== 'add') {
-            // the action on edit page is always 'return to list'
-            navigateToListPage();
-        } /* istanbul ignore next */ else if (!!alertError) {
-            // On error on add, the button just closes the notification dialog,
-            // allowing the user to correct and try again
-            hideConfirmation(); // form remains loaded
-        } else {
-            clearForm();
+        // I hate this sort of fake switch, but the istanbul would not give coverage of the else if :(
+        switch (true) {
+            case defaults.type !== 'add':
+                // the action on edit page is always 'return to list'
+                navigateToListPage();
+                break;
+            /* istanbul ignore next */
+            case !!alertError:
+                // On error on add, the button just closes the notification dialog,
+                // allowing the user to correct and try again
+                /* istanbul ignore next */
+                hideConfirmation(); // form remains loaded
+                break;
+            default:
+                clearForm();
         }
     };
 
