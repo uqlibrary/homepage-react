@@ -337,26 +337,33 @@ export const SpotlightsListAsTable = ({
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
         const thisType = e.target.closest('table').parentElement.id;
-        if (!!e.target && !!e.target.checked) {
-            // handle a checkbox being turned on
-            if (numberCheckboxesSelected === 1) {
-                setDeleteActive(true);
-            }
-            // disable any checkboxes in a different spotlight list
-            const checkBoxList = document.querySelectorAll('.markForDeletion input[type="checkbox"]');
-            checkBoxList.forEach(ii => {
-                const thetype = ii.closest('table').parentElement.id;
-                if (thetype !== thisType) {
-                    ii.disabled = true;
-                    ii.parentElement.parentElement.classList.add('Mui-disabled');
+        // I hate this sort of fake switch, but the istanbul would not give coverage of the else if :(
+        switch (true) {
+            case !!e.target && !!e.target.checked:
+                // handle a checkbox being turned on
+                if (numberCheckboxesSelected === 1) {
+                    setDeleteActive(true);
                 }
-            });
-        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
-            // handle a checkbox being turned off
-            if (numberCheckboxesSelected === 0) {
-                setDeleteActive(false);
-                reEnableAllCheckboxes();
-            }
+                // disable any checkboxes in a different spotlight list
+                const checkBoxList = document.querySelectorAll('.markForDeletion input[type="checkbox"]');
+                checkBoxList.forEach(ii => {
+                    const thetype = ii.closest('table').parentElement.id;
+                    if (thetype !== thisType) {
+                        ii.disabled = true;
+                        ii.parentElement.parentElement.classList.add('Mui-disabled');
+                    }
+                });
+                break;
+            /* istanbul ignore next */
+            case !!e.target && !e.target.checked:
+                // handle a checkbox being turned off
+                if (numberCheckboxesSelected === 0) {
+                    setDeleteActive(false);
+                    reEnableAllCheckboxes();
+                }
+                break;
+            /* istanbul ignore next */
+            default:
         }
         setSpotlightNotice(
             '[n] spotlight[s] selected'
@@ -372,13 +379,8 @@ export const SpotlightsListAsTable = ({
 
             data.map(s => {
                 // sort current then scheduled and then past
-                if (isPastSpotlight(s)) {
-                    s.spotlightType = 3; // past
-                } /* istanbul ignore next */ else if (isScheduledSpotlight(s)) {
-                    s.spotlightType = 2; // scheduled
-                } else {
-                    s.spotlightType = 1; // current
-                }
+                // eslint-disable-next-line no-nested-ternary
+                s.spotlightType = isPastSpotlight(s) ? 3 : isScheduledSpotlight(s) ? /* istanbul ignore next */ 2 : 1;
                 return s;
             })
                 .sort((a, b) => {
@@ -388,12 +390,15 @@ export const SpotlightsListAsTable = ({
                     const prevStartDate = formatDate(b.start, 'YYYYMMDDHHmmss');
                     const thisEndDate = formatDate(a.end, 'YYYYMMDDHHmmss');
                     const prevEndDate = formatDate(b.end, 'YYYYMMDDHHmmss');
-                    if (isPastSpotlight(a)) {
-                        return a.spotlightType - b.spotlightType || Number(thisEndDate) - Number(prevEndDate);
-                    } /* istanbul ignore next */ else if (isScheduledSpotlight(a)) {
-                        return a.spotlightType - b.spotlightType || Number(thisStartDate) - Number(prevStartDate);
-                    } else {
-                        return a.spotlightType - b.spotlightType || a.weight - b.weight;
+                    // (fake switch to allow istanbul on else if :( )
+                    switch (true) {
+                        case isPastSpotlight(a):
+                            return a.spotlightType - b.spotlightType || Number(thisEndDate) - Number(prevEndDate);
+                        /* istanbul ignore next */
+                        case isScheduledSpotlight(a):
+                            return a.spotlightType - b.spotlightType || Number(thisStartDate) - Number(prevStartDate);
+                        default:
+                            return a.spotlightType - b.spotlightType || a.weight - b.weight;
                     }
                 })
                 .map((s, index) => {

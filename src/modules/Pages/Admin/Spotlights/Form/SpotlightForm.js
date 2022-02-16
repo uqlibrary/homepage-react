@@ -364,11 +364,18 @@ export const SpotlightForm = ({
             propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
-            if (['active', 'weight'].includes(prop)) {
-                propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
-            } /* istanbul ignore next */ else if (propValue === false) {
-                // it returns false when we clear a text field
-                propValue = '';
+            // fake switch because istanbul doesnt block on an else if in this version :(
+            switch (true) {
+                case ['active', 'weight'].includes(prop):
+                    propValue = !!propValue ? 1 : /* istanbul ignore next */ 0;
+                    break;
+                /* istanbul ignore next */
+                case propValue === false:
+                    // it returns false when we clear a text field
+                    propValue = '';
+                    break;
+                /* istanbul ignore next */
+                default:
             }
         }
         setValues({

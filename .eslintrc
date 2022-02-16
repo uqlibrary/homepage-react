@@ -1,6 +1,6 @@
 /* prettier-ignore */
 {
-  "parser": "babel-eslint",          // https://github.com/babel/babel-eslint
+  "parser": "@babel/eslint-parser",
   "env": {
     "browser": true,
     "node": true,
@@ -30,6 +30,9 @@
     "react": {
       "version": "latest"
     }
+  },
+  "parserOptions": {
+    "requireConfigFile": false
   },
   "rules": {
     "no-var": 2,                     // http://eslint.org/docs/rules/no-var
@@ -229,14 +232,12 @@
     "jsx-a11y/no-onchange" : 2,
     "jsx-a11y/img-has-alt": "off",
     "jsx-a11y/onclick-has-focus" : "off",
-    "jsx-a11y/href-no-hash": "off",
-    "uqlibrary/no-uql-token": 2,
+    "jsx-a11y/href-no-hash": "off"
   },
   "plugins": [
     "react",
     "react-hooks",
-    "jsx-a11y",
-    "uqlibrary"
+    "jsx-a11y"
   ],
-  "extends": ["plugin:prettier/recommended"],
+  "extends": ["plugin:prettier/recommended"]
 }
