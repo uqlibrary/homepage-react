@@ -10,7 +10,7 @@ export const promoPanel = {
         title: 'Orientation',
         content: (
             <div>
-                <p>Get to know your Library as part of <span style="white-space: nowrap;">O-Week</span> (14-18 Feb) and Connect Week (21-25 Feb).</p>
+                <p>Get to know your Library as part of <span style={{ whiteSpace: 'nowrap' }}>O-Week</span> (14-18 Feb) and Connect Week (21-25 Feb).</p>
                 <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as an introductory IT session or one of our social events to your Orientation Plan!</p>
                 <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
             </div>
