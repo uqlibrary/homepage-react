@@ -7,54 +7,31 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import { makeStyles } from '@material-ui/styles';
-import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import TextField from '@material-ui/core/TextField';
-import Tooltip from '@material-ui/core/Tooltip';
 import { throttle } from 'throttle-debounce';
-import SearchIcon from '@material-ui/icons/Search';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/learningResourcesHelpers';
 
 const useStyles = makeStyles(
-    theme => ({
+    () => ({
         searchPanel: {
             paddingTop: 12,
-            paddingRight: 30,
+            paddingRight: 20,
             paddingBottom: 0,
-            paddingLeft: 30,
+            paddingLeft: 20,
         },
         selectInput: {
-            fontSize: 24,
             fontWeight: 300,
-            color: theme.palette.primary.main,
             textOverflow: 'ellipsis !important',
             overflow: 'hidden !important',
             whiteSpace: 'nowrap !important',
             '&::placeholder': {
+                paddingRight: 50,
                 textOverflow: 'ellipsis !important',
                 overflow: 'hidden !important',
                 whiteSpace: 'nowrap !important',
-            },
-        },
-        searchUnderlinks: {
-            marginBottom: 4,
-            '&a, a:link, a:hover, a:visited, a:active': {
-                color: theme.palette.primary.main + ' !important',
-            },
-            [theme.breakpoints.down('sm')]: {
-                zoom: 0.9,
-            },
-        },
-        searchButton: {
-            [theme.breakpoints.up('md')]: {
-                width: 40,
-                minWidth: 20,
-                padding: '8px 8px !important',
-            },
-            [theme.breakpoints.down('sm')]: {
-                width: '100%',
             },
         },
     }),
@@ -145,88 +122,81 @@ export const LearningResourceSearch = ({
         [actions],
     );
     return (
-        <StandardCard
-            noPadding
-            noHeader
-            standardCardId="primo-search"
-            className={displayType === 'full' ? classes.fullForm : ''}
-        >
-            <form id="primo-search-form" onSubmit={handleSearchButton}>
-                <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
-                    <Grid item xs={12} sm>
-                        <Autocomplete
-                            value={searchKeyword}
-                            freeSolo
-                            id="primo-search-autocomplete"
-                            data-testid="primo-search-autocomplete"
-                            disableClearable
-                            openOnFocus
-                            clearOnEscape
-                            options={
-                                (!!CRsuggestions &&
-                                    CRsuggestions.filter(option => option.text !== searchKeyword).map(option =>
-                                        unescapeString(option.text),
-                                    )) ||
-                                []
-                            }
-                            onInputChange={getSuggestions}
-                            ListboxProps={{
-                                'aria-labelledby': 'primo-search-select-label',
-                                id: 'primo-search-autocomplete-listbox',
-                                'data-testid': 'primo-search-autocomplete-listbox',
-                                'aria-label': 'Suggestion list',
-                            }}
-                            onChange={() => {
-                                setTimeout(() => {
-                                    document.getElementById('primo-search-submit').click();
-                                }, 300);
-                            }}
-                            renderInput={params => {
-                                return (
-                                    <TextField
-                                        {...params}
-                                        placeholder="Enter a course code"
-                                        error={!!CRsuggestionsError}
-                                        InputProps={{
-                                            ...params.InputProps,
-                                            type: 'search',
-                                            classes: {
-                                                input: classes.selectInput,
-                                            },
-                                        }}
-                                        inputProps={{
-                                            ...params.inputProps,
-                                            'aria-label': 'Enter your search terms',
-                                            'data-testid': 'primo-search-autocomplete-input',
-                                        }}
-                                    />
-                                );
-                            }}
-                        />
+        <form id="primo-search-form" onSubmit={handleSearchButton}>
+            <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
+                <Grid item xs={12} sm>
+                    <Autocomplete
+                        value={searchKeyword}
+                        freeSolo
+                        id="primo-search-autocomplete"
+                        data-testid="primo-search-autocomplete"
+                        disableClearable
+                        openOnFocus
+                        clearOnEscape
+                        options={
+                            (!!CRsuggestions &&
+                                CRsuggestions.filter(option => option.text !== searchKeyword).map(option =>
+                                    unescapeString(option.text),
+                                )) ||
+                            []
+                        }
+                        onInputChange={getSuggestions}
+                        ListboxProps={{
+                            'aria-labelledby': 'primo-search-select-label',
+                            id: 'primo-search-autocomplete-listbox',
+                            'data-testid': 'primo-search-autocomplete-listbox',
+                            'aria-label': 'Suggestion list',
+                        }}
+                        onChange={() => {
+                            setTimeout(() => {
+                                document.getElementById('primo-search-submit').click();
+                            }, 300);
+                        }}
+                        renderInput={params => {
+                            return (
+                                <TextField
+                                    {...params}
+                                    placeholder="Search by course code or keyword"
+                                    error={!!CRsuggestionsError}
+                                    InputProps={{
+                                        ...params.InputProps,
+                                        type: 'search',
+                                        classes: {
+                                            input: classes.selectInput,
+                                        },
+                                    }}
+                                    inputProps={{
+                                        ...params.inputProps,
+                                        'aria-label': 'Enter your search terms',
+                                        'data-testid': 'primo-search-autocomplete-input',
+                                    }}
+                                />
+                            );
+                        }}
+                    />
+                </Grid>
+                {CRsuggestionsLoading && (
+                    <Grid
+                        item
+                        xs={'auto'}
+                        style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
+                    >
+                        <CircularProgress color="primary" size={20} id="loading-suggestions" />
                     </Grid>
-                    {CRsuggestionsLoading && (
-                        <Grid
-                            item
-                            xs={'auto'}
-                            style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
-                        >
-                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
-                        </Grid>
-                    )}
-                </Grid>
-                <Grid container spacing={2} className={classes.searchPanel} data-testid={'primo-search-links'}>
-                    {!!CRsuggestionsError ? (
-                        <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
-                            <span>Autocomplete suggestions unavailable</span>
-                        </Grid>
-                    ) : (
-                        <Hidden smDown>
-                            <Grid item xs />
-                        </Hidden>
-                    )}
-                </Grid>
-            </form>
-        </StandardCard>
+                )}
+            </Grid>
+            <Grid container spacing={2} className={classes.searchPanel} data-testid={'primo-search-links'}>
+                {!!CRsuggestionsError ? (
+                    <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
+                        <span>Autocomplete suggestions unavailable</span>
+                    </Grid>
+                ) : (
+                    <Hidden smDown>
+                        <Grid item xs />
+                    </Hidden>
+                )}
+            </Grid>
+        </form>
     );
 };
 
