@@ -3,7 +3,6 @@ import { PropTypes } from 'prop-types';
 
 import { isRepeatingString, unescapeString } from 'helpers/general';
 
-import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
@@ -214,23 +213,6 @@ export const LearningResourceSearch = ({
                             <CircularProgress color="primary" size={20} id="loading-suggestions" />
                         </Grid>
                     )}
-                    <Grid item xs={12} md={'auto'}>
-                        <Tooltip title={'Perform your search'}>
-                            <Button
-                                fullWidth
-                                id="primo-search-submit"
-                                data-testid="primo-search-submit"
-                                size={'large'}
-                                variant="contained"
-                                color={'primary'}
-                                className={classes.searchButton}
-                                type="submit"
-                                value="Submit"
-                            >
-                                <SearchIcon />
-                            </Button>
-                        </Tooltip>
-                    </Grid>
                 </Grid>
                 <Grid container spacing={2} className={classes.searchPanel} data-testid={'primo-search-links'}>
                     {!!CRsuggestionsError ? (

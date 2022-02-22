@@ -182,8 +182,13 @@ export function loadCourseReadingListsSuggestions(keyword) {
             .then(response => response.json())
             .then(data => {
                 const payload = data.map((item, index) => {
+                    const specifier =
+                        (item.course_title ? `${item.course_title} | ` : '') +
+                        (item.campus ? `${item.campus} , ` : '') +
+                        (item.period ? item.period.toLowerCase() : '');
+                    const append = !!specifier ? ` ( ${specifier} )` : '';
                     return {
-                        text: item.name,
+                        text: `${item.name}${append}`,
                         index,
                         rest: item,
                     };
