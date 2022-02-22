@@ -7,7 +7,7 @@ import {
     clearLearningResourceSuggestions,
     clearExams,
     clearGuides,
-    clearReadingLists,
+    // clearReadingLists,
     loadCourseReadingListsSuggestions,
     loadExams,
     loadGuides,
@@ -146,12 +146,12 @@ describe('Account action creators', () => {
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
-    it('should dispatch clear reading lists list action', async () => {
-        const expectedActions = [actions.READING_LIST_CLEAR];
-
-        await mockActionsStore.dispatch(clearReadingLists());
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
+    // it('should dispatch clear reading lists list action', async () => {
+    //     const expectedActions = [actions.READING_LIST_CLEAR];
+    //
+    //     await mockActionsStore.dispatch(clearReadingLists());
+    //     expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    // });
 
     it('dispatches expected actions when possible suggestions call fails', async () => {
         global.fetch = jest.fn(() => {

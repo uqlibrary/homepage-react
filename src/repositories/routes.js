@@ -62,9 +62,13 @@ export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
     apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
 });
 
-export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
-});
+export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => {
+    const newVar = {
+        apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
+    };
+    console.log('SUGGESTIONS_API_PAST_COURSE ', keyword, newVar);
+    return newVar;
+};
 
 // Library hours
 export const LIB_HOURS_API = () => ({

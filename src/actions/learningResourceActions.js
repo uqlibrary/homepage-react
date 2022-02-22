@@ -153,6 +153,7 @@ export function loadReadingLists(coursecode, campus, semester, account) {
                     semester,
                     account,
                 );
+                console.log('talis updatedData = ', updatedData);
                 dispatch({
                     type: actions.READING_LIST_LOADED,
                     payload: updatedData,
@@ -167,11 +168,11 @@ export function loadReadingLists(coursecode, campus, semester, account) {
     };
 }
 
-export function clearReadingLists() {
-    return dispatch => {
-        dispatch({ type: actions.READING_LIST_CLEAR });
-    };
-}
+// export function clearReadingLists() {
+//     return dispatch => {
+//         dispatch({ type: actions.READING_LIST_CLEAR });
+//     };
+// }
 
 export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {

@@ -32,7 +32,7 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
-import { SPOTLIGHT_DELETE_BULK_API, SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
+// import { SPOTLIGHT_DELETE_BULK_API, SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const moment = require('moment');
 
@@ -457,9 +457,14 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper', examSuggestions);
 
+function getLearningResourceSearchSuggestions() {
+    console.log('learningResourceSearchSuggestions: ', learningResourceSearchSuggestions);
+    return learningResourceSearchSuggestions;
+}
+
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
-    learningResourceSearchSuggestions,
+    getLearningResourceSearchSuggestions(),
 );
 
 // spotlights
