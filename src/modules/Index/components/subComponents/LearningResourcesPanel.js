@@ -113,7 +113,10 @@ export const LearningResourcesPanel = ({ account, history }) => {
                                 key={`hcr-${index}`}
                                 style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
                             >
-                                <Link to={getUrlForLearningResourceSpecificTab(item, pageLocation)}>
+                                <Link
+                                    to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
+                                    data-testid={`learning-resource-panel-course-link-${index}`}
+                                >
                                     {item.classnumber}
                                 </Link>
                                 {' - '}

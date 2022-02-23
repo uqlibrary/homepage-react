@@ -5,7 +5,6 @@ import { isRepeatingString, unescapeString } from 'helpers/general';
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import { makeStyles } from '@material-ui/styles';
 import TextField from '@material-ui/core/TextField';
 import { throttle } from 'throttle-debounce';
@@ -218,28 +217,18 @@ export const LearningResourceSearch = ({
     // ];
 
     return (
-        <form id="primo-search-form" onSubmit={handleSearchButton}>
+        <form onSubmit={handleSearchButton}>
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
-                        value={searchKeyword}
-                        freeSolo
-                        id={`${elementId}-autocomplete`}
+                        debug
                         data-testid={`${elementId}-autocomplete`}
-                        disableClearable
-                        openOnFocus
                         clearOnEscape
+                        id={`${elementId}-autocomplete`}
                         // options={(!!CRsuggestions && CRsuggestions) || []}
                         // getOptionLabel={option => learningResourceSubjectDisplay(option)}
                         options={getOptions()}
                         // renderGroup={renderGroup}
-                        onInputChange={handleTypedKeywordChange}
-                        ListboxProps={{
-                            'aria-labelledby': 'primo-search-select-label',
-                            id: 'primo-search-autocomplete-listbox',
-                            'data-testid': 'primo-search-autocomplete-listbox',
-                            'aria-label': 'Suggestion list',
-                        }}
                         onChange={(event, value) => {
                             // setTimeout(() => {
                             console.log('change: ', value, event);
@@ -249,11 +238,12 @@ export const LearningResourceSearch = ({
                             handleSelectionOfCourseInDropdown(event, fullOption);
                             // }, 300);
                         }}
+                        onInputChange={handleTypedKeywordChange}
                         renderInput={params => {
                             return (
                                 <TextField
                                     {...params}
-                                    placeholder="Search by course code or keyword"
+                                    placeholder={locale.search.placeholder}
                                     error={!!CRsuggestionsError}
                                     InputProps={{
                                         ...params.InputProps,
@@ -264,12 +254,22 @@ export const LearningResourceSearch = ({
                                     }}
                                     inputProps={{
                                         ...params.inputProps,
-                                        'aria-label': 'Enter your search terms',
-                                        'data-testid': 'primo-search-autocomplete-input',
+                                        'data-testid': `${elementId}-autocomplete-input-wrapper`,
+                                        'aria-label': 'search for a subject by course code or title',
                                     }}
                                 />
                             );
                         }}
+                        ListboxProps={{
+                            'aria-labelledby': 'homepage-learningresource-autocomplete2-label',
+                            id: `${elementId}-autocomplete-listbox`,
+                            // 'data-testid': 'primo-search-autocomplete-listbox',
+                            'aria-label': 'Learning resource suggestion list',
+                        }}
+                        disableClearable
+                        openOnFocus
+                        freeSolo
+                        value={searchKeyword}
                     />
                 </Grid>
                 <div data-testid={`${elementId}-results`}>
@@ -284,32 +284,24 @@ export const LearningResourceSearch = ({
                     )}
                 </div>
             </Grid>
-            <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
-                {!!CRsuggestionsError ? (
+            {!!CRsuggestionsError && (
+                <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
                     <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
                         <span>Autocomplete suggestions unavailable</span>
                     </Grid>
-                ) : (
-                    <Hidden smDown>
-                        <Grid item xs />
-                    </Hidden>
-                )}
-            </Grid>
-            <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
-                {searchKeyword !== '' &&
+                </Grid>
+            )}
+            {searchKeyword !== '' &&
                 CRsuggestionsError === null &&
                 CRsuggestionsLoading === false &&
                 Array.isArray(CRsuggestions) &&
-                CRsuggestions.length === 0 ? (
-                    <span data-testid="noCoursesFound" style={{ color: 'red' }}>
-                        {locale.search.noResultsText}
-                    </span>
-                ) : (
-                    <Hidden smDown>
-                        <Grid item xs />
-                    </Hidden>
+                CRsuggestions.length === 0 && (
+                    <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-noresults`}>
+                        <span data-testid="noCoursesFound" style={{ color: 'red' }}>
+                            {locale.search.noResultsText}
+                        </span>
+                    </Grid>
                 )}
-            </Grid>
         </form>
     );
 };
