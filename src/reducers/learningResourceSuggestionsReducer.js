@@ -34,5 +34,6 @@ export default function learningResourceSuggestionsReducer(state = initialState,
     if (!handler) {
         return state;
     }
+    console.log('learningResourceSuggestionsReducer ', action.type, state, handler(state, action));
     return handler(state, action);
 }

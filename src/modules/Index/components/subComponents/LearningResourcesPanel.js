@@ -36,9 +36,12 @@ export const getUrlForLearningResourceSpecificTab = (
     const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
     const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
     const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
-    return !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-        ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
-        : `${prefix}?${learningResourceParams}`;
+    const url =
+        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
+            : `${prefix}?${learningResourceParams}`;
+    console.log('getUrlForLearningResourceSpecificTab: will go to ', url);
+    return url;
 };
 
 export const LearningResourcesPanel = ({ account, history }) => {
@@ -57,15 +60,18 @@ export const LearningResourcesPanel = ({ account, history }) => {
     }, [searchUrl, loadSearchResult]);
 
     const navigateToLearningResourcePage = option => {
+        console.log('LearningResourcesPanel::navigateToLearningResourcePage', option);
         /* istanbul ignore next */
-        if (!option.text || !option.rest || !option.rest.campus || !option.rest.period) {
+        if (!option.courseCode || !option.rest || !option.rest.campus || !option.rest.period) {
+            console.log('LearningResourcesPanel::navigateToLearningResourcePage - return blank');
             return; // should never happen
         }
         const course = {
-            classnumber: option.text,
+            classnumber: option.courseCode,
             campus: option.rest.campus,
             semester: option.rest.period,
         };
+        console.log('LearningResourcesPanel::navigateToLearningResourcePage course = ', course);
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
 

@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { GUIDES_API, EXAMS_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
+import { EXAMS_API, GUIDES_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
 import { getCampusByCode, throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
@@ -168,24 +168,43 @@ export function loadReadingLists(coursecode, campus, semester, account) {
 }
 
 export function loadCourseReadingListsSuggestions(keyword) {
+    console.log('loadCourseReadingListsSuggestions', keyword);
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
-                const payload = data.map((item, index) => {
-                    const specifier =
-                        (item.course_title ? `${item.course_title} | ` : '') +
-                        (item.campus ? `${item.campus} , ` : '') +
-                        (item.period ? item.period.toLowerCase() : '');
-                    const append = !!specifier ? ` ( ${specifier} )` : '';
-                    return {
-                        text: `${item.name}${append}`,
-                        index,
-                        rest: item,
-                    };
-                });
+                // console.log('keyword = ', keyword);
+                // console.log(
+                //     'data = ',
+                //     data.map(t => t.name),
+                // );
+                const payload = data
+                    // sort to put the matching course codes at the top of the list
+                    .sort(a => {
+                        const foundcode = a.name.toUpperCase().substr(0, keyword.length);
+                        const searchedcode = keyword.toUpperCase();
+                        // eslint-disable-next-line no-nested-ternary
+                        return foundcode < searchedcode ? -1 : foundcode > searchedcode ? 1 : 0;
+                    })
+                    .reverse()
+                    .map((item, index) => {
+                        const specifier =
+                            (item.course_title ? `${item.course_title} | ` : '') +
+                            (item.campus ? `${item.campus} , ` : '') +
+                            (item.period ? item.period.toLowerCase() : '');
+                        const append = !!specifier ? ` ( ${specifier} )` : '';
+                        return {
+                            courseCode: item.name,
+                            displayname: `${item.name}${append}`,
+                            index,
+                            rest: item,
+                            // courseTitle: item.course_title,
+                            campus: item.campus,
+                            semester: item.semester,
+                        };
+                    });
                 dispatch({
                     type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADED,
                     payload: payload,
@@ -201,6 +220,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
 }
 
 export function clearLearningResourceSuggestions() {
+    console.log('CLEARING SUGGESTIONS clearLearningResourceSuggestions');
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_CLEAR });
     };

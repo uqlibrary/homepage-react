@@ -38,33 +38,27 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-// navigateToLearningResourcePage={navigateToLearningResourcePage}
 export const LearningResourceSearch = ({
+    actions,
     displayType, // default: 'full'; values: 'full', 'compact'
     // 'full' for learning resources page search
     // 'compact' for Learning Resource search in homepage panel
+    elementId,
+    loadCourseAndSelectTab,
+    navigateToLearningResourcePage,
     CRsuggestions,
     CRsuggestionsLoading,
     CRsuggestionsError,
-    actions,
-    navigateToLearningResourcePage,
-    loadCourseAndSelectTab,
 }) => {
+    console.log('LearningResourceSearch:', elementId, ' CRsuggestions = ', CRsuggestions);
     const classes = useStyles();
     const [searchKeyword, setSearchKeyword] = useState('');
     const isDesktop = useMediaQuery('(min-width:600px)');
     useEffect(() => {
         if (isDesktop) {
-            document.getElementById('primo-search-autocomplete').focus();
+            document.getElementById(`${elementId}-autocomplete`).focus();
         }
-    }, [isDesktop]);
-
-    const focusOnSearchInput = () => {
-        setTimeout(() => {
-            const searchInput = document.getElementById('primo-search-autocomplete');
-            searchInput.focus();
-        }, 200);
-    };
+    }, [elementId, isDesktop]);
 
     /**
      * get the characters in the string before the specified character
@@ -80,6 +74,108 @@ export const LearningResourceSearch = ({
         return string.substr(0, string.indexOf(separator));
     };
 
+    const throttledReadingListLoadSuggestions = useRef(
+        throttle(3100, newValue => {
+            console.log('throttledReadingListLoadSuggestions', newValue, displayType, searchKeyword);
+            // if (displayType === 'full' && searchKeyword === newValue) {
+            //     // if we are on the results page and the current search term is the same as what we have, dont search
+            //     return;
+            // }
+            actions.loadCourseReadingListsSuggestions(newValue);
+        }),
+    );
+
+    const handleTypedKeywordChange = React.useCallback(
+        (event, typedText) => {
+            if (typedText.includes(' ')) {
+                // skip a space in the input - api doesnt really handle multiple words
+                return;
+            }
+
+            console.log(
+                'handleTypedKeywordChange',
+                displayType,
+                '; typedText = ',
+                typedText,
+                '; searchKeyword = ',
+                searchKeyword,
+                'CRsuggestions',
+                CRsuggestions,
+            );
+            // if (displayType === 'full' && typedText !== '' && CRsuggestions === null) {
+            //     return;
+            // }
+            setSearchKeyword(typedText);
+            if (typedText.length > 3 && !isRepeatingString(typedText)) {
+                // on the first pass we only get what they type;
+                // on the second pass we get the full description string
+                const coursecode = charactersBefore(typedText, ' ');
+                console.log(
+                    displayType,
+                    '; typedText = ',
+                    typedText,
+                    '; CRsuggestions = ',
+                    !!CRsuggestions ? CRsuggestions.length : 0,
+                    'about to throttledReadingListLoadSuggestions',
+                    typedText,
+                    displayType,
+                    searchKeyword,
+                );
+                throttledReadingListLoadSuggestions.current(coursecode);
+                console.log('here ', typedText);
+
+                // focusOnSearchInput();
+            } else {
+                actions.clearLearningResourceSuggestions();
+            }
+        },
+        // check this
+        [actions],
+    );
+
+    // const focusOnSearchInput = () => {
+    //     console.log('elementId = ', elementId);
+    //     console.log('elementId2  = ', `${elementId}-autocomplete`);
+    //     setTimeout(() => {
+    //         const searchInput = document.getElementById(`${elementId}-autocomplete`);
+    //         searchInput.focus();
+    //     }, 200);
+    // };
+
+    const handleSelectionOfCourseInDropdown = (event, option) => {
+        console.log('handleSelectionOfCourseInDropdown ', option);
+        /* istanbul ignore else */
+        if (!(!!option && !!option.courseCode)) {
+            // dev
+            console.log('handleSelectionOfCourseInDropdown missing option.courseCode');
+        }
+        if (!!option && !!option.courseCode) {
+            console.log('handleSelectionOfCourseInDropdown about to clear');
+            // we dont want the previous list to pop up if they search again
+            actions.clearLearningResourceSuggestions();
+            console.log('handleSelectionOfCourseInDropdown after clear');
+
+            if (displayType === 'compact') {
+                console.log('handleSelectionOfCourseInDropdown compact');
+
+                // user is on the homepage - will navigate to the Learning Resources page
+                navigateToLearningResourcePage(option);
+            } else {
+                // user is on the Learning Resource page - tab will load
+                loadCourseAndSelectTab(extractSubjectCodeFromName(option.courseCode), CRsuggestions);
+            }
+
+            document.getElementById(`${elementId}-autocomplete`).value = '';
+            console.log('input field should now be empty');
+
+            // clear the input after they select so they can re-search in a clean field
+            setSearchKeyword('');
+        }
+    };
+
+    /*
+     * can we remove this?!?
+     */
     const handleSearchButton = event => {
         if (!!event) {
             event.preventDefault();
@@ -100,27 +196,26 @@ export const LearningResourceSearch = ({
             }
         }
     };
+    function getOptions() {
+        console.log('getOptions CRsuggestions=', CRsuggestions);
+        const newVar =
+            !!CRsuggestions &&
+            CRsuggestions.filter(option => option.courseCode !== searchKeyword).map(option =>
+                unescapeString(option.displayname),
+            );
+        // console.log('getOptions newVar=', newVar);
+        return newVar || [];
+    }
 
-    const throttledReadingListLoadSuggestions = useRef(
-        throttle(3100, newValue => actions.loadCourseReadingListsSuggestions(newValue)),
-    );
+    // NEED TO ADD HEADER YET
+    // // we group them all together to place a header at the top of the search results
+    // const renderGroup = params => [
+    //     <h3 className={classes.searchTitle} key={params.key}>
+    //         {locale.search.autocompleteResultsTitle}
+    //     </h3>,
+    //     params.children,
+    // ];
 
-    const getSuggestions = React.useCallback(
-        (event, typedText) => {
-            setSearchKeyword(typedText);
-            if (typedText.length > 3 && !isRepeatingString(typedText)) {
-                // on the first pass we only get what they type;
-                // on the second pass we get the full description string
-                const coursecode = charactersBefore(typedText, ' ');
-                throttledReadingListLoadSuggestions.current(coursecode);
-
-                focusOnSearchInput();
-            } else {
-                actions.clearLearningResourceSuggestions();
-            }
-        },
-        [actions],
-    );
     return (
         <form id="primo-search-form" onSubmit={handleSearchButton}>
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
@@ -128,29 +223,30 @@ export const LearningResourceSearch = ({
                     <Autocomplete
                         value={searchKeyword}
                         freeSolo
-                        id="primo-search-autocomplete"
-                        data-testid="primo-search-autocomplete"
+                        id={`${elementId}-autocomplete`}
+                        data-testid={`${elementId}-autocomplete`}
                         disableClearable
                         openOnFocus
                         clearOnEscape
-                        options={
-                            (!!CRsuggestions &&
-                                CRsuggestions.filter(option => option.text !== searchKeyword).map(option =>
-                                    unescapeString(option.text),
-                                )) ||
-                            []
-                        }
-                        onInputChange={getSuggestions}
+                        // options={(!!CRsuggestions && CRsuggestions) || []}
+                        // getOptionLabel={option => learningResourceSubjectDisplay(option)}
+                        options={getOptions()}
+                        // renderGroup={renderGroup}
+                        onInputChange={handleTypedKeywordChange}
                         ListboxProps={{
                             'aria-labelledby': 'primo-search-select-label',
                             id: 'primo-search-autocomplete-listbox',
                             'data-testid': 'primo-search-autocomplete-listbox',
                             'aria-label': 'Suggestion list',
                         }}
-                        onChange={() => {
-                            setTimeout(() => {
-                                document.getElementById('primo-search-submit').click();
-                            }, 300);
+                        onChange={(event, value) => {
+                            // setTimeout(() => {
+                            console.log('change: ', value, event);
+                            const fullOption = CRsuggestions.filter(lr => lr.displayname === value).pop();
+                            console.log('clicked = ', fullOption);
+                            // document.getElementById('primo-search-submit').click();
+                            handleSelectionOfCourseInDropdown(event, fullOption);
+                            // }, 300);
                         }}
                         renderInput={params => {
                             return (
@@ -175,17 +271,19 @@ export const LearningResourceSearch = ({
                         }}
                     />
                 </Grid>
-                {CRsuggestionsLoading && (
-                    <Grid
-                        item
-                        xs={'auto'}
-                        style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
-                    >
-                        <CircularProgress color="primary" size={20} id="loading-suggestions" />
-                    </Grid>
-                )}
+                <div data-testid={`${elementId}-results`}>
+                    {CRsuggestionsLoading && (
+                        <Grid
+                            item
+                            xs={'auto'}
+                            style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
+                        >
+                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                        </Grid>
+                    )}
+                </div>
             </Grid>
-            <Grid container spacing={2} className={classes.searchPanel} data-testid={'primo-search-links'}>
+            <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
                 {!!CRsuggestionsError ? (
                     <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
                         <span>Autocomplete suggestions unavailable</span>
@@ -202,6 +300,7 @@ export const LearningResourceSearch = ({
 
 LearningResourceSearch.propTypes = {
     displayType: PropTypes.string,
+    elementId: PropTypes.string,
     option: PropTypes.any,
     CRsuggestions: PropTypes.any,
     CRsuggestionsLoading: PropTypes.bool,
