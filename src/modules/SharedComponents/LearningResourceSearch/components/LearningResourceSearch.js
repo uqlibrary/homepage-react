@@ -13,6 +13,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 
 import { extractSubjectCodeFromName } from 'modules/Pages/LearningResources/learningResourcesHelpers';
+import { default as locale } from 'modules/Pages/LearningResources/learningResources.locale';
 
 const useStyles = makeStyles(
     () => ({
@@ -288,6 +289,21 @@ export const LearningResourceSearch = ({
                     <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
                         <span>Autocomplete suggestions unavailable</span>
                     </Grid>
+                ) : (
+                    <Hidden smDown>
+                        <Grid item xs />
+                    </Hidden>
+                )}
+            </Grid>
+            <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
+                {searchKeyword !== '' &&
+                CRsuggestionsError === null &&
+                CRsuggestionsLoading === false &&
+                Array.isArray(CRsuggestions) &&
+                CRsuggestions.length === 0 ? (
+                    <span data-testid="noCoursesFound" style={{ color: 'red' }}>
+                        {locale.search.noResultsText}
+                    </span>
                 ) : (
                     <Hidden smDown>
                         <Grid item xs />
