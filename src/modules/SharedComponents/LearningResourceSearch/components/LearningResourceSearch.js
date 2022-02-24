@@ -57,7 +57,10 @@ export const LearningResourceSearch = ({
 }) => {
     console.log('LearningResourceSearch:', elementId, ' CRsuggestions = ', CRsuggestions);
     const classes = useStyles();
+
     const [searchKeyword, setSearchKeyword] = useState('');
+    // const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
+
     const isDesktop = useMediaQuery('(min-width:600px)');
     useEffect(() => {
         if (isDesktop) {
@@ -92,10 +95,10 @@ export const LearningResourceSearch = ({
 
     const handleTypedKeywordChange = React.useCallback(
         (event, typedText) => {
-            if (typedText.includes(' ')) {
-                // skip a space in the input - api doesnt really handle multiple words
-                return;
-            }
+            // if (typedText.includes(' ')) {
+            //     // skip a space in the input - api doesnt really handle multiple words
+            //     return;
+            // }
 
             console.log(
                 'handleTypedKeywordChange',
@@ -111,10 +114,13 @@ export const LearningResourceSearch = ({
             //     return;
             // }
             setSearchKeyword(typedText);
-            if (typedText.length > 3 && !isRepeatingString(typedText)) {
+            if (typedText.length <= 3) {
+                // noOptionsTextSetter(locale.search.noOptionsText);
+                actions.clearLearningResourceSuggestions();
+            } else if (!isRepeatingString(typedText)) {
                 // on the first pass we only get what they type;
                 // on the second pass we get the full description string
-                const coursecode = charactersBefore(typedText, ' ');
+                // const coursecode = charactersBefore(typedText, ' ');
                 console.log(
                     displayType,
                     '; typedText = ',
@@ -126,12 +132,15 @@ export const LearningResourceSearch = ({
                     displayType,
                     searchKeyword,
                 );
-                throttledReadingListLoadSuggestions.current(coursecode);
+                throttledReadingListLoadSuggestions.current(typedText.replace(' ', ''));
                 console.log('here ', typedText);
 
                 // focusOnSearchInput();
-            } else {
-                actions.clearLearningResourceSuggestions();
+                // noOptionsTextSetter(
+                //     <span data-testid="noCoursesFound" style={{ color: 'red' }}>
+                //         {locale.search.noResultsText}
+                //     </span>,
+                // );
             }
         },
         // check this
@@ -193,7 +202,7 @@ export const LearningResourceSearch = ({
 
             if (displayType === 'compact') {
                 // user is on the homepage - will navigate to the Learning Resources page
-                // https://www.library.uq.edu.au/learning-resources?coursecode=FREN2020&campus=St%20Lucia&semester=7160%20Semester%202%202021
+                // https://www.library.uq.edu.au/learning-resources?coursecode=FREN2020&campus=St%20Lucia&semester=Semester%202%202021
                 navigateToLearningResourcePage(keyword);
             } else {
                 // user is on the Learning Resource page - tab will load
@@ -225,15 +234,14 @@ export const LearningResourceSearch = ({
             <Grid container spacing={1} className={classes.searchPanel} alignItems={'flex-end'}>
                 <Grid item xs={12} sm>
                     <Autocomplete
-                        debug
+                        // debug
                         data-testid={`${elementId}-autocomplete`}
+                        blurOnSelect="mouse"
                         clearOnEscape
                         id={`${elementId}-autocomplete`}
                         // options={(!!CRsuggestions && CRsuggestions) || []}
                         // getOptionLabel={option => learningResourceSubjectDisplay(option)}
                         options={getOptions()}
-                        renderGroup={renderGroup}
-                        groupBy={() => false}
                         onChange={(event, value) => {
                             // setTimeout(() => {
                             console.log('change: ', value, event);
@@ -244,6 +252,11 @@ export const LearningResourceSearch = ({
                             // }, 300);
                         }}
                         onInputChange={handleTypedKeywordChange}
+                        noOptionsText=""
+                        // noOptionsText={noOptionsText}
+                        // noOptionsText={locale.search.noResultsText}
+                        renderGroup={renderGroup}
+                        groupBy={() => false}
                         renderInput={params => {
                             return (
                                 <TextField

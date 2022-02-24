@@ -13,13 +13,6 @@ export default [{
         campus: 'St Lucia',
         period: 'Semester 2 2020',
     }, {
-        name: 'ACCT1101',
-        url: 'http://lr.library.uq.edu.au/lists/8DED5E86-60FD-8C20-29F3-0E960FEC791B',
-        type: 'learning_resource',
-        course_title: 'has mock data - Accounting for Decision Making',
-        campus: 'St Lucia',
-        period: 'Semester 2 2020',
-    }, {
         name: 'ACCT7101',
         url: 'http://lr.library.uq.edu.au/lists/B888B026-16C7-F589-8F70-67614268862A',
         type: 'learning_resource',
@@ -67,11 +60,11 @@ export default [{
         url: 'http://lr.library.uq.edu.au/lists/9290F8D7-E2CC-77B7-F272-0DD398391E90',
         type: 'learning_resource',
     }, {
-        "name": "FREN3111",
-        "url": "http:\/\/lr.library.uq.edu.au\/lists\/351A111E-CD11-2B60-52A2-767A7F167C6D",
-        "type": "learning_resource",
-        "course_title": "French Language and Culture 1: ex beginners",
-        "campus": "St Lucia",
-        "period": "Semester 1 2021",
+        name: 'ACCT1101',
+        url: 'http://lr.library.uq.edu.au/lists/8DED5E86-60FD-8C20-29F3-0E960FEC791B',
+        type: 'learning_resource',
+        course_title: 'has mock data - Accounting for Decision Making',
+        campus: 'St Lucia',
+        period: 'Semester 2 2020',
     }
 ];

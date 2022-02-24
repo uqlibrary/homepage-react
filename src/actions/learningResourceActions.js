@@ -180,31 +180,42 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 //     'data = ',
                 //     data.map(t => t.name),
                 // );
-                const payload = data
+                const sorter = data
                     // sort to put the matching course codes at the top of the list
                     .sort(a => {
                         const foundcode = a.name.toUpperCase().substr(0, keyword.length);
                         const searchedcode = keyword.toUpperCase();
+                        const searchedcode4 = keyword.toUpperCase().substr(0, 4);
+                        // if (searchedcode.length > 4) {
+                        //     return 1;
+                        // }
                         // eslint-disable-next-line no-nested-ternary
-                        return foundcode < searchedcode ? -1 : foundcode > searchedcode ? 1 : 0;
-                    })
-                    .reverse()
-                    .map((item, index) => {
-                        const specifier =
-                            (item.course_title ? `${item.course_title} | ` : '') +
-                            (item.campus ? `${item.campus} , ` : '') +
-                            (item.period ? item.period.toLowerCase() : '');
-                        const append = !!specifier ? ` ( ${specifier} )` : '';
-                        return {
-                            courseCode: item.name,
-                            displayname: `${item.name}${append}`,
-                            index,
-                            rest: item,
-                            // courseTitle: item.course_title,
-                            campus: item.campus,
-                            semester: item.semester,
-                        };
+                        const number1 = foundcode === searchedcode ? 1 : a.name.startsWith(searchedcode4) ? 0 : -1;
+                        // const number1 = a.name.startsWith(searchedcode4) ? -1 : foundcode === searchedcode ? 0 : -1;
+                        // const number1 = foundcode < searchedcode ? -1 : foundcode > searchedcode ? 1 : 0;
+                        console.log('dump:', foundcode, searchedcode, number1);
+                        return number1;
                     });
+                console.log(
+                    'sorter = ',
+                    sorter.map(t => t.name),
+                );
+                const payload = sorter.reverse().map((item, index) => {
+                    const specifier =
+                        (item.course_title ? `${item.course_title}, ` : '') +
+                        (item.campus ? `${item.campus}, ` : '') +
+                        (item.period ? item.period : '');
+                    const append = !!specifier ? ` ( ${specifier} )` : '';
+                    return {
+                        courseCode: item.name,
+                        displayname: `${item.name}${append}`,
+                        index,
+                        rest: item,
+                        // courseTitle: item.course_title,
+                        campus: item.campus,
+                        semester: item.semester,
+                    };
+                });
                 dispatch({
                     type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADED,
                     payload: payload,
