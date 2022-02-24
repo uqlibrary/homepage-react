@@ -34,6 +34,11 @@ const useStyles = makeStyles(
                 whiteSpace: 'nowrap !important',
             },
         },
+        searchTitle: {
+            marginBlockStart: '0.5rem',
+            marginBlockEnd: '0.5rem',
+            marginLeft: '1rem',
+        },
     }),
     { withTheme: true },
 );
