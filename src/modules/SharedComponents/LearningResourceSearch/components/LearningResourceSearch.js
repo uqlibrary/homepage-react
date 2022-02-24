@@ -207,14 +207,13 @@ export const LearningResourceSearch = ({
         return newVar || [];
     }
 
-    // NEED TO ADD HEADER YET
-    // // we group them all together to place a header at the top of the search results
-    // const renderGroup = params => [
-    //     <h3 className={classes.searchTitle} key={params.key}>
-    //         {locale.search.autocompleteResultsTitle}
-    //     </h3>,
-    //     params.children,
-    // ];
+    // we group them all together to place a header at the top of the search results
+    const renderGroup = params => [
+        <h3 className={classes.searchTitle} key={params.key}>
+            {locale.search.autocompleteResultsTitle}
+        </h3>,
+        params.children,
+    ];
 
     return (
         <form onSubmit={handleSearchButton}>
@@ -228,7 +227,8 @@ export const LearningResourceSearch = ({
                         // options={(!!CRsuggestions && CRsuggestions) || []}
                         // getOptionLabel={option => learningResourceSubjectDisplay(option)}
                         options={getOptions()}
-                        // renderGroup={renderGroup}
+                        renderGroup={renderGroup}
+                        groupBy={() => false}
                         onChange={(event, value) => {
                             // setTimeout(() => {
                             console.log('change: ', value, event);
@@ -260,16 +260,19 @@ export const LearningResourceSearch = ({
                                 />
                             );
                         }}
-                        ListboxProps={{
-                            'aria-labelledby': 'homepage-learningresource-autocomplete2-label',
-                            id: `${elementId}-autocomplete-listbox`,
-                            // 'data-testid': 'primo-search-autocomplete-listbox',
-                            'aria-label': 'Learning resource suggestion list',
-                        }}
+                        // ListboxProps={{
+                        //     'aria-labelledby': 'homepage-learningresource-autocomplete2-label',
+                        //     id: `${elementId}-autocomplete-popup`,
+                        //     // 'data-testid': 'primo-search-autocomplete-listbox',
+                        //     'aria-label': 'Learning resource suggestion list',
+                        // }}
                         disableClearable
                         openOnFocus
-                        freeSolo
+                        // freeSolo
                         value={searchKeyword}
+                        selectOnFocus
+                        clearOnBlur
+                        handleHomeEndKeys
                     />
                 </Grid>
                 <div data-testid={`${elementId}-results`}>

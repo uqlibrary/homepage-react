@@ -8,6 +8,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.viewport(1300, 1000);
         cy.log('Learning resources panel');
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
+        cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
         cy.wait(500);
         cy.checkA11y('div[data-testid="learning-resources-panel"]', {
             reportName: 'Learning resources panel',
@@ -51,7 +52,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
 
-        // the user sees NO subjects (the form has no sibling elements)
+        // the user is not enrolled in any subjects which means the form has no sibling elements
         cy.get('div[data-testid=learning-resources-panel] form')
             .parent()
             .children()
@@ -63,6 +64,7 @@ context('The Homepage Learning Resource Panel', () => {
             locale.search.placeholder,
         );
 
+        cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
         // user clicks on first result
         cy.get('li#homepage-learningresource-autocomplete-option-0').click();
         // user lands on appropriate learning resources page
