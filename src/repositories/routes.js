@@ -1,4 +1,5 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
+import {API_URL} from '../config';
 
 export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',
@@ -59,11 +60,11 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
 });
 
 export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=' + keyword,
+    apiUrl: API_URL + 'search_suggestions?type=exam_paper&prefix=' + keyword,
 });
 
 export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
-    apiUrl: 'https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource&prefix=' + keyword,
+    apiUrl: API_URL + 'search_suggestions?type=learning_resource&prefix=' + keyword,
 });
 
 // Library hours
