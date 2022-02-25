@@ -92,7 +92,7 @@ describe('Backend routes method', () => {
     it('Should return no prefix if not supplied for API Exams', () => {
         const AllAPIRequest = routes.SEARCH_SUGGESTIONS_API_EXAMS({ keyword: 'test' });
         expect(AllAPIRequest.apiUrl).toEqual(
-            'https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper&prefix=test',
+            'https://api.library.uq.edu.au/staging/search_suggestions?type=exam_paper&prefix=test',
         );
     });
 });
