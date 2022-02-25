@@ -12,10 +12,9 @@ export const promoPanel = {
             <div>
                 <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
                 <ul>
-                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides.</li>
-                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options</li>
+                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides</li>
+                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options.</li>
                 </ul>
-                <p>and lots more.</p>
             </div>
         ),
     },
@@ -25,10 +24,9 @@ export const promoPanel = {
             <div>
                 <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
                 <ul>
-                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides.</li>
-                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options</li>
+                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides</li>
+                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options.</li>
                 </ul>
-                <p>and lots more.</p>
             </div>
         ),
     },
