@@ -62,14 +62,14 @@ export const LearningResourcesPanel = ({ account, history }) => {
     const navigateToLearningResourcePage = option => {
         console.log('LearningResourcesPanel::navigateToLearningResourcePage', option);
         /* istanbul ignore next */
-        if (!option.courseCode || !option.rest || !option.rest.campus || !option.rest.period) {
+        if (!option.courseCode || !option.campus || !option.semester) {
             console.log('LearningResourcesPanel::navigateToLearningResourcePage - return blank');
             return; // should never happen
         }
         const course = {
             classnumber: option.courseCode,
-            campus: option.rest.campus,
-            semester: option.rest.period,
+            campus: option.campus,
+            semester: option.semester,
         };
         console.log('LearningResourcesPanel::navigateToLearningResourcePage course = ', course);
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));

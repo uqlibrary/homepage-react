@@ -241,10 +241,8 @@ export function loadCourseReadingListsSuggestions(keyword) {
                         courseCode: item.name,
                         displayname: `${item.name}${append}`,
                         index,
-                        rest: item,
-                        // courseTitle: item.course_title,
                         campus: item.campus,
-                        semester: item.semester,
+                        semester: item.period,
                     };
                 });
                 dispatch({
