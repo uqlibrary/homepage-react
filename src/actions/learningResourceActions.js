@@ -175,12 +175,34 @@ export function loadCourseReadingListsSuggestions(keyword) {
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
-                // console.log('keyword = ', keyword);
-                // console.log(
-                //     'data = ',
-                //     data.map(t => t.name),
-                // );
-                const sorter = data
+                console.log('keyword = ', keyword);
+                console.log(
+                    'data = ',
+                    data.map(t => t.name),
+                );
+
+                function foundCourseCodeMatchesSearchTerm(option) {
+                    const uppercaseCourseCode =
+                        !!option.name && option.name.length > 0 ? option.name.toUpperCase() : '';
+                    return uppercaseCourseCode.startsWith(keyword.toUpperCase());
+                }
+
+                let datafiltered = data;
+
+                // if they have search for something that looks like it is a course code, eg FREN, then
+                // only show those course codes
+                // (the talis search is too broad - if the user searches for MEDI they will get subjects
+                // whose name includes interMEDIate)
+                if (!!data.find(option => foundCourseCodeMatchesSearchTerm(option))) {
+                    console.log('found ', keyword, ' in data');
+                    datafiltered = data.filter(option => foundCourseCodeMatchesSearchTerm(option));
+                }
+                console.log(
+                    'datafiltered = ',
+                    datafiltered.map(t => t.name),
+                );
+
+                const sorter = datafiltered
                     // sort to put the matching course codes at the top of the list
                     .sort(a => {
                         const foundcode = a.name.toUpperCase().substr(0, keyword.length);
