@@ -1,5 +1,6 @@
 import { accounts } from '../../../src/mock/data';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
+import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
 
 context('The Homepage Learning Resource Panel', () => {
     it('Learning resources panel is accessible', () => {
@@ -26,11 +27,12 @@ context('The Homepage Learning Resource Panel', () => {
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
         cy.get('div[data-testid=learning-resources-panel] h3').contains(locale.homepagePanel.userCourseTitle);
 
+        const numberOfBlocks = currentClasses.length + 1; // n classes + 1 header
         cy.get('div[data-testid=learning-resources-panel] h3')
             .parent()
             .parent()
             .children()
-            .should('have.length', currentClasses.length + 1); // n classes + 1 header
+            .should('have.length', numberOfBlocks);
 
         // the users clicks one of the classes in the 'Your courses' list
         const classIndex = 0;
@@ -64,16 +66,24 @@ context('The Homepage Learning Resource Panel', () => {
             locale.search.placeholder,
         );
 
-        cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
-        // user clicks on first result
-        cy.get('li#homepage-learningresource-autocomplete-option-0').click();
+        // user enters ACCT
+        cy.get('div[data-testid=learning-resources-panel] form input').type('ACCT11');
+        const learningResourceSearchSuggestionsWithACCT = learningResourceSearchSuggestions.filter(item =>
+            item.name.startsWith('ACCT11'),
+        );
+        cy.get('ul#homepage-learningresource-autocomplete-popup')
+            .children()
+            .should('have.length', learningResourceSearchSuggestionsWithACCT.length + 1); // add one for title
+        // user clicks on #1, ACCT1101
+        cy.get('li#homepage-learningresource-autocomplete-option-0')
+            .contains('ACCT1101')
+            .click();
         // user lands on appropriate learning resources page
         cy.url().should(
             'include',
-            // details of first mock result
-            'learning-resources?user=s3333333&coursecode=FREN3111&campus=St%20Lucia&semester=Semester%201%202021',
+            'learning-resources?user=s3333333&coursecode=ACCT1101&campus=St%20Lucia&semester=Semester%202%202020',
         );
         const classPanelId = 'classpanel-0';
-        cy.get(`div[data-testid=${classPanelId}] h3`).contains('FREN3111');
+        cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
     });
 });

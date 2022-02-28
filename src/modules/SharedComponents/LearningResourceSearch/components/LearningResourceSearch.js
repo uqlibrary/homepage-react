@@ -59,14 +59,14 @@ export const LearningResourceSearch = ({
     const classes = useStyles();
 
     const [searchKeyword, setSearchKeyword] = useState('');
-    // const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
+    const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
 
-    const isDesktop = useMediaQuery('(min-width:600px)');
-    useEffect(() => {
-        if (isDesktop) {
-            document.getElementById(`${elementId}-autocomplete`).focus();
-        }
-    }, [elementId, isDesktop]);
+    // const isDesktop = useMediaQuery('(min-width:600px)');
+    // useEffect(() => {
+    //     if (isDesktop) {
+    //         document.getElementById(`${elementId}-autocomplete`).focus();
+    //     }
+    // }, [elementId, isDesktop]);
 
     /**
      * get the characters in the string before the specified character
@@ -115,7 +115,7 @@ export const LearningResourceSearch = ({
             // }
             setSearchKeyword(typedText);
             if (typedText.length <= 3) {
-                // noOptionsTextSetter(locale.search.noOptionsText);
+                noOptionsTextSetter(locale.search.noOptionsText);
                 actions.clearLearningResourceSuggestions();
             } else if (!isRepeatingString(typedText)) {
                 // on the first pass we only get what they type;
@@ -235,10 +235,10 @@ export const LearningResourceSearch = ({
                 <Grid item xs={12} sm>
                     <Autocomplete
                         // debug
-                        data-testid={`${elementId}-autocomplete`}
-                        blurOnSelect="mouse"
-                        clearOnEscape
-                        id={`${elementId}-autocomplete`}
+                        // data-testid={`${elementId}-autocomplete`}
+                        // blurOnSelect="mouse"
+                        // clearOnEscape
+                        // id={`${elementId}-autocomplete`}
                         // options={(!!CRsuggestions && CRsuggestions) || []}
                         // getOptionLabel={option => learningResourceSubjectDisplay(option)}
                         options={getOptions()}
@@ -252,9 +252,9 @@ export const LearningResourceSearch = ({
                             // }, 300);
                         }}
                         onInputChange={handleTypedKeywordChange}
-                        noOptionsText=""
-                        // noOptionsText={noOptionsText}
-                        // noOptionsText={locale.search.noResultsText}
+                        // noOptionsText=""
+                        noOptionsText={noOptionsText}
+                        // // noOptionsText={locale.search.noResultsText}
                         renderGroup={renderGroup}
                         groupBy={() => false}
                         renderInput={params => {
@@ -275,22 +275,23 @@ export const LearningResourceSearch = ({
                                         'data-testid': `${elementId}-autocomplete-input-wrapper`,
                                         'aria-label': 'search for a subject by course code or title',
                                     }}
+                                    label={locale.search.placeholder}
                                 />
                             );
                         }}
-                        // ListboxProps={{
-                        //     'aria-labelledby': 'homepage-learningresource-autocomplete2-label',
-                        //     id: `${elementId}-autocomplete-popup`,
-                        //     // 'data-testid': 'primo-search-autocomplete-listbox',
-                        //     'aria-label': 'Learning resource suggestion list',
-                        // }}
+                        // // ListboxProps={{
+                        // //     'aria-labelledby': 'homepage-learningresource-autocomplete2-label',
+                        // //     id: `${elementId}-autocomplete-popup`,
+                        // //     // 'data-testid': 'primo-search-autocomplete-listbox',
+                        // //     'aria-label': 'Learning resource suggestion list',
+                        // // }}
                         disableClearable
                         openOnFocus
-                        // freeSolo
+                        // // freeSolo
                         value={searchKeyword}
                         selectOnFocus
                         clearOnBlur
-                        handleHomeEndKeys
+                        // handleHomeEndKeys
                     />
                 </Grid>
                 <div data-testid={`${elementId}-results`}>

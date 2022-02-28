@@ -189,8 +189,8 @@ export function loadCourseReadingListsSuggestions(keyword) {
 
                 let datafiltered = data;
 
-                // if they have search for something that looks like it is a course code, eg FREN, then
-                // only show those course codes
+                // if they have searched for something that looks like it is a course code, eg FREN, then
+                // only show results that start with that course code
                 // (the talis search is too broad - if the user searches for MEDI they will get subjects
                 // whose name includes interMEDIate)
                 if (!!data.find(option => foundCourseCodeMatchesSearchTerm(option))) {
@@ -227,7 +227,7 @@ export function loadCourseReadingListsSuggestions(keyword) {
                         (item.course_title ? `${item.course_title}, ` : '') +
                         (item.campus ? `${item.campus}, ` : '') +
                         (item.period ? item.period : '');
-                    const append = !!specifier ? ` ( ${specifier} )` : '';
+                    const append = !!specifier ? ` (${specifier})` : '';
                     return {
                         courseCode: item.name,
                         displayname: `${item.name}${append}`,
