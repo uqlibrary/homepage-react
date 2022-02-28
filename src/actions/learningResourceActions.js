@@ -168,19 +168,12 @@ export function loadReadingLists(coursecode, campus, semester, account) {
 }
 
 export function loadCourseReadingListsSuggestions(keyword) {
-    console.log('loadCourseReadingListsSuggestions', keyword);
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
         return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
-                console.log('keyword = ', keyword);
-                console.log(
-                    'data = ',
-                    data.map(t => t.name),
-                );
-
                 if (keyword.length === 0) {
                     // just trying this as it helps with the mock data
                     dispatch({
@@ -203,13 +196,8 @@ export function loadCourseReadingListsSuggestions(keyword) {
                 // (the talis search is too broad - if the user searches for MEDI they will get subjects
                 // whose name includes interMEDIate)
                 if (!!data.find(option => foundCourseCodeMatchesSearchTerm(option))) {
-                    console.log('found ', keyword, ' in data');
                     datafiltered = data.filter(option => foundCourseCodeMatchesSearchTerm(option));
                 }
-                console.log(
-                    'datafiltered = ',
-                    datafiltered.map(t => t.name),
-                );
 
                 const sorter = datafiltered
                     // sort to put the matching course codes at the top of the list
@@ -217,20 +205,9 @@ export function loadCourseReadingListsSuggestions(keyword) {
                         const foundcode = a.name.toUpperCase().substr(0, keyword.length);
                         const searchedcode = keyword.toUpperCase();
                         const searchedcode4 = keyword.toUpperCase().substr(0, 4);
-                        // if (searchedcode.length > 4) {
-                        //     return 1;
-                        // }
                         // eslint-disable-next-line no-nested-ternary
-                        const number1 = foundcode === searchedcode ? 1 : a.name.startsWith(searchedcode4) ? 0 : -1;
-                        // const number1 = a.name.startsWith(searchedcode4) ? -1 : foundcode === searchedcode ? 0 : -1;
-                        // const number1 = foundcode < searchedcode ? -1 : foundcode > searchedcode ? 1 : 0;
-                        console.log('dump:', foundcode, searchedcode, number1);
-                        return number1;
+                        return foundcode === searchedcode ? 1 : a.name.startsWith(searchedcode4) ? 0 : -1;
                     });
-                console.log(
-                    'sorter = ',
-                    sorter.map(t => t.name),
-                );
                 const payload = sorter.reverse().map((item, index) => {
                     const specifier =
                         (item.course_title ? `${item.course_title}, ` : '') +
@@ -260,7 +237,6 @@ export function loadCourseReadingListsSuggestions(keyword) {
 }
 
 export function clearLearningResourceSuggestions() {
-    console.log('CLEARING SUGGESTIONS clearLearningResourceSuggestions');
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_CLEAR });
     };

@@ -177,7 +177,6 @@ export const SearchCourses = ({
     };
 
     const loadCourseAndSelectTab = (searchKeyword, suggestions) => {
-        console.log('loadCourseAndSelectTab', '; searchKeyword = ', searchKeyword, '; suggestions = ', suggestions);
         let tabId;
 
         const thisSuggestion =

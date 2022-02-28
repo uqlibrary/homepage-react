@@ -40,7 +40,6 @@ export const getUrlForLearningResourceSpecificTab = (
         !!pageLocation.search && pageLocation.search.indexOf('?') === 0
             ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
             : `${prefix}?${learningResourceParams}`;
-    console.log('getUrlForLearningResourceSpecificTab: will go to ', url);
     return url;
 };
 
@@ -60,10 +59,8 @@ export const LearningResourcesPanel = ({ account, history }) => {
     }, [searchUrl, loadSearchResult]);
 
     const navigateToLearningResourcePage = option => {
-        console.log('LearningResourcesPanel::navigateToLearningResourcePage', option);
         /* istanbul ignore next */
         if (!option.courseCode || !option.campus || !option.semester) {
-            console.log('LearningResourcesPanel::navigateToLearningResourcePage - return blank');
             return; // should never happen
         }
         const course = {
@@ -71,7 +68,6 @@ export const LearningResourcesPanel = ({ account, history }) => {
             campus: option.campus,
             semester: option.semester,
         };
-        console.log('LearningResourcesPanel::navigateToLearningResourcePage course = ', course);
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
 

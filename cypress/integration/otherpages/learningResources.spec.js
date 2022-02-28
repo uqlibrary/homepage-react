@@ -331,7 +331,7 @@ function FREN1010_loads_properly_for_s111111_user() {
 }
 
 context('Learning Resources Accessibility', () => {
-    it('User with classes', () => {
+    it('LR is accessible', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(1300, 1000);
@@ -344,20 +344,7 @@ context('Learning Resources Accessibility', () => {
         });
     });
 
-    // it('User without classes', () => {
-    //     cy.visit('/learning-resources?user=s3333333');
-    //     cy.injectAxe();
-    //     cy.viewport(1300, 1000);
-    //     cy.get('div[data-testid="learning-resources"]').contains('My courses');
-    //     cy.log('Learning Resources');
-    //     cy.checkA11y('div[data-testid="learning-resources"]', {
-    //         reportName: 'Learning Resources',
-    //         scopeName: 'Content',
-    //         includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
-    //     });
-    // });
-
-    it('Responsive display', () => {
+    it('Responsive display is accessible', () => {
         cy.visit('/learning-resources?user=s1111111');
         cy.injectAxe();
         cy.viewport(414, 736);
