@@ -7,22 +7,26 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Orientation',
+        title: 'Services for students',
         content: (
             <div>
-                <p>Get to know your Library as part of <span style={{ whiteSpace: 'nowrap' }}>O-Week</span> (14-18 Feb) and Connect Week (21-25 Feb).</p>
-                <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as an introductory IT session or one of our social events to your Orientation Plan!</p>
-                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
+                <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
+                <ul>
+                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides</li>
+                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options.</li>
+                </ul>
             </div>
         ),
     },
     loggedin: {
-        title: 'Orientation',
+        title: 'Services for students',
         content: (
             <div>
-                <p>Get to know your Library as part of <span style={{ whiteSpace: 'nowrap' }}>O-Week</span> (14-18 Feb) and Connect Week (21-25 Feb). </p>
-                <p>Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> such as an introductory IT session or one of our social events to your Orientation Plan!</p>
-                <p>Make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.</p>
+                <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
+                <ul>
+                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides</li>
+                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options.</li>
+                </ul>
             </div>
         ),
     },
