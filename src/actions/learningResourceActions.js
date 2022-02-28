@@ -181,6 +181,15 @@ export function loadCourseReadingListsSuggestions(keyword) {
                     data.map(t => t.name),
                 );
 
+                if (keyword.length === 0) {
+                    // just trying this as it helps with the mock data
+                    dispatch({
+                        type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADED,
+                        payload: null,
+                    });
+                    return;
+                }
+
                 function foundCourseCodeMatchesSearchTerm(option) {
                     const uppercaseCourseCode =
                         !!option.name && option.name.length > 0 ? option.name.toUpperCase() : '';

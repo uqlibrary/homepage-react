@@ -197,7 +197,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 2, // autocomplete finds this many entries for typeChar
+    numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
 ) {
     const courseCode = courseReadingList.title || 'mock data is missing';
     const frenchSearchSuggestion = searchSuggestions
@@ -219,9 +219,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
 
     cy.get('ul#full-learningresource-autocomplete-popup')
         .children()
-        // calls the 'length' property yielding that value
-        .its('length')
-        .should('be.gt', 1);
+        .should('have.length', numberOfMatchingSubject + 1); // plus one for title
 
     cy.log('backspace one char');
     cy.get('div[data-testid=full-learningresource-autocomplete] input').type('{backspace}');
@@ -243,9 +241,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     // the drop down returns
     cy.get('ul#full-learningresource-autocomplete-popup')
         .children()
-        // calls the 'length' property yielding that value
-        .its('length')
-        .should('be.gt', 1);
+        .should('have.length', numberOfMatchingSubject + 1);
 
     // click the first option
     cy.get('li#full-learningresource-autocomplete-option-0')
@@ -259,7 +255,7 @@ function a_user_can_use_the_search_bar_to_load_a_subject(
     courseReadingList,
     searchSuggestions,
     typeChar = 'FREN',
-    numberOfMatchingSubject = 2, // autocomplete finds this many entries for typeChar
+    numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
     tabId = 0,
 ) {
     load_a_subject_in_learning_resource_page_search_tab(
@@ -516,7 +512,7 @@ context('The Learning Resources Page', () => {
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
-            7,
+            8,
             2,
         );
 
@@ -535,7 +531,7 @@ context('The Learning Resources Page', () => {
             ACCT1101ReadingList,
             learningResourceSearchSuggestions,
             'ACCT',
-            7,
+            8,
             2,
         );
     });
@@ -550,14 +546,15 @@ context('The Learning Resources Page', () => {
     //     cy.get('ul#full-learningresource-autocomplete-popup').should('not.exist');
     // });
 
-    // it('A user putting a space in a search still gets their result on the full page', () => {
-    //     cy.visit('/learning-resources?user=s3333333');
-    //     cy.viewport(1300, 1000);
-    //
-    //     cy.get('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').type('FREN 1');
-    //     cy.get('ul#full-learningresource-autocomplete-popup')
-    //         .children()
-    //         .its('length')
-    //         .should('be.gt', 1);
-    // });
+    it('A user putting a space in a search still gets their result on the full page', () => {
+        cy.visit('/learning-resources?user=s3333333');
+        cy.viewport(1300, 1000);
+
+        // enter a repeating string
+        cy.get('input[data-testid="full-learningresource-autocomplete-input-wrapper"]').type('FREN 1');
+        // and the drop down will not appear
+        cy.get('ul#full-learningresource-autocomplete-popup')
+            .children()
+            .should('have.length', 1 + 1);
+    });
 });

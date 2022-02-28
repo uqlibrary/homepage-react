@@ -235,10 +235,10 @@ export const LearningResourceSearch = ({
                 <Grid item xs={12} sm>
                     <Autocomplete
                         // debug
-                        // data-testid={`${elementId}-autocomplete`}
-                        // blurOnSelect="mouse"
+                        data-testid={`${elementId}-autocomplete`}
+                        blurOnSelect="mouse"
                         // clearOnEscape
-                        // id={`${elementId}-autocomplete`}
+                        id={`${elementId}-autocomplete`}
                         // options={(!!CRsuggestions && CRsuggestions) || []}
                         // getOptionLabel={option => learningResourceSubjectDisplay(option)}
                         options={getOptions()}
