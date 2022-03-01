@@ -16,7 +16,7 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-let LearningResearchSearchContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResourceSearch);
-LearningResearchSearchContainer = withRouter(LearningResearchSearchContainer);
+let LearningResourceSearchContainer = connect(mapStateToProps, mapDispatchToProps)(LearningResourceSearch);
+LearningResourceSearchContainer = withRouter(LearningResourceSearchContainer);
 
-export default LearningResearchSearchContainer;
+export default LearningResourceSearchContainer;

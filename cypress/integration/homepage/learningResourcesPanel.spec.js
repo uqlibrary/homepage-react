@@ -9,6 +9,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.viewport(1300, 1000);
         cy.log('Learning resources panel');
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
+        cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
         cy.wait(500);
         cy.checkA11y('div[data-testid="learning-resources-panel"]', {
             reportName: 'Learning resources panel',
@@ -21,7 +22,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.visit('/?user=s1111111');
         cy.viewport(1300, 1000);
         const currentClasses = accounts.s1111111.current_classes;
-        expect(currentClasses.length).to.be.above(1); // the course we are going to click on exists
+        expect(currentClasses.length).to.be.above(1); // the user has courses that we can click on
 
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
         cy.get('div[data-testid=learning-resources-panel] h3').contains(locale.homepagePanel.userCourseTitle);
@@ -33,19 +34,18 @@ context('The Homepage Learning Resource Panel', () => {
             .children()
             .should('have.length', numberOfBlocks);
 
-        // the users clicks the first one (HIST1201)
-        const secondClass = currentClasses[1];
-        const dropdownId = 'hcr-1';
-        cy.get(`div[data-testid=${dropdownId}] a`)
-            .contains(`${secondClass.SUBJECT}${secondClass.CATALOG_NBR}`)
-            .click();
+        // the users clicks one of the classes in the 'Your courses' list
+        const classIndex = 0;
+        const specificClass = currentClasses[classIndex];
+        cy.get(`[data-testid="learning-resource-panel-course-link-${classIndex}"]`)
+            .contains(`${specificClass.SUBJECT}${specificClass.CATALOG_NBR}`)
+            .click({ force: true });
         // the user lands on the correct page
         cy.url().should(
             'include',
-            'learning-resources?user=s1111111&coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020',
+            `learning-resources?user=s1111111&coursecode=${specificClass.SUBJECT}${specificClass.CATALOG_NBR}&campus=St%20Lucia&semester=Semester%202%202020`,
         );
-        const classPanelId = 'classpanel-1';
-        cy.get(`div[data-testid=${classPanelId}] h2`).contains(secondClass.SUBJECT);
+        cy.get(`div[data-testid="classpanel-${classIndex}"] h2`).contains(specificClass.SUBJECT);
     });
 
     // NOTE: purely for coverage, this test is duplicated into cypress/adminPages/learning-resources
@@ -54,7 +54,7 @@ context('The Homepage Learning Resource Panel', () => {
         cy.viewport(1300, 1000);
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
 
-        // the user sees NO subjects (the form has no sibling elements)
+        // the user is not enrolled in any subjects which means the form has no sibling elements
         cy.get('div[data-testid=learning-resources-panel] form')
             .parent()
             .children()
@@ -65,10 +65,6 @@ context('The Homepage Learning Resource Panel', () => {
             'placeholder',
             locale.search.placeholder,
         );
-        // user enters a invalid course code and see the error
-        cy.get('div[data-testid=learning-resources-panel] form input').type('FREX');
-        cy.get('[data-testid="noCoursesFound"]').contains(locale.search.noResultsText);
-        cy.get('div[data-testid=learning-resources-panel] form input').clear();
 
         // user enters ACCT
         cy.get('div[data-testid=learning-resources-panel] form input').type('ACCT11');
@@ -89,15 +85,5 @@ context('The Homepage Learning Resource Panel', () => {
         );
         const classPanelId = 'classpanel-0';
         cy.get(`div[data-testid=${classPanelId}] h3`).contains('ACCT1101');
-    });
-
-    it('A user putting a space in a search still gets their result on the homepage', () => {
-        cy.visit('/?user=s3333333');
-        cy.viewport(1300, 1000);
-
-        cy.get('input[data-testid="homepage-learningresource-autocomplete-input-wrapper"]').type('FREN 1');
-        cy.get('ul#homepage-learningresource-autocomplete-popup')
-            .children()
-            .should('have.length', 1 + 1);
     });
 });
