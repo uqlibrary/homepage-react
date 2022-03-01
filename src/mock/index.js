@@ -454,10 +454,10 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 // .reply(withDelay([500, {}]));
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
-fetchMock.mock('begin:https://api.library.uq.edu.au/v1/search_suggestions?type=exam_paper', examSuggestions);
+fetchMock.mock(`begin:https://api.library.uq.edu.au/staging/search_suggestions?type=exam_paper`, examSuggestions);
 
 fetchMock.mock(
-    'begin:https://api.library.uq.edu.au/v1/search_suggestions?type=learning_resource',
+    'begin:https://api.library.uq.edu.au/staging/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
 );
 
