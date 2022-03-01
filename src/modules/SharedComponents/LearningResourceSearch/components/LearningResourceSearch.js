@@ -72,6 +72,7 @@ export const LearningResourceSearch = ({
     const handleTypedKeywordChange = React.useCallback(
         (event, typedText) => {
             setSearchKeyword(typedText);
+            /* istanbul ignore else */
             if (typedText.length <= 3) {
                 noOptionsTextSetter(locale.search.noOptionsText);
                 actions.clearLearningResourceSuggestions();
@@ -85,6 +86,7 @@ export const LearningResourceSearch = ({
     );
 
     const handleSelectionOfCourseInDropdown = (event, option) => {
+        /* istanbul ignore else */
         if (!!option && !!option.courseCode) {
             // we dont want the previous list to pop up if they search again
             actions.clearLearningResourceSuggestions();
@@ -182,6 +184,7 @@ export const LearningResourceSearch = ({
                 </div>
             </Grid>
             {!!CRsuggestionsError && (
+                /* istanbul ignore next */
                 <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
                     <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
                         <span>Autocomplete suggestions unavailable</span>
@@ -193,6 +196,7 @@ export const LearningResourceSearch = ({
                 CRsuggestionsLoading === false &&
                 Array.isArray(CRsuggestions) &&
                 CRsuggestions.length === 0 && (
+                    /* istanbul ignore next */
                     <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-noresults`}>
                         <span data-testid="noCoursesFound" className={classes.searchPanelInfo}>
                             {locale.search.noResultsText}
