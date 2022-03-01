@@ -21,6 +21,10 @@ const useStyles = makeStyles(
             paddingBottom: 0,
             paddingLeft: 20,
         },
+        searchPanelInfo: {
+            color: 'red',
+            paddingLeft: '2em',
+        },
         selectInput: {
             fontWeight: 300,
             textOverflow: 'ellipsis !important',
@@ -179,7 +183,7 @@ export const LearningResourceSearch = ({
             </Grid>
             {!!CRsuggestionsError && (
                 <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-links`}>
-                    <Grid item xs={12} sm={12} md style={{ color: 'red' }}>
+                    <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
                         <span>Autocomplete suggestions unavailable</span>
                     </Grid>
                 </Grid>
@@ -190,7 +194,7 @@ export const LearningResourceSearch = ({
                 Array.isArray(CRsuggestions) &&
                 CRsuggestions.length === 0 && (
                     <Grid container spacing={2} className={classes.searchPanel} data-testid={`${elementId}-noresults`}>
-                        <span data-testid="noCoursesFound" style={{ color: 'red' }}>
+                        <span data-testid="noCoursesFound" className={classes.searchPanelInfo}>
                             {locale.search.noResultsText}
                         </span>
                     </Grid>
