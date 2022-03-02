@@ -7,7 +7,6 @@ import {
     clearLearningResourceSuggestions,
     clearExams,
     clearGuides,
-    clearReadingLists,
     loadCourseReadingListsSuggestions,
     loadExams,
     loadGuides,
@@ -143,13 +142,6 @@ describe('Account action creators', () => {
         const expectedActions = [actions.READING_LIST_LOADING, actions.APP_ALERT_SHOW, actions.READING_LIST_FAILED];
 
         await mockActionsStore.dispatch(loadReadingLists('FREN1010', 'St Lucia', 'Semester 2 2020', accounts.s1111111));
-        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
-    });
-
-    it('should dispatch clear reading lists list action', async () => {
-        const expectedActions = [actions.READING_LIST_CLEAR];
-
-        await mockActionsStore.dispatch(clearReadingLists());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 

@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { GUIDES_API, EXAMS_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
+import { EXAMS_API, GUIDES_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
 import { getCampusByCode, throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
@@ -167,12 +167,6 @@ export function loadReadingLists(coursecode, campus, semester, account) {
     };
 }
 
-export function clearReadingLists() {
-    return dispatch => {
-        dispatch({ type: actions.READING_LIST_CLEAR });
-    };
-}
-
 export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
@@ -180,11 +174,60 @@ export function loadCourseReadingListsSuggestions(keyword) {
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
-                const payload = data.map((item, index) => {
+                /* istanbul ignore next */
+                if (keyword.length === 0) {
+                    // just trying this as it helps with the mock data
+                    dispatch({
+                        type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADED,
+                        payload: null,
+                    });
+                    return;
+                }
+
+                function foundCourseCodeMatchesSearchTerm(option) {
+                    const uppercaseCourseCode =
+                        !!option.name && option.name.length > 0
+                            ? option.name.toUpperCase()
+                            : /* istanbul ignore next */ '';
+                    return uppercaseCourseCode.startsWith(keyword.toUpperCase());
+                }
+
+                let datafiltered = data;
+
+                // if they have searched for something that looks like it is a course code, eg FREN, then
+                // only show results that start with that course code
+                // (the talis search is too broad - if the user searches for MEDI they will get subjects
+                // whose name includes interMEDIate)
+                /* istanbul ignore else */
+                if (!!data.find(option => foundCourseCodeMatchesSearchTerm(option))) {
+                    datafiltered = data.filter(option => foundCourseCodeMatchesSearchTerm(option));
+                }
+
+                const sorter = datafiltered
+                    // sort to put the matching course codes at the top of the list
+                    .sort(a => {
+                        const foundcode = a.name.toUpperCase().substr(0, keyword.length);
+                        const searchedcode = keyword.toUpperCase();
+                        const searchedcode4 = keyword.toUpperCase().substr(0, 4);
+                        // eslint-disable-next-line no-nested-ternary
+                        return foundcode === searchedcode
+                            ? 1
+                            : /* istanbul ignore next */ a.name.startsWith(searchedcode4)
+                            ? 0
+                            : -1;
+                    });
+                const payload = sorter.reverse().map((item, index) => {
+                    const specifier =
+                        (item.course_title ? `${item.course_title}, ` : '') +
+                        (item.campus ? `${item.campus}, ` : '') +
+                        (item.period ? item.period : '');
+                    const append = !!specifier ? ` (${specifier})` : '';
                     return {
-                        text: item.name,
+                        courseCode: item.name,
+                        displayname: `${item.name}${append}`,
                         index,
-                        rest: item,
+                        campus: item.campus,
+                        semester: item.period,
                     };
                 });
                 dispatch({

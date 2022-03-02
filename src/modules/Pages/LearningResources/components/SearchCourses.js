@@ -188,9 +188,9 @@ export const SearchCourses = ({
                     .pop()) ||
             /* istanbul ignore next */ null;
 
-        const campus = thisSuggestion?.rest?.campus || /* istanbul ignore next */ '';
+        const campus = thisSuggestion?.campus || /* istanbul ignore next */ '';
 
-        const semester = thisSuggestion?.rest?.period || /* istanbul ignore next */ '';
+        const semester = thisSuggestion?.semester || /* istanbul ignore next */ '';
 
         // if subject is in 'my courses' list, swap to that tab
         if (isEnrolledInSubject(searchKeyword, account)) {

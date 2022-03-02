@@ -32,7 +32,6 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
-import { SPOTLIGHT_DELETE_BULK_API, SPOTLIGHT_GET_BY_ID_API, UPLOAD_PUBLIC_FILES_API } from 'repositories/routes';
 
 const moment = require('moment');
 

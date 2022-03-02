@@ -36,9 +36,11 @@ export const getUrlForLearningResourceSpecificTab = (
     const campus = isAccurateCampus ? item.campus : getCampusByCode(item.CAMPUS);
     const learningResourceParams = `coursecode=${item.classnumber}&campus=${campus}&semester=${item.semester}`;
     const prefix = `${includeFullPath ? fullPath : ''}/learning-resources`;
-    return !!pageLocation.search && pageLocation.search.indexOf('?') === 0
-        ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
-        : `${prefix}?${learningResourceParams}`;
+    const url =
+        !!pageLocation.search && pageLocation.search.indexOf('?') === 0
+            ? `${prefix}${pageLocation.search}&${learningResourceParams}` // eg include ?user=s111111
+            : `${prefix}?${learningResourceParams}`;
+    return url;
 };
 
 export const LearningResourcesPanel = ({ account, history }) => {
@@ -58,13 +60,13 @@ export const LearningResourcesPanel = ({ account, history }) => {
 
     const navigateToLearningResourcePage = option => {
         /* istanbul ignore next */
-        if (!option.text || !option.rest || !option.rest.campus || !option.rest.period) {
+        if (!option.courseCode || !option.campus || !option.semester) {
             return; // should never happen
         }
         const course = {
-            classnumber: option.text,
-            campus: option.rest.campus,
-            semester: option.rest.period,
+            classnumber: option.courseCode,
+            campus: option.campus,
+            semester: option.semester,
         };
         setSearchUrl(getUrlForLearningResourceSpecificTab(course, pageLocation, false, true));
     };
@@ -107,7 +109,10 @@ export const LearningResourcesPanel = ({ account, history }) => {
                                 key={`hcr-${index}`}
                                 style={{ textIndent: '-5rem', marginLeft: '5rem', paddingBottom: 8 }}
                             >
-                                <Link to={getUrlForLearningResourceSpecificTab(item, pageLocation)}>
+                                <Link
+                                    to={getUrlForLearningResourceSpecificTab(item, pageLocation)}
+                                    data-testid={`learning-resource-panel-course-link-${index}`}
+                                >
                                     {item.classnumber}
                                 </Link>
                                 {' - '}
