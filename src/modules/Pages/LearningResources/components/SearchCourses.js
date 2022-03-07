@@ -183,7 +183,7 @@ export const SearchCourses = ({
             (!!suggestions &&
                 suggestions
                     .filter(course => {
-                        return (course.text || /* istanbul ignore next */ '') === searchKeyword;
+                        return (course.courseCode || /* istanbul ignore next */ '') === searchKeyword;
                     })
                     .pop()) ||
             /* istanbul ignore next */ null;
