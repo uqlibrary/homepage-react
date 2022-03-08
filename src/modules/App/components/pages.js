@@ -1,4 +1,4 @@
-/* eslint prettier/prettier: ["error", { printWidth: 200 }] */
+/* eslint max-len: 0 */
 import { lazy } from 'react';
 
 const lazyRetry = (importFn, retries = 3, interval = 500) => {

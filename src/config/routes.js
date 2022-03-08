@@ -107,7 +107,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.AlertsEdit,
             // exact: true,
             pageTitle: locale.pages.admin.alerts.form.edit.title,
-            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
+            // regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
     ];
 
@@ -117,7 +117,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.AlertsClone,
             // exact: true,
             pageTitle: locale.pages.admin.alerts.form.clone.title,
-            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
+            // regExPath: pathConfig.admin.alertsclone(`(${alertidRegExp})`),
         },
     ];
 
@@ -127,7 +127,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.AlertsView,
             // exact: true,
             pageTitle: locale.pages.admin.alerts.form.view.title,
-            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
+            // regExPath: pathConfig.admin.alertsview(`(${alertidRegExp})`),
         },
     ];
 
@@ -166,7 +166,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.SpotlightsEdit,
             // exact: true,
             pageTitle: locale.pages.admin.spotlights.form.edit.title,
-            regExPath: pathConfig.admin.spotlightsedit(`(${spotlightidRegExp})`),
+            // regExPath: pathConfig.admin.spotlightsedit(`(${spotlightidRegExp})`),
         },
     ];
 
@@ -176,7 +176,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.SpotlightsClone,
             // exact: true,
             pageTitle: locale.pages.admin.spotlights.form.clone.title,
-            regExPath: pathConfig.admin.spotlightsclone(`(${spotlightidRegExp})`),
+            // regExPath: pathConfig.admin.spotlightsclone(`(${spotlightidRegExp})`),
         },
     ];
 
@@ -186,7 +186,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.SpotlightsView,
             // exact: true,
             pageTitle: locale.pages.admin.spotlights.form.view.title,
-            regExPath: pathConfig.admin.spotlightsview(`(${spotlightidRegExp})`),
+            // regExPath: pathConfig.admin.spotlightsview(`(${spotlightidRegExp})`),
         },
     ];
 
