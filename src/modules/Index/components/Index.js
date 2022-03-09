@@ -14,16 +14,20 @@ import {
     loadCompAvail,
     loadTrainingEvents,
 } from 'actions';
-import { canSeeLearningResources, canSeeLibraryServices } from 'helpers/access';
-import LibraryServices from './subComponents/LibraryServices';
-import Spotlights from './subComponents/Spotlights';
-import Hours from './subComponents/Hours';
-import { default as Computers } from './subComponents/Computers';
-import { default as Training } from './subComponents/Training';
-import { default as PersonalisedPanel } from './subComponents/PersonalisedPanel';
-import LearningResourcesPanel from './subComponents/LearningResourcesPanel';
-import PromoPanel from './subComponents/PromoPanel';
 import ContentLoader from 'react-content-loader';
+import { lazy } from 'react';
+
+import { canSeeLearningResources, canSeeLibraryServices } from 'helpers/access';
+
+import Spotlights from 'modules/Index/components/subComponents/Spotlights';
+import { default as Computers } from 'modules/Index/components/subComponents/Computers';
+import { default as Training } from 'modules/Index/components/subComponents/Training';
+import { default as PersonalisedPanel } from 'modules/Index/components/subComponents/PersonalisedPanel';
+import PromoPanel from 'modules/Index/components/subComponents/PromoPanel';
+
+const LearningResourcesPanel = lazy(() => import('modules/Index/components/subComponents/LearningResourcesPanel'));
+const LibraryServices = lazy(() => import('modules/Index/components/subComponents/LibraryServices'));
+const Hours = lazy(() => import('modules/Index/components/subComponents/Hours'));
 
 const MyLoader = props => (
     <ContentLoader
