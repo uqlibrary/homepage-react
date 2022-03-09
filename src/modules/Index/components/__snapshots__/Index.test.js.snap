@@ -1493,7 +1493,7 @@ exports[`Index page should render placeholders 1`] = `
                       viewBox="0 0 476 124"
                     >
                       <svg
-                        aria-labelledby="wyx8dpo-aria"
+                        aria-labelledby="vvv4v8h-aria"
                         id={null}
                         message="Loading"
                         role="img"
@@ -1501,17 +1501,17 @@ exports[`Index page should render placeholders 1`] = `
                         viewBox="0 0 476 124"
                       >
                         <title
-                          id="wyx8dpo-aria"
+                          id="vvv4v8h-aria"
                         >
                           Loading...
                         </title>
                         <rect
-                          clipPath="url(#wyx8dpo-diff)"
+                          clipPath="url(#vvv4v8h-diff)"
                           height="100%"
                           role="presentation"
                           style={
                             Object {
-                              "fill": "url(#wyx8dpo-animated-diff)",
+                              "fill": "url(#vvv4v8h-animated-diff)",
                             }
                           }
                           width="100%"
@@ -1522,7 +1522,7 @@ exports[`Index page should render placeholders 1`] = `
                           role="presentation"
                         >
                           <clipPath
-                            id="wyx8dpo-diff"
+                            id="vvv4v8h-diff"
                           >
                             <rect
                               height="6"
@@ -1566,7 +1566,7 @@ exports[`Index page should render placeholders 1`] = `
                             />
                           </clipPath>
                           <linearGradient
-                            id="wyx8dpo-animated-diff"
+                            id="vvv4v8h-animated-diff"
                           >
                             <stop
                               offset="0%"

@@ -1935,7 +1935,7 @@ exports[`Application component should render for anon user 1`] = `
                                             viewBox="0 0 476 124"
                                           >
                                             <svg
-                                              aria-labelledby="e53yyzs-aria"
+                                              aria-labelledby="tqcy6wxj-aria"
                                               id={null}
                                               message="Loading"
                                               role="img"
@@ -1943,17 +1943,17 @@ exports[`Application component should render for anon user 1`] = `
                                               viewBox="0 0 476 124"
                                             >
                                               <title
-                                                id="e53yyzs-aria"
+                                                id="tqcy6wxj-aria"
                                               >
                                                 Loading...
                                               </title>
                                               <rect
-                                                clipPath="url(#e53yyzs-diff)"
+                                                clipPath="url(#tqcy6wxj-diff)"
                                                 height="100%"
                                                 role="presentation"
                                                 style={
                                                   Object {
-                                                    "fill": "url(#e53yyzs-animated-diff)",
+                                                    "fill": "url(#tqcy6wxj-animated-diff)",
                                                   }
                                                 }
                                                 width="100%"
@@ -1964,7 +1964,7 @@ exports[`Application component should render for anon user 1`] = `
                                                 role="presentation"
                                               >
                                                 <clipPath
-                                                  id="e53yyzs-diff"
+                                                  id="tqcy6wxj-diff"
                                                 >
                                                   <rect
                                                     height="6"
@@ -2008,7 +2008,7 @@ exports[`Application component should render for anon user 1`] = `
                                                   />
                                                 </clipPath>
                                                 <linearGradient
-                                                  id="e53yyzs-animated-diff"
+                                                  id="tqcy6wxj-animated-diff"
                                                 >
                                                   <stop
                                                     offset="0%"
