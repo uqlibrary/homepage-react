@@ -1,20 +1,20 @@
-import Index from './Index';
+// import Index from './Index';
 import { getUrlForLearningResourceSpecificTab } from './subComponents/LearningResourcesPanel';
 import { greeting } from './subComponents/PersonalisedPanel';
 
-function setup(testProps = {}, args = { isShallow: false }) {
-    const props = {
-        ...testProps,
-    };
-    return getElement(Index, props, args);
-}
-
-describe('Index page', () => {
-    it('should render placeholders', () => {
-        const wrapper = setup();
-        expect(toJson(wrapper)).toMatchSnapshot();
-    });
-});
+// function setup(testProps = {}, args = { isShallow: false }) {
+//     const props = {
+//         ...testProps,
+//     };
+//     return getElement(Index, props, args);
+// }
+//
+// describe('Index page', () => {
+//     it('should render placeholders', () => {
+//         const wrapper = setup();
+//         expect(toJson(wrapper)).toMatchSnapshot();
+//     });
+// });
 
 describe('Learning Resources panel', () => {
     it('test urls correct', () => {
