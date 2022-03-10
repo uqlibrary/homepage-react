@@ -14,7 +14,7 @@ const RobotstxtPlugin = require('robotstxt-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const MomentTimezoneDataPlugin = require('moment-timezone-data-webpack-plugin');
 
-const options = {
+const robotsTxtOptions = {
     policy: [
         {
             userAgent: '*',
@@ -115,7 +115,6 @@ const webpackConfig = {
             )} (It took :elapsed seconds to build)\n`,
             clear: false,
         }),
-        // new ExtractTextPlugin('[name]-[hash].min.css'),
         new MiniCssExtractPlugin({
             filename: '[name]-[hash].min.css',
         }),
@@ -141,23 +140,11 @@ const webpackConfig = {
             'process.env.GIT_SHA': JSON.stringify(process.env.CI_COMMIT_ID),
         }),
         new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
-        // Put it in the end to capture all the HtmlWebpackPlugin's
-        // assets manipulations and do leak its manipulations to HtmlWebpackPlugin
-        // new OfflinePlugin({
-        //     relativePaths: false,
-        //     publicPath: config.basePath,
-        //     caches: {
-        //       main: [':rest:'],
-        //     },
-        //     AppCache : {
-        //       directory: './'
-        //     }
-        // }),
         new BundleAnalyzerPlugin({
             analyzerMode: config.environment === 'production' ? 'disabled' : 'static',
             openAnalyzer: !process.env.CI_BRANCH,
         }),
-        new RobotstxtPlugin(options),
+        new RobotstxtPlugin(robotsTxtOptions),
         new MomentTimezoneDataPlugin({
             matchZones: /^Australia\/Brisbane/,
         }),
@@ -168,11 +155,6 @@ const webpackConfig = {
             automaticNameDelimiter: '-',
             minChunks: 5,
             minSize: 40000,
-            // cacheGroups: {
-            //     commons: {
-            //         chunks: 'all',
-            //     },
-            // },
         },
         minimizer: [
             new TerserPlugin({

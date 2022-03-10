@@ -40,16 +40,6 @@ describe('Application component', () => {
         window.location = saveLocation;
     });
 
-    // it('should render for anon user', () => {
-    //     const wrapper = setup({ location: { pathname: '/' } });
-    //     expect(toJson(wrapper)).toMatchSnapshot();
-    // });
-
-    // it('should render loading screen while account is loading', () => {
-    //     const wrapper = setup({ accountLoading: true });
-    //     expect(toJson(wrapper)).toMatchSnapshot();
-    // });
-
     it('should start loading current user', () => {
         const testMethod = jest.fn();
         setup({
