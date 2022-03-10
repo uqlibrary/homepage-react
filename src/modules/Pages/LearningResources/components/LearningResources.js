@@ -118,10 +118,10 @@ export const LearningResources = ({
     // store a list of the Reading Lists that have been loaded, by subject
     const [currentReadingLists, updateReadingLists] = useState([]);
 
-    const throttledGuideLoad = useRef(throttle(5000, classnumber => actions.loadGuides(classnumber)));
-    const throttledExamsLoad = useRef(throttle(5000, classnumber => actions.loadExams(classnumber)));
+    const throttledGuideLoad = useRef(throttle(1000, classnumber => actions.loadGuides(classnumber)));
+    const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExams(classnumber)));
     const throttledReadingListLoad = useRef(
-        throttle(5000, (classnumber, campus, semester, account) =>
+        throttle(1000, (classnumber, campus, semester, account) =>
             actions.loadReadingLists(classnumber, campus, semester, account),
         ),
     );

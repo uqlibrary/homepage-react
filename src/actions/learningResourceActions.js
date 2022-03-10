@@ -84,11 +84,6 @@ const filterReadingLists = (readingLists, coursecode, campus, semester, account)
         return [];
     }
 
-    /* istanbul ignore next */
-    if (!account || !account.current_classes) {
-        return [];
-    }
-
     const importanceOrder = {
         Required: 1,
         Recommended: 2,

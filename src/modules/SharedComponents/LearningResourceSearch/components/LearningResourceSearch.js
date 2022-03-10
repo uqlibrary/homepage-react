@@ -64,7 +64,7 @@ export const LearningResourceSearch = ({
     const [noOptionsText, noOptionsTextSetter] = useState(locale.search.noOptionsText);
 
     const throttledReadingListLoadSuggestions = useRef(
-        throttle(3100, newValue => {
+        throttle(1000, newValue => {
             actions.loadCourseReadingListsSuggestions(newValue);
         }),
     );

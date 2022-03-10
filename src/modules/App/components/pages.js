@@ -1,4 +1,4 @@
-/* eslint prettier/prettier: ["error", { printWidth: 200 }] */
+/* eslint max-len: 0 */
 import { lazy } from 'react';
 
 const lazyRetry = (importFn, retries = 3, interval = 500) => {
@@ -34,8 +34,8 @@ export const SpotlightsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Ad
 export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Edit/SpotlightsEditContainer')));
 export const SpotlightsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')));
 export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')));
+export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';
-export { Masquerade } from 'modules/Pages/Admin/Masquerade';
 export { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
