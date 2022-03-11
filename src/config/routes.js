@@ -81,53 +81,35 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const alertsListDisplay = [
+    const alertidRegExp = '.*';
+    const alertid = `:alertid(${alertidRegExp})`;
+    const alertsDisplay = [
         {
             path: pathConfig.admin.alerts,
             component: components.AlertsList,
             exact: true,
             pageTitle: locale.pages.admin.alerts.title,
         },
-    ];
-
-    const alertAddDisplay = [
         {
             path: pathConfig.admin.alertsadd,
             component: components.AlertsAdd,
             exact: true,
             pageTitle: locale.pages.admin.alerts.form.add.title,
         },
-    ];
-
-    const alertidRegExp = '.*';
-    const alertid = `:alertid(${alertidRegExp})`;
-    const alertEditForm = [
         {
             path: pathConfig.admin.alertsedit(alertid),
             component: components.AlertsEdit,
-            // exact: true,
             pageTitle: locale.pages.admin.alerts.form.edit.title,
-            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
-    ];
-
-    const alertCloneForm = [
         {
             path: pathConfig.admin.alertsclone(alertid),
             component: components.AlertsClone,
-            // exact: true,
             pageTitle: locale.pages.admin.alerts.form.clone.title,
-            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
-    ];
-
-    const alertView = [
         {
             path: pathConfig.admin.alertsview(alertid),
             component: components.AlertsView,
-            // exact: true,
             pageTitle: locale.pages.admin.alerts.form.view.title,
-            regExPath: pathConfig.admin.alertsedit(`(${alertidRegExp})`),
         },
     ];
 
@@ -140,70 +122,44 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
         },
     ];
 
-    const spotlightsListDisplay = [
+    const spotlightidRegExp = '.*';
+    const spotlightid = `:spotlightid(${spotlightidRegExp})`;
+    const spotlightsDisplay = [
         {
             path: pathConfig.admin.spotlights,
             component: components.SpotlightsList,
             exact: true,
             pageTitle: locale.pages.admin.spotlights.title,
         },
-    ];
-
-    const spotlightidRegExp = '.*';
-    const spotlightid = `:spotlightid(${alertidRegExp})`;
-    const spotlightAddDisplay = [
         {
             path: pathConfig.admin.spotlightsadd,
             component: components.SpotlightsAdd,
             exact: true,
             pageTitle: locale.pages.admin.spotlights.form.add.title,
         },
-    ];
-
-    const spotlightEditForm = [
         {
             path: pathConfig.admin.spotlightsedit(spotlightid),
             component: components.SpotlightsEdit,
-            // exact: true,
             pageTitle: locale.pages.admin.spotlights.form.edit.title,
-            regExPath: pathConfig.admin.spotlightsedit(`(${spotlightidRegExp})`),
         },
-    ];
-
-    const spotlightCloneForm = [
         {
             path: pathConfig.admin.spotlightsclone(spotlightid),
             component: components.SpotlightsClone,
-            // exact: true,
             pageTitle: locale.pages.admin.spotlights.form.clone.title,
-            regExPath: pathConfig.admin.spotlightsclone(`(${spotlightidRegExp})`),
         },
-    ];
-
-    const spotlightViewDisplay = [
         {
             path: pathConfig.admin.spotlightsview(spotlightid),
             component: components.SpotlightsView,
-            // exact: true,
             pageTitle: locale.pages.admin.spotlights.form.view.title,
-            regExPath: pathConfig.admin.spotlightsview(`(${spotlightidRegExp})`),
         },
     ];
 
     return [
         ...publicPages,
         ...(account && canSeeLearningResources(account) ? courseResoures : []),
-        ...(isAlertsAdminUser(account) ? alertAddDisplay : []),
-        ...(isAlertsAdminUser(account) ? alertEditForm : []),
-        ...(isAlertsAdminUser(account) ? alertCloneForm : []),
-        ...(isAlertsAdminUser(account) ? alertView : []),
-        ...(isAlertsAdminUser(account) ? alertsListDisplay : []),
+        ...(account && isAlertsAdminUser(account) ? alertsDisplay : []),
         ...(account && account.canMasquerade ? masqueradeDisplay : []),
-        ...(isSpotlightsAdminUser(account) ? spotlightsListDisplay : []),
-        ...(isSpotlightsAdminUser(account) ? spotlightAddDisplay : []),
-        ...(isSpotlightsAdminUser(account) ? spotlightEditForm : []),
-        ...(isSpotlightsAdminUser(account) ? spotlightCloneForm : []),
-        ...(isSpotlightsAdminUser(account) ? spotlightViewDisplay : []),
+        ...(account && isSpotlightsAdminUser(account) ? spotlightsDisplay : []),
         {
             component: components.NotFound,
         },
