@@ -1,25 +1,7 @@
 /* eslint max-len: 0 */
 import { lazy } from 'react';
+import { lazyRetry } from 'helpers/general';
 
-// per https://medium.com/@botfather/react-loading-chunk-failed-error-88d0bb75b406
-const lazyRetry = (importFn, retries = 3, interval = 500) => {
-    return new Promise((resolve, reject) => {
-        importFn()
-            .then(resolve)
-            .catch(
-                /* istanbul ignore next */ error => {
-                    if (!retries) {
-                        reject(error);
-                        return;
-                    }
-
-                    setTimeout(() => {
-                        lazyRetry(importFn, retries - 1).then(resolve, reject);
-                    }, interval);
-                },
-            );
-    });
-};
 // lazy loaded components
 export const NotFound = lazy(() => lazyRetry(() => import('modules/Pages/NotFound/containers/NotFound')));
 export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/containers/LearningResources')));
