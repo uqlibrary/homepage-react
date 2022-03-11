@@ -1,6 +1,7 @@
 /* eslint max-len: 0 */
 import { lazy } from 'react';
 
+// per https://medium.com/@botfather/react-loading-chunk-failed-error-88d0bb75b406
 const lazyRetry = (importFn, retries = 3, interval = 500) => {
     return new Promise((resolve, reject) => {
         importFn()
