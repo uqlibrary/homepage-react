@@ -1,4 +1,4 @@
-import examReducer, { initialState } from './examReducer';
+import examLearningResourceReducer, { initialState } from './examLearningResourceReducer';
 import * as actions from '../actions/actionTypes';
 
 describe('account reducer', () => {
@@ -11,46 +11,46 @@ describe('account reducer', () => {
     });
 
     it('should handle a failing Exams API call', () => {
-        const test = examReducer(emptyState, {
-            type: actions.EXAMS_FAILED,
+        const test = examLearningResourceReducer(emptyState, {
+            type: actions.EXAMS_LEARNING_RESOURCES_FAILED,
             payload: 'failed!',
         });
         expect(test).toEqual({
             ...emptyState,
-            examListLoading: false,
-            examListError: 'failed!',
+            examLearningResourceListLoading: false,
+            examLearningResourceListError: 'failed!',
         });
     });
 
     it('should handle clearing the exams', () => {
-        const test = examReducer(emptyState, { type: actions.EXAMS_CLEAR });
+        const test = examLearningResourceReducer(emptyState, { type: actions.EXAMS_LEARNING_RESOURCES_CLEAR });
         expect(test).toEqual({
             ...emptyState,
         });
     });
 
     it('should set exams values when successfully loaded', () => {
-        const test = examReducer(emptyState, {
-            type: actions.EXAMS_LOADED,
+        const test = examLearningResourceReducer(emptyState, {
+            type: actions.EXAMS_LEARNING_RESOURCES_LOADED,
             payload: [],
         });
         expect(test).toEqual({
             ...emptyState,
-            examList: [],
-            examListError: false,
-            examListLoading: false,
+            examLearningResourceList: [],
+            examLearningResourceListError: false,
+            examLearningResourceListLoading: false,
         });
     });
 
     it('should set exams Status flags to loading when loading', () => {
-        const test = examReducer(emptyState, {
-            type: actions.EXAMS_LOADING,
+        const test = examLearningResourceReducer(emptyState, {
+            type: actions.EXAMS_LEARNING_RESOURCES_LOADING,
         });
         expect(test).toEqual({
             ...emptyState,
-            examList: null,
-            examListError: false,
-            examListLoading: true,
+            examLearningResourceList: null,
+            examLearningResourceListError: false,
+            examLearningResourceListLoading: true,
         });
     });
 });

@@ -1,5 +1,5 @@
 export const zeroPaddedYear = value => (value ? ('0000' + value).substr(-4) : '*');
-import {API_URL} from '../config';
+import { API_URL } from '../config';
 
 export const CURRENT_ACCOUNT_API = () => ({
     apiUrl: 'account',
@@ -84,7 +84,7 @@ export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
-export const EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
+export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
 export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     // api requires this field to be double encoded, as it may include characters like '/'

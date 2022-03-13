@@ -6,7 +6,7 @@ export { default as appReducer } from './app';
 export { default as learningResourceSuggestionsReducer } from './learningResourceSuggestionsReducer';
 export { default as guidesReducer } from './guidesReducer';
 export { default as readingListReducer } from './readingListReducer';
-export { default as examReducer } from './examReducer';
+export { default as examLearningResourceReducer } from './examLearningResourceReducer';
 export { default as publicFileUploadReducer } from './publicFileUploadReducer';
 export { default as spotlightReducer } from './spotlightReducer';
 export { default as spotlightsReducer } from './spotlightsReducer';

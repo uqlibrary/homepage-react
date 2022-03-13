@@ -1,6 +1,5 @@
 import guidesReducer, { initialState } from './guidesReducer';
 import * as actions from '../actions/actionTypes';
-import examReducer from './examReducer';
 
 describe('account reducer', () => {
     let emptyState;
