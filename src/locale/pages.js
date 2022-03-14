@@ -67,5 +67,8 @@ export default {
         bookExamBooth: {
             title: 'Book an exam booth in the UQ Centre',
         },
+        pastExamPaperSearch: {
+            title: 'Search exam papers',
+        },
     },
 };

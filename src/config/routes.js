@@ -23,6 +23,7 @@ export const pathConfig = {
         spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
+    pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
 };
 
@@ -30,7 +31,6 @@ export const pathConfig = {
 export const flattedPathConfigExact = [
     '/',
     '/learning-resources',
-    '/learning-resources/', // maybe someone has bookmarked it with a '/'?
     '/payment-receipt',
     '/admin/alerts/add',
     '/admin/alerts',
@@ -39,6 +39,8 @@ export const flattedPathConfigExact = [
     '/admin/spotlights/add',
     '/admin/spotlights',
     '/book-exam-booth',
+    '/exams',
+    '/exams/',
     'https://www.library.uq.edu.au/404.js',
 ];
 export const flattedPathConfig = [
@@ -48,6 +50,7 @@ export const flattedPathConfig = [
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
+    '/exams/',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
@@ -69,6 +72,12 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.BookExamBooth,
             exact: false,
             pageTitle: locale.pages.bookExamBooth.title,
+        },
+        {
+            path: pathConfig.pastExamPaperSearch,
+            component: components.PastExamPaperSearch,
+            exact: false,
+            pageTitle: locale.pages.pastExamPaperSearch.title,
         },
     ];
 
