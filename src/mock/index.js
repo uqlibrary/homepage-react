@@ -21,7 +21,6 @@ import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT110
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
 // import examSearch_FREN from './data/records/examSearch_FREN';
 import examSuggestion_FREN from './data/records/examSuggestion_FREN';
-import examSuggestions from './data/records/examLRSuggestions';
 import {
     computerAvailability,
     incompleteNTROs,
@@ -456,8 +455,6 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 // .reply(withDelay([500, {}]));
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
-fetchMock.mock(`begin:https://api.library.uq.edu.au/staging/search_suggestions?type=exam_paper`, examSuggestions);
-
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/staging/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
