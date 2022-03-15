@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 // import { throttle } from 'throttle-debounce';
@@ -23,27 +23,15 @@ const useStyles = makeStyles(
             paddingRight: 20,
             paddingBottom: 0,
         },
-        searchPanelInfo: {
-            color: 'red',
-            paddingLeft: '2em',
+        searchPanelInfo: { color: 'red', paddingLeft: '2em' },
+        loading: {
+            width: 80,
+            marginLeft: -100,
+            marginRight: 20,
+            marginBottom: 6,
+            opacity: 0.3,
         },
-        selectInput: {
-            fontWeight: 300,
-            textOverflow: 'ellipsis !important',
-            overflow: 'hidden !important',
-            whiteSpace: 'nowrap !important',
-            '&::placeholder': {
-                paddingRight: 50,
-                textOverflow: 'ellipsis !important',
-                overflow: 'hidden !important',
-                whiteSpace: 'nowrap !important',
-            },
-        },
-        searchTitle: {
-            marginBlockStart: '0.5rem',
-            marginBlockEnd: '0.5rem',
-            marginLeft: '1rem',
-        },
+        aboutLink: { marginTop: '4em', lineHeight: 1.5 },
     }),
     { withTheme: true },
 );
@@ -53,11 +41,44 @@ export const PastExamPaperSearch = ({
     examSuggestionList,
     examSuggestionListLoading,
 }) => {
-    console.log('PastExamPaperSearch: examSuggestionList = ', examSuggestionList);
     const classes = useStyles();
-    useTitle(locale.HTMLTitle);
+    useTitle('Search for a past exam paper - Library - The University of Queensland');
 
-    // const throttledReadingListLoadSuggestions = useRef(
+    const noOptionsTextDefault = 'Enter at least 2 characters to see relevant courses';
+    const [noOptionsText, setNoOptionsText] = React.useState(noOptionsTextDefault);
+    const [isOpen, setOpen] = React.useState(false);
+    const [searchTerm, setSearchTerm] = React.useState('');
+
+    useEffect(() => {
+        if (!!examSuggestionListError) {
+            setOpen(false);
+        }
+    }, [examSuggestionListError]);
+
+    useEffect(() => {
+        const noResultsFound = () => (
+            <Grid container>
+                <Grid item xs={12}>
+                    <p>We have not found any past exams for this course ({searchTerm.toUpperCase()}) because:</p>
+                    <ul>
+                        <li>there are no past exams available for this course in the last five years or </li>
+                        <li>{searchTerm.toUpperCase()} is not a valid course code or course code prefix or</li>
+                        <li>we've made a mistake.</li>
+                    </ul>
+                    <p>
+                        Please check with your instructor and let us know by emailing{' '}
+                        <a href="mailto://askus@library.uq.edu.au">askus@library.uq.edu.au</a>
+                    </p>
+                </Grid>
+            </Grid>
+        );
+
+        if (!examSuggestionListLoading && !!examSuggestionList && examSuggestionList.length === 0) {
+            setNoOptionsText(noResultsFound);
+        }
+    }, [examSuggestionList, examSuggestionListLoading, searchTerm]);
+
+    // const throttledExamSuggestionsLoad = useRef(
     //     throttle(1000, newValue => {
     //         actions.loadExamSuggestions(newValue);
     //     }),
@@ -65,22 +86,27 @@ export const PastExamPaperSearch = ({
 
     const handleTypedKeywordChange = React.useCallback(
         (event, typedText) => {
-            // setSearchKeyword(typedText);
-            /* istanbul ignore else */
+            setSearchTerm(typedText);
             if (typedText.length <= 1) {
                 actions.clearExamSuggestions();
+                setOpen(true);
+                setNoOptionsText(noOptionsTextDefault);
             } else if (typedText !== '' && !isRepeatingString(typedText)) {
                 // do we need to throttle?
-                // throttledReadingListLoadSuggestions.current(typedText.replace(' ', ''));
+                // throttledExamSuggestionsLoad.current(typedText.replace(' ', ''));
                 // ignore the space if they type eg "FREN 1101"
                 actions.loadExamSuggestions(typedText.replace(' ', ''));
+                setOpen(true);
+            } else {
+                // repeating string: book on the keyboard? dont send to api
+                setOpen(false);
             }
         },
         [actions],
     );
 
     // eslint-disable-next-line react/prop-types
-    const OptionTemplate = ({ option: { name: name, course_title: courseTitle } }) => (
+    const FormattedSuggestion = ({ option: { name: name, course_title: courseTitle } }) => (
         <Grid container className="autocompleteClass">
             <Grid item xs={12}>
                 <Typography variant="body1" color="textPrimary">
@@ -97,88 +123,62 @@ export const PastExamPaperSearch = ({
 
     return (
         <StandardPage>
-            <Grid container>
-                <Grid item xs={12}>
-                    <StandardCard title={locale.pageTitle}>
-                        <form>
-                            <Grid container className={classes.searchPanel} alignItems={'flex-end'}>
-                                <Grid item xs={12} sm>
-                                    <Autocomplete
-                                        blurOnSelect="mouse"
-                                        onInputChange={handleTypedKeywordChange}
-                                        options={examSuggestionList || []}
-                                        noOptionsText="Enter at least 2 characters to see relevant courses"
-                                        renderInput={params => (
-                                            <TextField
-                                                {...params}
-                                                label={locale.placeholder}
-                                                inputProps={{
-                                                    ...params.inputProps,
-                                                    'data-testid': 'past-exam-paper-search-autocomplete-input',
-                                                    'aria-label': 'search for past exam papers by course code',
-                                                }}
-                                            />
-                                        )}
-                                        renderOption={option => <OptionTemplate option={option} />}
-                                        getOptionLabel={item =>
-                                            (!!item && !!item.name && String(`${item.name} (${item.course_title})`)) ||
-                                            ''
-                                        }
-                                    />
-                                </Grid>
-                                <div data-testid={'past-exam-paper-search-results'}>
-                                    {examSuggestionListLoading && (
-                                        <Grid
-                                            item
-                                            xs={'auto'}
-                                            style={{
-                                                width: 80,
-                                                marginLeft: -100,
-                                                marginRight: 20,
-                                                marginBottom: 6,
-                                                opacity: 0.3,
-                                            }}
-                                        >
-                                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
-                                        </Grid>
-                                    )}
-                                </div>
-                            </Grid>
-                            {!!examSuggestionListError && (
-                                <Grid
-                                    container
-                                    spacing={2}
-                                    className={classes.searchPanel}
-                                    data-testid={'past-exam-paper-error'}
-                                >
-                                    <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
-                                        <span>
-                                            Autocomplete suggestions currently unavailable - please try again later
-                                        </span>
-                                    </Grid>
-                                </Grid>
-                            )}
-                            {examSuggestionListError === null &&
-                                examSuggestionListLoading === false &&
-                                Array.isArray(examSuggestionList) &&
-                                examSuggestionList.length === 0 && (
-                                    <Grid
-                                        container
-                                        spacing={2}
-                                        className={classes.searchPanel}
-                                        data-testid={'past-exam-paper-search-noresults'}
-                                    >
-                                        <span className={classes.searchPanelInfo}>{locale.search.noResultsText}</span>
-                                    </Grid>
-                                )}
-                        </form>
-                        <p style={{ marginTop: '4em', lineHeight: 1.5 }}>
-                            To search for past papers, enter up to 9 characters, so for example, BIOL3 will bring up all
-                            3rd year biological sciences courses, BIOL2001 will bring up that course only
-                        </p>
-                    </StandardCard>
+            <StandardCard title="Search for a past exam paper">
+                <Grid container alignItems={'flex-end'}>
+                    <Grid item xs={12} sm>
+                        To search for past papers, enter up to 9 characters, so for example, BIOL3 will bring up all 3rd
+                        year biological sciences courses, BIOL2001 will bring up that course only
+                    </Grid>
                 </Grid>
-            </Grid>
+                <form>
+                    <Autocomplete
+                        // debug
+                        open={isOpen}
+                        blurOnSelect="mouse"
+                        onInputChange={handleTypedKeywordChange}
+                        options={examSuggestionList || []}
+                        noOptionsText={noOptionsText}
+                        renderInput={params => (
+                            <TextField
+                                {...params}
+                                label={locale.placeholder}
+                                inputProps={{
+                                    ...params.inputProps,
+                                    'data-testid': 'past-exam-paper-search-autocomplete-input',
+                                    'aria-label': locale.placeholder,
+                                }}
+                            />
+                        )}
+                        renderOption={option => <FormattedSuggestion option={option} />}
+                        getOptionLabel={item =>
+                            (!!item && !!item.name && String(`${item.name} (${item.course_title})`)) || ''
+                        }
+                    />
+                </form>
+                {examSuggestionListLoading && (
+                    <Grid container>
+                        <Grid item xs={'auto'} className={classes.loading}>
+                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                        </Grid>
+                    </Grid>
+                )}
+                {!!examSuggestionListError && (
+                    <Grid container spacing={2} className={classes.searchPanel} data-testid={'past-exam-paper-error'}>
+                        <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
+                            <span>Autocomplete suggestions currently unavailable - please try again later</span>
+                        </Grid>
+                    </Grid>
+                )}
+                <Grid container>
+                    <Grid item xs={'auto'}>
+                        <p className={classes.aboutLink}>
+                            <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
+                                About past exam papers
+                            </a>
+                        </p>
+                    </Grid>
+                </Grid>
+            </StandardCard>
         </StandardPage>
     );
 };

@@ -10,7 +10,7 @@ context('past exam paper search page', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-    it('when I type FREN in the search bar, appropriate suggestions load', () => {
+    it('when I type a valid course code fragment in the search bar, appropriate suggestions load', () => {
         cy.visit('/exams');
         cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren1');
         // suggestions load
@@ -22,7 +22,7 @@ context('past exam paper search page', () => {
         cy.visit('/exams');
         cy.injectAxe();
         cy.viewport(1300, 1000);
-        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren1');
+        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren1'); // mock returns 200, array
         // suggestions load
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'past exam paper suggestions',
@@ -30,22 +30,22 @@ context('past exam paper search page', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-    it('when I type nonsense in the search bar, a hint shows', () => {
+    it('when I type an invalid course code fragment in the search bar, a hint shows', () => {
         cy.visit('/exams');
-        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('XYZA');
+        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('em'); // mock returns 200 empty
         // suggestions dont load
         cy.get('.MuiAutocomplete-listbox').should('have.length', 0);
         cy.get('.MuiAutocomplete-noOptions')
             .should('exist')
-            .contains('Enter at least 2 characters to see relevant courses');
+            .contains('We have not found any past exams for this course');
     });
     it('when the api fails I get an appropriate error message', () => {
         cy.visit('/exams');
-        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fail');
+        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fail'); // mock returns 500
         // suggestions dont load
         cy.get('.MuiAutocomplete-listbox').should('have.length', 0);
-        cy.get('.MuiAutocomplete-noOptions')
+        cy.get('div[data-testid="past-exam-paper-error"]')
             .should('exist')
-            .contains('Enter at least 2 characters to see relevant courses');
+            .contains('Autocomplete suggestions currently unavailable - please try again later');
     });
 });
