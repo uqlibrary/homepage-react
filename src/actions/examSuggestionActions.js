@@ -5,7 +5,7 @@ import { EXAMS_SUGGESTION_API } from '../repositories/routes';
 export function loadExamSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.EXAM_SUGGESTIONS_LOADING });
-        return get(EXAMS_SUGGESTION_API({ keyword }))
+        return get(EXAMS_SUGGESTION_API(keyword))
             .then(data => {
                 dispatch({
                     type: actions.EXAM_SUGGESTIONS_LOADED,

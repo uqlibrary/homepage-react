@@ -18,8 +18,8 @@ describe('account reducer', () => {
         });
         expect(test).toEqual({
             ...emptyState,
-            examSearchListLoading: false,
-            examSearchListError: 'failed!',
+            examSuggestionListLoading: false,
+            examSuggestionListError: 'failed!',
         });
     });
 
@@ -37,9 +37,9 @@ describe('account reducer', () => {
         });
         expect(test).toEqual({
             ...emptyState,
-            examSearchList: [],
-            examSearchListError: false,
-            examSearchListLoading: false,
+            examSuggestionList: [],
+            examSuggestionListError: false,
+            examSuggestionListLoading: false,
         });
     });
 
@@ -49,9 +49,9 @@ describe('account reducer', () => {
         });
         expect(test).toEqual({
             ...emptyState,
-            examSearchList: null,
-            examSearchListError: false,
-            examSearchListLoading: true,
+            examSuggestionList: null,
+            examSuggestionListError: false,
+            examSuggestionListLoading: true,
         });
     });
 });

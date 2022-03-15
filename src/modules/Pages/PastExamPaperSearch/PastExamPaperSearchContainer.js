@@ -7,7 +7,7 @@ import PastExamPaperSearch from './PastExamPaperSearch';
 
 const mapStateToProps = state => {
     return {
-        ...state.get('examSearchReducer'),
+        ...state.get('examSuggestionReducer'),
     };
 };
 

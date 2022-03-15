@@ -1,30 +1,30 @@
 import * as actions from 'actions/actionTypes';
 
 export const initialState = {
-    examSearchList: null,
-    examSearchListLoading: false,
-    examSearchListError: null,
+    examSuggestionList: null,
+    examSuggestionListLoading: false,
+    examSuggestionListError: null,
 };
 
 const handlers = {
     [actions.EXAM_SUGGESTIONS_LOADING]: state => ({
         ...initialState,
         ...state,
-        examSearchListLoading: true,
-        examSearchListError: false,
+        examSuggestionListLoading: true,
+        examSuggestionListError: false,
     }),
     [actions.EXAM_SUGGESTIONS_LOADED]: (state, action) => ({
         ...initialState,
         ...state,
-        examSearchListLoading: false,
-        examSearchListError: false,
-        examSearchList: action.payload,
+        examSuggestionListLoading: false,
+        examSuggestionListError: false,
+        examSuggestionList: action.payload,
     }),
     [actions.EXAM_SUGGESTIONS_FAILED]: (state, action) => ({
         ...initialState,
         ...state,
-        examSearchListLoading: false,
-        examSearchListError: action.payload,
+        examSuggestionListLoading: false,
+        examSuggestionListError: action.payload,
     }),
     [actions.EXAM_SUGGESTIONS_CLEAR]: () => ({
         ...initialState,

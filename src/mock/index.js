@@ -19,7 +19,9 @@ import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST120
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import examSuggestions from './data/records/examSuggestions';
+// import examSearch_FREN from './data/records/examSearch_FREN';
+import examSuggestion_FREN from './data/records/examSuggestion_FREN';
+import examSuggestions from './data/records/examLRSuggestions';
 import {
     computerAvailability,
     incompleteNTROs,
@@ -506,9 +508,17 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
         size: 9999,
     },
 ]);
-// mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
-//     message: ['an error message from the api that describes what the problem was'],
-// });
+
+// // console.log('examSuggestion_FREN', examSuggestion_FREN);
+// console.log('mock ', routes.EXAMS_SUGGESTION_API('FREN').apiUrl, ' with:', examSuggestion_FREN);
+// // mock.onGet(routes.EXAMS_SUGGESTION_API('FREN').apiUrl).reply(withDelay([200, examSuggestion_FREN]));
+// // console.log("routes.EXAMS_SUGGESTION_API('FREN') = ", routes.EXAMS_SUGGESTION_API('FREN'));
+// // console.log("routes.EXAMS_SUGGESTION_API('FREN').apiUrl = ", routes.EXAMS_SUGGESTION_API('FREN').apiUrl);
+// mock.onGet('exams/suggestions/FREN').reply(withDelay([200, examSuggestion_FREN]));
+// // exams/suggestions/FREN
+// // mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
+// //     message: ['an error message from the api that describes what the problem was'],
+// // });
 
 mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
@@ -559,6 +569,30 @@ mock.onGet('course_resources/FREN1010/exams')
     .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
+    })
+    .onGet('exams/suggestions/fr')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fre')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren1')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fail')
+    .reply(() => {
+        return [500, []];
+    })
+    .onGet('exams/suggestions/XYZA')
+    .reply(() => {
+        return [200, []];
     })
     .onAny()
     .reply(config => {

@@ -59,9 +59,9 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
     },
 });
 
-export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
-    apiUrl: API_URL + 'search_suggestions?type=exam_paper&prefix=' + keyword,
-});
+// export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
+//     apiUrl: API_URL + 'search_suggestions?type=exam_paper&prefix=' + keyword,
+// });
 
 export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
     apiUrl: API_URL + 'search_suggestions?type=learning_resource&prefix=' + keyword,
@@ -85,8 +85,9 @@ export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
 export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
+
 export const EXAMS_SEARCH_API = ({ hint }) => ({ apiUrl: `exams/search/${hint}` });
-export const EXAMS_SUGGESTION_API = ({ hint }) => ({ apiUrl: `exams/suggestions/${hint}` });
+export const EXAMS_SUGGESTION_API = hint => ({ apiUrl: `exams/suggestions/${hint}` });
 
 export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     // api requires this field to be double encoded, as it may include characters like '/'
