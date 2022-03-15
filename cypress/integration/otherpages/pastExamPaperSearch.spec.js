@@ -39,6 +39,15 @@ context('past exam paper search page', () => {
             .should('exist')
             .contains('We have not found any past exams for this course');
     });
+    it('when I type too short a course code fragment in the search bar, a hint shows', () => {
+        cy.visit('/exams');
+        cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('f'); // too short to send an api call
+        // suggestions dont load
+        cy.get('.MuiAutocomplete-listbox').should('have.length', 0);
+        cy.get('.MuiAutocomplete-noOptions')
+            .should('exist')
+            .contains('Type more characters to search');
+    });
     it('when the api fails I get an appropriate error message', () => {
         cy.visit('/exams');
         cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fail'); // mock returns 500

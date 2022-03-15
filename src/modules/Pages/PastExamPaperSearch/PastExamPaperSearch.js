@@ -31,7 +31,14 @@ const useStyles = makeStyles(
             marginBottom: 6,
             opacity: 0.3,
         },
-        aboutLink: { marginTop: '4em', lineHeight: 1.5 },
+        aboutLink: {
+            marginTop: '4em',
+            lineHeight: 1.5,
+            '& a': {
+                textDecoration: 'underline',
+            },
+        },
+        aboutBlock: { paddingBottom: '1em' },
     }),
     { withTheme: true },
 );
@@ -44,7 +51,7 @@ export const PastExamPaperSearch = ({
     const classes = useStyles();
     useTitle('Search for a past exam paper - Library - The University of Queensland');
 
-    const noOptionsTextDefault = 'Enter at least 2 characters to see relevant courses';
+    const noOptionsTextDefault = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(noOptionsTextDefault);
     const [isOpen, setOpen] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState('');
@@ -125,9 +132,12 @@ export const PastExamPaperSearch = ({
         <StandardPage>
             <StandardCard title="Search for a past exam paper">
                 <Grid container alignItems={'flex-end'}>
-                    <Grid item xs={12} sm>
-                        To search for past papers, enter up to 9 characters, so for example, BIOL3 will bring up all 3rd
-                        year biological sciences courses, BIOL2001 will bring up that course only
+                    <Grid item xs={12} sm className={classes.aboutBlock}>
+                        <p>To search for past papers, enter 2 to 9 characters. For example:</p>
+                        <ul>
+                            <li>searching for BIOL3 will bring up all 3rd year biological sciences courses,</li>
+                            <li>searching for BIOL2001 will bring up that course only.</li>
+                        </ul>
                     </Grid>
                 </Grid>
                 <form>
@@ -173,7 +183,7 @@ export const PastExamPaperSearch = ({
                     <Grid item xs={'auto'}>
                         <p className={classes.aboutLink}>
                             <a href="https://web.library.uq.edu.au/library-services/students/past-exam-papers">
-                                About past exam papers
+                                Read more about searching for past exam papers
                             </a>
                         </p>
                     </Grid>
