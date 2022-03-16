@@ -38,7 +38,12 @@ const useStyles = makeStyles(
                 textDecoration: 'underline',
             },
         },
-        aboutBlock: { paddingBottom: '1em' },
+        aboutBlock: {
+            paddingBottom: '1em',
+            '& strong': {
+                letterSpacing: '0.7px',
+            },
+        },
     }),
     { withTheme: true },
 );
@@ -133,10 +138,14 @@ export const PastExamPaperSearch = ({
             <StandardCard title="Search for a past exam paper">
                 <Grid container alignItems={'flex-end'}>
                     <Grid item xs={12} sm className={classes.aboutBlock}>
-                        <p>To search for past papers, enter 2 to 9 characters. For example:</p>
+                        <p>To search for past papers, enter 2 to 9 characters that start a course code. For example:</p>
                         <ul>
-                            <li>searching for BIOL3 will bring up all 3rd year biological sciences courses,</li>
-                            <li>searching for BIOL2001 will bring up that course only.</li>
+                            <li>
+                                entering <strong>BIOL3</strong> will bring up all 3rd year biological sciences courses,
+                            </li>
+                            <li>
+                                entering <strong>BIOL2001</strong> will bring up that course only.
+                            </li>
                         </ul>
                     </Grid>
                 </Grid>
