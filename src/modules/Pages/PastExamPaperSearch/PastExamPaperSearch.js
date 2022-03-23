@@ -71,15 +71,15 @@ export const PastExamPaperSearch = ({
         const noResultsFound = () => (
             <Grid container>
                 <Grid item xs={12}>
-                    <p>We have not found any past exams for this course ({searchTerm.toUpperCase()}) because:</p>
+                    <p>We have not found any past exams for this course ({searchTerm.toUpperCase()}) because either:</p>
                     <ul>
-                        <li>there are no past exams available for this course in the last five years or </li>
-                        <li>{searchTerm.toUpperCase()} is not a valid course code or course code prefix or</li>
-                        <li>we've made a mistake.</li>
+                        <li>there are no past exams available for this course in the last five years</li>
+                        <li>{searchTerm.toUpperCase()} is not a valid course code or course code prefix</li>
+                        <li>the system is not functioning correctly.</li>
                     </ul>
                     <p>
-                        Please check with your instructor and let us know by emailing{' '}
-                        <a href="mailto://askus@library.uq.edu.au">askus@library.uq.edu.au</a>
+                        Please check your course code and try again, or report a problem via the <strong>AskUs</strong>{' '}
+                        button at the top of the page.
                     </p>
                 </Grid>
             </Grid>
@@ -103,7 +103,7 @@ export const PastExamPaperSearch = ({
                 actions.clearExamSuggestions();
                 setOpen(true);
                 setNoOptionsText(noOptionsTextDefault);
-            } else if (typedText !== '' && !isRepeatingString(typedText)) {
+            } else if (typedText !== '' && !isRepeatingString(typedText) && typedText.length < 10) {
                 // do we need to throttle?
                 // throttledExamSuggestionsLoad.current(typedText.replace(' ', ''));
                 // ignore the space if they type eg "FREN 1101"
@@ -138,13 +138,19 @@ export const PastExamPaperSearch = ({
             <StandardCard title="Search for a past exam paper">
                 <Grid container alignItems={'flex-end'}>
                     <Grid item xs={12} sm className={classes.aboutBlock}>
-                        <p>To search for past papers, enter 2 to 9 characters that start a course code. For example:</p>
+                        <p>
+                            Enter a full or partial course code (between 2 and 9 characters) to find available past exam
+                            papers. For example:
+                        </p>
                         <ul>
                             <li>
-                                entering <strong>BIOL3</strong> will bring up all 3rd year biological sciences courses,
+                                <strong>BIOL2001</strong> displays the exam papers for the course,
                             </li>
                             <li>
-                                entering <strong>BIOL2001</strong> will bring up that course only.
+                                <strong>BIOL3</strong> displays exam papers for third year Biological Sciences course,
+                            </li>
+                            <li>
+                                <strong>BIOL</strong> displays all available Biological Sciences exam papers.
                             </li>
                         </ul>
                     </Grid>
