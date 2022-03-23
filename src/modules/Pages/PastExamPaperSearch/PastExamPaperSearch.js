@@ -171,6 +171,7 @@ export const PastExamPaperSearch = ({
                                     ...params.inputProps,
                                     'data-testid': 'past-exam-paper-search-autocomplete-input',
                                     'aria-label': locale.placeholder,
+                                    autoFocus: true,
                                 }}
                             />
                         )}
