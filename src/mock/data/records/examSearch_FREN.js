@@ -49,14 +49,14 @@ export default {
                     "courseCode": "FREN2010",
                     "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_846.pdf",
                     "examNote": "",
-                    "examType": "Final",
+                    "examType": "",
                     "examYear": "2021",
                     "examPeriod": "Sem.1",
                     "matchPeriod": "2020 || Sem.2"
                 }
             ], [
                 {
-                    "courseCode": "FREN1010",
+                    "courseCode": "FREN2010",
                     "matchPeriod": "2020 || Sem.1",
                     "examNote": "there is no exam paper for this period"
                 }
@@ -64,7 +64,7 @@ export default {
                 {
                     "courseCode": "FREN2010",
                     "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2019_FREN7221_school.pdf",
-                    "examNote": "",
+                    "examNote": "Final",
                     "examType": "",
                     "examYear": "2019",
                     "examPeriod": "Sem.1",

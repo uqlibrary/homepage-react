@@ -640,6 +640,10 @@ mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, []];
     })
+    .onGet('exams/search/fail')
+    .reply(() => {
+        return [500, []];
+    })
     .onAny()
     .reply(config => {
         console.log('url not mocked...', config);

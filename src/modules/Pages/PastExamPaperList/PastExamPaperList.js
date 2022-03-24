@@ -90,11 +90,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [courseHint]);
 
-    const listTitle = !!examSearchList
-        ? `Past Exam Papers from ${examSearchList.minYear} to ${
-              examSearchList.maxYear
-          } for "${courseHint.toUpperCase()}"`
-        : 'Past Exam Papers by Subject';
+    const listTitle =
+        !!examSearchList && !!examSearchList.minYear
+            ? `Past Exam Papers from ${examSearchList.minYear} to ${
+                  examSearchList.maxYear
+              } for "${courseHint.toUpperCase()}"`
+            : 'Past Exam Papers by Subject';
 
     function getCourseCode(course2) {
         const course = JSON.parse(JSON.stringify(course2));
@@ -105,7 +106,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
 
     return (
         <StandardPage>
-            <StandardCard title="Past exam papers">
+            <StandardCard title={listTitle}>
                 {!!examSearchListLoading && (
                     <Grid container>
                         <Grid item xs={'auto'} className={classes.loading}>
@@ -116,7 +117,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 {!!examSearchListError && (
                     <Grid container spacing={2} className={classes.searchPanel} data-testid={'past-exam-paper-error'}>
                         <Grid item xs={12} sm={12} md className={classes.searchPanelInfo}>
-                            <span>Autocomplete suggestions currently unavailable - please try again later</span>
+                            <span>Past exam paper search is currently unavailable - please try again later</span>
                         </Grid>
                     </Grid>
                 )}
@@ -124,7 +125,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !examSearchListError &&
                     ((!!examSearchList && !examSearchList.papers) || !examSearchList) && (
                         <Grid container>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} data-testid="past-exam-paper-missing">
                                 {noResultsFoundBlock(courseHint)}
                             </Grid>
                         </Grid>
@@ -136,10 +137,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList.periods && (
                         <Grid container>
                             <Grid item xs={'auto'}>
-                                <h1>{listTitle}</h1>
                                 <table border="1">
                                     <thead>
-                                        <tr>
+                                        <tr data-testid="exampaper-results-table-header">
                                             <th />
                                             {examSearchList.periods.map((semester, ss) => {
                                                 const parts = semester.split(' || ');
@@ -155,14 +155,17 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                             })}
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody data-testid="exampaper-results-table-body">
                                         {examSearchList.papers.map((course, cc) => {
                                             return (
-                                                <tr key={`exampaper-results-row-${cc}`} data-xx={course.length}>
+                                                <tr key={`exampaper-results-row-${cc}`}>
                                                     <th>{getCourseCode(course)}</th>
                                                     {course.map((semester, ss) => {
                                                         return (
-                                                            <td key={`exampaper-results-bodycell-${ss}`}>
+                                                            <td
+                                                                key={`exampaper-results-bodycell-${ss}`}
+                                                                data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
+                                                            >
                                                                 {semester.map((paper, pp) => {
                                                                     return (
                                                                         <div
