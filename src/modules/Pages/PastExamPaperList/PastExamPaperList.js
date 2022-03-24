@@ -142,7 +142,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                     <div
                                                                         key={`exampaper-results-bodycell-detail-${pp}`}
                                                                         className={
-                                                                            pp > 0 && classes.secondaryExamDetail
+                                                                            pp > 0 ? classes.secondaryExamDetail : null
                                                                         }
                                                                     >
                                                                         {!!paper.paperUrl ? (

@@ -20,7 +20,7 @@ describe('Account action creators', () => {
     });
 
     it('handles an exams get request', async () => {
-        mockApi.onGet(repositories.routes.EXAMS_SEARCH_API('FREN1').apiUrl).reply(200, {});
+        mockApi.onGet(repositories.routes.EXAMS_SEARCH_API('FREN1010').apiUrl).reply(200, {});
 
         const expectedActions = [actions.EXAM_SEARCH_LOADING, actions.EXAM_SEARCH_LOADED];
 
@@ -36,7 +36,7 @@ describe('Account action creators', () => {
     });
 
     it('dispatches expected actions when possible exams call fails', async () => {
-        mockApi.onGet(repositories.routes.EXAMS_SEARCH_API('FREN1')).reply(500);
+        mockApi.onGet(repositories.routes.EXAMS_SEARCH_API('FREN1010')).reply(500);
 
         const expectedActions = [actions.EXAM_SEARCH_LOADING, actions.EXAM_SEARCH_FAILED];
 

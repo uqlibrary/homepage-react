@@ -36,6 +36,5 @@ export default function examSearchReducer(state = initialState, action) {
     if (!handler) {
         return state;
     }
-    console.log('examSearchReducer', action.type, state, handler(state, action));
     return handler(state, action);
 }
