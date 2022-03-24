@@ -34,6 +34,9 @@ const useStyles = makeStyles(
         secondaryExamDetail: {
             marginTop: '1em',
         },
+        tableContainer: {
+            maxHeight: 600,
+        },
     }),
     { withTheme: true },
 );
@@ -99,8 +102,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList &&
                     !!examSearchList.papers &&
                     !!examSearchList.periods && (
-                        <TableContainer component={Paper}>
-                            <Table className={classes.table} aria-label="Past Exam Papers by Subject">
+                        <TableContainer className={classes.tableContainer} component={Paper}>
+                            <Table stickyHeader aria-label="Past Exam Papers by Subject">
                                 <TableHead>
                                     <TableRow data-testid="exampaper-results-table-header">
                                         <TableCell component="th" scope="col" />

@@ -79,7 +79,7 @@ describe('Past Exam Papers Pages', () => {
                 .should('have.length', 4);
             cy.get('[data-testid="exampaper-results-table-body"]')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 22);
             cy.get('[data-testid="exampaper-results-bodycell-0-0"]').contains('FREN1010');
             cy.get('[data-testid="exampaper-results-bodycell-0-0"]').contains('Sample');
             cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('FREN2010');
