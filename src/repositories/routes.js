@@ -86,7 +86,7 @@ export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keywor
 
 export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
 
-export const EXAMS_SEARCH_API = ({ hint }) => ({ apiUrl: `exams/search/${hint}` });
+export const EXAMS_SEARCH_API = hint => ({ apiUrl: `exams/search/${hint}` });
 export const EXAMS_SUGGESTION_API = hint => ({ apiUrl: `exams/suggestions/${hint}` });
 
 export const READING_LIST_API = ({ coursecode, campus, semester }) => {

@@ -70,5 +70,8 @@ export default {
         pastExamPaperSearch: {
             title: 'Search exam papers',
         },
+        pastExamPaperList: {
+            title: 'View exam papers',
+        },
     },
 };

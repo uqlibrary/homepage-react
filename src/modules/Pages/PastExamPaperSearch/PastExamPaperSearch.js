@@ -15,6 +15,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 
 import locale from './pastExamPaperSearch.locale';
 import { isRepeatingString } from 'helpers/general';
+import { noResultsFoundBlock } from './pastExamPapers.helpers';
 
 const useStyles = makeStyles(
     () => ({
@@ -68,25 +69,17 @@ export const PastExamPaperSearch = ({
     }, [examSuggestionListError]);
 
     useEffect(() => {
-        const noResultsFound = () => (
-            <Grid container>
-                <Grid item xs={12}>
-                    <p>We have not found any past exams for this course ({searchTerm.toUpperCase()}) because either:</p>
-                    <ul>
-                        <li>there are no past exams available for this course in the last five years</li>
-                        <li>{searchTerm.toUpperCase()} is not a valid course code or course code prefix</li>
-                        <li>the system is not functioning correctly.</li>
-                    </ul>
-                    <p>
-                        Please check your course code and try again, or report a problem via the <strong>AskUs</strong>{' '}
-                        button at the top of the page.
-                    </p>
+        const noResultsFoundPanel = () => {
+            return (
+                <Grid container>
+                    <Grid item xs={12}>
+                        {noResultsFoundBlock(searchTerm)}
+                    </Grid>
                 </Grid>
-            </Grid>
-        );
-
+            );
+        };
         if (!examSuggestionListLoading && !!examSuggestionList && examSuggestionList.length === 0) {
-            setNoOptionsText(noResultsFound);
+            setNoOptionsText(noResultsFoundPanel());
         }
     }, [examSuggestionList, examSuggestionListLoading, searchTerm]);
 
@@ -157,7 +150,6 @@ export const PastExamPaperSearch = ({
                 </Grid>
                 <form>
                     <Autocomplete
-                        // debug
                         open={isOpen}
                         blurOnSelect="mouse"
                         onInputChange={handleTypedKeywordChange}

@@ -33,6 +33,7 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
+import examSearch_FREN from './data/records/examSearch_FREN';
 
 const moment = require('moment');
 
@@ -608,6 +609,34 @@ mock.onGet('course_resources/FREN1010/exams')
         return [500, []];
     })
     .onGet('exams/suggestions/XYZA')
+    .reply(() => {
+        return [200, []];
+    })
+    .onGet('exams/search/fr')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fre')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren1')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren10')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren101')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/em') // this course code fragment does not return any results - mnemonic: empty
     .reply(() => {
         return [200, []];
     })

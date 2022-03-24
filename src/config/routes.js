@@ -23,6 +23,7 @@ export const pathConfig = {
         spotlights: '/admin/spotlights',
     },
     bookExamBooth: '/book-exam-booth',
+    pastExamPaperList: courseHint => `/exams/course/${courseHint}`,
     pastExamPaperSearch: '/exams',
     help: 'https://guides.library.uq.edu.au/for-researchers/research-publications-guide',
 };
@@ -50,10 +51,12 @@ export const flattedPathConfig = [
     '/admin/spotlights/edit',
     '/admin/spotlights/view',
     '/admin/spotlights/clone',
-    '/exams/',
+    '/exams/course',
 ];
 
 export const getRoutesConfig = ({ components = {}, account = null }) => {
+    const examSearchRegExp = '.*';
+    const examSearchCourseHint = `:courseHint(${examSearchRegExp})`;
     const publicPages = [
         {
             path: pathConfig.index,
@@ -72,6 +75,11 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
             component: components.BookExamBooth,
             exact: false,
             pageTitle: locale.pages.bookExamBooth.title,
+        },
+        {
+            path: pathConfig.pastExamPaperList(examSearchCourseHint),
+            component: components.PastExamPaperList,
+            pageTitle: locale.pages.pastExamPaperList.title,
         },
         {
             path: pathConfig.pastExamPaperSearch,
