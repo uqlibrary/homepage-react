@@ -145,8 +145,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                             pp > 0 ? classes.secondaryExamDetail : null
                                                                         }
                                                                     >
-                                                                        {!!paper.paperUrl ? (
-                                                                            <a href="${paper.paperUrl}">
+                                                                        {!!paper.paperUrl && (
+                                                                            <a href={paper.paperUrl}>
                                                                                 {!!paper.examType && (
                                                                                     <div>{paper.examType}</div>
                                                                                 )}
@@ -155,7 +155,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                     <div>{paper.examNote}</div>
                                                                                 )}
                                                                             </a>
-                                                                        ) : null}
+                                                                        )}
                                                                     </div>
                                                                 );
                                                             })}
