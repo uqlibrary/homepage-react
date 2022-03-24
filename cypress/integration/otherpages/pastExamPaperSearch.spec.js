@@ -85,11 +85,11 @@ describe('Past Exam Papers Pages', () => {
             cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('FREN2010');
             cy.get('[data-testid="exampaper-results-bodycell-1-2"]').contains('Final');
         });
-        it('a search with no results shows an error', () => {
-            cy.visit('/exams/course/em');
+        it('a search with no results shows a message', () => {
+            cy.visit('/exams/course/empt');
             cy.get('div[id="content-container"]').contains('Past Exam Papers by Subject');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
-                'We have not found any past exams for this course (EM) because either',
+                'We have not found any past exams for this course (EMPT) because either',
             );
         });
         it('when the api fails I get an appropriate error message', () => {

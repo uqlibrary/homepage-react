@@ -90,7 +90,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 )}
                 {!examSearchListLoading &&
                     !examSearchListError &&
-                    ((!!examSearchList && !examSearchList.papers) || !examSearchList) && (
+                    ((!!examSearchList && !!examSearchList.papers && examSearchList.papers.length === 0) ||
+                        !examSearchList) && (
                         <Grid container>
                             <Grid item xs={12} data-testid="past-exam-paper-missing">
                                 {noResultsFoundBlock(courseHint)}
