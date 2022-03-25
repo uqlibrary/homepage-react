@@ -37,6 +37,16 @@ const useStyles = makeStyles(
         tableContainer: {
             maxHeight: 600,
         },
+        stickyHeaderCell: {
+            position: 'sticky',
+            left: 0,
+            zIndex: 10,
+        },
+        stickyFirstCell: {
+            position: 'sticky',
+            left: 0,
+            backgroundColor: 'white',
+        },
     }),
     { withTheme: true },
 );
@@ -104,10 +114,18 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList.papers &&
                     !!examSearchList.periods && (
                         <TableContainer className={classes.tableContainer} component={Paper}>
-                            <Table stickyHeader aria-label="Past Exam Papers by Subject">
+                            <Table
+                                stickyHeader
+                                aria-label="Past Exam Papers by Subject"
+                                sx={{
+                                    width: 'max-content',
+                                }}
+                            >
                                 <TableHead>
                                     <TableRow data-testid="exampaper-results-table-header">
-                                        <TableCell component="th" scope="col" />
+                                        <TableCell component="th" scope="col" className={classes.stickyHeaderCell}>
+                                            {' '}
+                                        </TableCell>
                                         {examSearchList.periods.map((semester, ss) => {
                                             const parts = semester.split(' || ');
                                             return (
@@ -131,7 +149,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     {examSearchList.papers.map((course, cc) => {
                                         return (
                                             <TableRow key={`exampaper-results-row-${cc}`}>
-                                                <TableCell component="th" scope="row">
+                                                <TableCell
+                                                    component="th"
+                                                    scope="row"
+                                                    className={classes.stickyFirstCell}
+                                                >
                                                     {getCourseCode(course)}
                                                 </TableCell>
                                                 {course.map((semester, ss) => {

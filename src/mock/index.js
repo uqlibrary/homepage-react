@@ -19,7 +19,6 @@ import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST120
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-// import examSearch_FREN from './data/records/examSearch_FREN';
 import examSuggestion_FREN from './data/records/examSuggestion_FREN';
 import {
     computerAvailability,
@@ -34,6 +33,7 @@ import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
+import examSearch_DENT80 from './data/records/examSearch_DENT80';
 
 const moment = require('moment');
 
@@ -635,6 +635,10 @@ mock.onGet('course_resources/FREN1010/exams')
     .onGet('exams/search/fren101')
     .reply(() => {
         return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/dent')
+    .reply(() => {
+        return [200, examSearch_DENT80];
     })
     .onGet('exams/search/empt') // this course code fragment does not return any results - mnemonic: empty
     .reply(() => {
