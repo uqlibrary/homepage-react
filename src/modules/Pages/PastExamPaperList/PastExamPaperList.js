@@ -45,7 +45,7 @@ const useStyles = makeStyles(
         stickyFirstCell: {
             position: 'sticky',
             left: 0,
-            backgroundColor: 'white',
+            backgroundColor: '#fafafa',
         },
     }),
     { withTheme: true },
