@@ -43,9 +43,10 @@ const useStyles = makeStyles(
             zIndex: 10,
         },
         stickyFirstCell: {
-            position: 'sticky',
-            left: 0,
             backgroundColor: '#fafafa',
+            left: 0,
+            position: 'sticky',
+            verticalAlign: 'top',
         },
     }),
     { withTheme: true },
