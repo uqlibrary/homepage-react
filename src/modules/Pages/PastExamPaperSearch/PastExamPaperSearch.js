@@ -6,7 +6,7 @@ import { useTitle } from 'hooks';
 
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
@@ -54,8 +54,10 @@ export const PastExamPaperSearch = ({
     examSuggestionList,
     examSuggestionListLoading,
 }) => {
+    console.log('examSuggestionList = ', examSuggestionList);
     const classes = useStyles();
     useTitle('Search for a past exam paper - Library - The University of Queensland');
+    const filter = createFilterOptions();
 
     const noOptionsTextDefault = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(noOptionsTextDefault);
@@ -126,6 +128,20 @@ export const PastExamPaperSearch = ({
         </Grid>
     );
 
+    const addKeywordAsOption = (options, params) => {
+        const filtered = filter(options, params);
+
+        if (params.inputValue !== '') {
+            filtered.unshift({
+                name: params.inputValue.toUpperCase(),
+                // url: `/exams/course/${params.inputValue.toUpperCase()}`,
+                course_title: `View all exams for ${params.inputValue.toUpperCase()}`,
+            });
+        }
+
+        return filtered;
+    };
+
     return (
         <StandardPage>
             <StandardCard title="Search for a past exam paper">
@@ -152,6 +168,7 @@ export const PastExamPaperSearch = ({
                     <Autocomplete
                         open={isOpen}
                         blurOnSelect="mouse"
+                        filterOptions={addKeywordAsOption}
                         onInputChange={handleTypedKeywordChange}
                         options={examSuggestionList || []}
                         noOptionsText={noOptionsText}
