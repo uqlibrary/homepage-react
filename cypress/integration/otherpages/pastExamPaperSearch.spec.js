@@ -17,7 +17,7 @@ describe('Past Exam Papers Pages', () => {
             // suggestions load
             cy.get('.MuiAutocomplete-listbox')
                 .children()
-                .should('have.length', 2);
+                .should('have.length', 3);
         });
         it('the suggestions list is accessible', () => {
             cy.visit('/exams');
@@ -48,6 +48,36 @@ describe('Past Exam Papers Pages', () => {
             cy.get('.MuiAutocomplete-noOptions')
                 .should('exist')
                 .contains('Type more characters to search');
+        });
+        it('when I dont have any results yet, the "results for this search" doesnt get added to the drop down', () => {
+            cy.visit('/exams');
+            // typing one character doesnt add the "results for this incomplete search" option
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('f');
+            cy.get('.MuiAutocomplete-listbox').should('not.exist');
+            // but something with results does
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('ren');
+            cy.get('.MuiAutocomplete-listbox')
+                .children()
+                .should('have.length', 17);
+        });
+        it('when I click on a suggestion from the list, the correct result page loads', () => {
+            cy.visit('/exams');
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren');
+            cy.get('.MuiAutocomplete-listbox')
+                .children()
+                .should('have.length', 17);
+            cy.get('#exam-search-option-0').click({ force: true });
+            cy.url().should('include', 'exams/course/FREN');
+        });
+        it('when I hit return on a search list, the result page for the first option loads', () => {
+            // the "autoHighlight" option makes it take the first option when clicking return
+            cy.visit('/exams');
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren');
+            cy.get('.MuiAutocomplete-listbox')
+                .children()
+                .should('have.length', 17);
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('{enter}');
+            cy.url().should('include', 'exams/course/FREN');
         });
         it('when the api fails I get an appropriate error message', () => {
             cy.visit('/exams');

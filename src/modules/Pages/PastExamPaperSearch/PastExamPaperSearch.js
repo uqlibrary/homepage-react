@@ -53,6 +53,7 @@ export const PastExamPaperSearch = ({
     examSuggestionListError,
     examSuggestionList,
     examSuggestionListLoading,
+    history,
 }) => {
     console.log('examSuggestionList = ', examSuggestionList);
     const classes = useStyles();
@@ -131,15 +132,19 @@ export const PastExamPaperSearch = ({
     const addKeywordAsOption = (options, params) => {
         const filtered = filter(options, params);
 
-        if (params.inputValue !== '') {
+        if (options.length > 0 && params.inputValue !== '') {
             filtered.unshift({
                 name: params.inputValue.toUpperCase(),
-                // url: `/exams/course/${params.inputValue.toUpperCase()}`,
                 course_title: `View all exams for ${params.inputValue.toUpperCase()}`,
             });
         }
 
         return filtered;
+    };
+
+    const loadExamResults = (event, value) => {
+        const searchUrl = `/exams/course/${value.name.toUpperCase()}`;
+        history.push(searchUrl);
     };
 
     return (
@@ -166,10 +171,14 @@ export const PastExamPaperSearch = ({
                 </Grid>
                 <form>
                     <Autocomplete
+                        // debug
+                        autoHighlight
                         open={isOpen}
                         blurOnSelect="mouse"
                         filterOptions={addKeywordAsOption}
                         onInputChange={handleTypedKeywordChange}
+                        id="exam-search"
+                        onChange={loadExamResults}
                         options={examSuggestionList || []}
                         noOptionsText={noOptionsText}
                         renderInput={params => (
@@ -223,6 +232,7 @@ PastExamPaperSearch.propTypes = {
     examSuggestionListError: PropTypes.any,
     examSuggestionList: PropTypes.array,
     examSuggestionListLoading: PropTypes.bool,
+    history: PropTypes.object,
 };
 
 export default PastExamPaperSearch;

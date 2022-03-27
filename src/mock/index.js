@@ -612,6 +612,10 @@ mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, []];
     })
+    .onGet('exams/search/FREN')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
     .onGet('exams/search/fr')
     .reply(() => {
         return [200, examSearch_FREN];
