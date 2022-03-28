@@ -182,10 +182,10 @@ export const PastExamPaperSearch = ({
                 </Grid>
                 <form>
                     <Autocomplete
-                        // debug
                         autoHighlight
+                        clearOnEscape
+                        clearOnBlur={false}
                         open={isOpen}
-                        blurOnSelect="mouse"
                         filterOptions={addKeywordAsOption}
                         onInputChange={handleTypedKeywordChange}
                         id="exam-search"
