@@ -11,6 +11,17 @@ describe('Past Exam Papers Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
+        it('Responsive display is accessible', () => {
+            cy.visit('/exams');
+            cy.injectAxe();
+            cy.viewport(414, 736);
+            cy.get('div[id="content-container"]').contains('Search for a past exam paper');
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'past exam paper search mobile',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
         it('when I type a valid course code fragment in the search bar, appropriate suggestions load', () => {
             cy.visit('/exams');
             cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren1');
@@ -114,6 +125,17 @@ describe('Past Exam Papers Pages', () => {
             cy.get('div[id="content-container"]').contains('Past Exam Papers');
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'past exam paper results',
+                scopeName: 'Content',
+                includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
+            });
+        });
+        it('past exam paper result page responsive display is accessible', () => {
+            cy.visit('/exams/course/fren');
+            cy.injectAxe();
+            cy.viewport(414, 736);
+            cy.get('div[id="content-container"]').contains('Past Exam Papers');
+            cy.checkA11y('[data-testid="StandardPage"]', {
+                reportName: 'past exam paper results mobile',
                 scopeName: 'Content',
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });

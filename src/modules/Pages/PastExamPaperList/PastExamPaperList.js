@@ -14,6 +14,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useTheme from '@material-ui/styles/useTheme';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -47,6 +49,13 @@ const useStyles = makeStyles(
             left: 0,
             position: 'sticky',
             verticalAlign: 'top',
+        },
+        zebra: {
+            /* stripe alternate rows in movile view */
+            backgroundColor: '#fafafa',
+            paddingTop: '1rem',
+            paddingBottom: '1rem',
+            marginBottom: '1rem',
         },
     }),
     { withTheme: true },
@@ -82,6 +91,24 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         return !!firstSemester && !!firstSemester.courseCode
             ? firstSemester.courseCode
             : /* istanbul ignore next */ null;
+    }
+
+    const theme = useTheme();
+    const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
+
+    function linktoExamPaper(paper, showPeriod = false) {
+        return (
+            !!paper.paperUrl && (
+                <div>
+                    {showPeriod && <p>{paper.matchPeriod.replace('|| ', '')}</p>}
+                    <a href={paper.paperUrl}>
+                        {!!paper.examType && <div>{paper.examType}</div>}
+                        {paper.courseCode}
+                        {!!paper.examNote && <div>{paper.examNote}</div>}
+                    </a>
+                </div>
+            )
+        );
     }
 
     return (
@@ -133,89 +160,120 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 Where actual papers are restricted, sample papers provided by the school may be found in
                                 the column for the semester supplied.
                             </p>
-                            <TableContainer className={classes.tableContainer} component={Paper}>
-                                <Table
-                                    stickyHeader
-                                    aria-label="Past Exam Papers by Subject"
-                                    sx={{
-                                        width: 'max-content',
-                                    }}
-                                >
-                                    <TableHead>
-                                        <TableRow data-testid="exampaper-results-table-header">
-                                            <TableCell component="th" scope="col" className={classes.stickyHeaderCell}>
-                                                {' '}
-                                            </TableCell>
-                                            {examSearchList.periods.map((semester, ss) => {
-                                                const parts = semester.split(' || ');
+                            {isMobileView ? (
+                                <div>
+                                    {examSearchList.papers.map((course, cc) => {
+                                        return (
+                                            <div
+                                                key={`exampaper-results-row-${cc}`}
+                                                className={cc % 2 && classes.zebra}
+                                            >
+                                                <div>{getCourseCode(course)}</div>
+                                                {course.map((semester, ss) => {
+                                                    return (
+                                                        <div
+                                                            className={classes.bodyCell}
+                                                            key={`exampaper-results-bodycell-${ss}`}
+                                                            data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
+                                                        >
+                                                            {semester.map((paper, pp) => {
+                                                                return (
+                                                                    <div
+                                                                        key={`exampaper-results-bodycell-detail-${pp}`}
+                                                                        className={
+                                                                            pp > 0 ? classes.secondaryExamDetail : null
+                                                                        }
+                                                                    >
+                                                                        {linktoExamPaper(paper, pp === 0)}
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
+                                                    );
+                                                })}
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <TableContainer className={classes.tableContainer} component={Paper}>
+                                    <Table
+                                        stickyHeader
+                                        aria-label="Past Exam Papers by Subject"
+                                        sx={{
+                                            width: 'max-content',
+                                        }}
+                                    >
+                                        <TableHead>
+                                            <TableRow data-testid="exampaper-results-table-header">
+                                                <TableCell
+                                                    component="th"
+                                                    scope="col"
+                                                    className={classes.stickyHeaderCell}
+                                                >
+                                                    {' '}
+                                                </TableCell>
+                                                {examSearchList.periods.map((semester, ss) => {
+                                                    const parts = semester.split(' || ');
+                                                    return (
+                                                        <TableCell
+                                                            component="th"
+                                                            className={classes.headerCell}
+                                                            key={`exampaper-results-headercell-${ss}`}
+                                                            scope="col"
+                                                        >
+                                                            {parts.map((part, ii) => (
+                                                                <div key={`exampaper-results-headercell-part-${ii}`}>
+                                                                    {part}
+                                                                </div>
+                                                            ))}
+                                                        </TableCell>
+                                                    );
+                                                })}
+                                            </TableRow>
+                                        </TableHead>
+                                        <tbody data-testid="exampaper-results-table-body">
+                                            {examSearchList.papers.map((course, cc) => {
                                                 return (
-                                                    <TableCell
-                                                        component="th"
-                                                        className={classes.headerCell}
-                                                        key={`exampaper-results-headercell-${ss}`}
-                                                        scope="col"
-                                                    >
-                                                        {parts.map((part, ii) => (
-                                                            <div key={`exampaper-results-headercell-part-${ii}`}>
-                                                                {part}
-                                                            </div>
-                                                        ))}
-                                                    </TableCell>
+                                                    <TableRow key={`exampaper-results-row-${cc}`}>
+                                                        <TableCell
+                                                            component="th"
+                                                            scope="row"
+                                                            className={classes.stickyFirstCell}
+                                                        >
+                                                            {getCourseCode(course)}
+                                                        </TableCell>
+                                                        {course.map((semester, ss) => {
+                                                            return (
+                                                                <TableCell
+                                                                    className={classes.bodyCell}
+                                                                    key={`exampaper-results-bodycell-${ss}`}
+                                                                    data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
+                                                                >
+                                                                    {semester.map((paper, pp) => {
+                                                                        return (
+                                                                            <div
+                                                                                key={`exampaper-results-bodycell-detail-${pp}`}
+                                                                                className={
+                                                                                    pp > 0
+                                                                                        ? classes.secondaryExamDetail
+                                                                                        : null
+                                                                                }
+                                                                            >
+                                                                                {linktoExamPaper(paper)}
+                                                                            </div>
+                                                                        );
+                                                                    })}
+                                                                </TableCell>
+                                                            );
+                                                        })}
+                                                    </TableRow>
                                                 );
                                             })}
-                                        </TableRow>
-                                    </TableHead>
-                                    <tbody data-testid="exampaper-results-table-body">
-                                        {examSearchList.papers.map((course, cc) => {
-                                            return (
-                                                <TableRow key={`exampaper-results-row-${cc}`}>
-                                                    <TableCell
-                                                        component="th"
-                                                        scope="row"
-                                                        className={classes.stickyFirstCell}
-                                                    >
-                                                        {getCourseCode(course)}
-                                                    </TableCell>
-                                                    {course.map((semester, ss) => {
-                                                        return (
-                                                            <TableCell
-                                                                className={classes.bodyCell}
-                                                                key={`exampaper-results-bodycell-${ss}`}
-                                                                data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
-                                                            >
-                                                                {semester.map((paper, pp) => {
-                                                                    return (
-                                                                        <div
-                                                                            key={`exampaper-results-bodycell-detail-${pp}`}
-                                                                            className={
-                                                                                pp > 0
-                                                                                    ? classes.secondaryExamDetail
-                                                                                    : null
-                                                                            }
-                                                                        >
-                                                                            {!!paper.paperUrl && (
-                                                                                <a href={paper.paperUrl}>
-                                                                                    {!!paper.examType && (
-                                                                                        <div>{paper.examType}</div>
-                                                                                    )}
-                                                                                    {paper.courseCode}
-                                                                                    {!!paper.examNote && (
-                                                                                        <div>{paper.examNote}</div>
-                                                                                    )}
-                                                                                </a>
-                                                                            )}
-                                                                        </div>
-                                                                    );
-                                                                })}
-                                                            </TableCell>
-                                                        );
-                                                    })}
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </tbody>
-                                </Table>
-                            </TableContainer>
+                                        </tbody>
+                                    </Table>
+                                </TableContainer>
+                            )}
                         </React.Fragment>
                     )}
                 <Grid container>
