@@ -86,7 +86,7 @@ describe('Past Exam Papers Pages', () => {
             cy.get('.MuiAutocomplete-listbox')
                 .children()
                 .should('have.length', 2);
-            cy.get('#exam-search-option-0').should('contain', 'View all exams for FREN101');
+            cy.get('#exam-search-option-0').should('contain', 'View all exam papers for FREN101');
             cy.get('#exam-search-option-1').should('contain', 'FREN1010');
 
             // matching a course code exactly does not include the "view all results for..." option

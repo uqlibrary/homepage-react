@@ -127,7 +127,7 @@ export const PastExamPaperSearch = ({
         if (options.length > 0 && params.inputValue !== '' && options[0].name.toUpperCase() !== truncatedSearchTerm) {
             filtered.unshift({
                 name: truncatedSearchTerm,
-                course_title: `View all exams for ${truncatedSearchTerm}`,
+                course_title: `View all exam papers for ${truncatedSearchTerm}`,
             });
         }
 
