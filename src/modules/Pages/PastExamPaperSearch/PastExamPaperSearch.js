@@ -55,10 +55,11 @@ export const PastExamPaperSearch = ({
     examSuggestionListLoading,
     history,
 }) => {
-    console.log('examSuggestionList = ', examSuggestionList);
+    // console.log('examSuggestionList = ', examSuggestionList);
     const classes = useStyles();
     useTitle('Search for a past exam paper - Library - The University of Queensland');
     const filter = createFilterOptions();
+    const MAX_LENGTH_COURSE_CODE = 9;
 
     const noOptionsTextDefault = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(noOptionsTextDefault);
@@ -86,12 +87,6 @@ export const PastExamPaperSearch = ({
         }
     }, [examSuggestionList, examSuggestionListLoading, searchTerm]);
 
-    // const throttledExamSuggestionsLoad = useRef(
-    //     throttle(1000, newValue => {
-    //         actions.loadExamSuggestions(newValue);
-    //     }),
-    // );
-
     const handleTypedKeywordChange = React.useCallback(
         (event, typedText) => {
             setSearchTerm(typedText);
@@ -99,15 +94,11 @@ export const PastExamPaperSearch = ({
                 actions.clearExamSuggestions();
                 setOpen(true);
                 setNoOptionsText(noOptionsTextDefault);
-            } else if (typedText !== '' && !isRepeatingString(typedText) && typedText.length < 10) {
-                // do we need to throttle?
-                // throttledExamSuggestionsLoad.current(typedText.replace(' ', ''));
+            } else if (!isRepeatingString(typedText) && typedText.length <= MAX_LENGTH_COURSE_CODE) {
+                // console.log('in: ', typedText, typedText.length, 'examSuggestionList = ', examSuggestionList);
                 // ignore the space if they type eg "FREN 1101"
                 actions.loadExamSuggestions(typedText.replace(' ', ''));
                 setOpen(true);
-            } else {
-                // repeating string: book on the keyboard? dont send to api
-                setOpen(false);
             }
         },
         [actions],
@@ -134,8 +125,10 @@ export const PastExamPaperSearch = ({
 
         if (options.length > 0 && params.inputValue !== '') {
             filtered.unshift({
-                name: params.inputValue.toUpperCase(),
-                course_title: `View all exams for ${params.inputValue.toUpperCase()}`,
+                name: params.inputValue.toUpperCase().substring(0, MAX_LENGTH_COURSE_CODE),
+                course_title: `View all exams for ${params.inputValue
+                    .toUpperCase()
+                    .substring(0, MAX_LENGTH_COURSE_CODE)}`,
             });
         }
 
