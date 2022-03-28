@@ -66,7 +66,6 @@ export const PastExamPaperSearch = ({
 
     const noOptionsTextTooShort = 'Type more characters to search';
     const [noOptionsText, setNoOptionsText] = React.useState(null);
-
     useEffect(() => {
         const noOptionsTextNoResultsFoundPanel = () => {
             return (
@@ -154,7 +153,7 @@ export const PastExamPaperSearch = ({
         return filtered;
     };
 
-    const loadExamResults = (event, value) => {
+    const gotoSearchResultPage = (event, value) => {
         const searchUrl = `/exams/course/${value.name.toUpperCase()}`;
         history.push(searchUrl);
     };
@@ -190,7 +189,7 @@ export const PastExamPaperSearch = ({
                         filterOptions={addKeywordAsOption}
                         onInputChange={handleTypedKeywordChange}
                         id="exam-search"
-                        onChange={loadExamResults}
+                        onChange={gotoSearchResultPage}
                         options={examSuggestionList || []}
                         noOptionsText={noOptionsText}
                         renderInput={params => (
@@ -207,11 +206,12 @@ export const PastExamPaperSearch = ({
                         )}
                         renderOption={option => <FormattedSuggestion option={option} />}
                         getOptionLabel={item =>
-                            (!!item && !!item.name && String(`${item.name} (${item.course_title})`)) || ''
+                            (!!item && !!item.name && String(`${item.name} (${item.course_title})`)) ||
+                            /* istanbul ignore next */ ''
                         }
                     />
                 </form>
-                {examSuggestionListLoading && (
+                {!!examSuggestionListLoading && (
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md className={classes.searchLoading}>
                             <InlineLoader message="Loading" />

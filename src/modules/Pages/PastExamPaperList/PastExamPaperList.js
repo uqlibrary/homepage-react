@@ -79,7 +79,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
         const course = JSON.parse(JSON.stringify(course2));
         const firstCourse = course.find((paper, pp) => pp === 0);
         const firstSemester = !!firstCourse && firstCourse.pop();
-        return !!firstSemester && !!firstSemester.courseCode ? firstSemester.courseCode : null;
+        return !!firstSemester && !!firstSemester.courseCode
+            ? firstSemester.courseCode
+            : /* istanbul ignore next */ null;
     }
 
     return (
