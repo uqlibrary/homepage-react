@@ -1,17 +1,16 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
-// import { throttle } from 'throttle-debounce';
 import { useTitle } from 'hooks';
 
 import { Grid, TextField } from '@material-ui/core';
 import { makeStyles } from '@material-ui/styles';
 import Autocomplete, { createFilterOptions } from '@material-ui/lab/Autocomplete';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import Typography from '@material-ui/core/Typography';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
+import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import locale from './pastExamPaperSearch.locale';
 import { isRepeatingString } from 'helpers/general';
@@ -25,12 +24,11 @@ const useStyles = makeStyles(
             paddingBottom: 0,
         },
         searchPanelInfo: { color: 'red', paddingLeft: '2em' },
-        loading: {
-            width: 80,
-            marginLeft: -100,
+        searchLoading: {
+            marginTop: 50,
             marginRight: 20,
             marginBottom: 6,
-            opacity: 0.3,
+            minHeight: 100,
         },
         aboutLink: {
             marginTop: '4em',
@@ -55,25 +53,22 @@ export const PastExamPaperSearch = ({
     examSuggestionListLoading,
     history,
 }) => {
-    // console.log('examSuggestionList = ', examSuggestionList);
+    console.log('examSuggestionList = ', examSuggestionList);
+    console.log('examSuggestionListLoading = ', examSuggestionListLoading);
+    console.log('examSuggestionListError = ', examSuggestionListError);
     const classes = useStyles();
     useTitle('Search for a past exam paper - Library - The University of Queensland');
     const filter = createFilterOptions();
     const MAX_LENGTH_COURSE_CODE = 9;
 
-    const noOptionsTextDefault = 'Type more characters to search';
-    const [noOptionsText, setNoOptionsText] = React.useState(noOptionsTextDefault);
     const [isOpen, setOpen] = React.useState(false);
     const [searchTerm, setSearchTerm] = React.useState('');
 
-    useEffect(() => {
-        if (!!examSuggestionListError) {
-            setOpen(false);
-        }
-    }, [examSuggestionListError]);
+    const noOptionsTextTooShort = 'Type more characters to search';
+    const [noOptionsText, setNoOptionsText] = React.useState(null);
 
     useEffect(() => {
-        const noResultsFoundPanel = () => {
+        const noOptionsTextNoResultsFoundPanel = () => {
             return (
                 <Grid container>
                     <Grid item xs={12}>
@@ -82,26 +77,50 @@ export const PastExamPaperSearch = ({
                 </Grid>
             );
         };
-        if (!examSuggestionListLoading && !!examSuggestionList && examSuggestionList.length === 0) {
-            setNoOptionsText(noResultsFoundPanel());
+        if (!examSuggestionListLoading && !examSuggestionListError) {
+            if (!!examSuggestionList && examSuggestionList.length === 0) {
+                setOpen(true);
+                setNoOptionsText(noOptionsTextNoResultsFoundPanel());
+            } else if (searchTerm !== '') {
+                setOpen(true);
+            } else {
+                setOpen(false);
+            }
         }
-    }, [examSuggestionList, examSuggestionListLoading, searchTerm]);
+    }, [examSuggestionList, examSuggestionListError, examSuggestionListLoading, searchTerm]);
+
+    useEffect(() => {
+        if (!!examSuggestionListError) {
+            setOpen(false);
+        }
+    }, [examSuggestionListError]);
 
     const handleTypedKeywordChange = React.useCallback(
         (event, typedText) => {
+            // console.log('*** handleTypedKeywordChange typedText = ', typedText);
+            // if we have a new search term, wipe the unshifted "View all exam papers for" entry
+            if (!typedText.startsWith(searchTerm)) {
+                actions.clearExamSuggestions();
+            }
+
             setSearchTerm(typedText);
+
             if (typedText.length <= 1) {
+                // console.log('less: typedText = ', typedText, typedText.length);
                 actions.clearExamSuggestions();
                 setOpen(true);
-                setNoOptionsText(noOptionsTextDefault);
+                setNoOptionsText(noOptionsTextTooShort);
             } else if (!isRepeatingString(typedText) && typedText.length <= MAX_LENGTH_COURSE_CODE) {
+                setNoOptionsText(null);
+                setOpen(false);
                 // console.log('in: ', typedText, typedText.length, 'examSuggestionList = ', examSuggestionList);
                 // ignore the space if they type eg "FREN 1101"
                 actions.loadExamSuggestions(typedText.replace(' ', ''));
-                setOpen(true);
+                // } else {
+                //     console.log('out: ', typedText, typedText.length, 'examSuggestionList = ', examSuggestionList);
             }
         },
-        [actions],
+        [actions, searchTerm],
     );
 
     // eslint-disable-next-line react/prop-types
@@ -121,10 +140,11 @@ export const PastExamPaperSearch = ({
     );
 
     const addKeywordAsOption = (options, params) => {
+        console.log('options = ', options, '; params = ', params);
         const filtered = filter(options, params);
 
         const truncatedSearchTerm = params.inputValue.toUpperCase().substring(0, MAX_LENGTH_COURSE_CODE);
-        if (options.length > 0 && params.inputValue !== '' && options[0].name.toUpperCase() !== truncatedSearchTerm) {
+        if (filtered.length > 0 && params.inputValue !== '' && options[0].name.toUpperCase() !== truncatedSearchTerm) {
             filtered.unshift({
                 name: truncatedSearchTerm,
                 course_title: `View all exam papers for ${truncatedSearchTerm}`,
@@ -192,9 +212,9 @@ export const PastExamPaperSearch = ({
                     />
                 </form>
                 {examSuggestionListLoading && (
-                    <Grid container>
-                        <Grid item xs={'auto'} className={classes.loading}>
-                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} sm={12} md className={classes.searchLoading}>
+                            <InlineLoader message="Loading" />
                         </Grid>
                     </Grid>
                 )}
