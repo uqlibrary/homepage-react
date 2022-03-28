@@ -592,6 +592,10 @@ mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, examSuggestion_FREN];
     })
+    .onGet('exams/suggestions/fren1010')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
     .onGet('exams/suggestions/em') // this course code fragment does not return any results - mnemonic: empty
     .reply(() => {
         return [200, []];

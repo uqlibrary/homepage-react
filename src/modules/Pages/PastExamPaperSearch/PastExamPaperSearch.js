@@ -123,12 +123,11 @@ export const PastExamPaperSearch = ({
     const addKeywordAsOption = (options, params) => {
         const filtered = filter(options, params);
 
-        if (options.length > 0 && params.inputValue !== '') {
+        const truncatedSearchTerm = params.inputValue.toUpperCase().substring(0, MAX_LENGTH_COURSE_CODE);
+        if (options.length > 0 && params.inputValue !== '' && options[0].name.toUpperCase() !== truncatedSearchTerm) {
             filtered.unshift({
-                name: params.inputValue.toUpperCase().substring(0, MAX_LENGTH_COURSE_CODE),
-                course_title: `View all exams for ${params.inputValue
-                    .toUpperCase()
-                    .substring(0, MAX_LENGTH_COURSE_CODE)}`,
+                name: truncatedSearchTerm,
+                course_title: `View all exams for ${truncatedSearchTerm}`,
             });
         }
 

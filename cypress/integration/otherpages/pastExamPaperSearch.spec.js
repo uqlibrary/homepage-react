@@ -79,6 +79,23 @@ describe('Past Exam Papers Pages', () => {
             cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('{enter}');
             cy.url().should('include', 'exams/course/FREN');
         });
+        it('when my search term matches the first result I do not get a "show all" prompt', () => {
+            cy.visit('/exams');
+            // typing most of a course code gives the returned results plus the initial "view all results for..."
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fren101');
+            cy.get('.MuiAutocomplete-listbox')
+                .children()
+                .should('have.length', 2);
+            cy.get('#exam-search-option-0').should('contain', 'View all exams for FREN101');
+            cy.get('#exam-search-option-1').should('contain', 'FREN1010');
+
+            // matching a course code exactly does not include the "view all results for..." option
+            cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('0');
+            cy.get('.MuiAutocomplete-listbox')
+                .children()
+                .should('have.length', 1);
+            cy.get('#exam-search-option-0').should('contain', 'FREN1010');
+        });
         it('when the api fails I get an appropriate error message', () => {
             cy.visit('/exams');
             cy.get('[data-testid="past-exam-paper-search-autocomplete-input"]').type('fail'); // mock returns 500
