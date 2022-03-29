@@ -194,6 +194,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                 <a
                                                                                     href={paper.paperUrl}
                                                                                     data-testid={`exampaper-mobilelink-${cc}-${ss}-${pp}`}
+                                                                                    target="_blank"
                                                                                 >
                                                                                     {display}
                                                                                 </a>
@@ -275,7 +276,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                 }
                                                                             >
                                                                                 {!!paper.paperUrl ? (
-                                                                                    <a href={paper.paperUrl}>
+                                                                                    <a
+                                                                                        href={paper.paperUrl}
+                                                                                        target="_blank"
+                                                                                    >
                                                                                         {!!paper.examType && (
                                                                                             <div>{paper.examType}</div>
                                                                                         )}
