@@ -63,12 +63,6 @@ const useStyles = makeStyles(
                 marginTop: 20,
                 marginBottom: 20,
             },
-            // '&::firstChild': {
-            //     marginTop: 0,
-            // },
-            // '&::lastChild': {
-            //     marginBottom: 0,
-            // },
         },
         h3: {
             color: 'charcoal',
@@ -77,10 +71,6 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {
-    console.log('PastExamPaperList examSearchListError=', examSearchListError);
-    console.log('PastExamPaperList examSearchListLoading=', examSearchListLoading);
-    console.log('PastExamPaperList examSearchList=', examSearchList);
-
     const { courseHint } = useParams();
     const listTitle =
         !!examSearchList && !!examSearchList.minYear
@@ -169,7 +159,10 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                 key={`exampaper-results-row-${cc}`}
                                                 className={cc % 2 && classes.zebra}
                                             >
-                                                <Typography variant="h3" style={{ fontSize: 20, marginTop: 6 }}>
+                                                <Typography
+                                                    variant="h3"
+                                                    style={{ fontSize: 20, marginTop: 6, paddingLeft: 6 }}
+                                                >
                                                     {getCourseCode(course)}
                                                 </Typography>
                                                 {course.map((semester, ss) => {
@@ -187,35 +180,22 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                     >
                                                                         {!!paper.paperUrl && (
                                                                             <div>
-                                                                                {semester.length > 1 && pp === 0 && (
-                                                                                    <Typography
-                                                                                        variant="h4"
-                                                                                        style={{
-                                                                                            fontSize: 18,
-                                                                                            marginTop: 6,
-                                                                                        }}
-                                                                                    >
-                                                                                        {paper.matchPeriod.replace(
-                                                                                            '|| ',
-                                                                                            '',
-                                                                                        )}
-                                                                                    </Typography>
-                                                                                )}
-                                                                                <a href={paper.paperUrl}>
-                                                                                    {paper.courseCode}
-                                                                                    {semester.length === 1 && (
-                                                                                        <span>
-                                                                                            {' '}
-                                                                                            {paper.examPeriod}{' '}
-                                                                                            {paper.examYear}
-                                                                                        </span>
-                                                                                    )}
+                                                                                <a
+                                                                                    href={paper.paperUrl}
+                                                                                    data-testid={`exampaper-mobilelink-${cc}-${ss}-${pp}`}
+                                                                                >
+                                                                                    {paper.courseCode}{' '}
+                                                                                    {paper.examPeriod} {paper.examYear}
                                                                                     {!!paper.examType && (
                                                                                         <span> ({paper.examType})</span>
                                                                                     )}
                                                                                     {!!paper.examNote && (
                                                                                         <span> {paper.examNote}</span>
                                                                                     )}
+                                                                                    {!paper.examNote &&
+                                                                                        semester.length > 1 && (
+                                                                                            <span> Paper {pp + 1}</span>
+                                                                                        )}
                                                                                 </a>
                                                                             </div>
                                                                         )}

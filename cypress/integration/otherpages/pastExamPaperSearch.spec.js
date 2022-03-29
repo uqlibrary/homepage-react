@@ -140,7 +140,7 @@ describe('Past Exam Papers Pages', () => {
                 includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
             });
         });
-        it('the past exam paper result page is correct', () => {
+        it('the past exam paper result desktop page is correct', () => {
             cy.visit('/exams/course/fren');
             cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "FREN"');
             cy.get('[data-testid="exampaper-results-table-header"]')
@@ -167,6 +167,38 @@ describe('Past Exam Papers Pages', () => {
             cy.get('div[data-testid="past-exam-paper-error"]')
                 .should('exist')
                 .contains('Past exam paper search is currently unavailable - please try again later');
+        });
+        it('the past exam paper result mobile page is correct', () => {
+            cy.visit('/exams/course/fren');
+            cy.viewport(414, 736);
+            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'FREN1010');
+            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'Sem.2');
+            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', '2020');
+            cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'Sample');
+
+            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'FREN1010');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'Sem.1');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', '2020');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'Paper 1');
+
+            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'FREN1010');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'Sem.1');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', '2020');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'Paper 2');
+
+            cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', 'FREN2010');
+            cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', 'Sem.1');
+            cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', '2021');
+
+            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'FREN2010');
+            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'Sem.1');
+            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', '2019');
+            cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'Final');
+
+            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should('contain', 'FREN2082');
+            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should('contain', 'Sem.1');
+            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should('contain', '2020');
+            cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should('contain', 'a special french paper');
         });
     });
 });

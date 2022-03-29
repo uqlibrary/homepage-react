@@ -25,7 +25,7 @@ export default {
                     "examNote": "Paper 1",
                     "examType": "",
                     "examYear": "2020",
-                    "examPeriod": "Sem.2",
+                    "examPeriod": "Sem.1",
                     "matchPeriod": "2020 || Sem.1"
                 }, {
                     "courseCode": "FREN1010",
@@ -129,7 +129,7 @@ export default {
                 {
                     "courseCode": "FREN2082",
                     "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_847.pdf",
-                    "examNote": "",
+                    "examNote": "a special french paper",
                     "examType": "",
                     "examYear": "2020",
                     "examPeriod": "Sem.1",
