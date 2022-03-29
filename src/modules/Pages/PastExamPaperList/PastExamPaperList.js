@@ -34,9 +34,9 @@ const useStyles = makeStyles(
         headerCell: {
             textAlign: 'center',
         },
-        // secondaryExamDetail: {
-        //     marginTop: '1em',
-        // },
+        secondaryExamDetail: {
+            marginTop: '1em',
+        },
         tableContainer: {
             maxHeight: 600,
         },
