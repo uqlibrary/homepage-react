@@ -173,6 +173,13 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                             data-testid={`exampaper-results-bodycell-${cc}-${ss}`}
                                                         >
                                                             {semester.map((paper, pp) => {
+                                                                let display = `${paper.courseCode} ${paper.examPeriod} ${paper.examYear}`;
+                                                                display += !!paper.examType ? ` (${paper.examType})` : '';
+                                                                display += !!paper.examNote ? ` ${paper.examNote}` : '';
+                                                                display +=
+                                                                    !paper.examNote && semester.length > 1
+                                                                        ? ' Paper {pp + 1}'
+                                                                        : '';
                                                                 return (
                                                                     <div
                                                                         key={`exampaper-results-bodycell-detail-${pp}`}
@@ -184,18 +191,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                     href={paper.paperUrl}
                                                                                     data-testid={`exampaper-mobilelink-${cc}-${ss}-${pp}`}
                                                                                 >
-                                                                                    {paper.courseCode}{' '}
-                                                                                    {paper.examPeriod} {paper.examYear}
-                                                                                    {!!paper.examType && (
-                                                                                        <span> ({paper.examType})</span>
-                                                                                    )}
-                                                                                    {!!paper.examNote && (
-                                                                                        <span> {paper.examNote}</span>
-                                                                                    )}
-                                                                                    {!paper.examNote &&
-                                                                                        semester.length > 1 && (
-                                                                                            <span> Paper {pp + 1}</span>
-                                                                                        )}
+                                                                                    {display}
                                                                                 </a>
                                                                             </div>
                                                                         )}
