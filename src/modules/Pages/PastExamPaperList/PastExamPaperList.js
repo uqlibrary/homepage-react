@@ -122,7 +122,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 {!examSearchListLoading &&
                     !examSearchListError &&
                     ((!!examSearchList && !!examSearchList.papers && examSearchList.papers.length === 0) ||
-                        !examSearchList) && (
+                        !examSearchList ||
+                        !examSearchList.papers) && (
                         <Grid container>
                             <Grid item xs={12} data-testid="past-exam-paper-missing">
                                 {noResultsFoundBlock(courseHint)}
@@ -133,7 +134,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !examSearchListError &&
                     !!examSearchList &&
                     !!examSearchList.papers &&
-                    !!examSearchList.periods && (
+                    !!examSearchList.periods &&
+                    !!examSearchList.papers.length > 0 && (
                         <React.Fragment>
                             <p>
                                 This table shows only the last five years, and only for semesters where exams are
@@ -174,7 +176,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                         >
                                                             {semester.map((paper, pp) => {
                                                                 let display = `${paper.courseCode} ${paper.examPeriod} ${paper.examYear}`;
-                                                                display += !!paper.examType ? ` (${paper.examType})` : '';
+                                                                display += !!paper.examType
+                                                                    ? ` (${paper.examType})`
+                                                                    : '';
                                                                 display += !!paper.examNote ? ` ${paper.examNote}` : '';
                                                                 display +=
                                                                     !paper.examNote && semester.length > 1
