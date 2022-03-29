@@ -644,6 +644,10 @@ mock.onGet('course_resources/FREN1010/exams')
     .reply(() => {
         return [200, examSearch_FREN];
     })
+    .onGet('exams/search/fren1010')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
     .onGet('exams/search/dent')
     .reply(() => {
         return [200, examSearch_DENT80];

@@ -14,6 +14,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Typography from '@material-ui/core/Typography';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/styles/useTheme';
 
@@ -33,9 +34,9 @@ const useStyles = makeStyles(
         headerCell: {
             textAlign: 'center',
         },
-        secondaryExamDetail: {
-            marginTop: '1em',
-        },
+        // secondaryExamDetail: {
+        //     marginTop: '1em',
+        // },
         tableContainer: {
             maxHeight: 600,
         },
@@ -56,6 +57,21 @@ const useStyles = makeStyles(
             paddingTop: '1rem',
             paddingBottom: '1rem',
             marginBottom: '1rem',
+        },
+        mobileLink: {
+            '& > div': {
+                marginTop: 20,
+                marginBottom: 20,
+            },
+            // '&::firstChild': {
+            //     marginTop: 0,
+            // },
+            // '&::lastChild': {
+            //     marginBottom: 0,
+            // },
+        },
+        h3: {
+            color: 'charcoal',
         },
     }),
     { withTheme: true },
@@ -95,21 +111,6 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
 
     const theme = useTheme();
     const isMobileView = useMediaQuery(theme.breakpoints.down('xs')) || false;
-
-    function linktoExamPaper(paper, showPeriod = false) {
-        return (
-            !!paper.paperUrl && (
-                <div>
-                    {showPeriod && <p>{paper.matchPeriod.replace('|| ', '')}</p>}
-                    <a href={paper.paperUrl}>
-                        {!!paper.examType && <div>{paper.examType}</div>}
-                        {paper.courseCode}
-                        {!!paper.examNote && <div>{paper.examNote}</div>}
-                    </a>
-                </div>
-            )
-        );
-    }
 
     return (
         <StandardPage>
@@ -168,7 +169,9 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                 key={`exampaper-results-row-${cc}`}
                                                 className={cc % 2 && classes.zebra}
                                             >
-                                                <div>{getCourseCode(course)}</div>
+                                                <Typography variant="h3" style={{ fontSize: 20, marginTop: 6 }}>
+                                                    {getCourseCode(course)}
+                                                </Typography>
                                                 {course.map((semester, ss) => {
                                                     return (
                                                         <div
@@ -180,11 +183,42 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                 return (
                                                                     <div
                                                                         key={`exampaper-results-bodycell-detail-${pp}`}
-                                                                        className={
-                                                                            pp > 0 ? classes.secondaryExamDetail : null
-                                                                        }
+                                                                        className={classes.mobileLink}
                                                                     >
-                                                                        {linktoExamPaper(paper, pp === 0)}
+                                                                        {!!paper.paperUrl && (
+                                                                            <div>
+                                                                                {semester.length > 1 && pp === 0 && (
+                                                                                    <Typography
+                                                                                        variant="h4"
+                                                                                        style={{
+                                                                                            fontSize: 18,
+                                                                                            marginTop: 6,
+                                                                                        }}
+                                                                                    >
+                                                                                        {paper.matchPeriod.replace(
+                                                                                            '|| ',
+                                                                                            '',
+                                                                                        )}
+                                                                                    </Typography>
+                                                                                )}
+                                                                                <a href={paper.paperUrl}>
+                                                                                    {paper.courseCode}
+                                                                                    {semester.length === 1 && (
+                                                                                        <span>
+                                                                                            {' '}
+                                                                                            {paper.examPeriod}{' '}
+                                                                                            {paper.examYear}
+                                                                                        </span>
+                                                                                    )}
+                                                                                    {!!paper.examType && (
+                                                                                        <span> ({paper.examType})</span>
+                                                                                    )}
+                                                                                    {!!paper.examNote && (
+                                                                                        <span> {paper.examNote}</span>
+                                                                                    )}
+                                                                                </a>
+                                                                            </div>
+                                                                        )}
                                                                     </div>
                                                                 );
                                                             })}
@@ -260,7 +294,17 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                                         : null
                                                                                 }
                                                                             >
-                                                                                {linktoExamPaper(paper)}
+                                                                                {!!paper.paperUrl ? (
+                                                                                    <a href={paper.paperUrl}>
+                                                                                        {!!paper.examType && (
+                                                                                            <div>{paper.examType}</div>
+                                                                                        )}
+                                                                                        {paper.courseCode}
+                                                                                        {!!paper.examNote && (
+                                                                                            <div>{paper.examNote}</div>
+                                                                                        )}
+                                                                                    </a>
+                                                                                ) : null}
                                                                             </div>
                                                                         );
                                                                     })}

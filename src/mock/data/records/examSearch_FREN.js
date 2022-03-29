@@ -24,7 +24,7 @@ export default {
                     "paperUrl": "https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations__2018_FREN1020_613.pdf",
                     "examNote": "Paper 1",
                     "examType": "",
-                    "examYear": "2019",
+                    "examYear": "2020",
                     "examPeriod": "Sem.2",
                     "matchPeriod": "2020 || Sem.1"
                 }, {
@@ -124,10 +124,23 @@ export default {
                     "examYear": "2021",
                     "examPeriod": "Sem.1",
                     "matchPeriod": "2020 || Sem.2"
-                }
+                },
             ], [
                 {
                     "courseCode": "FREN2082",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_847.pdf",
+                    "examNote": "",
+                    "examType": "",
+                    "examYear": "2020",
+                    "examPeriod": "Sem.1",
+                    "matchPeriod": "2020 || Sem.1",
+                }, {
+                    "courseCode": "FREN2082",
+                    "paperUrl": "https://files.library.uq.edu.au/exams/2018/Semester_Two_Final_Examinations__2021_FREN2110_848.pdf",
+                    "examNote": "",
+                    "examType": "",
+                    "examYear": "2020",
+                    "examPeriod": "Sem.1",
                     "matchPeriod": "2020 || Sem.1",
                 }
             ], [
