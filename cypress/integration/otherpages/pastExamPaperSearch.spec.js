@@ -172,14 +172,15 @@ describe('Past Exam Papers Pages', () => {
             cy.visit('/exams/course/fren');
             cy.viewport(414, 736);
             cy.get('[data-testid="exampaper-mobilelink-0-0-0"]').should('contain', 'FREN1010 Sem.2 2020 (Sample)');
-            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'FREN1010 Sem.1 2020 Paper 1');
-            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'FREN1010 Sem.1 2020 Paper 2');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-0"]').should('contain', 'FREN1010 Sem.1 2020 Paper A');
+            cy.get('[data-testid="exampaper-mobilelink-0-1-1"]').should('contain', 'FREN1010 Sem.1 2020 Paper B');
             cy.get('[data-testid="exampaper-mobilelink-1-0-0"]').should('contain', 'FREN2010 Sem.1 2021');
             cy.get('[data-testid="exampaper-mobilelink-1-2-0"]').should('contain', 'FREN2010 Sem.1 2019 Final');
             cy.get('[data-testid="exampaper-mobilelink-4-1-0"]').should(
                 'contain',
                 'FREN2082 Sem.1 2020 a special french paper',
             );
+            cy.get('[data-testid="exampaper-mobilelink-4-1-1"]').should('contain', 'FREN2082 Sem.1 2020 Paper 2');
         });
     });
 });

@@ -22,7 +22,7 @@ export default {
                 {
                     "courseCode": "FREN1010",
                     "paperUrl": "https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations__2018_FREN1020_613.pdf",
-                    "examNote": "Paper 1",
+                    "examNote": "Paper A",
                     "examType": "",
                     "examYear": "2020",
                     "examPeriod": "Sem.1",
@@ -30,7 +30,7 @@ export default {
                 }, {
                     "courseCode": "FREN1010",
                     "paperUrl": "https://files.library.uq.edu.au/exams/2019/Semester_Two_Final_Examinations__2018_FREN1020_614.pdf",
-                    "examNote": "Paper 2",
+                    "examNote": "Paper B",
                     "examType": "",
                     "examYear": "2020",
                     "examPeriod": "Sem.1",

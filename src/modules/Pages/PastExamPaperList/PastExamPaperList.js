@@ -137,22 +137,24 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                     !!examSearchList.periods &&
                     !!examSearchList.papers.length > 0 && (
                         <React.Fragment>
-                            <p>
-                                This table shows only the last five years, and only for semesters where exams are
-                                recorded.
-                            </p>
-                            <p>
-                                Past exam papers are actual papers from previous examination periods, and do not include
-                                answers.
-                            </p>
-                            <p>
-                                They may not be an accurate reflection of the format or content of any future exam
-                                paper.
-                            </p>
-                            <p>
-                                Where actual papers are restricted, sample papers provided by the school may be found in
-                                the column for the semester supplied.
-                            </p>
+                            <div id="examResultsDescription">
+                                <p>
+                                    This table shows only the last five years, and only for semesters where exams are
+                                    recorded.
+                                </p>
+                                <p>
+                                    Past exam papers are actual papers from previous examination periods, and do not
+                                    include answers.
+                                </p>
+                                <p>
+                                    They may not be an accurate reflection of the format or content of any future exam
+                                    paper.
+                                </p>
+                                <p>
+                                    Where actual papers are restricted, sample papers provided by the school may be
+                                    found in the column for the semester supplied.
+                                </p>
+                            </div>
                             {isMobileView ? (
                                 <div>
                                     {examSearchList.papers.map((course, cc) => {
@@ -182,7 +184,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                 display += !!paper.examNote ? ` ${paper.examNote}` : '';
                                                                 display +=
                                                                     !paper.examNote && semester.length > 1
-                                                                        ? ' Paper {pp + 1}'
+                                                                        ? ` Paper ${pp + 1}`
                                                                         : '';
                                                                 return (
                                                                     <div
@@ -214,10 +216,8 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                 <TableContainer className={classes.tableContainer} component={Paper}>
                                     <Table
                                         stickyHeader
-                                        aria-label="Past Exam Papers by Subject"
-                                        sx={{
-                                            width: 'max-content',
-                                        }}
+                                        aria-label={listTitle}
+                                        aria-describedby="examResultsDescription"
                                     >
                                         <TableHead>
                                             <TableRow data-testid="exampaper-results-table-header">
