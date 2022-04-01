@@ -84,7 +84,7 @@ export const UPLOAD_PUBLIC_FILES_API = () => ({ apiUrl: 'file/public' });
 
 export const GUIDES_API = ({ keyword }) => ({ apiUrl: 'library_guides/' + keyword });
 
-export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `course_resources/${keyword}/exams` });
+export const LEARNING_RESOURCES_EXAMS_API = ({ keyword }) => ({ apiUrl: `exams/course/${keyword}/summary` });
 
 export const EXAMS_SEARCH_API = hint => ({ apiUrl: `exams/search/${hint}` });
 export const EXAMS_SUGGESTION_API = hint => ({ apiUrl: `exams/suggestions/${hint}` });

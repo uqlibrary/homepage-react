@@ -518,19 +518,19 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
 // //     message: ['an error message from the api that describes what the problem was'],
 // // });
 
-mock.onGet('course_resources/FREN1010/exams')
+mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, exams_FREN1010];
     })
-    .onGet('course_resources/HIST1201/exams')
+    .onGet('exams/course/HIST1201/summary')
     .reply(() => {
         return [200, exams_HIST1201];
     })
-    .onGet('course_resources/PHIL1002/exams')
+    .onGet('exams/course/PHIL1002/summary')
     .reply(() => {
         return [200, exams_PHIL1002];
     })
-    .onGet('course_resources/ACCT1101/exams')
+    .onGet('exams/course/ACCT1101/summary')
     .reply(() => {
         return [200, exams_ACCT1101];
     })
