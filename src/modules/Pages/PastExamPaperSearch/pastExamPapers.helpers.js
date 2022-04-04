@@ -11,8 +11,8 @@ export const noResultsFoundBlock = searchTerm => {
                 <li>the system is not functioning correctly.</li>
             </ul>
             <p>
-                Please check your course code with your instructor and try again, or report a problem via the{' '}
-                <strong>AskUs</strong> button at the top of the page.
+                Please check with your instructor, or report a problem via the <strong>AskUs</strong> button at the top
+                of the page.
             </p>
         </div>
     );
