@@ -178,7 +178,12 @@ export const LearningResourceSearch = ({
                             xs={'auto'}
                             style={{ width: 80, marginLeft: -100, marginRight: 20, marginBottom: 6, opacity: 0.3 }}
                         >
-                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                            <CircularProgress
+                                color="primary"
+                                size={20}
+                                id="loading-suggestions"
+                                aria-label="Loading Learning resources"
+                            />
                         </Grid>
                     )}
                 </div>

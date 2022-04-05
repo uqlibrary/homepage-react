@@ -62,7 +62,12 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
                 {!examListError && !!examListLoading && (
                     <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                        <CircularProgress color="primary" size={20} data-testid="loading-exampaper-suggestions" />
+                        <CircularProgress
+                            color="primary"
+                            size={20}
+                            data-testid="loading-exampaper-suggestions"
+                            aria-label="loading Past exam papers"
+                        />
                     </Grid>
                 )}
 

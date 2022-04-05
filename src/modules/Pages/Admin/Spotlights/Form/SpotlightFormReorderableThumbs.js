@@ -188,7 +188,7 @@ export const SpotlightFormReorderableThumbs = ({
                     opacity: 0.3,
                 }}
             >
-                <CircularProgress color="primary" size={20} />
+                <CircularProgress color="primary" size={20} aria-label="Loading Current spotlights" />
             </Grid>
         );
     }

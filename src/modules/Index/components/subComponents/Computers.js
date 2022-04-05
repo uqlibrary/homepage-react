@@ -267,6 +267,7 @@ const Computers = ({ computerAvailability, computerAvailabilityLoading, computer
                             width: '66%',
                             height: '66%',
                         },
+                        'aria-label': 'Display of computer availability on this floor',
                     }}
                 >
                     <Grid

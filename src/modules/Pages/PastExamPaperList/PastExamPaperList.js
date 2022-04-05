@@ -108,7 +108,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                 {!!examSearchListLoading && (
                     <Grid container>
                         <Grid item xs={'auto'} className={classes.loading}>
-                            <CircularProgress color="primary" size={20} id="loading-suggestions" />
+                            <CircularProgress
+                                color="primary"
+                                size={20}
+                                id="loading-suggestions"
+                                aria-label="Loading Past exam papers"
+                            />
                         </Grid>
                     </Grid>
                 )}

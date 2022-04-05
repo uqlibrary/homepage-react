@@ -49,7 +49,12 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                             opacity: 0.3,
                         }}
                     >
-                        <CircularProgress color="primary" size={20} data-testid="loading-guide-suggestions" />
+                        <CircularProgress
+                            color="primary"
+                            size={20}
+                            data-testid="loading-guide-suggestions"
+                            aria-label="Loading guides"
+                        />
                     </Grid>
                 )}
                 {!guideListError && !guideListLoading && (!guideList || guideList.length === 0) && (
