@@ -17,9 +17,9 @@ describe('Alerts Admin Form Pages', () => {
                 cy.get(`[data-testid="admin-alerts-form-row-${ii}"]`)
                     .should('exist')
                     .should('contain', 'Start date')
-                    .find(`[data-testid="admin-alerts-form-add-remove-buttons-${ii}"]`)
+                    .find(`[data-testid="admin-alerts-form-remove-date-button-${ii}"]`)
                     .should('exist')
-                    .should('have.attr', 'aria-label', 'Add/remove a date set');
+                    .should('have.attr', 'aria-label', 'Remove this date set');
             }
             const nextButtonId = buttonId + 1;
             cy.get(`[data-testid="admin-alerts-form-remove-date-button-${nextButtonId}"]`).should('not.exist');
