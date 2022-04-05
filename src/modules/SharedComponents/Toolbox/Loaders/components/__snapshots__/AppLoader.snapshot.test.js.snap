@@ -28,6 +28,7 @@ exports[`Component AppLoader should render as expected 1`] = `
     item={true}
   >
     <WithStyles(ForwardRef(CircularProgress))
+      aria-label="Loading Library website"
       className={
         Object {
           "color": "white",

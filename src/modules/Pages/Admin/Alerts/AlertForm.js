@@ -584,13 +584,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                         }}
                                     />
                                 </Grid>
-                                <Grid
-                                    item
-                                    md={2}
-                                    xs={12}
-                                    data-testid={`admin-alerts-form-add-remove-buttons-${index}`}
-                                    aria-label="Add/remove a date set"
-                                >
+                                <Grid item md={2} xs={12} data-testid={`admin-alerts-form-add-remove-buttons-${index}`}>
                                     {['add', 'clone'].includes(defaults.type) &&
                                     index === values.dateList.length - 1 ? (
                                         <IconButton
@@ -598,6 +592,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             onClick={addDateRow}
                                             title={locale.form.tooltips.addAnotherDateSet}
                                             style={{ minWidth: 60 }}
+                                            aria-label="Add a date set"
                                         >
                                             <AddCircleSharpIcon />
                                         </IconButton>
@@ -611,6 +606,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                                             data-testid={`admin-alerts-form-remove-date-button-${index}`}
                                             onClick={() => removeDateRow(index)}
                                             title={locale.form.tooltips.removeDateSet}
+                                            aria-label="Remove this date set"
                                         >
                                             <RemoveCircleSharpIcon />
                                         </IconButton>

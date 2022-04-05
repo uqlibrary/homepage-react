@@ -41,10 +41,20 @@ export class InlineLoader extends React.Component {
                         <Grid item xs />
                     </Hidden>
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
-                        <CircularProgress className={this.props.classes.circular} size={18} thickness={2} />
+                        <CircularProgress
+                            className={this.props.classes.circular}
+                            size={18}
+                            thickness={2}
+                            aria-labelledby="loading-icon"
+                        />
                     </Grid>
                     <Grid item xs={'auto'} style={{ textAlign: 'center' }}>
-                        <Typography className={this.props.classes.message} variant={'h5'} component={'span'}>
+                        <Typography
+                            id="loading-icon"
+                            className={this.props.classes.message}
+                            variant={'h5'}
+                            component={'span'}
+                        >
                             {this.props.message}
                         </Typography>
                     </Grid>

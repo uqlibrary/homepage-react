@@ -34,6 +34,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
       xs="auto"
     >
       <WithStyles(ForwardRef(CircularProgress))
+        aria-labelledby="loading-icon"
         size={18}
         thickness={2}
       />
@@ -49,6 +50,7 @@ exports[`Component InlineLoader should render as expected 1`] = `
     >
       <WithStyles(ForwardRef(Typography))
         component="span"
+        id="loading-icon"
         variant="h5"
       >
         InlineLoader Test

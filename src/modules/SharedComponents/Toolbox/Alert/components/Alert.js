@@ -352,7 +352,13 @@ export const Alert = ({
                                     data-testid={`${alertId}-action-icon-button`}
                                 >
                                     {showLoader ? (
-                                        <CircularProgress id="spinner" className="spinner" size={38} thickness={3} />
+                                        <CircularProgress
+                                            id="spinner"
+                                            className="spinner"
+                                            size={38}
+                                            thickness={3}
+                                            aria-label="Loading Alerts"
+                                        />
                                     ) : (
                                         renderIcon(type)
                                     )}
