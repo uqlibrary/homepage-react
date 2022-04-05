@@ -395,7 +395,10 @@ Deployment pipelines are setup for branches: "master", "staging, "production" an
 - Master branch is always deployed to staging/production
 - Deployments to production are hosted on <https://homepage-production.library.uq.edu.au/> and <https://www.library.uq.edu.au/>
 - Deployments to staging are hosted on <https://homepage-staging.library.uq.edu.au/>
-- Some other branches are deployed on <https://homepage-development.library.uq.edu/branchName/>. (Only certain branches are deployed now we are using AWS)
+- Some other branches are deployed on <https://homepage-development.library.uq.edu.au/branchName/>. (Only certain branches are deployed now we are using AWS)
+
+* Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
+  See [Cloudfront list of reserved routes](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-east-1&skipRegion=true#/distributions/E34LPPV7N4XONM/behaviors)
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions

@@ -77,3 +77,23 @@ export const throwFetchErrors = response => {
     /* istanbul ignore next */
     return response;
 };
+
+// per https://medium.com/@botfather/react-loading-chunk-failed-error-88d0bb75b406
+export const lazyRetry = (importFn, retries = 3, interval = 500) => {
+    return new Promise((resolve, reject) => {
+        importFn()
+            .then(resolve)
+            .catch(
+                /* istanbul ignore next */ error => {
+                    if (!retries) {
+                        reject(error);
+                        return;
+                    }
+
+                    setTimeout(() => {
+                        lazyRetry(importFn, retries - 1).then(resolve, reject);
+                    }, interval);
+                },
+            );
+    });
+};

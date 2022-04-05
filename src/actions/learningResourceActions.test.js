@@ -4,11 +4,11 @@ import { default as HIST1201ReadingList } from '../../src/mock/data/records/cour
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import {
+    clearExamLearningResources,
     clearLearningResourceSuggestions,
-    clearExams,
     clearGuides,
     loadCourseReadingListsSuggestions,
-    loadExams,
+    loadExamLearningResources,
     loadGuides,
     loadReadingLists,
 } from './learningResourceActions';
@@ -57,27 +57,27 @@ describe('Account action creators', () => {
     });
 
     it('dispatches expected actions when possible exams call fails', async () => {
-        mockApi.onGet(repositories.routes.EXAMS_API({ keyword: 'FREN1010' })).reply(500);
+        mockApi.onGet(repositories.routes.LEARNING_RESOURCES_EXAMS_API({ keyword: 'FREN1010' })).reply(500);
 
-        const expectedActions = [actions.EXAMS_LOADING, actions.EXAMS_FAILED];
+        const expectedActions = [actions.EXAMS_LEARNING_RESOURCES_LOADING, actions.EXAMS_LEARNING_RESOURCES_FAILED];
 
-        await mockActionsStore.dispatch(loadExams('FREN1010'));
+        await mockActionsStore.dispatch(loadExamLearningResources('FREN1010'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
     it('should dispatch clear exams list action', async () => {
-        const expectedActions = [actions.EXAMS_CLEAR];
+        const expectedActions = [actions.EXAMS_LEARNING_RESOURCES_CLEAR];
 
-        await mockActionsStore.dispatch(clearExams());
+        await mockActionsStore.dispatch(clearExamLearningResources());
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
     it('handles an exams get request', async () => {
-        mockApi.onGet(repositories.routes.EXAMS_API({ keyword: 'FREN1010' }).apiUrl).reply(200, {});
+        mockApi.onGet(repositories.routes.LEARNING_RESOURCES_EXAMS_API({ keyword: 'FREN1010' }).apiUrl).reply(200, {});
 
-        const expectedActions = [actions.EXAMS_LOADING, actions.EXAMS_LOADED];
+        const expectedActions = [actions.EXAMS_LEARNING_RESOURCES_LOADING, actions.EXAMS_LEARNING_RESOURCES_LOADED];
 
-        await mockActionsStore.dispatch(loadExams('FREN1010'));
+        await mockActionsStore.dispatch(loadExamLearningResources('FREN1010'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 

@@ -19,7 +19,7 @@ import courseReadingList_HIST1201 from './data/records/courseReadingList_HIST120
 import courseReadingList_PHIL1002 from './data/records/courseReadingList_PHIL1002';
 import courseReadingList_ACCT1101 from './data/records/courseReadingList_ACCT1101';
 import learningResourceSearchSuggestions from './data/records/learningResourceSearchSuggestions';
-import examSuggestions from './data/records/examSuggestions';
+import examSuggestion_FREN from './data/records/examSuggestion_FREN';
 import {
     computerAvailability,
     incompleteNTROs,
@@ -32,6 +32,8 @@ import {
 import { alertList } from './data/alerts';
 import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
+import examSearch_FREN from './data/records/examSearch_FREN';
+import examSearch_DENT80 from './data/records/examSearch_DENT80';
 
 const moment = require('moment');
 
@@ -454,8 +456,6 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 // .reply(withDelay([500, {}]));
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
-fetchMock.mock(`begin:https://api.library.uq.edu.au/staging/search_suggestions?type=exam_paper`, examSuggestions);
-
 fetchMock.mock(
     'begin:https://api.library.uq.edu.au/staging/search_suggestions?type=learning_resource',
     learningResourceSearchSuggestions,
@@ -506,23 +506,31 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
         size: 9999,
     },
 ]);
-// mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
-//     message: ['an error message from the api that describes what the problem was'],
-// });
 
-mock.onGet('course_resources/FREN1010/exams')
+// // console.log('examSuggestion_FREN', examSuggestion_FREN);
+// console.log('mock ', routes.EXAMS_SUGGESTION_API('FREN').apiUrl, ' with:', examSuggestion_FREN);
+// // mock.onGet(routes.EXAMS_SUGGESTION_API('FREN').apiUrl).reply(withDelay([200, examSuggestion_FREN]));
+// // console.log("routes.EXAMS_SUGGESTION_API('FREN') = ", routes.EXAMS_SUGGESTION_API('FREN'));
+// // console.log("routes.EXAMS_SUGGESTION_API('FREN').apiUrl = ", routes.EXAMS_SUGGESTION_API('FREN').apiUrl);
+// mock.onGet('exams/suggestions/FREN').reply(withDelay([200, examSuggestion_FREN]));
+// // exams/suggestions/FREN
+// // mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
+// //     message: ['an error message from the api that describes what the problem was'],
+// // });
+
+mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, exams_FREN1010];
     })
-    .onGet('course_resources/HIST1201/exams')
+    .onGet('exams/course/HIST1201/summary')
     .reply(() => {
         return [200, exams_HIST1201];
     })
-    .onGet('course_resources/PHIL1002/exams')
+    .onGet('exams/course/PHIL1002/summary')
     .reply(() => {
         return [200, exams_PHIL1002];
     })
-    .onGet('course_resources/ACCT1101/exams')
+    .onGet('exams/course/ACCT1101/summary')
     .reply(() => {
         return [200, exams_ACCT1101];
     })
@@ -559,6 +567,106 @@ mock.onGet('course_resources/FREN1010/exams')
     .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
+    })
+    .onGet('exams/suggestions/fr')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fre')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren1')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren10')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren101')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/fren1010')
+    .reply(() => {
+        return [200, examSuggestion_FREN];
+    })
+    .onGet('exams/suggestions/em') // this course code fragment does not return any results - mnemonic: empty
+    .reply(() => {
+        return [200, []];
+    })
+    .onGet('exams/suggestions/fa') // so dev can start typing in fail without it being weird
+    .reply(() => {
+        return [200, []];
+    })
+    .onGet('exams/suggestions/fai')
+    .reply(() => {
+        return [200, []];
+    })
+    .onGet('exams/suggestions/fail')
+    .reply(() => {
+        return [500, []];
+    })
+    .onGet('exams/suggestions/XYZA')
+    .reply(() => {
+        return [200, []];
+    })
+    .onGet('exams/search/FREN')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fr')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fre')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren1')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren10')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren101')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/fren1010')
+    .reply(() => {
+        return [200, examSearch_FREN];
+    })
+    .onGet('exams/search/dent')
+    .reply(() => {
+        return [200, examSearch_DENT80];
+    })
+    .onGet('exams/search/empt') // this course code fragment does not return any results - mnemonic: empty
+    .reply(() => {
+        return [
+            200,
+            {
+                minYear: 2017,
+                maxYear: 2022,
+                periods: [],
+                papers: [],
+            },
+        ];
+    })
+    .onGet('exams/search/fail')
+    .reply(() => {
+        return [500, []];
     })
     .onAny()
     .reply(config => {

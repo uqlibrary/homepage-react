@@ -1,3 +1,4 @@
+/* eslint max-len: 0 */
 import React, { useEffect } from 'react';
 import { PropTypes } from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
@@ -16,17 +17,18 @@ import {
 } from 'actions';
 import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
+import { lazyRetry } from 'helpers/general';
 
 import { canSeeLearningResources, canSeeLibraryServices } from 'helpers/access';
 
-const Computers = lazy(() => import('modules/Index/components/subComponents/Computers'));
-const Hours = lazy(() => import('modules/Index/components/subComponents/Hours'));
-const LearningResourcesPanel = lazy(() => import('modules/Index/components/subComponents/LearningResourcesPanel'));
-const LibraryServices = lazy(() => import('modules/Index/components/subComponents/LibraryServices'));
-const PersonalisedPanel = lazy(() => import('modules/Index/components/subComponents/PersonalisedPanel'));
-const PromoPanel = lazy(() => import('modules/Index/components/subComponents/PromoPanel'));
-const Spotlights = lazy(() => import('modules/Index/components/subComponents/Spotlights'));
-const Training = lazy(() => import('modules/Index/components/subComponents/Training'));
+const Computers = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Computers')));
+const Hours = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Hours')));
+const LearningResourcesPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LearningResourcesPanel')));
+const LibraryServices = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/LibraryServices')));
+const PersonalisedPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PersonalisedPanel')));
+const PromoPanel = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/PromoPanel')));
+const Spotlights = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Spotlights')));
+const Training = lazy(() => lazyRetry(() => import('modules/Index/components/subComponents/Training')));
 
 const MyLoader = props => (
     <ContentLoader

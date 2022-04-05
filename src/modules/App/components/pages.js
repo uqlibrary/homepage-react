@@ -1,24 +1,7 @@
 /* eslint max-len: 0 */
 import { lazy } from 'react';
+import { lazyRetry } from 'helpers/general';
 
-const lazyRetry = (importFn, retries = 3, interval = 500) => {
-    return new Promise((resolve, reject) => {
-        importFn()
-            .then(resolve)
-            .catch(
-                /* istanbul ignore next */ error => {
-                    if (!retries) {
-                        reject(error);
-                        return;
-                    }
-
-                    setTimeout(() => {
-                        lazyRetry(importFn, retries - 1).then(resolve, reject);
-                    }, interval);
-                },
-            );
-    });
-};
 // lazy loaded components
 export const NotFound = lazy(() => lazyRetry(() => import('modules/Pages/NotFound/containers/NotFound')));
 export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/containers/LearningResources')));
@@ -35,6 +18,8 @@ export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/A
 export const SpotlightsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/View/SpotlightsViewContainer')));
 export const SpotlightsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Clone/SpotlightsCloneContainer')));
 export const Masquerade = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Masquerade/containers/Masquerade')));
+export const PastExamPaperSearch = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperSearch/PastExamPaperSearchContainer')));
+export const PastExamPaperList = lazy(() => lazyRetry(() => import('modules/Pages/PastExamPaperList/PastExamPaperListContainer')));
 
 // always load components
 export { IndexContainer as Index } from 'modules/Index';
