@@ -33,10 +33,11 @@ describe('learningResourcesLocale', () => {
         isAString(locale.myCourses.examPapers.title);
         isAString(locale.myCourses.examPapers.unavailable);
         isAString(locale.myCourses.examPapers.none);
-        isAString(locale.myCourses.examPapers.morePastExams);
         expect(typeof locale.myCourses.examPapers.footer).toEqual('object');
-        isAValidLink(locale.myCourses.examPapers.footer.linkOutPattern);
-        isAString(locale.myCourses.examPapers.footer.linkLabel);
+        isAValidLink(locale.myCourses.examPapers.footer.noPastExams.linkOut);
+        isAString(locale.myCourses.examPapers.footer.noPastExams.linkLabel);
+        isAValidLink(locale.myCourses.examPapers.footer.morePastExams.linkOutPattern);
+        isAString(locale.myCourses.examPapers.footer.morePastExams.linkLabel);
         isPositiveInteger(locale.myCourses.examPapers.visibleItemsCount);
 
         expect(typeof locale.myCourses.guides).toEqual('object');

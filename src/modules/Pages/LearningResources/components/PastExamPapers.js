@@ -77,9 +77,9 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                             <Typography>{locale.myCourses.examPapers.none}</Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <a href={_courseLink('', locale.myCourses.examPapers.footer.linkOutPattern)}>
+                            <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
                                 <SpacedArrowForwardIcon />
-                                {locale.myCourses.examPapers.footer.linkLabel}
+                                {locale.myCourses.examPapers.footer.noPastExams.linkLabel}
                             </a>
                         </Grid>
                     </React.Fragment>
@@ -105,9 +105,9 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     })}
                 {!examListError && !examListLoading && !!numberExcessExams && numberExcessExams > 0 && (
                     <Grid item xs={12} data-testid="exam-more-link" className={classes.learningResourceLineItem}>
-                        <a href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}>
+                        <a href={_courseLink(subject, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern)}>
                             <SpacedArrowForwardIcon />
-                            {locale.myCourses.examPapers.morePastExams
+                            {locale.myCourses.examPapers.footer.morePastExams.linkLabel
                                 .replace('[numberExcessExams]', numberExcessExams)
                                 .replace('[examNumber]', _pluralise('paper', numberExcessExams))}
                         </a>
