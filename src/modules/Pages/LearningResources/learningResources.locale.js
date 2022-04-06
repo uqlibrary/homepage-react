@@ -58,10 +58,15 @@ export default {
             title: 'Past exam papers',
             none: 'No Past Exam Papers for this course',
             unavailable: 'Exam papers list currently unavailable',
-            morePastExams: '[numberExcessExams] more past [examNumber]',
             footer: {
-                linkOutPattern: 'https://www.library.uq.edu.au/exams/course/[courseCode]',
-                linkLabel: 'Search for other exam papers',
+                noPastExams: {
+                    linkOut: 'https://www.library.uq.edu.au/exams/',
+                    linkLabel: 'Search for other exam papers',
+                },
+                morePastExams: {
+                    linkOutPattern: 'https://www.library.uq.edu.au/exams/course/[courseCode]',
+                    linkLabel: '[numberExcessExams] more past [examNumber]',
+                },
             },
             visibleItemsCount: 2,
         },

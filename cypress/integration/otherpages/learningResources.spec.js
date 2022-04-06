@@ -98,7 +98,7 @@ function exams_panel_loads_correctly_for_a_subject_with_no_exams(coursecode) {
     cy.get(`div[data-testid=past-exams-${coursecode}] a`).should(
         'have.attr',
         'href',
-        _courseLink('', locale.myCourses.examPapers.footer.linkOutPattern),
+        _courseLink('', locale.myCourses.examPapers.footer.noPastExams.linkOut),
     );
 }
 
@@ -128,11 +128,15 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, d
         .should('have.attr', 'href', examPaperLink);
     cy.get('div[data-testid=exam-more-link] a')
         .contains(
-            locale.myCourses.examPapers.morePastExams
+            locale.myCourses.examPapers.footer.morePastExams.linkLabel
                 .replace('[numberExcessExams]', numberExcessExams)
                 .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
         )
-        .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.examPapers.footer.linkOutPattern));
+        .should(
+            'have.attr',
+            'href',
+            _courseLink(courseCode, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern),
+        );
 }
 
 function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page() {
