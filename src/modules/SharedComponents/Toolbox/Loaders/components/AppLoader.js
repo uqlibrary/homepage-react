@@ -47,7 +47,12 @@ export class AppLoader extends React.Component {
                 className={classes.appLoader}
             >
                 <Grid item className={classes.spaceBetween}>
-                    <CircularProgress size={80} thickness={1} className={classes.white} />
+                    <CircularProgress
+                        size={80}
+                        thickness={1}
+                        className={classes.white}
+                        aria-label="Loading Library website"
+                    />
                 </Grid>
                 <Grid item className={classes.spaceBetween}>
                     {logoImage && <div className={`${logoImage} ${classes.logo}`} alt={logoText} />}

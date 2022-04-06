@@ -126,7 +126,12 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                             opacity: 0.3,
                         }}
                     >
-                        <CircularProgress color="primary" size={20} data-testid="loading-readinglist-suggestions" />
+                        <CircularProgress
+                            color="primary"
+                            size={20}
+                            data-testid="loading-readinglist-suggestions"
+                            aria-label="Loading Reading lists"
+                        />
                     </Grid>
                 )}
 

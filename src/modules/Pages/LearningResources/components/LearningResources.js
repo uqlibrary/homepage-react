@@ -72,9 +72,9 @@ const useStyles = makeStyles(theme => ({
 
 export const LearningResources = ({
     actions,
-    examList,
-    examListLoading,
-    examListError,
+    examLearningResourceList,
+    examLearningResourceListLoading,
+    examLearningResourceListError,
     guideList,
     guideListLoading,
     guideListError,
@@ -119,7 +119,7 @@ export const LearningResources = ({
     const [currentReadingLists, updateReadingLists] = useState([]);
 
     const throttledGuideLoad = useRef(throttle(1000, classnumber => actions.loadGuides(classnumber)));
-    const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExams(classnumber)));
+    const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExamLearningResources(classnumber)));
     const throttledReadingListLoad = useRef(
         throttle(1000, (classnumber, campus, semester, account) =>
             actions.loadReadingLists(classnumber, campus, semester, account),
@@ -263,15 +263,15 @@ export const LearningResources = ({
 
     // load exams into an array, so we dont have to call it again
     const updateExamsSubjectList = React.useCallback(() => {
-        if (!!examList && !!examList.coursecode) {
-            const subjectNumber = examList.coursecode;
+        if (!!examLearningResourceList && !!examLearningResourceList.coursecode) {
+            const subjectNumber = examLearningResourceList.coursecode;
             if (subjectNumber !== false && currentExamsList[subjectNumber] === undefined) {
                 const newExamsList = {};
-                newExamsList[subjectNumber] = examList;
+                newExamsList[subjectNumber] = examLearningResourceList;
                 updateExamsList(currentExams => Object.assign({}, ...currentExams, ...newExamsList));
             }
         }
-    }, [examList, currentExamsList]);
+    }, [examLearningResourceList, currentExamsList]);
 
     React.useEffect(() => {
         updateExamsSubjectList();
@@ -304,8 +304,8 @@ export const LearningResources = ({
 
     const examLists = {
         list: currentExamsList,
-        loading: examListLoading,
-        error: examListError,
+        loading: examLearningResourceListLoading,
+        error: examLearningResourceListError,
     };
 
     const guideLists = {
@@ -378,9 +378,9 @@ export const LearningResources = ({
 
 LearningResources.propTypes = {
     actions: PropTypes.object,
-    examList: PropTypes.any,
-    examListLoading: PropTypes.bool,
-    examListError: PropTypes.any,
+    examLearningResourceList: PropTypes.any,
+    examLearningResourceListLoading: PropTypes.bool,
+    examLearningResourceListError: PropTypes.any,
     guideList: PropTypes.any,
     guideListLoading: PropTypes.bool,
     guideListError: PropTypes.any,

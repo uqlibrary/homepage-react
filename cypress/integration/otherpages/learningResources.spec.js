@@ -120,11 +120,12 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, d
         'Exam papers list currently unavailable',
     );
 
-    cy.get(`.exams ${headerLevel}`).contains(`${locale.myCourses.examPapers.title} (${examPapers.list.length} items)`);
+    const numberExcessExams = examPapers.remainingCount || 0;
+    const totalExamItems = examPapers.list.length + numberExcessExams;
+    cy.get(`.exams ${headerLevel}`).contains(`${locale.myCourses.examPapers.title} (${totalExamItems} items)`);
     cy.get('.exams a')
         .contains(`${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`)
         .should('have.attr', 'href', examPaperLink);
-    const numberExcessExams = examPapers.list.length - locale.myCourses.examPapers.visibleItemsCount;
     cy.get('div[data-testid=exam-more-link] a')
         .contains(
             locale.myCourses.examPapers.morePastExams
@@ -446,7 +447,7 @@ context('The Learning Resources Page', () => {
 
         a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
         cy.get('[data-testid="reading-list-FREN1010"]').contains('Reading list (2 items)');
-        cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (8 items)');
+        cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (16 items)');
         cy.get('[data-testid="guides-FREN1010"]').should('contain', 'French Studies');
 
         the_user_clicks_on_the_My_Courses_tab();

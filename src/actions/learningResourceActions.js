@@ -1,6 +1,11 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { EXAMS_API, GUIDES_API, READING_LIST_API, SUGGESTIONS_API_PAST_COURSE } from '../repositories/routes';
+import {
+    GUIDES_API,
+    LEARNING_RESOURCES_EXAMS_API,
+    READING_LIST_API,
+    SUGGESTIONS_API_PAST_COURSE,
+} from '../repositories/routes';
 import { getCampusByCode, throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {
@@ -32,28 +37,28 @@ export function clearGuides() {
     };
 }
 
-export function loadExams(keyword) {
+export function loadExamLearningResources(keyword) {
     return dispatch => {
-        dispatch({ type: actions.EXAMS_LOADING });
-        return get(EXAMS_API({ keyword }))
+        dispatch({ type: actions.EXAMS_LEARNING_RESOURCES_LOADING });
+        return get(LEARNING_RESOURCES_EXAMS_API({ keyword }))
             .then(data => {
                 dispatch({
-                    type: actions.EXAMS_LOADED,
+                    type: actions.EXAMS_LEARNING_RESOURCES_LOADED,
                     payload: data,
                 });
             })
             .catch(error => {
                 dispatch({
-                    type: actions.EXAMS_FAILED,
+                    type: actions.EXAMS_LEARNING_RESOURCES_FAILED,
                     payload: error.message,
                 });
             });
     };
 }
 
-export function clearExams() {
+export function clearExamLearningResources() {
     return dispatch => {
-        dispatch({ type: actions.EXAMS_CLEAR });
+        dispatch({ type: actions.EXAMS_LEARNING_RESOURCES_CLEAR });
     };
 }
 

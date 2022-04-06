@@ -38,15 +38,15 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
     const listOfExams = !!examList && !!examList.list && examList.list.length > 0 ? examList.list : false;
 
     const numberExcessExams =
-        !!listOfExams && listOfExams.length > locale.myCourses.examPapers.visibleItemsCount
-            ? listOfExams.length - locale.myCourses.examPapers.visibleItemsCount
-            : 0;
+        !!examList && !!examList.remainingCount && examList.remainingCount > 0 ? examList.remainingCount : 0;
+
+    const examTotalCount = listOfExams.length + numberExcessExams;
 
     const examAriaLabel = paper => `past exam paper for ${paper.period} format ${_extractExtension(paper.url)}`;
 
-    const itemCountLabel = _pluralise('item', listOfExams.length);
+    const itemCountLabel = _pluralise('item', examTotalCount);
     const examPaperTitle = `${locale.myCourses.examPapers.title} ${
-        !examListError && !!listOfExams && listOfExams.length > 0 ? `(${listOfExams.length} ${itemCountLabel})` : ''
+        !examListError && !examListLoading && examTotalCount > 0 ? `(${examTotalCount} ${itemCountLabel})` : ''
     }`;
 
     return (
@@ -62,7 +62,12 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
 
                 {!examListError && !!examListLoading && (
                     <Grid item xs={'auto'} style={{ width: 80, marginRight: 20, marginBottom: 6, opacity: 0.3 }}>
-                        <CircularProgress color="primary" size={20} data-testid="loading-exampaper-suggestions" />
+                        <CircularProgress
+                            color="primary"
+                            size={20}
+                            data-testid="loading-exampaper-suggestions"
+                            aria-label="loading Past exam papers"
+                        />
                     </Grid>
                 )}
 
@@ -83,7 +88,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                     !examListLoading &&
                     !!listOfExams &&
                     listOfExams.length > 0 &&
-                    listOfExams.slice(0, locale.myCourses.examPapers.visibleItemsCount).map((paper, index) => {
+                    listOfExams.map((paper, index) => {
                         return (
                             <Grid item xs={12} key={`examPapers-${index}`} className={classes.learningResourceLineItem}>
                                 <a
@@ -98,7 +103,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                             </Grid>
                         );
                     })}
-                {!!listOfExams && listOfExams.length > 0 && !!numberExcessExams && (
+                {!examListError && !examListLoading && !!numberExcessExams && numberExcessExams > 0 && (
                     <Grid item xs={12} data-testid="exam-more-link" className={classes.learningResourceLineItem}>
                         <a href={_courseLink(subject, locale.myCourses.examPapers.footer.linkOutPattern)}>
                             <SpacedArrowForwardIcon />

@@ -60,7 +60,7 @@ export default {
             unavailable: 'Exam papers list currently unavailable',
             morePastExams: '[numberExcessExams] more past [examNumber]',
             footer: {
-                linkOutPattern: 'https://www.library.uq.edu.au/exams/papers.php?stub=[courseCode]',
+                linkOutPattern: 'https://www.library.uq.edu.au/exams/course/[courseCode]',
                 linkLabel: 'Search for other exam papers',
             },
             visibleItemsCount: 2,
