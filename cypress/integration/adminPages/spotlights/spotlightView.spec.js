@@ -1,8 +1,4 @@
-import {
-    FILTER_STORAGE_NAME,
-    // hasAWorkingHelpButton,
-    numberCurrentPublishedSpotlights,
-} from '../../../support/spotlights';
+import { FILTER_STORAGE_NAME, numberCurrentPublishedSpotlights } from '../../../support/spotlights';
 import { clickButton } from '../../../support/helpers';
 
 describe('Spotlight Admin View page', () => {
