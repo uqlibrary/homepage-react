@@ -12,7 +12,7 @@ import { default as ACCT1101ReadingList } from '../../../src/mock/data/records/c
 import { default as ACCT1101Guide } from '../../../src/mock/data/records/libraryGuides_ACCT1101';
 import { default as ACCT1101Exam } from '../../../src/mock/data/records/examListACCT1101';
 import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
-import { readingListLength } from '../../support/helpers';
+import { getReadingListHeader, readingListLength } from '../../support/helpers';
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
     const title = courseReadingList.course_title || 'mock data is missing';
@@ -51,11 +51,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
     const readingList = firstReadingListItems(courseReadingList);
     const firstReadingListTitle = readingList.title || 'mock data is missing';
     const firstReadingListLink = readingList.itemLink || 'mock data is missing';
-
-    cy.log(`${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`);
-    cy.get(`.readingLists ${headerLevel}`).contains(
-        `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`,
-    );
+    cy.get(`.readingLists ${headerLevel}`).contains(getReadingListHeader(FREN1010ReadingList));
     cy.get(`div[data-testid="reading-list-${courseCode}"`).should('not.contain', 'Reading list currently unavailable');
     cy.get('.readingLists a')
         .contains(firstReadingListTitle)
@@ -70,11 +66,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
         courseReadingList.reading_lists.length > 0 &&
         courseReadingList.reading_lists[0];
     const readingListLink = readingList.url || 'mock data is missing';
-
-    cy.get('.readingLists h3').contains(
-        `${locale.myCourses.readingLists.title} (${readingListLength(courseReadingList)} items)`,
-    );
-
+    cy.get('.readingLists h3').contains(getReadingListHeader(courseReadingList));
     const numberExcessReadingLists =
         readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
     cy.get('div[data-testid=reading-list-more-link] a')
@@ -98,7 +90,7 @@ function exams_panel_loads_correctly_for_a_subject_with_no_exams(coursecode) {
     cy.get(`div[data-testid=past-exams-${coursecode}] a`).should(
         'have.attr',
         'href',
-        _courseLink('', locale.myCourses.examPapers.footer.linkOutPattern),
+        _courseLink('', locale.myCourses.examPapers.footer.noPastExams.linkOut),
     );
 }
 
@@ -128,11 +120,15 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, d
         .should('have.attr', 'href', examPaperLink);
     cy.get('div[data-testid=exam-more-link] a')
         .contains(
-            locale.myCourses.examPapers.morePastExams
+            locale.myCourses.examPapers.footer.morePastExams.linkLabel
                 .replace('[numberExcessExams]', numberExcessExams)
                 .replace('[examNumber]', _pluralise('paper', numberExcessExams)),
         )
-        .should('have.attr', 'href', _courseLink(courseCode, locale.myCourses.examPapers.footer.linkOutPattern));
+        .should(
+            'have.attr',
+            'href',
+            _courseLink(courseCode, locale.myCourses.examPapers.footer.morePastExams.linkOutPattern),
+        );
 }
 
 function guides_panel_has_correct_Library_Guides_footer_links_for_a_subject_page() {
@@ -316,17 +312,8 @@ function the_user_clicks_on_the_third_subject_tab(courseReadingList) {
 function the_title_block_displays_properly(courseReadingList) {
     const listTitle = courseReadingList.course_title || 'mock data is missing1';
     const coursecode = courseReadingList.title || 'mock data is missing2';
-    const readingList =
-        !!courseReadingList.reading_lists &&
-        courseReadingList.reading_lists.length > 0 &&
-        courseReadingList.reading_lists[0];
-    const semester = readingList.period || 'mock data is missing3';
-    const campus = readingList.campus || 'mock data is missing4';
-
     cy.get('h2[data-testid=learning-resource-subject-title]').contains(listTitle);
     cy.get('h2[data-testid=learning-resource-subject-title]').contains(coursecode);
-    cy.get('h2[data-testid=learning-resource-subject-title]').contains(campus);
-    cy.get('h2[data-testid=learning-resource-subject-title]').contains(semester);
 }
 
 function FREN1010_loads_properly_for_s111111_user() {
@@ -446,7 +433,7 @@ context('The Learning Resources Page', () => {
         the_user_lands_on_the_Search_tab();
 
         a_user_can_use_the_search_bar_to_load_a_subject(FREN1010ReadingList, learningResourceSearchSuggestions);
-        cy.get('[data-testid="reading-list-FREN1010"]').contains('Reading list (2 items)');
+        cy.get('[data-testid="reading-list-FREN1010"]').contains(getReadingListHeader(FREN1010ReadingList));
         cy.get('[data-testid="past-exams-FREN1010"]').contains('Past exam papers (16 items)');
         cy.get('[data-testid="guides-FREN1010"]').should('contain', 'French Studies');
 

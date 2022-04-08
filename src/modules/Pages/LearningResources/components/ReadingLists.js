@@ -10,7 +10,7 @@ import Grid from '@material-ui/core/Grid';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
-import { unescapeString } from 'helpers/general';
+import { getCampusByCode, unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     () => ({
@@ -30,9 +30,20 @@ const useStyles = makeStyles(
     { withTheme: true },
 );
 
-export const ReadingLists = ({ headingLevel, readingList, readingListLoading, readingListError }) => {
+export const ReadingLists = ({ subject, headingLevel, readingList, readingListLoading, readingListError }) => {
     const classes = useStyles();
-
+    const semester = () => {
+        const value = subject?.semester || readingList?.period || readingList?.reading_lists?.[0]?.period || '';
+        return value ? ` for ${value}` : value;
+    };
+    const campus = () => {
+        const value =
+            (subject.CAMPUS && getCampusByCode(subject.CAMPUS)) ||
+            readingList?.campus ||
+            readingList?.reading_lists?.[0]?.campus ||
+            '';
+        return value ? ` at ${value}` : value;
+    };
     // with the new api of calling for reading list by course code, campus and semester,
     // we should theoretically only ever have one reading list
     // but handle multiple anyway...
@@ -79,9 +90,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
             </Grid>
         );
     };
-
     const readingListItemAriaLabel = l => `Reading list item ${l.title}, ${l.referenceType}, ${l.importance}`;
-
     const singleReadingListLength = readingList => {
         return !readingListError &&
             !!readingList &&
@@ -92,23 +101,22 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
             ? readingList.reading_lists[0].list.length
             : 0;
     };
-
     const numberExcessReadingLists =
         singleReadingListLength(readingList) > locale.myCourses.readingLists.visibleItemsCount
             ? singleReadingListLength(readingList) - locale.myCourses.readingLists.visibleItemsCount
             : 0;
-
     const itemCountLabel = _pluralise('item', singleReadingListLength(readingList));
     const singleReadingListLengthTitle = readingList =>
         singleReadingListLength(readingList) > 0 ? `(${singleReadingListLength(readingList)} ${itemCountLabel})` : '';
+    const readingListTitle = `${
+        locale.myCourses.readingLists.title
+    }${semester()}${campus()} ${singleReadingListLengthTitle(readingList)}`;
+    const courseCode = (!!readingList && readingList.coursecode) || 'unknown';
 
-    const readingListTitle = `${locale.myCourses.readingLists.title} ${singleReadingListLengthTitle(readingList)}`;
-
-    const coursecode = (!!readingList && readingList.coursecode) || 'unknown';
     return (
         <StandardCard
             noHeader
-            standardCardId={`reading-list-${coursecode}`}
+            standardCardId={`reading-list-${courseCode}`}
             style={{ marginBottom: '1rem', marginTop: '1rem' }}
         >
             <Typography component={headingLevel} variant="h6" style={{ paddingBottom: '15px', fontWeight: 300 }}>
@@ -172,7 +180,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
                     )}
 
                 {!readingListError && !readingListLoading && !!readingList && readingList.reading_lists.length > 1 && (
-                    <Grid item>{renderMultipleReadingListReference(readingList.reading_lists, coursecode)}</Grid>
+                    <Grid item>{renderMultipleReadingListReference(readingList.reading_lists, courseCode)}</Grid>
                 )}
 
                 {!readingListError &&
@@ -255,6 +263,7 @@ export const ReadingLists = ({ headingLevel, readingList, readingListLoading, re
 };
 
 ReadingLists.propTypes = {
+    subject: PropTypes.object,
     headingLevel: PropTypes.string,
     readingList: PropTypes.any,
     readingListLoading: PropTypes.bool,

@@ -7,6 +7,8 @@
  * @param string selector
  * @param string expectedButtonLabel
  */
+import { default as locale } from '../../src/modules/Pages/LearningResources/learningResources.locale';
+
 export function clickButton(selector, expectedButtonLabel) {
     cy.get(selector).scrollIntoView();
     cy.get(`${selector} span:first-child`) // standard MUI button
@@ -35,6 +37,10 @@ export function clickSVGButton(selector) {
         });
 }
 
+/**
+ * @param courseReadingList
+ * @return {number}
+ */
 export function readingListLength(courseReadingList) {
     return (
         (!!courseReadingList.reading_lists &&
@@ -45,3 +51,14 @@ export function readingListLength(courseReadingList) {
         0
     );
 }
+
+/**
+ * @param courseReadingList
+ * @return string
+ */
+export const getReadingListHeader = courseReadingList => {
+    const readingList = courseReadingList?.reading_lists?.[0];
+    return `${locale.myCourses.readingLists.title} for ${readingList.period} at ${
+        readingList.campus
+    } (${readingListLength(courseReadingList)} items)`;
+};
