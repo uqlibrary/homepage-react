@@ -10,7 +10,7 @@ import { SubjectLinks } from './SubjectLinks';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
-import { getCampusByCode, unescapeString } from 'helpers/general';
+import { unescapeString } from 'helpers/general';
 
 const useStyles = makeStyles(
     theme => ({
@@ -46,32 +46,6 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
 
     /* istanbul ignore next */
     const coursecode = subject.classnumber || null;
-    const firstReadingList =
-        !!readingList &&
-        !!readingList.list &&
-        !!readingList.list[coursecode] &&
-        !!readingList.list[coursecode].reading_lists &&
-        readingList.list[coursecode].reading_lists.length > 0 &&
-        !!readingList.list[coursecode].reading_lists[0] &&
-        readingList.list[coursecode].reading_lists[0];
-
-    const coursecampus = () =>
-        (subject.CAMPUS && getCampusByCode(subject.CAMPUS)) ||
-        (!!firstReadingList && !!firstReadingList.campus && firstReadingList.campus) ||
-        // (subject.INSTRUCTION_MODE === 'EX' && locale.externalSubjectLocation) ||
-        null;
-
-    const courseSemester = () => {
-        const semester =
-            (!!subject && !!subject.semester && subject.semester) ||
-            (!!firstReadingList && !!firstReadingList.period && firstReadingList.period) ||
-            null;
-        if (semester !== null) {
-            return ` - ${semester}`;
-        }
-        return '';
-    };
-
     const courseTitle = () => {
         // whichever one we get first (they should both have the same value)
         /* istanbul ignore next */
@@ -109,13 +83,12 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 {coursecode}
                 {courseTitle()}
                 <br />
-                {coursecampus()}
-                {courseSemester()}
             </Typography>
 
             <Grid container spacing={3} className={'readingLists'}>
                 <Grid item xs={12}>
                     <ReadingLists
+                        subject={subject}
                         readingList={readingList.list[[coursecode]]}
                         readingListLoading={readingList.loading}
                         readingListError={readingList.error}
