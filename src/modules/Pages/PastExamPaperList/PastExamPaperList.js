@@ -73,11 +73,11 @@ const useStyles = makeStyles(
 export const PastExamPaperList = ({ actions, examSearchListError, examSearchList, examSearchListLoading }) => {
     const { courseHint } = useParams();
     const listTitle =
-        !!examSearchList && !!examSearchList.minYear
+        !!examSearchList && !!examSearchList.minYear && !!examSearchList.maxYear && !!courseHint
             ? `Past Exam Papers from ${examSearchList.minYear} to ${
                   examSearchList.maxYear
               } for "${courseHint.toUpperCase()}"`
-            : 'Past Exam Papers by Subject';
+            : /* istanbul ignore next */ 'Past Exam Papers by Subject';
 
     const classes = useStyles();
     useTitle(`${listTitle} - Library - The University of Queensland`);
