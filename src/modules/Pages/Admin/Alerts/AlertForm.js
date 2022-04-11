@@ -11,6 +11,8 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
@@ -62,6 +64,9 @@ const useStyles = makeStyles(
                 fill: '#ececec',
             },
         },
+        selectPriorityType: {
+            minWidth: '6em',
+        },
     }),
     { withTheme: true },
 );
@@ -94,6 +99,7 @@ export const isValidUrl = testurl => {
 };
 
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
+    console.log('defaults = ', defaults);
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -177,7 +183,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ['enteredbody']: '',
             ['startDate']: defaults.startDateDefault,
             ['endDate']: defaults.endDateDefault,
-            ['urgent']: false,
+            ['priorityType']: 'info',
             ['permanentAlert']: false,
             ['linkRequired']: false,
             ['linkTitle']: '',
@@ -246,11 +252,12 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
+        console.log('set newValues from:', values);
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
             body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
-            urgent: !!values.urgent ? '1' : '0',
+            priority_type: (!!values && values.priorityType) || 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
             dateList: values.dateList,
@@ -298,7 +305,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
         alertWebComponent.setAttribute('id', 'alert-preview');
         alertWebComponent.setAttribute('alerttitle', values.alertTitle);
-        alertWebComponent.setAttribute('alerttype', !!values.urgent ? '1' : '0');
+        alertWebComponent.setAttribute('prioritytype', values.priorityType);
         let body = (!!values.body && getBody(values)) || getBody(defaults);
         // when they havent entered all the link details yet, dont display the link in the preview at all
         body = body.replace('[]()', '');
@@ -456,6 +463,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ),
         };
     }
+    console.log('values = ', values);
 
     return (
         <Fragment>
@@ -647,15 +655,27 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                     </Grid>
                     <Grid item sm={4} xs={12}>
                         <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.urgent}>
-                            <Checkbox
-                                checked={values.urgent}
-                                data-testid="admin-alerts-form-checkbox-urgent"
-                                onChange={handleChange('urgent')}
-                                name="urgent"
-                                title={locale.form.urgentTooltip}
-                                className={classes.checkbox}
-                            />
-                            {locale.form.labels.urgent}
+                            {locale.form.labels.priority.title}
+                            <Select
+                                data-testid="admin-alerts-form-select-prioritytype"
+                                defaultValue={values.priorityType}
+                                value={values.priorityType}
+                                onChange={handleChange('priorityType')}
+                                classes={{ root: classes.selectPriorityType }}
+                                inputProps={{
+                                    'data-testid': 'admin-alerts-form-prioritytype-input',
+                                }}
+                            >
+                                <MenuItem data-testid="admin-alerts-form-option-info" value={'info'}>
+                                    {locale.form.labels.priority.level.info}
+                                </MenuItem>
+                                <MenuItem data-testid="admin-alerts-form-option-urgent" value={'urgent'}>
+                                    {locale.form.labels.priority.level.urgent}
+                                </MenuItem>
+                                <MenuItem data-testid="admin-alerts-form-option-extreme" value={'extreme'}>
+                                    {locale.form.labels.priority.level.extreme}
+                                </MenuItem>
+                            </Select>
                         </InputLabel>
                     </Grid>
                 </Grid>

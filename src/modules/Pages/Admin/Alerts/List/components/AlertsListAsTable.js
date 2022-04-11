@@ -63,7 +63,11 @@ const useStyles2 = makeStyles(
             },
         },
         urgent: {
-            backgroundColor: theme.palette.warning.main,
+            backgroundColor: theme.palette.warning.light,
+            color: '#000',
+        },
+        extreme: {
+            backgroundColor: theme.palette.error.main,
             color: '#fff',
         },
         link: {
@@ -404,12 +408,20 @@ export const AlertsListAsTable = ({
                                                         className={classes.link}
                                                     />
                                                 )}{' '}
-                                                {!!alert.urgent && (
+                                                {!!alert && alert.priority_type === 'urgent' && (
                                                     <Chip
                                                         data-testid={`alert-list-urgent-chip-${alert.id}`}
                                                         label="Urgent"
                                                         title="This is an urgent alert"
                                                         className={classes.urgent}
+                                                    />
+                                                )}{' '}
+                                                {!!alert && alert.priority_type === 'extreme' && (
+                                                    <Chip
+                                                        data-testid={`alert-list-urgent-chip-${alert.id}`}
+                                                        label="Extreme"
+                                                        title="This is an extreme alert"
+                                                        className={classes.extreme}
                                                     />
                                                 )}{' '}
                                                 {alert.body.includes('[permanent]') && (

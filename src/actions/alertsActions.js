@@ -34,6 +34,7 @@ export function loadAllAlerts() {
 }
 
 export const createAlert = request => {
+    console.log('createAlert', request);
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
         return post(ALERT_CREATE_API(), request)
@@ -53,6 +54,7 @@ export const createAlert = request => {
 };
 
 export const saveAlertChange = request => {
+    console.log('saveAlertChange: ', request);
     return async dispatch => {
         dispatch({ type: actions.ALERT_LOADING });
         return post(ALERT_SAVE_API({ id: request.id }), request)

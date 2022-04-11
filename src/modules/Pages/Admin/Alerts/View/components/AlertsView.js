@@ -8,6 +8,8 @@ import FormControl from '@material-ui/core/FormControl';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import { makeStyles } from '@material-ui/styles';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
@@ -52,7 +54,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
 
         alertWebComponent.setAttribute('id', 'alert-preview');
         alertWebComponent.setAttribute('alerttitle', thisAlert.title);
-        alertWebComponent.setAttribute('alerttype', !!thisAlert.urgent ? '1' : '0');
+        alertWebComponent.setAttribute('priorityType', thisAlert.priority_type);
         const body =
             !!thisAlert.body &&
             getBody({
@@ -128,7 +130,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         alertTitle: alert?.title || '',
         enteredbody: message2 || '',
         linkRequired: linkRegex?.length === 3,
-        urgent: !!alert && !!alert.urgent,
+        priorityType: (!!alert && alert.priority_type) || 'info',
         permanentAlert: isPermanent2 || false,
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
@@ -233,13 +235,20 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                             </Grid>
                             <Grid item sm={4} xs={12}>
                                 <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.urgent}>
-                                    <Checkbox
-                                        checked={values.urgent}
-                                        data-testid="admin-alerts-view-checkbox-urgent"
-                                        name="urgent"
-                                        className={classes.checkbox}
+                                    {locale.form.labels.priority.title}
+                                    <Select
+                                        data-testid="admin-alerts-view-select-priority-type"
+                                        // defaultValue={values.priority_type}
+                                        value={values.priorityType}
                                         disabled
-                                    />
+                                        classes={{ root: classes.selectPriorityType }}
+                                    >
+                                        <MenuItem value={'info'}>{locale.form.labels.priority.level.info}</MenuItem>
+                                        <MenuItem value={'urgent'}>{locale.form.labels.priority.level.urgent}</MenuItem>
+                                        <MenuItem value={'extreme'}>
+                                            {locale.form.labels.priority.level.extreme}
+                                        </MenuItem>
+                                    </Select>
                                     {locale.form.labels.urgent}
                                 </InputLabel>
                             </Grid>

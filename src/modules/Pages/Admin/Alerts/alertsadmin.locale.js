@@ -16,7 +16,14 @@ export default {
                 url: 'Link URL *',
             },
             permanent: 'Permanent',
-            urgent: 'Urgent',
+            priority: {
+                title: 'Priority: ',
+                level: {
+                    info: 'Info (blue)',
+                    urgent: 'Urgent (orange)',
+                    extreme: 'Extreme (red)',
+                },
+            },
             systems:
                 'Use these checkboxes to target your alert to selected systems only. Leave checkboxes blank to show alert on all systems.',
         },
@@ -29,7 +36,7 @@ export default {
                 url: 'Please enter a valid URL.',
             },
             permanent: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
-            urgent: 'Use for urgent/important alerts. Alert colour will change to orange.',
+            // urgent: 'Use for urgent/important alerts. Alert colour will change to orange.',
             addAnotherDateSet: 'Add another alert with the same text but different start and end times',
             removeDateSet: 'Remove this date/time set from the alert series',
         },
@@ -165,8 +172,9 @@ export default {
                                 be set in their browser for each alert closed.
                             </p>
                         </dd>
-                        <dt>Urgent</dt>
+                        <dt>Priority</dt>
                         <dd>
+                            <p>To be updated</p>
                             <p>Changes alert colour to orange and changes icon to indicate alert is urgent.</p>
                             <p>Default non-urgent alert is blue.</p>
                             <p>

@@ -1,6 +1,16 @@
 import { hasAWorkingHelpButton } from '../../../support/alerts';
 import { clickButton, clickSVGButton } from '../../../support/helpers';
 
+function selectPriorityType(type) {
+    // open the select
+    cy.get('[data-testid="admin-alerts-form-select-prioritytype"]')
+        .parent()
+        .click();
+    // choose urgent
+    cy.get(`[data-testid="admin-alerts-form-option-${type}"]`).click();
+    cy.get('[data-testid="admin-alerts-form-prioritytype-input"]').should('have.value', type);
+}
+
 describe('Alerts Admin Form Pages', () => {
     const numRowsHiddenAsNoDatainfo = 1;
     context('Alert Admin Add page', () => {
@@ -69,7 +79,7 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-title"]').should('have.text', 'No title supplied');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'No message supplied');
                     cy.get('[data-testid="alert-close"]').should('exist');
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Alert.');
                     cy.get('[data-testid="alert-close"] svg').should(
                         'have.attr',
                         'aria-label',
@@ -81,7 +91,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title');
             cy.get('[data-testid="admin-alerts-form-body"]').type('the body');
-            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').check();
+            selectPriorityType('urgent');
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
@@ -89,10 +99,10 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-title"]').should('have.text', 'alert title');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'the body');
                     cy.get('[data-testid="alert-close"]').should('exist');
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
+                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
                 });
         });
-        it('can show a preview of a non-urgent permanent alert with link', () => {
+        it('can show a preview of a info-priority permanent alert with link', () => {
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 2');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 2');
@@ -105,7 +115,39 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Alert.');
+                    cy.get('[data-testid="alert-title"]').should('have.text', 'alert title 2');
+                    cy.get('[data-testid="alert-message"]').should('have.text', 'body 2');
+                    cy.get('[data-testid="alert-close"]').should('not.exist');
+                    cy.get(
+                        '[data-testid="alert-alert-preview"] [data-testid="alert-alert-preview-action-button"]',
+                    ).should(
+                        'have.attr',
+                        'title',
+                        'On the live website, this button will visit http://example.com when clicked',
+                    );
+                });
+            // user can toggle the Preview
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+        });
+        it('can show a preview of a extreme permanent alert with link', () => {
+            cy.get('uq-alert[id="alert-preview"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 2');
+            cy.get('[data-testid="admin-alerts-form-body"]').type('body 2');
+            cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').check();
+            cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').check();
+            selectPriorityType('extreme');
+            cy.get('[data-testid="admin-alerts-form-link-title"] input').type('Click here');
+            cy.get('[data-testid="admin-alerts-form-link-url"] input').type('http://example.com');
+            cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
+            cy.get('uq-alert[id="alert-preview"]').should('exist');
+            cy.get('uq-alert[id="alert-preview"]')
+                .shadow()
+                .within(() => {
+                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Very important alert.');
                     cy.get('[data-testid="alert-title"]').should('have.text', 'alert title 2');
                     cy.get('[data-testid="alert-message"]').should('have.text', 'body 2');
                     cy.get('[data-testid="alert-close"]').should('not.exist');
@@ -187,7 +229,7 @@ describe('Alerts Admin Form Pages', () => {
         it('can save an alert (more complex)', () => {
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 4');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 4');
-            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').check();
+            // cy.get('[data-testid="admin-alerts-form-select-prioritytype"] input').check();
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').check();
 
             cy.get('[data-testid="admin-alerts-form-link-title"]').should('not.be.visible');
@@ -315,7 +357,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2031-07-02T18:30:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('be.checked');
+            // cy.get('[data-testid="admin-alerts-form-select-prioritytype"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-link-title"] input').should(
                 'have.value',
                 'UQ community COVID-19 advice',
@@ -333,7 +375,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('have.value', '2021-06-06T05:00:00');
             cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-permanent"] input').should('not.be.checked');
-            cy.get('[data-testid="admin-alerts-form-checkbox-urgent"] input').should('not.be.checked');
+            // cy.get('[data-testid="admin-alerts-form-select-prioritytype"] input').should('not.be.checked');
             cy.get('[data-testid="admin-alerts-form-link-title"] input').should('not.be.visible');
             cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
@@ -386,7 +428,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
                 .within(() => {
-                    cy.get('[data-testid="alert-icon"] svg').should('have.attr', 'aria-label', 'Important alert.');
+                    cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
                     cy.get('[data-testid="alert-title"]').should('have.text', 'Updated alert');
                 });
             // user can toggle the Preview
@@ -417,11 +459,7 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('uq-alert[id="alert-preview"]')
                         .shadow()
                         .within(() => {
-                            cy.get('[data-testid="alert-icon"] svg').should(
-                                'have.attr',
-                                'aria-label',
-                                'Important alert.',
-                            );
+                            cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
                             cy.get('[data-testid="alert-title"]').contains('Example alert:');
                             cy.get('[data-testid="alert-message"]').contains('This alert can be edited in mock.');
                             cy.get('[data-testid="alert-alert-preview-action-button"]').contains(

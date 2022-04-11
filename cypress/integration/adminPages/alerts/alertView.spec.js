@@ -53,8 +53,16 @@ describe('Alerts Admin View Page', () => {
         cy.get('[data-testid="admin-alerts-view-checkbox-permanent"] input').should('be.checked');
         cy.get('[data-testid="admin-alerts-view-checkbox-permanent"] input').should('be.disabled');
 
-        cy.get('[data-testid="admin-alerts-view-checkbox-urgent"] input').should('be.checked');
-        cy.get('[data-testid="admin-alerts-view-checkbox-urgent"] input').should('be.disabled');
+        // cy.get('[data-testid="admin-alerts-view-select-priority-type"] > div').should(
+        //     'have.property',
+        //     'aria-disabled',
+        //     'true',
+        // );
+        // cy.get('[data-testid="admin-alerts-view-select-priority-type"] input').should(
+        //     'have.property',
+        //     'value',
+        //     'urgent',
+        // );
     });
     it('can return to the list page from the view page', () => {
         cy.get('[data-testid="admin-alerts-view-title"] input').should('have.value', 'Example alert:');
@@ -98,7 +106,7 @@ describe('Alerts Admin View Page', () => {
                 cy.get('[data-testid="alert-alert-preview-action-button"]').should('not.exist');
             });
     });
-    it('can show a preview of an urgent permanent alert with link', () => {
+    it.only('can show a preview of an urgent permanent alert with link', () => {
         cy.get('uq-alert[id="alert-preview"]').should('exist');
         cy.get('uq-alert[id="alert-preview"]')
             .shadow()

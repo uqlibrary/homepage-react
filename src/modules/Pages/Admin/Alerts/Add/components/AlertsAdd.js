@@ -34,7 +34,7 @@ export const AlertsAdd = ({ actions, alert, alertError, alertLoading, alertStatu
         alertTitle: '',
         enteredbody: '',
         linkRequired: false,
-        urgent: false,
+        priorityType: 'info',
         permanentAlert: false,
         linkTitle: '',
         linkUrl: '',
