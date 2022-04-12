@@ -7,7 +7,7 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Assignment resources',
+        title: 'Assignment help',
         content: (
             <div>
                 <p>Working on an assignment? Check out these helpful resources:</p>
@@ -20,7 +20,7 @@ export const promoPanel = {
         ),
     },
     loggedin: {
-        title: 'Assignment resources',
+        title: 'Assignment help',
         content: (
             <div>
                 <p>Working on an assignment? Check out these helpful resources:</p>
