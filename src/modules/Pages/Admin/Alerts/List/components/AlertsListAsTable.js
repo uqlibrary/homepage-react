@@ -400,14 +400,6 @@ export const AlertsListAsTable = ({
                                             >{`${alert.title}`}</h4>{' '}
                                             {`${alert.message.replace('[permanent]', '')}`}
                                             <div className={classes.chipblock}>
-                                                {alert.body.includes('](') && (
-                                                    <Chip
-                                                        data-testid={`alert-list-link-chip-${alert.id}`}
-                                                        label="Link"
-                                                        title="This alert has a link out"
-                                                        className={classes.link}
-                                                    />
-                                                )}{' '}
                                                 {!!alert && alert.priority_type === 'urgent' && (
                                                     <Chip
                                                         data-testid={`alert-list-urgent-chip-${alert.id}`}
@@ -422,6 +414,14 @@ export const AlertsListAsTable = ({
                                                         label="Extreme"
                                                         title="This is an extreme alert"
                                                         className={classes.extreme}
+                                                    />
+                                                )}{' '}
+                                                {alert.body.includes('](') && (
+                                                    <Chip
+                                                        data-testid={`alert-list-link-chip-${alert.id}`}
+                                                        label="Link"
+                                                        title="This alert has a link out"
+                                                        className={classes.link}
                                                     />
                                                 )}{' '}
                                                 {alert.body.includes('[permanent]') && (
