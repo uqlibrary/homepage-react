@@ -423,6 +423,19 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
         },
     ]),
 );
+mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }).apiUrl).reply(
+    withDelay([
+        200,
+        {
+            "id": "d23f2e10-d7d6-11eb-a928-71f3ef9d35d9",
+            "start": "2021-06-28 16:02:54",
+            "end": "2021-06-29 15:00:54",
+            "title": "Face masks in the Library:",
+            "body": "in line with Queensland Government directions, you must wear a face mask when visiting UQ libraries. These requirements will be reviewed on Tuesday 13 July 2021.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
+            "priority_type": 'extreme'
+        },
+    ]),
+);
 mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }).apiUrl).reply(
     withDelay([
         200,

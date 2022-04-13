@@ -1,6 +1,10 @@
 import { hasAWorkingHelpButton } from '../../../support/alerts';
 import { clickButton, clickSVGButton } from '../../../support/helpers';
 
+const INFO_COLOUR = 'rgb(30, 114, 198)'; // #1e72c6
+const URGENT_COLOUR = 'rgb(251, 184, 0)'; // #fbb800
+const EXTREME_COLOUR = 'rgb(149, 17, 38)'; // #951126
+
 function selectPriorityType(type) {
     // open the select
     cy.get('[data-testid="admin-alerts-form-select-prioritytype"]')
@@ -100,6 +104,7 @@ describe('Alerts Admin Form Pages', () => {
                     cy.get('[data-testid="alert-message"]').should('have.text', 'the body');
                     cy.get('[data-testid="alert-close"]').should('exist');
                     cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Important alert.');
+                    cy.get('[data-testid="alert-alert-preview"]').should('have.css', 'background-color', URGENT_COLOUR);
                 });
         });
         it('can show a preview of a info-priority permanent alert with link', () => {
@@ -126,6 +131,7 @@ describe('Alerts Admin Form Pages', () => {
                         'title',
                         'On the live website, this button will visit http://example.com when clicked',
                     );
+                    cy.get('[data-testid="alert-alert-preview"]').should('have.css', 'background-color', INFO_COLOUR);
                 });
             // user can toggle the Preview
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
@@ -157,6 +163,11 @@ describe('Alerts Admin Form Pages', () => {
                         'have.attr',
                         'title',
                         'On the live website, this button will visit http://example.com when clicked',
+                    );
+                    cy.get('[data-testid="alert-alert-preview"]').should(
+                        'have.css',
+                        'background-color',
+                        EXTREME_COLOUR,
                     );
                 });
             // user can toggle the Preview
