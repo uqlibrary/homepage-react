@@ -45,7 +45,7 @@ describe('Alerts Admin Form Pages', () => {
             clickSVGButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
         }
         it('the "remove a date set button" works', () => {
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-add-remove-buttons-0"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-remove-date-button-0"]').should('not.exist'); // no '-' button
             clickPlusButton('0'); // add a date field
             thisManyRemoveButtonsExist(1);
@@ -65,7 +65,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Create alert');
-            cy.wait(500);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-add-remove-buttons-0"]').should('exist'));
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Add',
                 scopeName: 'Content',
@@ -74,8 +74,8 @@ describe('Alerts Admin Form Pages', () => {
         });
         it('can show a preview of the initial blank alert', () => {
             // this test is more about making sure nothing bad happens rather than checking it looks ok (and coverage)
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-add-remove-buttons-0"]').should('exist'));
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]')
                 .shadow()
@@ -226,7 +226,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('button[data-testid="admin-alerts-form-button-preview"]').click();
             cy.get('uq-alert[id="alert-preview"]').should('exist');
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-add-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('An alert has been added');
             // click 'add another alert' button in dialog
             cy.get('[data-testid="confirm-alert-add-save-succeeded"]').click();
@@ -264,19 +264,20 @@ describe('Alerts Admin Form Pages', () => {
             //      .should('have.attr', 'style', 'color: #c80000;');
 
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-add-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('An alert has been added');
             // click 'View alert list' button in dialog
             cy.get('[data-testid="cancel-alert-add-save-succeeded"]').click();
             // reloads list page (sadly it is mock data so we cant test for the presence of the new alert)
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('exist'));
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
             cy.get('[data-testid="admin-alerts-list-future-list"] tbody')
                 .children()
                 .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
             // then we click the add button and see an empty form
             cy.get('[data-testid="admin-alerts-help-display-button"]').click();
-            cy.wait(500);
+            cy.waitUntil(() => cy.get('[data-testid="standard-card-create-alert"]').should('exist'));
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts/add');
             cy.get('[data-testid="admin-alerts-form-title"]').should('have.value', '');
             cy.get('[data-testid="admin-alerts-form-body"] textarea').should('have.value', '');
@@ -353,7 +354,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Edit alert');
-            cy.wait(500);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Edit',
                 scopeName: 'Content',
@@ -361,7 +362,7 @@ describe('Alerts Admin Form Pages', () => {
             });
         });
         it('the edit form presets the correct data', () => {
-            cy.wait(100);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Example alert:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('This alert can be edited in mock.');
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-29T15:00:00');
@@ -379,7 +380,7 @@ describe('Alerts Admin Form Pages', () => {
             );
             cy.visit('http://localhost:2020/admin/alerts/edit/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.wait(100);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-title"] input').should('have.value', 'Sample alert 2:');
             cy.get('[data-testid="admin-alerts-form-body"]').contains('Has mock data.');
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('have.value', '2021-06-06T00:45:00');
@@ -393,12 +394,12 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
         });
         it('has a working Edit form', () => {
-            cy.wait(100);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-title"]').type('Updated alert');
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
-            cy.wait(500);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-edit-save-succeeded"]').should('exist'));
             cy.get('[data-testid="dialogbox-alert-edit-save-succeeded"] h2').contains('The alert has been updated');
             // can't do much checking here that it saves properly
             cy.get('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
@@ -407,14 +408,14 @@ describe('Alerts Admin Form Pages', () => {
         it('changing a system enables the save button', () => {
             cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
             cy.viewport(1300, 1000);
-            cy.wait(100);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input')
                 .should('not.be.checked')
                 .check();
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('not.be.disabled');
             cy.get('[data-testid="admin-alerts-form-button-save"').click();
-            cy.wait(500);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-edit-save-succeeded"]').should('exist'));
             cy.get('[data-testid="dialogbox-alert-edit-save-succeeded"] h2').contains('The alert has been updated');
             // can't do much checking here that it saves properly
             cy.get('button[data-testid="confirm-alert-edit-save-succeeded"]').click();
@@ -424,8 +425,8 @@ describe('Alerts Admin Form Pages', () => {
             hasAWorkingHelpButton();
         });
         it('can show a preview of a change', () => {
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.wait(100);
             cy.get('[data-testid="admin-alerts-form-title"] input')
                 .should('have.value', 'Example alert:') // force retry until re-attached
                 .clear()
@@ -461,8 +462,8 @@ describe('Alerts Admin Form Pages', () => {
                 .should('have.attr', 'style', 'padding-bottom: 1em; display: block; visibility: visible; opacity: 1;');
         });
         it('can show a preview of the original alert', () => {
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
-            cy.wait(100);
             clickButton('[data-testid="admin-alerts-form-button-preview"]', 'Preview'); // show preview
             cy.get('uq-alert[id="alert-preview"]')
                 .should('exist')
@@ -509,7 +510,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.viewport(1300, 1000);
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
-            cy.wait(500);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.checkA11y('[data-testid="StandardPage"]', {
                 reportName: 'Alerts Admin Clone',
                 scopeName: 'Content',
@@ -517,15 +518,15 @@ describe('Alerts Admin Form Pages', () => {
             });
         });
         it('can clone an alert and return to list', () => {
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
-            cy.wait(50);
             cy.get('[data-testid="admin-alerts-form-title"] input')
                 .focus()
                 .clear();
             cy.get('[data-testid="admin-alerts-form-title"] input').type('alert title 7');
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
             // click 'view alert list' button in dialog
             cy.get('[data-testid="cancel-alert-clone-save-succeeded"]').click();
@@ -534,16 +535,16 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-list-future-list"]').should('be.visible');
         });
         it('can clone an alert and then clone again', () => {
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
             cy.get('h2').should('be.visible');
             cy.get('h2').contains('Clone alert');
-            cy.wait(50);
             cy.get('[data-testid="admin-alerts-form-title"] input')
                 .focus()
                 .clear();
             cy.get('[data-testid="admin-alerts-form-title"] input').type('alert title 10');
             // click "Add new"
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
             // click 'clone again' button in dialog
             cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').click();
@@ -552,23 +553,25 @@ describe('Alerts Admin Form Pages', () => {
                 'http://localhost:2020/admin/alerts/clone/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff',
             );
             // click "Add new"
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-button-save"]').should('exist'));
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('The alert has been cloned');
         });
         it('has a working Help button on the Clone page', () => {
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-help-button"]').should('exist'));
             hasAWorkingHelpButton();
         });
 
         function clickPlusButton(buttonId) {
+            cy.waitUntil(() =>
+                cy.get('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]').should('exist'),
+            );
             clickSVGButton('[data-testid="admin-alerts-form-another-date-button-' + buttonId + '"]');
         }
         it('the "add a date set button" works', () => {
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
-            cy.wait(50);
             clickPlusButton('0');
 
             cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
@@ -583,14 +586,13 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-another-date-button-2"]').should('exist');
 
             clickButton('button[data-testid="admin-alerts-form-button-save"]', 'Create');
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('3 alerts have been cloned');
 
             clickButton('[data-testid="confirm-alert-clone-save-succeeded"]', 'Clone again');
 
             cy.get('[data-testid="admin-alerts-form-start-date-0"] input').should('exist');
             cy.get('[data-testid="admin-alerts-form-end-date-0"] input').should('exist');
-            cy.wait(50);
             clickPlusButton('0');
 
             cy.get('[data-testid="admin-alerts-form-start-date-1"] input').should('exist');
@@ -599,7 +601,7 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-another-date-button-1"]').should('exist');
 
             clickButton('button[data-testid="admin-alerts-form-button-save"]', 'Create');
-            cy.wait(50);
+            cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
             cy.get('.MuiDialog-container').contains('2 alerts have been cloned'); // we dont display 3 again when this time we only saved 2
         });
 
