@@ -299,6 +299,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         alertWebComponent.setAttribute('id', 'alert-preview');
         alertWebComponent.setAttribute('alerttitle', values.alertTitle);
         alertWebComponent.setAttribute('alerttype', !!values.urgent ? '1' : '0');
+        alertWebComponent.setAttribute('prioritytype', !!values.urgent ? 'urgent' : 'info');
         let body = (!!values.body && getBody(values)) || getBody(defaults);
         // when they havent entered all the link details yet, dont display the link in the preview at all
         body = body.replace('[]()', '');

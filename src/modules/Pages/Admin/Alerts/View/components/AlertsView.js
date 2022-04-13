@@ -53,6 +53,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         alertWebComponent.setAttribute('id', 'alert-preview');
         alertWebComponent.setAttribute('alerttitle', thisAlert.title);
         alertWebComponent.setAttribute('alerttype', !!thisAlert.urgent ? '1' : '0');
+        alertWebComponent.setAttribute('prioritytype', !!thisAlert.urgent ? 'urgent' : 'info');
         const body =
             !!thisAlert.body &&
             getBody({
