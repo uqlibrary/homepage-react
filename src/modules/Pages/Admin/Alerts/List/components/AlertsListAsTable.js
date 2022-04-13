@@ -70,10 +70,6 @@ const useStyles2 = makeStyles(
             backgroundColor: theme.palette.error.main,
             color: '#fff',
         },
-        link: {
-            backgroundColor: theme.palette.primary.main,
-            color: '#fff',
-        },
         system: {
             backgroundColor: '#666666',
             color: '#fff',
@@ -421,7 +417,6 @@ export const AlertsListAsTable = ({
                                                         data-testid={`alert-list-link-chip-${alert.id}`}
                                                         label="Link"
                                                         title="This alert has a link out"
-                                                        className={classes.link}
                                                     />
                                                 )}{' '}
                                                 {alert.body.includes('[permanent]') && (
