@@ -1,7 +1,7 @@
 import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
 import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
-import { readingListLength } from '../../support/helpers';
+import { getReadingListHeader } from '../../support/helpers';
 /*
  * this section duplcates tests in the homepage and otherpages folders and is needed to provide full coverage in the
  * admin pipeline during code coverage runs on aws :(
@@ -31,18 +31,9 @@ context('Learning Resources', () => {
             !!FREN1010ReadingList.reading_lists &&
             FREN1010ReadingList.reading_lists.length > 0 &&
             FREN1010ReadingList.reading_lists[0];
-        const semester = readingList.period || 'mock data is missing3';
-        const campus = readingList.campus || 'mock data is missing4';
-
         cy.get('h2[data-testid=learning-resource-subject-title]').contains(listTitle);
         cy.get('h2[data-testid=learning-resource-subject-title]').contains(coursecode);
-        cy.get('h2[data-testid=learning-resource-subject-title]').contains(campus);
-        cy.get('h2[data-testid=learning-resource-subject-title]').contains(semester);
-
-        cy.get('.readingLists h3').contains(
-            `${locale.myCourses.readingLists.title} (${readingListLength(FREN1010ReadingList)} items)`,
-        );
-
+        cy.get('.readingLists h3').contains(getReadingListHeader(FREN1010ReadingList));
         readingList.list.forEach(l => {
             cy.get('body').contains(l.title);
         });
