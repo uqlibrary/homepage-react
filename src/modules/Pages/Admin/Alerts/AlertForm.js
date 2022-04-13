@@ -523,6 +523,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             <Input
                                 id="alertTitle"
                                 data-testid="admin-alerts-form-title"
+                                error={!values.alertTitle}
                                 value={values.alertTitle}
                                 onChange={handleChange('alertTitle')}
                                 inputProps={{ maxLength: 100 }}
@@ -539,6 +540,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             <Input
                                 id="alertBody"
                                 data-testid="admin-alerts-form-body"
+                                error={!values.enteredbody}
                                 value={values.enteredbody}
                                 onChange={handleChange('enteredbody')}
                                 multiline
