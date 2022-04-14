@@ -99,7 +99,6 @@ export const isValidUrl = testurl => {
 };
 
 export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, defaults, alertError, history }) => {
-    console.log('defaults = ', defaults);
     const classes = useStyles();
 
     const [isOpen, showConfirmation, hideConfirmation] = useConfirmationState();
@@ -252,7 +251,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         const expandedValues = expandValues(values);
         setValues(expandedValues);
 
-        console.log('set newValues from:', values);
         const newValues = {
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
@@ -463,7 +461,6 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ),
         };
     }
-    console.log('values = ', values);
 
     return (
         <Fragment>

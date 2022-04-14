@@ -520,17 +520,6 @@ mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).r
     },
 ]);
 
-// // console.log('examSuggestion_FREN', examSuggestion_FREN);
-// console.log('mock ', routes.EXAMS_SUGGESTION_API('FREN').apiUrl, ' with:', examSuggestion_FREN);
-// // mock.onGet(routes.EXAMS_SUGGESTION_API('FREN').apiUrl).reply(withDelay([200, examSuggestion_FREN]));
-// // console.log("routes.EXAMS_SUGGESTION_API('FREN') = ", routes.EXAMS_SUGGESTION_API('FREN'));
-// // console.log("routes.EXAMS_SUGGESTION_API('FREN').apiUrl = ", routes.EXAMS_SUGGESTION_API('FREN').apiUrl);
-// mock.onGet('exams/suggestions/FREN').reply(withDelay([200, examSuggestion_FREN]));
-// // exams/suggestions/FREN
-// // mock.onPost(new RegExp(escapeRegExp(routes.UPLOAD_PUBLIC_FILES_API().apiUrl))).reply(500, {
-// //     message: ['an error message from the api that describes what the problem was'],
-// // });
-
 mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [200, exams_FREN1010];
