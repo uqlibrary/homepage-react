@@ -181,12 +181,18 @@ export default {
                         </dd>
                         <dt>Priority</dt>
                         <dd>
-                            <p>To be updated</p>
-                            <p>Changes alert colour to orange and changes icon to indicate alert is urgent.</p>
-                            <p>Default non-urgent alert is blue.</p>
                             <p>
-                                Use discretion, field for high impact alerts only (e.g. COVID lockdown, major system
-                                outage, major network outage, serious campus issue etc).
+                               Sets alert priority: Info (blue), Urgent (yellow) or Extreme (red) and 
+                               changes the alert colour and icon to indicate relative alert level.
+                            </p>
+                            <p>Default Info alert is blue and used most often. Use discretion for Urgent and Extreme.</p>
+                            <p>
+                                Use <strong>Urgent</strong> for important or high impact alerts 
+                                (e.g. where services, locations or systems are affected).
+                            </p>
+                            <p>
+                                Use <strong>Extreme</strong> for very important or very high impact issues only 
+                                (e.g. COVID lockdown, major system outage, major network outage, serious campus issue etc).
                             </p>
                         </dd>
                         <dt>Target alerts</dt>
