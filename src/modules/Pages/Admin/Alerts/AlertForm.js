@@ -255,7 +255,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
             body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
-            priority_type: (!!values && values.priorityType) || 'info',
+            priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
             dateList: values.dateList,
