@@ -36,7 +36,14 @@ export default {
                 url: 'Please enter a valid URL.',
             },
             permanent: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
-            // urgent: 'Use for urgent/important alerts. Alert colour will change to orange.',
+            priority: {
+                title:
+                    'Set to "Urgent" for urgent/important alerts or "Extreme" for Library-wide impacting extreme alerts. Alert background changes to orange or red, respectively',
+                level: {
+                    urgent: 'This is an urgent alert',
+                    extreme: 'This is an extreme alert',
+                },
+            },
             addAnotherDateSet: 'Add another alert with the same text but different start and end times',
             removeDateSet: 'Remove this date/time set from the alert series',
         },

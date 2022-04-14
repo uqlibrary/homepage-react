@@ -234,7 +234,7 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </InputLabel>
                             </Grid>
                             <Grid item sm={4} xs={12}>
-                                <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.urgent}>
+                                <InputLabel style={{ color: '#333' }} title={locale.form.tooltips.priority.title}>
                                     {locale.form.labels.priority.title}
                                     <Select
                                         data-testid="admin-alerts-view-select-priority-type"

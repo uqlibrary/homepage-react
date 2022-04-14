@@ -656,7 +656,10 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         </InputLabel>
                     </Grid>
                     <Grid item sm={4} xs={12}>
-                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.urgent}>
+                        <InputLabel
+                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            title={locale.form.tooltips.priority.title}
+                        >
                             {locale.form.labels.priority.title}
                             <Select
                                 data-testid="admin-alerts-form-select-prioritytype"

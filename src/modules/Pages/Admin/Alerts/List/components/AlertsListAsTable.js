@@ -400,7 +400,7 @@ export const AlertsListAsTable = ({
                                                     <Chip
                                                         data-testid={`alert-list-urgent-chip-${alert.id}`}
                                                         label="Urgent"
-                                                        title="This is an urgent alert"
+                                                        title={locale.form.tooltips.priority.level.urgent}
                                                         className={classes.urgent}
                                                     />
                                                 )}{' '}
@@ -408,7 +408,7 @@ export const AlertsListAsTable = ({
                                                     <Chip
                                                         data-testid={`alert-list-urgent-chip-${alert.id}`}
                                                         label="Extreme"
-                                                        title="This is an extreme alert"
+                                                        title={locale.form.tooltips.priority.level.extreme}
                                                         className={classes.extreme}
                                                     />
                                                 )}{' '}
