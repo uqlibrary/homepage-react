@@ -79,7 +79,6 @@ describe('Alert Admin List page', () => {
     });
 
     it('has a working Edit button on the List page', () => {
-        cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('be.visible');
         clickButton('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]', 'Edit');
         cy.location('href').should(
             'eq',

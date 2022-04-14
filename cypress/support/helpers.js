@@ -10,6 +10,7 @@
 import { default as locale } from '../../src/modules/Pages/LearningResources/learningResources.locale';
 
 export function clickButton(selector, expectedButtonLabel) {
+    cy.waitUntil(() => cy.get(selector).should('exist'));
     cy.get(selector).scrollIntoView();
     cy.get(`${selector} span:first-child`) // standard MUI button
         .should('exist')
@@ -62,3 +63,9 @@ export const getReadingListHeader = courseReadingList => {
         readingList.campus
     } (${readingListLength(courseReadingList)} items)`;
 };
+
+export function assertSpotlightListPageIsLoadedToTest() {
+    cy.waitUntil(() =>
+        cy.get('[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').should('exist'),
+    );
+}

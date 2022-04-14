@@ -12,7 +12,6 @@ describe('Spotlight Admin View page', () => {
     });
 
     it('can visit the clone page from the spotlight view page', () => {
-        cy.wait(50);
         clickButton('button[data-testid="admin-spotlights-form-button-save"]', 'Clone');
         cy.location('href').should(
             'eq',
@@ -33,7 +32,6 @@ describe('Spotlight Admin View page', () => {
         });
     });
     it('the cancel button on the view page returns to the list page', () => {
-        cy.wait(100);
         clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
         cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
         cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
@@ -45,7 +43,7 @@ describe('Spotlight Admin View page', () => {
         cy.get('[data-testid="admin-spotlights-help-button"]').should('exist');
     });
     it('the view page displays the correct data', () => {
-        cy.wait(100);
+        cy.waitUntil(() => cy.get('[data-testid="admin-spotlights-form-button-cancel"]').should('exist'));
         cy.get('[data-testid="admin-spotlights-form-admin-note"] textarea')
             .should('exist')
             .should('have.value', 'sample admin note 2');

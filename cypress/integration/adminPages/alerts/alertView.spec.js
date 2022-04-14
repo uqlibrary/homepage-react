@@ -131,7 +131,7 @@ describe('Alerts Admin View Page - other page tests', () => {
                 cy.get('[data-testid="alert-title"]').should('have.text', 'Face masks in the Library:');
                 cy.get('[data-testid="alert-message"]').should(
                     'have.text',
-                    'in line with Queensland Government directions, you must wear a face mask when visiting UQ libraries. These requirements will be reviewed on Tuesday 13 July 2021.',
+                    'Test Extreme alert with a longish body content',
                 );
                 cy.get('[data-testid="alert-close"]').should('not.exist');
                 cy.get('[data-testid="alert-alert-preview-action-button"]').should(

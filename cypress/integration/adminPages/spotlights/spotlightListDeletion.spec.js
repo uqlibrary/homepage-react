@@ -1,6 +1,12 @@
 import { FILTER_STORAGE_NAME, getFooterLabel } from '../../../support/spotlights';
 import { clickButton } from '../../../support/helpers';
 
+function noErrorDialogShows() {
+    // we give it a period of time and then determine that no error happened
+    cy.wait(500);
+    cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+}
+
 describe('Spotlight Admin: delete from List', () => {
     before(() => {
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
@@ -68,8 +74,7 @@ describe('Spotlight Admin: delete from List', () => {
             clickButton('[data-testid="confirm-spotlight-delete-confirm"]', 'Proceed');
             // dialog disappears
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
-            cy.wait(500);
-            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            noErrorDialogShows();
 
             // and the display has updated appropriately
             // deleted record is gone
@@ -115,8 +120,7 @@ describe('Spotlight Admin: delete from List', () => {
             clickButton('[data-testid="confirm-spotlight-delete-confirm"]', 'Proceed');
             // dialog disappears
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
-            cy.wait(500);
-            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            noErrorDialogShows();
 
             // and the display has updated appropriately
             // deleted record is gone
@@ -150,8 +154,7 @@ describe('Spotlight Admin: delete from List', () => {
             clickButton('[data-testid="confirm-spotlight-delete-confirm"]', 'Proceed');
             // dialog disappears
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
-            cy.wait(500);
-            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            noErrorDialogShows();
 
             // and the display has updated appropriately
             cy.get('[data-testid="admin-spotlights-list-current-list"]').should(
@@ -186,7 +189,7 @@ describe('Spotlight Admin: delete from List', () => {
             // dialog can be closed
             cy.get('[data-testid="confirm-spotlight-delete-error-dialog"]').should('exist');
             cy.get('[data-testid="confirm-spotlight-delete-error-dialog"]').click();
-            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            noErrorDialogShows();
         });
         it('sequential deletion of spotlights does not fail', () => {
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('contain', 'Can be deleted past #2');
@@ -204,9 +207,7 @@ describe('Spotlight Admin: delete from List', () => {
             // click the Proceed button and delete is attempted
             clickButton('[data-testid="confirm-spotlight-delete-confirm"]', 'Proceed');
             cy.get('[data-testid="dialogbox-spotlight-delete-confirm"]').should('not.exist');
-            cy.wait(500);
-            // the error dialog doesnt appear
-            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            noErrorDialogShows();
             // the row is gone
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #2');
 
@@ -231,7 +232,7 @@ describe('Spotlight Admin: delete from List', () => {
             );
             cy.get('[data-testid="admin-spotlights-list-past-list"]').should('not.contain', 'Can be deleted past #3');
             // the error dialog doesnt appear
-            cy.get('[data-testid="dialogbox-spotlight-delete-error-dialog"]').should('not.exist');
+            noErrorDialogShows();
             // nothing on the screen is checked for deletion
             cy.get('.markForDeletion input[type="checkbox"]:checked').should('not.exist');
             // checkbox in other section no longer disabled
