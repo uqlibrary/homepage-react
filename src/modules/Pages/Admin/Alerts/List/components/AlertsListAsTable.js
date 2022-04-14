@@ -63,11 +63,11 @@ const useStyles2 = makeStyles(
             },
         },
         urgent: {
-            backgroundColor: theme.palette.warning.main,
-            color: '#fff',
+            backgroundColor: theme.palette.warning.light,
+            color: '#000',
         },
-        link: {
-            backgroundColor: theme.palette.primary.main,
+        extreme: {
+            backgroundColor: theme.palette.error.main,
             color: '#fff',
         },
         system: {
@@ -396,20 +396,27 @@ export const AlertsListAsTable = ({
                                             >{`${alert.title}`}</h4>{' '}
                                             {`${alert.message.replace('[permanent]', '')}`}
                                             <div className={classes.chipblock}>
+                                                {!!alert && alert.priority_type === 'urgent' && (
+                                                    <Chip
+                                                        data-testid={`alert-list-urgent-chip-${alert.id}`}
+                                                        label="Urgent"
+                                                        title={locale.form.tooltips.priority.level.urgent}
+                                                        className={classes.urgent}
+                                                    />
+                                                )}{' '}
+                                                {!!alert && alert.priority_type === 'extreme' && (
+                                                    <Chip
+                                                        data-testid={`alert-list-urgent-chip-${alert.id}`}
+                                                        label="Extreme"
+                                                        title={locale.form.tooltips.priority.level.extreme}
+                                                        className={classes.extreme}
+                                                    />
+                                                )}{' '}
                                                 {alert.body.includes('](') && (
                                                     <Chip
                                                         data-testid={`alert-list-link-chip-${alert.id}`}
                                                         label="Link"
                                                         title="This alert has a link out"
-                                                        className={classes.link}
-                                                    />
-                                                )}{' '}
-                                                {!!alert.urgent && (
-                                                    <Chip
-                                                        data-testid={`alert-list-urgent-chip-${alert.id}`}
-                                                        label="Urgent"
-                                                        title="This is an urgent alert"
-                                                        className={classes.urgent}
                                                     />
                                                 )}{' '}
                                                 {alert.body.includes('[permanent]') && (

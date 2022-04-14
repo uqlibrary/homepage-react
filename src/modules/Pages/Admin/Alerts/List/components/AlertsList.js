@@ -28,6 +28,7 @@ const useStyles = makeStyles(
             },
             '& p': {
                 backgroundColor: theme.palette.warning.light,
+                color: '#000',
                 fontWeight: 'bold',
                 padding: 6,
                 textAlign: 'center',

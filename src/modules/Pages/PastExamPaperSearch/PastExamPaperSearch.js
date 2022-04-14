@@ -53,9 +53,6 @@ export const PastExamPaperSearch = ({
     examSuggestionListLoading,
     history,
 }) => {
-    console.log('examSuggestionList = ', examSuggestionList);
-    console.log('examSuggestionListLoading = ', examSuggestionListLoading);
-    console.log('examSuggestionListError = ', examSuggestionListError);
     const classes = useStyles();
     useTitle('Search for a past exam paper - Library - The University of Queensland');
     const filter = createFilterOptions();
@@ -96,7 +93,6 @@ export const PastExamPaperSearch = ({
 
     const handleTypedKeywordChange = React.useCallback(
         (event, typedText) => {
-            // console.log('*** handleTypedKeywordChange typedText = ', typedText);
             // if we have a new search term, wipe the unshifted "View all exam papers for" entry
             if (!typedText.startsWith(searchTerm)) {
                 actions.clearExamSuggestions();
@@ -105,18 +101,14 @@ export const PastExamPaperSearch = ({
             setSearchTerm(typedText);
 
             if (typedText.length <= 1) {
-                // console.log('less: typedText = ', typedText, typedText.length);
                 actions.clearExamSuggestions();
                 setOpen(true);
                 setNoOptionsText(noOptionsTextTooShort);
             } else if (!isRepeatingString(typedText) && typedText.length <= MAX_LENGTH_COURSE_CODE) {
                 setNoOptionsText(null);
                 setOpen(false);
-                // console.log('in: ', typedText, typedText.length, 'examSuggestionList = ', examSuggestionList);
                 // ignore the space if they type eg "FREN 1101"
                 actions.loadExamSuggestions(typedText.replace(' ', ''));
-                // } else {
-                //     console.log('out: ', typedText, typedText.length, 'examSuggestionList = ', examSuggestionList);
             }
         },
         [actions, searchTerm],
@@ -139,7 +131,6 @@ export const PastExamPaperSearch = ({
     );
 
     const addKeywordAsOption = (options, params) => {
-        console.log('options = ', options, '; params = ', params);
         const filtered = filter(options, params);
 
         const truncatedSearchTerm = params.inputValue.toUpperCase().substring(0, MAX_LENGTH_COURSE_CODE);

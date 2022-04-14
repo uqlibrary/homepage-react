@@ -11,6 +11,8 @@ import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 
@@ -61,6 +63,9 @@ const useStyles = makeStyles(
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#ececec',
             },
+        },
+        selectPriorityType: {
+            minWidth: '6em',
         },
     }),
     { withTheme: true },
@@ -177,7 +182,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             ['enteredbody']: '',
             ['startDate']: defaults.startDateDefault,
             ['endDate']: defaults.endDateDefault,
-            ['urgent']: false,
+            ['priorityType']: 'info',
             ['permanentAlert']: false,
             ['linkRequired']: false,
             ['linkTitle']: '',
@@ -250,7 +255,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
             id: defaults.type !== 'add' ? values.id : null,
             title: values.alertTitle,
             body: expandedValues.body, // unsure why this isnt set into `values` by the Set call above
-            urgent: !!values.urgent ? '1' : '0',
+            priority_type: (!!values && values.priorityType) || /* istanbul ignore next */ 'info',
             start: formatDate(values.startDate),
             end: formatDate(values.endDate),
             dateList: values.dateList,
@@ -298,8 +303,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
         }
         alertWebComponent.setAttribute('id', 'alert-preview');
         alertWebComponent.setAttribute('alerttitle', values.alertTitle);
-        alertWebComponent.setAttribute('alerttype', !!values.urgent ? '1' : '0');
-        alertWebComponent.setAttribute('prioritytype', !!values.urgent ? 'urgent' : 'info');
+        alertWebComponent.setAttribute('prioritytype', values.priorityType);
         let body = (!!values.body && getBody(values)) || getBody(defaults);
         // when they havent entered all the link details yet, dont display the link in the preview at all
         body = body.replace('[]()', '');
@@ -516,6 +520,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             <Input
                                 id="alertTitle"
                                 data-testid="admin-alerts-form-title"
+                                error={!values.alertTitle}
                                 value={values.alertTitle}
                                 onChange={handleChange('alertTitle')}
                                 inputProps={{ maxLength: 100 }}
@@ -532,6 +537,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                             <Input
                                 id="alertBody"
                                 data-testid="admin-alerts-form-body"
+                                error={!values.enteredbody}
                                 value={values.enteredbody}
                                 onChange={handleChange('enteredbody')}
                                 multiline
@@ -647,16 +653,31 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         </InputLabel>
                     </Grid>
                     <Grid item sm={4} xs={12}>
-                        <InputLabel style={{ color: 'rgba(0, 0, 0, 0.87)' }} title={locale.form.tooltips.urgent}>
-                            <Checkbox
-                                checked={values.urgent}
-                                data-testid="admin-alerts-form-checkbox-urgent"
-                                onChange={handleChange('urgent')}
-                                name="urgent"
-                                title={locale.form.urgentTooltip}
-                                className={classes.checkbox}
-                            />
-                            {locale.form.labels.urgent}
+                        <InputLabel
+                            style={{ color: 'rgba(0, 0, 0, 0.87)' }}
+                            title={locale.form.tooltips.priority.title}
+                        >
+                            {locale.form.labels.priority.title}
+                            <Select
+                                data-testid="admin-alerts-form-select-prioritytype"
+                                defaultValue={values.priorityType}
+                                value={values.priorityType}
+                                onChange={handleChange('priorityType')}
+                                classes={{ root: classes.selectPriorityType }}
+                                inputProps={{
+                                    'data-testid': 'admin-alerts-form-prioritytype-input',
+                                }}
+                            >
+                                <MenuItem data-testid="admin-alerts-form-option-info" value={'info'}>
+                                    {locale.form.labels.priority.level.info}
+                                </MenuItem>
+                                <MenuItem data-testid="admin-alerts-form-option-urgent" value={'urgent'}>
+                                    {locale.form.labels.priority.level.urgent}
+                                </MenuItem>
+                                <MenuItem data-testid="admin-alerts-form-option-extreme" value={'extreme'}>
+                                    {locale.form.labels.priority.level.extreme}
+                                </MenuItem>
+                            </Select>
                         </InputLabel>
                     </Grid>
                 </Grid>

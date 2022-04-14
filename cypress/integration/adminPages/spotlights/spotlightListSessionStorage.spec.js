@@ -1,5 +1,5 @@
 import { FILTER_STORAGE_NAME, getFooterLabel, totalCountPastRecords } from '../../../support/spotlights';
-import { clickButton } from '../../../support/helpers';
+import { assertSpotlightListPageIsLoadedToTest, clickButton } from '../../../support/helpers';
 
 const numRowsHiddenAsNoDatainfo = 1;
 
@@ -15,7 +15,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
     it('the filter text is maintained when the user visits a View page', () => {
         // the list page loads
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
-        cy.wait(50);
+        assertSpotlightListPageIsLoadedToTest();
         // initally, all 5 records show
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
@@ -68,7 +68,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
     it('the filter text is maintained when the user visits a Clone page', () => {
         // the list page loads
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
-        cy.wait(50);
+        assertSpotlightListPageIsLoadedToTest();
         // initally, all 5 records show
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
@@ -94,6 +94,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
             'eq',
             'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',
         );
+        cy.waitUntil(() => cy.get('[data-testid="admin-spotlights-form-button-cancel"]').should('exist'));
         cy.get('[data-testid="admin-spotlights-form-button-cancel"]')
             .should('exist')
             .click();
