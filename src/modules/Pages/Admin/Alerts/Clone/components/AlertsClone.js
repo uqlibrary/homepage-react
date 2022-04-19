@@ -66,7 +66,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         alertTitle: alert?.title || '',
         enteredbody: message || '',
         linkRequired: linkRegex?.length === 3,
-        urgent: !!alert && !!alert.urgent,
+        priorityType: (!!alert && alert.priority_type) || 'info',
         permanentAlert: isPermanent || false,
         linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
         linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',

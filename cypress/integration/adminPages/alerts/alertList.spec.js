@@ -8,8 +8,8 @@ describe('Alert Admin List page', () => {
         cy.viewport(1300, 1000);
     });
     it('displays a list of alerts to the authorised user', () => {
+        cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-current-list"]').should('exist'));
         cy.get('[data-testid="admin-alerts-list-current-list"]').should('be.visible');
-        cy.wait(100);
         cy.get('[data-testid="admin-alerts-list-current-list"] tbody')
             .children()
             .should('have.length', 1 + numRowsHiddenAsNoDatainfo);
@@ -31,7 +31,7 @@ describe('Alert Admin List page', () => {
             .should('exist')
             .contains('System: Home page');
 
-        cy.wait(500);
+        cy.waitUntil(() => cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('exist'));
         cy.get('[data-testid="admin-alerts-list-future-list"] tbody').should('be.visible');
         cy.get('[data-testid="headerRow-count-scheduled"]').contains('5 alerts');
         cy.get('[data-testid="admin-alerts-list-future-list"] tbody').scrollIntoView();
@@ -59,7 +59,9 @@ describe('Alert Admin List page', () => {
         cy.viewport(1300, 1000);
         cy.get('h2').should('be.visible');
         cy.get('h2').contains('All alerts');
-        cy.wait(500);
+        cy.waitUntil(() =>
+            cy.get('[data-testid="alert-list-row-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('exist'),
+        );
         cy.checkA11y('[data-testid="StandardPage"]', {
             reportName: 'Alerts Admin',
             scopeName: 'Content',
@@ -77,7 +79,6 @@ describe('Alert Admin List page', () => {
     });
 
     it('has a working Edit button on the List page', () => {
-        cy.get('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]').should('be.visible');
         clickButton('button[data-testid="alert-list-item-edit-1db618c0-d897-11eb-a27e-df4e46db7245"]', 'Edit');
         cy.location('href').should(
             'eq',

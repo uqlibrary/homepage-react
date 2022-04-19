@@ -57,7 +57,7 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
             alertTitle: alert?.title || '',
             enteredbody: message,
             linkRequired: linkRequired,
-            urgent: !!alert && !!alert.urgent,
+            priorityType: (!!alert && alert.priority_type) || 'info',
             permanentAlert: isPermanent || false,
             linkTitle: linkTitle,
             linkUrl: linkUrl,

@@ -16,7 +16,14 @@ export default {
                 url: 'Link URL *',
             },
             permanent: 'Permanent',
-            urgent: 'Urgent',
+            priority: {
+                title: 'Priority: ',
+                level: {
+                    info: 'Info (blue)',
+                    urgent: 'Urgent (orange)',
+                    extreme: 'Extreme (red)',
+                },
+            },
             systems:
                 'Use these checkboxes to target your alert to selected systems only. Leave checkboxes blank to show alert on all systems.',
         },
@@ -29,7 +36,14 @@ export default {
                 url: 'Please enter a valid URL.',
             },
             permanent: 'Permanent alerts cannot be dismissed by the client. The close button is removed.',
-            urgent: 'Use for urgent/important alerts. Alert colour will change to orange.',
+            priority: {
+                title:
+                    'Set to "Urgent" for urgent/important alerts or "Extreme" for Library-wide impacting extreme alerts. Alert background changes to orange or red, respectively',
+                level: {
+                    urgent: 'This is an urgent alert',
+                    extreme: 'This is an extreme alert',
+                },
+            },
             addAnotherDateSet: 'Add another alert with the same text but different start and end times',
             removeDateSet: 'Remove this date/time set from the alert series',
         },
@@ -165,13 +179,20 @@ export default {
                                 be set in their browser for each alert closed.
                             </p>
                         </dd>
-                        <dt>Urgent</dt>
+                        <dt>Priority</dt>
                         <dd>
-                            <p>Changes alert colour to orange and changes icon to indicate alert is urgent.</p>
-                            <p>Default non-urgent alert is blue.</p>
                             <p>
-                                Use discretion, field for high impact alerts only (e.g. COVID lockdown, major system
-                                outage, major network outage, serious campus issue etc).
+                               Sets alert priority: Info (blue), Urgent (yellow) or Extreme (red) and 
+                               changes the alert colour and icon to indicate relative alert level.
+                            </p>
+                            <p>Default Info alert is blue and used most often. Use discretion for Urgent and Extreme.</p>
+                            <p>
+                                Use <strong>Urgent</strong> for important or high impact alerts 
+                                (e.g. where services, locations or systems are affected).
+                            </p>
+                            <p>
+                                Use <strong>Extreme</strong> for very important or very high impact issues only 
+                                (e.g. COVID lockdown, major system outage, major network outage, serious campus issue etc).
                             </p>
                         </dd>
                         <dt>Target alerts</dt>

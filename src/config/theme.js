@@ -38,7 +38,7 @@ export const mui1theme = createMuiTheme({
             main: '#FFFFFF',
         },
         warning: {
-            light: '#ff9a57',
+            light: '#fbb800',
             main: '#bf5000',
             dark: '#542400',
         },
@@ -49,7 +49,7 @@ export const mui1theme = createMuiTheme({
         },
         error: {
             light: '#ff0000',
-            main: '#c80000',
+            main: '#951126',
             dark: '#790000',
         },
     }),

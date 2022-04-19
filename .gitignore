@@ -14,6 +14,7 @@
 .idea/prettier.xml
 .idea/sonarlint/*
 .idea/snyk.project.settings.xml
+.idea/misc.xml
 node_modules
 dist
 npm-debug.log*

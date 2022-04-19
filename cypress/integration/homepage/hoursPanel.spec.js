@@ -7,7 +7,7 @@ context('Hours Accessibility', () => {
         cy.get('[data-testid="hours-item-0"]').contains('Arch Music');
 
         cy.log('Hours list');
-        cy.wait(500);
+        cy.waitUntil(() => cy.get('div[data-testid="library-hours-panel"]').should('exist'));
         cy.checkA11y('div[data-testid="library-hours-panel"]', {
             reportName: 'Hours',
             scopeName: 'As loaded',

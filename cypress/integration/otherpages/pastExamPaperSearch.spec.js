@@ -156,7 +156,7 @@ describe('Past Exam Papers Pages', () => {
         });
         it('a search with no results shows a message', () => {
             cy.visit('/exams/course/empt');
-            cy.get('div[id="content-container"]').contains('Past Exam Papers by Subject');
+            cy.get('div[id="content-container"]').contains('Past Exam Papers from 2017 to 2022 for "EMPT"');
             cy.get('div[data-testid="past-exam-paper-missing"]').contains(
                 'We have not found any past exams for this course (EMPT) because either',
             );

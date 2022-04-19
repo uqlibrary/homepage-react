@@ -7,25 +7,27 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Services for students',
+        title: 'Assignment help',
         content: (
             <div>
-                <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
+                <p>Working on an assignment? Check out these helpful resources:</p>
                 <ul>
-                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides</li>
-                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options.</li>
+                    <li><a href="https://web.library.uq.edu.au/research-tools-techniques/digital-essentials/write-cite-submit">Write, cite and submit</a> &ndash; advice on planning, referencing and submitting your assignment</li>
+                    <li><a href="https://guides.library.uq.edu.au/referencing">Referencing style guides</a> &ndash; get your references right with our style guides</li>
+                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> &ndash; find articles and specialised resources for your subject.</li>
                 </ul>
             </div>
         ),
     },
     loggedin: {
-        title: 'Services for students',
+        title: 'Assignment help',
         content: (
             <div>
-                <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
+                <p>Working on an assignment? Check out these helpful resources:</p>
                 <ul>
-                    <li>Access your course resources, and assignment and study tips such as our Assignment Planner and referencing guides</li>
-                    <li>Build new skills using our Digital Essentials modules and discover in person and online (LinkedIn Learning) training options.</li>
+                    <li><a href="https://web.library.uq.edu.au/research-tools-techniques/digital-essentials/write-cite-submit">Write, cite and submit</a> &ndash; advice on planning, referencing and submitting your assignment</li>
+                    <li><a href="https://guides.library.uq.edu.au/referencing">Referencing style guides</a> &ndash; get your references right with our style guides</li>
+                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> &ndash; find articles and specialised resources for your subject.</li>
                 </ul>
             </div>
         ),

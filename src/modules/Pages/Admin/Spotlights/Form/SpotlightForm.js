@@ -157,22 +157,6 @@ export const SpotlightForm = ({
             startDate !== '' &&
             !!moment(startDate).isValid() &&
             (formattedstartdate >= formattedToday || formattedstartdate >= formatteddefaultstartdate);
-        // console.log('isValidStartDate: startDate = ', startDate);
-        // console.log('isValidStartDate: defaults.startDateDefault = ', defaults.startDateDefault);
-        // console.log('isValidStartDate: !!moment(startDate).isValid() = ', !!moment(startDate).isValid());
-        // console.log("isValidStartDate: startDate !== '' = ", startDate !== '');
-        // // console.log('isValidStartDate: moment(startDate) >= moment() ', moment(startDate) >= moment());
-        // console.log(
-        //     'isValidStartDate: formattedstartdate >= formattedToday = ', formattedstartdate >= formattedToday
-        // );
-        // console.log(
-        //     'isValidStartDate: formattedstartdate >= formatteddefaultstartdate = ',
-        //     formattedstartdate >= formatteddefaultstartdate,
-        // );
-        // console.log('isValidStartDate: formattedstartdate = ', formattedstartdate);
-        // console.log('isValidStartDate: formattedToday = ', formattedToday);
-        // console.log('isValidStartDate: formatteddefaultstartdate = ', formatteddefaultstartdate);
-        // console.log('isValidStartDate: is valid', result);
         return result;
     }
 
@@ -183,48 +167,23 @@ export const SpotlightForm = ({
     function isInvalidEndDate(endDate, startDate) {
         const startDateReformatted = startDate !== '' && moment(startDate).format('YYYY-MM-DDTHH:mm');
         const endDateReformatted = endDate !== '' && moment(endDate).format('YYYY-MM-DDTHH:mm');
-        // console.log('isInvalidEndDate end <= start: ', endDateReformatted, ' <= ', startDateReformatted);
-        // console.log(endDateReformatted <= startDateReformatted);
-        // console.log("isInvalidEndDate startDate !== '': ", startDate !== '');
-        // console.log('isInvalidEndDate together: ', endDate < startDateReformatted && startDate !== '');
-        // console.log('isInvalidEndDate !moment(endDate).isValid() = ', !moment(endDate).isValid());
         return (startDate !== '' && endDateReformatted <= startDateReformatted) || !moment(endDate).isValid();
     }
 
     const validateValues = currentValues => {
-        // console.log('validateValues: currentValues = ', currentValues);
         const isValid =
             spotlightStatus !== 'loading' &&
             !isInvalidStartDate(currentValues.start) &&
             !isInvalidEndDate(currentValues.end, currentValues.start) &&
             !!isValidLinkAria(currentValues.title) &&
             !!isValidImgAlt(currentValues.img_alt) &&
-            // currentValues.img_alt.length > 0 && // set to title during save if blank
-            // !!currentValues.localfilename &&
-            // currentValues.localfilename.length > 0 &&
             (defaults.type === 'edit' ||
                 defaults.type === 'clone' ||
                 (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
-            // currentValues.fileDetails.length > 0 &&
             !!currentValues.url &&
             currentValues.url.length > 0 &&
             isValidImageUrl(currentValues.url) &&
             !!currentValues.hasImage;
-
-        // console.log('validateValues: isValid = ', isValid, currentValues);
-        // console.log('validateValues: isValidStartDate = ', !isInvalidStartDate(null, currentValues.start));
-        // console.log('validateValues: isValidEndDate = ', !isInvalidEndDate(currentValues.end, currentValues.start));
-        // console.log('validateValues: isValidLinkAria = ', !!isValidLinkAria(currentValues.title));
-        // console.log('validateValues: isValidImgAlt = ', !!isValidImgAlt(currentValues.img_alt));
-        // console.log(
-        //     'validateValues: uploadedFile = ',
-        //     defaults.type === 'edit' || (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0),
-        // );
-        // console.log(
-        //     'validateValues: isValidImageUrl(', currentValues.url, ') = ', isValidImageUrl(currentValues.url)
-        // );
-        // console.log('validateValues: currentValues.img_alt = ', currentValues.img_alt);
-        // console.log('validateValues: currentValues = ', currentValues);
 
         return isValid;
     };
