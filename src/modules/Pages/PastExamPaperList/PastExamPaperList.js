@@ -218,15 +218,12 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     })}
                                 </div>
                             ) : (
-                                <TableContainer
-                                    className={classes.tableContainer}
-                                    component={Paper}
-                                    data-testid="exampaper-results-table"
-                                >
+                                <TableContainer className={classes.tableContainer} component={Paper}>
                                     <Table
                                         stickyHeader
                                         aria-label={listTitle}
                                         aria-describedby="examResultsDescription"
+                                        data-testid="exampaper-results-table"
                                     >
                                         <TableHead>
                                             <TableRow data-testid="exampaper-results-table-header">
