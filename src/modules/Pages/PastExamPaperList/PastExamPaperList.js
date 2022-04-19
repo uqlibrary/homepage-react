@@ -218,7 +218,11 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                     })}
                                 </div>
                             ) : (
-                                <TableContainer className={classes.tableContainer} component={Paper}>
+                                <TableContainer
+                                    className={classes.tableContainer}
+                                    component={Paper}
+                                    data-testid="exampaper-results-table"
+                                >
                                     <Table
                                         stickyHeader
                                         aria-label={listTitle}
@@ -255,11 +259,15 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                         <tbody data-testid="exampaper-results-table-body">
                                             {examSearchList.papers.map((course, cc) => {
                                                 return (
-                                                    <TableRow key={`exampaper-results-row-${cc}`}>
+                                                    <TableRow
+                                                        data-testid={`exampaper-results-row-${cc}`}
+                                                        key={`exampaper-results-row-${cc}`}
+                                                    >
                                                         <TableCell
                                                             component="th"
                                                             scope="row"
                                                             className={classes.stickyFirstCell}
+                                                            data-testid={`exampaper-results-label-${cc}`}
                                                         >
                                                             {getCourseCode(course)}
                                                         </TableCell>
@@ -282,6 +290,7 @@ export const PastExamPaperList = ({ actions, examSearchListError, examSearchList
                                                                             >
                                                                                 {!!paper.paperUrl ? (
                                                                                     <a
+                                                                                        data-testid={`exampaper-results-bodycell-link-${cc}-${ss}-${pp}`}
                                                                                         href={paper.paperUrl}
                                                                                         target="_blank"
                                                                                     >
