@@ -3,44 +3,6 @@ describe('Computer availability', () => {
         cy.visit('/');
         cy.viewport(1300, 1000);
     });
-    context('Minor functionality works', () => {
-        it('the display label has the correct number of computers free', () => {
-            cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
-            cy.get('button[data-testid="computers-library-button-1"]').click();
-
-            cy.get('[data-testid="computers-library-1-level-4-button"]').contains('Level 4');
-            cy.get('[data-testid="computers-library-1-level-4-button"]')
-                .parent()
-                .parent()
-                .find('div:nth-child(3)')
-                .contains('72 free of 110');
-        });
-        it('close options for map and levels works', () => {
-            cy.get('button[data-testid="computers-library-button-1"]')
-                .should('exist')
-                .contains('Biological Sciences Library')
-                .click();
-            // levels list opens
-            cy.get('[data-testid="computers-library-1-level-4-button"]')
-                .should('exist')
-                .contains('Level 4')
-                .click();
-            // map loads
-            cy.get('h3')
-                .should('exist')
-                .contains('Biological Sciences Library');
-            // close map
-            cy.get('[data-testid="computers-library-dialog-close-button"]').click();
-            cy.get('h3').should('not.exist');
-            // level list is open, click to close
-            cy.get('[data-testid="computers-library-1-level-4-button"]').should('exist');
-            cy.get('button[data-testid="computers-library-button-1"]').click();
-            cy.get('[data-testid="computers-library-1-level-4-button"]').should('not.exist');
-            cy.get('button[data-testid="computers-library-button-1"]')
-                .should('exist')
-                .contains('Biological Sciences Library');
-        });
-    });
     context('Computer availability accessibility', () => {
         it('Computer availability is accessible', () => {
             cy.injectAxe();
@@ -95,6 +57,44 @@ describe('Computer availability', () => {
                 .then(ariaLabel => {
                     expect(ariaLabel).to.contains('Biological Sciences Library level 4. 72 free of 110 computers');
                 });
+        });
+    });
+    context('Minor functionality works', () => {
+        it('the display label has the correct number of computers free', () => {
+            cy.get('button[data-testid="computers-library-button-1"]').contains('Biological Sciences Library');
+            cy.get('button[data-testid="computers-library-button-1"]').click();
+
+            cy.get('[data-testid="computers-library-1-level-4-button"]').contains('Level 4');
+            cy.get('[data-testid="computers-library-1-level-4-button"]')
+                .parent()
+                .parent()
+                .find('div:nth-child(3)')
+                .contains('72 free of 110');
+        });
+        it('close options for map and levels works', () => {
+            cy.get('button[data-testid="computers-library-button-1"]')
+                .should('exist')
+                .contains('Biological Sciences Library')
+                .click();
+            // levels list opens
+            cy.get('[data-testid="computers-library-1-level-4-button"]')
+                .should('exist')
+                .contains('Level 4')
+                .click();
+            // map loads
+            cy.get('h3')
+                .should('exist')
+                .contains('Biological Sciences Library');
+            // close map
+            cy.get('[data-testid="computers-library-dialog-close-button"]').click();
+            cy.get('h3').should('not.exist');
+            // level list is open, click to close
+            cy.get('[data-testid="computers-library-1-level-4-button"]').should('exist');
+            cy.get('button[data-testid="computers-library-button-1"]').click();
+            cy.get('[data-testid="computers-library-1-level-4-button"]').should('not.exist');
+            cy.get('button[data-testid="computers-library-button-1"]')
+                .should('exist')
+                .contains('Biological Sciences Library');
         });
     });
 });

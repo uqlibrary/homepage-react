@@ -5,8 +5,8 @@ export default {
     pageTitle: 'Book an exam booth in the Library',
     intro: (
         <p>
-            Please use this form to find an available booth in which to sit your online invigilated (ProctorU) exam in
-            the Library.
+            Please use this form to find an available Library booth in which to sit your online invigilated exam. e.g.
+            ProctorU, Zoom or Inspera Exam Portal invigilated exams.
         </p>
     ),
     locationDecider: {
@@ -34,9 +34,9 @@ export default {
     },
     displayDecider: {
         heading: 'Booking options',
-        label: 'Are you booking this booth to sit a scheduled ProctorU exam?',
-        yesText: 'Yes, I am sitting a ProctorU exam',
-        noText: 'No, I am NOT sitting a ProctorU exam',
+        label: 'Are you booking this booth to sit a scheduled online invigilated exam?',
+        yesText: 'Yes, I am sitting an online invigilated exam',
+        noText: 'No, I am NOT sitting an online invigilated exam',
     },
     noBookingMessage: {
         title: 'Find or book a quiet space',
@@ -63,7 +63,7 @@ export default {
     },
     startTimeHours: {
         aria: 'Select the nearest hour',
-        label: 'What is your registered ProctorU appointment time? Select the nearest possible time.',
+        label: 'What is your registered exam appointment time? Select the nearest possible time.',
     },
     startTimeMinutes: {
         aria: 'Select the nearest minute value',
