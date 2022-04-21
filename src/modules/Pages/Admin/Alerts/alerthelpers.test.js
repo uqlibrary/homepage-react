@@ -1,4 +1,4 @@
-import { isValidUrl } from './AlertForm';
+import { isValidUrl } from './Form/AlertForm';
 
 describe('alerts', () => {
     it('should correctly validate an url', () => {
