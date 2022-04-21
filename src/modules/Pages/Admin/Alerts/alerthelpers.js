@@ -103,6 +103,10 @@ export const systemList = [
         slug: 'primo',
         title: 'Primo',
     },
+    {
+        slug: 'espace',
+        title: 'eSpace',
+    },
 ];
 
 export function scrollToTopOfPage() {
