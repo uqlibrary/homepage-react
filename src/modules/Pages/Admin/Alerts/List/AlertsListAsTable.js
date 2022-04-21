@@ -23,9 +23,9 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { TablePaginationActions } from './TablePaginationActions';
 import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
 import { useConfirmationState } from 'hooks';
-import { default as locale } from '../../alertsadmin.locale';
+import { default as locale } from '../alertsadmin.locale';
 import AlertSplitButton from './AlertSplitButton';
-import { scrollToTopOfPage, systemList } from '../../alerthelpers';
+import { scrollToTopOfPage, systemList } from '../alerthelpers';
 
 const moment = require('moment');
 

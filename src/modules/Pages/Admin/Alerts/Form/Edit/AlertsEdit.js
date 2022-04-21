@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { useParams } from 'react-router';
-
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
@@ -10,17 +9,17 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
-import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
-import { getTimeEndOfDayFormatted, getTimeNowFormatted } from '../../alerthelpers';
+import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
+import { getTimeNowFormatted, extractFieldsFromBody, formatDate } from '../../alerthelpers';
 import { default as locale } from '../../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
-        transition: 'visibility 0s, opacity 10s ease-out',
+        transition: 'visibility 0s, opacity 0.5s linear',
     },
 }));
 
-export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
+export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStatus, history }) => {
     const classes = useStyles();
     const { alertid } = useParams();
 
@@ -40,40 +39,35 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         );
     }
 
-    // Strip markdown from the body
-    const linkRegex = !!alert?.body && alert.body.match(/\[([^\]]+)\]\(([^)]+)\)/);
-    let message = alert?.body || '';
-    if (!!linkRegex && linkRegex.length === 3) {
-        message = alert.body.replace(linkRegex[0], '').replace('  ', ' ');
-        message = message.replace(linkRegex[0], '').replace('  ', ' ');
+    const { isPermanent, linkRequired, linkTitle, linkUrl, message } = extractFieldsFromBody(alert?.body);
+
+    function setDefaults() {
+        const startDateDefault = alert?.start ? formatDate(alert.start, 'YYYY-MM-DDTHH:mm:ss') : '';
+        const endDateDefault = alert?.end ? formatDate(alert.end, 'YYYY-MM-DDTHH:mm:ss') : '';
+        return {
+            id: alert?.id || '',
+            dateList: [
+                {
+                    startDate: startDateDefault,
+                    endDate: endDateDefault,
+                },
+            ],
+            startDateDefault: startDateDefault,
+            endDateDefault: endDateDefault,
+            alertTitle: alert?.title || '',
+            enteredbody: message,
+            linkRequired: linkRequired,
+            priorityType: (!!alert && alert.priority_type) || 'info',
+            permanentAlert: isPermanent || false,
+            linkTitle: linkTitle,
+            linkUrl: linkUrl,
+            type: 'edit',
+            minimumDate: getTimeNowFormatted(),
+            systems: alert?.systems || [],
+        };
     }
 
-    const isPermanent = message.includes('[permanent]');
-    if (!!isPermanent) {
-        message = message.replace('[permanent]', '');
-    }
-
-    const defaults = {
-        id: alert?.id || '',
-        dateList: [
-            {
-                startDate: getTimeNowFormatted(),
-                endDate: getTimeEndOfDayFormatted(),
-            },
-        ],
-        startDateDefault: getTimeNowFormatted(),
-        endDateDefault: getTimeEndOfDayFormatted(),
-        alertTitle: alert?.title || '',
-        enteredbody: message || '',
-        linkRequired: linkRegex?.length === 3,
-        priorityType: (!!alert && alert.priority_type) || 'info',
-        permanentAlert: isPermanent || false,
-        linkTitle: !!linkRegex && linkRegex.length === 3 ? linkRegex[1] : '',
-        linkUrl: !!linkRegex && linkRegex.length === 3 ? linkRegex[2] : '',
-        type: 'clone',
-        minimumDate: getTimeNowFormatted(),
-        systems: alert?.systems || [],
-    };
+    const defaults = setDefaults();
 
     return (
         <Fragment>
@@ -82,8 +76,13 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
             </Grid>
             <StandardPage title="Alerts Management">
                 <section aria-live="assertive">
-                    <AlertsUtilityArea actions={actions} helpContent={locale.form.help} history={history} />
-                    <StandardCard title="Clone alert">
+                    <AlertsUtilityArea
+                        actions={actions}
+                        helpContent={locale.form.help}
+                        history={history}
+                        // showCloneButton
+                    />
+                    <StandardCard title="Edit alert">
                         <AlertForm
                             actions={actions}
                             alertLoading={alertLoading}
@@ -100,7 +99,7 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
     );
 };
 
-AlertsClone.propTypes = {
+AlertsEdit.propTypes = {
     actions: PropTypes.any,
     alert: PropTypes.any,
     alertError: PropTypes.any,
@@ -109,4 +108,4 @@ AlertsClone.propTypes = {
     history: PropTypes.object,
 };
 
-export default AlertsClone;
+export default AlertsEdit;

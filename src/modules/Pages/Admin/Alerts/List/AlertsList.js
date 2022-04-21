@@ -11,7 +11,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import AlertsListAsTable from './AlertsListAsTable';
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
-import { default as locale } from '../../alertsadmin.locale';
+import { default as locale } from '../alertsadmin.locale';
 
 const useStyles = makeStyles(
     theme => ({
