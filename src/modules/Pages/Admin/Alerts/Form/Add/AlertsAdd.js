@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 
 import { AlertsUtilityArea } from 'modules/Pages/Admin/Alerts/AlertsUtilityArea';
-import { AlertForm } from 'modules/Pages/Admin/Alerts/AlertForm';
+import { AlertForm } from 'modules/Pages/Admin/Alerts/Form/AlertForm';
 import { getTimeNowFormatted, getTimeEndOfDayFormatted } from '../../alerthelpers';
 
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';

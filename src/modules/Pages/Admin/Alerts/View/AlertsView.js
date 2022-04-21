@@ -26,8 +26,8 @@ import {
     manuallyMakeWebComponentBePermanent,
     scrollToTopOfPage,
     systemList,
-} from '../../alerthelpers';
-import { default as locale } from '../../alertsadmin.locale';
+} from '../alerthelpers';
+import { default as locale } from '../alertsadmin.locale';
 
 const useStyles = makeStyles(() => ({
     previewWrapper: {
