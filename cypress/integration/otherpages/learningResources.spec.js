@@ -551,4 +551,114 @@ context('The Learning Resources Page', () => {
             .children()
             .should('have.length', 1 + 1);
     });
+
+    it('the content on the history page is correct', () => {
+        cy.visit(
+            '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
+        );
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="reading-list-HIST1201-content"]')
+                .should('exist')
+                .should('contain', 'Reading list for Semester 2 2020 at St Lucia (35 items)'),
+        );
+
+        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'HIST1201');
+        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'The Australian Experience');
+        cy.get('[data-testid="reading-list-HIST1201-content"]').should(
+            'contain',
+            'Reading list for Semester 2 2020 at St Lucia (35 items)',
+        );
+        cy.get('[data-testid="reading-list-0"]').should('contain', 'True stories: history, politics, aboriginality');
+        cy.get('[data-testid="reading-list-1"]').should('contain', 'Warrior: a legendary');
+        cy.get('[data-testid="reading-list-more-link"]').should('contain', '33 more items');
+        cy.get('[data-testid="past-exams-HIST1201-content"] > div')
+            .children()
+            .should('have.length', 1);
+        cy.get('[data-testid="examPaperItem-0"]').should('contain', 'Semester 1 2016');
+        cy.get('[data-testid="no-guides"]').should('contain', 'No subject guides for this course');
+    });
+
+    it('the content on the french page is correct', () => {
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="reading-list-FREN1010-content"]')
+                .should('exist')
+                .should('contain', 'Reading list for Semester 2 2020 at St Lucia (2 items)'),
+        );
+
+        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'FREN1010');
+        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'Introductory French 1');
+
+        cy.get('[data-testid="reading-list-FREN1010-content"]').should(
+            'contain',
+            'Reading list for Semester 2 2020 at St Lucia (2 items)',
+        );
+        cy.get('[data-testid="reading-list-0"]').should('contain', 'Chahi, Fatiha');
+        cy.get('[data-testid="reading-list-1"]').should('contain', 'Collins Robert French dictionary');
+        cy.get('[data-testid="reading-list-more-link"]').should('not.exist');
+
+        cy.get('[data-testid="past-exams-FREN1010-content"] > div')
+            .children()
+            .should('have.length', 3);
+        cy.get('[data-testid="examPaperItem-0"]').should('contain', 'Semester 2 2019');
+        cy.get('[data-testid="examPaperItem-1"]').should('contain', 'Semester 1 2019');
+        cy.get('[data-testid="exam-more-link"]').should('contain', '14 more past papers');
+
+        cy.get('[data-testid="guides-FREN1010-content"] > div')
+            .children()
+            .should('have.length', 3);
+        cy.get('[data-testid="guide-0"]').should('contain', 'French Studies');
+        // cy.get('[data-testid="no-guides"]').should('contain', 'No subject guides for this course');
+    });
+
+    it('the content on the Philosophy page is correct', () => {
+        cy.visit(
+            '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%202%202020',
+        );
+        cy.waitUntil(() =>
+            cy
+                .get('[data-testid="reading-list-PHIL1002-content"]')
+                .should('exist')
+                .should('contain', 'Reading list for Semester 2 2020 at St Lucia'),
+        );
+
+        cy.get('[data-testid="learning-resource-subject-title"]').should('contain', 'PHIL1002');
+        cy.get('[data-testid="learning-resource-subject-title"]').should(
+            'contain',
+            'Introduction to Philosophy: What is Philosophy?',
+        );
+
+        cy.get('[data-testid="reading-list-PHIL1002-content"]').should(
+            'contain',
+            'Reading list for Semester 2 2020 at St Lucia',
+        );
+        cy.get('[data-testid="reading-list-multiple-label"]').should(
+            'contain',
+            'More than one reading list found for PHIL1002. Please select a list:',
+        );
+        cy.get('[data-testid="reading-list-link-0"]').should('contain', 'PHIL1002 St Lucia, Semester 2 2020');
+        cy.get('[data-testid="reading-list-link-1"]').should('contain', 'PHIL1002 St Lucia, Semester 2 2020');
+        cy.get('[data-testid="reading-list-multiple-label"]')
+            .parent()
+            .children()
+            .should('have.length', 4);
+
+        cy.get('[data-testid="multiple-reading-list-search-link"]').should('contain', 'Search other reading lists');
+
+        cy.get('[data-testid="past-exams-PHIL1002-content"] > div')
+            .children()
+            .should('have.length', 2);
+        cy.get('[data-testid="no-exam-papers"]').should('contain', 'No Past Exam Papers for this course');
+
+        cy.get('[data-testid="guides-PHIL1002-content"] > div')
+            .children()
+            .should('have.length', 5);
+        cy.get('[data-testid="guide-0"]').should('contain', 'PHIL1002');
+        cy.get('[data-testid="guide-1"]').should('contain', 'Philosophy');
+        cy.get('[data-testid="guide-2"]').should('contain', 'Stuff');
+    });
 });

@@ -72,8 +72,9 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
                                     aria-label={`Reading list for ${list.title} ${list.period}`}
                                     href={list.url}
                                     key={`reading-list-link-${index}`}
+                                    data-testid={`reading-list-link-${index}`}
                                 >
-                                    {coursecode} {list.campus}, {list.period}
+                                    {`${coursecode} ${list.campus}, ${list.period}`}
                                 </a>
                             </Grid>
                         );
