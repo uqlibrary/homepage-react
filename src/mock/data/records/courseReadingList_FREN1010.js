@@ -43,7 +43,8 @@ export default {
                 "libraryNote": "Required FREN1010 Semester 2 2020 sw | Ext FREN1010 semester 2 2020 sw",
                 "importance": "Required",
                 "startPage": "24",
-            }]
+            }],
+            "totalCount": 2,
         }
     ]
 };
