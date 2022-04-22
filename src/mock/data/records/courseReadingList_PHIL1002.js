@@ -1,5 +1,5 @@
 export default {
-    "title": "PHIL1002",
+    "coursecode": "PHIL1002",
     "course_title": "Introduction to Philosophy: What is Philosophy?",
     "reading_lists": [{
         "campus": "St Lucia",

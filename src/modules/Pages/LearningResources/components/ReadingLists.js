@@ -98,8 +98,8 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
             !!readingList.reading_lists &&
             readingList.reading_lists.length === 1 &&
             !!readingList.reading_lists[0] &&
-            !!readingList.reading_lists[0].list
-            ? readingList.reading_lists[0].list.length
+            !!readingList.reading_lists[0].totalCount
+            ? readingList.reading_lists[0].totalCount
             : 0;
     };
     const numberExcessReadingLists =

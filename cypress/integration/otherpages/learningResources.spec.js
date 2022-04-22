@@ -75,7 +75,7 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
 }
 
 function reading_list_panel_loads_correctly_for_a_subject_with_multiple_reading_lists(courseReadingList, coursecode) {
-    const courseCode = courseReadingList.title || 'mock data is missing';
+    const courseCode = courseReadingList.coursecode || 'mock data is missing';
 
     const multipleLabel = locale.myCourses.readingLists.error.multiple.replace('[classnumber]', courseCode);
     expect(multipleLabel).contains(coursecode);
@@ -190,7 +190,7 @@ function guides_panel_loads_correctly_for_a_subject_with_one_guide(guides, cours
 }
 
 function course_links_panel_loads_correctly_for_a_subject(courseReadingList) {
-    const courseCode = courseReadingList.title || 'mock data is missing';
+    const courseCode = courseReadingList.coursecode || 'mock data is missing';
 
     expect(locale.myCourses.courseLinks.links).to.be.an('array');
     expect(locale.myCourses.courseLinks.links.length).to.not.equals(0);
@@ -207,7 +207,7 @@ function load_a_subject_in_learning_resource_page_search_tab(
     typeChar = 'FREN',
     numberOfMatchingSubject = 1, // autocomplete finds this many entries for typeChar
 ) {
-    const courseCode = courseReadingList.title || 'mock data is missing';
+    const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const frenchSearchSuggestion = searchSuggestions
         .filter(obj => {
             return obj.name === courseCode;
@@ -293,7 +293,7 @@ function the_user_sees_the_search_form() {
 }
 
 function click_on_a_subject_tab(panelNumber, courseReadingList) {
-    const courseCode = courseReadingList.title || 'mock data is missing';
+    const courseCode = courseReadingList.coursecode || 'mock data is missing';
     const title = courseReadingList.course_title || 'mock data is missing';
     cy.get(`button#classtab-${panelNumber}`)
         .contains(courseCode)
@@ -311,7 +311,7 @@ function the_user_clicks_on_the_third_subject_tab(courseReadingList) {
 
 function the_title_block_displays_properly(courseReadingList) {
     const listTitle = courseReadingList.course_title || 'mock data is missing1';
-    const coursecode = courseReadingList.title || 'mock data is missing2';
+    const coursecode = courseReadingList.coursecode || 'mock data is missing2';
     cy.get('h2[data-testid=learning-resource-subject-title]').contains(listTitle);
     cy.get('h2[data-testid=learning-resource-subject-title]').contains(coursecode);
 }

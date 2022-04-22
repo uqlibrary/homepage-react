@@ -1,5 +1,5 @@
 export default {
-    "title": "ACCT1101",
+    "coursecode": "ACCT1101",
     "course_title": "Accounting for Decision Making",
     "reading_lists": [{
         "campus": "St Lucia",

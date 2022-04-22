@@ -1,5 +1,5 @@
 export default {
-    "title": "HIST1201",
+    "coursecode": "HIST1201",
     "course_title": "The Australian Experience",
     "reading_lists": [
         {

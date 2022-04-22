@@ -107,7 +107,7 @@ describe('Account action creators', () => {
 
         const expectedActions = [actions.READING_LIST_LOADING, actions.READING_LIST_LOADED];
 
-        await mockActionsStore.dispatch(loadReadingLists('FREN1010', 'St Lucia', 'Semester 2 2020', accounts.s1111111));
+        await mockActionsStore.dispatch(loadReadingLists('FREN1010', 'St Lucia', 'Semester 2 2020'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
@@ -124,7 +124,7 @@ describe('Account action creators', () => {
 
         const expectedActions = [actions.READING_LIST_LOADING, actions.READING_LIST_LOADED];
 
-        await mockActionsStore.dispatch(loadReadingLists('HIST1201', 'St Lucia', 'Semester 2 2020', accounts.s1111111));
+        await mockActionsStore.dispatch(loadReadingLists('HIST1201', 'St Lucia', 'Semester 2 2020'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
@@ -141,7 +141,7 @@ describe('Account action creators', () => {
 
         const expectedActions = [actions.READING_LIST_LOADING, actions.APP_ALERT_SHOW, actions.READING_LIST_FAILED];
 
-        await mockActionsStore.dispatch(loadReadingLists('FREN1010', 'St Lucia', 'Semester 2 2020', accounts.s1111111));
+        await mockActionsStore.dispatch(loadReadingLists('FREN1010', 'St Lucia', 'Semester 2 2020'));
         expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
     });
 
