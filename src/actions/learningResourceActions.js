@@ -4,7 +4,7 @@ import {
     GUIDES_API,
     LEARNING_RESOURCES_EXAMS_API,
     READING_LIST_API,
-    SUGGESTIONS_API_PAST_COURSE,
+    LEARNING_RESOURCES_COURSE_SUGGESTIONS_API,
 } from '../repositories/routes';
 import { throwFetchErrors } from 'helpers/general';
 
@@ -90,7 +90,7 @@ export function loadReadingLists(coursecode, campus, semester) {
 export function loadCourseReadingListsSuggestions(keyword) {
     return dispatch => {
         dispatch({ type: actions.LEARNING_RESOURCE_SUGGESTIONS_LOADING });
-        return fetch(SUGGESTIONS_API_PAST_COURSE({ keyword }).apiUrl)
+        return fetch(LEARNING_RESOURCES_COURSE_SUGGESTIONS_API({ keyword }).apiUrl)
             .then(throwFetchErrors)
             .then(response => response.json())
             .then(data => {
