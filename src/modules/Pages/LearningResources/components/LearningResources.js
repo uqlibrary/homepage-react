@@ -121,9 +121,7 @@ export const LearningResources = ({
     const throttledGuideLoad = useRef(throttle(1000, classnumber => actions.loadGuides(classnumber)));
     const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExamLearningResources(classnumber)));
     const throttledReadingListLoad = useRef(
-        throttle(1000, (classnumber, campus, semester, account) =>
-            actions.loadReadingLists(classnumber, campus, semester, account),
-        ),
+        throttle(1000, (classnumber, campus, semester) => actions.loadReadingLists(classnumber, campus, semester)),
     );
     const loadNewSubject = React.useCallback(
         (classnumber, campus, semester) => {
@@ -141,10 +139,10 @@ export const LearningResources = ({
             }
 
             if (!currentReadingLists[classnumber]) {
-                throttledReadingListLoad.current(classnumber, campus, semester, account);
+                throttledReadingListLoad.current(classnumber, campus, semester);
             }
         },
-        [currentGuidesList, currentExamsList, currentReadingLists, account],
+        [currentGuidesList, currentExamsList, currentReadingLists],
     );
 
     const params = getQueryParams(location.search);

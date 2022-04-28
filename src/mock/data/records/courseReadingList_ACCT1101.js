@@ -1,5 +1,5 @@
 export default {
-    "title": "ACCT1101",
+    "coursecode": "ACCT1101",
     "course_title": "Accounting for Decision Making",
     "reading_lists": [{
         "campus": "St Lucia",
@@ -33,6 +33,7 @@ export default {
             "created": "2020-07-16T04:41:40+00:00",
             "studentNote": "",
             "importance": "Required"
-        }]
+        }],
+        "totalCount": 2,
     }]
 }

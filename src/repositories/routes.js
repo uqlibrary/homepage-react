@@ -59,11 +59,7 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
     },
 });
 
-// export const SEARCH_SUGGESTIONS_API_EXAMS = ({ keyword }) => ({
-//     apiUrl: API_URL + 'search_suggestions?type=exam_paper&prefix=' + keyword,
-// });
-
-export const SUGGESTIONS_API_PAST_COURSE = ({ keyword }) => ({
+export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
     apiUrl: API_URL + 'learning_resource_suggestions?hint=' + keyword,
 });
 
@@ -93,7 +89,7 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     // api requires this field to be double encoded, as it may include characters like '/'
     const s = encodeURIComponent(encodeURIComponent(semester));
     return {
-        apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list`,
+        apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list/summary`,
     };
 };
 

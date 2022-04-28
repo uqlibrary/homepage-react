@@ -47,8 +47,8 @@ export function readingListLength(courseReadingList) {
         (!!courseReadingList.reading_lists &&
             courseReadingList.reading_lists.length > 0 &&
             !!courseReadingList.reading_lists[0] &&
-            !!courseReadingList.reading_lists[0].list &&
-            courseReadingList.reading_lists[0].list.length) ||
+            !!courseReadingList.reading_lists[0].totalCount &&
+            courseReadingList.reading_lists[0].totalCount) ||
         0
     );
 }

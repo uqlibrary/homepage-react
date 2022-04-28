@@ -73,6 +73,7 @@ export const Guides = ({ headingLevel, guideList, guideListLoading, guideListErr
                                     aria-label={`library guide for ${guide.title}`}
                                     className="library-guide-item"
                                     data-title="guideListItem"
+                                    data-testid={`guide-${index}`}
                                     href={guide.url}
                                     key={`guide-${index}`}
                                 >

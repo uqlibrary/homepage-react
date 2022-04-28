@@ -554,19 +554,19 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, libraryGuides_ACCT1101];
     })
 
-    .onGet('course_resources/FREN1010/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('course_resources/FREN1010/St Lucia/Semester%25202%25202020/reading_list/summary')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
     })
-    .onGet('course_resources/HIST1201/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('course_resources/HIST1201/St Lucia/Semester%25202%25202020/reading_list/summary')
     .reply(() => {
         return [200, courseReadingList_HIST1201];
     })
-    .onGet('course_resources/PHIL1002/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('course_resources/PHIL1002/St Lucia/Semester%25202%25202020/reading_list/summary')
     .reply(() => {
         return [200, courseReadingList_PHIL1002];
     })
-    .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list/summary')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
     })

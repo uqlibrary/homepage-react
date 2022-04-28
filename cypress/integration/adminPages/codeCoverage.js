@@ -1,7 +1,5 @@
-import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
 import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
-import { getReadingListHeader } from '../../support/helpers';
 /*
  * this section duplcates tests in the homepage and otherpages folders and is needed to provide full coverage in the
  * admin pipeline during code coverage runs on aws :(
@@ -14,31 +12,6 @@ context('Personalisation', () => {
 });
 
 context('Learning Resources', () => {
-    it('User with classes sees their classes', () => {
-        // this test simplifies the matching homepage/learningResources.js test, just to give coverage
-        cy.visit('/learning-resources?user=s1111111');
-        cy.viewport(1300, 1000);
-
-        const title = FREN1010ReadingList.course_title || 'mock data is missing';
-
-        cy.get('div[data-testid="learning-resources"]').contains(locale.myCourses.title);
-
-        cy.get('div[data-testid=classpanel-0] h2').contains(title);
-
-        const listTitle = FREN1010ReadingList.course_title || 'mock data is missing1';
-        const coursecode = FREN1010ReadingList.title || 'mock data is missing2';
-        const readingList =
-            !!FREN1010ReadingList.reading_lists &&
-            FREN1010ReadingList.reading_lists.length > 0 &&
-            FREN1010ReadingList.reading_lists[0];
-        cy.get('h2[data-testid=learning-resource-subject-title]').contains(listTitle);
-        cy.get('h2[data-testid=learning-resource-subject-title]').contains(coursecode);
-        cy.get('.readingLists h3').contains(getReadingListHeader(FREN1010ReadingList));
-        readingList.list.forEach(l => {
-            cy.get('body').contains(l.title);
-        });
-    });
-
     it('The Learning resources panel searches correctly', () => {
         // this test simplifies the matching homepage/learningResources.js test, just to give coverage
         cy.visit('/?user=s3333333');

@@ -74,7 +74,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                 {!examListError && !examListLoading && (!listOfExams || listOfExams.length === 0) && (
                     <React.Fragment>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <Typography>{locale.myCourses.examPapers.none}</Typography>
+                            <Typography data-testid="no-exam-papers">{locale.myCourses.examPapers.none}</Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <a href={locale.myCourses.examPapers.footer.noPastExams.linkOut}>
@@ -95,6 +95,7 @@ export const PastExamPapers = ({ examList, examListLoading, examListError, headi
                                     aria-label={examAriaLabel(paper)}
                                     className="exam-paper-item"
                                     data-title="examPaperItem"
+                                    data-testid={`examPaperItem-${index}`}
                                     href={paper.url}
                                     key={`exam-${index}`}
                                 >
