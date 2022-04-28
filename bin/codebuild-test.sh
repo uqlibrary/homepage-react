@@ -47,14 +47,7 @@ function checkCoverage {
      npm run cc:reportAll
 
      # four instances of `<span class="strong">100% </span>` indicates 100% code coverage
-     ls -la coverage/index.html
-
-     grep -c class=\"strong\"\>100\% coverage/index.html
-
-     echo "AFTER GREP"
-
      NUM_FULL_COVERAGE=$(grep -c class=\"strong\"\>100\% coverage/index.html)
-     echo "full coverage count = ${NUM_FULL_COVERAGE} (wanted: 4)"
      if [[ $NUM_FULL_COVERAGE == 4 ]]; then
          echo "Coverage 100%";
          echo ""
@@ -88,7 +81,7 @@ function checkCoverage {
          echo "                             !  !"
          echo "                             \__/"
          echo ""
-         echo "            Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
+         echo "Human, your code coverage was found to be lacking... Do not commit again until it is fixed."
          # show actual coverage numbers
          grep -A 2 class=\"strong\"\> coverage/index.html
          echo "Run your tests locally with npm run test:cc then load coverage/index.html to determine where the coverage gaps are"
