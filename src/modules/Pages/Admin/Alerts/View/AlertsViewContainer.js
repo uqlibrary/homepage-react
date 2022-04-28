@@ -3,7 +3,7 @@ import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'actions';
 
-import AlertsView from '../components/AlertsView';
+import AlertsView from 'modules/Pages/Admin/Alerts/View/AlertsView';
 
 const mapStateToProps = state => {
     return {

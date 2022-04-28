@@ -21,7 +21,7 @@ import { useConfirmationState } from 'hooks';
 
 const moment = require('moment');
 
-import { default as locale } from './alertsadmin.locale';
+import { default as locale } from '../alertsadmin.locale';
 import {
     formatDate,
     getBody,
@@ -31,7 +31,7 @@ import {
     manuallyMakeWebComponentBePermanent,
     scrollToTopOfPage,
     systemList,
-} from './alerthelpers';
+} from '../alerthelpers';
 
 const useStyles = makeStyles(
     theme => ({

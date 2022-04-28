@@ -7,11 +7,11 @@ export const NotFound = lazy(() => lazyRetry(() => import('modules/Pages/NotFoun
 export const LearningResources = lazy(() => lazyRetry(() => import('modules/Pages/LearningResources/containers/LearningResources')));
 export const PaymentReceipt = lazy(() => lazyRetry(() => import('modules/Pages/PaymentReceipt/PaymentReceipt')));
 export const BookExamBooth = lazy(() => lazyRetry(() => import('modules/Pages/BookExamBooth/containers/BookExamBooth')));
-export const AlertsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Add/containers/AlertsAdd')));
-export const AlertsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Edit/containers/AlertsEdit')));
-export const AlertsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Clone/containers/AlertsClone')));
-export const AlertsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/View/containers/AlertsView')));
-export const AlertsList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/List/containers/AlertsList')));
+export const AlertsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Add/AlertsAddContainer')));
+export const AlertsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Edit/AlertsEditContainer')));
+export const AlertsClone = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/Form/Clone/AlertsCloneContainer')));
+export const AlertsView = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/View/AlertsViewContainer')));
+export const AlertsList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Alerts/List/AlertsListContainer')));
 export const SpotlightsList = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/List/SpotlightsListContainer')));
 export const SpotlightsAdd = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Add/SpotlightsAddContainer')));
 export const SpotlightsEdit = lazy(() => lazyRetry(() => import('modules/Pages/Admin/Spotlights/Form/Edit/SpotlightsEditContainer')));
