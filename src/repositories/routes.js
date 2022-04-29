@@ -60,7 +60,7 @@ export const INCOMPLETE_NTRO_RECORDS_API = () => ({
 });
 
 export const LEARNING_RESOURCES_COURSE_SUGGESTIONS_API = ({ keyword }) => ({
-    apiUrl: API_URL + 'learning_resource_suggestions?hint=' + keyword,
+    apiUrl: API_URL + 'learning_resource/suggestions?hint=' + keyword,
 });
 
 // Library hours
@@ -89,7 +89,7 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     // api requires this field to be double encoded, as it may include characters like '/'
     const s = encodeURIComponent(encodeURIComponent(semester));
     return {
-        apiUrl: `course_resources/${coursecode}/${campus}/${s}/reading_list/summary`,
+        apiUrl: `learning_resources/reading_list/${coursecode}/${campus}/${s}`,
     };
 };
 
