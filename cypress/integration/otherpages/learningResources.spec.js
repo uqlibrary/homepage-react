@@ -552,6 +552,7 @@ context('The Learning Resources Page', () => {
             .should('have.length', 1 + 1);
     });
 
+    // a subject with one reading list which contains more than the minimum number displays correctly
     it('the content on the history page is correct', () => {
         cy.visit(
             '/learning-resources?coursecode=HIST1201&campus=St%20Lucia&semester=Semester%202%202020&user=s1111111',
@@ -579,6 +580,7 @@ context('The Learning Resources Page', () => {
         cy.get('[data-testid="no-guides"]').should('contain', 'No subject guides for this course');
     });
 
+    // a subject with one reading list which has only the minimum number of items displays correctly
     it('the content on the french page is correct', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=FREN1010&campus=St%20Lucia&semester=Semester%202%202020',
@@ -612,9 +614,9 @@ context('The Learning Resources Page', () => {
             .children()
             .should('have.length', 3);
         cy.get('[data-testid="guide-0"]').should('contain', 'French Studies');
-        // cy.get('[data-testid="no-guides"]').should('contain', 'No subject guides for this course');
     });
 
+    // a subject with multiple reading lists displays correctly
     it('the content on the Philosophy page is correct', () => {
         cy.visit(
             '/learning-resources?user=s1111111&coursecode=PHIL1002&campus=St%20Lucia&semester=Semester%202%202020',
