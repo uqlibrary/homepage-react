@@ -89,7 +89,7 @@ export const READING_LIST_API = ({ coursecode, campus, semester }) => {
     // api requires this field to be double encoded, as it may include characters like '/'
     const s = encodeURIComponent(encodeURIComponent(semester));
     return {
-        apiUrl: `learning_resources/reading_list/${coursecode}/${campus}/${s}`,
+        apiUrl: `learning_resources/reading_list/summary/${coursecode}/${campus}/${s}`,
     };
 };
 
