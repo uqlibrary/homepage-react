@@ -123,7 +123,7 @@ export const SearchCourses = ({
                 !!readingList.list[subjectCode].course_title &&
                 /* istanbul ignore next */
                 readingList.list[subjectCode].course_title) ||
-            null;
+            '';
         return subject;
     };
 
