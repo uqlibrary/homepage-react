@@ -54,7 +54,7 @@ mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
 mockData.accounts.uqagrinb = mockData.uqagrinb.account;
 if (user && !mockData.accounts[user]) {
     console.warn(
-        `API MOCK DATA: User name (${user}) is not found, please use one of the usernames from mock data only...`,
+        `API MOCK DATA: User name ${user} is not found, please use one of the usernames from mock data only...`,
     );
 }
 
@@ -470,7 +470,7 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
-    'begin:https://api.library.uq.edu.au/staging/learning_resource/suggestions?hint=',
+    'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
     learningResourceSearchSuggestions,
 );
 
