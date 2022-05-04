@@ -43,33 +43,19 @@ const useStyles = makeStyles(
 
 export const SubjectBody = ({ subject, examList, guideList, readingList, subjectHeaderLevel, panelHeadingLevel }) => {
     const classes = useStyles();
-
-    /* istanbul ignore next */
-    const coursecode = subject.classnumber || null;
-    const courseTitle = () => {
-        // whichever one we get first (they should both have the same value)
-        /* istanbul ignore next */
+    const coursecode = subject.classnumber || /* istanbul ignore next */ null;
+    const subjectHeading = course => {
+        // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
         const title =
-            (!!examList &&
-                !!examList.list &&
-                !!examList.list[coursecode] &&
-                !!examList.list[coursecode].title &&
-                ` - ${examList.list[coursecode].title}`) ||
-            (!!readingList &&
-                !!readingList.list &&
-                !!readingList.list[coursecode] &&
-                !!readingList.list[coursecode].course_title &&
-                ` - ${readingList.list[coursecode].course_title}`) ||
+            (!!course.DESCR && `- ${unescapeString(course.DESCR)}`) || // if from account
+            (!!course.title && `- ${unescapeString(course.title)}`) || // if from subject search
             null;
-
         if (title !== null) {
             // put focus on the tab, for screenreaders
             const searchResults = document.getElementById('learning-resource-search-results');
             !!searchResults && searchResults.focus();
         }
-
-        // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
-        return unescapeString(title);
+        return `${course.classnumber} ${title}`;
     };
 
     return (
@@ -80,8 +66,7 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 variant={'h5'}
                 data-testid="learning-resource-subject-title"
             >
-                {coursecode}
-                {courseTitle()}
+                {subjectHeading(subject)}
                 <br />
             </Typography>
 
