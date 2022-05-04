@@ -49,8 +49,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
         const title =
             (!!course.DESCR && `- ${unescapeString(course.DESCR)}`) || // if from account
             (!!course.title && `- ${unescapeString(course.title)}`) || // if from subject search
-            null;
-        if (title !== null) {
+            '';
+        if (title !== '') {
             // put focus on the tab, for screenreaders
             const searchResults = document.getElementById('learning-resource-search-results');
             !!searchResults && searchResults.focus();
