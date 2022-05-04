@@ -56,7 +56,7 @@ export const MyCourses = ({
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
-        preselectedCourse => {
+        thisPreselectedCourse => {
             if (!initialLoadComplete) {
                 let preselectedSubjectTab = null;
                 !!account &&
@@ -64,9 +64,9 @@ export const MyCourses = ({
                     !!account.current_classes.length > 0 &&
                     account.current_classes.map((item, index) => {
                         if (
-                            item.classnumber === preselectedCourse.coursecode &&
-                            getCampusByCode(item.CAMPUS) === preselectedCourse.campus &&
-                            item.semester === preselectedCourse.semester
+                            item.classnumber === thisPreselectedCourse.coursecode &&
+                            getCampusByCode(item.CAMPUS) === thisPreselectedCourse.campus &&
+                            item.semester === thisPreselectedCourse.semester
                         ) {
                             preselectedSubjectTab = `${courseTabLabel}-${index}`;
                         }
@@ -99,20 +99,20 @@ export const MyCourses = ({
                             value={coursemenu}
                             variant="scrollable"
                         >
-                            {account.current_classes.map((item, index) => {
+                            {account.current_classes.map((subject, index) => {
                                 return (
                                     <Tab
                                         {...a11yProps(index, 'classtab')}
                                         data-testid={`classtab-${index}`}
                                         key={`classtab-${index}`}
-                                        label={item.classnumber}
+                                        label={subject.classnumber}
                                         value={`${courseTabLabel}-${index}`} // must match 'index' in TabPanel
                                     />
                                 );
                             })}
                         </Tabs>
                     </AppBar>
-                    {account.current_classes.map((item, index) => {
+                    {account.current_classes.map((subject, index) => {
                         return (
                             <TabPanel
                                 className={classes.courseTabs}
@@ -125,7 +125,7 @@ export const MyCourses = ({
                                 {...reverseA11yProps(index, 'classtab')}
                             >
                                 <SubjectBody
-                                    subject={item}
+                                    subject={subject}
                                     readingList={readingList}
                                     examList={examList}
                                     guideList={guideList}
