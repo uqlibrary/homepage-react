@@ -64,6 +64,8 @@ export const AlertsEdit = ({ actions, alert, alertError, alertLoading, alertStat
             type: 'edit',
             minimumDate: getTimeNowFormatted(),
             systems: alert?.systems || [],
+            updatedBy: (!!alert && alert.updated_by) || null,
+            createdBy: (!!alert && alert.created_by) || '?',
         };
     }
 
