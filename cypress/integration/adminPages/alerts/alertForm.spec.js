@@ -108,6 +108,7 @@ describe('Alerts Admin Form Pages', () => {
                 });
         });
         it('can show a preview of a info-priority permanent alert with link', () => {
+            cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-button-preview"]').should('exist'));
             cy.get('uq-alert[id="alert-preview"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-title"]').type('alert title 2');
             cy.get('[data-testid="admin-alerts-form-body"]').type('body 2');
@@ -392,6 +393,10 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-link-url"] input').should('not.be.visible');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-homepage"] input').should('be.checked');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input').should('be.checked');
+
+            // the editing user displays correctly
+            cy.get('[data-testid="admin-alerts-form-created-by"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-updated-by"]').should('contain', 'Last Updated by: uqtest2');
         });
         it('has a working Edit form', () => {
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
@@ -406,9 +411,12 @@ describe('Alerts Admin Form Pages', () => {
             cy.location('href').should('eq', 'http://localhost:2020/admin/alerts');
         });
         it('changing a system enables the save button', () => {
-            cy.visit('http://localhost:2020/admin/alerts/edit/1db618c0-d897-11eb-a27e-df4e46db7245?user=uqstaff');
-            cy.viewport(1300, 1000);
             cy.waitUntil(() => cy.get('[data-testid="admin-alerts-form-checkbox-linkrequired"]').should('exist'));
+
+            // the editing user displays correctly
+            cy.get('[data-testid="admin-alerts-form-created-by"]').should('contain', 'Created by: uqtest1');
+            cy.get('[data-testid="admin-alerts-form-updated-by"]').should('contain', 'Last Updated by: uqtest2');
+
             cy.get('[data-testid="admin-alerts-form-button-save"]').should('be.disabled');
             cy.get('[data-testid="admin-alerts-form-checkbox-system-primo"] input')
                 .should('not.be.checked')
@@ -524,6 +532,8 @@ describe('Alerts Admin Form Pages', () => {
             cy.get('[data-testid="admin-alerts-form-title"] input')
                 .focus()
                 .clear();
+            cy.get('[data-testid="admin-alerts-form-created-by"]').should('not.exist');
+            cy.get('[data-testid="admin-alerts-form-updated-by"]').should('not.exist');
             cy.get('[data-testid="admin-alerts-form-title"] input').type('alert title 7');
             cy.get('[data-testid="admin-alerts-form-button-save"]').click();
             cy.waitUntil(() => cy.get('[data-testid="confirm-alert-clone-save-succeeded"]').should('exist'));
