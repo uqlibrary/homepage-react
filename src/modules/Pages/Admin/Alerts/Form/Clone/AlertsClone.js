@@ -73,6 +73,8 @@ export const AlertsClone = ({ actions, alert, alertError, alertLoading, alertSta
         type: 'clone',
         minimumDate: getTimeNowFormatted(),
         systems: alert?.systems || [],
+        updatedBy: (!!alert && alert.updated_by) || null,
+        createdBy: (!!alert && alert.created_by) || '?',
     };
 
     return (

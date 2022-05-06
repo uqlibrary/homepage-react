@@ -754,6 +754,20 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
                         })}
                     </Grid>
                 </Grid>
+                {defaults.type === 'edit' && values.createdBy !== '?' && (
+                    <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                        {/* created_by entries before we started recording the creator are marked as '?' */}
+                        <Grid item data-testid="admin-alerts-form-created-by">{`Created by: ${values.createdBy}`}</Grid>
+                    </Grid>
+                )}
+                {defaults.type === 'edit' && !!values.updatedBy && (
+                    <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                        <Grid
+                            item
+                            data-testid="admin-alerts-form-updated-by"
+                        >{`Last Updated by: ${values.updatedBy}`}</Grid>
+                    </Grid>
+                )}
                 <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                     <Grid item xs={3} align="left">
                         <Button

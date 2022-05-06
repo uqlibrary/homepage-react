@@ -120,6 +120,10 @@ describe('Alerts Admin View Page - other page tests', () => {
                 cy.get('[data-testid="alert-close"]').should('exist');
                 cy.get('[data-testid="alert-alert-preview-action-button"]').should('not.exist');
             });
+
+        // the editing user displays correctly
+        cy.get('[data-testid="admin-alerts-view-created-by"]').should('not.exist');
+        cy.get('[data-testid="admin-alerts-view-updated-by"]').should('contain', 'Last Updated by: uqtest2');
     });
     it('can show a preview of an extreme-priority permanent alert with link', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/d23f2e10-d7d6-11eb-a928-71f3ef9d35d9?user=uqstaff');
@@ -141,6 +145,10 @@ describe('Alerts Admin View Page - other page tests', () => {
                 );
                 cy.get('[data-testid="alert-icon"]').should('have.attr', 'aria-label', 'Very important alert.');
             });
+
+        // the editing user displays correctly
+        cy.get('[data-testid="admin-alerts-view-created-by"]').should('not.exist');
+        cy.get('[data-testid="admin-alerts-view-updated-by"]').should('not.exist');
     });
     it('tells the user when alert appeared on all systems', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08?user=uqstaff');
@@ -148,6 +156,10 @@ describe('Alerts Admin View Page - other page tests', () => {
         cy.get('[data-testid="admin-alerts-view-systems"]')
             .should('exist')
             .contains('This alert appeared on all systems');
+
+        // the editing user displays correctly
+        cy.get('[data-testid="admin-alerts-view-created-by"]').should('contain', 'Created by: uqtest1');
+        cy.get('[data-testid="admin-alerts-view-updated-by"]').should('contain', 'Last Updated by: uqtest2');
     });
     it('tells the user which systems the alert appeared on', () => {
         cy.visit('http://localhost:2020/admin/alerts/view/dc64fde0-9969-11eb-8dc3-1d415ccc50ec?user=uqstaff');
