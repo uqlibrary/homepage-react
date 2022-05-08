@@ -137,6 +137,8 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
         type: 'view',
         minimumDate: getTimeNowFormatted(),
         systems: alert?.systems || [],
+        updatedBy: (!!alert && alert.updated_by) || null,
+        createdBy: (!!alert && alert.created_by) || '?',
     };
 
     return (
@@ -323,6 +325,23 @@ export const AlertsView = ({ actions, alert, alertStatus, history }) => {
                                 </Grid>
                             )}
                         </Grid>
+                        {values.createdBy !== '?' && (
+                            <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                                {/* created_by entries before we started recording the creator are marked as '?' */}
+                                <Grid
+                                    item
+                                    data-testid="admin-alerts-view-created-by"
+                                >{`Created by: ${values.createdBy}`}</Grid>
+                            </Grid>
+                        )}
+                        {!!values.updatedBy && (
+                            <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                                <Grid
+                                    item
+                                    data-testid="admin-alerts-view-updated-by"
+                                >{`Last Updated by: ${values.updatedBy}`}</Grid>
+                            </Grid>
+                        )}
                         <Grid
                             container
                             data-testid="admin-alerts-view-button-block"
