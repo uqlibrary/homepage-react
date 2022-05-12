@@ -403,6 +403,8 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'dc64fde0-9969-11eb-8dc3-1d415ccc50ec' }
             body: 'Has mock data.',
             priority_type: 'info',
             systems: ['primo', 'homepage'],
+            created_by: '?',
+            updated_by: 'uqtest2',
         },
     ]),
 );
@@ -420,6 +422,8 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '1db618c0-d897-11eb-a27e-df4e46db7245' }
                 'This alert can be edited in mock.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
             priority_type: 'urgent',
             systems: ['homepage'],
+            created_by: 'uqtest1',
+            updated_by: 'uqtest2',
         },
     ]),
 );
@@ -432,7 +436,9 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }
             "end": "2021-06-29 15:00:54",
             "title": "Face masks in the Library:",
             "body": "Test Extreme alert with a longish body content.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
-            "priority_type": 'extreme'
+            "priority_type": 'extreme',
+            created_by: '?',
+            updated_by: null,
         },
     ]),
 );
@@ -446,6 +452,8 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: '0aa12a30-996a-11eb-b009-3f6ded4fdb35' }
             title: 'Example alert:',
             body: 'This alert will return an error if deleted in mock',
             priority_type: 'info',
+            created_by: '?',
+            updated_by: null,
         },
     ]),
 );
@@ -461,6 +469,8 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'cc0ab120-d4a3-11eb-b5ee-6593c1ac8f08' }
             body:
                 'There will be a short network outage in the Duhig Tower this afternoon (Sunday 27 June) for network maintenance. During this time the internet, library computers and printers will be affected. We apologise for any inconvenience.',
             priority_type: 'extreme',
+            created_by: 'uqtest1',
+            updated_by: 'uqtest2',
         },
     ]),
 );
