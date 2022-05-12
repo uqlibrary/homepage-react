@@ -37,6 +37,10 @@ const useStyles = makeStyles(
             color: theme.palette.primary.light,
             textAlign: 'center',
         },
+        contentBlock: {
+            paddingLeft: 12,
+            paddingRight: 12,
+        },
     }),
     { withTheme: true },
 );
@@ -70,7 +74,12 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 <br />
             </Typography>
 
-            <Grid container spacing={3} className={'readingLists'}>
+            <Grid
+                container
+                spacing={3}
+                className={classes.contentBlock}
+                data-testid="learning-resource-subject-reading-list"
+            >
                 <Grid item xs={12}>
                     <ReadingLists
                         subject={subject}
@@ -82,8 +91,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 </Grid>
             </Grid>
 
-            <Grid container>
-                <Grid item xs={12} md={4} className={'exams'}>
+            <Grid container className={classes.contentBlock}>
+                <Grid item xs={12} md={4} data-testid="learning-resource-subject-exams">
                     <PastExamPapers
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}

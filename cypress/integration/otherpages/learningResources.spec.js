@@ -51,9 +51,12 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
     const readingList = firstReadingListItems(courseReadingList);
     const firstReadingListTitle = readingList.title || 'mock data is missing';
     const firstReadingListLink = readingList.itemLink || 'mock data is missing';
-    cy.get(`.readingLists ${headerLevel}`).contains(getReadingListHeader(FREN1010ReadingList));
+    cy.get('[data-testid="learning-resource-subject-reading-list"]')
+        .find(`${headerLevel}`)
+        .contains(getReadingListHeader(FREN1010ReadingList));
     cy.get(`div[data-testid="reading-list-${courseCode}"`).should('not.contain', 'Reading list currently unavailable');
-    cy.get('.readingLists a')
+    cy.get('[data-testid="learning-resource-subject-reading-list"]')
+        .find('a')
         .contains(firstReadingListTitle)
         .should('have.attr', 'href', firstReadingListLink);
 }
@@ -66,7 +69,9 @@ function reading_lists_panel_loads_correctly_for_a_subject_with_one_reading_list
         courseReadingList.reading_lists.length > 0 &&
         courseReadingList.reading_lists[0];
     const readingListLink = readingList.url || 'mock data is missing';
-    cy.get('.readingLists h3').contains(getReadingListHeader(courseReadingList));
+    cy.get('[data-testid="learning-resource-subject-reading-list"]')
+        .find('h3')
+        .contains(getReadingListHeader(courseReadingList));
     const numberExcessReadingLists =
         readingListLength(courseReadingList) - locale.myCourses.readingLists.visibleItemsCount;
     cy.get('div[data-testid=reading-list-more-link] a')
@@ -114,8 +119,11 @@ function exams_panel_loads_correctly_for_a_subject_with_many_exams(examPapers, d
 
     const numberExcessExams = examPapers.remainingCount || 0;
     const totalExamItems = examPapers.list.length + numberExcessExams;
-    cy.get(`.exams ${headerLevel}`).contains(`${locale.myCourses.examPapers.title} (${totalExamItems} items)`);
-    cy.get('.exams a')
+    cy.get('[data-testid="learning-resource-subject-exams"]')
+        .find(`${headerLevel}`)
+        .contains(`${locale.myCourses.examPapers.title} (${totalExamItems} items)`);
+    cy.get('[data-testid="learning-resource-subject-exams"]')
+        .find('a')
         .contains(`${examPeriod} (${examPaperLink.slice(-3).toUpperCase()})`)
         .should('have.attr', 'href', examPaperLink);
     cy.get('div[data-testid=exam-more-link] a')
