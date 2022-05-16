@@ -2,17 +2,16 @@
 
 echo "Pre-commit hook running..."
 
-# Commits should not be made directly on Staging branch.
+# Commits should not be made directly on Staging branch (or the branch that calls reusable in staging).
 # (Do work in feature branch and then merge into Staging branch)
 
-FORBIDDEN="staging"
 THIS_BRANCH=$(git rev-parse --abbrev-ref HEAD)
 
-if [[ "$THIS_BRANCH" == "$FORBIDDEN" ]] ; then
+if [[ "$THIS_BRANCH" == "staging" || "$THIS_BRANCH" == "reusable-staging" ]] ; then
   if [ ! -e ".git/MERGE_MODE" ]; then
     printf "\e[31m\n"
-    echo "You are trying to commit directly on the $FORBIDDEN branch."
-    echo "Please commit in a feature branch and then merge into $FORBIDDEN branch instead."
+    echo "You are trying to commit directly on the $THIS_BRANCH branch."
+    echo "Please commit in a feature branch and then merge into $THIS_BRANCH branch instead."
     printf "\n\e[1mAborting commit.\e[0m\n\n"
     exit 1
   fi
