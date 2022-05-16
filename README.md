@@ -26,17 +26,17 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 
 2. Create a .env file based on example.env
 
-3. install npm: `nvm use 11.10.1 && npm i -g npm@6 jest webpack-dev-server`
+3. install npm: `nvm use 16.13.2 && npm i -g npm@8 jest webpack-dev-server`
  
 4. Create these git hooks to manage branches to project standard: 
 
 - `ln -sf "../../scripts/pre-commit" ".git/hooks/pre-commit"`
 
-  (Prevent direct commits to the staging branch and run `prettier-eslint` automatically before every local commit)
+  (Prevent direct commits to the staging branches and run `prettier-eslint` automatically before every local commit)
 
 - `ln -sf "../../scripts/prepare-commit-msg" ".git/hooks/prepare-commit-msg"`
 
-  (Prevent accidental merges from the staging branch:)
+  (Prevent accidental merges from the staging branches:)
 
 ## Development
 
@@ -81,25 +81,6 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 Mock data is provided for all pages and actions under `src/mock/`.
 
 ### Development notes
-
-#### Git safety checks
-
-- Run the following in the project root directory to install the pre-commit hook:
-
-  ```sh
-  ln -sf "../../scripts/pre-commit" ".git/hooks/pre-commit"
-  ```
-
-  It does two things:
-
-  - Prevent direct commits to the staging branch.
-  - Run `prettier-eslint` automatically before every local commit
-
-- Run the following in the project root directory to prevent accidental merges from the staging branch:
-
-  ```sh
-    ln -sf "../../scripts/prepare-commit-msg" ".git/hooks/prepare-commit-msg"
-  ```
 
 #### Naming conventions
 
@@ -276,9 +257,10 @@ If you want Codeship to run cypress tests before you merge to master, include th
 #### Some tricks and tips
 
 - the message 'Failed to connect to the bus' is not a problem per https://docs.cypress.io/guides/references/troubleshooting#Run-the-Cypress-app-by-itself
-- When simulating clicks which result in non-trivial DOM changes, you might need to `cy.wait(1000);` to wait 1 second after the click before posing any expectations. If possible, use `cy.waitUntil()` instead to wait for a particular condition to be true.
+- When simulating clicks, use `cy.waitUntil()` to wait for the page to have loaded.
+  Very rarely, you might need to eg `cy.wait(1000);` to wait 1 second after the click before posing any expectations - 
+  an example is the Axe accessibility checks which seem to simply take some time before the functionality is available.
 - sometimes a button is detached from the DOM when you go to click it. We have a helper called `clickButton` which usually gets around this.
-  If not, the fallback it to add a cy.wait(50) and that fixes it (mostly). Waits are considered an anti-pattern though.
   Note that we've had success by shifting the test up in the list when this happens (cypress seems to have memory problems at this scale?)
 - For a input field that has a problem clearing, first try adding a `.focus()`, if that isnt sufficient try eg
   `.should('have.value', 'Example alert:')`
@@ -399,6 +381,8 @@ Deployment pipelines are setup for branches: "master", "staging, "production" an
 
 * Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
   See [Cloudfront list of reserved routes](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-east-1&skipRegion=true#/distributions/E34LPPV7N4XONM/behaviors)
+
+* Branch `staging-reusable` is used to test changes to reusable that appear on the homepage. All other branches of homepage display production reusable. Do not merge _from_ `staging_reusable` as it has the wrong version of reusable  (the git hooks forbid it, if installed)
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions

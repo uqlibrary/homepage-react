@@ -1,5 +1,6 @@
 #!/bin/bash
 # Disallow merges from staging
+echo "prepare-commit-msg hook running..."
 
 MERGE_MESSAGE_FILE=$1
 ACTION=$2
