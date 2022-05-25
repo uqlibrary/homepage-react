@@ -34,7 +34,7 @@ const deployment = {
         api: 'https://api.library.uq.edu.au/v1/',
         auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
-        gtm: 'GTM-PNKNTSQ',
+        gtm: 'GTM-PX9H7R',
         title: 'UQ Library',
         short_name: 'Library',
         titleSuffix: '',
