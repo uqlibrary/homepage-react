@@ -25,7 +25,12 @@ export default {
                 },
             },
             systems:
-                '<strong>System specific alerts:</strong> use these checkboxes to target your alert to selected systems only. Leave checkboxes blank to show alert on all systems.',
+                (
+                    <Fragment>
+                        <strong>System specific alerts:</strong>{' '}
+                        use these checkboxes to target your alert to selected systems only. Leave the checkboxes blank to show alert on all systems.
+                    </Fragment>
+                ),
         },
         tooltips: {
             title: 'Alert lead text. Appears in bold. Field length of 100 characters.',
