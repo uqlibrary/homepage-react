@@ -208,7 +208,7 @@ export default {
                                 displayed on those systems only.
                             </p>
                             <p>
-                                When the checkboxes are blank, the alert will be displayed on all systems (Library Homepage apps, 
+                                When the checkboxes are blank, the alert will be displayed on all systems (Library Homepage apps,
                                 Drupal Website, Libguides, Library CRM pages and eSpace).
                             </p>
                         </dd>
