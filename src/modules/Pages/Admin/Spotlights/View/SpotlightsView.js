@@ -44,6 +44,7 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
         scrollToTopOfPage();
     };
 
+    /* istanbul ignore next */
     const navigateToCloneForm = () => {
         history.push(`/admin/spotlights/clone/${spotlightid}`);
 
@@ -207,7 +208,10 @@ export const SpotlightsView = ({ actions, spotlight, spotlightStatus, history })
                                     data-testid="admin-spotlights-form-button-save"
                                     variant="contained"
                                     children="Clone"
-                                    onClick={() => navigateToCloneForm()}
+                                    onClick={
+                                        /* istanbul ignore next */ () =>
+                                            /* istanbul ignore next */ navigateToCloneForm()
+                                    }
                                 />
                             </Grid>
                         </Grid>
