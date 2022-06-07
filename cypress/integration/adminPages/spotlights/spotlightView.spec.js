@@ -1,23 +1,26 @@
-import { FILTER_STORAGE_NAME, numberCurrentPublishedSpotlights } from '../../../support/spotlights';
-import { clickButton } from '../../../support/helpers';
+import {
+    FILTER_STORAGE_NAME,
+    // numberCurrentPublishedSpotlights
+} from '../../../support/spotlights';
+// import { clickButton } from '../../../support/helpers';
 
 describe('Spotlight Admin View page', () => {
     before(() => {
         sessionStorage.removeItem(FILTER_STORAGE_NAME);
     });
-    const numRowsHiddenAsNoDatainfo = 1;
+    // const numRowsHiddenAsNoDatainfo = 1;
     beforeEach(() => {
         cy.visit('http://localhost:2020/admin/spotlights/view/1e1b0e10-c400-11e6-a8f0-47525a49f469?user=uqstaff');
         cy.viewport(1300, 1000);
     });
 
-    it('can visit the clone page from the spotlight view page', () => {
-        clickButton('button[data-testid="admin-spotlights-form-button-save"]', 'Clone');
-        cy.location('href').should(
-            'eq',
-            'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',
-        );
-    });
+    // it('can visit the clone page from the spotlight view page', () => {
+    //     clickButton('button[data-testid="admin-spotlights-form-button-save"]', 'Clone');
+    //     cy.location('href').should(
+    //         'eq',
+    //         'http://localhost:2020/admin/spotlights/clone/1e1b0e10-c400-11e6-a8f0-47525a49f469',
+    //     );
+    // });
 
     it('view page is accessible', () => {
         cy.injectAxe();
@@ -31,14 +34,14 @@ describe('Spotlight Admin View page', () => {
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
     });
-    it('the cancel button on the view page returns to the list page', () => {
-        clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
-        cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
-        cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
-        cy.get('[data-testid="spotlight-list-current"] tbody')
-            .children()
-            .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
-    });
+    // it('the cancel button on the view page returns to the list page', () => {
+    //     clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
+    //     cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
+    //     cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
+    //     cy.get('[data-testid="spotlight-list-current"] tbody')
+    //         .children()
+    //         .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
+    // });
     it('has a Help button on the spotlight View page', () => {
         cy.get('[data-testid="admin-spotlights-help-button"]').should('exist');
     });
