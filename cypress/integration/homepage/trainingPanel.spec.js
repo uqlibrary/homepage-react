@@ -2,12 +2,13 @@ context('Training', () => {
     it('Training Accessibility', () => {
         cy.visit('/');
         cy.injectAxe();
+        cy.wait(2000);
         cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('div[data-testid="training-panel"]').should('exist'));
         cy.log('Training');
         cy.get('button[data-testid="training-event-detail-button-0"]').contains('EndNote: getting started');
 
         cy.log('Events list');
-        cy.wait(500);
         cy.get('[data-testid="training-event-detail-button-0"]')
             .should('exist')
             .should('have.text', 'EndNote: getting started24 November at 10am - Online');

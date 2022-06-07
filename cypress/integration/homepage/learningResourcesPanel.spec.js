@@ -6,8 +6,10 @@ context('The Homepage Learning Resource Panel', () => {
     it('Learning resources panel is accessible', () => {
         cy.visit('/?user=s1111111');
         cy.injectAxe();
+        cy.wait(2000);
         cy.viewport(1300, 1000);
         cy.log('Learning resources panel');
+        cy.waitUntil(() => cy.get('div[data-testid="learning-resources-homepage-panel"]').should('exist'));
         cy.get('div[data-testid=learning-resources-panel]').contains(locale.homepagePanel.title);
         cy.get('div[data-testid=learning-resources-panel] form input').type('FREN');
         cy.wait(500);

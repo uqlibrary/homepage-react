@@ -7,28 +7,30 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Assignment help',
+        title: 'Exams',
         content: (
             <div>
-                <p>Working on an assignment? Check out these helpful resources:</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support using online chat or by phone.</p>
+                <p>We're available from 7am to 8pm between 9 and 21 June (excluding Sundays).</p>
                 <ul>
-                    <li><a href="https://web.library.uq.edu.au/research-tools-techniques/digital-essentials/write-cite-submit">Write, cite and submit</a> &ndash; advice on planning, referencing and submitting your assignment</li>
-                    <li><a href="https://guides.library.uq.edu.au/referencing">Referencing style guides</a> &ndash; get your references right with our style guides</li>
-                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> &ndash; find articles and specialised resources for your subject.</li>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
+                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the library and on-campus.</li>
                 </ul>
+                <p>Good luck with your exams!</p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Assignment help',
+        title: 'Exams',
         content: (
             <div>
-                <p>Working on an assignment? Check out these helpful resources:</p>
+                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support using online chat or by phone.</p>
+                <p>We're available from 7am to 8pm between 9 and 21 June (excluding Sundays).</p>
                 <ul>
-                    <li><a href="https://web.library.uq.edu.au/research-tools-techniques/digital-essentials/write-cite-submit">Write, cite and submit</a> &ndash; advice on planning, referencing and submitting your assignment</li>
-                    <li><a href="https://guides.library.uq.edu.au/referencing">Referencing style guides</a> &ndash; get your references right with our style guides</li>
-                    <li><a href="https://guides.library.uq.edu.au/subject">Subject guides</a> &ndash; find articles and specialised resources for your subject.</li>
+                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
+                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the library and on-campus.</li>
                 </ul>
+                <p>Good luck with your exams!</p>
             </div>
         ),
     },
