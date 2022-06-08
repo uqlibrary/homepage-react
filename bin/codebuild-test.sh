@@ -195,6 +195,8 @@ case "$PIPE_NUM" in
         checkCoverage
 
     else
+        printf "(Build of feature branch \"$CI_BRANCH\" SKIPS code coverage check)\n"
+        printf "\n--- \e[1mRUNNING JEST UNIT TESTS\e[0m ---\n"
         npm run test:unit:ci2
 
         # Runner for cypress. More is in other pipelines.

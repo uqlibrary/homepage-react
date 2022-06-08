@@ -4,9 +4,10 @@ context('Spotlights on homepage', () => {
     it('Spotlights is accessible', () => {
         cy.visit('/');
         cy.injectAxe();
+        cy.wait(2000);
         cy.viewport(1300, 1000);
         cy.log('Spootlights');
-        cy.wait(500);
+        cy.waitUntil(() => cy.get('[data-testid="spotlights"]').should('exist'));
         cy.get('img[alt="Academic Integrity Modules - Everything you need to know about academic integrity at UQ"]')
             .should('be.visible')
             .and($img => {

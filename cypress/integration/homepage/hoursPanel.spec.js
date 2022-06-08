@@ -2,6 +2,7 @@ context('Hours Accessibility', () => {
     it('Hours Accessibility', () => {
         cy.visit('/');
         cy.injectAxe();
+        cy.wait(2000);
         cy.viewport(1300, 1000);
         cy.log('Hours');
         cy.get('[data-testid="hours-item-0"]').contains('Arch Music');
@@ -13,6 +14,7 @@ context('Hours Accessibility', () => {
             scopeName: 'As loaded',
             includedImpacts: ['minor', 'moderate', 'serious', 'critical'],
         });
+        cy.log('Done!');
     });
     it('can navigate to specific library hours page', () => {
         cy.intercept('GET', 'https://web.library.uq.edu.au/locations-hours/architecture-music-library', {

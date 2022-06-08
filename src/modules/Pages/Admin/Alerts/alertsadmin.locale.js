@@ -25,7 +25,12 @@ export default {
                 },
             },
             systems:
-                'Use these checkboxes to target your alert to selected systems only. Leave checkboxes blank to show alert on all systems.',
+                (
+                    <Fragment>
+                        <strong>System specific alerts:</strong>{' '}
+                        use these checkboxes to target your alert to selected systems only. Leave the checkboxes blank to show alert on all systems.
+                    </Fragment>
+                ),
         },
         tooltips: {
             title: 'Alert lead text. Appears in bold. Field length of 100 characters.',
@@ -195,14 +200,17 @@ export default {
                                 (e.g. COVID lockdown, major system outage, major network outage, serious campus issue etc).
                             </p>
                         </dd>
-                        <dt>Target alerts</dt>
+                        <dt>System specific alerts</dt>
                         <dd>
                             <p>Displays the alert on selected systems only.</p>
                             <p>
-                                Use the checkboxes to select one or more systems for your alert. The alert will be
+                                Optional field. Use the checkboxes to select one or more systems for your alert. The alert will be
                                 displayed on those systems only.
                             </p>
-                            <p>When the checkboxes are blank, the alert will be displayed on all systems.</p>
+                            <p>
+                                When the checkboxes are blank, the alert will be displayed on all systems (Library Homepage apps, 
+                                Drupal Website, Libguides, Library CRM pages and eSpace).
+                            </p>
                         </dd>
                     </dl>
                     <p>The alert will appear between the start time and the end time set in the alert.</p>
@@ -244,7 +252,7 @@ export default {
                     <p>
                         This application enables authorised users to post alerts for library clients in the website
                         header. Alerts appear as part of the reusable header on sites that include the Library Homepage
-                        apps, Drupal Website, Libguides and Library CRM pages.
+                        apps, Drupal Website, Libguides, Library CRM pages and eSpace.
                     </p>
 
                     <h2>Alert listing screen</h2>

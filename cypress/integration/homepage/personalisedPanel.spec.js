@@ -1,9 +1,10 @@
 context('Personalised panel accessibility', () => {
-    it('Main Personalised panel', () => {
+    it('Main Personalised panel is accessible', () => {
         cy.visit('/?user=uqresearcher');
-        cy.wait(3000);
         cy.injectAxe();
+        cy.wait(2000);
         cy.viewport(1300, 1000);
+        cy.waitUntil(() => cy.get('div[data-testid="promo-panel"]').should('exist'));
         cy.get('div[data-testid="personalised-panel"]').contains('John');
         cy.get('div[data-testid="personalised-panel"]').contains('Link ORCiD account to eSpace');
         cy.log('Personalised panel as loaded');
