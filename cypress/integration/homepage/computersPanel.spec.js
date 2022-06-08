@@ -6,9 +6,11 @@ describe('Computer availability', () => {
     context('Computer availability accessibility', () => {
         it('Computer availability is accessible', () => {
             cy.injectAxe();
+            cy.wait(2000);
             cy.viewport(1300, 1000);
 
             cy.log('Computers list');
+            cy.waitUntil(() => cy.get('div[data-testid="computer-availability-panel"]').should('exist'));
             cy.get('button[data-testid="computers-library-button-0"]').should(
                 'have.text',
                 'Architecture & Music Library',

@@ -382,7 +382,7 @@ Deployment pipelines are setup for branches: "master", "staging, "production" an
 * Note: avoid certain words in your branch name, eg exams - Cloudfront overrides these routes and you won't be able to view the deployment.
   See [Cloudfront list of reserved routes](https://us-east-1.console.aws.amazon.com/cloudfront/v3/home?region=us-east-1&skipRegion=true#/distributions/E34LPPV7N4XONM/behaviors)
 
-* Branch `staging-reusable` is used to test changes to reusable that appear on the homepage. All other branches of homepage display production reusable. Do not merge _from_ `staging_reusable` as it has the wrong version of reusable  (the git hooks forbid it, if installed)
+* Branch `reusable-staging` is used to test changes to reusable that appear on the homepage. All other branches of homepage display production reusable. Do not merge _from_ `staging_reusable` as it has the wrong version of reusable  (the git hooks forbid it, if installed)
 
 Staging/production build has routing based on `createBrowserHistory()`, other branches rely on `createHashHistory()` due
 to URL/Cloudfront restrictions
