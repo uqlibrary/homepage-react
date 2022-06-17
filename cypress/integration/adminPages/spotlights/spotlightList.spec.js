@@ -6,7 +6,7 @@ import {
     showUnpublishedSpotlights,
     totalCountPastRecords,
 } from '../../../support/spotlights';
-import { assertSpotlightListPageIsLoadedToTest, clickButton } from '../../../support/helpers';
+import { waitUntilSpotlightListPageHasLoaded, clickButton } from '../../../support/helpers';
 
 const numRowsHiddenAsNoDatainfo = 1;
 
@@ -25,7 +25,7 @@ describe('Spotlights Admin List Page', () => {
 
     it('displays a list of spotlights to the authorised user', () => {
         cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
-        assertSpotlightListPageIsLoadedToTest();
+        waitUntilSpotlightListPageHasLoaded();
         cy.get('[data-testid="spotlight-list-current"] tbody')
             .children()
             .should('have.length', numberCurrentPublishedSpotlights + numRowsHiddenAsNoDatainfo);
@@ -236,7 +236,7 @@ describe('Spotlights Admin List Page', () => {
     });
     it('can filter the Past Spotlights by text string', () => {
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
-        assertSpotlightListPageIsLoadedToTest();
+        waitUntilSpotlightListPageHasLoaded();
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
             .should('have.length', 5 + numRowsHiddenAsNoDatainfo);

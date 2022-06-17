@@ -1,5 +1,5 @@
 import { FILTER_STORAGE_NAME, getFooterLabel, totalCountPastRecords } from '../../../support/spotlights';
-import { assertSpotlightListPageIsLoadedToTest, clickButton } from '../../../support/helpers';
+import { waitUntilSpotlightListPageHasLoaded, clickButton } from '../../../support/helpers';
 
 const numRowsHiddenAsNoDatainfo = 1;
 
@@ -15,7 +15,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
     it('the filter text is maintained when the user visits a View page', () => {
         // the list page loads
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
-        assertSpotlightListPageIsLoadedToTest();
+        waitUntilSpotlightListPageHasLoaded();
         // initally, all 5 records show
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
@@ -68,7 +68,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
     it('the filter text is maintained when the user visits a Clone page', () => {
         // the list page loads
         cy.get('[data-testid="admin-spotlights-list-past-list"]').scrollIntoView();
-        assertSpotlightListPageIsLoadedToTest();
+        waitUntilSpotlightListPageHasLoaded();
         // initally, all 5 records show
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
