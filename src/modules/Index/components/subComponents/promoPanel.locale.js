@@ -7,30 +7,34 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Exams',
+        title: 'Mid-year break',
         content: (
             <div>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support using online chat or by phone.</p>
-                <p>We're available from 7am to 8pm between 9 and 21 June (excluding Sundays).</p>
-                <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
-                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the library and on-campus.</li>
-                </ul>
-                <p>Good luck with your exams!</p>
+                <p>
+                    Congratulations to our new graduates! Visit our 
+                    <a href="https://web.library.uq.edu.au/library-services/services-for-uq-alumni">services for alumni</a> page to apply 
+                    for your New Graduate Alumni Membership (free for the first year) and for resources available to alumni members.
+                </p>
+                <p>
+                    To our returning students, you have access to the library throughout the mid-semester break if you're 
+                    enrolled for Semester Two. Enjoy your break and we'll see you in July!
+                </p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Exams',
+        title: 'Mid-year break',
         content: (
             <div>
-                <p><a href="https://web.library.uq.edu.au/contact-us">Contact us</a> for online exam technical support using online chat or by phone.</p>
-                <p>We're available from 7am to 8pm between 9 and 21 June (excluding Sundays).</p>
-                <ul>
-                    <li><a href="https://web.library.uq.edu.au/library-services/students/prepare-online-exam-success">Prepare for online exam success</a></li>
-                    <li><a href="https://life.uq.edu.au/study-spaces">Study spaces</a> are available in the library and on-campus.</li>
-                </ul>
-                <p>Good luck with your exams!</p>
+                <p>
+                    Congratulations to our new graduates! Visit our 
+                    <a href="https://web.library.uq.edu.au/library-services/services-for-uq-alumni">services for alumni</a> page to apply 
+                    for your New Graduate Alumni Membership (free for the first year) and for resources available to alumni members.
+                </p>
+                <p>
+                    To our returning students, you have access to the library throughout the mid-semester break if you're 
+                    enrolled for Semester Two. Enjoy your break and we'll see you in July!
+                </p>
             </div>
         ),
     },
