@@ -63,9 +63,9 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
 
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
   - for a logged in session, log in at library.uq.edu.au on a standard session, and then copying the following two cookie values:
-  - - UQLID
-  - - UQLID_USER_GROUP : LIBRARYSTAFFB
-  
+    - UQLID
+    - UQLID_USER_GROUP : LIBRARYSTAFFB
+
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
     ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
 
