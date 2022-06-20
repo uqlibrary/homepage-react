@@ -62,9 +62,8 @@ This project is using `npm` for dependency management. Make sure `npm` is instal
     - You will also need to run Chrome in no-security mode by adding the alias `alias chrome-no-cors='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --disable-web-security --user-data-dir=~/chrome-dev-profile > /dev/null 2>&1'` and then running chrome by `chrome-no-cors`. or `open -n -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --args --user-data-dir="/tmp/chrome_dev_test" --disable-web-security`
 
   - for Hot Reloading to work in IntelliJ products, turn "safe write" off in the settings
-  - for a logged in session, log in at library.uq.edu.au on a standard session, and then copying the following two cookie values:
-    - UQLID
-    - UQLID_USER_GROUP : LIBRARYSTAFFB
+  - for a logged in session, add UQLID and UQLID_USER_GROUP cookies for logged-in users (values can be found under Developer Tools -> Application Tab -> Cookies after logging into https://www.library.uq.edu.au/)
+    - Examples `UQLID: HJDFhjdiuere893434uieruiNMDFND90a` `UQLID_USER_GROUP: LIBRARYSTAFFB`
 
   - for a logged in session: `./scripts/dev-tools.sh start:staging-session` or `SESSION_COOKIE_NAME='mysessiontoken' npm run start:url`
     ('mysessiontoken': your session token can be seen by logging in at library.uq.edu.au then inspecting any of the api requests for the `x-uql-token` value)
