@@ -471,3 +471,57 @@ describe('Account action creators', () => {
         expect(getClassNumberFromPieces({ SUBJECT: 'FREN', CATALOG_NBR: '1010' })).toEqual('FREN1010');
     });
 });
+
+describe('Account action creators', () => {
+    const MockDate = require('mockdate');
+    beforeEach(() => {
+        MockDate.set('2020-01-01T00:00:00.000Z', 10);
+        mockActionsStore = setupStoreForActions();
+        mockApi = setupMockAdapter();
+        mockSessionApi = setupSessionMockAdapter();
+
+        Cookies.get = jest.fn().mockImplementation(() => '');
+        Object.defineProperty(window, 'sessionStorage', { value: sessionStorageMock });
+    });
+
+    afterEach(() => {
+        MockDate.reset();
+        mockApi.reset();
+        mockSessionApi.reset();
+        window.sessionStorage.clear();
+    });
+
+    it('SL UPDATE - dispatches expected actions when loading papercut fails on 403', async () => {
+        mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(403);
+
+        const expectedActions = [actions.PRINT_BALANCE_FAILED];
+
+        await mockActionsStore.dispatch(loadPrintBalance());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+
+    it('SL UPDATE - dispatches expected actions when loading loans fails on 403', async () => {
+        mockApi.onGet(repositories.routes.PRINTING_API().apiUrl).reply(403);
+
+        const expectedActions = [actions.LOANS_FAILED];
+
+        await mockActionsStore.dispatch(loadLoans());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+    it('dispatches expected actions when possible espace publications call fails on 403', async () => {
+        mockApi.onGet(repositories.routes.POSSIBLE_RECORDS_API().apiUrl).reply(403);
+
+        const expectedActions = [actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED];
+
+        await mockActionsStore.dispatch(searcheSpacePossiblePublications());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+    it('dispatches expected actions when incomplete publications call fails on 403', async () => {
+        mockApi.onGet(repositories.routes.INCOMPLETE_NTRO_RECORDS_API().apiUrl).reply(403);
+
+        const expectedActions = [actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED];
+
+        await mockActionsStore.dispatch(searcheSpaceIncompleteNTROPublications());
+        expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
+    });
+});
