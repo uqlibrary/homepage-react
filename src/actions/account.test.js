@@ -17,7 +17,8 @@ import {
 } from './account';
 import Cookies from 'js-cookie';
 
-jest.mock('raven-js');
+// jest.mock('raven-js');
+jest.mock('@sentry/browser');
 
 const sessionStorageMock = (function createSessionStorageMock() {
     let store = {};
