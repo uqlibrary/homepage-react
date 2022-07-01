@@ -42,7 +42,11 @@ export default {
             title: 'Reading list',
             error: {
                 none: 'No reading list for this course',
-                unavailable: 'Reading list currently unavailable',
+                unavailable: {
+                    label: 'Reading list currently unavailable - ',
+                    tryManually: 'Try manually',
+                    linkOut: 'https://uq.rl.talis.com/courses/[coursecode].html',
+                },
                 multiple: 'More than one reading list found for [classnumber]. Please select a list:',
                 footer: {
                     linkLabel: 'Search other reading lists',
