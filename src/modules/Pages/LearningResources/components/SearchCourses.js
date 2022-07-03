@@ -70,15 +70,15 @@ export const SearchCourses = ({
 
     const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const focusOnSelectedSubjectTab = React.useCallback(
-        preselectedCourse => {
+        course => {
             if (!initialLoadComplete) {
                 let tabId = null;
                 /* istanbul ignore next */
-                const searchKeyword = preselectedCourse.coursecode || '';
+                const searchKeyword = course.coursecode || '';
                 /* istanbul ignore next */
-                const campus = preselectedCourse.campus || '';
+                const campus = course.campus || '';
                 /* istanbul ignore next */
-                const semester = preselectedCourse.semester || '';
+                const semester = course.semester || '';
                 loadNewSubject(searchKeyword, campus, semester);
                 /* istanbul ignore else */
                 if (!listSearchedSubjects.includes(searchKeyword)) {
@@ -86,7 +86,6 @@ export const SearchCourses = ({
                     updateSearchList(searchKeyword);
                 }
 
-                // tabId = listSearchedSubjects.length === 0 ? 0 : listSearchedSubjects.length - 1;
                 tabId = 0;
 
                 setCurrentSearchTab(`${subjectTabLabel}-${tabId}`);
@@ -108,14 +107,34 @@ export const SearchCourses = ({
         }
     }, [preselectedCourse, focusOnSelectedSubjectTab, account]); // run once on load
 
-    const renderSearchResults = listSearchedSubjects => {
+    const getSubjectDetails = subjectCode => {
+        const subject = {};
+        subject.classnumber = subjectCode;
+        subject.title =
+            (!!examList &&
+                !!examList.list &&
+                !!examList.list[subjectCode] &&
+                !!examList.list[subjectCode].title &&
+                examList.list[subjectCode].title) ||
+            (!!readingList &&
+                !!readingList.list &&
+                !!readingList.list[subjectCode] &&
+                /* istanbul ignore next */
+                !!readingList.list[subjectCode].course_title &&
+                /* istanbul ignore next */
+                readingList.list[subjectCode].course_title) ||
+            '';
+        return subject;
+    };
+
+    const renderSearchResults = subjectList => {
         return (
             <Fragment>
                 <AppBar position="static" className={classes.subjectTabBar}>
                     <Tabs onChange={handleSearchTabChange} scrollButtons="auto" value={searchTab} variant="scrollable">
-                        {!!listSearchedSubjects &&
-                            listSearchedSubjects.length > 0 &&
-                            listSearchedSubjects.map((subjectName, index) => {
+                        {!!subjectList &&
+                            subjectList.length > 0 &&
+                            subjectList.map((subjectName, index) => {
                                 const subjectCode = extractSubjectCodeFromName(subjectName);
                                 return (
                                     <Tab
@@ -129,11 +148,9 @@ export const SearchCourses = ({
                             })}
                     </Tabs>
                 </AppBar>
-                {!!listSearchedSubjects &&
-                    listSearchedSubjects.length > 0 &&
-                    listSearchedSubjects.map((subjectCode, index) => {
-                        const subject = {};
-                        subject.classnumber = subjectCode;
+                {!!subjectList &&
+                    subjectList.length > 0 &&
+                    subjectList.map((subjectCode, index) => {
                         return (
                             <TabPanel
                                 data-testid={`classpanel-${index}`}
@@ -146,7 +163,7 @@ export const SearchCourses = ({
                                 {...reverseA11yProps(index, subjectTabLabel)}
                             >
                                 <SubjectBody
-                                    subject={subject}
+                                    subject={getSubjectDetails(subjectCode)}
                                     readingList={readingList}
                                     examList={examList}
                                     guideList={guideList}

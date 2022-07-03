@@ -48,8 +48,8 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
     // we should theoretically only ever have one reading list
     // but handle multiple anyway...
     const renderMultipleReadingListReference = (readingLists, coursecode) => {
-        const chooseListPrompt = coursecode =>
-            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', coursecode);
+        const chooseListPrompt = localCourseCode =>
+            locale.myCourses.readingLists.error.multiple.replace('[classnumber]', localCourseCode);
         return (
             <Grid container style={{ paddingBottom: 12 }}>
                 {!!readingLists && readingLists.length > 1 && (
@@ -72,8 +72,9 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
                                     aria-label={`Reading list for ${list.title} ${list.period}`}
                                     href={list.url}
                                     key={`reading-list-link-${index}`}
+                                    data-testid={`reading-list-link-${index}`}
                                 >
-                                    {coursecode} {list.campus}, {list.period}
+                                    {`${coursecode} ${list.campus}, ${list.period}`}
                                 </a>
                             </Grid>
                         );
@@ -97,8 +98,8 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
             !!readingList.reading_lists &&
             readingList.reading_lists.length === 1 &&
             !!readingList.reading_lists[0] &&
-            !!readingList.reading_lists[0].list
-            ? readingList.reading_lists[0].list.length
+            !!readingList.reading_lists[0].totalCount
+            ? readingList.reading_lists[0].totalCount
             : 0;
     };
     const numberExcessReadingLists =
@@ -146,7 +147,19 @@ export const ReadingLists = ({ subject, headingLevel, readingList, readingListLo
                 {!!readingListError && (
                     /* istanbul ignore next */ <Fragment>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
-                            <Typography>{locale.myCourses.readingLists.error.unavailable}</Typography>
+                            <Typography>
+                                {locale.myCourses.readingLists.error.unavailable.label}
+                                <a
+                                    style={{ display: 'inline' }}
+                                    aria-label={`Reading list for ${subject.classnumber}`}
+                                    href={locale.myCourses.readingLists.error.unavailable.linkOut.replace(
+                                        '[coursecode]',
+                                        subject.classnumber.toLowerCase(),
+                                    )}
+                                >
+                                    {locale.myCourses.readingLists.error.unavailable.tryManually}
+                                </a>
+                            </Typography>
                         </Grid>
                         <Grid item xs={12} className={classes.learningResourceLineItem}>
                             <a
