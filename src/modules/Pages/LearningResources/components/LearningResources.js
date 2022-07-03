@@ -86,8 +86,8 @@ export const LearningResources = ({
      * The page consists of 2 sections:
      * - the user's enrolled courses (aka subjects), and
      * - search area
-     * If the user is enrolled in courses then we load that section: top0
-     * Otherwise we load the search section: top1
+     * If the user is enrolled in courses then we load that section: mycoursestab
+     * Otherwise we load the search section: searchtab
      * These sections are displayed as 2 tabs across the top
      */
 
@@ -121,9 +121,7 @@ export const LearningResources = ({
     const throttledGuideLoad = useRef(throttle(1000, classnumber => actions.loadGuides(classnumber)));
     const throttledExamsLoad = useRef(throttle(1000, classnumber => actions.loadExamLearningResources(classnumber)));
     const throttledReadingListLoad = useRef(
-        throttle(1000, (classnumber, campus, semester, account) =>
-            actions.loadReadingLists(classnumber, campus, semester, account),
-        ),
+        throttle(1000, (classnumber, campus, semester) => actions.loadReadingLists(classnumber, campus, semester)),
     );
     const loadNewSubject = React.useCallback(
         (classnumber, campus, semester) => {
@@ -141,10 +139,10 @@ export const LearningResources = ({
             }
 
             if (!currentReadingLists[classnumber]) {
-                throttledReadingListLoad.current(classnumber, campus, semester, account);
+                throttledReadingListLoad.current(classnumber, campus, semester);
             }
         },
-        [currentGuidesList, currentExamsList, currentReadingLists, account],
+        [currentGuidesList, currentExamsList, currentReadingLists],
     );
 
     const params = getQueryParams(location.search);
@@ -157,7 +155,7 @@ export const LearningResources = ({
     }, [params, currentReadingLists, loadNewSubject]);
 
     const getInitialTopTabState = () => {
-        let initialTopTabState = 'top1';
+        let initialTopTabState = 'searchtab';
         // if has account and no search param supplied, show My Course tab
         if (
             !!account &&
@@ -165,7 +163,7 @@ export const LearningResources = ({
             account.current_classes.length > 0 &&
             (!params || !params.coursecode)
         ) {
-            initialTopTabState = 'top0';
+            initialTopTabState = 'mycoursestab';
         }
         // if has account and param supplied and param in account list, show My Course tab
         !!params &&
@@ -182,7 +180,7 @@ export const LearningResources = ({
                     getCampusByCode(item.CAMPUS) === campus &&
                     item.semester === semester
                 ) {
-                    initialTopTabState = 'top0';
+                    initialTopTabState = 'mycoursestab';
                 }
             });
         return initialTopTabState;
@@ -219,7 +217,7 @@ export const LearningResources = ({
     };
 
     const selectMyCoursesTab = (subjectId, tabPosition) => {
-        setCurrentTopTab('top0');
+        setCurrentTopTab('mycoursestab');
         const tabLabel = `${courseTabLabel}-${tabPosition}`;
 
         loadSubjectAndFocusOnTab(subjectId, tabLabel);
@@ -328,14 +326,14 @@ export const LearningResources = ({
                                 className={classes.appbar}
                             >
                                 <Tabs centered onChange={handleTopTabChange} value={topmenu}>
-                                    <Tab value="top0" label={locale.myCourses.title} {...a11yProps('0')} />
-                                    <Tab value="top1" label={locale.search.title} {...a11yProps('1')} />
+                                    <Tab value="mycoursestab" label={locale.myCourses.title} {...a11yProps('0')} />
+                                    <Tab value="searchtab" label={locale.search.title} {...a11yProps('1')} />
                                 </Tabs>
                             </AppBar>
 
                             <TabPanel
                                 value={topmenu}
-                                index="top0" // must match 'value' in Tabs
+                                index="mycoursestab" // must match 'value' in Tabs
                                 label="topmenu"
                                 {...reverseA11yProps('0')}
                             >
@@ -352,7 +350,7 @@ export const LearningResources = ({
                             </TabPanel>
                             <TabPanel
                                 value={topmenu}
-                                index="top1" // must match 'value' in Tabs
+                                index="searchtab" // must match 'value' in Tabs
                                 label="topmenu"
                                 {...reverseA11yProps('1')}
                             >

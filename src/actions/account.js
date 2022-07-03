@@ -195,6 +195,7 @@ export function loadCurrentAccount() {
         }
 
         const storedAccount = getAccountFromStorage();
+
         if (storedAccount !== null && !!storedAccount.account) {
             // account details stored locally with an expiry date
             const account = extractAccountFromSession(dispatch, storedAccount);
@@ -298,22 +299,31 @@ export function loadLibHours() {
  * @returns {function(*)}
  */
 export function loadPrintBalance() {
-    return dispatch => {
-        dispatch({ type: actions.PRINT_BALANCE_LOADING });
-        return get(PRINTING_API())
-            .then(papercutResponse => {
-                dispatch({
-                    type: actions.PRINT_BALANCE_LOADED,
-                    payload: papercutResponse,
+    if (!!getSessionCookie()) {
+        return dispatch => {
+            dispatch({ type: actions.PRINT_BALANCE_LOADING });
+            return get(PRINTING_API())
+                .then(papercutResponse => {
+                    dispatch({
+                        type: actions.PRINT_BALANCE_LOADED,
+                        payload: papercutResponse,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.PRINT_BALANCE_FAILED,
+                        payload: error.message,
+                    });
                 });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.PRINT_BALANCE_FAILED,
-                    payload: error.message,
-                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.PRINT_BALANCE_FAILED,
+                payload: 'not logged in',
             });
-    };
+        };
+    }
 }
 
 /**
@@ -321,22 +331,31 @@ export function loadPrintBalance() {
  * @returns {function(*)}
  */
 export function loadLoans() {
-    return dispatch => {
-        dispatch({ type: actions.LOANS_LOADING });
-        return get(LOANS_API())
-            .then(loanResponse => {
-                dispatch({
-                    type: actions.LOANS_LOADED,
-                    payload: loanResponse,
+    if (!!getSessionCookie()) {
+        return dispatch => {
+            dispatch({ type: actions.LOANS_LOADING });
+            return get(LOANS_API())
+                .then(loanResponse => {
+                    dispatch({
+                        type: actions.LOANS_LOADED,
+                        payload: loanResponse,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.LOANS_FAILED,
+                        payload: error.message,
+                    });
                 });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.LOANS_FAILED,
-                    payload: error.message,
-                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.LOANS_FAILED,
+                payload: 'not logged in',
             });
-    };
+        };
+    }
 }
 
 /**
@@ -393,22 +412,31 @@ export function loadTrainingEvents(account) {
  * @returns {action}
  */
 export function searcheSpacePossiblePublications() {
-    return dispatch => {
-        dispatch({ type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING });
-        return get(POSSIBLE_RECORDS_API())
-            .then(response => {
-                dispatch({
-                    type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADED,
-                    payload: response,
+    if (!!getSessionCookie()) {
+        return dispatch => {
+            dispatch({ type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADING });
+            return get(POSSIBLE_RECORDS_API())
+                .then(response => {
+                    dispatch({
+                        type: actions.POSSIBLY_YOUR_PUBLICATIONS_LOADED,
+                        payload: response,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED,
+                        payload: error.message,
+                    });
                 });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED,
-                    payload: error.message,
-                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.POSSIBLY_YOUR_PUBLICATIONS_FAILED,
+                payload: 'not logged in',
             });
-    };
+        };
+    }
 }
 
 /**
@@ -417,22 +445,31 @@ export function searcheSpacePossiblePublications() {
  * @returns {action}
  */
 export function searcheSpaceIncompleteNTROPublications() {
-    return dispatch => {
-        dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
-        return get(INCOMPLETE_NTRO_RECORDS_API())
-            .then(response => {
-                dispatch({
-                    type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADED,
-                    payload: response,
+    if (!!getSessionCookie()) {
+        return dispatch => {
+            dispatch({ type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADING });
+            return get(INCOMPLETE_NTRO_RECORDS_API())
+                .then(response => {
+                    dispatch({
+                        type: actions.INCOMPLETE_NTRO_PUBLICATIONS_LOADED,
+                        payload: response,
+                    });
+                })
+                .catch(error => {
+                    dispatch({
+                        type: actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
+                        payload: error.message,
+                    });
                 });
-            })
-            .catch(error => {
-                dispatch({
-                    type: actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
-                    payload: error.message,
-                });
+        };
+    } else {
+        return dispatch => {
+            dispatch({
+                type: actions.INCOMPLETE_NTRO_PUBLICATIONS_FAILED,
+                payload: 'not logged in',
             });
-    };
+        };
+    }
 }
 
 export function logout() {

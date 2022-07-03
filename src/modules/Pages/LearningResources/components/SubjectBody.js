@@ -37,39 +37,29 @@ const useStyles = makeStyles(
             color: theme.palette.primary.light,
             textAlign: 'center',
         },
+        contentBlock: {
+            paddingLeft: 12,
+            paddingRight: 12,
+        },
     }),
     { withTheme: true },
 );
 
 export const SubjectBody = ({ subject, examList, guideList, readingList, subjectHeaderLevel, panelHeadingLevel }) => {
     const classes = useStyles();
-
-    /* istanbul ignore next */
-    const coursecode = subject.classnumber || null;
-    const courseTitle = () => {
-        // whichever one we get first (they should both have the same value)
-        /* istanbul ignore next */
+    const coursecode = subject.classnumber || /* istanbul ignore next */ null;
+    const subjectHeading = course => {
+        // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
         const title =
-            (!!examList &&
-                !!examList.list &&
-                !!examList.list[coursecode] &&
-                !!examList.list[coursecode].title &&
-                ` - ${examList.list[coursecode].title}`) ||
-            (!!readingList &&
-                !!readingList.list &&
-                !!readingList.list[coursecode] &&
-                !!readingList.list[coursecode].course_title &&
-                ` - ${readingList.list[coursecode].course_title}`) ||
-            null;
-
-        if (title !== null) {
+            (!!course.DESCR && `- ${unescapeString(course.DESCR)}`) || // if from account
+            (!!course.title && `- ${unescapeString(course.title)}`) || // if from subject search
+            '';
+        if (title !== '') {
             // put focus on the tab, for screenreaders
             const searchResults = document.getElementById('learning-resource-search-results');
             !!searchResults && searchResults.focus();
         }
-
-        // we have titles like "FREN3310 - French&gt;English Translation". unescapeString fixes them
-        return unescapeString(title);
+        return `${course.classnumber} ${title}`;
     };
 
     return (
@@ -80,12 +70,16 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 variant={'h5'}
                 data-testid="learning-resource-subject-title"
             >
-                {coursecode}
-                {courseTitle()}
+                {subjectHeading(subject)}
                 <br />
             </Typography>
 
-            <Grid container spacing={3} className={'readingLists'}>
+            <Grid
+                container
+                spacing={3}
+                className={classes.contentBlock}
+                data-testid="learning-resource-subject-reading-list"
+            >
                 <Grid item xs={12}>
                     <ReadingLists
                         subject={subject}
@@ -97,8 +91,8 @@ export const SubjectBody = ({ subject, examList, guideList, readingList, subject
                 </Grid>
             </Grid>
 
-            <Grid container>
-                <Grid item xs={12} md={4} className={'exams'}>
+            <Grid container className={classes.contentBlock}>
+                <Grid item xs={12} md={4} data-testid="learning-resource-subject-exams">
                     <PastExamPapers
                         examList={examList.list[coursecode]}
                         examListLoading={examList.loading}

@@ -47,8 +47,8 @@ export function readingListLength(courseReadingList) {
         (!!courseReadingList.reading_lists &&
             courseReadingList.reading_lists.length > 0 &&
             !!courseReadingList.reading_lists[0] &&
-            !!courseReadingList.reading_lists[0].list &&
-            courseReadingList.reading_lists[0].list.length) ||
+            !!courseReadingList.reading_lists[0].totalCount &&
+            courseReadingList.reading_lists[0].totalCount) ||
         0
     );
 }
@@ -64,8 +64,16 @@ export const getReadingListHeader = courseReadingList => {
     } (${readingListLength(courseReadingList)} items)`;
 };
 
-export function assertSpotlightListPageIsLoadedToTest() {
+export function waitUntilSpotlightListPageHasLoaded() {
     cy.waitUntil(() =>
         cy.get('[data-testid="spotlight-list-row-1e1b0e10-c400-11e6-a8f0-47525a49f469"]').should('exist'),
     );
+    cy.waitUntil(() => {
+        const numberOfRowsPerPageOptions = 4; // currently the list is: 5, 10, 25, 100, ie 4 options
+        return cy
+            .get('[data-testid="admin-spotlights-list-paginator-select"]')
+            .children()
+            .its('length')
+            .should('eq', numberOfRowsPerPageOptions);
+    });
 }

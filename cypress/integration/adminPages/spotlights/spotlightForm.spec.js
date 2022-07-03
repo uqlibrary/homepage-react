@@ -15,7 +15,7 @@ import {
     saveButtonisDisabled,
     saveButtonNOTDisabled,
 } from '../../../support/spotlights';
-import { clickButton, assertSpotlightListPageIsLoadedToTest } from '../../../support/helpers';
+import { clickButton, waitUntilSpotlightListPageHasLoaded } from '../../../support/helpers';
 
 function setDateToNow() {
     cy.get('[data-testid="admin-spotlights-form-start-date"] button').click();
@@ -204,7 +204,7 @@ describe('Spotlights Admin Form Pages', () => {
         it('the cancel button on the add page returns to the list page', () => {
             clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
-            assertSpotlightListPageIsLoadedToTest();
+            waitUntilSpotlightListPageHasLoaded();
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()
@@ -408,7 +408,7 @@ describe('Spotlights Admin Form Pages', () => {
         it('the cancel button on the edit page returns to the list page', () => {
             clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
-            assertSpotlightListPageIsLoadedToTest();
+            waitUntilSpotlightListPageHasLoaded();
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()
@@ -542,7 +542,7 @@ describe('Spotlights Admin Form Pages', () => {
         it('the cancel button on the clone page returns to the list page', () => {
             clickButton('[data-testid="admin-spotlights-form-button-cancel"]', 'Cancel');
             cy.location('href').should('eq', 'http://localhost:2020/admin/spotlights');
-            assertSpotlightListPageIsLoadedToTest();
+            waitUntilSpotlightListPageHasLoaded();
             cy.get('[data-testid="spotlight-list-current"]').should('be.visible');
             cy.get('[data-testid="spotlight-list-current"] tbody')
                 .children()

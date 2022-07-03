@@ -54,7 +54,7 @@ mockData.accounts.uqrdav10 = mockData.uqrdav10.account;
 mockData.accounts.uqagrinb = mockData.uqagrinb.account;
 if (user && !mockData.accounts[user]) {
     console.warn(
-        `API MOCK DATA: User name (${user}) is not found, please use one of the usernames from mock data only...`,
+        `API MOCK DATA: User name ${user} is not found, please use one of the usernames from mock data only...`,
     );
 }
 
@@ -480,7 +480,7 @@ mock.onGet(routes.COMP_AVAIL_API().apiUrl).reply(withDelay([200, computerAvailab
 
 // Fetchmock docs: http://www.wheresrhys.co.uk/fetch-mock/
 fetchMock.mock(
-    'begin:https://api.library.uq.edu.au/staging/learning_resource_suggestions?hint=',
+    'begin:https://api.library.uq.edu.au/staging/learning_resources/suggestions?hint=',
     learningResourceSearchSuggestions,
 );
 
@@ -564,19 +564,19 @@ mock.onGet('exams/course/FREN1010/summary')
         return [200, libraryGuides_ACCT1101];
     })
 
-    .onGet('course_resources/FREN1010/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/reading_list/summary/FREN1010/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_FREN1010];
     })
-    .onGet('course_resources/HIST1201/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/reading_list/summary/HIST1201/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_HIST1201];
     })
-    .onGet('course_resources/PHIL1002/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/reading_list/summary/PHIL1002/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_PHIL1002];
     })
-    .onGet('course_resources/ACCT1101/St Lucia/Semester%25202%25202020/reading_list')
+    .onGet('learning_resources/reading_list/summary/ACCT1101/St Lucia/Semester%25202%25202020')
     .reply(() => {
         return [200, courseReadingList_ACCT1101];
     })
