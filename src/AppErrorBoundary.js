@@ -24,6 +24,7 @@ class AppErrorBoundary extends React.Component {
             // }).install();
             Sentry.init({
                 dsn: 'https://88702b1b71434522871473c7e2490ed8@o136426.ingest.sentry.io/5379235',
+                environment: process.env.BRNCH,
                 release: process.env.GIT_SHA,
                 whitelistUrls: [/library\.uq\.edu\.au/],
                 ignoreErrors: [
