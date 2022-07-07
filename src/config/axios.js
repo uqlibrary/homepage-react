@@ -93,7 +93,6 @@ const reportToSentry = error => {
         detailedError = `Something happened in setting up the request that triggered an Error: ${error.message}`;
     }
     // Raven.captureException(error, { extra: { error: detailedError } });
-    console.log('Firing to sentry');
     Sentry.withScope(scope => {
         scope.setExtra('error', detailedError);
         Sentry.captureException(error);
