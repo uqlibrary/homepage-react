@@ -13,7 +13,8 @@ import {
     loadReadingLists,
 } from './learningResourceActions';
 
-jest.mock('raven-js');
+// jest.mock('raven-js');
+jest.mock('@sentry/browser');
 
 describe('Account action creators', () => {
     const MockDate = require('mockdate');

@@ -12,7 +12,11 @@ import {
     SPOTLIGHTS_API_CURRENT,
     TRAINING_API,
 } from 'repositories/routes';
-import Raven from 'raven-js';
+// import Raven from 'raven-js';
+
+import * as Sentry from '@sentry/browser';
+// import { BrowserTracing } from '@sentry/tracing';
+
 import { sessionApi } from 'config';
 import { isHospitalUser, TRAINING_FILTER_GENERAL, TRAINING_FILTER_HOSPITAL } from 'helpers/access';
 import { SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, STORAGE_ACCOUNT_KEYNAME } from 'config/general';
@@ -209,8 +213,11 @@ export function loadCurrentAccount() {
         return get(CURRENT_ACCOUNT_API())
             .then(account => {
                 if (account.hasOwnProperty('hasSession') && account.hasSession === true) {
-                    if (process.env.ENABLE_LOG) Raven.setUserContext({ id: account.id });
-
+                    if (process.env.ENABLE_LOG) {
+                        Sentry.setUser({
+                            id: account.id,
+                        });
+                    }
                     addAccountToStoredAccount(account);
 
                     return Promise.resolve(account);
