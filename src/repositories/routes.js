@@ -17,7 +17,7 @@ export const TRAINING_API = (numEvents = 6, filterId = 104) => ({
 
 // Papercut balance API
 export const PRINTING_API = () => ({
-    apiUrl: 'papercut/balance',
+    apiUrl: 'papercut/balancez',
     options: { params: { ts: `${new Date().getTime()}` } },
 });
 
