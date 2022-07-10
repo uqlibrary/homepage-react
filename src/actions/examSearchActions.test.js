@@ -2,7 +2,6 @@ import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import { clearExamSearch, loadExamSearch } from './examSearchActions';
 
-// jest.mock('raven-js');
 jest.mock('@sentry/browser');
 
 describe('Account action creators', () => {

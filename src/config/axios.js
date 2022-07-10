@@ -6,9 +6,8 @@ import { store } from 'config/store';
 import { logout } from 'actions/account';
 import { showAppAlert } from 'actions/app';
 import locale from 'locale/global';
-// import Raven from 'raven-js';
+
 import * as Sentry from '@sentry/browser';
-// import { BrowserTracing } from '@sentry/tracing';
 
 import param from 'can-param';
 import { COMP_AVAIL_API, CURRENT_ACCOUNT_API, LIB_HOURS_API, TRAINING_API } from '../repositories/routes';
@@ -92,7 +91,6 @@ const reportToSentry = error => {
     } else {
         detailedError = `Something happened in setting up the request that triggered an Error: ${error.message}`;
     }
-    // Raven.captureException(error, { extra: { error: detailedError } });
     Sentry.withScope(scope => {
         scope.setExtra('error', detailedError);
         Sentry.captureException(error);
