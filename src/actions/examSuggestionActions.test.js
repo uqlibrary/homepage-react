@@ -2,7 +2,7 @@ import * as actions from './actionTypes';
 import * as repositories from 'repositories';
 import { clearExamSuggestions, loadExamSuggestions } from './examSuggestionActions';
 
-jest.mock('raven-js');
+jest.mock('@sentry/browser');
 
 describe('Account action creators', () => {
     const MockDate = require('mockdate');

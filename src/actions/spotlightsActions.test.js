@@ -13,7 +13,7 @@ import {
     deleteSpotlightBatch,
 } from './spotlightsActions';
 
-jest.mock('raven-js');
+jest.mock('@sentry/browser');
 
 const fileToUpload = new File(['foo'], 'foo.jpg', {
     type: 'text/jpg',
