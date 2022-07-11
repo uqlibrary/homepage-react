@@ -13,7 +13,6 @@ import {
     stripSeconds,
 } from './alertsActions';
 
-// jest.mock('raven-js');
 jest.mock('@sentry/browser');
 
 const newAlertRecord = {
