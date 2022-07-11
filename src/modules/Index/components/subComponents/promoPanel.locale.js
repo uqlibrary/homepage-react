@@ -11,8 +11,8 @@ export const promoPanel = {
         content: (
             <div>
                 <p>
-                    Get to know your Library this O-Week <span style="white-space: nowrap;">(18-22 July)</span> 
-                    and Connect Week <span style="white-space: nowrap;">(25-29 July)</span>.
+                    Get to know your Library this O-Week <span style={{ whiteSpace: 'nowrap' }}>(18-22 July)</span>{' '}
+                    and Connect Week <span style={{ whiteSpace: 'nowrap' }}>(25-29 July)</span>.
                 </p>
                 <p>
                     Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to 
@@ -30,8 +30,8 @@ export const promoPanel = {
         content: (
             <div>
                 <p>
-                    Get to know your Library this O-Week <span style="white-space: nowrap;">(18-22 July)</span> 
-                    and Connect Week <span style="white-space: nowrap;">(25-29 July)</span>.
+                    Get to know your Library this O-Week <span style={{ whiteSpace: 'nowrap' }}>(18-22 July)</span>{' '}
+                    and Connect Week <span style={{ whiteSpace: 'nowrap' }}>(25-29 July)</span>.
                 </p>
                 <p>
                     Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to 
