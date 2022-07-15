@@ -164,7 +164,7 @@ case "$PIPE_NUM" in
         exit 1
     fi
 
-    # Setting this after codestyle checks so that script doesn't exist before list of failures can be printed above.
+    # Set this after the codestyle checks above, so that this script doesn't exit before any failures can be printed
     set -e
 
     if [[ $CODE_COVERAGE_REQUIRED == true ]]; then
