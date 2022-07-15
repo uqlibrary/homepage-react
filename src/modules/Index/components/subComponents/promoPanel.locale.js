@@ -7,34 +7,40 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Mid-year break',
+        title: 'Orientation',
         content: (
             <div>
-                <p>Congratulations to our new graduates!</p>
-                <p>         
-                    Visit our <a href="https://web.library.uq.edu.au/library-services/services-for-uq-alumni">services for alumni</a> page to apply 
-                    for your New Graduate Alumni Membership (free for the first year) and for resources available to alumni members.
+                <p>
+                    Get to know your Library this O-Week <span style={{ whiteSpace: 'nowrap' }}>(18-22 July)</span>{' '}
+                    and Connect Week <span style={{ whiteSpace: 'nowrap' }}>(25-29 July)</span>.
                 </p>
                 <p>
-                    To our returning students, you have access to the library throughout the mid-semester break if you're enrolled for Semester Two. 
+                    Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to 
+                    your Orientation Plan such as an introduction to Learn.UQ (Blackboard) or a Library Q&amp;A session!
                 </p>
-                <p>Enjoy your break and we'll see you in July!</p>   
+                <p>
+                    Read our <a href="https://web.library.uq.edu.au/blog/2022/07/welcome-library-orientation">Getting started tips</a> and 
+                    make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.
+                </p>
             </div>
         ),
     },
     loggedin: {
-        title: 'Mid-year break',
+        title: 'Orientation',
         content: (
             <div>
-                <p>Congratulations to our new graduates!</p>
-                <p>         
-                    Visit our <a href="https://web.library.uq.edu.au/library-services/services-for-uq-alumni">services for alumni</a> page to apply 
-                    for your New Graduate Alumni Membership (free for the first year) and for resources available to alumni members.
+                <p>
+                    Get to know your Library this O-Week <span style={{ whiteSpace: 'nowrap' }}>(18-22 July)</span>{' '}
+                    and Connect Week <span style={{ whiteSpace: 'nowrap' }}>(25-29 July)</span>.
                 </p>
                 <p>
-                    To our returning students, you have access to the library throughout the mid-semester break if you're enrolled for Semester Two. 
+                    Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to 
+                    your Orientation Plan such as an introduction to Learn.UQ (Blackboard) or a Library Q&amp;A session!
                 </p>
-                <p>Enjoy your break and we'll see you in July!</p>   
+                <p>
+                    Read our <a href="https://web.library.uq.edu.au/blog/2022/07/welcome-library-orientation">Getting started tips</a> and 
+                    make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.
+                </p>
             </div>
         ),
     },
