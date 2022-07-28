@@ -7,40 +7,26 @@ import React from 'react';
 
 export const promoPanel = {
     loggedout: {
-        title: 'Orientation',
+        title: 'Services for students',
         content: (
             <div>
-                <p>
-                    Get to know your Library this O-Week <span style={{ whiteSpace: 'nowrap' }}>(18-22 July)</span>{' '}
-                    and Connect Week <span style={{ whiteSpace: 'nowrap' }}>(25-29 July)</span>.
-                </p>
-                <p>
-                    Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to 
-                    your Orientation Plan such as an introduction to Learn.UQ (Blackboard) or a Library Q&amp;A session!
-                </p>
-                <p>
-                    Read our <a href="https://web.library.uq.edu.au/blog/2022/07/welcome-library-orientation">Getting started tips</a> and 
-                    make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.
-                </p>
+                <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
+                <ul>
+                    <li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li>
+                    <li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li>
+                </ul>
             </div>
         ),
     },
     loggedin: {
-        title: 'Orientation',
+        title: 'Services for students',
         content: (
             <div>
-                <p>
-                    Get to know your Library this O-Week <span style={{ whiteSpace: 'nowrap' }}>(18-22 July)</span>{' '}
-                    and Connect Week <span style={{ whiteSpace: 'nowrap' }}>(25-29 July)</span>.
-                </p>
-                <p>
-                    Add <a href="https://orientation.uq.edu.au/event-search/organiser/3778">Library orientation sessions</a> to 
-                    your Orientation Plan such as an introduction to Learn.UQ (Blackboard) or a Library Q&amp;A session!
-                </p>
-                <p>
-                    Read our <a href="https://web.library.uq.edu.au/blog/2022/07/welcome-library-orientation">Getting started tips</a> and 
-                    make the most of your <a href="https://life.uq.edu.au/orientation">orientation experience</a> with UQ Life.
-                </p>
+                <p>Visit our <a href="https://web.library.uq.edu.au/library-services/services-students?utm_source=homepage&utm_medium=promobox&utm_campaign=services-for-students">services for students</a> page to make the most of your library this semester:</p>
+                <ul>
+                    <li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li>
+                    <li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li>
+                </ul>
             </div>
         ),
     },
