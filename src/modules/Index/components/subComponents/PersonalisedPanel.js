@@ -132,7 +132,7 @@ const useStyles = makeStyles(theme => ({
         margin: 3,
     },
     ppBadgeError: {
-        zIndex: 999,
+        zIndex: 998,
         width: 17,
         minWidth: 17,
         height: 17,
@@ -144,7 +144,7 @@ const useStyles = makeStyles(theme => ({
         lineHeight: 2,
     },
     ppBadgeWarning: {
-        zIndex: 999,
+        zIndex: 998,
         width: 17,
         minWidth: 17,
         height: 17,
@@ -156,7 +156,7 @@ const useStyles = makeStyles(theme => ({
         lineHeight: 2,
     },
     ppBadgeInfo: {
-        zIndex: 999,
+        zIndex: 998,
         width: 17,
         minWidth: 17,
         height: 17,
