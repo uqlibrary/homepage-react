@@ -20,7 +20,7 @@ const deployment = {
         api: 'https://api.library.uq.edu.au/staging/',
         auth_login: 'https://auth.library.uq.edu.au/login',
         auth_logout: 'https://auth.library.uq.edu.au/logout',
-        gtm: 'GTM-PNKNTSQ',
+        gtm: 'GTM-NC7M38Q',
         title: 'UQ Library (STAGING)',
         short_name: 'Library',
         titleSuffix: 'Staging',
