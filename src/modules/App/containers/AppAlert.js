@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as actions from 'actions';
+import * as actions from 'data/actions';
 
 import { Alert } from 'modules/SharedComponents/Toolbox/Alert';
 

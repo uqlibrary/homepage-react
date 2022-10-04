@@ -14,7 +14,7 @@ import {
     loadLibHours,
     loadCompAvail,
     loadTrainingEvents,
-} from 'actions';
+} from 'data/actions';
 import ContentLoader from 'react-content-loader';
 import { lazy } from 'react';
 import { lazyRetry } from 'helpers/general';

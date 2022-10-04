@@ -3,8 +3,8 @@ import Cookies from 'js-cookie';
 import { setupCache } from 'axios-cache-adapter';
 import { API_URL, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, TOKEN_NAME } from './general';
 import { store } from 'config/store';
-import { logout } from 'actions/account';
-import { showAppAlert } from 'actions/app';
+import { logout } from 'data/actions/account';
+import { showAppAlert } from 'data/actions/app';
 import locale from 'locale/global';
 
 import * as Sentry from '@sentry/browser';
