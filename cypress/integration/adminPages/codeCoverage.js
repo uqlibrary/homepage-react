@@ -1,5 +1,5 @@
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
-import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
+import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResourceSearchSuggestions';
 /*
  * this section duplcates tests in the homepage and otherpages folders and is needed to provide full coverage in the
  * admin pipeline during code coverage runs on aws :(

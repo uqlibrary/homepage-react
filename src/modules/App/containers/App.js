@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import App from '../components/App';
 import { bindActionCreators } from 'redux';
-import * as actions from 'actions';
+import * as actions from 'data/actions';
 
 const mapStateToProps = state => ({
     ...state.get('accountReducer'),
