@@ -166,13 +166,7 @@ api.interceptors.response.use(
                         };
                         break;
                     case 403:
-                        if (error?.response?.request?.responseUrl === 'spotlight') {
-                            errorMessage = {
-                                ...error.response,
-                                message:
-                                    'your image could not be uploaded. Please check or recreate the image and try again.',
-                            };
-                        } else if (error?.response?.request?.responseUrl !== 'account') {
+                        if (error?.response?.request?.responseUrl !== 'account') {
                             // if the api was account, we default to the global.js errorMessages entry
                             // as it is the most common case for a 403
                             errorMessage = {

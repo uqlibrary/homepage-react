@@ -418,7 +418,7 @@ export const AlertForm = ({ actions, alertLoading, alertResponse, alertStatus, d
 
     const errorLocale = {
         ...locale.form.add.addAlertError,
-        confirmationTitle: `An error occurred: ${alertError}`,
+        confirmationTitle: `An error occurred: ${JSON.stringify(alertError)}`,
     };
 
     const handleConfirmation = () => {
