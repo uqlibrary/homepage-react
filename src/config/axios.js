@@ -123,7 +123,12 @@ api.interceptors.response.use(
     error => {
         let errorMessage = null;
         if (!!error && !!error.config) {
-            if (!!error.response && !!error.response.status && error.response.status === 403) {
+            if (
+                !!error.response &&
+                !!error.response.status &&
+                error.response.status === 403 &&
+                error?.response?.request?.responseUrl === 'account'
+            ) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -156,6 +161,12 @@ api.interceptors.response.use(
                     errorMessage = {
                         ...errorMessage,
                         ...error.response.data,
+                    };
+                }
+                if (['spotlight'].includes(error?.response?.request?.responseUrl) && error.response.status === 403) {
+                    errorMessage = {
+                        ...error.response,
+                        message: 'your image could not be uploaded. Please check or recreate the image and try again.',
                     };
                 }
             }

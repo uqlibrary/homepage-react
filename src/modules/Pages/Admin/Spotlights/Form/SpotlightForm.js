@@ -348,7 +348,7 @@ export const SpotlightForm = ({
     const errorLocale = {
         ...locale.form.add.addSpotlightError,
         confirmationTitle: !!spotlightError
-            ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(spotlightError)}`
+            ? /* istanbul ignore next */ `An error occurred: ${spotlightError}`
             : 'An unknown error occurred',
     };
 
