@@ -348,7 +348,7 @@ export const SpotlightForm = ({
     const errorLocale = {
         ...locale.form.add.addSpotlightError,
         confirmationTitle: !!spotlightError
-            ? /* istanbul ignore next */ `An error occurred: ${spotlightError}`
+            ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(spotlightError)}`
             : 'An unknown error occurred',
     };
 
@@ -357,7 +357,7 @@ export const SpotlightForm = ({
         const errorMessage = (!!publicFileUploadError && !!publicFileUploadResult && publicFileUploadResult[0]) || '';
         return {
             ...locale.form.upload.uploadError,
-            confirmationTitle: `An error occurred during the upload${
+            confirmationTitle: `Your image could not be uploaded. Please check or recreate the image and try again${
                 !!errorMessage && typeof errorMessage === 'string' ? ': ' + errorMessage.trim() : ''
             }`,
         };
