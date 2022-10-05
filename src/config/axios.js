@@ -157,26 +157,21 @@ api.interceptors.response.use(
                 }
             } else if (!!error.response && !!error.response.status) {
                 errorMessage = locale.global.errorMessages[error.response.status];
-                switch (error.response.status) {
-                    case 410:
-                    case 422:
+                if ([410, 422].includes(error.response.status)) {
+                    errorMessage = {
+                        ...errorMessage,
+                        ...error.response.data,
+                    };
+                }
+                if (error.response.status === 403) {
+                    if (!!error?.response?.request?.responseUrl && error.response.request.responseUrl !== 'account') {
+                        // if the api was account, we default to the global.js errorMessages entry
+                        // as it is the most common case for a 403
                         errorMessage = {
-                            ...errorMessage,
-                            ...error.response.data,
+                            ...error.response,
+                            message: 'Your submission failed. Please try again or notify support',
                         };
-                        break;
-                    case 403:
-                        if (error?.response?.request?.responseUrl !== 'account') {
-                            // if the api was account, we default to the global.js errorMessages entry
-                            // as it is the most common case for a 403
-                            errorMessage = {
-                                ...error.response,
-                                message: 'Your submission failed. Please try again or notify support',
-                            };
-                        }
-                        break;
-                    default:
-                        break;
+                    }
                 }
             }
         }

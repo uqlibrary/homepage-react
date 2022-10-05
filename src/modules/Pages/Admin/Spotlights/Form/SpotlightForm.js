@@ -357,7 +357,7 @@ export const SpotlightForm = ({
         const errorMessage = (!!publicFileUploadError && !!publicFileUploadResult && publicFileUploadResult[0]) || '';
         return {
             ...locale.form.upload.uploadError,
-            confirmationTitle: `Your image could not be uploaded. Please check or recreate the image and try again${
+            confirmationTitle: `${locale.form.upload.uploadError.confirmationTitle}${
                 !!errorMessage && typeof errorMessage === 'string' ? ': ' + errorMessage.trim() : ''
             }`,
         };
