@@ -8,7 +8,7 @@ import {
     UPLOAD_PUBLIC_FILES_API,
     SPOTLIGHT_DELETE_BULK_API,
 } from 'repositories/routes';
-import { API_URL } from '../config';
+import { API_URL } from 'config';
 
 export function loadAllSpotlights() {
     return dispatch => {

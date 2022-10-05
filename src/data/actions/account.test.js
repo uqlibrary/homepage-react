@@ -1,4 +1,4 @@
-import { accounts, currentAuthor } from 'mock/data/account';
+import { accounts, currentAuthor } from 'data/mock/data/account';
 
 import * as actions from './actionTypes';
 import * as repositories from 'repositories';
@@ -183,7 +183,6 @@ describe('Account action creators', () => {
             actions.CURRENT_ACCOUNT_LOADING,
             actions.CURRENT_ACCOUNT_LOADED,
             actions.CURRENT_AUTHOR_LOADING,
-            actions.CURRENT_ACCOUNT_ANONYMOUS,
             actions.CURRENT_AUTHOR_FAILED,
         ];
 

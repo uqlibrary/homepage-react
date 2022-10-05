@@ -3,8 +3,8 @@ import Cookies from 'js-cookie';
 import { setupCache } from 'axios-cache-adapter';
 import { API_URL, SESSION_COOKIE_NAME, SESSION_USER_GROUP_COOKIE_NAME, TOKEN_NAME } from './general';
 import { store } from 'config/store';
-import { logout } from 'actions/account';
-import { showAppAlert } from 'actions/app';
+import { logout } from 'data/actions/account';
+import { showAppAlert } from 'data/actions/app';
 import locale from 'locale/global';
 
 import * as Sentry from '@sentry/browser';
@@ -123,7 +123,12 @@ api.interceptors.response.use(
     error => {
         let errorMessage = null;
         if (!!error && !!error.config) {
-            if (!!error.response && !!error.response.status && error.response.status === 403) {
+            if (
+                !!error.response &&
+                !!error.response.status &&
+                error.response.status === 403 &&
+                error?.response?.request?.responseUrl === 'account'
+            ) {
                 if (!!Cookies.get(SESSION_COOKIE_NAME)) {
                     Cookies.remove(SESSION_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
                     Cookies.remove(SESSION_USER_GROUP_COOKIE_NAME, { path: '/', domain: '.library.uq.edu.au' });
@@ -152,11 +157,32 @@ api.interceptors.response.use(
                 }
             } else if (!!error.response && !!error.response.status) {
                 errorMessage = locale.global.errorMessages[error.response.status];
-                if ([410, 422].includes(error.response.status)) {
-                    errorMessage = {
-                        ...errorMessage,
-                        ...error.response.data,
-                    };
+                switch (error.response.status) {
+                    case 410:
+                    case 422:
+                        errorMessage = {
+                            ...errorMessage,
+                            ...error.response.data,
+                        };
+                        break;
+                    case 403:
+                        if (error?.response?.request?.responseUrl === 'spotlight') {
+                            errorMessage = {
+                                ...error.response,
+                                message:
+                                    'your image could not be uploaded. Please check or recreate the image and try again.',
+                            };
+                        } else if (error?.response?.request?.responseUrl !== 'account') {
+                            // if the api was account, we default to the global.js errorMessages entry
+                            // as it is the most common case for a 403
+                            errorMessage = {
+                                ...error.response,
+                                message: 'Your submission failed. Please try again or notify support',
+                            };
+                        }
+                        break;
+                    default:
+                        break;
                 }
             }
         }
