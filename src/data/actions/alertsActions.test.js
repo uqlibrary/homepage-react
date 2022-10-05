@@ -180,11 +180,7 @@ describe('Alert actions', () => {
                 await mockActionsStore.dispatch(deleteAlert('id'));
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             } catch (e) {
-                const expectedActions = [
-                    actions.ALERT_LOADING,
-                    actions.CURRENT_ACCOUNT_ANONYMOUS,
-                    actions.ALERT_FAILED,
-                ];
+                const expectedActions = [actions.ALERT_LOADING, actions.ALERT_FAILED];
                 expect(mockActionsStore.getActions()).toHaveDispatchedActions(expectedActions);
             }
         });
