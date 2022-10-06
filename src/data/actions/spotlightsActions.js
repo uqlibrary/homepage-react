@@ -84,6 +84,12 @@ export const updateSpotlightWithExistingImage = request => {
     };
 };
 
+export const clearUpload = () => {
+    return async dispatch => {
+        dispatch({ type: actions.PUBLIC_FILE_UPLOAD_CLEARED });
+    };
+};
+
 export const updateSpotlightWithNewImage = (request, spotlightSaveType = 'update') => {
     if (!request.uploadedFile || request.uploadedFile.length === 0) {
         /* istanbul ignore else */
