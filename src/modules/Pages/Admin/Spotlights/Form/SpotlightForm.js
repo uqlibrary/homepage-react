@@ -220,17 +220,12 @@ export const SpotlightForm = ({
 
     useEffect(() => {
         /* istanbul ignore next */
-        if (!!spotlightError || spotlightStatus === 'error') {
-            showErrorConfirmation();
-        }
-    }, [showErrorConfirmation, spotlightError, spotlightStatus]);
-
-    useEffect(() => {
-        /* istanbul ignore next */
         if (!!publicFileUploadError) {
             showUploadError();
+        } else if (!!spotlightError || spotlightStatus === 'error') {
+            showErrorConfirmation();
         }
-    }, [showUploadError, publicFileUploadError]);
+    }, [showErrorConfirmation, spotlightError, spotlightStatus, showUploadError, publicFileUploadError]);
 
     function clearUploadError() {
         actions.clearUpload();
