@@ -232,6 +232,11 @@ export const SpotlightForm = ({
         }
     }, [showUploadError, publicFileUploadError]);
 
+    function clearUploadError() {
+        actions.clearUpload();
+        return hideUploadError();
+    }
+
     const clearForm = () => {
         setValues(defaults);
     };
@@ -450,8 +455,8 @@ export const SpotlightForm = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="spotlight-file-upload-failed"
-                    onClose={hideUploadError}
-                    onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ hideUploadError()}
+                    onClose={clearUploadError}
+                    onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ clearUploadError()}
                     isOpen={isUploadErrorOpen}
                     locale={uploadErrorLocale()}
                     hideCancelButton
