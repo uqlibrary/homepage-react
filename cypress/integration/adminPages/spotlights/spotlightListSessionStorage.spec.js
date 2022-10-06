@@ -22,7 +22,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
             .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(totalCountPastRecords));
 
-        // we reduce the number of rows to 3 by typing into the filter input field
+        // we reduce the number of rows displayed by typing into the filter input field
         cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
         cy.get('[data-testid="spotlight-list-past"] tbody')
@@ -61,6 +61,13 @@ describe('Spotlight Admin: past list filter session storage', () => {
             .should('exist')
             .click();
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', '');
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .its('length')
+                .should('eq', 5 + numRowsHiddenAsNoDatainfo);
+        });
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
             .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
@@ -75,7 +82,7 @@ describe('Spotlight Admin: past list filter session storage', () => {
             .should('have.length', 5 + numRowsHiddenAsNoDatainfo);
         cy.get('[data-testid="admin-spotlights-list-past-list"] tfoot').contains(getFooterLabel(totalCountPastRecords));
 
-        // we reduce the number of rows to 4 by typing into the filter input field
+        // we reduce the number of rows displayed by typing into the filter input field
         cy.get('[data-testid="spotlights-list-clear-text-field"]').should('exist');
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').type('can');
         cy.get('[data-testid="spotlight-list-past"] tbody')
@@ -114,6 +121,13 @@ describe('Spotlight Admin: past list filter session storage', () => {
             .should('exist')
             .click();
         cy.get('[data-testid="spotlights-list-clear-text-field"] input').should('have.value', '');
+        cy.waitUntil(() => {
+            return cy
+                .get('[data-testid="spotlight-list-past"] tbody')
+                .children()
+                .its('length')
+                .should('eq', 5 + numRowsHiddenAsNoDatainfo);
+        });
         cy.get('[data-testid="spotlight-list-past"] tbody')
             .children()
             .should('have.length', 5 + numRowsHiddenAsNoDatainfo);

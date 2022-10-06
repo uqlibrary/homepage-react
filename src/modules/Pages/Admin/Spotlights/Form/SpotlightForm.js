@@ -220,17 +220,17 @@ export const SpotlightForm = ({
 
     useEffect(() => {
         /* istanbul ignore next */
-        if (!!spotlightError || spotlightStatus === 'error') {
-            showErrorConfirmation();
-        }
-    }, [showErrorConfirmation, spotlightError, spotlightStatus]);
-
-    useEffect(() => {
-        /* istanbul ignore next */
         if (!!publicFileUploadError) {
             showUploadError();
+        } else if (!!spotlightError || spotlightStatus === 'error') {
+            showErrorConfirmation();
         }
-    }, [showUploadError, publicFileUploadError]);
+    }, [showErrorConfirmation, spotlightError, spotlightStatus, showUploadError, publicFileUploadError]);
+
+    function clearUploadError() {
+        actions.clearUpload();
+        return hideUploadError();
+    }
 
     const clearForm = () => {
         setValues(defaults);
@@ -357,7 +357,7 @@ export const SpotlightForm = ({
         const errorMessage = (!!publicFileUploadError && !!publicFileUploadResult && publicFileUploadResult[0]) || '';
         return {
             ...locale.form.upload.uploadError,
-            confirmationTitle: `An error occurred during the upload${
+            confirmationTitle: `${locale.form.upload.uploadError.confirmationTitle}${
                 !!errorMessage && typeof errorMessage === 'string' ? ': ' + errorMessage.trim() : ''
             }`,
         };
@@ -450,8 +450,8 @@ export const SpotlightForm = ({
                     actionButtonColor="primary"
                     actionButtonVariant="contained"
                     confirmationBoxId="spotlight-file-upload-failed"
-                    onClose={hideUploadError}
-                    onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ hideUploadError()}
+                    onClose={clearUploadError}
+                    onAction={/* istanbul ignore next */ () => /* istanbul ignore next */ clearUploadError()}
                     isOpen={isUploadErrorOpen}
                     locale={uploadErrorLocale()}
                     hideCancelButton

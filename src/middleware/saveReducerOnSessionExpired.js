@@ -1,4 +1,4 @@
-import * as actions from 'actions/actionTypes';
+import * as actions from 'data/actions/actionTypes';
 
 const saveReducerOnSessionExpired = store => next => action => {
     if (action.type === actions.CURRENT_ACCOUNT_SESSION_EXPIRED) {

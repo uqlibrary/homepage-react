@@ -1,6 +1,6 @@
 import * as actions from './actionTypes';
 import { get } from 'repositories/generic';
-import { EXAMS_SUGGESTION_API } from '../repositories/routes';
+import { EXAMS_SUGGESTION_API } from 'repositories/routes';
 
 export function loadExamSuggestions(keyword) {
     return dispatch => {

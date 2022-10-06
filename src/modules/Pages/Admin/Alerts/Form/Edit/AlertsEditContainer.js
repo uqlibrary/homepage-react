@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
-import * as actions from 'actions';
+import * as actions from 'data/actions';
 
 import AlertsEdit from 'modules/Pages/Admin/Alerts/Form/Edit/AlertsEdit';
 

@@ -8,7 +8,7 @@ import {
     UPLOAD_PUBLIC_FILES_API,
     SPOTLIGHT_DELETE_BULK_API,
 } from 'repositories/routes';
-import { API_URL } from '../config';
+import { API_URL } from 'config';
 
 export function loadAllSpotlights() {
     return dispatch => {
@@ -81,6 +81,12 @@ export const updateSpotlightWithExistingImage = request => {
     return dispatch => {
         dispatch({ type: actions.SPOTLIGHT_SAVING });
         return saveSpotlightChange(request, dispatch);
+    };
+};
+
+export const clearUpload = () => {
+    return async dispatch => {
+        dispatch({ type: actions.PUBLIC_FILE_UPLOAD_CLEARED });
     };
 };
 

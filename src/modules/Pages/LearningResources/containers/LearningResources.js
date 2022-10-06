@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import LearningResources from '../components/LearningResources';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
-import * as actions from 'actions';
+import * as actions from 'data/actions';
 
 // this page can either be loaded as a general 'show me my courses'
 // eg http://localhost:2020/learning-resources?user=s1111111

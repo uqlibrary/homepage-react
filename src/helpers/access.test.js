@@ -9,7 +9,7 @@ import {
     isHdrStudent,
     isSpotlightsAdminUser,
 } from './access';
-import { accounts } from '../mock/data';
+import { accounts } from 'data/mock/data';
 
 describe('access', () => {
     it('should get the correct services when the account is missing', () => {

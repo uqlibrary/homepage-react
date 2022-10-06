@@ -1,7 +1,7 @@
 import saveReducerOnSessionExpired from './saveReducerOnSessionExpired';
-import { CURRENT_ACCOUNT_SESSION_EXPIRED } from 'actions/actionTypes';
+import { CURRENT_ACCOUNT_SESSION_EXPIRED } from 'data/actions/actionTypes';
 import Immutable from 'immutable';
-import { thesisFormData } from 'mock/data/testing/localStorageData';
+import { thesisFormData } from 'data/mock/data/testing/localStorageData';
 
 describe('middleware saveReducerOnSessionExpired', () => {
     it('should save given reducer (form) in action payload to a local storage', () => {

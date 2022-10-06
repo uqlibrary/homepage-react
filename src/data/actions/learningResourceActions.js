@@ -5,7 +5,7 @@ import {
     LEARNING_RESOURCES_EXAMS_API,
     READING_LIST_API,
     LEARNING_RESOURCES_COURSE_SUGGESTIONS_API,
-} from '../repositories/routes';
+} from 'repositories/routes';
 import { throwFetchErrors } from 'helpers/general';
 
 export function loadGuides(keyword) {

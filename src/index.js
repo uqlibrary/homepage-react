@@ -24,7 +24,7 @@ require('events').EventEmitter.prototype._maxListeners = 30;
 
 // Import mock data if required
 if (process.env.BRANCH !== 'production' && process.env.USE_MOCK) {
-    require('./mock');
+    require('./data/mock');
 }
 
 const render = () => {

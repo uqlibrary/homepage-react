@@ -2,16 +2,16 @@
 /* eslint max-len: 0 */
 import { default as locale } from '../../../src/modules/Pages/LearningResources/learningResources.locale';
 import { _courseLink, _pluralise } from '../../../src/modules/Pages/LearningResources/learningResourcesHelpers';
-import { default as FREN1010ReadingList } from '../../../src/mock/data/records/courseReadingList_FREN1010';
-import { default as FREN1010Guide } from '../../../src/mock/data/records/libraryGuides_FREN1010';
-import { default as FREN1010Exam } from '../../../src/mock/data/records/examListFREN1010';
-import { default as HIST1201ReadingList } from '../../../src/mock/data/records/courseReadingList_HIST1201';
-import { default as PHIL1002ReadingList } from '../../../src/mock/data/records/courseReadingList_PHIL1002';
-import { default as PHIL1002Guide } from '../../../src/mock/data/records/libraryGuides_PHIL1002';
-import { default as ACCT1101ReadingList } from '../../../src/mock/data/records/courseReadingList_ACCT1101';
-import { default as ACCT1101Guide } from '../../../src/mock/data/records/libraryGuides_ACCT1101';
-import { default as ACCT1101Exam } from '../../../src/mock/data/records/examListACCT1101';
-import { default as learningResourceSearchSuggestions } from '../../../src/mock/data/records/learningResourceSearchSuggestions';
+import { default as FREN1010ReadingList } from '../../../src/data/mock/data/records/courseReadingList_FREN1010';
+import { default as FREN1010Guide } from '../../../src/data/mock/data/records/libraryGuides_FREN1010';
+import { default as FREN1010Exam } from '../../../src/data/mock/data/records/examListFREN1010';
+import { default as HIST1201ReadingList } from '../../../src/data/mock/data/records/courseReadingList_HIST1201';
+import { default as PHIL1002ReadingList } from '../../../src/data/mock/data/records/courseReadingList_PHIL1002';
+import { default as PHIL1002Guide } from '../../../src/data/mock/data/records/libraryGuides_PHIL1002';
+import { default as ACCT1101ReadingList } from '../../../src/data/mock/data/records/courseReadingList_ACCT1101';
+import { default as ACCT1101Guide } from '../../../src/data/mock/data/records/libraryGuides_ACCT1101';
+import { default as ACCT1101Exam } from '../../../src/data/mock/data/records/examListACCT1101';
+import { default as learningResourceSearchSuggestions } from '../../../src/data/mock/data/records/learningResourceSearchSuggestions';
 import { getReadingListHeader, readingListLength } from '../../support/helpers';
 
 function the_user_lands_on_the_My_Classes_tab(courseReadingList, panelId = 0) {
