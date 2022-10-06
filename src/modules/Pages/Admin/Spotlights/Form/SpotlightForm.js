@@ -222,7 +222,7 @@ export const SpotlightForm = ({
         /* istanbul ignore next */
         if (!!publicFileUploadError) {
             showUploadError();
-        } /* istanbul ignore else */ else if (!!spotlightError || spotlightStatus === 'error') {
+        } /* istanbul ignore next */ else if (!!spotlightError || spotlightStatus === 'error') {
             showErrorConfirmation();
         }
     }, [showErrorConfirmation, spotlightError, spotlightStatus, showUploadError, publicFileUploadError]);
