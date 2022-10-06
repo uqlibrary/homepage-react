@@ -222,13 +222,20 @@ export const SpotlightForm = ({
         /* istanbul ignore next */
         if (!!publicFileUploadError) {
             showUploadError();
-        } /* istanbul ignore next */ else if (!!spotlightError || spotlightStatus === 'error') {
+        } /* istanbul ignore else */ /* istanbul ignore next */ else if (
+            !!spotlightError ||
+            spotlightStatus === 'error'
+        ) {
+            /* istanbul ignore next */
             showErrorConfirmation();
         }
     }, [showErrorConfirmation, spotlightError, spotlightStatus, showUploadError, publicFileUploadError]);
 
+    /* istanbul ignore next */
     function clearUploadError() {
+        /* istanbul ignore next */
         actions.clearUpload();
+        /* istanbul ignore next */
         return hideUploadError();
     }
 
