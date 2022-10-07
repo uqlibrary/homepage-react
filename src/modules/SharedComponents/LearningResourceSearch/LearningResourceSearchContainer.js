@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { withRouter } from 'react-router-dom';
 import * as actions from 'data/actions';
-import LearningResourceSearch from '../components/LearningResourceSearch';
+import LearningResourceSearch from './LearningResourceSearch';
 
 const mapStateToProps = state => {
     return {
