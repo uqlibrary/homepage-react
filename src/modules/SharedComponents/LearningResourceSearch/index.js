@@ -1,1 +1,1 @@
-export { default as LearningResourceSearch } from './containers/LearningResourceSearch';
+export { default as LearningResourceSearch } from './LearningResourceSearchContainer';
