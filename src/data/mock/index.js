@@ -431,12 +431,13 @@ mock.onGet(routes.ALERT_BY_ID_API({ id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9' }
     withDelay([
         200,
         {
-            "id": "d23f2e10-d7d6-11eb-a928-71f3ef9d35d9",
-            "start": "2021-06-28 16:02:54",
-            "end": "2021-06-29 15:00:54",
-            "title": "Face masks in the Library:",
-            "body": "Test Extreme alert with a longish body content.[permanent][UQ community COVID-19 advice](https:\/\/about.uq.edu.au\/coronavirus)",
-            "priority_type": 'extreme',
+            id: 'd23f2e10-d7d6-11eb-a928-71f3ef9d35d9',
+            start: '2021-06-28 16:02:54',
+            end: '2021-06-29 15:00:54',
+            title: 'Face masks in the Library:',
+            body:
+                'Test Extreme alert with a longish body content.[permanent][UQ community COVID-19 advice](https://about.uq.edu.au/coronavirus)',
+            priority_type: 'extreme',
             created_by: '?',
             updated_by: null,
         },
