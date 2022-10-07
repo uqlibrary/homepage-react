@@ -1,4 +1,4 @@
-import * as actions from 'actions/actionTypes';
+import * as actions from 'data/actions/actionTypes';
 import accountReducer from './account';
 import { initialState, initSavingState } from './account';
 

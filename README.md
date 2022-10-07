@@ -1,8 +1,6 @@
 # HOMEPAGE-REACT
 
 [![Codebuild Status for uqlibrary/homepage-react](https://codebuild.ap-southeast-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiSUhCeGFUaW5iaHMyYjNIcnNWTGJMOTA3eThjRFFTYVhyY3NiSDVTWlJlbnl5VllnUHlvRzVyeWdhYW52VnduNUNzbDBPZUkreVFvUTFkQkhyQ0YxZUJZPSIsIml2UGFyYW1ldGVyU3BlYyI6IldlOVk5dlVxU0ROSE5IaDciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=master)](https://ap-southeast-2.console.aws.amazon.com/codesuite/codepipeline/pipelines/homepage-master/view?region=ap-southeast-2)
-[![Dependency Status](https://david-dm.org/uqlibrary/homepage-react.svg)](https://david-dm.org/uqlibrary/homepage-react)
-[![Dev Dependency Status](https://david-dm.org/uqlibrary/homepage-react/dev-status.svg)](https://david-dm.org/uqlibrary/homepage-react)
 
 A repo for the Library of The University of Queensland website homepage
 
