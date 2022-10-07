@@ -88,7 +88,7 @@ export const LearningResourceSearch = ({
     const handleSelectionOfCourseInDropdown = (event, option) => {
         /* istanbul ignore else */
         if (!!option && !!option.courseCode) {
-            // we dont want the previous list to pop up if they search again
+            // we don't want the previous list to pop up if they search again
             actions.clearLearningResourceSuggestions();
 
             if (displayType === 'compact') {
@@ -107,13 +107,8 @@ export const LearningResourceSearch = ({
     };
 
     function getOptions() {
-        return (
-            (!!CRsuggestions &&
-                CRsuggestions.filter(option => option.courseCode !== searchKeyword).map(option =>
-                    unescapeString(option.displayname),
-                )) ||
-            []
-        );
+        // make special characters display nicely
+        return (!!CRsuggestions && CRsuggestions.map(option => unescapeString(option.displayname))) || [];
     }
 
     // we group them all together to place a header at the top of the search results
