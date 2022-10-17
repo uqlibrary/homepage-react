@@ -57,6 +57,15 @@ export default {
                     view: { title: 'View a Spotlight' },
                 },
             },
+            promopanel: {
+                title: 'Promo Panels',
+                form: {
+                    add: { title: 'Add a new Promo Panel' },
+                    edit: { title: 'Edit a Promo Panel' },
+                    clone: { title: 'Clone a Promo Panel - make a new panel based on an existing one' },
+                    view: { title: 'View a Promo Panel' },
+                },
+            },
         },
         learningresources: {
             title: 'Learning resources',

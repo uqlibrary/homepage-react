@@ -156,6 +156,8 @@ export const isSpotlightsAdminUser = account => isLoggedInUser(account) && canSe
 
 export const isAlertsAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
 
+export const isPromoPanelAdminUser = account => isLoggedInUser(account) && canSeeWebContentAdminPages(account);
+
 export const isHospitalUser = account =>
     isLoggedInUser(account) && !!account.user_group && account.user_group === EXTRAMURAL_HOSPITAL;
 
