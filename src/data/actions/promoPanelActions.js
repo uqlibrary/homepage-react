@@ -90,6 +90,11 @@ export function loadPromoPanelUserList() {
 }
 
 export const createPromoPanel = request => {
+    if ('id' in request) {
+        // as we are creating a new promo panel there should not be an id field
+        delete request.id;
+    }
+    console.log('in Create Promo Panel Action', request);
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_CREATING });
         return post(PROMOPANEL_CREATE_API(), request)

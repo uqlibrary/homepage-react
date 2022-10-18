@@ -18,6 +18,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 // import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 // import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/Form/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
+import { formatDate } from '../Spotlights/spotlighthelpers';
 // import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 // import { useConfirmationState } from 'hooks';
@@ -69,7 +70,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 export const PromoPanelForm = ({
-    // actions,
+    actions,
     // spotlightResponse,
     // spotlightStatus,
     defaults,
@@ -242,56 +243,65 @@ export const PromoPanelForm = ({
     //     scrollToTopOfPage();
     // };
 
-    // const saveSpotlight = () => {
-    //     scrollToTopOfPage();
+    const savePromoPanel = () => {
+        //     scrollToTopOfPage();
+        console.log('The values at time of save', values);
+        const newValues = {
+            id: defaults.type === 'edit' ? values.id : null,
+            panel_name: values.name,
+            panel_title: values.title,
+            panel_content: values.content,
 
-    //     const newValues = {
-    //         id: defaults.type === 'edit' ? values.id : null,
-    //         start: formatDate(values.start),
-    //         end: formatDate(values.end),
-    //         title: values.title,
-    //         url: values.url,
-    //         // eslint-disable-next-line camelcase
-    //         img_url: values?.img_url ?? /* istanbul ignore next */ null,
-    //         img_alt: values.img_alt,
-    //         // weight will update after save,
-    //         // but lets just use a number that sits at the end of the current spotlights, as requested
-    //         // weight: defaults.type === 'edit' ? values.weight : 1000, // weight,
-    //         weight: values.weight,
-    //         active: !!values.active ? 1 : 0,
-    //         // eslint-disable-next-line camelcase
-    //         admin_notes: values?.admin_notes ?? /* istanbul ignore next */ null,
-    //     };
-    //     !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
+            panel_start: formatDate(values.start),
+            panel_end: formatDate(values.end),
+        };
+        actions.createPromoPanel(newValues);
+        //    end: formatDate(values.end),
+        //    name: values.name,
 
-    //     switch (defaults.type) {
-    //         case 'add':
-    //             actions.createSpotlightWithNewImage(newValues);
-    //             break;
-    //         case 'edit':
-    //             !!values.uploadedFile
-    //                 ? actions.updateSpotlightWithNewImage(newValues)
-    //                 : /* istanbul ignore next */ actions.updateSpotlightWithExistingImage(newValues);
-    //             break;
-    //         case 'clone':
-    //             /* istanbul ignore next */
-    //             !!values.uploadedFile
-    //                 ? actions.createSpotlightWithNewImage(newValues)
-    //                 : actions.createSpotlightWithExistingImage(newValues);
-    //             break;
-    //         /* istanbul ignore next */
-    //         default:
-    //             // never happens
-    //             return;
-    //     }
+        //         title: values.title,
+        //         url: values.url,
+        //         // eslint-disable-next-line camelcase
+        //         img_url: values?.img_url ?? /* istanbul ignore next */ null,
+        //         img_alt: values.img_alt,
+        //         // weight will update after save,
+        //         // but lets just use a number that sits at the end of the current spotlights, as requested
+        //         // weight: defaults.type === 'edit' ? values.weight : 1000, // weight,
+        //         weight: values.weight,
+        //         active: !!values.active ? 1 : 0,
+        //         // eslint-disable-next-line camelcase
+        //         admin_notes: values?.admin_notes ?? /* istanbul ignore next */ null,
+        //     };
+        //     !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
 
-    //     // force to the top of the page, because otherwise it looks a bit weird
-    //     window.scrollTo({
-    //         top: 0,
-    //         left: 0,
-    //         behavior: 'smooth',
-    //     });
-    // };
+        //     switch (defaults.type) {
+        //         case 'add':
+        //             actions.createSpotlightWithNewImage(newValues);
+        //             break;
+        //         case 'edit':
+        //             !!values.uploadedFile
+        //                 ? actions.updateSpotlightWithNewImage(newValues)
+        //                 : /* istanbul ignore next */ actions.updateSpotlightWithExistingImage(newValues);
+        //             break;
+        //         case 'clone':
+        //             /* istanbul ignore next */
+        //             !!values.uploadedFile
+        //                 ? actions.createSpotlightWithNewImage(newValues)
+        //                 : actions.createSpotlightWithExistingImage(newValues);
+        //             break;
+        //         /* istanbul ignore next */
+        //         default:
+        //             // never happens
+        //             return;
+        //     }
+
+        //     // force to the top of the page, because otherwise it looks a bit weird
+        //     window.scrollTo({
+        //         top: 0,
+        //         left: 0,
+        //         behavior: 'smooth',
+        //     });
+    };
 
     /* istanbul ignore next */
     // const updateWeightInValues = newWeight => {
@@ -422,10 +432,10 @@ export const PromoPanelForm = ({
                                 id="promoPanelName"
                                 data-testid="admin-promopanel-form-name"
                                 multiline
-                                error={!values.title}
+                                error={!values.name}
                                 onChange={handleChange('name')}
                                 rows={1}
-                                value={values.title}
+                                value={values.name}
                             />
                         </FormControl>
                     </Grid>
@@ -508,6 +518,28 @@ export const PromoPanelForm = ({
                                     'aria-label': locale.form.tooltips.unpublishDate,
                                 }}
                                 minDateMessage="Should not be before Date published"
+                            />
+                        </Grid>
+                    </Grid>
+                    <Grid container spacing={2} style={{ marginTop: '1rem' }}>
+                        <Grid item xs={3} align="left">
+                            <Button
+                                color="secondary"
+                                children="Cancel"
+                                data-testid="admin-promopanel-form-button-cancel"
+                                // onClick={() => navigateToListPage()}
+                                variant="contained"
+                            />
+                        </Grid>
+                        <Grid item xs={9} align="right">
+                            <Button
+                                color="primary"
+                                data-testid="admin-promopanel-form-button-save"
+                                variant="contained"
+                                children={defaults.type === 'edit' ? 'Save' : 'Create'}
+                                // disabled={!isFormValid}
+                                onClick={savePromoPanel}
+                                className={classes.saveButton}
                             />
                         </Grid>
                     </Grid>

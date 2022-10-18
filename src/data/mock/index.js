@@ -681,8 +681,17 @@ mock.onGet('exams/course/FREN1010/summary')
     .reply(() => {
         return [500, []];
     })
+    .onPost(routes.PROMOPANEL_CREATE_API().apiUrl).reply(
+        withDelay([
+            200,
+            {
+                
+            },
+        ]),
+    )
     .onAny()
     .reply(config => {
         console.log('url not mocked...', config);
         return [404, { message: `MOCK URL NOT FOUND: ${config.url}` }];
     });
+

@@ -5,3 +5,4 @@ export * from './alertsActions';
 export * from './spotlightsActions';
 export * from './examSearchActions';
 export * from './examSuggestionActions';
+export * from './promoPanelActions';

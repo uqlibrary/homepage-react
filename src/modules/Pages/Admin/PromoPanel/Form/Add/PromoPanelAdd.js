@@ -14,17 +14,15 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 // import { default as locale } from 'modules/Pages/Admin/PromoPanel/promopaneladmin.locale';
 
-export const PromoPanelAdd = (
-    {
-        // actions,
-        // promoPanel,
-        // promoPanelError,
-        // promoPanelStatus,
-        // history,
-        // promoPanels,
-        // promoPanelsLoading,
-    },
-) => {
+export const PromoPanelAdd = ({
+    actions,
+    // promoPanel,
+    // promoPanelError,
+    // promoPanelStatus,
+    // history,
+    // promoPanels,
+    // promoPanelsLoading,
+}) => {
     const defaults = {
         id: '',
         startDateDefault: getTimeMondayMidnightNext(),
@@ -47,7 +45,7 @@ export const PromoPanelAdd = (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
                 <StandardCard title="Create a new Promo Panel">
-                    <PromoPanelForm defaults={defaults} />
+                    <PromoPanelForm defaults={defaults} actions={actions} />
                 </StandardCard>
             </section>
         </StandardPage>
