@@ -177,3 +177,4 @@ export const PROMOPANEL_UPDATE_USERTYPE_DEFAULT = ({ id, usergroup }) => ({
 export const PROMOPANEL_UPDATE_USERTYPE = ({ id, usergroup }) => ({
     apiUrl: `promo-panel/user-type/${usergroup}/${id}`,
 });
+export const PROMOPANEL_DELETE_API = ({ id }) => ({ apiUrl: `promo-panel/${id}` });
