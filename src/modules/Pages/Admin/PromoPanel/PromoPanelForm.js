@@ -10,6 +10,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
+import Typography from '@material-ui/core/Typography';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -454,7 +455,9 @@ export const PromoPanelForm = ({
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
+                        <Typography style={{ fontWeight: 'bold' }}>Panel content</Typography>
                         <CKEditor
+                            id="promoPanelContent"
                             style={{ width: '100%' }}
                             editor={ClassicEditor}
                             config={{
