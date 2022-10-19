@@ -7,6 +7,7 @@ export default {
     form: {
         labels: {
             titleField: 'Title of the Promo Panel',
+            scheduleCheckbox: 'Schedule this Promo Panel?',
             nameField: 'Name of the Panel (not displayed)',
             adminNotesField: 'Admin notes - anything non-public the admin needs to record about this promo panel',
             linkDescAriaField: 'Link title *',

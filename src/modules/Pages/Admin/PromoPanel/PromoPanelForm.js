@@ -1,16 +1,22 @@
 /* eslint-disable no-unused-vars */
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { String, Fragment, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 
 import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
+
+import PromoPanelPreview from './PromoPanelPreview';
 
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
@@ -28,11 +34,26 @@ import { formatDate } from '../Spotlights/spotlighthelpers';
 const moment = require('moment');
 
 const useStyles = makeStyles(() => ({
+    contentRequired: {
+        color: '#990000',
+        paddingTop: 10,
+        display: 'block',
+        fontSize: 14,
+    },
     saveButton: {
         '&:disabled': {
             color: 'rgba(0, 0, 0, 0.26)',
             boxShadow: 'none',
             backgroundColor: 'rgba(0, 0, 0, 0.12)',
+        },
+    },
+    previewButton: {
+        marginRight: 10,
+    },
+    checkbox: {
+        paddingLeft: 0,
+        '&.Mui-checked': {
+            color: 'black',
         },
     },
     checkboxCell: {
@@ -70,6 +91,20 @@ const useStyles = makeStyles(() => ({
         fontSize: '0.8em',
     },
 }));
+
+const availableGroups = [
+    'Public',
+    'Van Henry',
+    'April Tucker',
+    'Ralph Hubbard',
+    'Omar Alexander',
+    'Carlos Abbott',
+    'Miriam Wagner',
+    'Bradley Wilkerson',
+    'Virginia Andrews',
+    'Kelly Snyder',
+];
+
 export const PromoPanelForm = ({
     actions,
     // spotlightResponse,
@@ -85,164 +120,26 @@ export const PromoPanelForm = ({
 }) => {
     const classes = useStyles();
 
-    // we cant just use the Current Spotlights api because it doesnt return unpublished records :(
-    // const currentSpotlights =
-    //     !spotlightsLoading &&
-    //     !!spotlights &&
-    //     spotlights
-    //         .filter(s => moment(s.start).isBefore(moment()) && moment(s.end).isAfter(moment()))
-    //         .sort((a, b) => a.weight - b.weight);
-
-    // const [isErrorOpen, showErrorConfirmation, hideErrorConfirmation] = useConfirmationState();
-    // const [isAddOpen, showAddConfirmation, hideAddConfirmation] = useConfirmationState();
-    // const [isEditOpen, showEditConfirmation, hideEditConfirmation] = useConfirmationState();
-    // const [isCloneOpen, showCloneConfirmation, hideCloneConfirmation] = useConfirmationState();
-    // const [isUploadErrorOpen, showUploadError, hideUploadError] = useConfirmationState();
-
-    // const [isFormValid, setFormValidity] = useState(false); // enable-disable the save button
-
-    // const [originalValues, setOriginalValues] = useState({});
-    // useEffect(() => {
-    //     scrollToTopOfPage();
-
-    //     const newVar = { weight: defaults.type === 'edit' ? defaults.weight : 1000,
-    // start: defaults.startDateDefault };
-    //     setOriginalValues(newVar);
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [defaults]);
-
     const [values, setValues] = useState({
         ...defaults,
         start: defaults.startDateDefault,
         end: defaults.endDateDefault,
     });
 
+    console.log('Values Group', values.group);
+
+    const [groupName, setGroupName] = React.useState([values.group]);
+
     // const isValidLinkAria = title => {
     //     return !!title && title.length > 0;
     // };
 
-    // const isValidImgAlt = imgAlt => {
-    //     return !!imgAlt && imgAlt.length > 0;
-    // };
-
-    // function isValidStartDate(startDate) {
-    //     const momentToday = new moment();
-    //     const formattedToday = momentToday.startOf('day').format('YYYYMMDDHHmmss');
-
-    //     const formattedstartdate = formatDate(startDate, 'YYYYMMDDHHmmss');
-    //     const formatteddefaultstartdate = formatDate(defaults.startDateDefault, 'YYYYMMDDHHmmss');
-    //     const result =
-    //         startDate !== '' &&
-    //         !!moment(startDate).isValid() &&
-    //         (formattedstartdate >= formattedToday || formattedstartdate >= formatteddefaultstartdate);
-    //     return result;
-    // }
-
-    // function isInvalidStartDate(startDate) {
-    //     return !isValidStartDate(startDate);
-    // }
-
-    // function isInvalidEndDate(endDate, startDate) {
-    //     const startDateReformatted = startDate !== '' && moment(startDate).format('YYYY-MM-DDTHH:mm');
-    //     const endDateReformatted = endDate !== '' && moment(endDate).format('YYYY-MM-DDTHH:mm');
-    //     return (startDate !== '' && endDateReformatted <= startDateReformatted) || !moment(endDate).isValid();
-    // }
-
-    // const validateValues = currentValues => {
-    //     const isValid =
-    //         spotlightStatus !== 'loading' &&
-    //         !isInvalidStartDate(currentValues.start) &&
-    //         !isInvalidEndDate(currentValues.end, currentValues.start) &&
-    //         !!isValidLinkAria(currentValues.title) &&
-    //         !!isValidImgAlt(currentValues.img_alt) &&
-    //         (defaults.type === 'edit' ||
-    //             defaults.type === 'clone' ||
-    //             (!!currentValues.uploadedFile && currentValues.uploadedFile.length > 0)) &&
-    //         !!currentValues.url &&
-    //         currentValues.url.length > 0 &&
-    //         isValidImageUrl(currentValues.url) &&
-    //         !!currentValues.hasImage;
-
-    //     return isValid;
-    // };
-
-    // useEffect(() => {
-    //     setFormValidity(validateValues(values));
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [values]);
-
-    // useEffect(() => {
-    //     if (!!spotlightResponse && !!spotlightResponse.id && ['saved', 'created'].includes(spotlightStatus)) {
-    //         setValues(defaults); // save success - clear the form!
-    //         /* istanbul ignore next */
-    //         if (!!publicFileUploadError) {
-    //             showUploadError();
-    //         } else if (defaults.type === 'edit') {
-    //             showEditConfirmation();
-    //         } else if (defaults.type === 'add') {
-    //             showAddConfirmation();
-    //         } /* istanbul ignore else */ else if (defaults.type === 'clone') {
-    //             showCloneConfirmation();
-    //         }
-    //     }
-    // }, [
-    //     spotlightResponse,
-    //     spotlightStatus,
-    //     defaults,
-    //     publicFileUploadError,
-    //     showEditConfirmation,
-    //     showAddConfirmation,
-    //     showCloneConfirmation,
-    //     showUploadError,
-    // ]);
-
-    // useEffect(() => {
-    //     /* istanbul ignore next */
-    //     if (!!publicFileUploadError) {
-    //         showUploadError();
-    //     } /* istanbul ignore else */ /* istanbul ignore next */ else if (
-    //         !!spotlightError ||
-    //         spotlightStatus === 'error'
-    //     ) {
-    //         /* istanbul ignore next */
-    //         showErrorConfirmation();
-    //     }
-    // }, [showErrorConfirmation, spotlightError, spotlightStatus, showUploadError, publicFileUploadError]);
-
-    // /* istanbul ignore next */
-    // function clearUploadError() {
-    //     /* istanbul ignore next */
-    //     actions.clearUpload();
-    //     /* istanbul ignore next */
-    //     return hideUploadError();
-    // }
-
-    // const clearForm = () => {
-    //     setValues(defaults);
-    // };
-
-    // const navigateToListPage = () => {
-    //     clearForm();
-
-    //     actions.clearSpotlights(); // force the list page to reload after save
-
-    //     actions.clearASpotlight(); // make the form clear for the next use
-
-    //     history.push('/admin/spotlights');
-
-    //     scrollToTopOfPage();
-    // };
-
-    // const reloadClonePage = () => {
-    //     setValues({
-    //         // the data displayed in the form
-    //         ...defaults,
-    //         start: defaults.startDateDefault,
-    //         end: defaults.endDateDefault,
-    //     });
-
-    //     scrollToTopOfPage();
-    // };
+    const previewPromoPanel = () => {
+        setValues({
+            ...values,
+            isPreviewOpen: true,
+        });
+    };
 
     const savePromoPanel = () => {
         //     scrollToTopOfPage();
@@ -257,60 +154,7 @@ export const PromoPanelForm = ({
             panel_end: formatDate(values.end),
         };
         actions.createPromoPanel(newValues);
-        //    end: formatDate(values.end),
-        //    name: values.name,
-
-        //         title: values.title,
-        //         url: values.url,
-        //         // eslint-disable-next-line camelcase
-        //         img_url: values?.img_url ?? /* istanbul ignore next */ null,
-        //         img_alt: values.img_alt,
-        //         // weight will update after save,
-        //         // but lets just use a number that sits at the end of the current spotlights, as requested
-        //         // weight: defaults.type === 'edit' ? values.weight : 1000, // weight,
-        //         weight: values.weight,
-        //         active: !!values.active ? 1 : 0,
-        //         // eslint-disable-next-line camelcase
-        //         admin_notes: values?.admin_notes ?? /* istanbul ignore next */ null,
-        //     };
-        //     !!values.uploadedFile && (newValues.uploadedFile = values.uploadedFile);
-
-        //     switch (defaults.type) {
-        //         case 'add':
-        //             actions.createSpotlightWithNewImage(newValues);
-        //             break;
-        //         case 'edit':
-        //             !!values.uploadedFile
-        //                 ? actions.updateSpotlightWithNewImage(newValues)
-        //                 : /* istanbul ignore next */ actions.updateSpotlightWithExistingImage(newValues);
-        //             break;
-        //         case 'clone':
-        //             /* istanbul ignore next */
-        //             !!values.uploadedFile
-        //                 ? actions.createSpotlightWithNewImage(newValues)
-        //                 : actions.createSpotlightWithExistingImage(newValues);
-        //             break;
-        //         /* istanbul ignore next */
-        //         default:
-        //             // never happens
-        //             return;
-        //     }
-
-        //     // force to the top of the page, because otherwise it looks a bit weird
-        //     window.scrollTo({
-        //         top: 0,
-        //         left: 0,
-        //         behavior: 'smooth',
-        //     });
     };
-
-    /* istanbul ignore next */
-    // const updateWeightInValues = newWeight => {
-    //     setValues(prevState => {
-    //         return { ...prevState, weight: newWeight };
-    //     });
-    // };
-
     const handleContentChange = data => {
         console.log('The recieved Data', data);
         setValues({
@@ -320,10 +164,34 @@ export const PromoPanelForm = ({
         console.log('Values are:', values);
     };
 
+    const handlePreviewClose = () => {
+        console.log('is it?');
+        setValues({
+            ...values,
+            isPreviewOpen: false,
+        });
+    };
+
+    const handleGroupChange = event => {
+        const {
+            target: { value },
+        } = event;
+        setGroupName(
+            // On autofill we get a stringified value.
+            typeof value === 'string' ? value.split(',') : value,
+        );
+        setValues({
+            ...values,
+            group: groupName,
+        });
+    };
+
     const handleChange = prop => event => {
         console.log('field context', event);
         let propValue;
-        if (['start', 'end'].includes(prop)) {
+        if (['scheduled'].includes(prop)) {
+            propValue = event.target.checked ? 1 : 0;
+        } else if (['start', 'end'].includes(prop)) {
             propValue = event.format('YYYY/MM/DD hh:mm a');
         } else {
             propValue = !!event.target.value ? event.target.value : event.target.checked;
@@ -404,10 +272,12 @@ export const PromoPanelForm = ({
     //         {numCharsCurrent > 0 && `${numCharsMax - numCharsCurrent} characters left`}
     //     </div>
     // );
+    console.log('GROUP NAME', groupName);
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
                 {/* Confirmation Boxes here */}
+                <Typography style={{ fontWeight: 'bold' }}>Panel Details</Typography>
                 <Grid container spacing={2}>
                     <Grid item xs={12}>
                         <FormControl
@@ -485,43 +355,120 @@ export const PromoPanelForm = ({
                                 handleContentChange(data);
                             }}
                         />
+                        {!!!values.content && (
+                            <span className={classes.contentRequired}>* This content is required</span>
+                        )}
                     </Grid>
-                    <Grid container spacing={2} style={{ marginTop: 12 }}>
-                        <Grid item md={5} xs={12}>
-                            <KeyboardDateTimePicker
-                                id="admin-promopanel-form-start-date"
-                                data-testid="admin-promopanel-form-start-date"
-                                value={values.start}
-                                label={locale.form.labels.publishDate}
-                                onChange={handleChange('start')}
-                                minDate={defaults.minimumDate}
-                                format="DD/MM/YYYY HH:mm a"
-                                showTodayButton
-                                todayLabel={locale.form.labels.datePopupNowButton}
-                                autoOk
-                                KeyboardButtonProps={{
-                                    'aria-label': locale.form.tooltips.publishDate,
-                                }}
-                            />
-                            {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
-                                <div className={classes.errorStyle}>This date is in the past.</div>
-                            )}
+
+                    <Grid item md={5} xs={12}>
+                        <Typography style={{ fontWeight: 'bold' }}>Group Assignment</Typography>
+                        {/* <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
+                            <InputLabel id="demo-simple-select-helper-label">Group</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-helper-label"
+                                id="demo-simple-select-helper"
+                                value={groupName}
+                                label="Age"
+                                onChange={handleGroupChange}
+                                multiple
+                            >
+                                <MenuItem key="Public" value="Public">
+                                    <em>Public</em>
+                                </MenuItem>
+                                <MenuItem key="Authenticated" value="Authenticated">
+                                    <em>Authenticated</em>
+                                </MenuItem>
+                                <MenuItem key="Students" value="Students">
+                                    Students
+                                </MenuItem>
+                                <MenuItem key="Staff" value="Staff">
+                                    Staff
+                                </MenuItem>
+                            </Select>
+                        </FormControl> */}
+
+                        <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
+                            <Select
+                                labelId="demo-multiple-checkbox-label"
+                                id="demo-multiple-checkbox"
+                                multiple
+                                value={groupName}
+                                onChange={handleGroupChange}
+                                // input={<OutlinedInput label="Tag" />}
+                                renderValue={selected => selected.join(', ')}
+                            >
+                                {availableGroups.map(name => (
+                                    <MenuItem key={name} value={name}>
+                                        <Checkbox checked={groupName.indexOf(name) > -1} />
+                                        <ListItemText primary={name} />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Grid>
+                    <Grid container style={{ margin: '0 10px 0' }}>
+                        <Typography style={{ fontWeight: 'bold' }}>Panel Scheduling</Typography>
+                        <Grid container>
+                            <Typography style={{ fontSize: 12 }}>
+                                If no schedule is defined, this will be considered to be the default for the selected
+                                group
+                            </Typography>
                         </Grid>
-                        <Grid item md={5} xs={12}>
-                            <KeyboardDateTimePicker
-                                id="admin-promopanel-form-end-date"
-                                data-testid="admin-promopanel-form-end-date"
-                                label={locale.form.labels.unpublishDate}
-                                onChange={handleChange('end')}
-                                value={values.end}
-                                minDate={values.start}
-                                format="DD/MM/YYYY HH:mm a"
-                                autoOk
-                                KeyboardButtonProps={{
-                                    'aria-label': locale.form.tooltips.unpublishDate,
-                                }}
-                                minDateMessage="Should not be before Date published"
-                            />
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <InputLabel
+                                    title={locale.form.tooltips.scheduleCheckbox}
+                                    className={`${classes.scheduleCell}`}
+                                >
+                                    <Checkbox
+                                        checked={values.scheduled === 1}
+                                        data-testid="admin-spotlights-form-checkbox-published"
+                                        onChange={handleChange('scheduled')}
+                                        className={classes.checkbox}
+                                    />
+                                    {locale.form.labels.scheduleCheckbox}
+                                </InputLabel>
+                            </Grid>
+                            {values.scheduled === 1 && (
+                                <>
+                                    <Grid item md={5} xs={6}>
+                                        <KeyboardDateTimePicker
+                                            id="admin-promopanel-form-start-date"
+                                            data-testid="admin-promopanel-form-start-date"
+                                            value={values.start}
+                                            label={locale.form.labels.publishDate}
+                                            onChange={handleChange('start')}
+                                            minDate={defaults.minimumDate}
+                                            format="DD/MM/YYYY HH:mm a"
+                                            showTodayButton
+                                            todayLabel={locale.form.labels.datePopupNowButton}
+                                            autoOk
+                                            KeyboardButtonProps={{
+                                                'aria-label': locale.form.tooltips.publishDate,
+                                            }}
+                                        />
+                                        {moment(values.start).isBefore(moment().subtract(1, 'minutes')) && (
+                                            <div className={classes.errorStyle}>This date is in the past.</div>
+                                        )}
+                                    </Grid>
+                                    <Grid item md={5} xs={6}>
+                                        <KeyboardDateTimePicker
+                                            id="admin-promopanel-form-end-date"
+                                            data-testid="admin-promopanel-form-end-date"
+                                            label={locale.form.labels.unpublishDate}
+                                            onChange={handleChange('end')}
+                                            value={values.end}
+                                            minDate={values.start}
+                                            format="DD/MM/YYYY HH:mm a"
+                                            autoOk
+                                            KeyboardButtonProps={{
+                                                'aria-label': locale.form.tooltips.unpublishDate,
+                                            }}
+                                            minDateMessage="Should not be before Date published"
+                                        />
+                                    </Grid>
+                                </>
+                            )}
                         </Grid>
                     </Grid>
                     <Grid container spacing={2} style={{ marginTop: '1rem' }}>
@@ -534,7 +481,25 @@ export const PromoPanelForm = ({
                                 variant="contained"
                             />
                         </Grid>
+
                         <Grid item xs={9} align="right">
+                            {console.log('Values', values)}
+                            <Button
+                                color="primary"
+                                data-testid="admin-promopanel-form-button-preview"
+                                variant="contained"
+                                children={'Preview'}
+                                disabled={
+                                    !!!values.name ||
+                                    values.name.length < 1 ||
+                                    !!!values.title ||
+                                    values.title.length < 1 ||
+                                    !!!values.content ||
+                                    values.content.length < 1
+                                }
+                                onClick={previewPromoPanel}
+                                className={classes.previewButton}
+                            />
                             <Button
                                 color="primary"
                                 data-testid="admin-promopanel-form-button-save"
@@ -548,6 +513,18 @@ export const PromoPanelForm = ({
                     </Grid>
                 </Grid>
             </form>
+            {console.log('open', values.isPreviewOpen)}
+            <PromoPanelPreview
+                isPreviewOpen={values.isPreviewOpen}
+                previewName={values.name}
+                handlePreviewClose={handlePreviewClose}
+                previewTitle={values.title}
+                previewContent={values.content}
+                previewGroup={groupName}
+                previewScheduled={values.scheduled === 1 ? true : false}
+                previewStart={values.start}
+                previewEnd={values.end}
+            />
         </Fragment>
     );
 };

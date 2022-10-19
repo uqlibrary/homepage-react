@@ -152,6 +152,7 @@
         "copy-webpack-plugin": "^6.2.1",
         "core-js": "^3.21.0",
         "history": "^4.7.2",
+        "html-react-parser": "^3.0.4",
         "immutable": "^3.8.2",
         "js-cookie": "^2.2.0",
         "jss-preset-default": "^10.9.0",

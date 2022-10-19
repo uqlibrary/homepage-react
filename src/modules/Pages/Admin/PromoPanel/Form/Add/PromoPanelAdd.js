@@ -30,7 +30,9 @@ export const PromoPanelAdd = ({
         title: '',
         name: '',
         content: '',
+        group: 'Public',
         admin_notes: '',
+        isPreviewOpen: false,
     };
 
     // React.useEffect(() => {
