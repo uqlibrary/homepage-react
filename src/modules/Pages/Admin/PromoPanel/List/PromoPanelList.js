@@ -5,8 +5,8 @@ import PropTypes from 'prop-types';
 // import Grid from '@material-ui/core/Grid';
 // import { makeStyles } from '@material-ui/styles';
 
-// import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
+import { PromoPanelListTable } from './PromoPanelListTable';
 // import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
 // import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
 // import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
@@ -152,9 +152,114 @@ export const PromoPanelList = (
     //     );
     // }
 
+    const currentPanels = [
+        {
+            user_type: 'public',
+            user_type_name: 'Public (Not logged in}',
+            panels: [
+                {
+                    id: 1,
+                    admin_notes: 'Public Panel 1 admin notes',
+                    panel_name: 'Public Panel 1 name',
+                    panel_title: 'Public Panel 1 Title',
+                    panel_content: 'Public Panel 1 Content',
+                    panel_start: null,
+                    panel_end: null,
+                    is_default: true,
+                },
+                {
+                    id: 2,
+                    admin_notes: 'Public Panel 2 admin notes',
+                    panel_name: 'Public Panel 2 name',
+                    panel_title: 'Public Panel 2 Title',
+                    panel_content: 'Public Panel 2 Content',
+                    panel_start: '12/12/2021 1:50pm',
+                    panel_end: '20/12/2021 11:59pm',
+                    is_default: false,
+                },
+                {
+                    id: 3,
+                    admin_notes: 'Public Panel 3 admin notes',
+                    panel_name: 'Public Panel 3 name',
+                    panel_title: 'Public Panel 3 Title',
+                    panel_content: 'Public Panel 3 Content',
+                    panel_start: '1/2/2022 1:50pm',
+                    panel_end: '20/2/2022 11:59pm',
+                    is_default: false,
+                },
+            ],
+        },
+        {
+            user_type: 'REMUG',
+            user_type_name: 'REMUG Group',
+            panels: [
+                {
+                    id: 1,
+                    admin_notes: 'REMUG Panel 1 admin notes',
+                    panel_name: 'REMUG Panel 1 name',
+                    panel_title: 'REMUG Panel 1 Title',
+                    panel_content: 'REMUG Panel 1 Content',
+                    panel_start: null,
+                    panel_end: null,
+                    is_default: true,
+                },
+                {
+                    id: 2,
+                    admin_notes: 'REMUG Panel 2 admin notes',
+                    panel_name: 'REMUG Panel 2 name',
+                    panel_title: 'REMUG Panel 2 Title',
+                    panel_content: 'REMUG Panel 2 Content',
+                    panel_start: '15/12/2021 1:50pm',
+                    panel_end: '17/12/2021 11:59pm',
+                    is_default: false,
+                },
+            ],
+        },
+        {
+            user_type: 'UNDERGRAD',
+            user_type_name: 'UNDERGRAD Group',
+            panels: [
+                {
+                    id: 1,
+                    admin_notes: 'UNDERGRAD Panel 1 admin notes',
+                    panel_name: 'UNDERGRAD Panel 1 name',
+                    panel_title: 'UNDERGRAD Panel 1 Title',
+                    panel_content: 'UNDERGRAD Panel 1 Content',
+                    panel_start: null,
+                    panel_end: null,
+                    is_default: true,
+                },
+                {
+                    id: 2,
+                    admin_notes: 'REMUG Panel 2 admin notes',
+                    panel_name: 'UNDERGRAD Panel 2 name',
+                    panel_title: 'UNDERGRAD Panel 2 Title',
+                    panel_content: 'REUNDERGRADMUG Panel 2 Content',
+                    panel_start: '6/12/2021 1:50pm',
+                    panel_end: '19/12/2021 11:59pm',
+                    is_default: false,
+                },
+                {
+                    id: 3,
+                    admin_notes: 'REMUG Panel 3 admin notes',
+                    panel_name: 'UNDERGRAD Panel 3 name',
+                    panel_title: 'UNDERGRAD Panel 3 Title',
+                    panel_content: 'REUNDERGRADMUG Panel 3 Content',
+                    panel_start: '21/12/2021 1:50pm',
+                    panel_end: '23/12/2021 11:59pm',
+                    is_default: false,
+                },
+            ],
+        },
+    ];
+
     return (
         <StandardPage title="Promo Panel Management">
-            <h1>Promo Panel List</h1>
+            <PromoPanelListTable panelList={currentPanels} title="Current Panels" canEdit canClone canDelete />
+
+            {/* <PromoPanelListTable />
+
+            <PromoPanelListTable /> */}
         </StandardPage>
     );
 };
