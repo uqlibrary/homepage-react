@@ -7,7 +7,6 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
 import ListItemText from '@material-ui/core/ListItemText';
 import Grid from '@material-ui/core/Grid';
 import Input from '@material-ui/core/Input';
@@ -21,17 +20,21 @@ import PromoPanelPreview from './PromoPanelPreview';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogBox';
-// import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
-// import { SpotlightFileUploadDropzone } from 'modules/Pages/Admin/Spotlights/Form/SpotlightFileUploadDropzone';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 import { formatDate } from '../Spotlights/spotlighthelpers';
-// import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
-
-// import { useConfirmationState } from 'hooks';
-// import SpotlightFormReorderableThumbs from './SpotlightFormReorderableThumbs';
 
 const moment = require('moment');
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 6 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+};
 
 const useStyles = makeStyles(() => ({
     contentRequired: {
@@ -55,13 +58,6 @@ const useStyles = makeStyles(() => ({
         '&.Mui-checked': {
             color: 'black',
         },
-    },
-    checkboxCell: {
-        '& input[type="checkbox"]:checked + svg': {
-            fill: '#595959',
-        },
-        padding: 0,
-        color: 'rgba(0, 0, 0, 0.87)',
     },
     promoPanelForm: {
         '& label': {
@@ -92,18 +88,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const availableGroups = [
-    'Public',
-    'Van Henry',
-    'April Tucker',
-    'Ralph Hubbard',
-    'Omar Alexander',
-    'Carlos Abbott',
-    'Miriam Wagner',
-    'Bradley Wilkerson',
-    'Virginia Andrews',
-    'Kelly Snyder',
-];
+const availableGroups = ['Public', 'Authenticated', 'UnderGrad', 'International', 'Staff'];
 
 export const PromoPanelForm = ({
     actions,
@@ -126,13 +111,7 @@ export const PromoPanelForm = ({
         end: defaults.endDateDefault,
     });
 
-    console.log('Values Group', values.group);
-
-    const [groupName, setGroupName] = React.useState([values.group]);
-
-    // const isValidLinkAria = title => {
-    //     return !!title && title.length > 0;
-    // };
+    const [groupNames, setGroupNames] = React.useState([values.group]);
 
     const previewPromoPanel = () => {
         setValues({
@@ -142,30 +121,26 @@ export const PromoPanelForm = ({
     };
 
     const savePromoPanel = () => {
-        //     scrollToTopOfPage();
-        console.log('The values at time of save', values);
         const newValues = {
             id: defaults.type === 'edit' ? values.id : null,
             panel_name: values.name,
             panel_title: values.title,
             panel_content: values.content,
-
+            panel_groups: groupNames, // possibly use a function here for group validation
             panel_start: formatDate(values.start),
             panel_end: formatDate(values.end),
+            panel_adminNotes: values.admin_notes,
         };
         actions.createPromoPanel(newValues);
     };
     const handleContentChange = data => {
-        console.log('The recieved Data', data);
         setValues({
             ...values,
             content: data,
         });
-        console.log('Values are:', values);
     };
 
     const handlePreviewClose = () => {
-        console.log('is it?');
         setValues({
             ...values,
             isPreviewOpen: false,
@@ -176,18 +151,28 @@ export const PromoPanelForm = ({
         const {
             target: { value },
         } = event;
-        setGroupName(
-            // On autofill we get a stringified value.
-            typeof value === 'string' ? value.split(',') : value,
-        );
+
+        const selections = typeof value === 'string' ? value.split(',') : value;
+        const lastSelected = selections.slice(-1).join();
+
+        let filteredSelection = selections;
+        console.log('last selected', lastSelected);
+
+        if (lastSelected === 'Authenticated') {
+            filteredSelection = selections.filter(value => value === 'Public' || value === 'Authenticated');
+        } else if (lastSelected !== 'Public' && lastSelected !== 'Authenticated') {
+            filteredSelection = selections.filter(value => value !== 'Authenticated');
+        }
+        filteredSelection = filteredSelection.length === 0 ? ['Public'] : filteredSelection;
+
+        setGroupNames(filteredSelection);
         setValues({
             ...values,
-            group: groupName,
+            group: filteredSelection,
         });
     };
 
     const handleChange = prop => event => {
-        console.log('field context', event);
         let propValue;
         if (['scheduled'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
@@ -217,62 +202,6 @@ export const PromoPanelForm = ({
         });
     };
 
-    // const errorLocale = {
-    //     ...locale.form.add.addSpotlightError,
-    //     confirmationTitle: !!spotlightError
-    //         ? /* istanbul ignore next */ `An error occurred: ${JSON.stringify(spotlightError)}`
-    //         : 'An unknown error occurred',
-    // };
-
-    // /* istanbul ignore next */
-    // const uploadErrorLocale = () => {
-    //     const errorMessage = (!!publicFileUploadError && !!publicFileUploadResult
-    // && publicFileUploadResult[0]) || '';
-    //     return {
-    //         ...locale.form.upload.uploadError,
-    //         confirmationTitle: `${locale.form.upload.uploadError.confirmationTitle}${
-    //             !!errorMessage && typeof errorMessage === 'string' ? ': ' + errorMessage.trim() : ''
-    //         }`,
-    //     };
-    // };
-
-    // if (!!publicFileUploading) {
-    //     return (
-    //         <Grid
-    //             item
-    //             xs={'auto'}
-    //             style={{
-    //                 width: 80,
-    //                 margin: '0 auto',
-    //                 height: 200, // default to some space for the blocks
-    //             }}
-    //         >
-    //             <InlineLoader message="Uploading" />
-    //         </Grid>
-    //     );
-    // }
-
-    // const handleSuppliedFiles = files => {
-    //     setValues({ ...values, ['uploadedFile']: files, hasImage: true });
-    // };
-
-    // const clearSuppliedFile = () => {
-    //     setValues(prevState => {
-    //         return { ...prevState, ['uploadedFile']: [], hasImage: false };
-    //     });
-    // };
-
-    // const ImageAltMaxLength = 255;
-    // const titleMaxLength = 100;
-    // const urlMaxLength = 250;
-
-    // display a count of the remaining characters for the field
-    // const characterCount = (numCharsCurrent, numCharsMax) => (
-    //     <div className={classes.charactersRemaining}>
-    //         {numCharsCurrent > 0 && `${numCharsMax - numCharsCurrent} characters left`}
-    //     </div>
-    // );
-    console.log('GROUP NAME', groupName);
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
@@ -392,14 +321,14 @@ export const PromoPanelForm = ({
                                 labelId="demo-multiple-checkbox-label"
                                 id="demo-multiple-checkbox"
                                 multiple
-                                value={groupName}
+                                value={groupNames}
                                 onChange={handleGroupChange}
-                                // input={<OutlinedInput label="Tag" />}
                                 renderValue={selected => selected.join(', ')}
+                                MenuProps={MenuProps}
                             >
                                 {availableGroups.map(name => (
                                     <MenuItem key={name} value={name}>
-                                        <Checkbox checked={groupName.indexOf(name) > -1} />
+                                        <Checkbox checked={groupNames.indexOf(name) > -1} />
                                         <ListItemText primary={name} />
                                     </MenuItem>
                                 ))}
@@ -483,7 +412,6 @@ export const PromoPanelForm = ({
                         </Grid>
 
                         <Grid item xs={9} align="right">
-                            {console.log('Values', values)}
                             <Button
                                 color="primary"
                                 data-testid="admin-promopanel-form-button-preview"
@@ -513,14 +441,13 @@ export const PromoPanelForm = ({
                     </Grid>
                 </Grid>
             </form>
-            {console.log('open', values.isPreviewOpen)}
             <PromoPanelPreview
                 isPreviewOpen={values.isPreviewOpen}
                 previewName={values.name}
                 handlePreviewClose={handlePreviewClose}
                 previewTitle={values.title}
                 previewContent={values.content}
-                previewGroup={groupName}
+                previewGroup={groupNames}
                 previewScheduled={values.scheduled === 1 ? true : false}
                 previewStart={values.start}
                 previewEnd={values.end}
@@ -531,9 +458,6 @@ export const PromoPanelForm = ({
 
 PromoPanelForm.propTypes = {
     actions: PropTypes.any,
-    publicFileUploading: PropTypes.any,
-    publicFileUploadError: PropTypes.any,
-    publicFileUploadResult: PropTypes.any,
     spotlightResponse: PropTypes.any,
     spotlightError: PropTypes.any,
     spotlightStatus: PropTypes.any,
