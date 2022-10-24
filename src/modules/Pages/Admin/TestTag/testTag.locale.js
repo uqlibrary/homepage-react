@@ -3,6 +3,6 @@
 export default {
     pageTitle: 'UQ Asset Test and Tag',
     testingPage: {
-        header: 'Test an Asset',
+        header: 'Managing assets for Technical Services',
     },
 };
