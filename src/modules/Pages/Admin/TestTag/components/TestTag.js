@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import React, { useEffect, useState } from 'react';
 // import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
