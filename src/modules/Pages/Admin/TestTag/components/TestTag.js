@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 import { Grid } from '@material-ui/core';
@@ -106,6 +106,7 @@ const assetType = [
 const status = {
     PASS: { label: 'PASS', value: 'pass' },
     FAIL: { label: 'FAIL', value: 'fail' },
+    NONE: { label: 'NONE', value: 'none' },
 };
 const action = {
     OUTFORREPAIR: { label: 'OUT FOR REPAIR' },
@@ -291,9 +292,8 @@ const getLastLocation = asset => {
         : 'Unknown';
 };
 
-export const TestTag = ({ currentRetestList, ...rest }) => {
+export const TestTag = (/* { currentRetestList, ...rest }*/) => {
     const classes = useStyles();
-    const moment = require('moment');
     const today = moment().format('YYYY-MM-DD');
     const startDate = moment()
         .startOf('year')
@@ -306,8 +306,10 @@ export const TestTag = ({ currentRetestList, ...rest }) => {
     const [deviceid, setDeviceId] = React.useState(1);
     const [currentAsset, setCurrentAsset] = React.useState({});
     const [currentAssetType, setCurrentAssetType] = React.useState({});
-    const [testStatus, setTestStatus] = React.useState(status.PASS);
+    const [testStatus, setTestStatus] = React.useState(status.NONE);
     const [nextTestValue, setNextTestValue] = React.useState(12);
+    const [discardingId, setDiscardingId] = React.useState(1);
+    const [repairId, setRepairId] = React.useState(1);
 
     const handleChange = (event, li, source) => {
         console.log(event, li, source);
@@ -327,6 +329,12 @@ export const TestTag = ({ currentRetestList, ...rest }) => {
                 break;
             case 'nextTest':
                 setNextTestValue(value);
+                break;
+            case 'discard':
+                setDiscardingId(value);
+                break;
+            case 'repair':
+                setRepairId(value);
                 break;
             default:
                 return;
@@ -349,6 +357,7 @@ export const TestTag = ({ currentRetestList, ...rest }) => {
                 assetType.find(item => item.id === currentAsset.assetTypeId)) ??
                 {},
         );
+        setTestStatus(status.NONE);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, JSON.stringify(currentAsset));
 
@@ -663,6 +672,7 @@ export const TestTag = ({ currentRetestList, ...rest }) => {
                                                 <RadioGroup
                                                     row
                                                     value={testStatus.value}
+                                                    defaultChecked={false}
                                                     onChange={(e, child) => handleChange(e, child, 'testStatusRadio')}
                                                 >
                                                     <FormControlLabel
@@ -742,6 +752,111 @@ export const TestTag = ({ currentRetestList, ...rest }) => {
                                     </Grid>
                                 </StandardCard>
                             )}
+                        {!!currentAsset &&
+                            Object.keys(currentAsset).length > 0 &&
+                            (testStatus !== status.NONE ||
+                                !currentAsset.hasOwnProperty('lastTest') ||
+                                currentAsset.lastTest?.action === '') && (
+                                <StandardCard title="Discard Asset" style={{ marginTop: 30 }}>
+                                    <Grid container spacing={3}>
+                                        <Grid item sm={12}>
+                                            <Typography
+                                                component={'h2'}
+                                                style={{ backgroundColor: 'black', color: 'white', padding: 10 }}
+                                            >
+                                                IMPORTANT: Only complete this section if you are actually discarding
+                                                this asset
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container spacing={3}>
+                                        <Grid item sm={12}>
+                                            <FormControl className={classes.formControl} disabled={repairId === 2}>
+                                                <InputLabel shrink>DISCARD THIS ASSET</InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    className={classes.formSelect}
+                                                    value={discardingId}
+                                                    onChange={(e, child) => handleChange(e, child, 'discard')}
+                                                    style={{ minWidth: 200 }}
+                                                    disabled={repairId === 2}
+                                                >
+                                                    <MenuItem value={1} data-id={1}>
+                                                        NO
+                                                    </MenuItem>
+                                                    <MenuItem value={2} data-id={2}>
+                                                        YES
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item sm={12}>
+                                            <FormControl
+                                                className={classes.formControl}
+                                                fullWidth
+                                                disabled={repairId === 2}
+                                            >
+                                                <TextField
+                                                    label="Discarding Reason"
+                                                    multiline
+                                                    rows={4}
+                                                    defaultValue=""
+                                                    variant="standard"
+                                                    InputProps={{ fullWidth: true }}
+                                                    disabled={discardingId === 1}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                </StandardCard>
+                            )}
+                        {!!currentAsset &&
+                            Object.keys(currentAsset).length > 0 &&
+                            (testStatus === status.FAIL ||
+                                !currentAsset.hasOwnProperty('lastTest') ||
+                                currentAsset.lastTest?.action === '') && (
+                                <StandardCard title="Out for Repair" style={{ marginTop: 30 }}>
+                                    <Grid container spacing={3}>
+                                        <Grid item sm={12}>
+                                            <FormControl className={classes.formControl} disabled={discardingId === 2}>
+                                                <InputLabel shrink>Send for Repair</InputLabel>
+                                                <Select
+                                                    fullWidth
+                                                    className={classes.formSelect}
+                                                    value={repairId}
+                                                    onChange={(e, child) => handleChange(e, child, 'repair')}
+                                                    style={{ minWidth: 200 }}
+                                                    disabled={discardingId === 2}
+                                                >
+                                                    <MenuItem value={1} data-id={1}>
+                                                        NO
+                                                    </MenuItem>
+                                                    <MenuItem value={2} data-id={2}>
+                                                        YES
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                        </Grid>
+                                        <Grid item sm={12}>
+                                            <FormControl
+                                                className={classes.formControl}
+                                                fullWidth
+                                                disabled={discardingId === 2}
+                                            >
+                                                <TextField
+                                                    label="Repairer Details"
+                                                    multiline
+                                                    rows={4}
+                                                    defaultValue=""
+                                                    variant="standard"
+                                                    InputProps={{ fullWidth: true }}
+                                                    disabled={repairId === 1}
+                                                />
+                                            </FormControl>
+                                        </Grid>
+                                    </Grid>
+                                </StandardCard>
+                            )}
                     </StandardCard>
                 </Grid>
             </Grid>
@@ -749,8 +864,8 @@ export const TestTag = ({ currentRetestList, ...rest }) => {
     );
 };
 
-TestTag.propTypes = {
-    currentRetestList: PropTypes.array,
-};
+// TestTag.propTypes = {
+//     currentRetestList: PropTypes.array,
+// };
 
 export default TestTag;
