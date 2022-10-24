@@ -12,6 +12,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormLabel from '@material-ui/core/FormLabel';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { DatePicker } from '@material-ui/pickers';
 
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
@@ -45,7 +46,7 @@ const GreenRadio = withStyles({
         },
     },
     checked: {},
-})(props => <Radio color="default" {...props} />);
+})(props => <Radio color="default" tabIndex={0} {...props} />);
 const RedRadio = withStyles({
     root: {
         color: red[400],
@@ -54,7 +55,7 @@ const RedRadio = withStyles({
         },
     },
     checked: {},
-})(props => <Radio color="default" {...props} />);
+})(props => <Radio color="default" tabIndex={0} {...props} />);
 
 const location = {
     site: [{ id: 1, label: 'St Lucia', value: 1 }],
@@ -296,12 +297,14 @@ const getLastLocation = asset => {
 
 export const TestTag = (/* { currentRetestList, ...rest }*/) => {
     const classes = useStyles();
-    const today = moment().format('YYYY-MM-DD');
+    const dateFormat = 'YYYY-MM-DD';
+    const today = moment().format(dateFormat);
     const startDate = moment()
         .startOf('year')
-        .format('YYYY-MM-DD');
+        .format(dateFormat);
 
     const [siteid] = useState(location.site[0].id);
+    const [eventDate, setEventDate] = useState(today);
     const [buildingid, setBuildingId] = useState('');
     const [floorid, setFloorId] = useState('');
     const [selectedRoom, setSelectedRoom] = React.useState({});
@@ -315,10 +318,14 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
 
     const handleChange = (event, li, source) => {
         console.log(event, li, source);
-        const value = !!li.hasOwnProperty('props') ? parseInt(li?.props['data-id'], 10) : li;
+        const value = !!li && !!li.hasOwnProperty('props') ? parseInt(li?.props['data-id'], 10) : li ?? null;
         switch (source) {
+            case 'eventDate':
+                setEventDate(event.format(dateFormat));
+                break;
             case 'building':
                 setBuildingId(value);
+                setFloorId('');
                 break;
             case 'floor':
                 setFloorId(value);
@@ -368,24 +375,21 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
             <Grid container spacing={3}>
                 <Grid item xs={12}>
                     <StandardCard title={locale.testingPage.header}>
-                        <Grid container spacing={3}>
-                            <Grid item xs={12}>
-                                <Typography>Welcome Dave de Groot (Technical Services)</Typography>
-                            </Grid>
-                        </Grid>
-                        <StandardCard title="Event Details" style={{ marginTop: 30 }}>
+                        <StandardCard title="Event Details">
                             <Grid container spacing={3}>
                                 <Grid item sm={12}>
-                                    <TextField
+                                    <DatePicker
                                         InputLabelProps={{ shrink: true }}
                                         label="Event date"
+                                        format={dateFormat}
+                                        minDate={startDate}
+                                        disableFuture
+                                        autoOk
+                                        disableToolbar
+                                        name="startDate"
                                         type="date"
-                                        value={today}
-                                        inputProps={{
-                                            min: startDate,
-                                            max: today,
-                                            required: true,
-                                        }}
+                                        value={eventDate}
+                                        onChange={e => handleChange(e, null, 'eventDate')}
                                     />
                                 </Grid>
                                 <Grid item sm={12}>
@@ -399,7 +403,6 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                             value={siteid}
                                             onChange={(e, child) => handleChange(e, child, 'site')}
                                         >
-                                            Site
                                             <MenuItem value={location.site[0].value}>{location.site[0].label}</MenuItem>
                                         </Select>
                                     </FormControl>
@@ -415,7 +418,6 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                             }
                                             onChange={(e, child) => handleChange(e, child, 'building')}
                                         >
-                                            Building
                                             {location.building
                                                 .filter(item => item.siteid === siteid)
                                                 .map(item => (
@@ -434,7 +436,6 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                             value={floorid && location.floor.find(item => item.id === floorid).value}
                                             onChange={(e, child) => handleChange(e, child, 'floor')}
                                         >
-                                            Floor
                                             {location.floor
                                                 .filter(
                                                     item => item.siteid === siteid && item.buildingid === buildingid,
@@ -518,14 +519,53 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                     <FormControl className={classes.formControl} fullWidth>
                                         <Autocomplete
                                             fullWidth
-                                            options={assets}
+                                            value={(currentAsset.length > 0 && currentAsset) ?? ''}
                                             onChange={(event, newValue) => {
-                                                setCurrentAsset(newValue ?? {});
+                                                if (typeof newValue === 'string') {
+                                                    setCurrentAsset({ id: newValue });
+                                                } else if (newValue && newValue.inputValue) {
+                                                    // Create a new value from the user input
+                                                    setCurrentAsset({
+                                                        id: newValue.inputValue,
+                                                    });
+                                                } else {
+                                                    setCurrentAsset(newValue ?? {});
+                                                }
                                             }}
-                                            getOptionLabel={option => `${option.id}`}
+                                            filterOptions={(options, params) => {
+                                                const filtered = filter(options, params);
+
+                                                // Suggest the creation of a new value
+                                                if (params.inputValue !== '') {
+                                                    filtered.push({
+                                                        inputValue: params.inputValue,
+                                                        id: `Add "${params.inputValue}"`,
+                                                    });
+                                                }
+
+                                                return filtered;
+                                            }}
+                                            selectOnFocus
+                                            handleHomeEndKeys
+                                            options={assets}
+                                            getOptionLabel={option => {
+                                                // Value selected with enter, right from the input
+                                                if (typeof option === 'string') {
+                                                    return option;
+                                                }
+                                                // Add "xxx" option created dynamically
+                                                if (option.inputValue) {
+                                                    return option.inputValue;
+                                                }
+                                                // Regular option
+                                                return `${option.id ?? ''}`;
+                                            }}
+                                            renderOption={option => `${option.id}`}
+                                            freeSolo
                                             renderInput={params => (
                                                 <TextField
                                                     {...params}
+                                                    required
                                                     label="Asset ID"
                                                     variant="standard"
                                                     InputLabelProps={{ shrink: true }}
@@ -538,51 +578,12 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                     <FormControl className={classes.formControl} fullWidth>
                                         <Autocomplete
                                             fullWidth
-                                            value={currentAssetType}
-                                            filterOptions={(options, params) => {
-                                                const filtered = filter(options, params);
-
-                                                // Suggest the creation of a new value
-                                                if (params.inputValue !== '') {
-                                                    filtered.push({
-                                                        inputValue: params.inputValue,
-                                                        label: `Add "${params.inputValue}"`,
-                                                    });
-                                                }
-
-                                                return filtered;
-                                            }}
-                                            onChange={(event, newValue) => {
-                                                if (typeof newValue === 'string') {
-                                                    setCurrentAssetType({ id: 10, label: newValue, value: 'nv10' });
-                                                } else if (newValue && newValue.inputValue) {
-                                                    // Create a new value from the user input
-                                                    setCurrentAssetType({
-                                                        id: 10,
-                                                        label: newValue.inputValue,
-                                                        value: 'nv10',
-                                                    });
-                                                } else {
-                                                    setCurrentAssetType(newValue);
-                                                }
-                                            }}
-                                            selectOnFocus
-                                            handleHomeEndKeys
                                             options={assetType}
-                                            getOptionLabel={option => {
-                                                // Value selected with enter, right from the input
-                                                if (typeof option === 'string') {
-                                                    return option;
-                                                }
-                                                // Add "xxx" option created dynamically
-                                                if (option.inputValue) {
-                                                    return option.inputValue;
-                                                }
-                                                // Regular option
-                                                return option.label;
+                                            value={currentAssetType}
+                                            onChange={(event, newValue) => {
+                                                setCurrentAssetType(newValue);
                                             }}
-                                            renderOption={option => option.label}
-                                            freeSolo
+                                            getOptionLabel={option => option.label}
                                             style={{ width: 300 }}
                                             renderInput={params => (
                                                 <TextField
@@ -682,12 +683,14 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                                         control={<GreenRadio />}
                                                         label={status.PASS.label}
                                                         labelPlacement="end"
+                                                        tabIndex={0}
                                                     />
                                                     <FormControlLabel
                                                         value={status.FAIL.value}
                                                         control={<RedRadio />}
                                                         label={status.FAIL.label}
                                                         labelPlacement="end"
+                                                        tabIndex={0}
                                                     />
                                                 </RadioGroup>
                                             </FormControl>
@@ -720,7 +723,7 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                                                         Next test due:{' '}
                                                         {moment()
                                                             .add(nextTestValue, 'months')
-                                                            .format('DD/MM/YYYY')}
+                                                            .format(dateFormat)}
                                                     </Typography>
                                                 </FormControl>
                                             </Grid>
@@ -757,8 +760,7 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                         {!!currentAsset &&
                             Object.keys(currentAsset).length > 0 &&
                             (testStatus !== status.NONE ||
-                                !currentAsset.hasOwnProperty('lastTest') ||
-                                currentAsset.lastTest?.action === '') && (
+                                (!currentAsset.hasOwnProperty('lastTest') && currentAsset.lastTest?.action === '')) && (
                                 <StandardCard title="Discard Asset" style={{ marginTop: 30 }}>
                                     <Grid container spacing={3}>
                                         <Grid item sm={12}>
@@ -815,8 +817,7 @@ export const TestTag = (/* { currentRetestList, ...rest }*/) => {
                         {!!currentAsset &&
                             Object.keys(currentAsset).length > 0 &&
                             (testStatus === status.FAIL ||
-                                !currentAsset.hasOwnProperty('lastTest') ||
-                                currentAsset.lastTest?.action === '') && (
+                                (!currentAsset.hasOwnProperty('lastTest') && currentAsset.lastTest?.action === '')) && (
                                 <StandardCard title="Out for Repair" style={{ marginTop: 30 }}>
                                     <Grid container spacing={3}>
                                         <Grid item sm={12}>
