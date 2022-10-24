@@ -29,6 +29,7 @@ import { ConfirmationBox } from 'modules/SharedComponents/Toolbox/ConfirmDialogB
 import { useConfirmationState } from 'hooks';
 import { default as locale } from '../promoPanelAdmin.locale';
 import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
+import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
 // import { scrollToTopOfPage, systemList } from '../alerthelpers';
 
@@ -39,7 +40,12 @@ const moment = require('moment');
 
 const useStyles2 = makeStyles(
     theme => ({
-        cellGroupRow: {},
+        cellGroupRowOdd: {
+            backgroundColor: '#eee',
+        },
+        cellGroupRowEven: {
+            backgroundColor: 'none',
+        },
         cellGroupName: {
             marginTop: 0,
             marginBottom: 0,
@@ -132,7 +138,7 @@ export const PromoPanelListTable = ({
     alertOrder,
 }) => {
     const classes = useStyles2();
-
+    let rowMarker = 0;
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
             ...locale.listPage.confirmDelete,
@@ -171,6 +177,7 @@ export const PromoPanelListTable = ({
                         {/* Start of a Group and it's Panels */}
                         {console.log('panelList', panelList)}
                         {panelList.map((item, id) => {
+                            rowMarker = 0;
                             return (
                                 <React.Fragment key={id}>
                                     <TableRow className={classes.cellGroupRow}>
@@ -182,12 +189,23 @@ export const PromoPanelListTable = ({
                                         <TableCell component="td" scope="row" className={classes.cellGroupName} />
                                         <TableCell component="td" scope="row" className={classes.cellGroupName} />
                                     </TableRow>
+
                                     {item.panels.map((row, id) => {
+                                        rowMarker++;
                                         return (
-                                            <TableRow className={classes.cellGroupRow} key={id}>
+                                            <TableRow
+                                                className={`${
+                                                    rowMarker % 2 === 0
+                                                        ? classes.cellGroupRowEven
+                                                        : classes.cellGroupRowOdd
+                                                }`}
+                                                key={id}
+                                            >
                                                 <TableCell className={classes.cellGroupDetails} />
                                                 <TableCell className={classes.cellGroupDetails}>
-                                                    {row.panel_name}
+                                                    <strong>{row.panel_title}</strong>
+                                                    <br />
+                                                    {row.admin_notes}
                                                 </TableCell>
                                                 <TableCell className={classes.cellGroupDetails}>
                                                     {row.panel_start && row.panel_start !== ''
