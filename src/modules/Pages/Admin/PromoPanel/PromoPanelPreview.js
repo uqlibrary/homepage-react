@@ -141,6 +141,8 @@ PromoPanelPreview.propTypes = {
 };
 
 PromoPanelPreview.defaultProps = {
+    previewGroup: [],
+    previewContent: '',
     helpButtonLabel: 'Help',
     helpContent: 'test',
     spotlights: [],
