@@ -190,7 +190,7 @@ export const PromoPanelListPanels = ({
                             <TableCell component="th" scope="row">
                                 Created
                             </TableCell>
-                            <TableCell component="th" scope="row" align="center">
+                            <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
                                 Actions
                             </TableCell>
                         </TableRow>
@@ -210,10 +210,16 @@ export const PromoPanelListPanels = ({
                                             {item.panel_content.replace(regex, '')}
                                         </TableCell>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            {item.admin_notes}
+                                            {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
                                         </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                        <TableCell
+                                            component="td"
+                                            scope="row"
+                                            className={classes.cellGroupName}
+                                            align="right"
+                                        >
                                             <PromoPanelSplitButton
+                                                align="right"
                                                 alertId={alert.id}
                                                 canEdit={canEdit}
                                                 canClone={canClone}
