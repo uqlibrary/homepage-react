@@ -123,7 +123,7 @@ const useStyles2 = makeStyles(
     }),
     { withTheme: true },
 );
-export const PromoPanelListTable = ({
+export const PromoPanelListPanels = ({
     panelList,
     title,
     canEdit,
@@ -141,7 +141,9 @@ export const PromoPanelListTable = ({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
     const classes = useStyles2();
-    let rowMarker = 0;
+    const rowMarker = 0;
+    const regex = /(<([^>]+)>)/gi;
+
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
             ...locale.listPage.confirmDelete,
@@ -152,16 +154,16 @@ export const PromoPanelListTable = ({
     };
 
     const onPreviewOpen = (row, item) => {
-        console.log('Row', row);
-        console.log('item', item);
+        console.log('Rowz', row);
         const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
-        console.log('scheduled?', scheduled);
-        // console.log('Value', value);
+        console.log('zscheduled?', scheduled);
+        const groups = Array.from(row.user_types, item => item.user_type);
+        console.log('zgroups', groups);
         setPreviewPanel({
             name: row.admin_notes,
             title: row.panel_title,
             content: row.panel_content,
-            group: [item.user_type],
+            group: groups,
             start: row.panel_start,
             end: row.panel_end,
             scheduled: scheduled,
@@ -180,16 +182,13 @@ export const PromoPanelListTable = ({
                     <TableHead>
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                Group
+                                Name
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                Panel Name
+                                Preview Content
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                From
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                To
+                                Created
                             </TableCell>
                             <TableCell component="th" scope="row" align="center">
                                 Actions
@@ -200,66 +199,50 @@ export const PromoPanelListTable = ({
                         {/* Start of a Group and it's Panels */}
                         {console.log('panelList', panelList)}
                         {panelList.map((item, id) => {
-                            rowMarker = 0;
+                            console.log('This is the item', item);
                             return (
-                                <React.Fragment key={id}>
+                                <>
                                     <TableRow className={classes.cellGroupRow}>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            {item.user_type_name}
+                                            {item.admin_notes}
                                         </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
+                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            {item.panel_content.replace(regex, '')}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            {item.admin_notes}
+                                        </TableCell>
+                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                            <PromoPanelSplitButton
+                                                alertId={alert.id}
+                                                canEdit={canEdit}
+                                                canClone={canClone}
+                                                canDelete={canDelete}
+                                                onPreview={item => onPreviewOpen(item)}
+                                                row={item}
+                                                // deleteAlertById={deleteAlertById}
+                                                mainButtonLabel={'Edit'}
+                                                // navigateToCloneForm={navigateToCloneForm}
+                                                // navigateToEditForm={navigateToEditForm}
+                                                // navigateToView={navigateToView}
+                                                confirmDeleteLocale={confirmDeleteLocale}
+                                            />
+                                        </TableCell>
                                     </TableRow>
-
-                                    {item.panels.map((row, id) => {
-                                        rowMarker++;
-                                        return (
-                                            <TableRow
-                                                className={`${
-                                                    rowMarker % 2 === 0
-                                                        ? classes.cellGroupRowEven
-                                                        : classes.cellGroupRowOdd
-                                                }`}
-                                                key={id}
-                                            >
-                                                <TableCell className={classes.cellGroupDetails} />
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    <strong>{row.panel_title}</strong>
-                                                    <br />
-                                                    {row.admin_notes}
-                                                </TableCell>
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    {row.panel_start && row.panel_start !== ''
-                                                        ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
-                                                        : 'Default'}
-                                                </TableCell>
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    {row.panel_end && row.panel_end !== ''
-                                                        ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
-                                                        : ''}
-                                                </TableCell>
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    <PromoPanelSplitButton
-                                                        alertId={alert.id}
-                                                        canEdit={canEdit}
-                                                        canClone={canClone}
-                                                        canDelete={canDelete}
-                                                        onPreview={row => onPreviewOpen(row, item)}
-                                                        row={row}
-                                                        // deleteAlertById={deleteAlertById}
-                                                        mainButtonLabel={'Edit'}
-                                                        // navigateToCloneForm={navigateToCloneForm}
-                                                        // navigateToEditForm={navigateToEditForm}
-                                                        // navigateToView={navigateToView}
-                                                        confirmDeleteLocale={confirmDeleteLocale}
+                                    <TableRow>
+                                        <TableCell colSpan={4}>
+                                            {item.user_types.map(type => {
+                                                return (
+                                                    <Chip
+                                                        data-testid={'alert-list-urgent-chip-'}
+                                                        label={type.user_type_name}
+                                                        title={type.user_type_name}
                                                     />
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </React.Fragment>
+                                                );
+                                            })}
+                                        </TableCell>
+                                    </TableRow>
+                                </>
                             );
                         })}
                     </TableBody>
@@ -280,7 +263,7 @@ export const PromoPanelListTable = ({
     );
 };
 
-PromoPanelListTable.propTypes = {
+PromoPanelListPanels.propTypes = {
     panelList: PropTypes.array,
     title: PropTypes.string,
     canEdit: PropTypes.bool,
@@ -296,9 +279,9 @@ PromoPanelListTable.propTypes = {
     alertOrder: PropTypes.any,
 };
 
-PromoPanelListTable.defaultProps = {
+PromoPanelListPanels.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
     alertOrder: false, // what order should we sort the alerts in? false means unspecified
 };
 
-export default PromoPanelListTable;
+export default PromoPanelListPanels;

@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 }));
 export const PromoPanelPreview = props => {
     const classes = useStyles();
-    console.log('PROPS IS PREVIEW OPEN', props.isPreviewOpen);
+    console.log('PROPS for the object', props);
 
     return (
         <React.Fragment>
@@ -141,6 +141,9 @@ PromoPanelPreview.propTypes = {
 };
 
 PromoPanelPreview.defaultProps = {
+    previewGroup: ['none', 'none'],
+    previewContent: '',
+    previewScheduled: false,
     helpButtonLabel: 'Help',
     helpContent: 'test',
     spotlights: [],

@@ -29,9 +29,12 @@ const useStyles = makeStyles(() => ({
 }));
 export const PromoPanelSplitButton = ({
     canEdit,
+    row,
+    item,
     canClone,
     canDelete,
     alertId,
+    onPreview,
     deleteAlertById,
     mainButtonLabel,
     navigateToCloneForm,
@@ -57,6 +60,10 @@ export const PromoPanelSplitButton = ({
         setOpen(false);
     };
 
+    const handlePreview = row => {
+        setOpen(false);
+        onPreview(row);
+    };
     return (
         <React.Fragment>
             <ConfirmationBox
@@ -111,7 +118,7 @@ export const PromoPanelSplitButton = ({
                                                 <MenuItem
                                                     data-testid={`${alertId}-preview-button`}
                                                     key={`${alertId}-preview-button`}
-                                                    onClick={() => navigateToEditForm(alertId)}
+                                                    onClick={() => handlePreview(row, item)}
                                                 >
                                                     Preview
                                                 </MenuItem>
@@ -155,10 +162,13 @@ export const PromoPanelSplitButton = ({
 };
 
 PromoPanelSplitButton.propTypes = {
+    row: PropTypes.object,
+    item: PropTypes.object,
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
     alertId: PropTypes.string,
+    onPreview: PropTypes.func,
     mainButtonLabel: PropTypes.string,
     deleteAlertById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
