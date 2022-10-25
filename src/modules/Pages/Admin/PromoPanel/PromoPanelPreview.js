@@ -51,7 +51,7 @@ const useStyles = makeStyles(theme => ({
 }));
 export const PromoPanelPreview = props => {
     const classes = useStyles();
-    console.log('PROPS IS PREVIEW OPEN', props.isPreviewOpen);
+    console.log('PROPS for the object', props);
 
     return (
         <React.Fragment>
