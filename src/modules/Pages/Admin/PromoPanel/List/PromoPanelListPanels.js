@@ -198,10 +198,10 @@ export const PromoPanelListPanels = ({
                     <TableBody>
                         {/* Start of a Group and it's Panels */}
                         {console.log('panelList', panelList)}
-                        {panelList.map((item, id) => {
+                        {panelList.map(item => {
                             console.log('This is the item', item);
                             return (
-                                <>
+                                <React.Fragment key={item.panel_id}>
                                     <TableRow className={classes.cellGroupRow}>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                             {item.admin_notes}
@@ -212,14 +212,9 @@ export const PromoPanelListPanels = ({
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                             {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
                                         </TableCell>
-                                        <TableCell
-                                            component="td"
-                                            scope="row"
-                                            className={classes.cellGroupName}
-                                            align="right"
-                                        >
+                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                             <PromoPanelSplitButton
-                                                align="right"
+                                                align="flex-end"
                                                 alertId={alert.id}
                                                 canEdit={canEdit}
                                                 canClone={canClone}
@@ -240,6 +235,7 @@ export const PromoPanelListPanels = ({
                                             {item.user_types.map(type => {
                                                 return (
                                                     <Chip
+                                                        key={type.user_type}
                                                         data-testid={'alert-list-urgent-chip-'}
                                                         label={type.user_type_name}
                                                         title={type.user_type_name}
@@ -248,7 +244,7 @@ export const PromoPanelListPanels = ({
                                             })}
                                         </TableCell>
                                     </TableRow>
-                                </>
+                                </React.Fragment>
                             );
                         })}
                     </TableBody>

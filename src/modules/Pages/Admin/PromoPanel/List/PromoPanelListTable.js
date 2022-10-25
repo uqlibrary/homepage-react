@@ -323,6 +323,7 @@ export const PromoPanelListTable = ({
                                                         canDelete={canDelete}
                                                         onPreview={row => onPreviewOpen(row, item)}
                                                         row={row}
+                                                        align={'flex-end'}
                                                         // deleteAlertById={deleteAlertById}
                                                         mainButtonLabel={'Edit'}
                                                         // navigateToCloneForm={navigateToCloneForm}
