@@ -29,6 +29,7 @@ const useStyles = makeStyles(() => ({
 }));
 export const PromoPanelSplitButton = ({
     canEdit,
+    align,
     row,
     item,
     canClone,
@@ -76,7 +77,7 @@ export const PromoPanelSplitButton = ({
                 isOpen={isDeleteConfirmOpen}
                 locale={confirmDeleteLocale(1)}
             />
-            <Grid container direction="column" alignItems="center">
+            <Grid container direction="column" alignItems={!!align ? align : 'center'}>
                 <Grid item xs={12} className={classes.parent}>
                     <ButtonGroup variant="contained" color="primary" ref={anchorRef} aria-label="split button">
                         <Button
@@ -163,6 +164,7 @@ export const PromoPanelSplitButton = ({
 
 PromoPanelSplitButton.propTypes = {
     row: PropTypes.object,
+    align: PropTypes.string,
     item: PropTypes.object,
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
@@ -180,6 +182,7 @@ PromoPanelSplitButton.propTypes = {
 
 PromoPanelSplitButton.defaultProps = {
     mainButtonLabel: 'Edit',
+    align: '',
 };
 
 export default PromoPanelSplitButton;

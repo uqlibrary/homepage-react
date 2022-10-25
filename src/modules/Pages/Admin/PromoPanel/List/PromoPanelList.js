@@ -164,6 +164,7 @@ export const PromoPanelList = (
                     panel_name: 'Public Panel 1 name',
                     panel_title: 'Public Panel 1 Title',
                     panel_content: 'Public Panel 1 Content',
+                    panel_created_at: '2022-11-06T23:59',
                     panel_start: null,
                     panel_end: null,
                     is_default: true,
@@ -176,6 +177,7 @@ export const PromoPanelList = (
                     panel_content: 'Public Panel 2 Content',
                     panel_start: '2022-11-06T23:59',
                     panel_end: '2022-06-14T23:59',
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
                 {
@@ -186,6 +188,7 @@ export const PromoPanelList = (
                     panel_content: 'Public Panel 3 Content',
                     panel_start: '2022-08-06T23:59',
                     panel_end: '2022-11-06T23:59',
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
             ],
@@ -202,6 +205,7 @@ export const PromoPanelList = (
                     panel_content: 'REMUG Panel 1 Content',
                     panel_start: null,
                     panel_end: null,
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: true,
                 },
                 {
@@ -212,6 +216,7 @@ export const PromoPanelList = (
                     panel_content: 'REMUG Panel 2 Content',
                     panel_start: '2022-11-06T23:59',
                     panel_end: '2022-12-06T23:59',
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
             ],
@@ -228,6 +233,7 @@ export const PromoPanelList = (
                     panel_content: 'UNDERGRAD Panel 1 Content',
                     panel_start: null,
                     panel_end: null,
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: true,
                 },
                 {
@@ -238,6 +244,7 @@ export const PromoPanelList = (
                     panel_content: 'REUNDERGRADMUG Panel 2 Content',
                     panel_start: '2022-11-06T23:59',
                     panel_end: '2022-12-06T23:59',
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
                 {
@@ -248,6 +255,7 @@ export const PromoPanelList = (
                     panel_content: 'REUNDERGRADMUG Panel 3 Content',
                     panel_start: '2022-11-06T23:59',
                     panel_end: '2022-12-06T23:59',
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
             ],
@@ -260,6 +268,7 @@ export const PromoPanelList = (
             admin_notes: 'Xmas',
             panel_title: 'Christmas break',
             panel_content: '<div>xmas break</div>',
+            panel_created_at: '2022-11-06T23:59',
             user_types: [
                 {
                     user_type: 'REMUG',
@@ -280,6 +289,7 @@ export const PromoPanelList = (
             admin_notes: 'Other',
             panel_title: 'Other break',
             panel_content: '<div>not break</div>',
+            panel_created_at: '2022-11-06T23:59',
             user_types: [
                 {
                     user_type: 'UNDERGRAD',
@@ -294,6 +304,7 @@ export const PromoPanelList = (
             admin_notes: 'Check12',
             panel_title: 'Check break',
             panel_content: '<div>not break <b>test</b></div>',
+            panel_created_at: '2022-11-06T23:59',
             user_types: [
                 {
                     user_type: 'UNDERGRAD',

@@ -175,6 +175,81 @@ export const PromoPanelListTable = ({
 
     return (
         <StandardCard title={title} customBackgroundColor="#F7F7F7">
+            {/* <Grid container>
+                <Grid container>
+                    <Grid item xs={2}>
+                        Group
+                    </Grid>
+                    <Grid item xs={4}>
+                        Panel Name
+                    </Grid>
+                    <Grid item xs={2}>
+                        From
+                    </Grid>
+                    <Grid item xs={2}>
+                        To
+                    </Grid>
+                    <Grid item xs={2}>
+                        Actions
+                    </Grid>
+                </Grid>
+                {panelList.map((item, id) => {
+                    rowMarker = 0;
+                    return (
+                        <Grid container>
+                            <Grid item xs={12}>
+                                {item.user_type_name}
+                                {item.panels.map((row, id) => {
+                                    return (
+                                        <Grid container>
+                                            <Grid item xs={2} />
+                                            <Grid item xs={4}>
+                                                <strong>{row.panel_title}</strong>
+                                                <br />
+                                                {row.admin_notes}
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                {row.panel_start && row.panel_start !== ''
+                                                    ? moment(row.panel_start).format('dddd DD/MM/YYYY')
+                                                    : 'Default'}
+                                                <br />
+                                                {row.panel_start && row.panel_start !== ''
+                                                    ? moment(row.panel_start).format('HH:mm a')
+                                                    : ''}
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                {row.panel_end && row.panel_end !== ''
+                                                    ? moment(row.panel_end).format('dddd DD/MM/YYYY')
+                                                    : ''}
+                                                <br />
+                                                {row.panel_end && row.panel_end !== ''
+                                                    ? moment(row.panel_end).format('HH:mm a')
+                                                    : ''}
+                                            </Grid>
+                                            <Grid item xs={2}>
+                                                <PromoPanelSplitButton
+                                                    alertId={alert.id}
+                                                    canEdit={canEdit}
+                                                    canClone={canClone}
+                                                    canDelete={canDelete}
+                                                    onPreview={row => onPreviewOpen(row, item)}
+                                                    row={row}
+                                                    // deleteAlertById={deleteAlertById}
+                                                    mainButtonLabel={'Edit'}
+                                                    // navigateToCloneForm={navigateToCloneForm}
+                                                    // navigateToEditForm={navigateToEditForm}
+                                                    // navigateToView={navigateToView}
+                                                    confirmDeleteLocale={confirmDeleteLocale}
+                                                />
+                                            </Grid>
+                                        </Grid>
+                                    );
+                                })}
+                            </Grid>
+                        </Grid>
+                    );
+                })}
+            </Grid> */}
             <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
                     <TableHead>
@@ -191,7 +266,7 @@ export const PromoPanelListTable = ({
                             <TableCell component="th" scope="row">
                                 To
                             </TableCell>
-                            <TableCell component="th" scope="row" align="center">
+                            <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
                                 Actions
                             </TableCell>
                         </TableRow>
