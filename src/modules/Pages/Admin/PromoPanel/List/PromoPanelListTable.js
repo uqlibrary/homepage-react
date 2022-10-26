@@ -19,7 +19,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelPreview } from '../PromoPanelPreview';
-
+import { Typography } from '@material-ui/core';
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -151,6 +151,10 @@ export const PromoPanelListTable = ({
         };
     };
 
+    const navigateToAddForm = () => {
+        history.push('/admin/promopanel/add/');
+    };
+
     const onPreviewOpen = (row, item) => {
         console.log('Row', row);
         console.log('item', item);
@@ -255,19 +259,19 @@ export const PromoPanelListTable = ({
                     <TableHead>
                         <TableRow>
                             <TableCell component="th" scope="row">
-                                Group
+                                <Typography variant="body1">Group</Typography>
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                Panel Name
+                                <Typography variant="body1">Panel Name</Typography>
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                From
+                                <Typography variant="body1">From</Typography>
                             </TableCell>
                             <TableCell component="th" scope="row">
-                                To
+                                <Typography variant="body1">To</Typography>
                             </TableCell>
                             <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
-                                Actions
+                                <Typography variant="body1">Actions</Typography>
                             </TableCell>
                         </TableRow>
                     </TableHead>
@@ -280,7 +284,7 @@ export const PromoPanelListTable = ({
                                 <React.Fragment key={id}>
                                     <TableRow className={classes.cellGroupRow}>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            {item.user_type_name}
+                                            <Typography variant="body1">{item.user_type_name}</Typography>
                                         </TableCell>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName} />
                                         <TableCell component="td" scope="row" className={classes.cellGroupName} />
@@ -301,19 +305,26 @@ export const PromoPanelListTable = ({
                                             >
                                                 <TableCell className={classes.cellGroupDetails} />
                                                 <TableCell className={classes.cellGroupDetails}>
-                                                    <strong>{row.panel_title}</strong>
-                                                    <br />
-                                                    {row.admin_notes}
+                                                    <Typography variant="body1">
+                                                        <strong>{row.panel_title}</strong>
+                                                        <br />
+                                                        {row.admin_notes}
+                                                    </Typography>
                                                 </TableCell>
                                                 <TableCell className={classes.cellGroupDetails}>
-                                                    {row.panel_start && row.panel_start !== ''
-                                                        ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
-                                                        : 'Default'}
+                                                    <Typography variant="body1">
+                                                        {!!!row.is_default
+                                                            ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
+                                                            : 'Default'}
+                                                    </Typography>
                                                 </TableCell>
                                                 <TableCell className={classes.cellGroupDetails}>
-                                                    {row.panel_end && row.panel_end !== ''
-                                                        ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
-                                                        : ''}
+                                                    <Typography variant="body1">
+                                                        {' '}
+                                                        {!!!row.is_default
+                                                            ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
+                                                            : ''}
+                                                    </Typography>
                                                 </TableCell>
                                                 <TableCell className={classes.cellGroupDetails}>
                                                     <PromoPanelSplitButton
