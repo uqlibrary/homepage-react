@@ -14,6 +14,11 @@ const handlers = {
     [actions.PROMOPANEL_CLEAR]: () => ({
         ...initialState,
     }),
+    [actions.PROMOPANEL_CLEAR_CURRENT]: state => ({
+        ...initialState,
+        ...state,
+        currentPromoPanel: null,
+    }),
     // Single Panel Reducer
     [actions.PROMOPANEL_LOADING]: state => ({
         ...initialState,

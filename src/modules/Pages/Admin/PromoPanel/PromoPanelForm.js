@@ -14,6 +14,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import { makeStyles } from '@material-ui/styles';
 import { KeyboardDateTimePicker } from '@material-ui/pickers';
 import Typography from '@material-ui/core/Typography';
+import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 import PromoPanelPreview from './PromoPanelPreview';
 
@@ -99,7 +100,7 @@ export const PromoPanelForm = ({
     // publicFileUploading,
     // publicFileUploadError,
     // publicFileUploadResult,
-    // history,
+    history,
     // spotlights,
     // spotlightsLoading,
 }) => {
@@ -110,6 +111,18 @@ export const PromoPanelForm = ({
         start: defaults.startDateDefault,
         end: defaults.endDateDefault,
     });
+    const clearForm = () => {
+        setValues(defaults);
+    };
+
+    const navigateToListPage = () => {
+        clearForm();
+
+        actions.clearCurrentPanel(); // force the list page to reload after save
+
+        history.push('/admin/promopanel');
+        scrollToTopOfPage();
+    };
 
     const [groupNames, setGroupNames] = React.useState([values.group]);
 
@@ -406,7 +419,7 @@ export const PromoPanelForm = ({
                                 color="secondary"
                                 children="Cancel"
                                 data-testid="admin-promopanel-form-button-cancel"
-                                // onClick={() => navigateToListPage()}
+                                onClick={() => navigateToListPage()}
                                 variant="contained"
                             />
                         </Grid>

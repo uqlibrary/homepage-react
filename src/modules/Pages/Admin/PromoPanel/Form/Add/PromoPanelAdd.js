@@ -19,7 +19,7 @@ export const PromoPanelAdd = ({
     // promoPanel,
     // promoPanelError,
     // promoPanelStatus,
-    // history,
+    history,
     // promoPanels,
     // promoPanelsLoading,
 }) => {
@@ -47,7 +47,7 @@ export const PromoPanelAdd = ({
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
                 <StandardCard title="Create a new Promo Panel">
-                    <PromoPanelForm defaults={defaults} actions={actions} />
+                    <PromoPanelForm defaults={defaults} actions={actions} history={history} />
                 </StandardCard>
             </section>
         </StandardPage>
