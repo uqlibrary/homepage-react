@@ -20,6 +20,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelPreview } from '../PromoPanelPreview';
 import { Typography } from '@material-ui/core';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 
@@ -142,6 +143,7 @@ export const PromoPanelListPanels = ({
     canEdit,
     canClone,
     canDelete,
+    isLoading,
     rows,
     headertag,
     alertsLoading,
@@ -209,10 +211,21 @@ export const PromoPanelListPanels = ({
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {/* Start of a Group and it's Panels */}
-                        {console.log('panelList', panelList)}
+                    {(!!isLoading || panelList.length < 1) && (
+                            <TableRow>
+                                <TableCell colSpan={5} align='center'>
+                                    <CircularProgress
+                                        id="spinner"
+                                        color='primary'
+                                        size={38}
+                                        thickness={3}
+                                        aria-label="Loading Alerts"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                             
+                        )}
                         {panelList.map(item => {
-                            console.log('This is the item', item);
                             return (
                                 <React.Fragment key={item.panel_id}>
                                     <TableRow className={classes.cellGroupRow}>
@@ -294,6 +307,7 @@ PromoPanelListPanels.propTypes = {
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
     rows: PropTypes.array,
+    isLoading: PropTypes.bool,
     headertag: PropTypes.string,
     alertsLoading: PropTypes.any,
     history: PropTypes.object,
@@ -304,6 +318,7 @@ PromoPanelListPanels.propTypes = {
 };
 
 PromoPanelListPanels.defaultProps = {
+    panelList: [],
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
     alertOrder: false, // what order should we sort the alerts in? false means unspecified
 };

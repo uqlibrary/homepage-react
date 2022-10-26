@@ -21,7 +21,7 @@ import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelPreview } from '../PromoPanelPreview';
 import { Typography } from '@material-ui/core';
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import CloseIcon from '@material-ui/icons/Close';
 import DeleteIcon from '@material-ui/icons/Delete';
 
@@ -129,6 +129,7 @@ export const PromoPanelListTable = ({
     canEdit,
     canClone,
     canDelete,
+    isLoading,
     rows,
     headertag,
     alertsLoading,
@@ -151,9 +152,7 @@ export const PromoPanelListTable = ({
         };
     };
 
-    const navigateToAddForm = () => {
-        history.push('/admin/promopanel/add/');
-    };
+    
 
     const onPreviewOpen = (row, item) => {
         console.log('Row', row);
@@ -277,8 +276,21 @@ export const PromoPanelListTable = ({
                     </TableHead>
                     <TableBody>
                         {/* Start of a Group and it's Panels */}
-                        {console.log('panelList', panelList)}
-                        {panelList.map((item, id) => {
+                        {(!!isLoading || panelList.length < 1) && (
+                            <TableRow>
+                                <TableCell colSpan={5} align='center'>
+                                    <CircularProgress
+                                        id="ListTableSpinner"
+                                        color='primary'
+                                        size={38}
+                                        thickness={3}
+                                        aria-label="Loading Table Panels"
+                                    />
+                                </TableCell>
+                            </TableRow>
+                             
+                        )}
+                        {!isLoading && panelList.map((item, id) => {
                             rowMarker = 0;
                             return (
                                 <React.Fragment key={id}>
@@ -313,7 +325,7 @@ export const PromoPanelListTable = ({
                                                 </TableCell>
                                                 <TableCell className={classes.cellGroupDetails}>
                                                     <Typography variant="body1">
-                                                        {!!!row.is_default
+                                                        {!!!row.is_default_panel && !!!row.is_default
                                                             ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
                                                             : 'Default'}
                                                     </Typography>
@@ -321,7 +333,7 @@ export const PromoPanelListTable = ({
                                                 <TableCell className={classes.cellGroupDetails}>
                                                     <Typography variant="body1">
                                                         {' '}
-                                                        {!!!row.is_default
+                                                        {!!!row.is_default && !!!row.is_default_panel
                                                             ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
                                                             : ''}
                                                     </Typography>
@@ -373,6 +385,7 @@ PromoPanelListTable.propTypes = {
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
+    isLoading: PropTypes.bool,
     rows: PropTypes.array,
     headertag: PropTypes.string,
     alertsLoading: PropTypes.any,

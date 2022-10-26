@@ -35,6 +35,8 @@ import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
 
+import {currentPanels, userListPanels} from "./data/promoPanels";
+
 const moment = require('moment');
 
 const queryString = require('query-string');
@@ -62,12 +64,22 @@ if (user && !mockData.accounts[user]) {
 user = user || 'vanilla';
 
 const withDelay = response => config => {
-    const randomTime = Math.floor(Math.random() * 100) + 1; // Change these values to delay mock API
+    const randomTime = Math.floor(Math.random() * 100) + 100; // Change these values to delay mock API
     // const randomTime = 5000;
     return new Promise(function(resolve, reject) {
         setTimeout(function() {
             resolve(response);
         }, randomTime);
+    });
+};
+const withSetDelay = (response, seconds=0.1) => config =>{
+    seconds = seconds > 5 ? 0.1 : seconds;
+    const setTime = seconds * 1000; // Change these values to delay mock API
+    // const randomTime = 5000;
+    return new Promise(function(resolve, reject) {
+        setTimeout(function() {
+            resolve(response);
+        }, setTime);
     });
 };
 
@@ -688,6 +700,18 @@ mock.onGet('exams/course/FREN1010/summary')
                 
             },
         ]),
+    )
+    .onGet(routes.PROMOPANEL_LIST_API().apiUrl).reply(
+        withSetDelay([
+            200,
+            currentPanels
+        ], 1.5),
+    )
+    .onGet(routes.PROMOPANEL_LIST_USERTYPES_API().apiUrl).reply(
+        withSetDelay([
+            200,
+            userListPanels
+        ], 3.9),
     )
     .onAny()
     .reply(config => {
