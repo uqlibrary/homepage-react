@@ -19,6 +19,7 @@ import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import { StandardCard } from 'modules/SharedComponents/Toolbox/StandardCard';
 import { PromoPanelPreview } from '../PromoPanelPreview';
+import { Typography } from '@material-ui/core';
 
 import { PromoPanelSplitButton } from './PromoPanelSplitButton';
 
@@ -46,6 +47,13 @@ const useStyles2 = makeStyles(
         },
         cellGroupRowEven: {
             backgroundColor: 'none',
+        },
+        ellipsis: {
+            maxWidth: 500, // percentage also works
+            display: 'inline-block',
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
         },
         cellGroupName: {
             marginTop: 0,
@@ -99,6 +107,11 @@ const useStyles2 = makeStyles(
             '&>div>div': {
                 marginBottom: 4,
             },
+        },
+        defaultChip: {
+            backgroundColor: theme.palette.primary.main,
+            color: '#fff',
+            fontWeight: 'bold',
         },
         urgent: {
             backgroundColor: theme.palette.warning.light,
@@ -204,13 +217,18 @@ export const PromoPanelListPanels = ({
                                 <React.Fragment key={item.panel_id}>
                                     <TableRow className={classes.cellGroupRow}>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            {item.admin_notes}
+                                            <Typography variant="body1">{item.admin_notes}</Typography>
                                         </TableCell>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            {item.panel_content.replace(regex, '')}
+                                            <Typography variant="body1" className={classes.ellipsis}>
+                                                {(!!item.panel_content && item.panel_content.replace(regex, ' ')) ||
+                                                    ' '}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
+                                            <Typography variant="body1">
+                                                {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                             <PromoPanelSplitButton
@@ -233,12 +251,16 @@ export const PromoPanelListPanels = ({
                                     <TableRow>
                                         <TableCell colSpan={4}>
                                             {item.user_types.map(type => {
+                                                console.log('Type', type);
                                                 return (
                                                     <Chip
                                                         key={type.user_type}
                                                         data-testid={'alert-list-urgent-chip-'}
-                                                        label={type.user_type_name}
+                                                        label={`${type.is_default_panel ? 'Default: ' : ''} ${
+                                                            type.user_type_name
+                                                        }`}
                                                         title={type.user_type_name}
+                                                        className={type.is_default_panel ? classes.defaultChip : ''}
                                                     />
                                                 );
                                             })}

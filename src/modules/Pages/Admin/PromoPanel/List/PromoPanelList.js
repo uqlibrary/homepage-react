@@ -9,8 +9,8 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { PromoPanelListTable } from './PromoPanelListTable';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
 // import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
-// import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-// import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 
 // import moment from 'moment';
 // import {
@@ -45,11 +45,11 @@ import { PromoPanelListPanels } from './PromoPanelListPanels';
 //     { withTheme: true },
 // );
 
-export const PromoPanelList = (
-    {
-        // actions, spotlights, spotlightsLoading, spotlightsError, history
-    },
-) => {
+export const PromoPanelList = ({
+    history,
+    actions,
+    // actions, spotlights, spotlightsLoading, spotlightsError, history
+}) => {
     // const classes = useStyles();
 
     // const [currentSpotlights, setCurrentSpotlights] = useState([]);
@@ -155,38 +155,29 @@ export const PromoPanelList = (
 
     const groupPanels = [
         {
-            user_type: 'public',
+            user_type: 'PUBLIC',
             user_type_name: 'Public (Not logged in}',
             panels: [
                 {
-                    id: 1,
-                    admin_notes: 'Public Panel 1 admin notes',
-                    panel_name: 'Public Panel 1 name',
-                    panel_title: 'Public Panel 1 Title',
-                    panel_content: 'Public Panel 1 Content',
-                    panel_created_at: '2022-11-06T23:59',
+                    panel_id: 1,
+                    admin_notes: 'Panel ID 1 Test',
+                    panel_title: 'Welcome Students',
+                    panel_content:
+                        "<p>Visit our <a href='http://library.uq.edu.au'> services for students</a> page to make the most of your library this semester:</p><ul><li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li><li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li></ul>",
                     panel_start: null,
                     panel_end: null,
+                    panel_created_at: '2022-11-06T23:59',
                     is_default: true,
                 },
+
                 {
-                    id: 2,
-                    admin_notes: 'Public Panel 2 admin notes',
-                    panel_name: 'Public Panel 2 name',
-                    panel_title: 'Public Panel 2 Title',
-                    panel_content: 'Public Panel 2 Content',
+                    panel_id: 3,
+                    admin_notes: 'Testing 3',
+                    panel_title: 'Exam Help',
+                    panel_content:
+                        "<p>Currently studying for exams?</p><ul><li>Private study rooms available</li><li>Extended library hours</li><li>Extended facility operating hours</li></ul><p>Please note: Ensure that you have <strong>All the information you need</strong> before commencing your studies</p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page for resources and advice.</p>",
+
                     panel_start: '2022-11-06T23:59',
-                    panel_end: '2022-06-14T23:59',
-                    panel_created_at: '2022-11-06T23:59',
-                    is_default: false,
-                },
-                {
-                    id: 3,
-                    admin_notes: 'Public Panel 3 admin notes',
-                    panel_name: 'Public Panel 3 name',
-                    panel_title: 'Public Panel 3 Title',
-                    panel_content: 'Public Panel 3 Content',
-                    panel_start: '2022-08-06T23:59',
                     panel_end: '2022-11-06T23:59',
                     panel_created_at: '2022-11-06T23:59',
                     is_default: false,
@@ -195,66 +186,57 @@ export const PromoPanelList = (
         },
         {
             user_type: 'REMUG',
-            user_type_name: 'REMUG Group',
+            user_type_name: 'Remote Undergraduate',
             panels: [
                 {
-                    id: 1,
-                    admin_notes: 'REMUG Panel 1 admin notes',
-                    panel_name: 'REMUG Panel 1 name',
-                    panel_title: 'REMUG Panel 1 Title',
-                    panel_content: 'REMUG Panel 1 Content',
+                    panel_id: 1,
+                    admin_notes: 'Panel ID 1 Test',
+                    panel_title: 'Welcome Students',
+                    panel_content:
+                        "<p>Visit our <a href='http://library.uq.edu.au'> services for students</a> page to make the most of your library this semester:</p><ul><li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li><li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li></ul>",
                     panel_start: null,
                     panel_end: null,
-                    panel_created_at: '2022-11-06T23:59',
+                    panel_created_at: null,
                     is_default: true,
-                },
-                {
-                    id: 2,
-                    admin_notes: 'REMUG Panel 2 admin notes',
-                    panel_name: 'REMUG Panel 2 name',
-                    panel_title: 'REMUG Panel 2 Title',
-                    panel_content: 'REMUG Panel 2 Content',
-                    panel_start: '2022-11-06T23:59',
-                    panel_end: '2022-12-06T23:59',
-                    panel_created_at: '2022-11-06T23:59',
-                    is_default: false,
                 },
             ],
         },
         {
-            user_type: 'UNDERGRAD',
-            user_type_name: 'UNDERGRAD Group',
+            user_type: 'LOCUG',
+            user_type_name: 'Local Undergraduate',
             panels: [
                 {
-                    id: 1,
-                    admin_notes: 'UNDERGRAD Panel 1 admin notes',
-                    panel_name: 'UNDERGRAD Panel 1 name',
-                    panel_title: 'UNDERGRAD Panel 1 Title',
-                    panel_content: 'UNDERGRAD Panel 1 Content',
+                    panel_id: 2,
+                    admin_notes: 'Testing Panel ID 2',
+                    panel_title: 'Xmas Break',
+                    panel_content:
+                        "<p>Please note the following services will be unavailable during the christmas break:</p><ul><li>Enrolment Services.</li><li>Councelling services</li><li>Additional professional services such as vaccinations</li></ul><p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page to make informed decisions.</p>",
                     panel_start: null,
                     panel_end: null,
                     panel_created_at: '2022-11-06T23:59',
                     is_default: true,
                 },
                 {
-                    id: 2,
-                    admin_notes: 'REMUG Panel 2 admin notes',
-                    panel_name: 'UNDERGRAD Panel 2 name',
-                    panel_title: 'UNDERGRAD Panel 2 Title',
-                    panel_content: 'REUNDERGRADMUG Panel 2 Content',
+                    panel_id: 1,
+                    admin_notes: 'Panel ID 1 Test',
+                    panel_title: 'Welcome Students',
+                    panel_content:
+                        "<p>Visit our <a href='http://library.uq.edu.au'> services for students</a> page to make the most of your library this semester:</p><ul><li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li><li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li></ul>",
                     panel_start: '2022-11-06T23:59',
-                    panel_end: '2022-12-06T23:59',
+                    panel_end: '2022-11-06T23:59',
                     panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
+
                 {
-                    id: 3,
-                    admin_notes: 'REMUG Panel 3 admin notes',
-                    panel_name: 'UNDERGRAD Panel 3 name',
-                    panel_title: 'UNDERGRAD Panel 3 Title',
-                    panel_content: 'REUNDERGRADMUG Panel 3 Content',
+                    panel_id: 3,
+                    admin_notes: 'Testing 3',
+                    panel_title: 'Exam Help',
+                    panel_content:
+                        "<p>Currently studying for exams?</p><ul><li>Private study rooms available</li><li>Extended library hours</li><li>Extended facility operating hours</li></ul><p>Please note: Ensure that you have <strong>All the information you need</strong> before commencing your studies</p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page for resources and advice.</p>",
+
                     panel_start: '2022-11-06T23:59',
-                    panel_end: '2022-12-06T23:59',
+                    panel_end: '2022-11-06T23:59',
                     panel_created_at: '2022-11-06T23:59',
                     is_default: false,
                 },
@@ -265,70 +247,69 @@ export const PromoPanelList = (
     const currentPanels = [
         {
             panel_id: 1,
-            admin_notes: 'Xmas',
-            panel_title: 'Christmas break',
-            panel_content: '<div>xmas break</div>',
+            admin_notes: 'Panel ID 1 Test',
+            panel_title: 'Welcome Students',
+            panel_content:
+                "<p>Visit our <a href='http://library.uq.edu.au'> services for students</a> page to make the most of your library this semester:</p><ul><li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li><li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li></ul>",
             panel_created_at: '2022-11-06T23:59',
             user_types: [
+                {
+                    user_type: 'PUBLIC',
+                    user_type_name: 'Public (Not logged in}',
+                    display_type: 'current',
+                    is_default_panel: true,
+                },
                 {
                     user_type: 'REMUG',
                     user_type_name: 'Remote Undergraduate',
                     display_type: 'current',
-                    is_default_panel: 'N',
+                    is_default_panel: true,
                 },
                 {
-                    user_type: 'UNDERGRAD',
+                    user_type: 'LOCUG',
                     user_type_name: 'Local Undergraduate',
                     display_type: 'current',
-                    is_default_panel: 'N',
+                    is_default_panel: false,
                 },
             ],
         },
         {
             panel_id: 2,
-            admin_notes: 'Other',
-            panel_title: 'Other break',
-            panel_content: '<div>not break</div>',
+            admin_notes: 'Testing Panel ID 2',
+            panel_title: 'Xmas Break',
+            panel_content:
+                "<p>Please note the following services will be unavailable during the christmas break:</p><ul><li>Enrolment Services.</li><li>Councelling services</li><li>Additional professional services such as vaccinations</li></ul><p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page to make informed decisions.</p>",
+
             panel_created_at: '2022-11-06T23:59',
             user_types: [
                 {
-                    user_type: 'UNDERGRAD',
+                    user_type: 'LOCUG',
                     user_type_name: 'Local Undergraduate',
                     display_type: 'current',
-                    is_default_panel: 'N',
+                    is_default_panel: true,
                 },
             ],
         },
         {
             panel_id: 3,
-            admin_notes: 'Check12',
-            panel_title: 'Check break',
-            panel_content: '<div>not break <b>test</b></div>',
+            admin_notes: 'Testing 3',
+            panel_title: 'Exam Help',
+            panel_content:
+                "<p>Currently studying for exams?</p><ul><li>Private study rooms available</li><li>Extended library hours</li><li>Extended facility operating hours</li></ul><p>Please note: Ensure that you have <strong>All the information you need</strong> before commencing your studies</p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page for resources and advice.</p>",
+
             panel_created_at: '2022-11-06T23:59',
             user_types: [
                 {
-                    user_type: 'UNDERGRAD',
+                    user_type: 'LOCUG',
                     user_type_name: 'Local Undergraduate',
                     display_type: 'current',
-                    is_default_panel: 'N',
+                    is_default_panel: false,
                 },
                 {
-                    user_type: 'UNDERGRAD2',
-                    user_type_name: 'Local Undergraduate 2',
+                    user_type: 'PUBLIC',
+                    user_type_name: 'Public (Not logged in}',
                     display_type: 'current',
-                    is_default_panel: 'N',
-                },
-                {
-                    user_type: 'UNDERGRAD3',
-                    user_type_name: 'Local Undergraduate 3',
-                    display_type: 'current',
-                    is_default_panel: 'N',
-                },
-                {
-                    user_type: 'UNDERGRAD4',
-                    user_type_name: 'Local Undergraduate 4',
-                    display_type: 'current',
-                    is_default_panel: 'N',
+                    is_default_panel: false,
                 },
             ],
         },
@@ -336,7 +317,20 @@ export const PromoPanelList = (
 
     return (
         <StandardPage title="Promo Panel Management">
-            <PromoPanelListTable panelList={groupPanels} title="Current Panels" canEdit canClone canDelete />
+            <PromoPanelUtilityArea
+                actions={actions}
+                helpContent={locale.listPage.help}
+                history={history}
+                showAddButton
+            />
+            <PromoPanelListTable
+                history={history}
+                panelList={groupPanels}
+                title="Current Panels"
+                canEdit
+                canClone
+                canDelete
+            />
             <PromoPanelListPanels panelList={currentPanels} title="Panel List" canEdit canClone canDelete />
             {/* <PromoPanelListTable />
 

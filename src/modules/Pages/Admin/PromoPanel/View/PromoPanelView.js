@@ -12,15 +12,14 @@ import PropTypes from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 // import { InlineLoader } from 'modules/SharedComponents/Toolbox/Loaders';
 
-// import { SpotlightsUtilityArea } from 'modules/Pages/Admin/Spotlights/SpotlightsUtilityArea';
-// import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
+import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
 // import { formatDate, scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
-export const PromoPanelView = (
-    {
-        // actions, spotlight, spotlightStatus, history
-    },
-) => {
+export const PromoPanelView = ({
+    actions,
+    // actions, spotlight, spotlightStatus, history
+}) => {
     // const { spotlightid } = useParams();
 
     // React.useEffect(() => {
@@ -81,6 +80,7 @@ export const PromoPanelView = (
     return (
         <Fragment>
             <StandardPage title="Promo Panel Management">
+                <PromoPanelUtilityArea actions={actions} helpContent={locale.viewPage.help} history={history} />
                 <h1>Promo Panel View</h1>
             </StandardPage>
         </Fragment>
