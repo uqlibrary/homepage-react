@@ -190,3 +190,9 @@ export const deletePanel = panelID => {
         }
     };
 };
+
+export function clearCurrentPanel() {
+    return dispatch => {
+        dispatch({ type: actions.PROMOPANEL_CLEAR_CURRENT });
+    };
+}
