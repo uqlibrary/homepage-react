@@ -36,7 +36,7 @@ export const PromoPanelSplitButton = ({
     canDelete,
     alertId,
     onPreview,
-    deleteAlertById,
+    deletePanelById,
     mainButtonLabel,
     navigateToCloneForm,
     navigateToEditForm,
@@ -71,7 +71,7 @@ export const PromoPanelSplitButton = ({
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="alert-delete-confirm"
-                onAction={() => deleteAlertById(alertId)}
+                onAction={() => deletePanelById(row.panel_id)}
                 onClose={hideDeleteConfirmation}
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}

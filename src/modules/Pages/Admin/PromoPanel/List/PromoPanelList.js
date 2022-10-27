@@ -45,14 +45,13 @@ import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmi
 //     { withTheme: true },
 // );
 export const PromoPanelList = ({
-    history,
     actions,
     promoPanelList,
     promoPanelUserTypeList,
     promoPanelListLoading,
     promoPanelUserTypesLoading,
-    promoPanelListError,
-    promoPanelUserTypesError,
+    promoPanelActionError,
+    history,
 
     // actions, spotlights, spotlightsLoading, spotlightsError, history
 }) => {
@@ -161,9 +160,9 @@ export const PromoPanelList = ({
     //         </StandardPage>
     //     );
     // }
-    const deletePanel = alertID => {
-        return actions.deletePanel(alertID);
-    };
+    // const deletePanel = alertID => {
+    //     return actions.deletePanel(alertID);
+    // };
 
     return (
         <StandardPage title="Promo Panel Management">
@@ -175,26 +174,28 @@ export const PromoPanelList = ({
             />
 
             <PromoPanelListTable
-                history={history}
+                actions={actions}
+                isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
-                error={promoPanelUserTypesError}
+                // deletePanel={deletePanel}
                 title="Current Panels"
-                deletePanel={deletePanel}
                 canEdit
                 canClone
                 canDelete
-                isLoading={promoPanelUserTypesLoading}
+                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
             />
 
             <PromoPanelListPanels
+                actions={actions}
                 isLoading={promoPanelListLoading}
+                history={history}
                 panelList={promoPanelList}
-                error={promoPanelListError}
-                deletePanel={deletePanel}
+                // deletePanel={deletePanel}
                 title="Panel List"
                 canEdit
                 canClone
                 canDelete
+                panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
             />
             {/* <PromoPanelListTable />
 
@@ -209,7 +210,8 @@ PromoPanelList.propTypes = {
     promoPanelUserTypeList: PropTypes.array,
     promoPanelStatus: PropTypes.string,
     promoPanelListError: PropTypes.string,
-    promoPanelUserTypesError: PropTypes.string,
+    promoPanelUserTypesError: PropTypes.object,
+    promoPanelActionError: PropTypes.object,
     promoPanelListLoading: PropTypes.bool,
     promoPanelUserTypesLoading: PropTypes.bool,
     history: PropTypes.object,

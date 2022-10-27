@@ -124,20 +124,16 @@ const useStyles2 = makeStyles(
     { withTheme: true },
 );
 export const PromoPanelListTable = ({
-    panelList,
-    title,
-    canEdit,
-    canClone,
-    canDelete,
-    isLoading,
-    rows,
-    headertag,
-    alertsLoading,
-    history,
-    actions,
-    deletePanel,
-    footerDisplayMinLength,
-    alertOrder,
+        actions,
+        isLoading,
+        panelList,
+        deletePanel,
+        title,
+        canEdit,
+        canClone,
+        canDelete,
+        headertag,
+        panelError
 }) => {
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -149,7 +145,7 @@ export const PromoPanelListTable = ({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
     const [deleteActive, setDeleteActive] = useState(false);
-    const [alertNotice, setAlertNotice] = useState('');
+    const [PanelNotice, setPanelNotice] = useState('');
     const classes = useStyles2();
     const clearAllCheckboxes = () => {
         const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
@@ -212,7 +208,7 @@ export const PromoPanelListTable = ({
                 reEnableAllCheckboxes();
             }
         }
-        setAlertNotice(
+        setPanelNotice(
             '[n] panel[s] selected'
                 .replace('[n]', numberCheckboxesSelected)
                 .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
@@ -246,13 +242,16 @@ export const PromoPanelListTable = ({
     }
     function deletePanelById(id) {
         console.log('deleting', id)
-        deletePanel(id)
+        console.log('actions', actions)
+        actions.deletePanel(id)
             .then(() => {
                 setPanelNotice('');
                 setDeleteActive(false);
-                actions.loadAllPanels();
+                actions.loadPromoPanelUserList();
+                clearAllCheckboxes();
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log("Thrown an error", e);
                 showDeleteFailureConfirmation();
             });
     }
@@ -264,10 +263,12 @@ export const PromoPanelListTable = ({
                 const id = c.value.replace(checkBoxIdPrefix, '');
                 deletePanelById(id);
             });
+            
         }
+       
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;
-
+    console.log("PANEL ERROR", panelError)
     return (
         <React.Fragment>
              <ConfirmationBox
@@ -279,6 +280,7 @@ export const PromoPanelListTable = ({
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
                 locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
+               
             />
             <ConfirmationBox
                 actionButtonColor="primary"
@@ -289,6 +291,8 @@ export const PromoPanelListTable = ({
                 hideCancelButton
                 isOpen={isDeleteFailureConfirmationOpen}
                 locale={locale.listPage.deleteError}
+                showAdditionalInformation
+                additionalInformation={panelError}
             />
        
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
@@ -340,8 +344,7 @@ export const PromoPanelListTable = ({
                             <TableRow>
                             
                                     
-                                <TableCell colSpan={2} component="th" scope="row">
-                                    <Typography variant="body1">Group</Typography>
+                                <TableCell component="th" scope="row">
                                 </TableCell>
                                 <TableCell component="th" scope="row">
                                     <Typography variant="body1">Panel Name</Typography>
@@ -410,7 +413,6 @@ export const PromoPanelListTable = ({
                                                         value={`${checkBoxIdPrefix}${row.panel_id}`}
                                                         />
                                                     </TableCell>
-                                                    <TableCell className={classes.cellGroupDetails} />
                                                     <TableCell className={classes.cellGroupDetails}>
                                                         <Typography variant="body1">
                                                             <strong>{row.panel_title}</strong>
@@ -442,7 +444,7 @@ export const PromoPanelListTable = ({
                                                             onPreview={row => onPreviewOpen(row, item)}
                                                             row={row}
                                                             align={'flex-end'}
-                                                            // deleteAlertById={deleteAlertById}
+                                                            deletePanelById={(row) => {console.log("checking row", row); deletePanelById(row)}}
                                                             mainButtonLabel={'Edit'}
                                                             // navigateToCloneForm={navigateToCloneForm}
                                                             // navigateToEditForm={navigateToEditForm}
@@ -490,11 +492,13 @@ PromoPanelListTable.propTypes = {
     deletePanel: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     alertOrder: PropTypes.any,
+    panelError: PropTypes.string
 };
 
 PromoPanelListTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
     alertOrder: false, // what order should we sort the alerts in? false means unspecified
+    panelError: ''
 };
 
 export default PromoPanelListTable;

@@ -49,6 +49,7 @@ const handlers = {
     [actions.PROMOPANEL_LIST_LOADING]: state => ({
         ...initialState,
         ...state,
+        promoPanelList: [],
         promoPanelListLoading: true,
         promoPanelListError: null,
     }),
@@ -70,6 +71,7 @@ const handlers = {
     [actions.PROMOPANEL_USERLIST_LOADING]: state => ({
         ...initialState,
         ...state,
+        promoPanelUserTypeList: [],
         promoPanelUserTypesError: null,
         promoPanelUserTypesLoading: true,
     }),

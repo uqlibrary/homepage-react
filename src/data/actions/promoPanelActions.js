@@ -169,6 +169,7 @@ export const saveDefaultUserTypePanel = request => {
 };
 
 export const deletePanel = panelID => {
+    console.log('Deleting panel', panelID);
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_DELETING });
 

@@ -138,20 +138,16 @@ const useStyles2 = makeStyles(
     { withTheme: true },
 );
 export const PromoPanelListPanels = ({
-    panelList,
-    title,
-    canEdit,
-    canClone,
-    canDelete,
-    isLoading,
-    rows,
-    headertag,
-    alertsLoading,
-    history,
     actions,
-    deletePanel,
-    footerDisplayMinLength,
-    alertOrder,
+        isLoading,
+        panelList,
+        deletePanel,
+        title,
+        canEdit,
+        canClone,
+        canDelete,
+        headertag,
+        panelError,
 }) => {
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -162,7 +158,7 @@ export const PromoPanelListPanels = ({
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
     const [deleteActive, setDeleteActive] = useState(false);
-    const [alertNotice, setAlertNotice] = useState('');
+    const [panelNotice, setPanelNotice] = useState('');
     const classes = useStyles2();
     const rowMarker = 0;
     const regex = /(<([^>]+)>)/gi;
@@ -241,7 +237,7 @@ export const PromoPanelListPanels = ({
                 reEnableAllCheckboxes();
             }
         }
-        setAlertNotice(
+        setPanelNotice(
             '[n] panel[s] selected'
                 .replace('[n]', numberCheckboxesSelected)
                 .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
@@ -253,13 +249,14 @@ export const PromoPanelListPanels = ({
     }
     function deletePanelById(id) {
         console.log('deleting', id)
-        deletePanel(id)
+        actions.deletePanel(id)
             .then(() => {
                 setPanelNotice('');
                 setDeleteActive(false);
-                actions.loadAllPanels();
+                actions.loadPromoPanelList();
             })
-            .catch(() => {
+            .catch((e) => {
+                console.log(e)
                 showDeleteFailureConfirmation();
             });
     }
@@ -297,6 +294,8 @@ export const PromoPanelListPanels = ({
                 hideCancelButton
                 isOpen={isDeleteFailureConfirmationOpen}
                 locale={locale.listPage.deleteError}
+                showAdditionalInformation
+                additionalInformation={panelError}
             />
         <StandardCard title={title} customBackgroundColor="#F7F7F7">
             <div
@@ -376,6 +375,7 @@ export const PromoPanelListPanels = ({
                              
                         )}
                         {panelList.map(item => {
+                            console.log("ITEM", item)
                             return (
                                 <React.Fragment key={item.panel_id}>
                                     <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
@@ -413,7 +413,7 @@ export const PromoPanelListPanels = ({
                                                 canDelete={canDelete}
                                                 onPreview={item => onPreviewOpen(item)}
                                                 row={item}
-                                                // deleteAlertById={deleteAlertById}
+                                                deletePanelById={(row) => deletePanelById(row)}
                                                 mainButtonLabel={'Edit'}
                                                 // navigateToCloneForm={navigateToCloneForm}
                                                 // navigateToEditForm={navigateToEditForm}

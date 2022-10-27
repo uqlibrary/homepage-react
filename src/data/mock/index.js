@@ -711,7 +711,10 @@ mock.onGet('exams/course/FREN1010/summary')
         withSetDelay([
             200,
             userListPanels
-        ], 3.9),
+        ], 1),
+    )
+    .onDelete(routes.PROMOPANEL_DELETE_API({id: 1}).apiUrl).reply(
+        withSetDelay([200, {status: 'ok'}],1)
     )
     .onAny()
     .reply(config => {

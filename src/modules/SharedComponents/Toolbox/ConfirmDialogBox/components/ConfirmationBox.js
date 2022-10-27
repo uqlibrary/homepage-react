@@ -36,6 +36,8 @@ export const ConfirmationBox = ({
     onClose,
     showAlternateActionButton,
     showInputForm,
+    showAdditionalInformation,
+    additionalInformation,
 }) => {
     const classes = useStyles();
 
@@ -59,6 +61,13 @@ export const ConfirmationBox = ({
             <DialogTitle data-testid="message-title">{locale.confirmationTitle}</DialogTitle>
             <DialogContent style={{ minWidth: 400 }}>
                 <DialogContentText data-testid="message-content">{locale.confirmationMessage}</DialogContentText>
+                {!!showAdditionalInformation && !!additionalInformation && (
+                    <DialogContentText data-testid="message-content">
+                        <strong>Info: </strong>
+                        {additionalInformation}
+                    </DialogContentText>
+                )}
+
                 {!!showInputForm && /* istanbul ignore next */ <InputForm />}
             </DialogContent>
             <DialogActions>
@@ -129,9 +138,12 @@ ConfirmationBox.propTypes = {
     onClose: PropTypes.func,
     showAlternateActionButton: PropTypes.bool,
     showInputForm: PropTypes.bool,
+    additionalInformation: PropTypes.string,
+    showAdditionalInformation: PropTypes.bool,
 };
 
 ConfirmationBox.defaultProps = {
+    showAdditionalInformation: false,
     hideActionButton: false,
     hideCancelButton: false,
     isOpen: false,
@@ -144,6 +156,7 @@ ConfirmationBox.defaultProps = {
     },
     showAlternateActionButton: false,
     showInputForm: false,
+    additionalInformation: null,
 };
 
 export default React.memo(ConfirmationBox);
