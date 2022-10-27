@@ -127,7 +127,7 @@ export const PromoPanelSplitButton = ({
                                                 <MenuItem
                                                     data-testid={`${alertId}-edit-button`}
                                                     key={`${alertId}-edit-button`}
-                                                    onClick={() => navigateToEditForm(alertId)}
+                                                    onClick={() => navigateToEditForm(row.panel_id)}
                                                 >
                                                     Edit
                                                 </MenuItem>
@@ -136,7 +136,7 @@ export const PromoPanelSplitButton = ({
                                                 <MenuItem
                                                     data-testid={`${alertId}-clone-button`}
                                                     key={`${alertId}-clone-button`}
-                                                    onClick={() => navigateToCloneForm(alertId)}
+                                                    onClick={() => navigateToCloneForm(row.panel_id)}
                                                 >
                                                     Clone
                                                 </MenuItem>

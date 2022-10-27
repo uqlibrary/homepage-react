@@ -32,7 +32,7 @@ import { default as locale } from '../promoPanelAdmin.locale';
 import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
-// import { scrollToTopOfPage, systemList } from '../alerthelpers';
+import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const moment = require('moment');
 
@@ -128,6 +128,7 @@ export const PromoPanelListTable = ({
         isLoading,
         panelList,
         deletePanel,
+        history,
         title,
         canEdit,
         canClone,
@@ -266,6 +267,11 @@ export const PromoPanelListTable = ({
             
         }
        
+    };
+    const navigateToEditForm = alertid => {
+       console.log("ID", alertid)
+        // history.push(`/admin/promopanel/edit/${alertid}`);
+        scrollToTopOfPage();
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;
     console.log("PANEL ERROR", panelError)
@@ -447,7 +453,7 @@ export const PromoPanelListTable = ({
                                                             deletePanelById={(row) => {console.log("checking row", row); deletePanelById(row)}}
                                                             mainButtonLabel={'Edit'}
                                                             // navigateToCloneForm={navigateToCloneForm}
-                                                            // navigateToEditForm={navigateToEditForm}
+                                                            navigateToEditForm={(row) => navigateToEditForm(row)}
                                                             // navigateToView={navigateToView}
                                                             confirmDeleteLocale={confirmDeleteLocale}
                                                         />

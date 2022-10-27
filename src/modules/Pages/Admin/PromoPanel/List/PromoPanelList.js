@@ -177,6 +177,7 @@ export const PromoPanelList = ({
                 actions={actions}
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
+                history={history}
                 // deletePanel={deletePanel}
                 title="Current Panels"
                 canEdit
