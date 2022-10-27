@@ -44,7 +44,6 @@ import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmi
 //     }),
 //     { withTheme: true },
 // );
-
 export const PromoPanelList = ({
     history,
     actions,
@@ -162,6 +161,9 @@ export const PromoPanelList = ({
     //         </StandardPage>
     //     );
     // }
+    const deletePanel = alertID => {
+        return actions.deletePanel(alertID);
+    };
 
     return (
         <StandardPage title="Promo Panel Management">
@@ -177,6 +179,7 @@ export const PromoPanelList = ({
                 panelList={promoPanelUserTypeList}
                 error={promoPanelUserTypesError}
                 title="Current Panels"
+                deletePanel={deletePanel}
                 canEdit
                 canClone
                 canDelete
@@ -187,6 +190,7 @@ export const PromoPanelList = ({
                 isLoading={promoPanelListLoading}
                 panelList={promoPanelList}
                 error={promoPanelListError}
+                deletePanel={deletePanel}
                 title="Panel List"
                 canEdit
                 canClone

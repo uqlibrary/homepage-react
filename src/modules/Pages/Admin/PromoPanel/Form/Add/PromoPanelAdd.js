@@ -33,6 +33,7 @@ export const PromoPanelAdd = ({
         group: 'Public',
         admin_notes: '',
         isPreviewOpen: false,
+        is_default_panel: 0,
     };
 
     // React.useEffect(() => {

@@ -89,7 +89,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const availableGroups = ['Public', 'Authenticated', 'UnderGrad', 'International', 'Staff'];
+const availableGroups = ['Public', 'UnderGrad', 'International', 'Staff'];
 
 export const PromoPanelForm = ({
     actions,
@@ -171,11 +171,11 @@ export const PromoPanelForm = ({
         let filteredSelection = selections;
         console.log('last selected', lastSelected);
 
-        if (lastSelected === 'Authenticated') {
-            filteredSelection = selections.filter(value => value === 'Public' || value === 'Authenticated');
-        } else if (lastSelected !== 'Public' && lastSelected !== 'Authenticated') {
-            filteredSelection = selections.filter(value => value !== 'Authenticated');
-        }
+        // if (lastSelected === 'Authenticated') {
+        //     filteredSelection = selections.filter(value => value === 'Public' || value === 'Authenticated');
+        // } else if (lastSelected !== 'Public' && lastSelected !== 'Authenticated') {
+        //     filteredSelection = selections.filter(value => value !== 'Authenticated');
+        // }
         filteredSelection = filteredSelection.length === 0 ? ['Public'] : filteredSelection;
 
         setGroupNames(filteredSelection);
@@ -187,7 +187,7 @@ export const PromoPanelForm = ({
 
     const handleChange = prop => event => {
         let propValue;
-        if (['scheduled'].includes(prop)) {
+        if (['is_default_panel'].includes(prop)) {
             propValue = event.target.checked ? 1 : 0;
         } else if (['start', 'end'].includes(prop)) {
             propValue = event.format('YYYY/MM/DD hh:mm a');
@@ -349,29 +349,28 @@ export const PromoPanelForm = ({
                         </FormControl>
                     </Grid>
                     <Grid container style={{ margin: '0 10px 0' }}>
-                        <Typography style={{ fontWeight: 'bold' }}>Panel Scheduling</Typography>
+                        <Typography style={{ fontWeight: 'bold' }}>Is this the default panel for group?</Typography>
                         <Grid container>
                             <Typography style={{ fontSize: 12 }}>
-                                If no schedule is defined, this will be considered to be the default for the selected
-                                group
+                                If selected, this will be the default panel for the selected groups
                             </Typography>
                         </Grid>
                         <Grid container>
                             <Grid item xs={12}>
                                 <InputLabel
-                                    title={locale.form.tooltips.scheduleCheckbox}
+                                    title={locale.form.tooltips.defaultPanelCheckbox}
                                     className={`${classes.scheduleCell}`}
                                 >
                                     <Checkbox
-                                        checked={values.scheduled === 1}
+                                        checked={values.is_default_panel === 1}
                                         data-testid="admin-spotlights-form-checkbox-published"
-                                        onChange={handleChange('scheduled')}
+                                        onChange={handleChange('is_default_panel')}
                                         className={classes.checkbox}
                                     />
-                                    {locale.form.labels.scheduleCheckbox}
+                                    {locale.form.labels.defaultPanelCheckbox}
                                 </InputLabel>
                             </Grid>
-                            {values.scheduled === 1 && (
+                            {values.is_default_panel !== 1 && (
                                 <>
                                     <Grid item md={5} xs={6}>
                                         <KeyboardDateTimePicker

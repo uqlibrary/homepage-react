@@ -7,7 +7,7 @@ export default {
     form: {
         labels: {
             titleField: 'Title of the Promo Panel',
-            scheduleCheckbox: 'Schedule this Promo Panel?',
+            defaultPanelCheckbox: 'Default panel for selected groups',
             nameField: 'Name of the Panel (not displayed)',
             adminNotesField: 'Admin notes - anything non-public the admin needs to record about this promo panel',
             linkDescAriaField: 'Link title *',
@@ -260,12 +260,12 @@ export default {
     },
     listPage: {
         confirmDelete: {
-            confirmationTitle: 'Remove [N] spotlights?',
+            confirmationTitle: 'Remove [N] panels?',
             confirmationMessage: (
                 <Fragment>
-                    Are you sure you want to remove the selected spotlights?
+                    Are you sure you want to remove the selected panels?
                     <br />
-                    Removed spotlights cannot be brought back.
+                    Removed panels cannot be brought back.
                 </Fragment>
             ),
             cancelButtonLabel: 'Cancel',

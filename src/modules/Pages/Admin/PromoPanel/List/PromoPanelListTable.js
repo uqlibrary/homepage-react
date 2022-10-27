@@ -114,7 +114,7 @@ const useStyles2 = makeStyles(
         },
         checkboxCell: {
             '& input[type="checkbox"]:checked + svg': {
-                fill: '#595959',
+                fill: '#222',
             },
         },
         removedChip: {
@@ -135,13 +135,30 @@ export const PromoPanelListTable = ({
     alertsLoading,
     history,
     actions,
-    deleteAlert,
+    deletePanel,
     footerDisplayMinLength,
     alertOrder,
 }) => {
+    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+    const [
+        isDeleteFailureConfirmationOpen,
+        showDeleteFailureConfirmation,
+        hideDeleteFailureConfirmation,
+    ] = useConfirmationState();
+
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
+    const [deleteActive, setDeleteActive] = useState(false);
+    const [alertNotice, setAlertNotice] = useState('');
     const classes = useStyles2();
+    const clearAllCheckboxes = () => {
+        const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
+        checkBoxList.forEach(ii => {
+            if (ii.checked) {
+                ii.click();
+            }
+        });
+    };
     let rowMarker = 0;
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
@@ -150,6 +167,56 @@ export const PromoPanelListTable = ({
                 .replace('[N]', numberOfCheckedBoxes)
                 .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
         };
+    };
+
+    const checkBoxIdPrefix = 'table-checkbox-';
+    
+    // const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length).replace('[s]', rows.length > 1 ? 's' : '');
+
+    const headerCountIndicator = (rowCount) => {
+        console.log(rowCount);
+            return ('[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : ''));
+    }
+
+    const reEnableAllCheckboxes = () => {
+            const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
+            checkBoxList.forEach(ii => {
+                ii.disabled = false;
+                ii.parentElement.parentElement.classList.remove('Mui-disabled');
+            });
+    };
+
+    const handleCheckboxChange = e => {
+        const numberCheckboxesSelected = getNumberCheckboxesSelected();
+
+        const thisType = e.target.closest('table').parentElement.id;
+        /* istanbul ignore else */
+        if (!!e.target && !!e.target.checked) {
+            // handle a checkbox being turned on
+            if (numberCheckboxesSelected === 1) {
+                setDeleteActive(true);
+            }
+            // disable any checkboxes in a different alert list
+            const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
+            checkBoxList.forEach(ii => {
+                const thetype = ii.closest('table').parentElement.id;
+                if (thetype !== thisType) {
+                    ii.disabled = true;
+                    ii.parentElement.parentElement.classList.add('Mui-disabled');
+                }
+            });
+        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
+            // handle a checkbox being turned off
+            if (numberCheckboxesSelected === 0) {
+                setDeleteActive(false);
+                reEnableAllCheckboxes();
+            }
+        }
+        setAlertNotice(
+            '[n] panel[s] selected'
+                .replace('[n]', numberCheckboxesSelected)
+                .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
+        );
     };
 
     
@@ -173,209 +240,238 @@ export const PromoPanelListTable = ({
         setPreviewOpen(true);
     };
     const handlePreviewClose = () => setPreviewOpen(false);
-
+    
+    function getNumberCheckboxesSelected() {
+        return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
+    }
+    function deletePanelById(id) {
+        console.log('deleting', id)
+        deletePanel(id)
+            .then(() => {
+                setPanelNotice('');
+                setDeleteActive(false);
+                actions.loadAllPanels();
+            })
+            .catch(() => {
+                showDeleteFailureConfirmation();
+            });
+    }
+    const deleteSelectedPanels = () => {
+        const checkboxes = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]:checked');
+        /* istanbul ignore else */
+        if (!!checkboxes && checkboxes.length > 0) {
+            checkboxes.forEach(c => {
+                const id = c.value.replace(checkBoxIdPrefix, '');
+                deletePanelById(id);
+            });
+        }
+    };
     // const needsPaginator = userows.length > footerDisplayMinLength;
 
     return (
-        <StandardCard title={title} customBackgroundColor="#F7F7F7">
-            {/* <Grid container>
-                <Grid container>
-                    <Grid item xs={2}>
-                        Group
-                    </Grid>
-                    <Grid item xs={4}>
-                        Panel Name
-                    </Grid>
-                    <Grid item xs={2}>
-                        From
-                    </Grid>
-                    <Grid item xs={2}>
-                        To
-                    </Grid>
-                    <Grid item xs={2}>
-                        Actions
-                    </Grid>
-                </Grid>
-                {panelList.map((item, id) => {
-                    rowMarker = 0;
-                    return (
-                        <Grid container>
-                            <Grid item xs={12}>
-                                {item.user_type_name}
-                                {item.panels.map((row, id) => {
-                                    return (
-                                        <Grid container>
-                                            <Grid item xs={2} />
-                                            <Grid item xs={4}>
-                                                <strong>{row.panel_title}</strong>
-                                                <br />
-                                                {row.admin_notes}
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                {row.panel_start && row.panel_start !== ''
-                                                    ? moment(row.panel_start).format('dddd DD/MM/YYYY')
-                                                    : 'Default'}
-                                                <br />
-                                                {row.panel_start && row.panel_start !== ''
-                                                    ? moment(row.panel_start).format('HH:mm a')
-                                                    : ''}
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                {row.panel_end && row.panel_end !== ''
-                                                    ? moment(row.panel_end).format('dddd DD/MM/YYYY')
-                                                    : ''}
-                                                <br />
-                                                {row.panel_end && row.panel_end !== ''
-                                                    ? moment(row.panel_end).format('HH:mm a')
-                                                    : ''}
-                                            </Grid>
-                                            <Grid item xs={2}>
-                                                <PromoPanelSplitButton
-                                                    alertId={alert.id}
-                                                    canEdit={canEdit}
-                                                    canClone={canClone}
-                                                    canDelete={canDelete}
-                                                    onPreview={row => onPreviewOpen(row, item)}
-                                                    row={row}
-                                                    // deleteAlertById={deleteAlertById}
-                                                    mainButtonLabel={'Edit'}
-                                                    // navigateToCloneForm={navigateToCloneForm}
-                                                    // navigateToEditForm={navigateToEditForm}
-                                                    // navigateToView={navigateToView}
-                                                    confirmDeleteLocale={confirmDeleteLocale}
-                                                />
-                                            </Grid>
-                                        </Grid>
-                                    );
-                                })}
-                            </Grid>
-                        </Grid>
-                    );
-                })}
-            </Grid> */}
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
-                    <TableHead>
-                        <TableRow>
-                            <TableCell component="th" scope="row">
-                                <Typography variant="body1">Group</Typography>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                <Typography variant="body1">Panel Name</Typography>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                <Typography variant="body1">From</Typography>
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                <Typography variant="body1">To</Typography>
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
-                                <Typography variant="body1">Actions</Typography>
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {/* Start of a Group and it's Panels */}
-                        {(!!isLoading || panelList.length < 1) && (
+        <React.Fragment>
+             <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="panel-delete-confirm"
+                onAction={deleteSelectedPanels}
+                onClose={hideDeleteConfirmation}
+                onCancelAction={hideDeleteConfirmation}
+                isOpen={isDeleteConfirmOpen}
+                locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
+            />
+            <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="panel-delete-error-dialog"
+                onAction={hideDeleteFailureConfirmation}
+                onClose={hideDeleteFailureConfirmation}
+                hideCancelButton
+                isOpen={isDeleteFailureConfirmationOpen}
+                locale={locale.listPage.deleteError}
+            />
+       
+            <StandardCard title={title} customBackgroundColor="#F7F7F7">
+                <div
+                    data-testid={`headerRow-table`}
+                    className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
+                >
+                    <div>
+                        <h3 style={{ marginBottom: 6 }}>
+                            {headertag}
+                            <span
+                                style={{ fontSize: '0.9em', fontWeight: 300 }}
+                                data-testid={`headerRow-count-table`}
+                            >
+                                {getNumberCheckboxesSelected() > 0 ? headerCountIndicator(getNumberCheckboxesSelected()): null}
+                            </span>
+                        </h3>
+                    </div>
+                    {!!deleteActive && (
+                        <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
+                            
+                            <IconButton
+                                onClick={showDeleteConfirmation}
+                                aria-label="Delete alert(s)"
+                                data-testid={`panel-list-table-delete-button`}
+                                title="Delete panel(s)"
+                            >
+                                <DeleteIcon
+                                    className={`${
+                                        !!deleteActive ? classes.iconHighlighted : /* istanbul ignore next */ ''
+                                    }`}
+                                />
+                            </IconButton>
+                            <IconButton
+                                onClick={clearAllCheckboxes}
+                                aria-label="Deselect all"
+                                data-testid={`panel-list-table-deselect-button`}
+                                className={classes.iconHighlighted}
+                                title="Deselect all"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </span>
+                    )}
+                </div>
+                <TableContainer component={Paper}>
+                    <Table  size="small" aria-label="a dense table" id={`admin-promoPanel-table`}>
+                        <TableHead>
                             <TableRow>
-                                <TableCell colSpan={5} align='center'>
-                                    <CircularProgress
-                                        id="ListTableSpinner"
-                                        color='primary'
-                                        size={38}
-                                        thickness={3}
-                                        aria-label="Loading Table Panels"
-                                    />
+                            
+                                    
+                                <TableCell colSpan={2} component="th" scope="row">
+                                    <Typography variant="body1">Group</Typography>
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    <Typography variant="body1">Panel Name</Typography>
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    <Typography variant="body1">From</Typography>
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    <Typography variant="body1">To</Typography>
+                                </TableCell>
+                                <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
+                                    <Typography variant="body1">Actions</Typography>
                                 </TableCell>
                             </TableRow>
-                             
-                        )}
-                        {!isLoading && panelList.map((item, id) => {
-                            rowMarker = 0;
-                            return (
-                                <React.Fragment key={id}>
-                                    <TableRow className={classes.cellGroupRow}>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            <Typography variant="body1">{item.user_type_name}</Typography>
-                                        </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName} />
-                                    </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {/* Start of a Group and it's Panels */}
+                            {(!!isLoading || panelList.length < 1) && (
+                                <TableRow>
+                                    <TableCell colSpan={6} align='center'>
+                                        <CircularProgress
+                                            id="ListTableSpinner"
+                                            color='primary'
+                                            size={38}
+                                            thickness={3}
+                                            aria-label="Loading Table Panels"
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                                
+                            )}
+                            {!isLoading && panelList.map((item, id) => {
+                                rowMarker = 0;
+                                return (
+                                    <React.Fragment key={id}>
+                                        
+                                            
+                                        
+                                        <TableRow className={classes.cellGroupRow}>
+                                        
+                                            <TableCell colSpan={6} component="td" scope="row" className={classes.cellGroupName}>
+                                                <Typography variant="body1">{item.user_type_name}</Typography>
+                                            </TableCell>
+                                            
+                                        </TableRow>
 
-                                    {item.panels.map((row, id) => {
-                                        rowMarker++;
-                                        return (
-                                            <TableRow
-                                                className={`${
-                                                    rowMarker % 2 === 0
-                                                        ? classes.cellGroupRowEven
-                                                        : classes.cellGroupRowOdd
-                                                }`}
-                                                key={id}
-                                            >
-                                                <TableCell className={classes.cellGroupDetails} />
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    <Typography variant="body1">
-                                                        <strong>{row.panel_title}</strong>
-                                                        <br />
-                                                        {row.admin_notes}
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    <Typography variant="body1">
-                                                        {!!!row.is_default_panel && !!!row.is_default
-                                                            ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
-                                                            : 'Default'}
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    <Typography variant="body1">
-                                                        {' '}
-                                                        {!!!row.is_default && !!!row.is_default_panel
-                                                            ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
-                                                            : ''}
-                                                    </Typography>
-                                                </TableCell>
-                                                <TableCell className={classes.cellGroupDetails}>
-                                                    <PromoPanelSplitButton
-                                                        alertId={alert.id}
-                                                        canEdit={canEdit}
-                                                        canClone={canClone}
-                                                        canDelete={canDelete}
-                                                        onPreview={row => onPreviewOpen(row, item)}
-                                                        row={row}
-                                                        align={'flex-end'}
-                                                        // deleteAlertById={deleteAlertById}
-                                                        mainButtonLabel={'Edit'}
-                                                        // navigateToCloneForm={navigateToCloneForm}
-                                                        // navigateToEditForm={navigateToEditForm}
-                                                        // navigateToView={navigateToView}
-                                                        confirmDeleteLocale={confirmDeleteLocale}
-                                                    />
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </React.Fragment>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <PromoPanelPreview
-                isPreviewOpen={previewOpen}
-                previewName={previewPanel.name}
-                handlePreviewClose={handlePreviewClose}
-                previewTitle={previewPanel.title}
-                previewContent={previewPanel.content}
-                previewGroup={previewPanel.group}
-                previewScheduled={previewPanel.scheduled}
-                previewStart={previewPanel.start}
-                previewEnd={previewPanel.end}
-            />
-        </StandardCard>
+                                        {item.panels.map((row, id) => {
+                                            rowMarker++;
+                                            return (
+                                                <TableRow
+                                                    className={`promoPanel-data-row ${
+                                                        rowMarker % 2 === 0
+                                                            ? classes.cellGroupRowEven
+                                                            : classes.cellGroupRowOdd
+                                                    }`}
+                                                    key={id}
+                                                >
+                                                    <TableCell className={classes.checkboxCell}>
+                                                        <Checkbox
+                                                        id={`panel-table-item-checkbox-${row.panel_id}`}
+                                                        inputProps={{
+                                                            'aria-labelledby': `panel-table-item-title-${row.panel_id}`,
+                                                            'data-testid': `panel-list-table-checkbox-${row.panel_id}`,
+                                                        }}
+                                                        onChange={handleCheckboxChange}
+                                                        value={`${checkBoxIdPrefix}${row.panel_id}`}
+                                                        />
+                                                    </TableCell>
+                                                    <TableCell className={classes.cellGroupDetails} />
+                                                    <TableCell className={classes.cellGroupDetails}>
+                                                        <Typography variant="body1">
+                                                            <strong>{row.panel_title}</strong>
+                                                            <br />
+                                                            {row.admin_notes}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell className={classes.cellGroupDetails}>
+                                                        <Typography variant="body1">
+                                                            {!!!row.is_default_panel && !!!row.is_default
+                                                                ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
+                                                                : 'Default'}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell className={classes.cellGroupDetails}>
+                                                        <Typography variant="body1">
+                                                            {' '}
+                                                            {!!!row.is_default && !!!row.is_default_panel
+                                                                ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
+                                                                : ''}
+                                                        </Typography>
+                                                    </TableCell>
+                                                    <TableCell className={classes.cellGroupDetails}>
+                                                        <PromoPanelSplitButton
+                                                            alertId={alert.id}
+                                                            canEdit={canEdit}
+                                                            canClone={canClone}
+                                                            canDelete={canDelete}
+                                                            onPreview={row => onPreviewOpen(row, item)}
+                                                            row={row}
+                                                            align={'flex-end'}
+                                                            // deleteAlertById={deleteAlertById}
+                                                            mainButtonLabel={'Edit'}
+                                                            // navigateToCloneForm={navigateToCloneForm}
+                                                            // navigateToEditForm={navigateToEditForm}
+                                                            // navigateToView={navigateToView}
+                                                            confirmDeleteLocale={confirmDeleteLocale}
+                                                        />
+                                                    </TableCell>
+                                                </TableRow>
+                                            );
+                                        })}
+                                    </React.Fragment>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <PromoPanelPreview
+                    isPreviewOpen={previewOpen}
+                    previewName={previewPanel.name}
+                    handlePreviewClose={handlePreviewClose}
+                    previewTitle={previewPanel.title}
+                    previewContent={previewPanel.content}
+                    previewGroup={previewPanel.group}
+                    previewScheduled={previewPanel.scheduled}
+                    previewStart={previewPanel.start}
+                    previewEnd={previewPanel.end}
+                />
+            </StandardCard>
+        </React.Fragment>
     );
 };
 
@@ -391,7 +487,7 @@ PromoPanelListTable.propTypes = {
     alertsLoading: PropTypes.any,
     history: PropTypes.object,
     actions: PropTypes.any,
-    deleteAlert: PropTypes.any,
+    deletePanel: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     alertOrder: PropTypes.any,
 };

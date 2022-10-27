@@ -128,7 +128,7 @@ const useStyles2 = makeStyles(
         },
         checkboxCell: {
             '& input[type="checkbox"]:checked + svg': {
-                fill: '#595959',
+                fill: '#222',
             },
         },
         removedChip: {
@@ -149,15 +149,39 @@ export const PromoPanelListPanels = ({
     alertsLoading,
     history,
     actions,
-    deleteAlert,
+    deletePanel,
     footerDisplayMinLength,
     alertOrder,
 }) => {
+    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+    const [
+        isDeleteFailureConfirmationOpen,
+        showDeleteFailureConfirmation,
+        hideDeleteFailureConfirmation,
+    ] = useConfirmationState();
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
+    const [deleteActive, setDeleteActive] = useState(false);
+    const [alertNotice, setAlertNotice] = useState('');
     const classes = useStyles2();
     const rowMarker = 0;
     const regex = /(<([^>]+)>)/gi;
+    const clearAllCheckboxes = () => {
+        const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
+        checkBoxList.forEach(ii => {
+            if (ii.checked) {
+                ii.click();
+            }
+        });
+    };
+    const reEnableAllCheckboxes = () => {
+        const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
+        checkBoxList.forEach(ii => {
+            ii.disabled = false;
+            ii.parentElement.parentElement.classList.remove('Mui-disabled');
+        });
+    };
+
 
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
@@ -167,6 +191,7 @@ export const PromoPanelListPanels = ({
                 .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
         };
     };
+    const checkBoxIdPrefix = 'list-checkbox-';
 
     const onPreviewOpen = (row, item) => {
         console.log('Rowz', row);
@@ -186,16 +211,141 @@ export const PromoPanelListPanels = ({
         // console.log('Sending to preview', previewPanel);
         setPreviewOpen(true);
     };
+    function getNumberCheckboxesSelected() {
+        return document.querySelectorAll('#admin-promoPanel-list tr.promoPanel-data-row :checked').length;
+    }
     const handlePreviewClose = () => setPreviewOpen(false);
+    const handleCheckboxChange = e => {
+        const numberCheckboxesSelected = getNumberCheckboxesSelected();
+
+        const thisType = e.target.closest('table').parentElement.id;
+        /* istanbul ignore else */
+        if (!!e.target && !!e.target.checked) {
+            // handle a checkbox being turned on
+            if (numberCheckboxesSelected === 1) {
+                setDeleteActive(true);
+            }
+            // disable any checkboxes in a different alert list
+            const checkBoxList = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]');
+            checkBoxList.forEach(ii => {
+                const thetype = ii.closest('table').parentElement.id;
+                if (thetype !== thisType) {
+                    ii.disabled = true;
+                    ii.parentElement.parentElement.classList.add('Mui-disabled');
+                }
+            });
+        } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
+            // handle a checkbox being turned off
+            if (numberCheckboxesSelected === 0) {
+                setDeleteActive(false);
+                reEnableAllCheckboxes();
+            }
+        }
+        setAlertNotice(
+            '[n] panel[s] selected'
+                .replace('[n]', numberCheckboxesSelected)
+                .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
+        );
+    };
+    const headerCountIndicator = (rowCount) => {
+        console.log(rowCount);
+            return ('[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : ''));
+    }
+    function deletePanelById(id) {
+        console.log('deleting', id)
+        deletePanel(id)
+            .then(() => {
+                setPanelNotice('');
+                setDeleteActive(false);
+                actions.loadAllPanels();
+            })
+            .catch(() => {
+                showDeleteFailureConfirmation();
+            });
+    }
+    const deleteSelectedPanels = () => {
+        const checkboxes = document.querySelectorAll('#admin-promoPanel-list input[type="checkbox"]:checked');
+        /* istanbul ignore else */
+        if (!!checkboxes && checkboxes.length > 0) {
+            checkboxes.forEach(c => {
+                const id = c.value.replace(checkBoxIdPrefix, '');
+                deletePanelById(id);
+            });
+        }
+    };
 
     // const needsPaginator = userows.length > footerDisplayMinLength;
 
     return (
+        <React.Fragment>
+        <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="panel-delete-confirm"
+                onAction={deleteSelectedPanels}
+                onClose={hideDeleteConfirmation}
+                onCancelAction={hideDeleteConfirmation}
+                isOpen={isDeleteConfirmOpen}
+                locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
+            />
+            <ConfirmationBox
+                actionButtonColor="primary"
+                actionButtonVariant="contained"
+                confirmationBoxId="panel-delete-error-dialog"
+                onAction={hideDeleteFailureConfirmation}
+                onClose={hideDeleteFailureConfirmation}
+                hideCancelButton
+                isOpen={isDeleteFailureConfirmationOpen}
+                locale={locale.listPage.deleteError}
+            />
         <StandardCard title={title} customBackgroundColor="#F7F7F7">
+            <div
+                    data-testid={`headerRow-panelList`}
+                    className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
+                >
+                    <div>
+                        <h3 style={{ marginBottom: 6 }}>
+                            {headertag}
+                            <span
+                                style={{ fontSize: '0.9em', fontWeight: 300 }}
+                                data-testid={`headerRow-count-panelList`}
+                            >
+                                {getNumberCheckboxesSelected() > 0 ? headerCountIndicator(getNumberCheckboxesSelected()): null}
+                            </span>
+                        </h3>
+                    </div>
+                    {!!deleteActive && (
+                        <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
+                            
+                            <IconButton
+                                onClick={showDeleteConfirmation}
+                                aria-label="Delete panel(s)"
+                                data-testid={`panel-list-panel-delete-button`}
+                                title="Delete panel(s)"
+                            >
+                                <DeleteIcon
+                                    className={`${
+                                        !!deleteActive ? classes.iconHighlighted : /* istanbul ignore next */ ''
+                                    }`}
+                                />
+                            </IconButton>
+                            <IconButton
+                                onClick={clearAllCheckboxes}
+                                aria-label="Deselect all"
+                                data-testid={`panel-list-panel-deselect-button`}
+                                className={classes.iconHighlighted}
+                                title="Deselect all"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                        </span>
+                    )}
+                </div>
             <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table" id="admin-promoPanel-list">
                     <TableHead>
                         <TableRow>
+                        <TableCell component="th" scope="row" />
                             <TableCell component="th" scope="row">
                                 Name
                             </TableCell>
@@ -228,7 +378,18 @@ export const PromoPanelListPanels = ({
                         {panelList.map(item => {
                             return (
                                 <React.Fragment key={item.panel_id}>
-                                    <TableRow className={classes.cellGroupRow}>
+                                    <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
+                                        <TableCell component="td" scope="row" className={classes.checkboxCell}>
+                                            <Checkbox
+                                                id={`panel-table-item-checkbox-${item.panel_id}`}
+                                                inputProps={{
+                                                    'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
+                                                    'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
+                                                }}
+                                                onChange={handleCheckboxChange}
+                                                value={`${checkBoxIdPrefix}${item.panel_id}`}
+                                            />
+                                        </TableCell>
                                         <TableCell component="td" scope="row" className={classes.cellGroupName}>
                                             <Typography variant="body1">{item.admin_notes}</Typography>
                                         </TableCell>
@@ -262,6 +423,7 @@ export const PromoPanelListPanels = ({
                                         </TableCell>
                                     </TableRow>
                                     <TableRow>
+                                        <TableCell/>
                                         <TableCell colSpan={4}>
                                             {item.user_types.map(type => {
                                                 console.log('Type', type);
@@ -297,6 +459,7 @@ export const PromoPanelListPanels = ({
                 previewEnd={previewPanel.end}
             />
         </StandardCard>
+        </React.Fragment>
     );
 };
 
@@ -312,7 +475,7 @@ PromoPanelListPanels.propTypes = {
     alertsLoading: PropTypes.any,
     history: PropTypes.object,
     actions: PropTypes.any,
-    deleteAlert: PropTypes.any,
+    deletePanel: PropTypes.func,
     footerDisplayMinLength: PropTypes.number,
     alertOrder: PropTypes.any,
 };
