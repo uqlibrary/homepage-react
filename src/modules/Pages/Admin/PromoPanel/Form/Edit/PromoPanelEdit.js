@@ -46,6 +46,8 @@ export const PromoPanelEdit = ({
         admin_notes: '',
         isPreviewOpen: false,
         is_default_panel: 0,
+        allocatedGroups: [],
+        defaultFromParent: 'test',
     };
 
     React.useEffect(() => {

@@ -34,6 +34,8 @@ export const PromoPanelAdd = ({
         admin_notes: '',
         isPreviewOpen: false,
         is_default_panel: 0,
+        scheduleList: [],
+        scheduledGroups: [],
     };
 
     // React.useEffect(() => {

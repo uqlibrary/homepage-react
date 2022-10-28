@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import React, { String, Fragment, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { array } from 'prop-types';
 
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
@@ -89,7 +89,7 @@ const useStyles = makeStyles(() => ({
     },
 }));
 
-const availableGroups = ['Public', 'UnderGrad', 'International', 'Staff'];
+const knownGroups = ['Public', 'UnderGrad', 'International', 'Staff'];
 
 export const PromoPanelForm = ({
     actions,
@@ -104,13 +104,21 @@ export const PromoPanelForm = ({
     // spotlights,
     // spotlightsLoading,
 }) => {
+    // const scheduledGroups = [];
+    // console.log('The Parsed Defaults', defaults);
     const classes = useStyles();
-
     const [values, setValues] = useState({
         ...defaults,
         start: defaults.startDateDefault,
         end: defaults.endDateDefault,
+        test: 'test',
     });
+
+    const [unscheduledGroups, setUnscheduledGroups] = useState(knownGroups);
+    const [scheduledGroups, setScheduledGroups] = useState(values.scheduledGroups);
+    const [groupNames, setGroupNames] = React.useState(values.scheduledGroups);
+
+    // const [allocatedGroups, setAllocatedGroups] = useState(values.allocatedGroups);
     const clearForm = () => {
         setValues(defaults);
     };
@@ -123,8 +131,6 @@ export const PromoPanelForm = ({
         history.push('/admin/promopanel');
         scrollToTopOfPage();
     };
-
-    const [groupNames, setGroupNames] = React.useState([values.group]);
 
     const previewPromoPanel = () => {
         setValues({
@@ -166,22 +172,41 @@ export const PromoPanelForm = ({
         } = event;
 
         const selections = typeof value === 'string' ? value.split(',') : value;
-        const lastSelected = selections.slice(-1).join();
 
-        let filteredSelection = selections;
-        console.log('last selected', lastSelected);
+        setGroupNames(selections);
+    };
 
-        // if (lastSelected === 'Authenticated') {
-        //     filteredSelection = selections.filter(value => value === 'Public' || value === 'Authenticated');
-        // } else if (lastSelected !== 'Public' && lastSelected !== 'Authenticated') {
-        //     filteredSelection = selections.filter(value => value !== 'Authenticated');
-        // }
-        filteredSelection = filteredSelection.length === 0 ? ['Public'] : filteredSelection;
+    const handleAddSchedule = groups => {
+        console.log('groups passed in', groups);
+        // console.log('Scheduled Groups', scheduledGroups);
+        // console.log('Chosen Groups', groupNames);
+        const newGroups = [...scheduledGroups];
 
-        setGroupNames(filteredSelection);
+        groupNames.map(item => !newGroups.includes(item) && newGroups.push(item));
+
+        setScheduledGroups(newGroups);
+
+        console.log('Group names are', groupNames, newGroups);
+
+        const unscheduledGroup = knownGroups
+            .filter(item => groupNames.indexOf(item) < 0)
+            .filter(item => newGroups.indexOf(item) < 0);
+
+        console.log('Setting UnscheduledGroups with ', unscheduledGroup);
+        setUnscheduledGroups(unscheduledGroup);
+        setGroupNames([]);
+
+        const allocatedList = values.scheduleList;
+        allocatedList.push({
+            groupNames: groupNames,
+            startDate: values.start,
+            endDate: values.end,
+        });
+
         setValues({
             ...values,
-            group: filteredSelection,
+            scheduledGroups: newGroups,
+            scheduleList: allocatedList,
         });
     };
 
@@ -215,6 +240,37 @@ export const PromoPanelForm = ({
         });
     };
 
+    const removePanelGroupSchedule = idx => {
+        const newSchedules = [...values.scheduleList];
+        const removeGroups = values.scheduleList[idx].groupNames;
+
+        // console.log('NewSchedules', newSchedules);
+        // console.log('removeGroups', removeGroups);
+
+        newSchedules.splice(idx, 1);
+
+        const newGroups = [...unscheduledGroups];
+        removeGroups.map(item => !newGroups.includes(item) && newGroups.push(item));
+
+        const unscheduled = knownGroups.filter(item => {
+            return newGroups.indexOf(item) > -1;
+        });
+        console.log('unscheduled', unscheduled);
+        console.log('the values of scheduled groups', values.scheduledGroups);
+        const allocGroups = knownGroups.filter(item => unscheduled.indexOf(item) < 0);
+        console.log('The suggested scheduled groups are', allocGroups);
+
+        setUnscheduledGroups(unscheduled);
+        setScheduledGroups(allocGroups);
+
+        console.log('Setting New Scheduled Groups', allocGroups);
+        setValues({
+            ...values,
+            scheduleList: [...newSchedules],
+            scheduledGroups: [...allocGroups],
+        });
+    };
+    // console.log('SCHEDULED GROUPS FOR OBJECT', values.scheduledGroups);
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
@@ -301,33 +357,8 @@ export const PromoPanelForm = ({
                             <span className={classes.contentRequired}>* This content is required</span>
                         )}
                     </Grid>
-
                     <Grid item md={5} xs={12}>
                         <Typography style={{ fontWeight: 'bold' }}>Group Assignment</Typography>
-                        {/* <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
-                            <InputLabel id="demo-simple-select-helper-label">Group</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-helper-label"
-                                id="demo-simple-select-helper"
-                                value={groupName}
-                                label="Age"
-                                onChange={handleGroupChange}
-                                multiple
-                            >
-                                <MenuItem key="Public" value="Public">
-                                    <em>Public</em>
-                                </MenuItem>
-                                <MenuItem key="Authenticated" value="Authenticated">
-                                    <em>Authenticated</em>
-                                </MenuItem>
-                                <MenuItem key="Students" value="Students">
-                                    Students
-                                </MenuItem>
-                                <MenuItem key="Staff" value="Staff">
-                                    Staff
-                                </MenuItem>
-                            </Select>
-                        </FormControl> */}
 
                         <FormControl className={classes.dropdown} fullWidth title={locale.form.tooltips.groupField}>
                             <Select
@@ -339,7 +370,7 @@ export const PromoPanelForm = ({
                                 renderValue={selected => selected.join(', ')}
                                 MenuProps={MenuProps}
                             >
-                                {availableGroups.map(name => (
+                                {unscheduledGroups.map(name => (
                                     <MenuItem key={name} value={name}>
                                         <Checkbox checked={groupNames.indexOf(name) > -1} />
                                         <ListItemText primary={name} />
@@ -411,7 +442,63 @@ export const PromoPanelForm = ({
                                 </>
                             )}
                         </Grid>
+
+                        <Grid item xs={12}>
+                            <Button
+                                color="primary"
+                                children="Add Schedule"
+                                data-testid="admin-promopanel-form-button-addSchedule"
+                                onClick={() => handleAddSchedule(values.scheduledGroups)}
+                                variant="contained"
+                                disabled={groupNames.length < 1}
+                            />
+                        </Grid>
+                        <Grid container style={{ border: '1px solid black', padding: '10px' }}>
+                            <Grid item xs={12}>
+                                Current assignments
+                                <Grid container>
+                                    <Grid item xs={4}>
+                                        <Typography style={{ fontWeight: 'bold' }}>Group name</Typography>
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        Scheduled Start
+                                    </Grid>
+                                    <Grid item xs={3}>
+                                        Scheduled End
+                                    </Grid>
+                                    <Grid item xs={2}>
+                                        Action
+                                    </Grid>
+                                </Grid>
+                                {values.scheduleList.length > 0 &&
+                                    values.scheduleList.map((item, index) => {
+                                        return (
+                                            <Grid container>
+                                                <Grid item xs={4}>
+                                                    {item.groupNames.join(', ')}
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    {item.startDate}
+                                                </Grid>
+                                                <Grid item xs={3}>
+                                                    {item.endDate}
+                                                </Grid>
+                                                <Grid item xs={2}>
+                                                    <Button
+                                                        color="primary"
+                                                        children="Remove group"
+                                                        data-testid="admin-promopanel-form-button-cancel"
+                                                        onClick={() => removePanelGroupSchedule(index)}
+                                                        variant="contained"
+                                                    />
+                                                </Grid>
+                                            </Grid>
+                                        );
+                                    })}
+                            </Grid>
+                        </Grid>
                     </Grid>
+
                     <Grid container spacing={2} style={{ marginTop: '1rem' }}>
                         <Grid item xs={3} align="left">
                             <Button
