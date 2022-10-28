@@ -198,6 +198,7 @@ export const PromoPanelList = ({
                 canDelete
                 panelError={(!!promoPanelActionError && promoPanelActionError.message) || null}
             />
+            <h1> Past Panels Coming soon</h1>
             {/* <PromoPanelListTable />
 
             <PromoPanelListTable /> */}

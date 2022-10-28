@@ -85,7 +85,7 @@ export const PromoPanelSplitButton = ({
                             color="primary"
                             data-testid={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
                             id={`alert-list-item-${mainButtonLabel.toLowerCase()}-${alertId}`}
-                            onClick={() => (canEdit ? navigateToEditForm(alertId) : navigateToView(alertId))}
+                            onClick={() => (canEdit ? navigateToEditForm(row.panel_id) : handlePreview(row, item))}
                             variant="contained"
                         />
                         <Button

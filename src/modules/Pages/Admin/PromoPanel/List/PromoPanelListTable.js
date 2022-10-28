@@ -270,7 +270,7 @@ export const PromoPanelListTable = ({
     };
     const navigateToEditForm = alertid => {
        console.log("ID", alertid)
-        // history.push(`/admin/promopanel/edit/${alertid}`);
+        history.push(`/admin/promopanel/edit/${alertid}`);
         scrollToTopOfPage();
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;

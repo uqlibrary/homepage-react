@@ -155,7 +155,7 @@ export const getRoutesConfig = ({ components = {}, account = null }) => {
     ];
 
     const promopanelidRegExp = '.*';
-    const promopanelid = `:alertid(${promopanelidRegExp})`;
+    const promopanelid = `:promopanelid(${promopanelidRegExp})`;
     const promoPanelDisplay = [
         {
             path: pathConfig.admin.promopanel,
