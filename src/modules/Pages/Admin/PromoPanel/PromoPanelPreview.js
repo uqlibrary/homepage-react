@@ -69,7 +69,7 @@ export const PromoPanelPreview = props => {
                             <p style={{ fontSize: 14, fontWeight: 100, lineHeight: 1, margin: 0 }}>
                                 {props.previewName}
                             </p>
-                            <p style={{ fontSize: 12, fontWeight: 100 }}>
+                            {/* <p style={{ fontSize: 12, fontWeight: 100 }}>
                                 <b>{'For Group: '}</b>
                                 {props.previewGroup.join(', ')}
                             </p>
@@ -81,7 +81,7 @@ export const PromoPanelPreview = props => {
                                     <br />
                                     <b>End:</b> {moment(props.previewEnd).format('dddd DD/MM/YYYY HH:mm a')}
                                 </p>
-                            )}
+                            )} */}
                         </>
                     }
                 />

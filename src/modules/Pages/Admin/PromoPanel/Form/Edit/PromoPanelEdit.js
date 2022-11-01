@@ -15,30 +15,27 @@ import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { PromoPanelForm } from 'modules/Pages/Admin/PromoPanel/PromoPanelForm';
 
 // import { default as locale } from 'modules/Pages/Admin/Spotlights/spotlightsadmin.locale';
+import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 export const PromoPanelEdit = ({
     actions,
     promoPanelList,
+    promoPanelListLoading,
+    promoPanelUserTypesLoading,
     promoPanelUserTypeList,
-    currentPromoPanel,
-    promoPanelLoading,
-    // spotlight,
-    // spotlightError,
-    // spotlightStatus,
-    // history,
-    // publicFileUploading,
-    // publicFileUploadError,
-    // publicFileUploadResult,
-    // spotlights,
-    // spotlightsLoading,
+    history,
 }) => {
     const { promopanelid } = useParams();
-    console.log('Current Promo Panel', currentPromoPanel);
+
+    const [scheduleList, setScheduleList] = React.useState([]);
+    const [userList, setUserList] = React.useState([]);
+    const [knownGroups, setKnownGroups] = React.useState([]);
+    const [currentPanel, setCurrentPanel] = React.useState(null);
 
     const defaults = {
         id: '',
-        startDateDefault: null,
-        endDateDefault: null,
+        startDateDefault: getTimeMondayMidnightNext(),
+        endDateDefault: getTimeSundayNextFormatted(),
         title: '',
         name: '',
         content: '',
@@ -46,20 +43,70 @@ export const PromoPanelEdit = ({
         admin_notes: '',
         isPreviewOpen: false,
         is_default_panel: 0,
-        allocatedGroups: [],
-        defaultFromParent: 'test',
+        scheduledGroups: userList,
     };
 
     React.useEffect(() => {
         /* istanbul ignore else */
-        console.log('currrent promo panel list', promoPanelList, `${!promoPanelList}`);
-        if (!!!promoPanelList || promoPanelList.length < 1) {
-            console.log('THE PROMO PANEL LIST');
+        if (
+            !!!promoPanelListLoading &&
+            !!!promoPanelUserTypesLoading &&
+            (promoPanelList.length < 1 || promoPanelUserTypeList.length < 1)
+        ) {
             actions.loadPromoPanelList();
+            actions.loadPromoPanelUserList();
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
+
+    React.useEffect(() => {
+        // do something with the promo Panel List and the user type here.
+        if (promoPanelUserTypeList.length > 0) {
+            const known = [];
+            promoPanelUserTypeList.map(item => !known.includes(item.user_group) && known.push(item.user_group));
+            setKnownGroups(known);
+        }
+        if (promoPanelList.length > 0) {
+            const userlist = [];
+            const schedule = [];
+            setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
+            promoPanelList.map(item => {
+                item.user_groups.map(element => {
+                    !userlist.includes(element.user_group) && userlist.push(element.user_group);
+                    //  element.is_panel_default_for_this_user !== 'Y' &&
+
+                    if (`${item.panel_id}` === `${promopanelid}`) {
+                        if (schedule.length < 1) {
+                            schedule.push({
+                                startDate: element.panel_schedule_start_time,
+                                endDate: element.panel_schedule_end_time,
+                                groupNames: [element.user_group],
+                            });
+                        } else {
+                            schedule.map((scheduleItem, index) => {
+                                if (
+                                    scheduleItem.startDate === element.panel_schedule_start_time &&
+                                    scheduleItem.endDate === element.panel_schedule_end_time
+                                ) {
+                                    schedule[index].groupNames.push(element.user_group);
+                                } else {
+                                    schedule.push({
+                                        startDate: element.panel_schedule_start_time,
+                                        endDate: element.panel_schedule_end_time,
+                                        groupNames: [element.user_group],
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+                setUserList(userlist);
+                setScheduleList(schedule);
+            });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [promoPanelList, promoPanelUserTypeList]);
 
     React.useEffect(() => {
         /* istanbul ignore else */
@@ -71,12 +118,23 @@ export const PromoPanelEdit = ({
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [promoPanelList]);
-    console.log('PROMO PANEL LIST', promoPanelList);
     return (
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
-                <StandardCard title="Edit a new Promo Panel">
-                    <PromoPanelForm defaults={defaults} actions={actions} history={history} />
+                <StandardCard title="Edit a promo panel">
+                    {!!currentPanel && (
+                        <PromoPanelForm
+                            scheduledList={scheduleList}
+                            scheduledGroupNames={userList}
+                            fullPromoPanelList={promoPanelList}
+                            fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                            currentPanel={currentPanel}
+                            knownGroups={knownGroups}
+                            defaults={defaults}
+                            actions={actions}
+                            history={history}
+                        />
+                    )}
                 </StandardCard>
             </section>
         </StandardPage>
@@ -85,16 +143,12 @@ export const PromoPanelEdit = ({
 
 PromoPanelEdit.propTypes = {
     actions: PropTypes.any,
+    promoPanelListLoading: PropTypes.bool,
+    promoPanelUserTypesLoading: PropTypes.bool,
     promoPanelList: PropTypes.array,
-    spotlight: PropTypes.any,
-    spotlightError: PropTypes.any,
-    spotlightStatus: PropTypes.any,
+    promoPanelUserTypeList: PropTypes.array,
+
     history: PropTypes.object,
-    publicFileUploading: PropTypes.any,
-    publicFileUploadError: PropTypes.any,
-    publicFileUploadResult: PropTypes.any,
-    spotlights: PropTypes.any,
-    spotlightsLoading: PropTypes.any,
 };
 
 export default PromoPanelEdit;

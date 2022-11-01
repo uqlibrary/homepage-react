@@ -34,7 +34,7 @@ import { default as locale } from '../promoPanelAdmin.locale';
 import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
-// import { scrollToTopOfPage, systemList } from '../alerthelpers';
+import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
 
 const moment = require('moment');
 
@@ -139,15 +139,16 @@ const useStyles2 = makeStyles(
 );
 export const PromoPanelListPanels = ({
     actions,
-        isLoading,
-        panelList,
-        deletePanel,
-        title,
-        canEdit,
-        canClone,
-        canDelete,
-        headertag,
-        panelError,
+    isLoading,
+    panelList,
+    deletePanel,
+    title,
+    canEdit,
+    canClone,
+    canDelete,
+    headertag,
+    panelError,
+    history,
 }) => {
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -178,6 +179,7 @@ export const PromoPanelListPanels = ({
         });
     };
 
+    const isDefaultPanel = value => value === 'Y' || value === 1 || value === true;
 
     const confirmDeleteLocale = numberOfCheckedBoxes => {
         return {
@@ -190,21 +192,15 @@ export const PromoPanelListPanels = ({
     const checkBoxIdPrefix = 'list-checkbox-';
 
     const onPreviewOpen = (row, item) => {
-        console.log('Rowz', row);
         const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
-        console.log('zscheduled?', scheduled);
-        const groups = Array.from(row.user_types, item => item.user_type);
-        console.log('zgroups', groups);
         setPreviewPanel({
-            name: row.admin_notes,
+            name: row.panel_admin_notes,
             title: row.panel_title,
             content: row.panel_content,
-            group: groups,
             start: row.panel_start,
             end: row.panel_end,
             scheduled: scheduled,
         });
-        // console.log('Sending to preview', previewPanel);
         setPreviewOpen(true);
     };
     function getNumberCheckboxesSelected() {
@@ -243,20 +239,18 @@ export const PromoPanelListPanels = ({
                 .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
         );
     };
-    const headerCountIndicator = (rowCount) => {
-        console.log(rowCount);
-            return ('[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : ''));
-    }
+    const headerCountIndicator = rowCount => {
+        return '[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : '');
+    };
     function deletePanelById(id) {
-        console.log('deleting', id)
-        actions.deletePanel(id)
+        actions
+            .deletePanel(id)
             .then(() => {
                 setPanelNotice('');
                 setDeleteActive(false);
                 actions.loadPromoPanelList();
             })
-            .catch((e) => {
-                console.log(e)
+            .catch(e => {
                 showDeleteFailureConfirmation();
             });
     }
@@ -271,11 +265,13 @@ export const PromoPanelListPanels = ({
         }
     };
 
-    // const needsPaginator = userows.length > footerDisplayMinLength;
-
+    const navigateToEditForm = alertid => {
+        history.push(`/admin/promopanel/edit/${alertid}`);
+        scrollToTopOfPage();
+    };
     return (
         <React.Fragment>
-        <ConfirmationBox
+            <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="panel-delete-confirm"
@@ -297,9 +293,9 @@ export const PromoPanelListPanels = ({
                 showAdditionalInformation
                 additionalInformation={panelError}
             />
-        <StandardCard title={title} customBackgroundColor="#F7F7F7">
-            <div
-                    data-testid={`headerRow-panelList`}
+            <StandardCard title={title} customBackgroundColor="#F7F7F7">
+                <div
+                    data-testid={'headerRow-panelList'}
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                 >
                     <div>
@@ -307,19 +303,20 @@ export const PromoPanelListPanels = ({
                             {headertag}
                             <span
                                 style={{ fontSize: '0.9em', fontWeight: 300 }}
-                                data-testid={`headerRow-count-panelList`}
+                                data-testid={'headerRow-count-panelList'}
                             >
-                                {getNumberCheckboxesSelected() > 0 ? headerCountIndicator(getNumberCheckboxesSelected()): null}
+                                {getNumberCheckboxesSelected() > 0
+                                    ? headerCountIndicator(getNumberCheckboxesSelected())
+                                    : null}
                             </span>
                         </h3>
                     </div>
                     {!!deleteActive && (
                         <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
-                            
                             <IconButton
                                 onClick={showDeleteConfirmation}
                                 aria-label="Delete panel(s)"
-                                data-testid={`panel-list-panel-delete-button`}
+                                data-testid={'panel-list-panel-delete-button'}
                                 title="Delete panel(s)"
                             >
                                 <DeleteIcon
@@ -331,7 +328,7 @@ export const PromoPanelListPanels = ({
                             <IconButton
                                 onClick={clearAllCheckboxes}
                                 aria-label="Deselect all"
-                                data-testid={`panel-list-panel-deselect-button`}
+                                data-testid={'panel-list-panel-deselect-button'}
                                 className={classes.iconHighlighted}
                                 title="Deselect all"
                             >
@@ -340,125 +337,128 @@ export const PromoPanelListPanels = ({
                         </span>
                     )}
                 </div>
-            <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table" id="admin-promoPanel-list">
-                    <TableHead>
-                        <TableRow>
-                        <TableCell component="th" scope="row" />
-                            <TableCell component="th" scope="row">
-                                Name
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                Preview Content
-                            </TableCell>
-                            <TableCell component="th" scope="row">
-                                Created
-                            </TableCell>
-                            <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
-                                Actions
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                    {(!!isLoading || panelList.length < 1) && (
+                <TableContainer component={Paper}>
+                    <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table" id="admin-promoPanel-list">
+                        <TableHead>
                             <TableRow>
-                                <TableCell colSpan={5} align='center'>
-                                    <CircularProgress
-                                        id="spinner"
-                                        color='primary'
-                                        size={38}
-                                        thickness={3}
-                                        aria-label="Loading Alerts"
-                                    />
+                                <TableCell component="th" scope="row" />
+                                <TableCell component="th" scope="row">
+                                    Name
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    Preview Content
+                                </TableCell>
+                                <TableCell component="th" scope="row">
+                                    Created
+                                </TableCell>
+                                <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
+                                    Actions
                                 </TableCell>
                             </TableRow>
-                             
-                        )}
-                        {panelList.map(item => {
-                            console.log("ITEM", item)
-                            return (
-                                <React.Fragment key={item.panel_id}>
-                                    <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
-                                        <TableCell component="td" scope="row" className={classes.checkboxCell}>
-                                            <Checkbox
-                                                id={`panel-table-item-checkbox-${item.panel_id}`}
-                                                inputProps={{
-                                                    'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
-                                                    'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
-                                                }}
-                                                onChange={handleCheckboxChange}
-                                                value={`${checkBoxIdPrefix}${item.panel_id}`}
-                                            />
-                                        </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            <Typography variant="body1">{item.admin_notes}</Typography>
-                                        </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            <Typography variant="body1" className={classes.ellipsis}>
-                                                {(!!item.panel_content && item.panel_content.replace(regex, ' ')) ||
-                                                    ' '}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            <Typography variant="body1">
-                                                {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
-                                            </Typography>
-                                        </TableCell>
-                                        <TableCell component="td" scope="row" className={classes.cellGroupName}>
-                                            <PromoPanelSplitButton
-                                                align="flex-end"
-                                                alertId={alert.id}
-                                                canEdit={canEdit}
-                                                canClone={canClone}
-                                                canDelete={canDelete}
-                                                onPreview={item => onPreviewOpen(item)}
-                                                row={item}
-                                                deletePanelById={(row) => deletePanelById(row)}
-                                                mainButtonLabel={'Edit'}
-                                                // navigateToCloneForm={navigateToCloneForm}
-                                                // navigateToEditForm={navigateToEditForm}
-                                                // navigateToView={navigateToView}
-                                                confirmDeleteLocale={confirmDeleteLocale}
-                                            />
-                                        </TableCell>
-                                    </TableRow>
-                                    <TableRow>
-                                        <TableCell/>
-                                        <TableCell colSpan={4}>
-                                            {item.user_types.map(type => {
-                                                console.log('Type', type);
-                                                return (
-                                                    <Chip
-                                                        key={type.user_type}
-                                                        data-testid={'alert-list-urgent-chip-'}
-                                                        label={`${type.is_default_panel ? 'Default: ' : ''} ${
-                                                            type.user_type_name
-                                                        }`}
-                                                        title={type.user_type_name}
-                                                        className={type.is_default_panel ? classes.defaultChip : ''}
-                                                    />
-                                                );
-                                            })}
-                                        </TableCell>
-                                    </TableRow>
-                                </React.Fragment>
-                            );
-                        })}
-                    </TableBody>
-                </Table>
-            </TableContainer>
-            <PromoPanelPreview
-                isPreviewOpen={previewOpen}
-                previewName={previewPanel.name}
-                handlePreviewClose={handlePreviewClose}
-                previewTitle={previewPanel.title}
-                previewContent={previewPanel.content}
-                previewGroup={previewPanel.group}
-                previewScheduled={previewPanel.scheduled}
-                previewStart={previewPanel.start}
-                previewEnd={previewPanel.end}
-            />
-        </StandardCard>
+                        </TableHead>
+                        <TableBody>
+                            {(!!isLoading || panelList.length < 1) && (
+                                <TableRow>
+                                    <TableCell colSpan={5} align="center">
+                                        <CircularProgress
+                                            id="spinner"
+                                            color="primary"
+                                            size={38}
+                                            thickness={3}
+                                            aria-label="Loading Alerts"
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            )}
+                            {panelList.map(item => {
+                                return (
+                                    <React.Fragment key={item.panel_id}>
+                                        <TableRow className={`promoPanel-data-row ${classes.cellGroupRow}`}>
+                                            <TableCell component="td" scope="row" className={classes.checkboxCell}>
+                                                <Checkbox
+                                                    id={`panel-table-item-checkbox-${item.panel_id}`}
+                                                    inputProps={{
+                                                        'aria-labelledby': `panel-list-item-title-${item.panel_id}`,
+                                                        'data-testid': `panel-list-item-checkbox-${item.panel_id}`,
+                                                    }}
+                                                    onChange={handleCheckboxChange}
+                                                    value={`${checkBoxIdPrefix}${item.panel_id}`}
+                                                />
+                                            </TableCell>
+                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                                <Typography variant="body1">{item.panel_title}</Typography>
+                                            </TableCell>
+                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                                <Typography variant="body1" className={classes.ellipsis}>
+                                                    {(!!item.panel_content && item.panel_content.replace(regex, ' ')) ||
+                                                        ' '}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                                <Typography variant="body1">
+                                                    {moment(item.panel_created_at).format('dddd DD/MM/YYYY HH:mm a')}
+                                                </Typography>
+                                            </TableCell>
+                                            <TableCell component="td" scope="row" className={classes.cellGroupName}>
+                                                <PromoPanelSplitButton
+                                                    align="flex-end"
+                                                    alertId={alert.id}
+                                                    canEdit={canEdit}
+                                                    canClone={canClone}
+                                                    canDelete={canDelete}
+                                                    onPreview={item => onPreviewOpen(item)}
+                                                    row={item}
+                                                    deletePanelById={row => deletePanelById(row)}
+                                                    mainButtonLabel={'Edit'}
+                                                    // navigateToCloneForm={navigateToCloneForm}
+                                                    navigateToEditForm={row => navigateToEditForm(row)}
+                                                    // navigateToView={navigateToView}
+                                                    confirmDeleteLocale={confirmDeleteLocale}
+                                                />
+                                            </TableCell>
+                                        </TableRow>
+                                        <TableRow>
+                                            <TableCell />
+                                            <TableCell colSpan={4}>
+                                                {item.user_groups.map(type => {
+                                                    return (
+                                                        <Chip
+                                                            key={type.user_group}
+                                                            data-testid={'alert-list-urgent-chip-'}
+                                                            label={`${
+                                                                isDefaultPanel(type.is_panel_default_for_this_user)
+                                                                    ? 'Default: '
+                                                                    : ''
+                                                            } ${type.user_group_name}`}
+                                                            title={type.user_group_name}
+                                                            className={
+                                                                isDefaultPanel(type.is_panel_default_for_this_user)
+                                                                    ? classes.defaultChip
+                                                                    : ''
+                                                            }
+                                                        />
+                                                    );
+                                                })}
+                                            </TableCell>
+                                        </TableRow>
+                                    </React.Fragment>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <PromoPanelPreview
+                    isPreviewOpen={previewOpen}
+                    previewName={previewPanel.name}
+                    handlePreviewClose={handlePreviewClose}
+                    previewTitle={previewPanel.title}
+                    previewContent={previewPanel.content}
+                    previewGroup={previewPanel.group}
+                    previewScheduled={previewPanel.scheduled}
+                    previewStart={previewPanel.start}
+                    previewEnd={previewPanel.end}
+                />
+            </StandardCard>
         </React.Fragment>
     );
 };
@@ -476,8 +476,7 @@ PromoPanelListPanels.propTypes = {
     history: PropTypes.object,
     actions: PropTypes.any,
     deletePanel: PropTypes.func,
-    footerDisplayMinLength: PropTypes.number,
-    alertOrder: PropTypes.any,
+    panelError: PropTypes.string,
 };
 
 PromoPanelListPanels.defaultProps = {

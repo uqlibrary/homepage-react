@@ -94,7 +94,6 @@ export const createPromoPanel = request => {
         // as we are creating a new promo panel there should not be an id field
         delete request.id;
     }
-    console.log('in Create Promo Panel Action', request);
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_CREATING });
         return post(PROMOPANEL_CREATE_API(), request)
@@ -169,7 +168,6 @@ export const saveDefaultUserTypePanel = request => {
 };
 
 export const deletePanel = panelID => {
-    console.log('Deleting panel', panelID);
     return async dispatch => {
         dispatch({ type: actions.PROMOPANEL_DELETING });
 

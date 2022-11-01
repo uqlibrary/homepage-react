@@ -16,12 +16,11 @@ import { getTimeMondayMidnightNext, getTimeSundayNextFormatted } from 'modules/P
 
 export const PromoPanelAdd = ({
     actions,
-    // promoPanel,
-    // promoPanelError,
-    // promoPanelStatus,
+    promoPanelList,
+    promoPanelListLoading,
+    promoPanelUserTypesLoading,
+    promoPanelUserTypeList,
     history,
-    // promoPanels,
-    // promoPanelsLoading,
 }) => {
     const defaults = {
         id: '',
@@ -37,6 +36,31 @@ export const PromoPanelAdd = ({
         scheduleList: [],
         scheduledGroups: [],
     };
+    const [knownGroups, setKnownGroups] = React.useState([]);
+
+    React.useEffect(() => {
+        /* istanbul ignore else */
+        if (
+            !!!promoPanelListLoading &&
+            !!!promoPanelUserTypesLoading &&
+            (promoPanelList.length < 1 || promoPanelUserTypeList.length < 1)
+        ) {
+            actions.loadPromoPanelList();
+            actions.loadPromoPanelUserList();
+        }
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    React.useEffect(() => {
+        // do something with the promo Panel List and the user type here.
+        if (promoPanelUserTypeList.length > 0) {
+            const known = [];
+            promoPanelUserTypeList.map(item => !known.includes(item.user_group) && known.push(item.user_group));
+            setKnownGroups(known);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [promoPanelList, promoPanelUserTypeList]);
 
     // React.useEffect(() => {
     //     /* istanbul ignore else */
@@ -50,7 +74,16 @@ export const PromoPanelAdd = ({
         <StandardPage title="Promo Panel Management">
             <section aria-live="assertive">
                 <StandardCard title="Create a new Promo Panel">
-                    <PromoPanelForm defaults={defaults} actions={actions} history={history} />
+                    <PromoPanelForm
+                        scheduledList={[]}
+                        scheduledGroupNames={[]}
+                        fullPromoPanelList={promoPanelList}
+                        fullPromoPanelUserTypeList={promoPanelUserTypeList}
+                        defaults={defaults}
+                        actions={actions}
+                        history={history}
+                        knownGroups={knownGroups}
+                    />
                 </StandardCard>
             </section>
         </StandardPage>
@@ -59,9 +92,11 @@ export const PromoPanelAdd = ({
 
 PromoPanelAdd.propTypes = {
     actions: PropTypes.any,
-    spotlight: PropTypes.any,
-    spotlightError: PropTypes.any,
-    spotlightStatus: PropTypes.any,
+    promoPanelList: PropTypes.array,
+    promoPanelListLoading: PropTypes.bool,
+    promoPanelUserTypesLoading: PropTypes.bool,
+    promoPanelUserTypeList: PropTypes.array,
+    promoPanelLoading: PropTypes.bool,
     history: PropTypes.object,
     publicFileUploading: PropTypes.any,
     publicFileUploadError: PropTypes.any,

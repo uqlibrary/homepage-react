@@ -124,17 +124,17 @@ const useStyles2 = makeStyles(
     { withTheme: true },
 );
 export const PromoPanelListTable = ({
-        actions,
-        isLoading,
-        panelList,
-        deletePanel,
-        history,
-        title,
-        canEdit,
-        canClone,
-        canDelete,
-        headertag,
-        panelError
+    actions,
+    isLoading,
+    panelList,
+    deletePanel,
+    history,
+    title,
+    canEdit,
+    canClone,
+    canDelete,
+    headertag,
+    panelError,
 }) => {
     const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
     const [
@@ -167,21 +167,25 @@ export const PromoPanelListTable = ({
     };
 
     const checkBoxIdPrefix = 'table-checkbox-';
-    
-    // const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length).replace('[s]', rows.length > 1 ? 's' : '');
 
-    const headerCountIndicator = (rowCount) => {
-        console.log(rowCount);
-            return ('[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : ''));
-    }
+    // const headerCountIndicator = '[N] alert[s]'.replace('[N]', rows.length)
+    // .replace('[s]', rows.length > 1 ? 's' : '');
+
+    const headerCountIndicator = rowCount => {
+        return '[N] panel[s] selected'.replace('[N]', rowCount).replace('[s]', rowCount > 1 ? 's' : '');
+    };
 
     const reEnableAllCheckboxes = () => {
-            const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
-            checkBoxList.forEach(ii => {
-                ii.disabled = false;
-                ii.parentElement.parentElement.classList.remove('Mui-disabled');
-            });
+        const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
+        checkBoxList.forEach(ii => {
+            ii.disabled = false;
+            ii.parentElement.parentElement.classList.remove('Mui-disabled');
+        });
     };
+
+    function getNumberCheckboxesSelected() {
+        return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
+    }
 
     const handleCheckboxChange = e => {
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
@@ -215,44 +219,30 @@ export const PromoPanelListTable = ({
                 .replace('[s]', numberCheckboxesSelected === 1 ? '' : 's'),
         );
     };
-
-    
-
     const onPreviewOpen = (row, item) => {
-        console.log('Row', row);
-        console.log('item', item);
         const scheduled = !!row.panel_start && !!row.panel_end ? true : false;
-        console.log('scheduled?', scheduled);
-        // console.log('Value', value);
         setPreviewPanel({
-            name: row.admin_notes,
+            name: row.panel_admin_notes,
             title: row.panel_title,
             content: row.panel_content,
-            group: [item.user_type],
             start: row.panel_start,
             end: row.panel_end,
             scheduled: scheduled,
         });
-        // console.log('Sending to preview', previewPanel);
         setPreviewOpen(true);
     };
     const handlePreviewClose = () => setPreviewOpen(false);
-    
-    function getNumberCheckboxesSelected() {
-        return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
-    }
+
     function deletePanelById(id) {
-        console.log('deleting', id)
-        console.log('actions', actions)
-        actions.deletePanel(id)
+        actions
+            .deletePanel(id)
             .then(() => {
                 setPanelNotice('');
                 setDeleteActive(false);
                 actions.loadPromoPanelUserList();
                 clearAllCheckboxes();
             })
-            .catch((e) => {
-                console.log("Thrown an error", e);
+            .catch(e => {
                 showDeleteFailureConfirmation();
             });
     }
@@ -264,20 +254,16 @@ export const PromoPanelListTable = ({
                 const id = c.value.replace(checkBoxIdPrefix, '');
                 deletePanelById(id);
             });
-            
         }
-       
     };
     const navigateToEditForm = alertid => {
-       console.log("ID", alertid)
         history.push(`/admin/promopanel/edit/${alertid}`);
         scrollToTopOfPage();
     };
     // const needsPaginator = userows.length > footerDisplayMinLength;
-    console.log("PANEL ERROR", panelError)
     return (
         <React.Fragment>
-             <ConfirmationBox
+            <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
                 confirmationBoxId="panel-delete-confirm"
@@ -286,7 +272,6 @@ export const PromoPanelListTable = ({
                 onCancelAction={hideDeleteConfirmation}
                 isOpen={isDeleteConfirmOpen}
                 locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
-               
             />
             <ConfirmationBox
                 actionButtonColor="primary"
@@ -300,30 +285,28 @@ export const PromoPanelListTable = ({
                 showAdditionalInformation
                 additionalInformation={panelError}
             />
-       
+
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
                 <div
-                    data-testid={`headerRow-table`}
+                    data-testid={'headerRow-table'}
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                 >
                     <div>
                         <h3 style={{ marginBottom: 6 }}>
                             {headertag}
-                            <span
-                                style={{ fontSize: '0.9em', fontWeight: 300 }}
-                                data-testid={`headerRow-count-table`}
-                            >
-                                {getNumberCheckboxesSelected() > 0 ? headerCountIndicator(getNumberCheckboxesSelected()): null}
+                            <span style={{ fontSize: '0.9em', fontWeight: 300 }} data-testid={'headerRow-count-table'}>
+                                {getNumberCheckboxesSelected() > 0
+                                    ? headerCountIndicator(getNumberCheckboxesSelected())
+                                    : null}
                             </span>
                         </h3>
                     </div>
                     {!!deleteActive && (
                         <span className="deleteManager" style={{ marginLeft: 'auto', paddingTop: 8 }}>
-                            
                             <IconButton
                                 onClick={showDeleteConfirmation}
                                 aria-label="Delete alert(s)"
-                                data-testid={`panel-list-table-delete-button`}
+                                data-testid={'panel-list-table-delete-button'}
                                 title="Delete panel(s)"
                             >
                                 <DeleteIcon
@@ -335,7 +318,7 @@ export const PromoPanelListTable = ({
                             <IconButton
                                 onClick={clearAllCheckboxes}
                                 aria-label="Deselect all"
-                                data-testid={`panel-list-table-deselect-button`}
+                                data-testid={'panel-list-table-deselect-button'}
                                 className={classes.iconHighlighted}
                                 title="Deselect all"
                             >
@@ -345,13 +328,10 @@ export const PromoPanelListTable = ({
                     )}
                 </div>
                 <TableContainer component={Paper}>
-                    <Table  size="small" aria-label="a dense table" id={`admin-promoPanel-table`}>
+                    <Table size="small" aria-label="a dense table" id={'admin-promoPanel-table'}>
                         <TableHead>
                             <TableRow>
-                            
-                                    
-                                <TableCell component="th" scope="row">
-                                </TableCell>
+                                <TableCell component="th" scope="row" />
                                 <TableCell component="th" scope="row">
                                     <Typography variant="body1">Panel Name</Typography>
                                 </TableCell>
@@ -370,100 +350,163 @@ export const PromoPanelListTable = ({
                             {/* Start of a Group and it's Panels */}
                             {(!!isLoading || panelList.length < 1) && (
                                 <TableRow>
-                                    <TableCell colSpan={6} align='center'>
+                                    <TableCell colSpan={6} align="center">
                                         <CircularProgress
                                             id="ListTableSpinner"
-                                            color='primary'
+                                            color="primary"
                                             size={38}
                                             thickness={3}
                                             aria-label="Loading Table Panels"
                                         />
                                     </TableCell>
                                 </TableRow>
-                                
                             )}
-                            {!isLoading && panelList.map((item, id) => {
-                                rowMarker = 0;
-                                return (
-                                    <React.Fragment key={id}>
-                                        
-                                            
-                                        
-                                        <TableRow className={classes.cellGroupRow}>
-                                        
-                                            <TableCell colSpan={6} component="td" scope="row" className={classes.cellGroupName}>
-                                                <Typography variant="body1">{item.user_type_name}</Typography>
-                                            </TableCell>
-                                            
-                                        </TableRow>
 
-                                        {item.panels.map((row, id) => {
-                                            rowMarker++;
-                                            return (
-                                                <TableRow
-                                                    className={`promoPanel-data-row ${
-                                                        rowMarker % 2 === 0
-                                                            ? classes.cellGroupRowEven
-                                                            : classes.cellGroupRowOdd
-                                                    }`}
-                                                    key={id}
-                                                >
-                                                    <TableCell className={classes.checkboxCell}>
-                                                        <Checkbox
-                                                        id={`panel-table-item-checkbox-${row.panel_id}`}
-                                                        inputProps={{
-                                                            'aria-labelledby': `panel-table-item-title-${row.panel_id}`,
-                                                            'data-testid': `panel-list-table-checkbox-${row.panel_id}`,
-                                                        }}
-                                                        onChange={handleCheckboxChange}
-                                                        value={`${checkBoxIdPrefix}${row.panel_id}`}
-                                                        />
-                                                    </TableCell>
-                                                    <TableCell className={classes.cellGroupDetails}>
-                                                        <Typography variant="body1">
-                                                            <strong>{row.panel_title}</strong>
-                                                            <br />
-                                                            {row.admin_notes}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell className={classes.cellGroupDetails}>
-                                                        <Typography variant="body1">
-                                                            {!!!row.is_default_panel && !!!row.is_default
-                                                                ? moment(row.panel_start).format('dddd DD/MM/YYYY HH:mm a')
-                                                                : 'Default'}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell className={classes.cellGroupDetails}>
-                                                        <Typography variant="body1">
-                                                            {' '}
-                                                            {!!!row.is_default && !!!row.is_default_panel
-                                                                ? moment(row.panel_end).format('dddd DD/MM/YYYY HH:mm a')
-                                                                : ''}
-                                                        </Typography>
-                                                    </TableCell>
-                                                    <TableCell className={classes.cellGroupDetails}>
-                                                        <PromoPanelSplitButton
-                                                            alertId={alert.id}
-                                                            canEdit={canEdit}
-                                                            canClone={canClone}
-                                                            canDelete={canDelete}
-                                                            onPreview={row => onPreviewOpen(row, item)}
-                                                            row={row}
-                                                            align={'flex-end'}
-                                                            deletePanelById={(row) => {console.log("checking row", row); deletePanelById(row)}}
-                                                            mainButtonLabel={'Edit'}
-                                                            // navigateToCloneForm={navigateToCloneForm}
-                                                            navigateToEditForm={(row) => navigateToEditForm(row)}
-                                                            // navigateToView={navigateToView}
-                                                            confirmDeleteLocale={confirmDeleteLocale}
-                                                        />
-                                                    </TableCell>
-                                                </TableRow>
-                                            );
-                                        })}
-                                    </React.Fragment>
-                                );
-                            })}
+                            {!isLoading &&
+                                panelList.map((item, id) => {
+                                    console.log('The Item', item);
+                                    rowMarker = 0;
+                                    return (
+                                        <React.Fragment key={id}>
+                                            {!!item.default_panel && Object.keys(item.default_panel).length > 0 && (
+                                                <>
+                                                    <TableRow className={classes.cellGroupRow}>
+                                                        <TableCell
+                                                            colSpan={6}
+                                                            component="td"
+                                                            scope="row"
+                                                            className={classes.cellGroupName}
+                                                        >
+                                                            <Typography variant="body1">
+                                                                {item.user_group_name}
+                                                            </Typography>
+                                                        </TableCell>
+                                                    </TableRow>
+
+                                                    <TableRow
+                                                        className={`promoPanel-data-row ${
+                                                            rowMarker % 2 === 0
+                                                                ? classes.cellGroupRowEven
+                                                                : classes.cellGroupRowOdd
+                                                        }`}
+                                                        key={id}
+                                                    >
+                                                        <TableCell className={classes.checkboxCell}>
+                                                            <Checkbox
+                                                                id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
+                                                                inputProps={{
+                                                                    'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
+                                                                    'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
+                                                                }}
+                                                                onChange={handleCheckboxChange}
+                                                                value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
+                                                            />
+                                                        </TableCell>
+                                                        <TableCell className={classes.cellGroupDetails}>
+                                                            <Typography variant="body1">
+                                                                <strong>{item.default_panel.panel_title}</strong>
+                                                                <br />
+                                                                {item.default_panel.panel_admin_notes}
+                                                            </Typography>
+                                                        </TableCell>
+                                                        <TableCell className={classes.cellGroupDetails}>
+                                                            <Typography variant="body1">Default</Typography>
+                                                        </TableCell>
+                                                        <TableCell className={classes.cellGroupDetails}>
+                                                            <Typography variant="body1" />
+                                                        </TableCell>
+                                                        <TableCell className={classes.cellGroupDetails}>
+                                                            <PromoPanelSplitButton
+                                                                alertId={alert.id}
+                                                                canEdit={canEdit}
+                                                                canClone={canClone}
+                                                                canDelete={canDelete}
+                                                                onPreview={row => onPreviewOpen(item.default_panel)}
+                                                                row={item.default_panel}
+                                                                align={'flex-end'}
+                                                                deletePanelById={item => {
+                                                                    deletePanelById(item.default_panel);
+                                                                }}
+                                                                mainButtonLabel={'Edit'}
+                                                                // navigateToCloneForm={navigateToCloneForm}
+                                                                navigateToEditForm={row => navigateToEditForm(row)}
+                                                                // navigateToView={navigateToView}
+                                                                confirmDeleteLocale={confirmDeleteLocale}
+                                                            />
+                                                        </TableCell>
+                                                    </TableRow>
+                                                </>
+                                            )}
+
+                                            {item.scheduled_panels.length > 0 &&
+                                                item.scheduled_panels.map((row, id) => {
+                                                    rowMarker++;
+                                                    return (
+                                                        <TableRow
+                                                            className={`promoPanel-data-row ${
+                                                                rowMarker % 2 === 0
+                                                                    ? classes.cellGroupRowEven
+                                                                    : classes.cellGroupRowOdd
+                                                            }`}
+                                                            key={id}
+                                                        >
+                                                            <TableCell className={classes.checkboxCell}>
+                                                                <Checkbox
+                                                                    id={`panel-table-item-checkbox-${row.panel_id}`}
+                                                                    inputProps={{
+                                                                        'aria-labelledby': `panel-table-item-title-${row.panel_id}`,
+                                                                        'data-testid': `panel-list-table-checkbox-${row.panel_id}`,
+                                                                    }}
+                                                                    onChange={handleCheckboxChange}
+                                                                    value={`${checkBoxIdPrefix}${row.panel_id}`}
+                                                                />
+                                                            </TableCell>
+                                                            <TableCell className={classes.cellGroupDetails}>
+                                                                <Typography variant="body1">
+                                                                    <strong>{row.panel_title}</strong>
+                                                                    <br />
+                                                                    {row.panel_admin_notes}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell className={classes.cellGroupDetails}>
+                                                                <Typography variant="body1">
+                                                                    {moment(row.panel_start).format(
+                                                                        'dddd DD/MM/YYYY HH:mm a',
+                                                                    )}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell className={classes.cellGroupDetails}>
+                                                                <Typography variant="body1">
+                                                                    {moment(row.panel_end).format(
+                                                                        'dddd DD/MM/YYYY HH:mm a',
+                                                                    )}
+                                                                </Typography>
+                                                            </TableCell>
+                                                            <TableCell className={classes.cellGroupDetails}>
+                                                                <PromoPanelSplitButton
+                                                                    alertId={alert.id}
+                                                                    canEdit={canEdit}
+                                                                    canClone={canClone}
+                                                                    canDelete={canDelete}
+                                                                    onPreview={row => onPreviewOpen(row, item)}
+                                                                    row={row}
+                                                                    align={'flex-end'}
+                                                                    deletePanelById={row => {
+                                                                        deletePanelById(row);
+                                                                    }}
+                                                                    mainButtonLabel={'Edit'}
+                                                                    // navigateToCloneForm={navigateToCloneForm}
+                                                                    navigateToEditForm={row => navigateToEditForm(row)}
+                                                                    // navigateToView={navigateToView}
+                                                                    confirmDeleteLocale={confirmDeleteLocale}
+                                                                />
+                                                            </TableCell>
+                                                        </TableRow>
+                                                    );
+                                                })}
+                                        </React.Fragment>
+                                    );
+                                })}
                         </TableBody>
                     </Table>
                 </TableContainer>
@@ -498,13 +541,13 @@ PromoPanelListTable.propTypes = {
     deletePanel: PropTypes.any,
     footerDisplayMinLength: PropTypes.number,
     alertOrder: PropTypes.any,
-    panelError: PropTypes.string
+    panelError: PropTypes.string,
 };
 
 PromoPanelListTable.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
     alertOrder: false, // what order should we sort the alerts in? false means unspecified
-    panelError: ''
+    panelError: '',
 };
 
 export default PromoPanelListTable;
