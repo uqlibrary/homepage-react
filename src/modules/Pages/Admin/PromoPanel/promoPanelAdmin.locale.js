@@ -271,10 +271,29 @@ export default {
             cancelButtonLabel: 'Cancel',
             confirmButtonLabel: 'Proceed',
         },
+        confirmUnschedule: {
+            confirmationTitle: 'Unschedule [N] panels?',
+            confirmationMessage: (
+                <Fragment>
+                    Are you sure you want to unschedule the selected panels for this group?
+                    <br />
+                    The panel will no longer be scheduled for this group.
+                </Fragment>
+            ),
+            cancelButtonLabel: 'Cancel',
+            confirmButtonLabel: 'Proceed',
+        },
         deleteError: {
             confirmationTitle: 'Some records did not delete successfully',
             confirmationMessage: (
                 <Fragment>Refresh the page to see current status and try deletion again later</Fragment>
+            ),
+            confirmButtonLabel: 'OK',
+        },
+        unscheduleError: {
+            confirmationTitle: 'There was an error unscheduling panel(s)',
+            confirmationMessage: (
+                <Fragment>Refresh the page to see current status and try unscheduling again later</Fragment>
             ),
             confirmButtonLabel: 'OK',
         },

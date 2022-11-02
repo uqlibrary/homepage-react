@@ -33,6 +33,7 @@ import ReactSeventeenAdapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { getClassNumberFromPieces } from 'data/actions';
 // import AlertSplitButton from './AlertSplitButton';
 import { scrollToTopOfPage } from 'modules/Pages/Admin/Spotlights/spotlighthelpers';
+import PromoPanelScheduleHeaders from './PromoPanelScheduleHeaders';
 
 const moment = require('moment');
 
@@ -44,6 +45,9 @@ const useStyles2 = makeStyles(
         cellGroupRowOdd: {
             backgroundColor: '#eee',
         },
+        cellEmpty: {
+            borderBottom: 'none',
+        },
         cellGroupRowEven: {
             backgroundColor: 'none',
         },
@@ -54,7 +58,7 @@ const useStyles2 = makeStyles(
             paddingBottom: 0,
             fontWeight: 400,
             borderBottom: 'none',
-            borderTop: '1px solid #aaa',
+            color: '#FFF',
         },
         cellGroupDetails: {
             marginTop: 0,
@@ -104,6 +108,14 @@ const useStyles2 = makeStyles(
             backgroundColor: theme.palette.warning.light,
             color: '#000',
         },
+        tableRow: {
+            borderBottom: '1px solid #bbb',
+        },
+        tableRowGroup: {
+            backgroundColor: '#333',
+            color: '#fff',
+            borderBottom: 'none',
+        },
         extreme: {
             backgroundColor: theme.palette.error.main,
             color: '#fff',
@@ -113,6 +125,7 @@ const useStyles2 = makeStyles(
             color: '#fff',
         },
         checkboxCell: {
+            borderBottom: 'none',
             '& input[type="checkbox"]:checked + svg': {
                 fill: '#222',
             },
@@ -123,7 +136,7 @@ const useStyles2 = makeStyles(
     }),
     { withTheme: true },
 );
-export const PromoPanelListTable = ({
+export const PromoPanelListSchedules = ({
     actions,
     isLoading,
     panelList,
@@ -136,16 +149,16 @@ export const PromoPanelListTable = ({
     headertag,
     panelError,
 }) => {
-    const [isDeleteConfirmOpen, showDeleteConfirmation, hideDeleteConfirmation] = useConfirmationState();
+    const [isUnscheduleConfirmOpen, showUnscheduleConfirmation, hideUnscheduleConfirmation] = useConfirmationState();
     const [
-        isDeleteFailureConfirmationOpen,
-        showDeleteFailureConfirmation,
-        hideDeleteFailureConfirmation,
+        isUnscheduleFailureConfirmationOpen,
+        showUnscheduleFailureConfirmation,
+        hideUnscheduleFailureConfirmation,
     ] = useConfirmationState();
 
     const [previewOpen, setPreviewOpen] = useState(false);
     const [previewPanel, setPreviewPanel] = useState({});
-    const [deleteActive, setDeleteActive] = useState(false);
+    const [unscheduleActive, setUnscheduleActive] = useState(false);
     const [PanelNotice, setPanelNotice] = useState('');
     const classes = useStyles2();
     const clearAllCheckboxes = () => {
@@ -157,12 +170,10 @@ export const PromoPanelListTable = ({
         });
     };
     let rowMarker = 0;
-    const confirmDeleteLocale = numberOfCheckedBoxes => {
+    const confirmUnscheduleLocale = numberOfCheckedBoxes => {
         return {
-            ...locale.listPage.confirmDelete,
-            confirmationTitle: locale.listPage.confirmDelete.confirmationTitle
-                .replace('[N]', numberOfCheckedBoxes)
-                .replace('alerts', numberOfCheckedBoxes === 1 ? 'alert' : 'alerts'),
+            ...locale.listPage.confirmUnschedule,
+            confirmationTitle: locale.listPage.confirmUnschedule.confirmationTitle,
         };
     };
 
@@ -187,6 +198,10 @@ export const PromoPanelListTable = ({
         return document.querySelectorAll('#admin-promoPanel-table tr.promoPanel-data-row :checked').length;
     }
 
+    const handleGroupDefaultChange = (userGroup, panel) => {
+        console.log(userGroup, panel);
+    };
+
     const handleCheckboxChange = e => {
         const numberCheckboxesSelected = getNumberCheckboxesSelected();
 
@@ -195,7 +210,7 @@ export const PromoPanelListTable = ({
         if (!!e.target && !!e.target.checked) {
             // handle a checkbox being turned on
             if (numberCheckboxesSelected === 1) {
-                setDeleteActive(true);
+                setUnscheduleActive(true);
             }
             // disable any checkboxes in a different alert list
             const checkBoxList = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]');
@@ -209,7 +224,7 @@ export const PromoPanelListTable = ({
         } /* istanbul ignore else */ else if (!!e.target && !e.target.checked) {
             // handle a checkbox being turned off
             if (numberCheckboxesSelected === 0) {
-                setDeleteActive(false);
+                setUnscheduleActive(false);
                 reEnableAllCheckboxes();
             }
         }
@@ -238,15 +253,29 @@ export const PromoPanelListTable = ({
             .deletePanel(id)
             .then(() => {
                 setPanelNotice('');
-                setDeleteActive(false);
+                setUnscheduleActive(false);
                 actions.loadPromoPanelUserList();
                 clearAllCheckboxes();
             })
             .catch(e => {
-                showDeleteFailureConfirmation();
+                showUnscheduleFailureConfirmation();
             });
     }
-    const deleteSelectedPanels = () => {
+    function unschedulePanelById(id, row) {
+        console.log('ID:', id, 'row', row);
+        actions
+            .unschedulePanel(id, row.user_group)
+            .then(() => {
+                setPanelNotice('');
+                setUnscheduleActive(false);
+                actions.loadPromoPanelUserList();
+                clearAllCheckboxes();
+            })
+            .catch(e => {
+                showUnscheduleFailureConfirmation();
+            });
+    }
+    const unscheduleSelectedPanels = () => {
         const checkboxes = document.querySelectorAll('#admin-promoPanel-table input[type="checkbox"]:checked');
         /* istanbul ignore else */
         if (!!checkboxes && checkboxes.length > 0) {
@@ -266,28 +295,38 @@ export const PromoPanelListTable = ({
             <ConfirmationBox
                 actionButtonColor="secondary"
                 actionButtonVariant="contained"
-                confirmationBoxId="panel-delete-confirm"
-                onAction={deleteSelectedPanels}
-                onClose={hideDeleteConfirmation}
-                onCancelAction={hideDeleteConfirmation}
-                isOpen={isDeleteConfirmOpen}
-                locale={confirmDeleteLocale(getNumberCheckboxesSelected())}
+                confirmationBoxId="panel-unschedule-confirm"
+                onAction={unscheduleSelectedPanels}
+                onClose={hideUnscheduleConfirmation}
+                onCancelAction={hideUnscheduleConfirmation}
+                isOpen={isUnscheduleConfirmOpen}
+                locale={confirmUnscheduleLocale(getNumberCheckboxesSelected())}
             />
             <ConfirmationBox
                 actionButtonColor="primary"
                 actionButtonVariant="contained"
                 confirmationBoxId="panel-delete-error-dialog"
-                onAction={hideDeleteFailureConfirmation}
-                onClose={hideDeleteFailureConfirmation}
+                onAction={hideUnscheduleConfirmation}
+                onClose={hideUnscheduleConfirmation}
                 hideCancelButton
-                isOpen={isDeleteFailureConfirmationOpen}
+                isOpen={isUnscheduleConfirmOpen}
                 locale={locale.listPage.deleteError}
                 showAdditionalInformation
                 additionalInformation={panelError}
             />
+            {/* <ConfirmationBox
+                actionButtonColor="secondary"
+                actionButtonVariant="contained"
+                confirmationBoxId="panel-default-confirm"
+                onAction={deleteSelectedPanels}
+                onClose={hideDeleteConfirmation}
+                onCancelAction={hideDeleteConfirmation}
+                isOpen={isDeleteConfirmOpen}
+                locale={confirmUnscheduleLocale(getNumberCheckboxesSelected())}
+            /> */}
 
             <StandardCard title={title} customBackgroundColor="#F7F7F7">
-                <div
+                {/* <div
                     data-testid={'headerRow-table'}
                     className={`${classes.headerRow} ${!!deleteActive ? classes.headerRowHighlighted : ''}`}
                 >
@@ -311,7 +350,7 @@ export const PromoPanelListTable = ({
                             >
                                 <DeleteIcon
                                     className={`${
-                                        !!deleteActive ? classes.iconHighlighted : /* istanbul ignore next */ ''
+                                        !!deleteActive ? classes.iconHighlighted :
                                     }`}
                                 />
                             </IconButton>
@@ -326,31 +365,15 @@ export const PromoPanelListTable = ({
                             </IconButton>
                         </span>
                     )}
-                </div>
+                </div> */}
                 <TableContainer component={Paper}>
                     <Table size="small" aria-label="a dense table" id={'admin-promoPanel-table'}>
-                        <TableHead>
-                            <TableRow>
-                                <TableCell component="th" scope="row" />
-                                <TableCell component="th" scope="row">
-                                    <Typography variant="body1">Panel Name</Typography>
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    <Typography variant="body1">From</Typography>
-                                </TableCell>
-                                <TableCell component="th" scope="row">
-                                    <Typography variant="body1">To</Typography>
-                                </TableCell>
-                                <TableCell component="th" scope="row" align="right" style={{ paddingRight: 25 }}>
-                                    <Typography variant="body1">Actions</Typography>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
+                        <PromoPanelScheduleHeaders />
                         <TableBody>
                             {/* Start of a Group and it's Panels */}
                             {(!!isLoading || panelList.length < 1) && (
                                 <TableRow>
-                                    <TableCell colSpan={6} align="center">
+                                    <TableCell colSpan={7} align="center">
                                         <CircularProgress
                                             id="ListTableSpinner"
                                             color="primary"
@@ -364,50 +387,62 @@ export const PromoPanelListTable = ({
 
                             {!isLoading &&
                                 panelList.map((item, id) => {
-                                    console.log('The Item', item);
                                     rowMarker = 0;
                                     return (
                                         <React.Fragment key={id}>
                                             {!!item.default_panel && Object.keys(item.default_panel).length > 0 && (
                                                 <>
-                                                    <TableRow className={classes.cellGroupRow}>
+                                                    <TableRow className={classes.tableRowGroup}>
                                                         <TableCell
-                                                            colSpan={6}
+                                                            colSpan={7}
                                                             component="td"
                                                             scope="row"
                                                             className={classes.cellGroupName}
                                                         >
-                                                            <Typography variant="body1">
+                                                            <Typography variant="body1" style={{ paddingBottom: 5 }}>
                                                                 {item.user_group_name}
                                                             </Typography>
                                                         </TableCell>
                                                     </TableRow>
 
                                                     <TableRow
-                                                        className={`promoPanel-data-row ${
+                                                        className={`${classes.tableRow} promoPanel-data-row ${
                                                             rowMarker % 2 === 0
                                                                 ? classes.cellGroupRowEven
                                                                 : classes.cellGroupRowOdd
                                                         }`}
                                                         key={id}
                                                     >
-                                                        <TableCell className={classes.checkboxCell}>
-                                                            <Checkbox
-                                                                id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
-                                                                inputProps={{
-                                                                    'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
-                                                                    'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
-                                                                }}
-                                                                onChange={handleCheckboxChange}
-                                                                value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
-                                                            />
-                                                        </TableCell>
+                                                        <TableCell className={classes.cellEmpty} />
+                                                        {/* <TableCell className={classes.checkboxCell}>
+                                <Checkbox
+                                    id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
+                                    inputProps={{
+                                        'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
+                                        'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
+                                    }}
+                                    onChange={handleCheckboxChange}
+                                    value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
+                                />
+                            </TableCell> */}
+
                                                         <TableCell className={classes.cellGroupDetails}>
                                                             <Typography variant="body1">
                                                                 <strong>{item.default_panel.panel_title}</strong>
                                                                 <br />
                                                                 {item.default_panel.panel_admin_notes}
                                                             </Typography>
+                                                        </TableCell>
+                                                        <TableCell className={classes.checkboxCell}>
+                                                            <Checkbox
+                                                                id={`panel-table-default-checkbox-${item.default_panel.panel_id}`}
+                                                                inputProps={{
+                                                                    'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
+                                                                    'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
+                                                                }}
+                                                                // onChange={() => handleGroupDefaultChange(null, item)}
+                                                                checked
+                                                            />
                                                         </TableCell>
                                                         <TableCell className={classes.cellGroupDetails}>
                                                             <Typography variant="body1">Default</Typography>
@@ -420,18 +455,18 @@ export const PromoPanelListTable = ({
                                                                 alertId={alert.id}
                                                                 canEdit={canEdit}
                                                                 canClone={canClone}
-                                                                canDelete={canDelete}
+                                                                canDelete={false}
                                                                 onPreview={row => onPreviewOpen(item.default_panel)}
                                                                 row={item.default_panel}
                                                                 align={'flex-end'}
                                                                 deletePanelById={item => {
-                                                                    deletePanelById(item.default_panel);
+                                                                    unschedulePanelById(item.default_panel);
                                                                 }}
                                                                 mainButtonLabel={'Edit'}
                                                                 // navigateToCloneForm={navigateToCloneForm}
                                                                 navigateToEditForm={row => navigateToEditForm(row)}
                                                                 // navigateToView={navigateToView}
-                                                                confirmDeleteLocale={confirmDeleteLocale}
+                                                                confirmDeleteLocale={confirmUnscheduleLocale}
                                                             />
                                                         </TableCell>
                                                     </TableRow>
@@ -443,30 +478,44 @@ export const PromoPanelListTable = ({
                                                     rowMarker++;
                                                     return (
                                                         <TableRow
-                                                            className={`promoPanel-data-row ${
+                                                            className={`${classes.tableRow} promoPanel-data-row ${
                                                                 rowMarker % 2 === 0
                                                                     ? classes.cellGroupRowEven
                                                                     : classes.cellGroupRowOdd
                                                             }`}
                                                             key={id}
                                                         >
-                                                            <TableCell className={classes.checkboxCell}>
-                                                                <Checkbox
-                                                                    id={`panel-table-item-checkbox-${row.panel_id}`}
-                                                                    inputProps={{
-                                                                        'aria-labelledby': `panel-table-item-title-${row.panel_id}`,
-                                                                        'data-testid': `panel-list-table-checkbox-${row.panel_id}`,
-                                                                    }}
-                                                                    onChange={handleCheckboxChange}
-                                                                    value={`${checkBoxIdPrefix}${row.panel_id}`}
-                                                                />
-                                                            </TableCell>
+                                                            <TableCell className={classes.cellEmpty} />
+                                                            {/* <TableCell className={classes.checkboxCell}>
+                            <Checkbox
+                                id={`panel-table-item-checkbox-${row.panel_id}`}
+                                inputProps={{
+                                    'aria-labelledby': `panel-table-item-title-${row.panel_id}`,
+                                    'data-testid': `panel-list-table-checkbox-${row.panel_id}`,
+                                }}
+                                onChange={handleCheckboxChange}
+                                value={`${checkBoxIdPrefix}${row.panel_id}`}
+                            />
+                        </TableCell> */}
                                                             <TableCell className={classes.cellGroupDetails}>
                                                                 <Typography variant="body1">
                                                                     <strong>{row.panel_title}</strong>
                                                                     <br />
                                                                     {row.panel_admin_notes}
                                                                 </Typography>
+                                                            </TableCell>
+                                                            <TableCell className={classes.checkboxCell}>
+                                                                <Checkbox
+                                                                    id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
+                                                                    inputProps={{
+                                                                        'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
+                                                                        'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
+                                                                    }}
+                                                                    onChange={() =>
+                                                                        handleGroupDefaultChange(item.user_group, row)
+                                                                    }
+                                                                    value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
+                                                                />
                                                             </TableCell>
                                                             <TableCell className={classes.cellGroupDetails}>
                                                                 <Typography variant="body1">
@@ -487,18 +536,18 @@ export const PromoPanelListTable = ({
                                                                     alertId={alert.id}
                                                                     canEdit={canEdit}
                                                                     canClone={canClone}
-                                                                    canDelete={canDelete}
+                                                                    canUnschedule
                                                                     onPreview={row => onPreviewOpen(row, item)}
                                                                     row={row}
                                                                     align={'flex-end'}
                                                                     deletePanelById={row => {
-                                                                        deletePanelById(row);
+                                                                        unschedulePanelById(row, item);
                                                                     }}
                                                                     mainButtonLabel={'Edit'}
                                                                     // navigateToCloneForm={navigateToCloneForm}
                                                                     navigateToEditForm={row => navigateToEditForm(row)}
                                                                     // navigateToView={navigateToView}
-                                                                    confirmDeleteLocale={confirmDeleteLocale}
+                                                                    confirmDeleteLocale={confirmUnscheduleLocale}
                                                                 />
                                                             </TableCell>
                                                         </TableRow>
@@ -526,7 +575,7 @@ export const PromoPanelListTable = ({
     );
 };
 
-PromoPanelListTable.propTypes = {
+PromoPanelListSchedules.propTypes = {
     panelList: PropTypes.array,
     title: PropTypes.string,
     canEdit: PropTypes.bool,
@@ -544,10 +593,10 @@ PromoPanelListTable.propTypes = {
     panelError: PropTypes.string,
 };
 
-PromoPanelListTable.defaultProps = {
+PromoPanelListSchedules.defaultProps = {
     footerDisplayMinLength: 5, // the number of records required in the alert list before we display the paginator
     alertOrder: false, // what order should we sort the alerts in? false means unspecified
     panelError: '',
 };
 
-export default PromoPanelListTable;
+export default PromoPanelListSchedules;

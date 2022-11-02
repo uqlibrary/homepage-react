@@ -34,13 +34,13 @@ export const PromoPanelSplitButton = ({
     item,
     canClone,
     canDelete,
+    canUnschedule,
     alertId,
     onPreview,
     deletePanelById,
     mainButtonLabel,
     navigateToCloneForm,
     navigateToEditForm,
-    navigateToView,
     confirmDeleteLocale,
 }) => {
     const classes = useStyles();
@@ -141,13 +141,13 @@ export const PromoPanelSplitButton = ({
                                                     Clone
                                                 </MenuItem>
                                             )}
-                                            {!!canDelete && (
+                                            {!!(canDelete || canUnschedule) && (
                                                 <MenuItem
                                                     data-testid={`${alertId}-delete-button`}
                                                     key={`${alertId}-delete-button`}
                                                     onClick={showDeleteConfirmation}
                                                 >
-                                                    Delete
+                                                    {canDelete ? 'Delete' : 'Unschedule'}
                                                 </MenuItem>
                                             )}
                                         </MenuList>
@@ -169,10 +169,11 @@ PromoPanelSplitButton.propTypes = {
     canEdit: PropTypes.bool,
     canClone: PropTypes.bool,
     canDelete: PropTypes.bool,
+    canUnschedule: PropTypes.bool,
     alertId: PropTypes.string,
     onPreview: PropTypes.func,
     mainButtonLabel: PropTypes.string,
-    deleteAlertById: PropTypes.func,
+    deletePanelById: PropTypes.func,
     navigateToCloneForm: PropTypes.func,
     navigateToEditForm: PropTypes.func,
     navigateToView: PropTypes.func,

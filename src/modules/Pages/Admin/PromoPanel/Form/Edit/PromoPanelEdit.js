@@ -31,6 +31,7 @@ export const PromoPanelEdit = ({
     const [userList, setUserList] = React.useState([]);
     const [knownGroups, setKnownGroups] = React.useState([]);
     const [currentPanel, setCurrentPanel] = React.useState(null);
+    const [isDefault, setIsDefault] = React.useState(false);
 
     const defaults = {
         id: '',
@@ -42,7 +43,7 @@ export const PromoPanelEdit = ({
         group: 'Public',
         admin_notes: '',
         isPreviewOpen: false,
-        is_default_panel: 0,
+        is_default_panel: isDefault,
         scheduledGroups: userList,
     };
 
@@ -61,7 +62,6 @@ export const PromoPanelEdit = ({
     }, []);
 
     React.useEffect(() => {
-        // do something with the promo Panel List and the user type here.
         if (promoPanelUserTypeList.length > 0) {
             const known = [];
             promoPanelUserTypeList.map(item => !known.includes(item.user_group) && known.push(item.user_group));
@@ -73,9 +73,12 @@ export const PromoPanelEdit = ({
             setCurrentPanel(...promoPanelList.filter(item => `${item.panel_id}` === `${promopanelid}`));
             promoPanelList.map(item => {
                 item.user_groups.map(element => {
-                    !userlist.includes(element.user_group) && userlist.push(element.user_group);
-                    //  element.is_panel_default_for_this_user !== 'Y' &&
-
+                    if (element.is_panel_default_for_this_user === 'Y' && !isDefault) {
+                        setIsDefault(true);
+                    }
+                    `${item.panel_id}` === `${promopanelid}` &&
+                        !userlist.includes(element.user_group) &&
+                        userlist.push(element.user_group);
                     if (`${item.panel_id}` === `${promopanelid}`) {
                         if (schedule.length < 1) {
                             schedule.push({
@@ -133,6 +136,7 @@ export const PromoPanelEdit = ({
                             defaults={defaults}
                             actions={actions}
                             history={history}
+                            isDefaultPanel={isDefault}
                         />
                     )}
                 </StandardCard>

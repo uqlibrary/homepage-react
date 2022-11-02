@@ -99,9 +99,10 @@ export const PromoPanelForm = ({
     defaults,
     actions,
     history,
+    isDefaultPanel,
 }) => {
     // const scheduledGroups = [];
-
+    console.log('CURRENT PANEL', currentPanel);
     const classes = useStyles();
 
     const [displayList, setDisplayList] = useState(scheduledList);
@@ -111,6 +112,8 @@ export const PromoPanelForm = ({
 
     const [values, setValues] = useState({
         ...defaults,
+
+        is_default_panel: isDefaultPanel ? 1 : 0,
         start: defaults.startDateDefault,
         end: defaults.endDateDefault,
         scheduledList: displayList,
@@ -289,6 +292,10 @@ export const PromoPanelForm = ({
         });
         setDisplayList([...newSchedules]);
     };
+
+    console.log('KNOWN GROUPS', knownGroups);
+    console.log('SCHEDULED LIST', scheduledList);
+    console.log('SCHEDULED GROUP NAMES', scheduledGroupNames);
     return (
         <Fragment>
             <form className={classes.spotlightForm}>
@@ -580,9 +587,11 @@ PromoPanelForm.propTypes = {
     currentPanel: PropTypes.object,
     defaults: PropTypes.object,
     history: PropTypes.object,
+    isDefaultPanel: PropTypes.bool,
 };
 
 PromoPanelForm.defaultProps = {
+    isDefaultPanel: false,
     promoPanelList: [],
     publicFileUploading: false, // whether a file is currently being uploaded. Only done by Add, other defaults false
     publicFileUploadError: false,

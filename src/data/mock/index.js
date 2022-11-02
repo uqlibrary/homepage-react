@@ -716,6 +716,11 @@ mock.onGet('exams/course/FREN1010/summary')
     .onDelete(routes.PROMOPANEL_DELETE_API({id: 1}).apiUrl).reply(
         withSetDelay([200, {status: 'ok'}],1)
     )
+    .onDelete(routes.PROMOPANEL_UNSCHEDULE_API({id: 3, userType: 'PUBLIC'}).apiUrl).reply(
+        () => {
+            return [200, {status: 'ok'}]
+        }
+    )
     .onAny()
     .reply(config => {
         console.log('url not mocked...', config);

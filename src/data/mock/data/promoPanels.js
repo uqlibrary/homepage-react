@@ -136,24 +136,24 @@ export const userListPanels = [
                 panel_created_at: '2022-11-06T23:59',
             },
             {
-                panel_id: 1,
-                panel_admin_notes: 'Panel ID 1 Test',
-                panel_title: 'Welcome Students',
+                panel_id: 2,
+                admin_notes: 'Testing Panel ID 2',
+                panel_title: 'Xmas Break',
                 panel_content:
-                    "<p>Visit our <a href='http://library.uq.edu.au'> services for students</a> page to make the most of your library this semester:</p><ul><li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li><li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li></ul>",
+                    "<p>Please note the following services will be unavailable during the christmas break:</p><ul><li>Enrolment Services.</li><li>Councelling services</li><li>Additional professional services such as vaccinations</li></ul><p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page to make informed decisions.</p>",
+        
                 panel_schedule_start_time: '2022-01-12 10:00:00',
                 panel_schedule_end_time: '2022-01-12 10:00:00',
                 panel_created_at: '2022-11-06T23:59',
             }
         ],
         default_panel: {
-            panel_id: 2,
-            panel_admin_notes: 'Testing Panel ID 2',
-            panel_title: 'Xmas Break',
+            panel_id: 1,
+            panel_admin_notes: 'Panel ID 1 Test',
+            panel_title: 'Welcome Students',
             panel_content:
-                "<p>Please note the following services will be unavailable during the christmas break:</p><ul><li>Enrolment Services.</li><li>Councelling services</li><li>Additional professional services such as vaccinations</li></ul><p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page to make informed decisions.</p>",
-        
-        },
+                "<p>Visit our <a href='http://library.uq.edu.au'> services for students</a> page to make the most of your library this semester:</p><ul><li>Access learning resources for your courses, our Assignment Planner tool, and subject and referencing guides.</li><li>Build new skills with our Digital Essentials modules and discover in-person and online (LinkedIn Learning) training options.</li></ul>",
+        }
     },
     {
         user_group: 'EMPTY',

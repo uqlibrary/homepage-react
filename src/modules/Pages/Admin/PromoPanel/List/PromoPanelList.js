@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 // import { makeStyles } from '@material-ui/styles';
 
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
-import { PromoPanelListTable } from './PromoPanelListTable';
+import { PromoPanelListSchedules } from './PromoPanelListSchedules';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
 // import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
@@ -165,7 +165,7 @@ export const PromoPanelList = ({
     // };
 
     return (
-        <StandardPage title="Promo Panel Management">
+        <StandardPage title="Promo panel management">
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}
@@ -173,13 +173,13 @@ export const PromoPanelList = ({
                 showAddButton
             />
 
-            <PromoPanelListTable
+            <PromoPanelListSchedules
                 actions={actions}
                 isLoading={promoPanelUserTypesLoading}
                 panelList={promoPanelUserTypeList}
                 history={history}
                 // deletePanel={deletePanel}
-                title="Current Panels"
+                title="Current and scheduled panels"
                 canEdit
                 canClone
                 canDelete

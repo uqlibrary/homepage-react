@@ -10,6 +10,7 @@ import {
     PROMOPANEL_UPDATE_USERTYPE_DEFAULT,
     PROMOPANEL_UPDATE_USERTYPE,
     PROMOPANEL_DELETE_API,
+    PROMOPANEL_UNSCHEDULE_API,
 } from 'repositories/routes';
 
 // Actions for Single Promo Panel Retrieval
@@ -190,6 +191,30 @@ export const deletePanel = panelID => {
     };
 };
 
+export const unschedulePanel = (panelID, userType) => {
+    console.log('Firing action Unschedule panel', panelID, userType);
+    console.log('URL', PROMOPANEL_UNSCHEDULE_API({ id: panelID, userType: userType }));
+    return async dispatch => {
+        dispatch({ type: actions.PROMOPANEL_UNSCHEDULING });
+
+        try {
+            const response = await destroy(PROMOPANEL_UNSCHEDULE_API({ id: panelID, userType: userType }));
+            dispatch({
+                type: actions.PROMOPANEL_DELETE_SUCCESS,
+                payload: [],
+            });
+
+            return Promise.resolve(response.data);
+        } catch (e) {
+            dispatch({
+                type: actions.PROMOPANEL_DELETE_FAILED,
+                payload: e,
+            });
+
+            return Promise.reject(e);
+        }
+    };
+};
 export function clearCurrentPanel() {
     return dispatch => {
         dispatch({ type: actions.PROMOPANEL_CLEAR_CURRENT });
