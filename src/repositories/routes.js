@@ -162,3 +162,11 @@ send payload:
 export const SPOTLIGHT_SAVE_API = ({ id }) => ({ apiUrl: `spotlight/${id}` });
 
 export const SPOTLIGHT_DELETE_BULK_API = () => ({ apiUrl: 'spotlight/bulk' });
+
+export const TEST_TAG_SITE_API = () => ({ apiUrl: 'test_and_tag/site/current' });
+export const TEST_TAG_FLOOR_API = (siteId, buildingId) => ({
+    apiUrl: `test_and_tag/site/${siteId}/building/${buildingId}/current`,
+});
+export const TEST_TAG_ROOM_API = (siteId, buildingId, floorId) => ({
+    apiUrl: `test_and_tag/site/${siteId}/building/${buildingId}/floor/${floorId}/current`,
+});

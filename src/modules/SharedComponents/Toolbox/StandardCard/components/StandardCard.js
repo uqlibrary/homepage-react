@@ -59,6 +59,8 @@ export class Cards extends Component {
         standardCardId: PropTypes.string,
         subCard: PropTypes.bool,
         style: PropTypes.object,
+        headerAction: PropTypes.any,
+        variant: PropTypes.string,
     };
 
     render() {
@@ -71,6 +73,8 @@ export class Cards extends Component {
             smallTitle = false,
             subCard = false,
             style = {},
+            headerAction,
+            variant,
         } = this.props;
         const customBG = !!this.props.customBackgroundColor
             ? { backgroundColor: this.props.customBackgroundColor }
@@ -94,12 +98,14 @@ export class Cards extends Component {
                             .toLowerCase()}`
                       : /* istanbul ignore next */ ''
               }`;
+        const cardHeaderAction = !!headerAction ? headerAction : <></>;
         return (
             <Card
                 data-testid={standardCardId}
                 id={standardCardId}
                 className={`${classes.card} StandardCard`}
                 style={{ ...customBG, ...fullHeight, ...style }}
+                variant={variant ?? 'elevation'}
             >
                 {!this.props.noHeader && (
                     <CardHeader
@@ -116,6 +122,7 @@ export class Cards extends Component {
                                 (primaryHeader && classes.cardHeaderPrimary) ||
                                 (accentHeader && classes.cardHeaderAccent),
                         }}
+                        action={cardHeaderAction}
                     />
                 )}
                 <CardContent
