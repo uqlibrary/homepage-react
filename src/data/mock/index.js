@@ -34,6 +34,9 @@ import { spotlights as spotlightsHomepage } from './data/spotlights';
 import { spotlightsLong } from './data/spotlightsLong';
 import examSearch_FREN from './data/records/examSearch_FREN';
 import examSearch_DENT80 from './data/records/examSearch_DENT80';
+import testTag_siteList from './data/records/test_tag_sites';
+import testTag_floorList from './data/records/test_tag_floors';
+import testTag_roomList from './data/records/test_tag_rooms';
 
 const moment = require('moment');
 
@@ -677,6 +680,38 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+    // T&T SITE
+    .onGet('test_and_tag/site/current')
+    .reply(()=>{
+        return [200, testTag_siteList];
+    })
+    // T&T FLOORS
+    .onGet('test_and_tag/site/1/building/1/current')
+    .reply(()=>{
+        return [200, testTag_floorList.find(floor=>floor.site_id === 1 && floor.building_id === 1)];
+    })
+    .onGet('test_and_tag/site/1/building/2/current')
+    .reply(()=>{
+        return [200, testTag_floorList.find(floor=>floor.site_id === 1 && floor.building_id === 2)];
+    })
+    // T&T ROOMS
+    .onGet('test_and_tag/site/1/building/1/floor/1/current')
+    .reply(()=>{
+        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 1 && room.floor_id === 1)];
+    })
+    .onGet('test_and_tag/site/1/building/1/floor/2/current')
+    .reply(()=>{
+        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 1 && room.floor_id === 2)];
+    })
+    .onGet('test_and_tag/site/1/building/2/floor/3/current')
+    .reply(()=>{
+        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 2 && room.floor_id === 3)];
+    })
+    .onGet('test_and_tag/site/1/building/2/floor/4/current')
+    .reply(()=>{
+        return [200, testTag_roomList.find(room=>room.site_id === 1 && room.building_id === 2 && room.floor_id === 4)];
+    })
+
     .onGet('exams/search/fail')
     .reply(() => {
         return [500, []];

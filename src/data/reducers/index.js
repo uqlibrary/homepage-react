@@ -12,3 +12,6 @@ export { default as spotlightReducer } from './spotlightReducer';
 export { default as spotlightsReducer } from './spotlightsReducer';
 export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
+export { default as siteListReducer } from './siteListReducer';
+export { default as floorListReducer } from './floorListReducer';
+export { default as roomListReducer } from './roomListReducer';
