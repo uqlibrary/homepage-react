@@ -37,6 +37,8 @@ import examSearch_DENT80 from './data/records/examSearch_DENT80';
 import testTag_siteList from './data/records/test_tag_sites';
 import testTag_floorList from './data/records/test_tag_floors';
 import testTag_roomList from './data/records/test_tag_rooms';
+import testTag_assetTypes from './data/records/test_tag_asset_types';
+import testTag_testDevices from './data/records/test_tag_test_devices';
 
 const moment = require('moment');
 
@@ -680,6 +682,21 @@ mock.onGet('exams/course/FREN1010/summary')
             },
         ];
     })
+    
+    /** TEST AND TAG ROUTES **/
+
+    // ASSET TYPES
+    .onGet('test_and_tag/asset/type')
+    .reply(()=>{
+        return [200, testTag_assetTypes];
+    })
+
+    // TEST DEVICES TYPES
+    .onGet('test_and_tag/devices/current')
+    .reply(()=>{
+        return [200, testTag_testDevices];
+    })
+    
     // T&T SITE
     .onGet('test_and_tag/site/current')
     .reply(()=>{

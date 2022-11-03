@@ -33,6 +33,7 @@ import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import Box from '@material-ui/core/Box';
 import Alert from '@material-ui/lab/Alert';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 // import Checkbox from '@material-ui/core/Checkbox';
 
@@ -355,6 +356,12 @@ function a11yProps(index) {
 export const TestTag = ({
     actions,
     currentRetestList,
+    assetTypes,
+    assetTypesLoading,
+    assetTypesError,
+    testDevices,
+    testDevicesLoading,
+    testDevicesError,
     siteList,
     siteListLoading,
     siteListError,
@@ -381,19 +388,25 @@ export const TestTag = ({
     const [buildingid, setBuildingId] = useState(-1);
     const [floorid, setFloorId] = useState(-1);
     const [roomid, setRoomId] = React.useState(-1);
-    const [deviceid, setDeviceId] = React.useState(1);
+    const [deviceid, setDeviceId] = React.useState(
+        !!!testDevicesLoading && !!!testDevicesError && !!testDevices && !!testDevices.length > 0
+            ? testDevices[0].device_id
+            : -1,
+    );
     const [currentAsset, setCurrentAsset] = React.useState({});
-    const [currentAssetType, setCurrentAssetType] = React.useState({});
+    const [assetTypeid, setAssetTypeId] = useState(-1);
     const [testStatus, setTestStatus] = React.useState(status.NONE);
     const [nextTestValue, setNextTestValue] = React.useState(12);
     const [discardingId, setDiscardingId] = React.useState(1);
     const [repairId, setRepairId] = React.useState(1);
     const [selectedTabValue, setSelectedTabValue] = React.useState(0);
+    const [eventExpanded, setEventExpanded] = useState(true);
+    const [previousTestExpanded, setPreviousTestExpanded] = useState(false);
 
     const handleChange = (event, li, source) => {
         const value =
             !!li && !!li.hasOwnProperty('props') ? parseInt(li?.props['data-id'] ?? li?.props.value, 10) : li ?? null;
-        console.log(event, li, source, value);
+
         switch (source) {
             case 'eventDate':
                 setEventDate(event.format(dateFormat));
@@ -402,15 +415,6 @@ export const TestTag = ({
                 setSiteId(value);
                 setBuildingId(-1);
                 setFloorId(-1);
-                break;
-            case 'building':
-                setBuildingId(value);
-                setFloorId(-1);
-                setRoomId(-1);
-                break;
-            case 'floor':
-                setFloorId(value);
-                setRoomId(-1);
                 break;
             case 'device':
                 setDeviceId(value);
@@ -436,6 +440,8 @@ export const TestTag = ({
     };
 
     useEffect(() => {
+        actions.loadAssetTypes();
+        actions.loadTestDevices();
         actions.loadSites();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -443,14 +449,16 @@ export const TestTag = ({
     useEffect(() => {
         if (siteid !== -1 && buildingid !== -1) {
             actions.loadFloors(siteid, buildingid);
+            setFloorId(-1);
+            setRoomId(-1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [buildingid]);
 
     useEffect(() => {
-        console.log('LOADROOMS EVENT', siteid, buildingid, floorid);
         if (siteid !== -1 && buildingid !== -1 && floorid !== -1) {
             actions.loadRooms(siteid, buildingid, floorid);
+            setRoomId(-1);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [floorid]);
@@ -464,18 +472,17 @@ export const TestTag = ({
     //     setRoomId({});
     // }, [floorid]);
 
-    useEffect(() => {
-        setCurrentAssetType(
-            (Object.keys(currentAsset).length > 0 &&
-                !!currentAsset.assetTypeId &&
-                assetType.find(item => item.id === currentAsset.assetTypeId)) ??
-                {},
-        );
-        setTestStatus(status.NONE);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, JSON.stringify(currentAsset));
-    const expanded = true;
-    console.log('roomList', roomListLoading, roomListError, roomList);
+    // useEffect(() => {
+    //     setCurrentAssetType(
+    //         (Object.keys(currentAsset).length > 0 &&
+    //             !!currentAsset.assetTypeId &&
+    //             assetType.find(item => item.id === currentAsset.assetTypeId)) ??
+    //             {},
+    //     );
+    //     setTestStatus(status.NONE);
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, JSON.stringify(currentAsset));
+
     return (
         <StandardPage title={locale.pageTitle}>
             <Typography component={'h2'} variant={'h5'}>
@@ -489,16 +496,17 @@ export const TestTag = ({
                 headerAction={
                     <IconButton
                         className={clsx(classes.expand, {
-                            [classes.expandOpen]: expanded,
+                            [classes.expandOpen]: eventExpanded,
                         })}
-                        aria-expanded={expanded}
+                        aria-expanded={eventExpanded}
                         aria-label="show more"
+                        onClick={() => setEventExpanded(!eventExpanded)}
                     >
                         <ExpandMoreIcon />
                     </IconButton>
                 }
             >
-                <Collapse in={expanded} timeout="auto">
+                <Collapse in={eventExpanded} timeout="auto">
                     <Grid container spacing={3}>
                         <Grid item xs={12} sm={12}>
                             <DatePicker
@@ -547,65 +555,102 @@ export const TestTag = ({
                         </Grid>
                         <Grid item sm={6} md={4}>
                             <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel shrink>Building</InputLabel>
-                                <Select
-                                    className={classes.formSelect}
-                                    value={buildingid === -1 ? '' : buildingid}
-                                    onChange={(e, child) => handleChange(e, child, 'building')}
-                                >
-                                    {!!siteListLoading && (
-                                        <MenuItem value={-1} disabled key={'building-loading'}>
-                                            Loading...
-                                        </MenuItem>
-                                    )}
-                                    {!!!siteListLoading &&
-                                        !!!siteListError &&
-                                        !!siteList &&
-                                        !!siteList.length > 0 &&
+                                <Autocomplete
+                                    fullWidth
+                                    options={
+                                        (!!!siteListLoading &&
+                                            !!!siteListError &&
+                                            siteList?.find(site => site.site_id === siteid)?.buildings) ??
+                                        []
+                                    }
+                                    value={
                                         siteList
-                                            .find(site => site.site_id === siteid)
-                                            ?.buildings.map(building => (
-                                                <MenuItem value={building.building_id} key={building.building_id}>
-                                                    {building.building_id_displayed}
-                                                </MenuItem>
-                                            ))}
-                                </Select>
+                                            ?.find(site => site.site_id === siteid)
+                                            ?.buildings?.find(building => building.building_id === buildingid) ?? ''
+                                    }
+                                    onChange={(event, newValue) => {
+                                        setBuildingId(newValue.building_id);
+                                    }}
+                                    getOptionLabel={option => option.building_id_displayed}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            required
+                                            label="Building"
+                                            variant="standard"
+                                            InputLabelProps={{ shrink: true }}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <React.Fragment>
+                                                        {siteListLoading ? (
+                                                            <CircularProgress color="inherit" size={20} />
+                                                        ) : null}
+                                                        {params.InputProps.endAdornment}
+                                                    </React.Fragment>
+                                                ),
+                                            }}
+                                        />
+                                    )}
+                                    disabled={siteid === -1 || siteListLoading}
+                                    disableClearable
+                                    autoSelect
+                                    loading={!!siteListLoading}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item sm={6} md={2}>
                             <FormControl className={classes.formControl} fullWidth>
-                                <InputLabel shrink>Floor</InputLabel>
-                                <Select
-                                    className={classes.formSelect}
-                                    value={floorid === -1 ? '' : floorid}
-                                    onChange={(e, child) => handleChange(e, child, 'floor')}
-                                >
-                                    {!!floorListLoading && (
-                                        <MenuItem value={-1} disabled key={'floor-loading'}>
-                                            Loading...
-                                        </MenuItem>
+                                <Autocomplete
+                                    fullWidth
+                                    options={
+                                        (!!!floorListLoading && !!!floorListError && !!floorList && floorList.floors) ??
+                                        []
+                                    }
+                                    value={floorList?.floors?.find(floor => floor.floor_id === floorid) ?? ''}
+                                    onChange={(event, newValue) => {
+                                        setFloorId(newValue.floor_id);
+                                    }}
+                                    getOptionLabel={option => option.floor_id_displayed ?? option}
+                                    renderInput={params => (
+                                        <TextField
+                                            {...params}
+                                            required
+                                            label="Floor"
+                                            variant="standard"
+                                            InputLabelProps={{ shrink: true }}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <React.Fragment>
+                                                        {floorListLoading ? (
+                                                            <CircularProgress color="inherit" size={20} />
+                                                        ) : null}
+                                                        {params.InputProps.endAdornment}
+                                                    </React.Fragment>
+                                                ),
+                                            }}
+                                        />
                                     )}
-                                    {!!!floorListLoading &&
-                                        !!!floorListError &&
-                                        !!floorList &&
-                                        floorList.floors.map(floor => (
-                                            <MenuItem value={floor.floor_id} key={floor.floor_id}>
-                                                {floor.floor_id_displayed}
-                                            </MenuItem>
-                                        ))}
-                                </Select>
+                                    disabled={buildingid === -1 || floorListLoading}
+                                    disableClearable
+                                    autoSelect
+                                    loading={!!floorListLoading}
+                                />
                             </FormControl>
                         </Grid>
                         <Grid item sm={6} md={3}>
                             <FormControl className={classes.formControl} fullWidth>
                                 <Autocomplete
                                     fullWidth
-                                    options={!!!roomListLoading && !!!roomListError && !!roomList && roomList.rooms}
-                                    value={roomid}
+                                    options={
+                                        (!!!roomListLoading && !!!roomListError && !!roomList && roomList.rooms) ?? []
+                                    }
+                                    value={roomList?.rooms?.find(room => room.room_id === roomid) ?? ''}
                                     onChange={(event, newValue) => {
-                                        setRoomId(newValue);
+                                        setRoomId(newValue.room_id);
                                     }}
-                                    getOptionLabel={option => option.room_id_displayed}
+                                    getOptionLabel={option => option.room_id_displayed ?? option}
                                     renderInput={params => (
                                         <TextField
                                             {...params}
@@ -613,8 +658,23 @@ export const TestTag = ({
                                             label="Room"
                                             variant="standard"
                                             InputLabelProps={{ shrink: true }}
+                                            InputProps={{
+                                                ...params.InputProps,
+                                                endAdornment: (
+                                                    <React.Fragment>
+                                                        {roomListLoading ? (
+                                                            <CircularProgress color="inherit" size={20} />
+                                                        ) : null}
+                                                        {params.InputProps.endAdornment}
+                                                    </React.Fragment>
+                                                ),
+                                            }}
                                         />
                                     )}
+                                    disabled={floorid === -1 || roomListLoading}
+                                    disableClearable
+                                    autoSelect
+                                    loading={!!roomListLoading}
                                 />
                             </FormControl>
                         </Grid>
@@ -688,13 +748,14 @@ export const TestTag = ({
                         <FormControl className={classes.formControl} fullWidth>
                             <Autocomplete
                                 fullWidth
-                                options={assetType}
-                                value={currentAssetType}
+                                options={
+                                    (!!!assetTypesLoading && !!!assetTypesError && !!assetTypes && assetTypes) ?? []
+                                }
+                                value={assetTypes?.find(assetType => assetType.asset_type_id === assetTypeid) ?? ''}
                                 onChange={(event, newValue) => {
-                                    setCurrentAssetType(newValue);
+                                    setAssetTypeId(newValue.asset_type_id);
                                 }}
-                                getOptionLabel={option => option.label}
-                                style={{ width: 300 }}
+                                getOptionLabel={option => option.asset_type_name ?? option}
                                 renderInput={params => (
                                     <TextField
                                         {...params}
@@ -702,8 +763,23 @@ export const TestTag = ({
                                         label="Asset type"
                                         variant="standard"
                                         InputLabelProps={{ shrink: true }}
+                                        InputProps={{
+                                            ...params.InputProps,
+                                            endAdornment: (
+                                                <React.Fragment>
+                                                    {assetTypesLoading ? (
+                                                        <CircularProgress color="inherit" size={20} />
+                                                    ) : null}
+                                                    {params.InputProps.endAdornment}
+                                                </React.Fragment>
+                                            ),
+                                        }}
                                     />
                                 )}
+                                disabled={assetTypesLoading}
+                                disableClearable
+                                autoSelect
+                                loading={!!assetTypesLoading}
                             />
                         </FormControl>
                     </Grid>
@@ -772,17 +848,18 @@ export const TestTag = ({
                     headerAction={
                         <IconButton
                             className={clsx(classes.expand, {
-                                [classes.expandOpen]: expanded,
+                                [classes.expandOpen]: previousTestExpanded,
                             })}
-                            aria-expanded={expanded}
+                            aria-expanded={previousTestExpanded}
                             aria-label="show more"
+                            onClick={() => setPreviousTestExpanded(!previousTestExpanded)}
                         >
                             <ExpandMoreIcon />
                         </IconButton>
                     }
                     style={{ borderLeft: `10px solid ${theme.palette.success.main}` }}
                 >
-                    <Collapse in={expanded} timeout="auto">
+                    <Collapse in={previousTestExpanded} timeout="auto">
                         <Grid item xs={12}>
                             <Typography component={'p'}>Next Test Date: October 21, 2022</Typography>
                         </Grid>
@@ -817,15 +894,23 @@ export const TestTag = ({
                                 <Select
                                     fullWidth
                                     className={classes.formSelect}
-                                    value={deviceid}
-                                    onChange={(e, child) => handleChange(e, child, 'device')}
+                                    value={deviceid ?? ''}
+                                    onChange={e => setDeviceId(e.target.value)}
                                 >
-                                    <MenuItem value={1} data-id={1}>
-                                        Testing Device One
-                                    </MenuItem>
-                                    <MenuItem value={2} data-id={2}>
-                                        Testing Device Two
-                                    </MenuItem>
+                                    {!!testDevicesLoading && (
+                                        <MenuItem value={-1} disabled key={'devicetypes-loading'}>
+                                            Loading...
+                                        </MenuItem>
+                                    )}
+                                    {!!!testDevicesLoading &&
+                                        !!!testDevicesError &&
+                                        !!testDevices &&
+                                        testDevices?.length > 0 &&
+                                        testDevices.map(device => (
+                                            <MenuItem value={device.device_id} key={device.device_id}>
+                                                {device.device_model_name}
+                                            </MenuItem>
+                                        ))}
                                 </Select>
                             </FormControl>
                         </Grid>
@@ -1051,6 +1136,12 @@ TestTag.propTypes = {
     roomList: PropTypes.any,
     roomListLoading: PropTypes.bool,
     roomListError: PropTypes.any,
+    testDevices: PropTypes.any,
+    testDevicesLoading: PropTypes.bool,
+    testDevicesError: PropTypes.any,
+    assetTypes: PropTypes.any,
+    assetTypesLoading: PropTypes.bool,
+    assetTypesError: PropTypes.any,
 };
 
 export default React.memo(TestTag);
