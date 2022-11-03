@@ -13,9 +13,8 @@ const currentRetestList = [
 
 export const mapStateToProps = state => {
     return {
-        ...state.get('siteListReducer'),
-        ...state.get('floorListReducer'),
-        ...state.get('roomListReducer'),
+        ...state.get('testTagLocationReducer'),
+        ...state.get('testTagSetupReducer'),
     };
 };
 
