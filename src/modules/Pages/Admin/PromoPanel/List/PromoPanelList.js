@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import { StandardPage } from 'modules/SharedComponents/Toolbox/StandardPage';
 import { PromoPanelListSchedules } from './PromoPanelListSchedules';
 import { PromoPanelListPanels } from './PromoPanelListPanels';
+import { PromoPanelListActive } from './PromoPanelListActive';
 // import SpotlightsListAsTable from 'modules/Pages/Admin/Spotlights/List/SpotlightsListAsTable';
 import { PromoPanelUtilityArea } from 'modules/Pages/Admin/PromoPanel/PromoPanelUtilityArea';
 import { default as locale } from 'modules/Pages/Admin/PromoPanel/promoPanelAdmin.locale';
@@ -166,6 +167,11 @@ export const PromoPanelList = ({
 
     return (
         <StandardPage title="Promo panel management">
+            <PromoPanelListActive
+                isLoading={promoPanelUserTypesLoading}
+                panelList={promoPanelUserTypeList}
+                title="Currently shown panels"
+            />
             <PromoPanelUtilityArea
                 actions={actions}
                 helpContent={locale.listPage.help}

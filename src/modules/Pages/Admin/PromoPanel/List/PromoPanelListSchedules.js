@@ -475,18 +475,23 @@ export const PromoPanelListSchedules = ({
 
                                             {item.scheduled_panels.length > 0 &&
                                                 item.scheduled_panels.map((row, id) => {
-                                                    rowMarker++;
-                                                    return (
-                                                        <TableRow
-                                                            className={`${classes.tableRow} promoPanel-data-row ${
-                                                                rowMarker % 2 === 0
-                                                                    ? classes.cellGroupRowEven
-                                                                    : classes.cellGroupRowOdd
-                                                            }`}
-                                                            key={id}
-                                                        >
-                                                            <TableCell className={classes.cellEmpty} />
-                                                            {/* <TableCell className={classes.checkboxCell}>
+                                                    console.log('ROW CHECK', row);
+                                                    if (
+                                                        row.panel_schedule_end_time &&
+                                                        moment(row.panel_schedule_end_time).toDate() > new moment()
+                                                    ) {
+                                                        rowMarker++;
+                                                        return (
+                                                            <TableRow
+                                                                className={`${classes.tableRow} promoPanel-data-row ${
+                                                                    rowMarker % 2 === 0
+                                                                        ? classes.cellGroupRowEven
+                                                                        : classes.cellGroupRowOdd
+                                                                }`}
+                                                                key={id}
+                                                            >
+                                                                <TableCell className={classes.cellEmpty} />
+                                                                {/* <TableCell className={classes.checkboxCell}>
                             <Checkbox
                                 id={`panel-table-item-checkbox-${row.panel_id}`}
                                 inputProps={{
@@ -497,61 +502,69 @@ export const PromoPanelListSchedules = ({
                                 value={`${checkBoxIdPrefix}${row.panel_id}`}
                             />
                         </TableCell> */}
-                                                            <TableCell className={classes.cellGroupDetails}>
-                                                                <Typography variant="body1">
-                                                                    <strong>{row.panel_title}</strong>
-                                                                    <br />
-                                                                    {row.panel_admin_notes}
-                                                                </Typography>
-                                                            </TableCell>
-                                                            <TableCell className={classes.checkboxCell}>
-                                                                <Checkbox
-                                                                    id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
-                                                                    inputProps={{
-                                                                        'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
-                                                                        'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
-                                                                    }}
-                                                                    onChange={() =>
-                                                                        handleGroupDefaultChange(item.user_group, row)
-                                                                    }
-                                                                    value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
-                                                                />
-                                                            </TableCell>
-                                                            <TableCell className={classes.cellGroupDetails}>
-                                                                <Typography variant="body1">
-                                                                    {moment(row.panel_start).format(
-                                                                        'dddd DD/MM/YYYY HH:mm a',
-                                                                    )}
-                                                                </Typography>
-                                                            </TableCell>
-                                                            <TableCell className={classes.cellGroupDetails}>
-                                                                <Typography variant="body1">
-                                                                    {moment(row.panel_end).format(
-                                                                        'dddd DD/MM/YYYY HH:mm a',
-                                                                    )}
-                                                                </Typography>
-                                                            </TableCell>
-                                                            <TableCell className={classes.cellGroupDetails}>
-                                                                <PromoPanelSplitButton
-                                                                    alertId={alert.id}
-                                                                    canEdit={canEdit}
-                                                                    canClone={canClone}
-                                                                    canUnschedule
-                                                                    onPreview={row => onPreviewOpen(row, item)}
-                                                                    row={row}
-                                                                    align={'flex-end'}
-                                                                    deletePanelById={row => {
-                                                                        unschedulePanelById(row, item);
-                                                                    }}
-                                                                    mainButtonLabel={'Edit'}
-                                                                    // navigateToCloneForm={navigateToCloneForm}
-                                                                    navigateToEditForm={row => navigateToEditForm(row)}
-                                                                    // navigateToView={navigateToView}
-                                                                    confirmDeleteLocale={confirmUnscheduleLocale}
-                                                                />
-                                                            </TableCell>
-                                                        </TableRow>
-                                                    );
+                                                                <TableCell className={classes.cellGroupDetails}>
+                                                                    <Typography variant="body1">
+                                                                        <strong>{row.panel_title}</strong>
+                                                                        <br />
+                                                                        {row.panel_admin_notes}
+                                                                    </Typography>
+                                                                </TableCell>
+                                                                <TableCell className={classes.checkboxCell}>
+                                                                    <Checkbox
+                                                                        id={`panel-table-item-checkbox-${item.default_panel.panel_id}`}
+                                                                        inputProps={{
+                                                                            'aria-labelledby': `panel-table-item-title-${item.default_panel.panel_id}`,
+                                                                            'data-testid': `panel-list-table-checkbox-${item.default_panel.panel_id}`,
+                                                                        }}
+                                                                        onChange={() =>
+                                                                            handleGroupDefaultChange(
+                                                                                item.user_group,
+                                                                                row,
+                                                                            )
+                                                                        }
+                                                                        value={`${checkBoxIdPrefix}${item.default_panel.panel_id}`}
+                                                                    />
+                                                                </TableCell>
+                                                                <TableCell className={classes.cellGroupDetails}>
+                                                                    <Typography variant="body1">
+                                                                        {moment(row.panel_schedule_start_time).format(
+                                                                            'dddd DD/MM/YYYY HH:mm a',
+                                                                        )}
+                                                                    </Typography>
+                                                                </TableCell>
+                                                                <TableCell className={classes.cellGroupDetails}>
+                                                                    <Typography variant="body1">
+                                                                        {moment(row.panel_schedule_end_time).format(
+                                                                            'dddd DD/MM/YYYY HH:mm a',
+                                                                        )}
+                                                                    </Typography>
+                                                                </TableCell>
+                                                                <TableCell className={classes.cellGroupDetails}>
+                                                                    <PromoPanelSplitButton
+                                                                        alertId={alert.id}
+                                                                        canEdit={canEdit}
+                                                                        canClone={canClone}
+                                                                        canUnschedule
+                                                                        onPreview={row => onPreviewOpen(row, item)}
+                                                                        row={row}
+                                                                        align={'flex-end'}
+                                                                        deletePanelById={row => {
+                                                                            unschedulePanelById(row, item);
+                                                                        }}
+                                                                        mainButtonLabel={'Edit'}
+                                                                        // navigateToCloneForm={navigateToCloneForm}
+                                                                        navigateToEditForm={row =>
+                                                                            navigateToEditForm(row)
+                                                                        }
+                                                                        // navigateToView={navigateToView}
+                                                                        confirmDeleteLocale={confirmUnscheduleLocale}
+                                                                    />
+                                                                </TableCell>
+                                                            </TableRow>
+                                                        );
+                                                    } else {
+                                                        return '';
+                                                    }
                                                 })}
                                         </React.Fragment>
                                     );

@@ -49,7 +49,7 @@ export const currentPanels = [
                 user_group_name: 'Local Undergraduate',
                 is_panel_default_for_this_user: 'N',
                 panel_schedule_start_time: '2022-01-12 10:00:00',
-                panel_schedule_end_time: '2022-01-12 10:00:00',
+                panel_schedule_end_time: '2092-01-12 10:00:00',
             },
         ],
     },
@@ -137,13 +137,13 @@ export const userListPanels = [
             },
             {
                 panel_id: 2,
-                admin_notes: 'Testing Panel ID 2',
+                panel_admin_notes: 'Testing Panel ID 2',
                 panel_title: 'Xmas Break',
                 panel_content:
                     "<p>Please note the following services will be unavailable during the christmas break:</p><ul><li>Enrolment Services.</li><li>Councelling services</li><li>Additional professional services such as vaccinations</li></ul><p>For further information, please visit <a href='http://library.uq.edu.au'> services for students</a> page to make informed decisions.</p>",
         
-                panel_schedule_start_time: '2022-01-12 10:00:00',
-                panel_schedule_end_time: '2022-01-12 10:00:00',
+                panel_schedule_start_time: '2021-11-01 10:00:00',
+                panel_schedule_end_time: '2092-01-12 10:00:00',
                 panel_created_at: '2022-11-06T23:59',
             }
         ],
