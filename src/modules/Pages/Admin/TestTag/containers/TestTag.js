@@ -15,6 +15,7 @@ export const mapStateToProps = state => {
     return {
         ...state.get('testTagLocationReducer'),
         ...state.get('testTagSetupReducer'),
+        ...state.get('testTagAssetsReducer'),
     };
 };
 

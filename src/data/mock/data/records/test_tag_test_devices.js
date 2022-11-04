@@ -1,7 +1,7 @@
 export default [
 	{
 		device_id: 1,
-		device_model_name: 'KEW 620-1',
+		device_model_name: 'TESTER 620-1',
         device_serial_number: 'W309876',
         device_department: 'UQL_WSS',
         device_calibrated_date_last: '2022-01-02 00:00:00',
@@ -13,7 +13,7 @@ export default [
 	},
 	{
 		device_id: 2,
-		device_model_name: 'DEW 665-2',
+		device_model_name: 'TESTER 665-2',
         device_serial_number: 'W309878',
         device_department: 'UQL_WSS',
         device_calibrated_date_last: '2022-01-02 00:00:00',

@@ -14,3 +14,4 @@ export { default as examSearchReducer } from './examSearchReducer';
 export { default as examSuggestionReducer } from './examSuggestionReducer';
 export { default as testTagSetupReducer } from './testTagSetupReducer';
 export { default as testTagLocationReducer } from './testTagLocationReducer';
+export { default as testTagAssetsReducer } from './testTagAssetsReducer';
